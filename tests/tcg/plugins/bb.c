@@ -93,6 +93,29 @@ static void vcpu_tb_trans(qemu_plugin_id_t id, struct qemu_plugin_tb *tb)
     }
 }
 
+static void vcpu_tb_restore(qemu_plugin_id_t id,
+                            struct qemu_plugin_tb_restore *tb_restore)
+{
+    unsigned int cpu_index;
+    cpu_index = qemu_plugin_tb_restore_cpu_index(tb_restore);
+    CPUCount *count = qemu_plugin_scoreboard_find(counts, cpu_index);
+
+    size_t insns_left = qemu_plugin_tb_restore_insns_left(tb_restore);
+    count->insn_count -= insns_left;
+}
+
+static void vcpu_tb_recompile_io(qemu_plugin_id_t id,
+    struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    unsigned int cpu_index;
+    cpu_index = qemu_plugin_tb_recompile_io_cpu_index(tb_recompile_io);
+    CPUCount *count = qemu_plugin_scoreboard_find(counts, cpu_index);
+
+    uint32_t next_tb_n = qemu_plugin_tb_recompile_io_next_tb_n(tb_recompile_io);
+    count->insn_count += next_tb_n;
+}
+
+
 QEMU_PLUGIN_EXPORT int qemu_plugin_install(qemu_plugin_id_t id,
                                            const qemu_info_t *info,
                                            int argc, char **argv)
@@ -128,6 +151,8 @@ QEMU_PLUGIN_EXPORT int qemu_plugin_install(qemu_plugin_id_t id,
     }
 
     qemu_plugin_register_vcpu_tb_trans_cb(id, vcpu_tb_trans);
+    qemu_plugin_register_vcpu_tb_restore_cb(id, vcpu_tb_restore);
+    qemu_plugin_register_vcpu_tb_recompile_io_cb(id, vcpu_tb_recompile_io);
     qemu_plugin_register_atexit_cb(id, plugin_exit, NULL);
     return 0;
 }

@@ -228,6 +228,10 @@ struct qemu_plugin_tb;
 struct qemu_plugin_insn;
 /** struct qemu_plugin_scoreboard - Opaque handle for a scoreboard */
 struct qemu_plugin_scoreboard;
+/** struct qemu_plugin_tb_restore - Opaque handle for TB restore */
+struct qemu_plugin_tb_restore;
+/** struct qemu_plugin_tb_recompile_io - Opaque handle for recompile_io */
+struct qemu_plugin_tb_recompile_io;
 
 /**
  * typedef qemu_plugin_u64 - uint64_t member of an entry in a scoreboard
@@ -294,6 +298,22 @@ typedef void (*qemu_plugin_vcpu_tb_trans_cb_t)(qemu_plugin_id_t id,
                                                struct qemu_plugin_tb *tb);
 
 /**
+ * typedef qemu_plugin_vcpu_tb_restore_cb_t - cpu restore state from TB callback
+ * @id: unique plugin id
+ * @tb_restore: opaque handle used for querying TB restore info.
+ */
+typedef void (*qemu_plugin_vcpu_tb_restore_cb_t)(qemu_plugin_id_t id,
+    struct qemu_plugin_tb_restore *tb_restore);
+
+/**
+ * typedef qemu_plugin_vcpu_tb_restore_cb_t - cpu io recompile callback
+ * @id: unique plugin id
+ * @tb_restore: opaque handle used for querying cpu io recompile info.
+ */
+typedef void (*qemu_plugin_vcpu_tb_recompile_io_cb_t)(qemu_plugin_id_t id,
+    struct qemu_plugin_tb_recompile_io *tb_recompile_io);
+
+/**
  * qemu_plugin_register_vcpu_tb_trans_cb() - register a translate cb
  * @id: plugin ID
  * @cb: callback function
@@ -308,6 +328,33 @@ typedef void (*qemu_plugin_vcpu_tb_trans_cb_t)(qemu_plugin_id_t id,
 QEMU_PLUGIN_API
 void qemu_plugin_register_vcpu_tb_trans_cb(qemu_plugin_id_t id,
                                            qemu_plugin_vcpu_tb_trans_cb_t cb);
+
+/**
+ * qemu_plugin_register_vcpu_tb_restore_cb() - register a TB restore cb
+ * @id: plugin ID
+ * @cb: callback function
+ *
+ * The @cb function is called every time a TB restore occurs. The @cb
+ * function is passed an opaque qemu_plugin_type which it can query
+ * for additional information.
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_register_vcpu_tb_restore_cb(qemu_plugin_id_t id,
+    qemu_plugin_vcpu_tb_restore_cb_t cb);
+
+/**
+ * qemu_plugin_register_vcpu_tb_recompile_io_cb()
+ * register a cpu io recompile cb
+ * @id: plugin ID
+ * @cb: callback function
+ *
+ * The @cb function is called every time a cpu io recompile occurs. The @cb
+ * function is passed an opaque qemu_plugin_type which it can query
+ * for additional information.
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_register_vcpu_tb_recompile_io_cb(qemu_plugin_id_t id,
+    qemu_plugin_vcpu_tb_recompile_io_cb_t cb);
 
 /**
  * qemu_plugin_register_vcpu_tb_exec_cb() - register execution callback
@@ -468,6 +515,90 @@ uint64_t qemu_plugin_tb_vaddr(const struct qemu_plugin_tb *tb);
 QEMU_PLUGIN_API
 struct qemu_plugin_insn *
 qemu_plugin_tb_get_insn(const struct qemu_plugin_tb *tb, size_t idx);
+
+/**
+ * qemu_plugin_tb_restore_cpu_index()
+ * query helper for cpu index where TB restore occurs
+ * @tb_restore: Opaque handle to the TB restore structure passed to the callback
+ *
+ * Returns: cpu index where the TB restore occurs.
+ */
+QEMU_PLUGIN_API
+unsigned int qemu_plugin_tb_restore_cpu_index(
+    const struct qemu_plugin_tb_restore *tb_restore);
+
+/**
+ * qemu_plugin_tb_restore_insns_left()
+ * query helper for number of unexecuted instructions in TB
+ * @tb_restore: Opaque handle to the TB restore structure passed to the callback
+ *
+ * Returns: number of unexecuted instructions in this block.
+ */
+QEMU_PLUGIN_API
+int qemu_plugin_tb_restore_insns_left(
+    const struct qemu_plugin_tb_restore *tb_restore);
+
+/**
+ * qemu_plugin_tb_restore_tb_n() - query helper for number of insns in TB
+ * @tb_restore: Opaque handle to the TB restore structure passed to the callback
+ *
+ * Returns: number of instructions in this block.
+ */
+QEMU_PLUGIN_API
+size_t qemu_plugin_tb_restore_tb_n(
+    const struct qemu_plugin_tb_restore *tb_restore);
+
+/**
+ * qemu_plugin_tb_restore_tb_pc() - query helper for vaddr of TB start
+ * @tb_restore: Opaque handle to the TB restore structure passed to the callback
+ *
+ * Returns: virtual address of block start.
+ */
+QEMU_PLUGIN_API
+uint64_t qemu_plugin_tb_restore_tb_pc(
+    const struct qemu_plugin_tb_restore *tb_restore);
+
+/**
+ * qemu_plugin_tb_recompile_io_cpu_index()
+ * query helper for cpu index where recompile I/O occurs
+ * @tb_recompile_io: Opaque handle to the TB recompile I/O structure
+ *
+ * Returns: cpu index where I/O recompile occurs.
+ */
+QEMU_PLUGIN_API
+unsigned int qemu_plugin_tb_recompile_io_cpu_index(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io);
+
+/**
+ * qemu_plugin_tb_recompile_io_next_tb_n()
+ * query helper for number of insns in next TB
+ * @tb_recompile_io: Opaque handle to the TB recompile I/O structure
+ *
+ * Returns: number of instructions in next block.
+ */
+QEMU_PLUGIN_API
+uint32_t qemu_plugin_tb_recompile_io_next_tb_n(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io);
+
+/**
+ * qemu_plugin_tb_recompile_io_tb_pc() - query helper for vaddr of TB start
+ * @tb_recompile_io: Opaque handle to the TB recompile I/O structure
+ *
+ * Returns: virtual address of block start.
+ */
+QEMU_PLUGIN_API
+uint64_t qemu_plugin_tb_recompile_io_tb_pc(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io);
+
+/**
+ * qemu_plugin_tb_recompile_io_cpu_pc() - query helper for cpu program counter
+ * @tb_recompile_io: Opaque handle to the TB recompile I/O structure
+ *
+ * Returns: program counter of cpu where recompile I/O occurs.
+ */
+QEMU_PLUGIN_API
+uint64_t qemu_plugin_tb_recompile_io_cpu_pc(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io);
 
 /**
  * qemu_plugin_insn_data() - copy instruction data

@@ -491,6 +491,48 @@ void qemu_plugin_tb_trans_cb(CPUState *cpu, struct qemu_plugin_tb *tb)
  * have type information
  */
 QEMU_DISABLE_CFI
+void qemu_plugin_tb_restore_cb(CPUState *cpu,
+                               struct qemu_plugin_tb_restore *tb_restore)
+{
+    struct qemu_plugin_cb *cb, *next;
+    enum qemu_plugin_event ev = QEMU_PLUGIN_EV_VCPU_TB_RESTORE;
+
+    /* no plugin_state->event_mask check here; caller should have checked */
+
+    QLIST_FOREACH_SAFE_RCU(cb, &plugin.cb_lists[ev], entry, next) {
+        qemu_plugin_vcpu_tb_restore_cb_t func = cb->f.vcpu_tb_restore;
+
+        func(cb->ctx->id, tb_restore);
+    }
+}
+
+/*
+ * Disable CFI checks.
+ * The callback function has been loaded from an external library so we do not
+ * have type information
+ */
+QEMU_DISABLE_CFI
+void qemu_plugin_tb_recompile_io_cb(CPUState *cpu,
+    struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    struct qemu_plugin_cb *cb, *next;
+    enum qemu_plugin_event ev = QEMU_PLUGIN_EV_VCPU_TB_RECOMPILE_IO;
+
+    /* no plugin_state->event_mask check here; caller should have checked */
+
+    QLIST_FOREACH_SAFE_RCU(cb, &plugin.cb_lists[ev], entry, next) {
+        qemu_plugin_vcpu_tb_recompile_io_cb_t func = cb->f.vcpu_tb_recompile_io;
+
+        func(cb->ctx->id, tb_recompile_io);
+    }
+}
+
+/*
+ * Disable CFI checks.
+ * The callback function has been loaded from an external library so we do not
+ * have type information
+ */
+QEMU_DISABLE_CFI
 void
 qemu_plugin_vcpu_syscall(CPUState *cpu, int64_t num, uint64_t a1, uint64_t a2,
                          uint64_t a3, uint64_t a4, uint64_t a5,

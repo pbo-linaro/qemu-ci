@@ -206,6 +206,18 @@ void qemu_plugin_register_vcpu_tb_trans_cb(qemu_plugin_id_t id,
     plugin_register_cb(id, QEMU_PLUGIN_EV_VCPU_TB_TRANS, cb);
 }
 
+void qemu_plugin_register_vcpu_tb_restore_cb(qemu_plugin_id_t id,
+    qemu_plugin_vcpu_tb_restore_cb_t cb)
+{
+    plugin_register_cb(id, QEMU_PLUGIN_EV_VCPU_TB_RESTORE, cb);
+}
+
+void qemu_plugin_register_vcpu_tb_recompile_io_cb(qemu_plugin_id_t id,
+    qemu_plugin_vcpu_tb_recompile_io_cb_t cb)
+{
+    plugin_register_cb(id, QEMU_PLUGIN_EV_VCPU_TB_RECOMPILE_IO, cb);
+}
+
 void qemu_plugin_register_vcpu_syscall_cb(qemu_plugin_id_t id,
                                           qemu_plugin_vcpu_syscall_cb_t cb)
 {
@@ -255,6 +267,72 @@ qemu_plugin_tb_get_insn(const struct qemu_plugin_tb *tb, size_t idx)
     }
     insn = g_ptr_array_index(tb->insns, idx);
     return insn;
+}
+
+/*
+ * CPU restore state from TB information:
+ *
+ * A plugin can query various details about the TB being restored,
+ * including the CPU index, the number of remaining instructions to execute,
+ * the total number of instructions, and the virtual address of
+ * the start of the block.
+ */
+
+unsigned int qemu_plugin_tb_restore_cpu_index(
+    const struct qemu_plugin_tb_restore *tb_restore)
+{
+    return tb_restore->cpu_index;
+}
+
+int qemu_plugin_tb_restore_insns_left(
+    const struct qemu_plugin_tb_restore *tb_restore)
+{
+    return tb_restore->insns_left;
+}
+
+size_t qemu_plugin_tb_restore_tb_n(
+    const struct qemu_plugin_tb_restore *tb_restore)
+{
+    return tb_restore->tb_n;
+}
+
+uint64_t qemu_plugin_tb_restore_tb_pc(
+    const struct qemu_plugin_tb_restore *tb_restore)
+{
+    return tb_restore->tb_pc;
+}
+
+/*
+ * CPU Recompile I/O information:
+ *
+ * A plugin can query various details related to the I/O recompile process,
+ * including the CPU index, the number of instructions in next TB,
+ * the virtual address of the start of current block, and the program counter
+ * of the CPU at the time of the recompile.
+ */
+
+unsigned int qemu_plugin_tb_recompile_io_cpu_index(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    return tb_recompile_io->cpu_index;
+}
+
+uint32_t qemu_plugin_tb_recompile_io_next_tb_n(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    return tb_recompile_io->next_tb_n;
+}
+
+uint64_t qemu_plugin_tb_recompile_io_tb_pc(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    return tb_recompile_io->tb_pc;
+}
+
+uint64_t qemu_plugin_tb_recompile_io_cpu_pc(
+    const struct qemu_plugin_tb_recompile_io *tb_recompile_io)
+{
+    return tb_recompile_io->cpu_pc;
 }
 
 /*

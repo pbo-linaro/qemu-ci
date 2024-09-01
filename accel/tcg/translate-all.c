@@ -65,6 +65,7 @@
 #include "internal-target.h"
 #include "tcg/perf.h"
 #include "tcg/insn-start-words.h"
+#include "qemu/plugin.h"
 
 TBContext tb_ctx;
 
@@ -217,6 +218,19 @@ void cpu_restore_state_from_tb(CPUState *cpu, TranslationBlock *tb,
          */
         cpu->neg.icount_decr.u16.low += insns_left;
     }
+
+#ifdef CONFIG_PLUGIN
+    /*
+     * Notify the plugin with the relevant information
+     * when restoring the execution state of a TB.
+     */
+    struct qemu_plugin_tb_restore ptb_restore;
+    ptb_restore.cpu_index = cpu->cpu_index;
+    ptb_restore.insns_left = insns_left;
+    ptb_restore.tb_n = tb->icount;
+    ptb_restore.tb_pc = tb->pc;
+    qemu_plugin_tb_restore_cb(cpu, &ptb_restore);
+#endif
 
     cpu->cc->tcg_ops->restore_state_to_opc(cpu, tb, data);
 }
@@ -640,6 +654,19 @@ void cpu_io_recompile(CPUState *cpu, uintptr_t retaddr)
                      VADDR_PRIx "\n", pc);
         }
     }
+
+#ifdef CONFIG_PLUGIN
+    /*
+     * Notify the plugin with the relevant information
+     * when cpu_io_recompile is triggered.
+     */
+    struct qemu_plugin_tb_recompile_io ptb_recompile_io;
+    ptb_recompile_io.cpu_index = cpu->cpu_index;
+    ptb_recompile_io.next_tb_n = n;
+    ptb_recompile_io.tb_pc = tb->pc;
+    ptb_recompile_io.cpu_pc = cpu->cc->get_pc(cpu);
+    qemu_plugin_tb_recompile_io_cb(cpu, &ptb_recompile_io);
+#endif
 
     cpu_loop_exit_noexc(cpu);
 }

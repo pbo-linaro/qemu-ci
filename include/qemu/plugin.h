@@ -60,6 +60,8 @@ union qemu_plugin_cb_sig {
     qemu_plugin_vcpu_simple_cb_t     vcpu_simple;
     qemu_plugin_vcpu_udata_cb_t      vcpu_udata;
     qemu_plugin_vcpu_tb_trans_cb_t   vcpu_tb_trans;
+    qemu_plugin_vcpu_tb_restore_cb_t   vcpu_tb_restore;
+    qemu_plugin_vcpu_tb_recompile_io_cb_t   vcpu_tb_recompile_io;
     qemu_plugin_vcpu_mem_cb_t        vcpu_mem;
     qemu_plugin_vcpu_syscall_cb_t    vcpu_syscall;
     qemu_plugin_vcpu_syscall_ret_cb_t vcpu_syscall_ret;
@@ -139,6 +141,22 @@ struct qemu_plugin_tb {
     GArray *cbs;
 };
 
+/* TranslationBlock Restore info */
+struct qemu_plugin_tb_restore {
+    unsigned int cpu_index;
+    int insns_left;
+    size_t tb_n;
+    uint64_t tb_pc;
+};
+
+/* TranslationBlock Recompile IO info */
+struct qemu_plugin_tb_recompile_io {
+    unsigned int cpu_index;
+    uint32_t next_tb_n;
+    uint64_t tb_pc;
+    uint64_t cpu_pc;
+};
+
 /**
  * struct CPUPluginState - per-CPU state for plugins
  * @event_mask: plugin event bitmap. Modified only via async work.
@@ -158,6 +176,12 @@ CPUPluginState *qemu_plugin_create_vcpu_state(void);
 void qemu_plugin_vcpu_init_hook(CPUState *cpu);
 void qemu_plugin_vcpu_exit_hook(CPUState *cpu);
 void qemu_plugin_tb_trans_cb(CPUState *cpu, struct qemu_plugin_tb *tb);
+void
+qemu_plugin_tb_restore_cb(CPUState *cpu,
+                          struct qemu_plugin_tb_restore *tb);
+void
+qemu_plugin_tb_recompile_io_cb(CPUState *cpu,
+                               struct qemu_plugin_tb_recompile_io *tb);
 void qemu_plugin_vcpu_idle_cb(CPUState *cpu);
 void qemu_plugin_vcpu_resume_cb(CPUState *cpu);
 void
