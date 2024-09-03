@@ -907,7 +907,6 @@ PXA2XX
 M: Peter Maydell <peter.maydell@linaro.org>
 L: qemu-arm@nongnu.org
 S: Odd Fixes
-F: hw/arm/z2.c
 F: hw/*/pxa2xx*
 F: include/hw/arm/pxa.h
 
