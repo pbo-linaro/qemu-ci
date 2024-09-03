@@ -3185,7 +3185,7 @@ static void kvm_vm_enable_energy_msrs(KVMState *s)
 
 int kvm_arch_init(MachineState *ms, KVMState *s)
 {
-    uint64_t identity_base = 0xfffbc000;
+    uint64_t identity_base;
     int ret;
     struct utsname utsname;
     Error *local_err = NULL;
