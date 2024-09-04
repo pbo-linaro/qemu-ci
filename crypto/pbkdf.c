@@ -85,7 +85,7 @@ static int qcrypto_pbkdf2_get_thread_cpu(unsigned long long *val_ms,
 #endif
 }
 
-uint64_t qcrypto_pbkdf2_count_iters(QCryptoHashAlgorithm hash,
+uint64_t qcrypto_pbkdf2_count_iters(QCryptoHashAlgo hash,
                                     const uint8_t *key, size_t nkey,
                                     const uint8_t *salt, size_t nsalt,
                                     size_t nout,
