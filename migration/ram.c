@@ -548,9 +548,11 @@ static void mig_throttle_guest_down(uint64_t bytes_dirty_period,
     uint64_t throttle_now = cpu_throttle_get_percentage();
     uint64_t cpu_now, cpu_ideal, throttle_inc;
 
+    int new_throttle_pct;
+
     /* We have not started throttling yet. Let's start it. */
     if (!cpu_throttle_active()) {
-        cpu_throttle_set(pct_initial);
+        new_throttle_pct = pct_initial;
     } else {
         /* Throttling already on, just increase the rate */
         if (!pct_tailslow) {
@@ -563,8 +565,10 @@ static void mig_throttle_guest_down(uint64_t bytes_dirty_period,
                         bytes_dirty_period);
             throttle_inc = MIN(cpu_now - cpu_ideal, pct_increment);
         }
-        cpu_throttle_set(MIN(throttle_now + throttle_inc, pct_max));
+        new_throttle_pct = MIN(throttle_now + throttle_inc, pct_max);
     }
+    trace_migration_throttle(new_throttle_pct);
+    cpu_throttle_set(new_throttle_pct);
 }
 
 void mig_throttle_counter_reset(void)
@@ -1032,7 +1036,6 @@ static void migration_trigger_throttle(RAMState *rs)
         (++rs->dirty_rate_high_cnt >= 2)) {
         rs->dirty_rate_high_cnt = 0;
         if (migrate_auto_converge()) {
-            trace_migration_throttle();
             mig_throttle_guest_down(bytes_dirty_period,
                                     bytes_dirty_threshold);
         } else if (migrate_dirty_limit()) {
