@@ -217,14 +217,6 @@ is a chance the code will bitrot without anyone noticing.
 System emulator machines
 ------------------------
 
-Arm ``virt`` machine ``dtb-kaslr-seed`` property (since 7.1)
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-The ``dtb-kaslr-seed`` property on the ``virt`` board has been
-deprecated; use the new name ``dtb-randomness`` instead. The new name
-better reflects the way this property affects all random data within
-the device tree blob, not just the ``kaslr-seed`` node.
-
 ``pc-i440fx-2.4`` up to ``pc-i440fx-2.12`` (since 9.1)
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''
 

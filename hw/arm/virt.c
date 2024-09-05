@@ -3197,12 +3197,6 @@ static void virt_machine_class_init(ObjectClass *oc, void *data)
                                           "Set off to disable passing random or "
                                           "non-deterministic dtb nodes to guest");
 
-    object_class_property_add_bool(oc, "dtb-kaslr-seed",
-                                   virt_get_dtb_randomness,
-                                   virt_set_dtb_randomness);
-    object_class_property_set_description(oc, "dtb-kaslr-seed",
-                                          "Deprecated synonym of dtb-randomness");
-
     object_class_property_add_str(oc, "x-oem-id",
                                   virt_get_oem_id,
                                   virt_set_oem_id);

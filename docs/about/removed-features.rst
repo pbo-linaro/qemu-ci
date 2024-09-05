@@ -924,6 +924,14 @@ The m68k ``dummy`` machine (removed in 2.9)
 
 Use the ``none`` machine with the ``loader`` device instead.
 
+Arm ``virt`` machine ``dtb-kaslr-seed`` property (removed in 9.2)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+The ``dtb-kaslr-seed`` property on the ``virt`` board has been
+deprecated; use the new name ``dtb-randomness`` instead. The new name
+better reflects the way this property affects all random data within
+the device tree blob, not just the ``kaslr-seed`` node.
+
 ``xlnx-ep108`` (removed in 3.0)
 '''''''''''''''''''''''''''''''
 

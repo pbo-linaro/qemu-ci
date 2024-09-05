@@ -181,9 +181,6 @@ dtb-randomness
   DTB to be non-deterministic. It would be the responsibility of
   the firmware to come up with a seed and pass it on if it wants to.
 
-dtb-kaslr-seed
-  A deprecated synonym for dtb-randomness.
-
 Linux guest kernel configuration
 """"""""""""""""""""""""""""""""
 
