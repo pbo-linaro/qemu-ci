@@ -424,6 +424,7 @@ fi
 # Note that this case should only have supported host CPUs, not guests.
 # Please keep it sorted and synchronized with meson.build's host_arch.
 host_arch=
+host_bits=64
 linux_arch=
 case "$cpu" in
   aarch64)
@@ -434,12 +435,14 @@ case "$cpu" in
   armv*b|armv*l|arm)
     cpu=arm
     host_arch=arm
+    host_bits=32
     linux_arch=arm
     ;;
 
   i386|i486|i586|i686)
     cpu="i386"
     host_arch=i386
+    host_bits=32
     linux_arch=x86
     CPU_CFLAGS="-m32"
     ;;
@@ -458,11 +461,13 @@ case "$cpu" in
   mips*)
     cpu=mips
     host_arch=mips
+    host_bits=32
     linux_arch=mips
     ;;
 
   ppc)
     host_arch=ppc
+    host_bits=32
     linux_arch=powerpc
     CPU_CFLAGS="-m32"
     ;;
@@ -480,11 +485,13 @@ case "$cpu" in
 
   riscv32 | riscv64)
     host_arch=riscv
+    host_bits=32
     linux_arch=riscv
     ;;
 
   s390)
     linux_arch=s390
+    host_bits=32
     CPU_CFLAGS="-m31"
     ;;
   s390x)
@@ -495,6 +502,7 @@ case "$cpu" in
 
   sparc|sun4[cdmuv])
     cpu=sparc
+    host_bits=32
     CPU_CFLAGS="-m32 -mv8plus -mcpu=ultrasparc"
     ;;
   sparc64)
@@ -505,6 +513,7 @@ case "$cpu" in
   x32)
     cpu="x86_64"
     host_arch=x86_64
+    host_bits=32
     linux_arch=x86
     CPU_CFLAGS="-mx32"
     ;;
@@ -1028,7 +1037,7 @@ if test "$static" = "yes" ; then
   fi
   plugins="no"
 fi
-if test "$plugins" != "no"; then
+if test "$plugins" != "no" && test host_bits = 64; then
   plugins=yes
   subdirs="$subdirs contrib/plugins"
 fi
