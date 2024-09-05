@@ -77,6 +77,10 @@ struct RDTState {
 struct RDTStateClass {
 };
 
+uint32_t rdt_get_cpuid_10_1_edx_cos_max(void) { return RDT_MAX_L3_MASK_COUNT; }
+uint32_t rdt_get_cpuid_10_2_edx_cos_max(void) { return RDT_MAX_L2_MASK_COUNT; }
+uint32_t rdt_get_cpuid_10_3_edx_cos_max(void) { return RDT_MAX_MBA_THRTL_COUNT; }
+
 bool rdt_associate_rmid_cos(uint64_t msr_ia32_pqr_assoc) {
     X86CPU *cpu = X86_CPU(current_cpu);
     RDTStatePerCore *rdt = cpu->rdt;
@@ -86,7 +90,7 @@ bool rdt_associate_rmid_cos(uint64_t msr_ia32_pqr_assoc) {
     uint32_t rmid = msr_ia32_pqr_assoc & 0xffff;
 
     if (cos_id > RDT_MAX_L3_MASK_COUNT || cos_id > RDT_MAX_L2_MASK_COUNT ||
-    cos_id > RDT_MAX_MBA_THRTL_COUNT || rmid > rdt_max_rmid(rdt)) {
+        cos_id > RDT_MAX_MBA_THRTL_COUNT || rmid > rdt_max_rmid(rdt)) {
         return false;
     }
 
@@ -104,8 +108,7 @@ uint32_t rdt_read_l3_mask(uint32_t pos)
     X86CPU *cpu = X86_CPU(current_cpu);
     RDTStatePerCore *rdt = cpu->rdt;
 
-    uint32_t val = rdt->rdtstate->msr_L3_ia32_mask_n[pos];
-    return val;
+    return rdt->rdtstate->msr_L3_ia32_mask_n[pos];
 }
 
 uint32_t rdt_read_l2_mask(uint32_t pos)
@@ -113,8 +116,7 @@ uint32_t rdt_read_l2_mask(uint32_t pos)
     X86CPU *cpu = X86_CPU(current_cpu);
     RDTStatePerCore *rdt = cpu->rdt;
 
-    uint32_t val = rdt->rdtstate->msr_L2_ia32_mask_n[pos];
-    return val;
+    return rdt->rdtstate->msr_L2_ia32_mask_n[pos];
 }
 
 uint32_t rdt_read_mba_thrtl(uint32_t pos)
@@ -122,8 +124,7 @@ uint32_t rdt_read_mba_thrtl(uint32_t pos)
     X86CPU *cpu = X86_CPU(current_cpu);
     RDTStatePerCore *rdt = cpu->rdt;
 
-    uint32_t val = rdt->rdtstate->ia32_L2_qos_ext_bw_thrtl_n[pos];
-    return val;
+    return rdt->rdtstate->ia32_L2_qos_ext_bw_thrtl_n[pos];
 }
 
 void rdt_write_msr_l3_mask(uint32_t pos, uint32_t val) {
@@ -153,7 +154,8 @@ uint32_t rdt_max_rmid(RDTStatePerCore *rdt)
     return rdtdev->rmids - 1;
 }
 
-uint64_t rdt_read_event_count(RDTStatePerCore *rdtInstance, uint32_t rmid, uint32_t event_id)
+uint64_t rdt_read_event_count(RDTStatePerCore *rdtInstance,
+                              uint32_t rmid, uint32_t event_id)
 {
     CPUState *cs;
     RDTMonitor *mon;
@@ -181,13 +183,10 @@ uint64_t rdt_read_event_count(RDTStatePerCore *rdtInstance, uint32_t rmid, uint3
     switch (event_id) {
         case RDT_EVENT_L3_OCCUPANCY:
             return count_l3 == 0 ? QM_CTR_UNAVAILABLE : count_l3;
-            break;
         case RDT_EVENT_L3_REMOTE_BW:
             return count_remote == 0 ? QM_CTR_UNAVAILABLE : count_remote;
-            break;
         case RDT_EVENT_L3_LOCAL_BW:
             return count_local == 0 ? QM_CTR_UNAVAILABLE : count_local;
-            break;
         default:
             return QM_CTR_ERROR;
     }
@@ -247,4 +246,3 @@ static void rdt_class_init(ObjectClass *klass, void *data)
 
     device_class_set_props(dc, rdt_properties);
 }
-
