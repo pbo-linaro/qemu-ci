@@ -32,7 +32,11 @@ TIMEOUT_MULTIPLIER = 1
 ifneq ($(SPEED), quick)
 .mtestargs += --setup $(SPEED)
 endif
+# If the user set MESON_TESTTHREADS then don't override that preference by
+# passing --num-processes to 'meson test'
+ifeq ($(MESON_TESTTHREADS),)
 .mtestargs += $(subst -j,--num-processes , $(filter-out -j, $(lastword -j1 $(filter -j%, $(MAKEFLAGS)))))
+endif
 
 .check.mtestargs = $(MTESTARGS) $(.mtestargs) $(if $(V),--verbose,--print-errorlogs)
 .bench.mtestargs = $(MTESTARGS) $(.mtestargs) --benchmark --verbose''')
