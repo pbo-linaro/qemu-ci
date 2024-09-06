@@ -70,6 +70,9 @@ cross-i686-tci:
     ACCEL: tcg-interpreter
     EXTRA_CONFIGURE_OPTS: --target-list=i386-softmmu,i386-linux-user,aarch64-softmmu,aarch64-linux-user,ppc-softmmu,ppc-linux-user --disable-plugins --disable-kvm
     MAKE_CHECK_ARGS: check check-tcg
+    # Force 'meson test' to run only one test at once, to
+    # see whether this reduces the flakiness of this CI job.
+    MESON_TESTTHREADS: 1
 
 cross-mipsel-system:
   extends: .cross_system_build_job
