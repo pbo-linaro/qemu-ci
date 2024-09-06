@@ -82,7 +82,10 @@ OBJECT_DECLARE_SIMPLE_TYPE(AcpiGedState, ACPI_GED)
 #define ACPI_GED_RESET_VALUE       0x42
 
 /* ACPI_GED_REG_SLEEP_CTL.SLP_TYP value for S5 (aka poweroff) */
+#define ACPI_GED_SLP_TYP_SHIFT     0x02
 #define ACPI_GED_SLP_TYP_S5        0x05
+#define ACPI_GED_SLP_TYP_MASK      0x1C
+#define ACPI_GED_SLP_ENABLE        0x20
 
 #define GED_DEVICE      "GED"
 #define AML_GED_EVT_REG "EREG"
