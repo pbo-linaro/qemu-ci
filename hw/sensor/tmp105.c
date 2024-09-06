@@ -133,7 +133,7 @@ static void tmp105_read(TMP105State *s)
         break;
 
     case TMP105_REG_CONFIG:
-        s->buf[s->len++] = s->config;
+        s->buf[s->len++] = s->config & 0x7f;
         break;
 
     case TMP105_REG_T_LOW:
