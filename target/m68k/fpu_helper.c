@@ -170,7 +170,7 @@ void HELPER(update_fpsr)(CPUM68KState *env, FPReg *pval)
     floatx80 val = pval->d;
     int soft;
 
-    fpsr &= ~FPSR_CC_MASK;
+    fpsr &= ~(FPSR_CC_MASK | FPSR_EXC_MASK);
 
     if (floatx80_is_neg(val)) {
         fpsr |= FPSR_CC_N;
@@ -187,20 +187,22 @@ void HELPER(update_fpsr)(CPUM68KState *env, FPReg *pval)
     if (soft) {
         set_float_exception_flags(0, &env->fp_status);
 
-        if (soft & float_flag_invalid) {
-            fpsr |= FPSR_AEXP_IOP;
+        if (soft & float_flag_invalid_snan) {
+            fpsr |= FPSR_EXC_SNAN | FPSR_AEXP_IOP;
+        } else if (soft & float_flag_invalid) {
+            fpsr |= FPSR_EXC_OPERR | FPSR_AEXP_IOP;
         }
         if (soft & float_flag_overflow) {
-            fpsr |= FPSR_AEXP_OVFL;
+            fpsr |= FPSR_EXC_OVFL | FPSR_AEXP_OVFL;
         }
         if (soft & (float_flag_underflow | float_flag_output_denormal)) {
-            fpsr |= FPSR_AEXP_UNFL;
+            fpsr |= FPSR_EXC_UNFL | FPSR_AEXP_UNFL;
         }
         if (soft & float_flag_divbyzero) {
-            fpsr |= FPSR_AEXP_DZ;
+            fpsr |= FPSR_EXC_DZ | FPSR_AEXP_DZ;
         }
         if (soft & float_flag_inexact) {
-            fpsr |= FPSR_AEXC_INEX;
+            fpsr |= FPSR_EXC_INEX2 | FPSR_AEXC_INEX;
         }
     }
 
