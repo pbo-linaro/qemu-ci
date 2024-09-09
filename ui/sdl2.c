@@ -42,6 +42,7 @@ static SDL_Surface *guest_sprite_surface;
 static int gui_grab; /* if true, all keyboard/mouse events are grabbed */
 static bool alt_grab;
 static bool ctrl_grab;
+static bool win32_kbd_grab;
 
 static int gui_saved_grab;
 static int gui_fullscreen;
@@ -202,6 +203,19 @@ static void sdl_update_caption(struct sdl2_console *scon)
     }
 }
 
+static void *sdl2_win32_get_hwnd(struct sdl2_console *scon)
+{
+#ifdef CONFIG_WIN32
+    SDL_SysWMinfo info;
+
+    SDL_VERSION(&info.version);
+    if (SDL_GetWindowWMInfo(scon->real_window, &info)) {
+        return info.info.win.window;
+    }
+#endif
+    return NULL;
+}
+
 static void sdl_hide_cursor(struct sdl2_console *scon)
 {
     if (scon->opts->has_show_cursor && scon->opts->show_cursor) {
@@ -259,9 +273,16 @@ static void sdl_grab_start(struct sdl2_console *scon)
     } else {
         sdl_hide_cursor(scon);
     }
+    /*
+     * Windows: To ensure that QEMU's low level keyboard hook procedure is
+     * called before SDL2's, the QEMU procedure must first be removed and
+     * then the SDL2 and QEMU procedures must be installed in this order.
+     */
+    win32_kbd_set_window(NULL);
     SDL_SetWindowGrab(scon->real_window, SDL_TRUE);
+    win32_kbd_set_window(sdl2_win32_get_hwnd(scon));
     gui_grab = 1;
-    win32_kbd_set_grab(true);
+    win32_kbd_set_grab(win32_kbd_grab);
     sdl_update_caption(scon);
 }
 
@@ -368,19 +389,6 @@ static int get_mod_state(void)
     } else {
         return (mod & gui_grab_code) == gui_grab_code;
     }
-}
-
-static void *sdl2_win32_get_hwnd(struct sdl2_console *scon)
-{
-#ifdef CONFIG_WIN32
-    SDL_SysWMinfo info;
-
-    SDL_VERSION(&info.version);
-    if (SDL_GetWindowWMInfo(scon->real_window, &info)) {
-        return info.info.win.window;
-    }
-#endif
-    return NULL;
 }
 
 static void handle_keydown(SDL_Event *ev)
@@ -605,7 +613,7 @@ static void handle_windowevent(SDL_Event *ev)
         sdl2_redraw(scon);
         break;
     case SDL_WINDOWEVENT_FOCUS_GAINED:
-        win32_kbd_set_grab(gui_grab);
+        win32_kbd_set_grab(win32_kbd_grab && gui_grab);
         if (qemu_console_is_graphic(scon->dcl.con)) {
             win32_kbd_set_window(sdl2_win32_get_hwnd(scon));
         }
@@ -849,6 +857,7 @@ static void sdl2_display_init(DisplayState *ds, DisplayOptions *o)
     uint8_t data = 0;
     int i;
     SDL_SysWMinfo info;
+    SDL_version ver;
     SDL_Surface *icon = NULL;
     char *dir;
 
@@ -866,10 +875,7 @@ static void sdl2_display_init(DisplayState *ds, DisplayOptions *o)
 #ifdef SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR /* only available since SDL 2.0.8 */
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
 #endif
-#ifndef CONFIG_WIN32
-    /* QEMU uses its own low level keyboard hook procedure on Windows */
     SDL_SetHint(SDL_HINT_GRAB_KEYBOARD, "1");
-#endif
 #ifdef SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED
     SDL_SetHint(SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED, "0");
 #endif
@@ -877,6 +883,17 @@ static void sdl2_display_init(DisplayState *ds, DisplayOptions *o)
     SDL_EnableScreenSaver();
     memset(&info, 0, sizeof(info));
     SDL_VERSION(&info.version);
+    /*
+     * Since version 2.16.0 under Windows, SDL2 has its own low level
+     * keyboard hook procedure to grab the keyboard. The remaining task of
+     * QEMU's low level keyboard hook procedure is to filter out the special
+     * left Control up/down key event for every Alt Gr key event on keyboards
+     * with an international layout.
+     */
+    SDL_GetVersion(&ver);
+    if (ver.major == 2 && ver.minor < 16) {
+        win32_kbd_grab = true;
+    }
 
     gui_fullscreen = o->has_full_screen && o->full_screen;
 
