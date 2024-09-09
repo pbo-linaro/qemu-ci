@@ -2560,7 +2560,7 @@ DISAS_INSN(lea)
     TCGv tmp;
 
     reg = AREG(insn, 9);
-    tmp = gen_lea(env, s, insn, OS_LONG);
+    tmp = gen_lea(env, s, insn, OS_UNSIZED);
     if (IS_NULL_QREG(tmp)) {
         gen_addr_fault(s);
         return;
@@ -2657,7 +2657,7 @@ DISAS_INSN(pea)
 {
     TCGv tmp;
 
-    tmp = gen_lea(env, s, insn, OS_LONG);
+    tmp = gen_lea(env, s, insn, OS_UNSIZED);
     if (IS_NULL_QREG(tmp)) {
         gen_addr_fault(s);
         return;
@@ -2908,7 +2908,7 @@ DISAS_INSN(jump)
      * Load the target address first to ensure correct exception
      * behavior.
      */
-    tmp = gen_lea(env, s, insn, OS_LONG);
+    tmp = gen_lea(env, s, insn, OS_UNSIZED);
     if (IS_NULL_QREG(tmp)) {
         gen_addr_fault(s);
         return;
