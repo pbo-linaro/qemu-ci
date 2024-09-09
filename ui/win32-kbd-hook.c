@@ -91,6 +91,9 @@ void win32_kbd_set_window(void *hwnd)
             win32_unhook_notifier.notify = keyboard_hook_unhook;
             qemu_add_exit_notifier(&win32_unhook_notifier);
         }
+    } else if (!hwnd && win32_keyboard_hook) {
+        keyboard_hook_unhook(&win32_unhook_notifier, NULL);
+        qemu_remove_exit_notifier(&win32_unhook_notifier);
     }
 
     win32_window = hwnd;
