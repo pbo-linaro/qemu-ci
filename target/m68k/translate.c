@@ -4732,7 +4732,7 @@ static void gen_load_fcr(DisasContext *s, TCGv res, int reg)
         tcg_gen_movi_i32(res, 0);
         break;
     case M68K_FPSR:
-        gen_helper_get_fpsr(res, tcg_env);
+        tcg_gen_ld_i32(res, tcg_env, offsetof(CPUM68KState, fpsr));
         break;
     case M68K_FPCR:
         tcg_gen_ld_i32(res, tcg_env, offsetof(CPUM68KState, fpcr));
@@ -4746,7 +4746,7 @@ static void gen_store_fcr(DisasContext *s, TCGv val, int reg)
     case M68K_FPIAR:
         break;
     case M68K_FPSR:
-        gen_helper_set_fpsr(tcg_env, val);
+        tcg_gen_st_i32(val, tcg_env, offsetof(CPUM68KState, fpsr));
         break;
     case M68K_FPCR:
         gen_helper_set_fpcr(tcg_env, val);
@@ -4965,7 +4965,7 @@ DISAS_INSN(fpu)
                       EA_STORE, IS_USER(s)) == -1) {
             gen_addr_fault(s);
         }
-        gen_helper_ftst(tcg_env, cpu_src);
+        gen_helper_update_fpsr(tcg_env, cpu_src);
         return;
     case 4: /* fmove to control register.  */
     case 5: /* fmove from control register.  */
@@ -5159,12 +5159,12 @@ DISAS_INSN(fpu)
         gen_helper_fcmp(tcg_env, cpu_src, cpu_dest);
         return;
     case 0x3a: /* ftst */
-        gen_helper_ftst(tcg_env, cpu_src);
+        gen_helper_update_fpsr(tcg_env, cpu_src);
         return;
     default:
         goto undef;
     }
-    gen_helper_ftst(tcg_env, cpu_dest);
+    gen_helper_update_fpsr(tcg_env, cpu_dest);
     return;
 undef:
     /* FIXME: Is this right for offset addressing modes?  */
