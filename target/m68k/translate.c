@@ -767,8 +767,7 @@ static TCGv gen_lea_mode(CPUM68KState *env, DisasContext *s,
         tcg_gen_movi_i32(tmp, offset);
         return tmp;
     }
-    /* Should never happen.  */
-    return NULL_QREG;
+    g_assert_not_reached();
 }
 
 static TCGv gen_lea(CPUM68KState *env, DisasContext *s, uint16_t insn,
@@ -892,8 +891,7 @@ static TCGv gen_ea_mode(CPUM68KState *env, DisasContext *s, int mode, int reg0,
             return NULL_QREG;
         }
     }
-    /* Should never happen.  */
-    return NULL_QREG;
+    g_assert_not_reached();
 }
 
 static TCGv_ptr gen_fp_ptr(int freg)
