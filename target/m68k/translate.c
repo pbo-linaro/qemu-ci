@@ -4955,6 +4955,7 @@ DISAS_INSN(fpu)
             TCGv rom_offset = tcg_constant_i32(opmode);
             cpu_dest = gen_fp_ptr(REG(ext, 7));
             gen_helper_fconst(tcg_env, cpu_dest, rom_offset);
+            gen_helper_update_fpsr(tcg_env, cpu_dest);
             return;
         }
         break;
