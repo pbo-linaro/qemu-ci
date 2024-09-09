@@ -1023,6 +1023,7 @@ static bool gen_load_mode_fp(DisasContext *s, uint16_t insn, int opsize,
         return true;
 
     case 1: /* Address register direct.  */
+        gen_addr_fault(s);
         return false;
 
     case 7: /* Other */
@@ -1079,6 +1080,7 @@ static bool gen_load_mode_fp(DisasContext *s, uint16_t insn, int opsize,
     case 6: /* Indirect index + displacement.  */
         addr = gen_lea_mode(s, mode, reg0, opsize);
         if (IS_NULL_QREG(addr)) {
+            gen_addr_fault(s);
             return false;
         }
         gen_load_fp(s, opsize, addr, fp, index);
@@ -1112,6 +1114,7 @@ static bool gen_store_mode_fp(DisasContext *s, uint16_t insn, int opsize,
         return true;
 
     case 1: /* Address register direct.  */
+        gen_addr_fault(s);
         return false;
 
     case 2: /* Indirect register */
@@ -1122,6 +1125,7 @@ static bool gen_store_mode_fp(DisasContext *s, uint16_t insn, int opsize,
     case 7: /* Other */
         addr = gen_lea_mode(s, mode, reg0, opsize);
         if (IS_NULL_QREG(addr)) {
+            gen_addr_fault(s);
             return false;
         }
         gen_store_fp(s, opsize, addr, fp, index);
@@ -4887,10 +4891,9 @@ DISAS_INSN(fpu)
     case 3: /* fmove out */
         cpu_src = gen_fp_ptr(REG(ext, 7));
         opsize = ext_opsize(ext, 10);
-        if (!gen_store_mode_fp(s, insn, opsize, cpu_src, IS_USER(s))) {
-            gen_addr_fault(s);
+        if (gen_store_mode_fp(s, insn, opsize, cpu_src, IS_USER(s))) {
+            gen_helper_update_fpsr(tcg_env, cpu_src);
         }
-        gen_helper_update_fpsr(tcg_env, cpu_src);
         return;
     case 4: /* fmove to control register.  */
     case 5: /* fmove from control register.  */
@@ -4909,7 +4912,6 @@ DISAS_INSN(fpu)
         opsize = ext_opsize(ext, 10);
         cpu_src = gen_fp_result_ptr();
         if (!gen_load_mode_fp(s, insn, opsize, cpu_src, IS_USER(s))) {
-            gen_addr_fault(s);
             return;
         }
     } else {
