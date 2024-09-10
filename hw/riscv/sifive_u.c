@@ -60,6 +60,7 @@
 #include "sysemu/device_tree.h"
 #include "sysemu/runstate.h"
 #include "sysemu/sysemu.h"
+#include "include/hw/misc/sifive_u_pmu.h"
 
 #include <libfdt.h>
 
@@ -92,6 +93,17 @@ static const MemMapEntry sifive_u_memmap[] = {
 
 #define OTP_SERIAL          1
 #define GEM_REVISION        0x10070109
+
+static void create_fdt_pmu(MachineState *s)
+{
+    g_autofree char *pmu_name = g_strdup_printf("/pmu");
+    MachineState *ms = MACHINE(s);
+    RISCVCPU *hart = RISCV_CPU(qemu_get_cpu(0));
+
+    qemu_fdt_add_subnode(ms->fdt, pmu_name);
+    qemu_fdt_setprop_string(ms->fdt, pmu_name, "compatible", "riscv,pmu");
+    sifive_u_pmu_generate_fdt_node(ms->fdt, hart->pmu_avail_ctrs, pmu_name);
+}
 
 static void create_fdt(SiFiveUState *s, const MemMapEntry *memmap,
                        bool is_32_bit)
@@ -499,6 +511,8 @@ static void create_fdt(SiFiveUState *s, const MemMapEntry *memmap,
     qemu_fdt_setprop_string(fdt, "/aliases", "serial0", nodename);
 
     g_free(nodename);
+
+    create_fdt_pmu(ms);
 }
 
 static void sifive_u_machine_reset(void *opaque, int n, int level)

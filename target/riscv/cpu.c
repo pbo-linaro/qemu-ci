@@ -38,6 +38,7 @@
 #include "kvm/kvm_riscv.h"
 #include "tcg/tcg-cpu.h"
 #include "tcg/tcg.h"
+#include "include/hw/misc/sifive_u_pmu.h"
 
 /* RISC-V CPU definitions */
 static const char riscv_single_letter_exts[] = "IEMAFDQCBPVH";
@@ -477,6 +478,15 @@ static void riscv_max_cpu_init(Object *obj)
 #endif
 }
 
+#ifndef CONFIG_USER_ONLY
+static void riscv_sifive_u_hart_reg_pmu_cb(CPURISCVState *env)
+{
+    env->pmu_vendor_support = riscv_sifive_u_supported_events;
+    env->pmu_ctr_write = riscv_sifive_u_pmu_ctr_write;
+    env->pmu_ctr_read = riscv_sifive_u_pmu_ctr_read;
+}
+#endif
+
 #if defined(TARGET_RISCV64)
 static void rv64_base_cpu_init(Object *obj)
 {
@@ -498,9 +508,12 @@ static void rv64_sifive_u_cpu_init(Object *obj)
     RISCVCPU *cpu = RISCV_CPU(obj);
     CPURISCVState *env = &cpu->env;
     riscv_cpu_set_misa_ext(env, RVI | RVM | RVA | RVF | RVD | RVC | RVS | RVU);
-    env->priv_ver = PRIV_VERSION_1_10_0;
+    env->priv_ver = PRIV_VERSION_1_12_0;
 #ifndef CONFIG_USER_ONLY
     set_satp_mode_max_supported(RISCV_CPU(obj), VM_1_10_SV39);
+    if (!kvm_enabled()) {
+        riscv_sifive_u_hart_reg_pmu_cb(env);
+    }
 #endif
 
     /* inherited from parent obj via riscv_cpu_init() */
@@ -508,6 +521,8 @@ static void rv64_sifive_u_cpu_init(Object *obj)
     cpu->cfg.ext_zicsr = true;
     cpu->cfg.mmu = true;
     cpu->cfg.pmp = true;
+    cpu->cfg.ext_sscofpmf = true;
+    cpu->cfg.pmu_mask = MAKE_64BIT_MASK(3, 2);
 }
 
 static void rv64_sifive_e_cpu_init(Object *obj)
@@ -660,6 +675,9 @@ static void rv32_sifive_u_cpu_init(Object *obj)
     env->priv_ver = PRIV_VERSION_1_10_0;
 #ifndef CONFIG_USER_ONLY
     set_satp_mode_max_supported(RISCV_CPU(obj), VM_1_10_SV32);
+    if (!kvm_enabled()) {
+        riscv_sifive_u_hart_reg_pmu_cb(env);
+    }
 #endif
 
     /* inherited from parent obj via riscv_cpu_init() */
