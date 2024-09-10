@@ -1,6 +1,9 @@
 config RISCV_NUMA
     bool
 
+config RISCV_OPENSBI_DOMAIN
+    bool
+
 config IBEX
     bool
 
@@ -40,6 +43,7 @@ config RISCV_VIRT
     imply TPM_TIS_SYSBUS
     select DEVICE_TREE
     select RISCV_NUMA
+    select RISCV_OPENSBI_DOMAIN
     select GOLDFISH_RTC
     select PCI
     select PCI_EXPRESS_GENERIC_BRIDGE

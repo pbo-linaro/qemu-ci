@@ -357,6 +357,13 @@ F: target/riscv/XVentanaCondOps.decode
 F: target/riscv/insn_trans/trans_xventanacondops.c.inc
 F: disas/riscv-xventana*
 
+RISC-V OpenSBI domain support
+M: Gregor Haas <gregorhaas1997@gmail.com>
+L: qemu-riscv@nongnu.org
+S: Maintained
+F: hw/riscv/opensbi_domain.c
+F: include/hw/riscv/opensbi_domain.h
+
 RENESAS RX CPUs
 R: Yoshinori Sato <ysato@users.sourceforge.jp>
 S: Orphan
