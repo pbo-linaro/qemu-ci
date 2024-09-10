@@ -2,7 +2,7 @@
  * CRIS cpu parameters for qemu.
  *
  * Copyright (c) 2007 AXIS Communications AB
- * SPDX-License-Identifier: LGPL-2.0+
+ * SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
 #ifndef CRIS_CPU_PARAM_H
