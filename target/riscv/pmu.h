@@ -22,10 +22,20 @@
 #include "cpu.h"
 #include "qapi/error.h"
 
-bool riscv_pmu_ctr_monitor_instructions(CPURISCVState *env,
-                                        uint32_t target_ctr);
-bool riscv_pmu_ctr_monitor_cycles(CPURISCVState *env,
-                                  uint32_t target_ctr);
+#define RISCV_PMU_EVENT_NOT_PRESENTED -1
+
+#define RISCV_PMU_CTR_IS_HPM(x) (x > 2)
+#define RISCV_PMU_EVENT_IS_FIXED(x) ({              \
+    bool ret = false;                               \
+    if ((x) == RISCV_PMU_EVENT_HW_CPU_CYCLES ||     \
+        (x) == RISCV_PMU_EVENT_HW_INSTRUCTIONS) {   \
+        ret = true;                                 \
+    }                                               \
+    ret;                                            \
+})
+
+int riscv_pmu_get_event_by_ctr(CPURISCVState *env,
+                               uint32_t target_ctr);
 void riscv_pmu_timer_cb(void *priv);
 void riscv_pmu_init(RISCVCPU *cpu, Error **errp);
 int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
@@ -38,5 +48,6 @@ void riscv_pmu_update_fixed_ctrs(CPURISCVState *env, target_ulong newpriv,
                                  bool new_virt);
 RISCVException riscv_pmu_read_ctr(CPURISCVState *env, target_ulong *val,
                                   bool upper_half, uint32_t ctr_idx);
+bool riscv_pmu_counter_enabled(RISCVCPU *cpu, uint32_t ctr_idx);
 
 #endif /* RISCV_PMU_H */
