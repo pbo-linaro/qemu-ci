@@ -92,3 +92,13 @@ the images they need.
 * ``-bios <file>``
 
 Tells QEMU to load the specified file as the firmware.
+
+RISC-V Devices
+--------------
+
+There are some RISC-V specific devices that can be specified:
+
+.. toctree::
+    :maxdepth: 1
+
+    riscv/opensbi_domains

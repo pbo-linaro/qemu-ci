@@ -361,6 +361,7 @@ RISC-V OpenSBI domain support
 M: Gregor Haas <gregorhaas1997@gmail.com>
 L: qemu-riscv@nongnu.org
 S: Maintained
+F: docs/system/riscv/opensbi_domains.rst
 F: hw/riscv/opensbi_domain.c
 F: include/hw/riscv/opensbi_domain.h
 
