@@ -3117,7 +3117,7 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
 
     if (!vbasedev->mdev &&
         !pci_device_set_iommu_device(pdev, vbasedev->hiod, errp)) {
-        error_prepend(errp, "Failed to set iommu_device: ");
+        error_setg(errp, "Failed to set iommu_device: ");
         goto out_teardown;
     }
 
