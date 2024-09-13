@@ -2076,10 +2076,8 @@ static void *postcopy_ram_listen_thread(void *opaque)
      * got a bad migration state).
      */
     migration_incoming_state_destroy();
-    qemu_loadvm_state_cleanup();
 
     rcu_unregister_thread();
-    mis->have_listen_thread = false;
     postcopy_state_set(POSTCOPY_INCOMING_END);
 
     object_unref(OBJECT(migr));
@@ -2130,7 +2128,6 @@ static int loadvm_postcopy_handle_listen(MigrationIncomingState *mis)
         return -1;
     }
 
-    mis->have_listen_thread = true;
     postcopy_thread_create(mis, &mis->listen_thread, "mig/dst/listen",
                            postcopy_ram_listen_thread, QEMU_THREAD_DETACHED);
     trace_loadvm_postcopy_handle_listen("return");
@@ -2978,11 +2975,6 @@ int qemu_loadvm_state(QEMUFile *f)
 
     trace_qemu_loadvm_state_post_main(ret);
 
-    if (mis->have_listen_thread) {
-        /* Listen thread still going, can't clean up yet */
-        return ret;
-    }
-
     if (ret == 0) {
         ret = qemu_file_get_error(f);
     }
@@ -3022,7 +3014,6 @@ int qemu_loadvm_state(QEMUFile *f)
         }
     }
 
-    qemu_loadvm_state_cleanup();
     cpu_synchronize_all_post_init();
 
     return ret;
