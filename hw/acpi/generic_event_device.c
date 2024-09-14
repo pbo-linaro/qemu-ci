@@ -343,10 +343,11 @@ static const VMStateDescription vmstate_ged_state = {
 
 static const VMStateDescription vmstate_ghes = {
     .name = "acpi-ghes",
-    .version_id = 1,
-    .minimum_version_id = 1,
+    .version_id = 2,
+    .minimum_version_id = 2,
     .fields = (const VMStateField[]) {
         VMSTATE_UINT64(ghes_addr_le, AcpiGhesState),
+        VMSTATE_UINT64(hest_addr_le, AcpiGhesState),
         VMSTATE_END_OF_LIST()
     },
 };
@@ -354,13 +355,13 @@ static const VMStateDescription vmstate_ghes = {
 static bool ghes_needed(void *opaque)
 {
     AcpiGedState *s = opaque;
-    return s->ghes_state.ghes_addr_le;
+    return s->ghes_state.ghes_addr_le && s->ghes_state.hest_addr_le;
 }
 
 static const VMStateDescription vmstate_ghes_state = {
     .name = "acpi-ged/ghes",
-    .version_id = 1,
-    .minimum_version_id = 1,
+    .version_id = 2,
+    .minimum_version_id = 2,
     .needed = ghes_needed,
     .fields = (const VMStateField[]) {
         VMSTATE_STRUCT(ghes_state, AcpiGedState, 1,
