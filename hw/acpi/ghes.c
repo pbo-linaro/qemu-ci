@@ -62,6 +62,23 @@
 #define ACPI_GHES_GESB_SIZE                 20
 
 /*
+ * Offsets with regards to the start of the HEST table stored at
+ * ags->hest_addr_le, according with the memory layout map at
+ * docs/specs/acpi_hest_ghes.rst.
+ */
+
+/* ACPI 6.2: 18.3.2.8 Generic Hardware Error Source version 2
+ * Table 18-382 Generic Hardware Error Source version 2 (GHESv2) Structure
+ */
+#define HEST_GHES_V2_TABLE_SIZE  92
+#define GHES_ACK_OFFSET          (64 + GAS_ADDR_OFFSET)
+
+/* ACPI 6.2: 18.3.2.7: Generic Hardware Error Source
+ * Table 18-380: 'Error Status Address' field
+ */
+#define GHES_ERR_ST_ADDR_OFFSET  (20 + GAS_ADDR_OFFSET)
+
+/*
  * Values for error_severity field
  */
 enum AcpiGenericErrorSeverity {
@@ -401,11 +418,13 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
 
 int acpi_ghes_record_errors(uint8_t source_id, uint64_t physical_address)
 {
-    uint64_t error_block_addr, read_ack_register_addr, read_ack_register = 0;
-    uint64_t start_addr;
-    bool ret = -1;
+    uint64_t hest_read_ack_start_addr, read_ack_start_addr;
+    uint64_t hest_addr, cper_addr, err_source_struct;
+    uint64_t hest_err_block_addr, error_block_addr;
+    uint32_t i, ret;
     AcpiGedState *acpi_ged_state;
     AcpiGhesState *ags;
+    uint64_t read_ack;
 
     assert(source_id < ACPI_GHES_ERROR_SOURCE_COUNT);
 
@@ -414,44 +433,66 @@ int acpi_ghes_record_errors(uint8_t source_id, uint64_t physical_address)
     g_assert(acpi_ged_state);
     ags = &acpi_ged_state->ghes_state;
 
-    start_addr = le64_to_cpu(ags->ghes_addr_le);
+    hest_addr = le64_to_cpu(ags->hest_addr_le);
 
     if (!physical_address) {
         return -1;
     }
 
-    start_addr += source_id * sizeof(uint64_t);
+    err_source_struct = hest_addr + ACPI_GHES_ERROR_SOURCE_COUNT;
 
-    cpu_physical_memory_read(start_addr, &error_block_addr,
-                                sizeof(error_block_addr));
+    /*
+     * Currently, HEST Error source navigates only for GHESv2 tables
+     */
+    for (i = 0; i < ACPI_GHES_ERROR_SOURCE_COUNT; i++) {
+        uint64_t addr = err_source_struct;
+        uint16_t type, src_id;
 
-    error_block_addr = le64_to_cpu(error_block_addr);
+        cpu_physical_memory_read(addr, &type, sizeof(type));
 
-    read_ack_register_addr = start_addr +
-        ACPI_GHES_ERROR_SOURCE_COUNT * sizeof(uint64_t);
+        /* For now, we only know the size of GHESv2 table */
+        assert(type == ACPI_GHES_SOURCE_GENERIC_ERROR_V2);
 
-    cpu_physical_memory_read(read_ack_register_addr,
-                                &read_ack_register, sizeof(read_ack_register));
+        /* It is GHES. Compare CPER source address */
+        addr += sizeof(type);
+        cpu_physical_memory_read(addr, &src_id, sizeof(src_id));
 
-    /* zero means OSPM does not acknowledge the error */
-    if (!read_ack_register) {
-        error_report("OSPM does not acknowledge previous error,"
-            " so can not record CPER for current error anymore");
-    } else if (error_block_addr) {
-        read_ack_register = cpu_to_le64(0);
-        /*
-         * Clear the Read Ack Register, OSPM will write it to 1 when
-         * it acknowledges this error.
-         */
-        cpu_physical_memory_write(read_ack_register_addr,
-            &read_ack_register, sizeof(uint64_t));
+        if (src_id == source_id) {
+            break;
+        }
 
-        ret = acpi_ghes_record_mem_error(error_block_addr,
-                                            physical_address);
-    } else {
+        err_source_struct += HEST_GHES_V2_TABLE_SIZE;
+    }
+    if (i == ACPI_GHES_ERROR_SOURCE_COUNT) {
         error_report("can not find Generic Error Status Block");
+
+        return -1;
     }
 
+    /* Navigate though table address pointers */
+
+    hest_err_block_addr = err_source_struct + GHES_ERR_ST_ADDR_OFFSET;
+    hest_read_ack_start_addr = err_source_struct + GHES_ACK_OFFSET;
+
+    cpu_physical_memory_read(hest_err_block_addr, &error_block_addr,
+                             sizeof(error_block_addr));
+
+    cpu_physical_memory_read(error_block_addr, &cper_addr,
+                             sizeof(error_block_addr));
+
+    cpu_physical_memory_read(hest_read_ack_start_addr, &read_ack_start_addr,
+                             sizeof(read_ack_start_addr));
+
+    /* Update ACK offset to notify about a new error */
+
+    cpu_physical_memory_read(read_ack_start_addr,
+                             &read_ack, sizeof(read_ack));
+
+    read_ack = cpu_to_le64(0);
+    cpu_physical_memory_write(read_ack_start_addr,
+                              &read_ack, sizeof(read_ack));
+
+    ret = acpi_ghes_record_mem_error(error_block_addr, physical_address);
     return ret;
 }
 
