@@ -2660,6 +2660,7 @@ L: qemu-ppc@nongnu.org
 S: Odd Fixes
 F: hw/*/*xive*
 F: include/hw/*/*xive*
+F: tests/qtest/*xive*
 F: docs/*/*xive*
 
 Renesas peripherals
@@ -3326,7 +3327,7 @@ R: Paolo Bonzini <pbonzini@redhat.com>
 R: Bandan Das <bsd@redhat.com>
 R: Stefan Hajnoczi <stefanha@redhat.com>
 R: Thomas Huth <thuth@redhat.com>
-R: Darren Kenny <darren.kenny@oracle.com> 
+R: Darren Kenny <darren.kenny@oracle.com>
 R: Qiuhao Li <Qiuhao.Li@outlook.com>
 S: Maintained
 F: tests/qtest/fuzz/
