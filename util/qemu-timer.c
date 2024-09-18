@@ -291,11 +291,6 @@ QEMUClockType timerlist_get_clock(QEMUTimerList *timer_list)
     return timer_list->clock->type;
 }
 
-QEMUTimerList *qemu_clock_get_main_loop_timerlist(QEMUClockType type)
-{
-    return main_loop_tlg.tl[type];
-}
-
 void timerlist_notify(QEMUTimerList *timer_list)
 {
     if (timer_list->notify_cb) {
