@@ -19,6 +19,7 @@
 
 #define PNV_SPI_OPCODE_LO_NIBBLE(x) (x & 0x0F)
 #define PNV_SPI_MASKED_OPCODE(x) (x & 0xF0)
+#define PNV_SPI_FIFO_SIZE 16
 
 /*
  * Macro from include/hw/ppc/fdt.h
@@ -34,38 +35,6 @@
             exit(1);                                               \
         }                                                          \
     } while (0)
-
-/* PnvXferBuffer */
-typedef struct PnvXferBuffer {
-
-    uint32_t    len;
-    uint8_t    *data;
-
-} PnvXferBuffer;
-
-/* pnv_spi_xfer_buffer_methods */
-static PnvXferBuffer *pnv_spi_xfer_buffer_new(void)
-{
-    PnvXferBuffer *payload = g_malloc0(sizeof(*payload));
-
-    return payload;
-}
-
-static void pnv_spi_xfer_buffer_free(PnvXferBuffer *payload)
-{
-    free(payload->data);
-    free(payload);
-}
-
-static uint8_t *pnv_spi_xfer_buffer_write_ptr(PnvXferBuffer *payload,
-                uint32_t offset, uint32_t length)
-{
-    if (payload->len < (offset + length)) {
-        payload->len = offset + length;
-        payload->data = g_realloc(payload->data, payload->len);
-    }
-    return &payload->data[offset];
-}
 
 static bool does_rdr_match(PnvSpi *s)
 {
@@ -107,8 +76,8 @@ static uint8_t get_from_offset(PnvSpi *s, uint8_t offset)
     return byte;
 }
 
-static uint8_t read_from_frame(PnvSpi *s, uint8_t *read_buf, uint8_t nr_bytes,
-                uint8_t ecc_count, uint8_t shift_in_count)
+static uint8_t read_from_frame(PnvSpi *s, uint8_t nr_bytes, uint8_t ecc_count,
+                uint8_t shift_in_count)
 {
     uint8_t byte;
     int count = 0;
@@ -118,8 +87,8 @@ static uint8_t read_from_frame(PnvSpi *s, uint8_t *read_buf, uint8_t nr_bytes,
         if ((ecc_count != 0) &&
             (shift_in_count == (PNV_SPI_REG_SIZE + ecc_count))) {
             shift_in_count = 0;
-        } else {
-            byte = read_buf[count];
+        } else if (!fifo8_is_empty(&s->rx_fifo)) {
+            byte = fifo8_pop(&s->rx_fifo);
             trace_pnv_spi_shift_rx(byte, count);
             s->regs[SPI_RCV_DATA_REG] = (s->regs[SPI_RCV_DATA_REG] << 8) | byte;
         }
@@ -128,7 +97,7 @@ static uint8_t read_from_frame(PnvSpi *s, uint8_t *read_buf, uint8_t nr_bytes,
     return shift_in_count;
 }
 
-static void spi_response(PnvSpi *s, int bits, PnvXferBuffer *rsp_payload)
+static void spi_response(PnvSpi *s)
 {
     uint8_t ecc_count;
     uint8_t shift_in_count;
@@ -144,13 +113,13 @@ static void spi_response(PnvSpi *s, int bits, PnvXferBuffer *rsp_payload)
      * First check that the response payload is the exact same
      * number of bytes as the request payload was
      */
-    if (rsp_payload->len != (s->N1_bytes + s->N2_bytes)) {
+    if ((&s->rx_fifo)->num != (s->N1_bytes + s->N2_bytes)) {
         qemu_log_mask(LOG_GUEST_ERROR, "Invalid response payload size in "
                        "bytes, expected %d, got %d\n",
-                       (s->N1_bytes + s->N2_bytes), rsp_payload->len);
+                       (s->N1_bytes + s->N2_bytes), (&s->rx_fifo)->num);
     } else {
         uint8_t ecc_control;
-        trace_pnv_spi_rx_received(rsp_payload->len);
+        trace_pnv_spi_rx_received((&s->rx_fifo)->num);
         trace_pnv_spi_log_Ncounts(s->N1_bits, s->N1_bytes, s->N1_tx,
                         s->N1_rx, s->N2_bits, s->N2_bytes, s->N2_tx, s->N2_rx);
         /*
@@ -175,14 +144,13 @@ static void spi_response(PnvSpi *s, int bits, PnvXferBuffer *rsp_payload)
         /* Handle the N1 portion of the frame first */
         if (s->N1_rx != 0) {
             trace_pnv_spi_rx_read_N1frame();
-            shift_in_count = read_from_frame(s, &rsp_payload->data[0],
-                            s->N1_bytes, ecc_count, shift_in_count);
+            shift_in_count = read_from_frame(s, s->N1_bytes,
+                            ecc_count, shift_in_count);
         }
         /* Handle the N2 portion of the frame */
         if (s->N2_rx != 0) {
             trace_pnv_spi_rx_read_N2frame();
-            shift_in_count = read_from_frame(s,
-                            &rsp_payload->data[s->N1_bytes], s->N2_bytes,
+            shift_in_count = read_from_frame(s, s->N2_bytes,
                             ecc_count, shift_in_count);
         }
         if ((s->N1_rx + s->N2_rx) > 0) {
@@ -210,34 +178,36 @@ static void spi_response(PnvSpi *s, int bits, PnvXferBuffer *rsp_payload)
     } /* end of else */
 } /* end of spi_response() */
 
-static void transfer(PnvSpi *s, PnvXferBuffer *payload)
+static void transfer(PnvSpi *s)
 {
-    uint32_t tx;
-    uint32_t rx;
-    PnvXferBuffer *rsp_payload = NULL;
+    uint32_t tx, rx, payload_len;
+    uint8_t rx_byte;
 
-    rsp_payload = pnv_spi_xfer_buffer_new();
-    for (int offset = 0; offset < payload->len; offset += s->transfer_len) {
+    payload_len = (&s->tx_fifo)->num;
+    for (int offset = 0; offset < payload_len; offset += s->transfer_len) {
         tx = 0;
         for (int i = 0; i < s->transfer_len; i++) {
-            if ((offset + i) >= payload->len) {
+            if ((offset + i) >= payload_len) {
                 tx <<= 8;
-            } else {
-                tx = (tx << 8) | payload->data[offset + i];
+            } else if (!fifo8_is_empty(&s->tx_fifo)) {
+                tx = (tx << 8) | fifo8_pop(&s->tx_fifo);
             }
         }
         rx = ssi_transfer(s->ssi_bus, tx);
         for (int i = 0; i < s->transfer_len; i++) {
-            if ((offset + i) >= payload->len) {
+            if ((offset + i) >= payload_len) {
                 break;
             }
-            *(pnv_spi_xfer_buffer_write_ptr(rsp_payload, rsp_payload->len, 1)) =
-                    (rx >> (8 * (s->transfer_len - 1) - i * 8)) & 0xFF;
+            rx_byte = (rx >> (8 * (s->transfer_len - 1) - i * 8)) & 0xFF;
+            if (!fifo8_is_full(&s->rx_fifo)) {
+                fifo8_push(&s->rx_fifo, rx_byte);
+            }
         }
     }
-    if (rsp_payload != NULL) {
-        spi_response(s, s->N1_bits, rsp_payload);
-    }
+    spi_response(s);
+    /* Reset fifo for next frame */
+    fifo8_reset(&s->tx_fifo);
+    fifo8_reset(&s->rx_fifo);
 }
 
 static inline uint8_t get_seq_index(PnvSpi *s)
@@ -348,19 +318,10 @@ static void calculate_N1(PnvSpi *s, uint8_t opcode)
 /*
  * Shift_N1 operation handler method
  */
-static bool operation_shiftn1(PnvSpi *s, uint8_t opcode,
-                       PnvXferBuffer **payload, bool send_n1_alone)
+static bool operation_shiftn1(PnvSpi *s, uint8_t opcode, bool send_n1_alone)
 {
     uint8_t n1_count;
     bool stop = false;
-
-    /*
-     * If there isn't a current payload left over from a stopped sequence
-     * create a new one.
-     */
-    if (*payload == NULL) {
-        *payload = pnv_spi_xfer_buffer_new();
-    }
     /*
      * Use a combination of N1 counters to build the N1 portion of the
      * transmit payload.
@@ -411,9 +372,10 @@ static bool operation_shiftn1(PnvSpi *s, uint8_t opcode,
                  */
                 uint8_t n1_byte = 0x00;
                 n1_byte = get_from_offset(s, n1_count);
-                trace_pnv_spi_tx_append("n1_byte", n1_byte, n1_count);
-                *(pnv_spi_xfer_buffer_write_ptr(*payload, (*payload)->len, 1)) =
-                        n1_byte;
+                if (!fifo8_is_full(&s->tx_fifo)) {
+                    trace_pnv_spi_tx_append("n1_byte", n1_byte, n1_count);
+                    fifo8_push(&s->tx_fifo, n1_byte);
+                }
             } else {
                 /*
                  * We hit a shift_n1 opcode TX but the TDR is empty, tell the
@@ -440,10 +402,9 @@ static bool operation_shiftn1(PnvSpi *s, uint8_t opcode,
                                 "set for receive but RDR is full");
                 stop = true;
                 break;
-            } else {
+            } else if (!fifo8_is_full(&s->tx_fifo)) {
                 trace_pnv_spi_tx_append_FF("n1_byte");
-                *(pnv_spi_xfer_buffer_write_ptr(*payload, (*payload)->len, 1))
-                        = 0xff;
+                fifo8_push(&s->tx_fifo, 0xff);
             }
         }
         n1_count++;
@@ -484,15 +445,13 @@ static bool operation_shiftn1(PnvSpi *s, uint8_t opcode,
      */
     if (send_n1_alone && !stop) {
         /* We have a TX and a full TDR or an RX and an empty RDR */
-        trace_pnv_spi_tx_request("Shifting N1 frame", (*payload)->len);
-        transfer(s, *payload);
+        trace_pnv_spi_tx_request("Shifting N1 frame", (&s->tx_fifo)->num);
+        transfer(s);
         /* The N1 frame shift is complete so reset the N1 counters */
         s->N2_bits = 0;
         s->N2_bytes = 0;
         s->N2_tx = 0;
         s->N2_rx = 0;
-        pnv_spi_xfer_buffer_free(*payload);
-        *payload = NULL;
     }
     return stop;
 } /* end of operation_shiftn1() */
@@ -588,19 +547,10 @@ static void calculate_N2(PnvSpi *s, uint8_t opcode)
  * Shift_N2 operation handler method
  */
 
-static bool operation_shiftn2(PnvSpi *s, uint8_t opcode,
-                       PnvXferBuffer **payload)
+static bool operation_shiftn2(PnvSpi *s, uint8_t opcode)
 {
     uint8_t n2_count;
     bool stop = false;
-
-    /*
-     * If there isn't a current payload left over from a stopped sequence
-     * create a new one.
-     */
-    if (*payload == NULL) {
-        *payload = pnv_spi_xfer_buffer_new();
-    }
     /*
      * Use a combination of N2 counters to build the N2 portion of the
      * transmit payload.
@@ -639,25 +589,26 @@ static bool operation_shiftn2(PnvSpi *s, uint8_t opcode,
             /* Always append data for the N2 segment if it is set for TX */
             uint8_t n2_byte = 0x00;
             n2_byte = get_from_offset(s, (s->N1_tx + n2_count));
-            trace_pnv_spi_tx_append("n2_byte", n2_byte, (s->N1_tx + n2_count));
-            *(pnv_spi_xfer_buffer_write_ptr(*payload, (*payload)->len, 1))
-                    = n2_byte;
-        } else {
+            if (!fifo8_is_full(&s->tx_fifo)) {
+                trace_pnv_spi_tx_append("n2_byte", n2_byte,
+                                (s->N1_tx + n2_count));
+                fifo8_push(&s->tx_fifo, n2_byte);
+            }
+        } else if (!fifo8_is_full(&s->tx_fifo)) {
             /*
              * Regardless of whether or not N2 is set for TX or RX, we need
              * the number of bytes in the payload to match the overall length
              * of the operation.
              */
             trace_pnv_spi_tx_append_FF("n2_byte");
-            *(pnv_spi_xfer_buffer_write_ptr(*payload, (*payload)->len, 1))
-                    = 0xff;
+            fifo8_push(&s->tx_fifo, 0xff);
         }
         n2_count++;
     } /* end of while */
     if (!stop) {
         /* We have a TX and a full TDR or an RX and an empty RDR */
-        trace_pnv_spi_tx_request("Shifting N2 frame", (*payload)->len);
-        transfer(s, *payload);
+        trace_pnv_spi_tx_request("Shifting N2 frame", (&s->tx_fifo)->num);
+        transfer(s);
         /*
          * If we are doing an N2 TX and the TDR is full we need to clear the
          * TDR_full status. Do this here instead of up in the loop above so we
@@ -680,8 +631,6 @@ static bool operation_shiftn2(PnvSpi *s, uint8_t opcode,
         s->N1_bytes = 0;
         s->N1_tx = 0;
         s->N1_rx = 0;
-        pnv_spi_xfer_buffer_free(*payload);
-        *payload = NULL;
     }
     return stop;
 } /*  end of operation_shiftn2()*/
@@ -699,19 +648,6 @@ static void operation_sequencer(PnvSpi *s)
     uint8_t opcode = 0;
     uint8_t masked_opcode = 0;
 
-    /*
-     * PnvXferBuffer for containing the payload of the SPI frame.
-     * This is a static because there are cases where a sequence has to stop
-     * and wait for the target application to unload the RDR.  If this occurs
-     * during a sequence where N1 is not sent alone and instead combined with
-     * N2 since the N1 tx length + the N2 tx length is less than the size of
-     * the TDR.
-     */
-    static PnvXferBuffer *payload;
-
-    if (payload == NULL) {
-        payload = pnv_spi_xfer_buffer_new();
-    }
     /*
      * Clear the sequencer FSM error bit - general_SPI_status[3]
      * before starting a sequence.
@@ -840,7 +776,7 @@ static void operation_sequencer(PnvSpi *s)
                 }
                 s->status = SETFIELD(SPI_STS_SHIFTER_FSM, s->status,
                                 FSM_SHIFT_N1);
-                stop = operation_shiftn1(s, opcode, &payload, send_n1_alone);
+                stop = operation_shiftn1(s, opcode, send_n1_alone);
                 if (stop) {
                     /*
                      *  The operation code says to stop, this can occur if:
@@ -895,7 +831,7 @@ static void operation_sequencer(PnvSpi *s)
                 /* Ok to do a Shift_N2 */
                 s->status = SETFIELD(SPI_STS_SHIFTER_FSM, s->status,
                                 FSM_SHIFT_N2);
-                stop = operation_shiftn2(s, opcode, &payload);
+                stop = operation_shiftn2(s, opcode);
                 /*
                  * If the operation code says to stop set the shifter state to
                  * wait and stop
@@ -1207,6 +1143,9 @@ static void pnv_spi_realize(DeviceState *dev, Error **errp)
     s->ssi_bus = ssi_create_bus(dev, name);
     s->cs_line = g_new0(qemu_irq, 1);
     qdev_init_gpio_out_named(DEVICE(s), s->cs_line, "cs", 1);
+
+    fifo8_create(&s->tx_fifo, PNV_SPI_FIFO_SIZE);
+    fifo8_create(&s->rx_fifo, PNV_SPI_FIFO_SIZE);
 
     /* spi scoms */
     pnv_xscom_region_init(&s->xscom_spic_regs, OBJECT(s), &pnv_spi_xscom_ops,
