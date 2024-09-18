@@ -268,15 +268,6 @@ net_rx_pkt_attach_data(struct NetRxPkt *pkt, const void *data,
 struct iovec *net_rx_pkt_get_iovec(struct NetRxPkt *pkt);
 
 /**
-* returns io vector length that holds the attached data
-*
-* @pkt:            packet
-* @ret:            IOVec length
-*
-*/
-uint16_t net_rx_pkt_get_iovec_len(struct NetRxPkt *pkt);
-
-/**
  * prints rx packet data if debug is enabled
  *
  * @pkt:            packet
