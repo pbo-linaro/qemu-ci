@@ -15,6 +15,7 @@
 #include "qapi/error.h"
 #include "qapi/qapi-builtin-visit.h"
 #include "qapi/qapi-commands-machine.h"
+#include "qapi/qmp/qdict.h"
 #include "qapi/qmp/qobject.h"
 #include "qapi/qobject-input-visitor.h"
 #include "qapi/type-helpers.h"
@@ -404,5 +405,38 @@ GuidInfo *qmp_query_vm_generation_id(Error **errp)
 
     info = g_malloc0(sizeof(*info));
     info->guid = qemu_uuid_unparse_strdup(&vms->guid);
+    return info;
+}
+
+AccelInfo *qmp_query_accelerator(Error **errp)
+{
+    AccelState *accel = current_accel();
+    AccelClass *acc = ACCEL_GET_CLASS(accel);
+    AccelInfo *info = g_new0(AccelInfo, 1);
+    QDict *qdict_out = qdict_new();
+    ObjectPropertyIterator iter;
+    ObjectProperty *prop;
+
+    info->name = g_strdup(acc->name);
+
+    object_property_iter_init(&iter, OBJECT(accel));
+    while ((prop = object_property_iter_next(&iter))) {
+        QObject *value;
+
+        if (!prop->get) {
+            continue;
+        }
+
+        value = object_property_get_qobject(OBJECT(accel), prop->name,
+                                                  &error_abort);
+        qdict_put_obj(qdict_out, prop->name, value);
+    }
+
+    if (!qdict_size(qdict_out)) {
+        qobject_unref(qdict_out);
+    } else {
+        info->props = QOBJECT(qdict_out);
+    }
+
     return info;
 }

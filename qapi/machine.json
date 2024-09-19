@@ -1898,3 +1898,30 @@
 { 'command': 'x-query-interrupt-controllers',
   'returns': 'HumanReadableText',
   'features': [ 'unstable' ]}
+
+##
+# @AccelInfo:
+#
+# Information about the current accelerator.
+#
+# @name: the name of the current accelerator being used
+#
+# @props: a dictionary of the accelerator properties
+#
+# Since: 9.2
+##
+{ 'struct': 'AccelInfo',
+  'data': { 'name': 'str',
+            '*props': 'any' } }
+
+##
+# @query-accelerator:
+#
+# Shows information about the accelerator in use.
+#
+# Returns: a CpuModelExpansionInfo describing the expanded CPU model
+#
+# Since: 9.2
+##
+{ 'command': 'query-accelerator',
+  'returns': 'AccelInfo' }
