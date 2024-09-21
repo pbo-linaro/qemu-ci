@@ -1,8 +1,6 @@
 /*
  * QEMU GRLIB IRQMP Emulator
  *
- * (Extended interrupt not supported)
- *
  * SPDX-License-Identifier: MIT
  *
  * Copyright (c) 2010-2024 AdaCore
@@ -38,25 +36,29 @@
 #include "qemu/module.h"
 #include "qom/object.h"
 
-#define IRQMP_MAX_CPU 16
-#define IRQMP_REG_SIZE 256      /* Size of memory mapped registers */
+#define IRQMP_MAX_CPU (16)
+#define IRQMP_REG_SIZE (256)    /* Size of memory mapped registers */
 
 /* Memory mapped register offsets */
-#define LEVEL_OFFSET     0x00
-#define PENDING_OFFSET   0x04
-#define FORCE0_OFFSET    0x08
-#define CLEAR_OFFSET     0x0C
-#define MP_STATUS_OFFSET 0x10
-#define BROADCAST_OFFSET 0x14
-#define MASK_OFFSET      0x40
-#define FORCE_OFFSET     0x80
-#define EXTENDED_OFFSET  0xC0
+#define LEVEL_OFFSET     (0x00)
+#define PENDING_OFFSET   (0x04)
+#define FORCE0_OFFSET    (0x08)
+#define CLEAR_OFFSET     (0x0C)
+#define MP_STATUS_OFFSET (0x10)
+#define BROADCAST_OFFSET (0x14)
+#define MASK_OFFSET      (0x40)
+#define FORCE_OFFSET     (0x80)
+#define EXTENDED_OFFSET  (0xC0)
 
 /* Multiprocessor Status Register  */
 #define MP_STATUS_CPU_STATUS_MASK ((1 << IRQMP_MAX_CPU)-2)
-#define MP_STATUS_NCPU_SHIFT      28
+#define MP_STATUS_NCPU_SHIFT      (28)
+#define MP_STATUS_EIRQ_OFFSET     (16)
 
-#define MAX_PILS 16
+#define MAX_PILS_STD (16)
+#define MAX_PILS_EXT (32)
+
+#define DEFAULT_EIRQ (12)
 
 OBJECT_DECLARE_SIMPLE_TYPE(IRQMP, GRLIB_IRQMP)
 
@@ -68,6 +70,7 @@ struct IRQMP {
     MemoryRegion iomem;
 
     unsigned int ncpus;
+    unsigned int eirq;
     IRQMPState *state;
     qemu_irq start_signal[IRQMP_MAX_CPU];
     qemu_irq irq[IRQMP_MAX_CPU];
@@ -89,13 +92,26 @@ struct IRQMPState {
 
 static void grlib_irqmp_check_irqs(IRQMPState *state)
 {
-    int i;
+    int i, j;
 
     assert(state != NULL);
     assert(state->parent != NULL);
 
     for (i = 0; i < state->parent->ncpus; i++) {
         uint32_t pend = (state->pending | state->force[i]) & state->mask[i];
+
+        /*
+         * Checks is pending interrupt extended.
+         * If so, sets pending to EIRQ and acknowledges
+         * extended interrupt
+         */
+        for (j = MAX_PILS_STD; j < MAX_PILS_EXT; j++) {
+            if ((pend & (1 << j)) != 0) {
+                pend = (1 << state->parent->eirq);
+                state->extended[i] = (j & 0xffff);
+            }
+        }
+
         uint32_t level0 = pend & ~state->level;
         uint32_t level1 = pend &  state->level;
 
@@ -110,6 +126,10 @@ static void grlib_irqmp_check_irqs(IRQMPState *state)
 static void grlib_irqmp_ack_mask(IRQMPState *state, unsigned int cpu,
                                  uint32_t mask)
 {
+    if ((mask & (1 << state->parent->eirq)) != 0) {
+        mask |= (1 << state->extended[cpu]);
+    }
+
     /* Clear registers */
     state->pending  &= ~mask;
     state->force[cpu] &= ~mask;
@@ -143,7 +163,6 @@ static void grlib_irqmp_set_irq(void *opaque, int irq, int level)
     s = irqmp->state;
     assert(s         != NULL);
     assert(s->parent != NULL);
-
 
     if (level) {
         trace_grlib_irqmp_set_irq(irq);
@@ -278,6 +297,9 @@ static void grlib_irqmp_write(void *opaque, hwaddr addr,
                 state->mpstatus &= ~(1 << i);
             }
         }
+
+        /* Writing EIRQ number */
+        state->mpstatus |= (state->parent->eirq << MP_STATUS_EIRQ_OFFSET);
         return;
 
     case BROADCAST_OFFSET:
@@ -345,7 +367,8 @@ static void grlib_irqmp_reset(DeviceState *d)
     memset(irqmp->state, 0, sizeof *irqmp->state);
     irqmp->state->parent = irqmp;
     irqmp->state->mpstatus = ((irqmp->ncpus - 1) << MP_STATUS_NCPU_SHIFT) |
-        ((1 << irqmp->ncpus) - 2);
+        ((1 << irqmp->ncpus) - 2) |
+        (irqmp->eirq << MP_STATUS_EIRQ_OFFSET);
 }
 
 static void grlib_irqmp_realize(DeviceState *dev, Error **errp)
@@ -359,7 +382,14 @@ static void grlib_irqmp_realize(DeviceState *dev, Error **errp)
         return;
     }
 
-    qdev_init_gpio_in(dev, grlib_irqmp_set_irq, MAX_PILS);
+    if ((!irqmp->eirq) || (irqmp->eirq >= MAX_PILS_STD)) {
+        error_setg(errp, "Invalid eirq properties: "
+                   "%u, must be 0 < eirq < %u.", irqmp->eirq,
+                   MAX_PILS_STD);
+        return;
+    }
+
+    qdev_init_gpio_in(dev, grlib_irqmp_set_irq, MAX_PILS_EXT);
 
     /*
      * Transitionning from 0 to 1 starts the CPUs. The opposite can't
@@ -378,6 +408,7 @@ static void grlib_irqmp_realize(DeviceState *dev, Error **errp)
 
 static Property grlib_irqmp_properties[] = {
     DEFINE_PROP_UINT32("ncpus", IRQMP, ncpus, 1),
+    DEFINE_PROP_UINT32("eirq", IRQMP, eirq, DEFAULT_EIRQ),
     DEFINE_PROP_END_OF_LIST(),
 };
 
