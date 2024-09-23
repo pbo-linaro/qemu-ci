@@ -617,6 +617,7 @@ int main(int argc, char **argv)
         gdbserver_start(gdbstub);
         gdb_handlesig(cpu, 0, NULL, NULL, 0);
     }
+    current_cpu = cpu;
     cpu_loop(env);
     /* never exits */
     return 0;

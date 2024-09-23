@@ -1022,6 +1022,7 @@ int main(int argc, char **argv, char **envp)
     qemu_semihosting_guestfd_init();
 #endif
 
+    current_cpu = cpu;
     cpu_loop(env);
     /* never exits */
     return 0;

@@ -6531,6 +6531,7 @@ static void *clone_func(void *arg)
     pthread_mutex_lock(&clone_lock);
     pthread_mutex_unlock(&clone_lock);
     bql_lock();
+    current_cpu = cpu;
     cpu_loop(env);
     /* never exits */
     return NULL;
