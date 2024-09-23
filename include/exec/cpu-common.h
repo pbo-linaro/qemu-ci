@@ -233,6 +233,7 @@ void cpu_exit_syscall(CPUState *cs);
 
 int cpu_thread_is_idle_common(CPUState *cpu);
 bool cpu_thread_is_idle(CPUState *cpu);
+bool cpu_is_paused(CPUState *cpu);
 
 /**
  * env_archcpu(env)

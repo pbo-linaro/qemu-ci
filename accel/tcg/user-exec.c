@@ -1329,3 +1329,8 @@ bool cpu_thread_is_idle(CPUState *cpu)
 
     return ret == -1 ? true : ret;
 }
+
+bool cpu_is_paused(CPUState *cpu)
+{
+    return cpu->stopped || cpu->in_syscall;
+}

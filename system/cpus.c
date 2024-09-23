@@ -530,12 +530,17 @@ void cpu_resume(CPUState *cpu)
     qemu_cpu_kick(cpu);
 }
 
+bool cpu_is_paused(CPUState *cpu)
+{
+    return cpu->stopped;
+}
+
 static bool all_vcpus_paused(void)
 {
     CPUState *cpu;
 
     CPU_FOREACH(cpu) {
-        if (!cpu->stopped) {
+        if (!cpu_is_paused(cpu)) {
             return false;
         }
     }
