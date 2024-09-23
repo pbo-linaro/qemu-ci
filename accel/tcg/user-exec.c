@@ -1302,3 +1302,8 @@ int cpu_exec_user(CPUState *cs)
 
     return trapnr;
 }
+
+void qemu_cpu_kick(CPUState *cpu)
+{
+    cpu_exit(cpu);
+}
