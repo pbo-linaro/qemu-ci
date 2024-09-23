@@ -1422,11 +1422,10 @@ static void handle_v_attach(GArray *params, void *user_ctx)
     gdbserver_state.g_cpu = cpu;
     gdbserver_state.c_cpu = cpu;
 
-    if (gdbserver_state.allow_stop_reply) {
+    if (gdb_try_stop()) {
         g_string_printf(gdbserver_state.str_buf, "T%02xthread:", GDB_SIGNAL_TRAP);
         gdb_append_thread_id(cpu, gdbserver_state.str_buf);
         g_string_append_c(gdbserver_state.str_buf, ';');
-        gdbserver_state.allow_stop_reply = false;
 cleanup:
         gdb_put_strbuf();
     }
@@ -2016,12 +2015,11 @@ static void handle_gen_set(GArray *params, void *user_ctx)
 
 static void handle_target_halt(GArray *params, void *user_ctx)
 {
-    if (gdbserver_state.allow_stop_reply) {
+    if (gdb_try_stop()) {
         g_string_printf(gdbserver_state.str_buf, "T%02xthread:", GDB_SIGNAL_TRAP);
         gdb_append_thread_id(gdbserver_state.c_cpu, gdbserver_state.str_buf);
         g_string_append_c(gdbserver_state.str_buf, ';');
         gdb_put_strbuf();
-        gdbserver_state.allow_stop_reply = false;
     }
     /*
      * Remove all the breakpoints when this query is issued,
@@ -2493,3 +2491,12 @@ void gdb_create_default_process(GDBState *s)
     process->target_xml = NULL;
 }
 
+bool gdb_try_stop(void)
+{
+    if (!gdbserver_state.allow_stop_reply) {
+        return false;
+    }
+
+    gdbserver_state.allow_stop_reply = false;
+    return true;
+}
