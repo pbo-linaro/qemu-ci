@@ -142,8 +142,6 @@ void gdb_create_default_process(GDBState *s);
 int gdb_signal_to_target(int sig);
 int gdb_target_signal_to_gdb(int sig);
 
-int gdb_get_char(void); /* user only */
-
 /**
  * gdb_continue() - handle continue in mode specific way.
  */
