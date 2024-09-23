@@ -13,6 +13,12 @@ struct QemuMutex {
     bool initialized;
 };
 
+#ifdef CONFIG_DEBUG_MUTEX
+#define QEMU_MUTEX_INITIALIZER {PTHREAD_MUTEX_INITIALIZER, NULL, 0, true}
+#else
+#define QEMU_MUTEX_INITIALIZER {PTHREAD_MUTEX_INITIALIZER, true}
+#endif
+
 /*
  * QemuRecMutex cannot be a typedef of QemuMutex lest we have two
  * compatible cases in _Generic.  See qemu/lockable.h.

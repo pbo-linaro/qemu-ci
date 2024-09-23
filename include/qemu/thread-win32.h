@@ -12,6 +12,12 @@ struct QemuMutex {
     bool initialized;
 };
 
+#ifdef CONFIG_DEBUG_MUTEX
+#define QEMU_MUTEX_INITIALIZER {SRWLOCK_INIT, NULL, 0, true}
+#else
+#define QEMU_MUTEX_INITIALIZER {SRWLOCK_INIT, true}
+#endif
+
 typedef struct QemuRecMutex QemuRecMutex;
 struct QemuRecMutex {
     CRITICAL_SECTION lock;
