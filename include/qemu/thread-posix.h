@@ -32,6 +32,8 @@ struct QemuCond {
     bool initialized;
 };
 
+#define QEMU_COND_INITIALIZER {PTHREAD_COND_INITIALIZER, true}
+
 struct QemuSemaphore {
     QemuMutex mutex;
     QemuCond cond;

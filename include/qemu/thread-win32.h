@@ -29,6 +29,8 @@ struct QemuCond {
     bool initialized;
 };
 
+#define QEMU_COND_INITIALIZER {CONDITION_VARIABLE_INIT, true}
+
 struct QemuSemaphore {
     HANDLE sema;
     bool initialized;
