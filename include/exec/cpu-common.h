@@ -228,6 +228,8 @@ G_NORETURN void cpu_loop_exit_restore(CPUState *cpu, uintptr_t pc);
 int cpu_exec(CPUState *cpu);
 /* accel/tcg/user-exec.c */
 int cpu_exec_user(CPUState *cs);
+void cpu_enter_syscall(CPUState *cs);
+void cpu_exit_syscall(CPUState *cs);
 
 /**
  * env_archcpu(env)

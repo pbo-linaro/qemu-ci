@@ -1307,3 +1307,13 @@ void qemu_cpu_kick(CPUState *cpu)
 {
     cpu_exit(cpu);
 }
+
+void cpu_enter_syscall(CPUState *cs)
+{
+    cs->in_syscall = true;
+}
+
+void cpu_exit_syscall(CPUState *cs)
+{
+    cs->in_syscall = false;
+}

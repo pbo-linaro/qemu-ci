@@ -13771,6 +13771,8 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
     }
 #endif
 
+    cpu_enter_syscall(cpu);
+
     record_syscall_start(cpu, num, arg1,
                          arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 
@@ -13791,5 +13793,8 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
     bql_lock();
 
     record_syscall_return(cpu, num, ret);
+
+    cpu_exit_syscall(cpu);
+
     return ret;
 }

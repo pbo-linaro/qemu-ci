@@ -936,6 +936,8 @@ abi_long do_freebsd_syscall(void *cpu_env, int num, abi_long arg1,
 {
     abi_long ret;
 
+    cpu_enter_syscall(env_cpu(cpu_env));
+
     bql_unlock();
 
     if (do_strace) {
@@ -950,6 +952,8 @@ abi_long do_freebsd_syscall(void *cpu_env, int num, abi_long arg1,
     }
 
     bql_lock();
+
+    cpu_exit_syscall(env_cpu(cpu_env));
 
     return ret;
 }
