@@ -46,6 +46,10 @@ if have_block or have_ga
   stub_ss.add(files('qmp-quit.c'))
 endif
 
+if have_user
+  stub_ss.add(files('qemu-timer.c'))
+endif
+
 if have_block or have_ga or have_user
   stub_ss.add(files('replay-mutex.c'))
 endif
