@@ -24,6 +24,8 @@
 #include "sysemu/cpus.h"
 #include "qemu/lockable.h"
 #include "trace/trace-root.h"
+#include "exec/replay-core.h"
+#include "qemu/plugin.h"
 
 QemuMutex qemu_cpu_list_lock;
 static QemuCond exclusive_cond;
@@ -456,6 +458,9 @@ void cpu_breakpoint_remove_all(CPUState *cpu, int mask)
 /* The Big QEMU Lock (BQL) */
 static QemuMutex bql = QEMU_MUTEX_INITIALIZER;
 
+/* system init */
+static QemuCond qemu_pause_cond = QEMU_COND_INITIALIZER;
+
 QEMU_DEFINE_STATIC_CO_TLS(bool, bql_locked)
 
 bool bql_locked(void)
@@ -498,6 +503,105 @@ void run_on_cpu(CPUState *cpu, run_on_cpu_func func, run_on_cpu_data data)
     do_run_on_cpu(cpu, func, data, &bql);
 }
 
+static bool all_vcpus_paused(void)
+{
+    CPUState *cpu;
+
+    CPU_FOREACH(cpu) {
+        if (!cpu_is_paused(cpu)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void pause_all_vcpus(void)
+{
+    CPUState *cpu;
+
+    qemu_clock_enable(QEMU_CLOCK_VIRTUAL, false);
+    CPU_FOREACH(cpu) {
+        cpu_pause(cpu);
+    }
+
+    /* We need to drop the replay_lock so any vCPU threads woken up
+     * can finish their replay tasks
+     */
+    replay_mutex_unlock();
+
+    while (!all_vcpus_paused()) {
+        qemu_cond_wait_bql(&qemu_pause_cond);
+        CPU_FOREACH(cpu) {
+            qemu_cpu_kick(cpu);
+        }
+    }
+
+    bql_unlock();
+    replay_mutex_lock();
+    bql_lock();
+}
+
+void qemu_pause_cond_broadcast(void)
+{
+    qemu_cond_broadcast(&qemu_pause_cond);
+}
+
+static void qemu_cpu_stop(CPUState *cpu, bool exit)
+{
+    g_assert(qemu_cpu_is_self(cpu));
+    cpu->stop = false;
+    cpu->stopped = true;
+    if (exit) {
+        cpu_exit(cpu);
+    }
+    qemu_pause_cond_broadcast();
+}
+
+void qemu_wait_io_event_common(CPUState *cpu)
+{
+    qatomic_set_mb(&cpu->thread_kicked, false);
+    if (cpu->stop) {
+        qemu_cpu_stop(cpu, false);
+    }
+    process_queued_cpu_work(cpu);
+}
+
+void qemu_wait_io_event(CPUState *cpu)
+{
+    bool slept = false;
+
+    while (cpu_thread_is_idle(cpu)) {
+        if (!slept) {
+            slept = true;
+            qemu_plugin_vcpu_idle_cb(cpu);
+        }
+        qemu_cond_wait_bql(cpu->halt_cond);
+    }
+    if (slept) {
+        qemu_plugin_vcpu_resume_cb(cpu);
+    }
+
+    qemu_wait_io_event_common(cpu);
+}
+
+void cpu_pause(CPUState *cpu)
+{
+    if (qemu_cpu_is_self(cpu)) {
+        qemu_cpu_stop(cpu, true);
+    } else {
+        cpu->stop = true;
+        qemu_cpu_kick(cpu);
+    }
+}
+
+void cpu_resume(CPUState *cpu)
+{
+    cpu->stop = false;
+    cpu->stopped = false;
+    qemu_cpu_kick(cpu);
+}
+
 bool cpu_work_list_empty(CPUState *cpu)
 {
     return QSIMPLEQ_EMPTY_ATOMIC(&cpu->work_list);
@@ -515,4 +619,15 @@ int cpu_thread_is_idle_common(CPUState *cpu)
         return 0;
     }
     return -1;
+}
+
+bool cpu_can_run(CPUState *cpu)
+{
+    if (cpu->stop) {
+        return false;
+    }
+    if (cpu_is_stopped(cpu)) {
+        return false;
+    }
+    return true;
 }

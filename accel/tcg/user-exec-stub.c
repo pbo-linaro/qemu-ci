@@ -2,10 +2,6 @@
 #include "hw/core/cpu.h"
 #include "exec/replay-core.h"
 
-void cpu_resume(CPUState *cpu)
-{
-}
-
 void cpu_remove_sync(CPUState *cpu)
 {
 }

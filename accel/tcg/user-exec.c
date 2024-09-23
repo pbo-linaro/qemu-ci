@@ -1293,12 +1293,19 @@ int cpu_exec_user(CPUState *cs)
 {
     int trapnr;
 
+    do {
+        qemu_wait_io_event(cs);
+    } while (!cpu_can_run(cs));
+
     bql_unlock();
     cpu_exec_start(cs);
     trapnr = cpu_exec(cs);
     cpu_exec_end(cs);
     bql_lock();
-    process_queued_cpu_work(cs);
+
+    do {
+        qemu_wait_io_event(cs);
+    } while (!cpu_can_run(cs));
 
     return trapnr;
 }
@@ -1306,11 +1313,13 @@ int cpu_exec_user(CPUState *cs)
 void qemu_cpu_kick(CPUState *cpu)
 {
     cpu_exit(cpu);
+    qemu_cond_broadcast(cpu->halt_cond);
 }
 
 void cpu_enter_syscall(CPUState *cs)
 {
     cs->in_syscall = true;
+    qemu_pause_cond_broadcast();
 }
 
 void cpu_exit_syscall(CPUState *cs)

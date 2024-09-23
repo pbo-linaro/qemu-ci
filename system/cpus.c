@@ -307,17 +307,6 @@ int vm_shutdown(void)
     return do_vm_stop(RUN_STATE_SHUTDOWN, false);
 }
 
-bool cpu_can_run(CPUState *cpu)
-{
-    if (cpu->stop) {
-        return false;
-    }
-    if (cpu_is_stopped(cpu)) {
-        return false;
-    }
-    return true;
-}
-
 void cpu_handle_guest_debug(CPUState *cpu)
 {
     if (replay_running_debug()) {
@@ -400,54 +389,13 @@ static QemuThread io_thread;
 
 /* cpu creation */
 static QemuCond qemu_cpu_cond;
-/* system init */
-static QemuCond qemu_pause_cond;
 
 void qemu_init_cpu_loop(void)
 {
     qemu_init_sigbus();
     qemu_cond_init(&qemu_cpu_cond);
-    qemu_cond_init(&qemu_pause_cond);
 
     qemu_thread_get_self(&io_thread);
-}
-
-static void qemu_cpu_stop(CPUState *cpu, bool exit)
-{
-    g_assert(qemu_cpu_is_self(cpu));
-    cpu->stop = false;
-    cpu->stopped = true;
-    if (exit) {
-        cpu_exit(cpu);
-    }
-    qemu_cond_broadcast(&qemu_pause_cond);
-}
-
-void qemu_wait_io_event_common(CPUState *cpu)
-{
-    qatomic_set_mb(&cpu->thread_kicked, false);
-    if (cpu->stop) {
-        qemu_cpu_stop(cpu, false);
-    }
-    process_queued_cpu_work(cpu);
-}
-
-void qemu_wait_io_event(CPUState *cpu)
-{
-    bool slept = false;
-
-    while (cpu_thread_is_idle(cpu)) {
-        if (!slept) {
-            slept = true;
-            qemu_plugin_vcpu_idle_cb(cpu);
-        }
-        qemu_cond_wait_bql(cpu->halt_cond);
-    }
-    if (slept) {
-        qemu_plugin_vcpu_resume_cb(cpu);
-    }
-
-    qemu_wait_io_event_common(cpu);
 }
 
 void cpus_kick_thread(CPUState *cpu)
@@ -513,65 +461,9 @@ void cpu_thread_signal_destroyed(CPUState *cpu)
     qemu_cond_signal(&qemu_cpu_cond);
 }
 
-void cpu_pause(CPUState *cpu)
-{
-    if (qemu_cpu_is_self(cpu)) {
-        qemu_cpu_stop(cpu, true);
-    } else {
-        cpu->stop = true;
-        qemu_cpu_kick(cpu);
-    }
-}
-
-void cpu_resume(CPUState *cpu)
-{
-    cpu->stop = false;
-    cpu->stopped = false;
-    qemu_cpu_kick(cpu);
-}
-
 bool cpu_is_paused(CPUState *cpu)
 {
     return cpu->stopped;
-}
-
-static bool all_vcpus_paused(void)
-{
-    CPUState *cpu;
-
-    CPU_FOREACH(cpu) {
-        if (!cpu_is_paused(cpu)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-void pause_all_vcpus(void)
-{
-    CPUState *cpu;
-
-    qemu_clock_enable(QEMU_CLOCK_VIRTUAL, false);
-    CPU_FOREACH(cpu) {
-        cpu_pause(cpu);
-    }
-
-    /* We need to drop the replay_lock so any vCPU threads woken up
-     * can finish their replay tasks
-     */
-    replay_mutex_unlock();
-
-    while (!all_vcpus_paused()) {
-        qemu_cond_wait_bql(&qemu_pause_cond);
-        CPU_FOREACH(cpu) {
-            qemu_cpu_kick(cpu);
-        }
-    }
-
-    bql_unlock();
-    replay_mutex_lock();
-    bql_lock();
 }
 
 void resume_all_vcpus(void)

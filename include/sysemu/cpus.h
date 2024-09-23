@@ -20,11 +20,7 @@ void dummy_start_vcpu_thread(CPUState *);
 #define VCPU_THREAD_NAME_SIZE 16
 
 void cpus_kick_thread(CPUState *cpu);
-bool cpu_work_list_empty(CPUState *cpu);
 bool all_cpu_threads_idle(void);
-bool cpu_can_run(CPUState *cpu);
-void qemu_wait_io_event_common(CPUState *cpu);
-void qemu_wait_io_event(CPUState *cpu);
 void cpu_thread_signal_created(CPUState *cpu);
 void cpu_thread_signal_destroyed(CPUState *cpu);
 void cpu_handle_guest_debug(CPUState *cpu);
@@ -34,7 +30,6 @@ void cpu_handle_guest_debug(CPUState *cpu);
 bool qemu_in_vcpu_thread(void);
 void qemu_init_cpu_loop(void);
 void resume_all_vcpus(void);
-void pause_all_vcpus(void);
 void cpu_stop_current(void);
 
 extern int icount_align_option;

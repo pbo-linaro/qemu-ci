@@ -234,6 +234,13 @@ void cpu_exit_syscall(CPUState *cs);
 int cpu_thread_is_idle_common(CPUState *cpu);
 bool cpu_thread_is_idle(CPUState *cpu);
 bool cpu_is_paused(CPUState *cpu);
+bool cpu_can_run(CPUState *cpu);
+void qemu_wait_io_event_common(CPUState *cpu);
+void qemu_wait_io_event(CPUState *cpu);
+void pause_all_vcpus(void);
+void qemu_pause_cond_broadcast(void);
+bool cpu_work_list_empty(CPUState *cpu);
+
 
 /**
  * env_archcpu(env)
