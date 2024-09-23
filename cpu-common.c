@@ -452,3 +452,48 @@ void cpu_breakpoint_remove_all(CPUState *cpu, int mask)
         }
     }
 }
+
+/* The Big QEMU Lock (BQL) */
+static QemuMutex bql = QEMU_MUTEX_INITIALIZER;
+
+QEMU_DEFINE_STATIC_CO_TLS(bool, bql_locked)
+
+bool bql_locked(void)
+{
+    return get_bql_locked();
+}
+
+/*
+ * The BQL is taken from so many places that it is worth profiling the
+ * callers directly, instead of funneling them all through a single function.
+ */
+void bql_lock_impl(const char *file, int line)
+{
+    QemuMutexLockFunc bql_lock_fn = qatomic_read(&bql_mutex_lock_func);
+
+    g_assert(!bql_locked());
+    bql_lock_fn(&bql, file, line);
+    set_bql_locked(true);
+}
+
+void bql_unlock(void)
+{
+    g_assert(bql_locked());
+    set_bql_locked(false);
+    qemu_mutex_unlock(&bql);
+}
+
+void qemu_cond_wait_bql(QemuCond *cond)
+{
+    qemu_cond_wait(cond, &bql);
+}
+
+void qemu_cond_timedwait_bql(QemuCond *cond, int ms)
+{
+    qemu_cond_timedwait(cond, &bql, ms);
+}
+
+void run_on_cpu(CPUState *cpu, run_on_cpu_func func, run_on_cpu_data data)
+{
+    do_run_on_cpu(cpu, func, data, &bql);
+}

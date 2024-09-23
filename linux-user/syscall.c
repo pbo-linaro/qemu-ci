@@ -144,6 +144,7 @@
 #include "qapi/error.h"
 #include "fd-trans.h"
 #include "cpu_loop-common.h"
+#include "qemu/main-loop.h"
 
 #ifndef CLONE_IO
 #define CLONE_IO                0x80000000      /* Clone io context */
@@ -6529,6 +6530,7 @@ static void *clone_func(void *arg)
     /* Wait until the parent has finished initializing the tls state.  */
     pthread_mutex_lock(&clone_lock);
     pthread_mutex_unlock(&clone_lock);
+    bql_lock();
     cpu_loop(env);
     /* never exits */
     return NULL;
@@ -13772,6 +13774,8 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
     record_syscall_start(cpu, num, arg1,
                          arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 
+    bql_unlock();
+
     if (unlikely(qemu_loglevel_mask(LOG_STRACE))) {
         print_syscall(cpu_env, num, arg1, arg2, arg3, arg4, arg5, arg6);
     }
@@ -13783,6 +13787,8 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
         print_syscall_ret(cpu_env, num, ret, arg1, arg2,
                           arg3, arg4, arg5, arg6);
     }
+
+    bql_lock();
 
     record_syscall_return(cpu, num, ret);
     return ret;

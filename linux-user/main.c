@@ -57,6 +57,7 @@
 #include "user-mmap.h"
 #include "tcg/perf.h"
 #include "exec/page-vary.h"
+#include "qemu/main-loop.h"
 
 #ifdef CONFIG_SEMIHOSTING
 #include "semihosting/semihost.h"
@@ -1010,6 +1011,8 @@ int main(int argc, char **argv, char **envp)
     tcg_prologue_init();
 
     target_cpu_copy_regs(env, regs);
+
+    bql_lock();
 
     if (gdbstub) {
         if (gdbserver_start(gdbstub) < 0) {

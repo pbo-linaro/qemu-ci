@@ -32,6 +32,7 @@
 #include "qemu.h"
 #include "signal-common.h"
 #include "user/syscall-trace.h"
+#include "qemu/main-loop.h"
 
 /* BSD independent syscall shims */
 #include "bsd-file.h"
@@ -935,15 +936,20 @@ abi_long do_freebsd_syscall(void *cpu_env, int num, abi_long arg1,
 {
     abi_long ret;
 
+    bql_unlock();
+
     if (do_strace) {
         print_freebsd_syscall(num, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
     ret = freebsd_syscall(cpu_env, num, arg1, arg2, arg3, arg4, arg5, arg6,
                           arg7, arg8);
+
     if (do_strace) {
         print_freebsd_syscall_ret(num, ret);
     }
+
+    bql_lock();
 
     return ret;
 }

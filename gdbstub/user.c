@@ -12,6 +12,7 @@
 #include "qemu/osdep.h"
 #include "qemu/bitops.h"
 #include "qemu/cutils.h"
+#include "qemu/main-loop.h"
 #include "qemu/sockets.h"
 #include "exec/hwaddr.h"
 #include "exec/tb-flush.h"
@@ -168,6 +169,8 @@ void gdb_put_buffer(const uint8_t *buf, int len)
 void gdb_exit(int code)
 {
     char buf[4];
+
+    BQL_LOCK_GUARD();
 
     if (!gdbserver_state.init) {
         return;
@@ -463,6 +466,8 @@ void gdbserver_fork_end(CPUState *cpu, pid_t pid)
 {
     char b;
     int fd;
+
+    BQL_LOCK_GUARD();
 
     if (!gdbserver_state.init || gdbserver_user_state.fd < 0) {
         return;

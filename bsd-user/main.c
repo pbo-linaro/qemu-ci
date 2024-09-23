@@ -48,6 +48,7 @@
 #include "qemu/guest-random.h"
 #include "gdbstub/user.h"
 #include "exec/page-vary.h"
+#include "qemu/main-loop.h"
 
 #include "host-os.h"
 #include "target_arch_cpu.h"
@@ -616,6 +617,7 @@ int main(int argc, char **argv)
 
     target_cpu_init(env, regs);
 
+    bql_lock();
     if (gdbstub) {
         gdbserver_start(gdbstub);
         gdb_handlesig(cpu, 0, NULL, NULL, 0);

@@ -1293,9 +1293,11 @@ int cpu_exec_user(CPUState *cs)
 {
     int trapnr;
 
+    bql_unlock();
     cpu_exec_start(cs);
     trapnr = cpu_exec(cs);
     cpu_exec_end(cs);
+    bql_lock();
     process_queued_cpu_work(cs);
 
     return trapnr;
