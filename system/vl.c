@@ -908,6 +908,41 @@ static void help(int exitcode)
     exit(exitcode);
 }
 
+static void build_info(const char *execname, bool as_json)
+{
+#include "build-info.h"
+    if (as_json) {
+        printf("{\n");
+        for (size_t i = 0; i + 1 < BUILD_INFO_SIZE ; i++) {
+            printf("\"%s\":\"%s\",\n",
+                   BUILD_INFO[i].key,
+                   BUILD_INFO[i].value);
+        }
+        if (BUILD_INFO_SIZE > 0) {
+            printf("\"%s\":\"%s\"\n",
+                   BUILD_INFO[BUILD_INFO_SIZE - 1].key,
+                   BUILD_INFO[BUILD_INFO_SIZE - 1].value);
+        }
+        printf("}\n");
+    } else {
+        printf("%s version "
+               QEMU_FULL_VERSION
+               " build information\n\n", execname ?:"QEMU");
+        printf("  %-*s key value\n",
+               BUILD_INFO_HEADER_WIDTH,
+               "configuration key");
+        printf("  %-*s ---------\n",
+               BUILD_INFO_HEADER_WIDTH,
+               "-----------------");
+        for (size_t i = 0; i < BUILD_INFO_SIZE ; i++) {
+            printf("  %-*s %s\n",
+                   BUILD_INFO_HEADER_WIDTH,
+                   BUILD_INFO[i].key,
+                   BUILD_INFO[i].value);
+        }
+    }
+}
+
 enum {
 
 #define DEF(option, opt_arg, opt_enum, opt_help, arch_mask)     \
@@ -3017,6 +3052,12 @@ void qemu_init(int argc, char **argv)
                 break;
             case QEMU_OPTION_version:
                 version();
+                exit(0);
+                break;
+            case QEMU_OPTION_build_info:
+                /* fallthrough */
+            case QEMU_OPTION_build_info_json:
+                build_info(argv[0], popt->index != QEMU_OPTION_build_info);
                 exit(0);
                 break;
             case QEMU_OPTION_m:
