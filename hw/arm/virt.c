@@ -1032,19 +1032,17 @@ static void create_gpio_keys(char *fdt, DeviceState *pl061_dev,
 #define SECURE_GPIO_POWEROFF 0
 #define SECURE_GPIO_RESET    1
 
-static void create_secure_gpio_pwr(char *fdt, DeviceState *pl061_dev,
-                                   uint32_t phandle)
+static void create_secure_gpio_poweroff(char *fdt, DeviceState *pl061_dev,
+                                        uint32_t phandle)
 {
-    DeviceState *gpio_pwr_dev;
+    DeviceState *gpio_poweroff_dev;
 
-    /* gpio-pwr */
-    gpio_pwr_dev = sysbus_create_simple("gpio-pwr", -1, NULL);
+    /* gpio-poweroff */
+    gpio_poweroff_dev = sysbus_create_simple("gpio-poweroff", -1, NULL);
 
-    /* connect secure pl061 to gpio-pwr */
-    qdev_connect_gpio_out(pl061_dev, SECURE_GPIO_RESET,
-                          qdev_get_gpio_in_named(gpio_pwr_dev, "reset", 0));
+    /* connect secure pl061 to gpio-poweroff */
     qdev_connect_gpio_out(pl061_dev, SECURE_GPIO_POWEROFF,
-                          qdev_get_gpio_in_named(gpio_pwr_dev, "shutdown", 0));
+                          qdev_get_gpio_in(gpio_poweroff_dev, 0));
 
     qemu_fdt_add_subnode(fdt, "/gpio-poweroff");
     qemu_fdt_setprop_string(fdt, "/gpio-poweroff", "compatible",
@@ -1054,6 +1052,19 @@ static void create_secure_gpio_pwr(char *fdt, DeviceState *pl061_dev,
     qemu_fdt_setprop_string(fdt, "/gpio-poweroff", "status", "disabled");
     qemu_fdt_setprop_string(fdt, "/gpio-poweroff", "secure-status",
                             "okay");
+}
+
+static void create_secure_gpio_restart(char *fdt, DeviceState *pl061_dev,
+                                       uint32_t phandle)
+{
+    DeviceState *gpio_restart_dev;
+
+    /* gpio-restart */
+    gpio_restart_dev = sysbus_create_simple("gpio-restart", -1, NULL);
+
+    /* connect secure pl061 to gpio-restart */
+    qdev_connect_gpio_out(pl061_dev, SECURE_GPIO_RESET,
+                          qdev_get_gpio_in(gpio_restart_dev, 0));
 
     qemu_fdt_add_subnode(fdt, "/gpio-restart");
     qemu_fdt_setprop_string(fdt, "/gpio-restart", "compatible",
@@ -1112,7 +1123,8 @@ static void create_gpio_devices(const VirtMachineState *vms, int gpio,
     if (gpio == VIRT_GPIO) {
         create_gpio_keys(ms->fdt, pl061_dev, phandle);
     } else {
-        create_secure_gpio_pwr(ms->fdt, pl061_dev, phandle);
+        create_secure_gpio_poweroff(ms->fdt, pl061_dev, phandle);
+        create_secure_gpio_restart(ms->fdt, pl061_dev, phandle);
     }
 }
 

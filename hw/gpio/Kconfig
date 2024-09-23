@@ -11,7 +11,10 @@ config GPIO_KEY
 config GPIO_MPC8XXX
     bool
 
-config GPIO_PWR
+config GPIO_POWEROFF
+    bool
+
+config GPIO_RESTART
     bool
 
 config SIFIVE_GPIO

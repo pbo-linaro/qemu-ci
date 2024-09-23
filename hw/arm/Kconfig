@@ -23,7 +23,8 @@ config ARM_VIRT
     select PL011 # UART
     select PL031 # RTC
     select PL061 # GPIO
-    select GPIO_PWR
+    select GPIO_POWEROFF
+    select GPIO_RESTART
     select PLATFORM_BUS
     select SMBIOS
     select VIRTIO_MMIO
