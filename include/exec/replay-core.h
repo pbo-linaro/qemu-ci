@@ -77,4 +77,17 @@ void replay_save_random(int ret, void *buf, size_t len);
 /* Loads the saved values for the random number generator */
 int replay_read_random(void *buf, size_t len);
 
+/* Replay locking
+ *
+ * The locks are needed to protect the shared structures and log file
+ * when doing record/replay. They also are the main sync-point between
+ * the main-loop thread and the vCPU thread. This was a role
+ * previously filled by the BQL which has been busy trying to reduce
+ * its impact across the code. This ensures blocks of events stay
+ * sequential and reproducible.
+ */
+
+void replay_mutex_lock(void);
+void replay_mutex_unlock(void);
+
 #endif

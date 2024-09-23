@@ -94,3 +94,11 @@ void qmp_replay_seek(int64_t icount, Error **errp)
     error_set(errp, ERROR_CLASS_COMMAND_NOT_FOUND,
               "replay support not available");
 }
+
+void replay_mutex_lock(void)
+{
+}
+
+void replay_mutex_unlock(void)
+{
+}

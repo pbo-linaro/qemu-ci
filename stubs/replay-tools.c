@@ -41,14 +41,6 @@ bool replay_checkpoint(ReplayCheckpoint checkpoint)
     return true;
 }
 
-void replay_mutex_lock(void)
-{
-}
-
-void replay_mutex_unlock(void)
-{
-}
-
 void replay_register_char_driver(struct Chardev *chr)
 {
 }
