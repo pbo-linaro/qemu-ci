@@ -458,6 +458,7 @@ static void disable_gdbstub(CPUState *thread_cpu)
         cpu_breakpoint_remove_all(cpu, BP_GDB);
         /* no cpu_watchpoint_remove_all for user-mode */
         cpu_single_step(cpu, 0);
+        cpu_resume(cpu);
     }
     tb_flush(thread_cpu);
 }
@@ -650,9 +651,16 @@ int gdb_continue_partial(char *newstates)
      * previous situation, where only one CPU would be single-stepped.
      */
     CPU_FOREACH(cpu) {
-        if (newstates[cpu->cpu_index] == 's') {
+        switch (newstates[cpu->cpu_index]) {
+        case 's':
             trace_gdbstub_op_stepping(cpu->cpu_index);
             cpu_single_step(cpu, gdbserver_state.sstep_flags);
+            QEMU_FALLTHROUGH;
+        case 'c':
+        case 'C':
+        case 'S':
+            cpu_resume(cpu);
+            break;
         }
     }
     gdbserver_user_state.running_state = 1;

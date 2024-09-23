@@ -2497,6 +2497,8 @@ bool gdb_try_stop(void)
         return false;
     }
 
+    pause_all_vcpus();
+
     gdbserver_state.allow_stop_reply = false;
     return true;
 }
