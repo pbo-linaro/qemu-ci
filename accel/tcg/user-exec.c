@@ -1288,3 +1288,15 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
 #define DATA_SIZE 16
 #include "atomic_template.h"
 #endif
+
+int cpu_exec_user(CPUState *cs)
+{
+    int trapnr;
+
+    cpu_exec_start(cs);
+    trapnr = cpu_exec(cs);
+    cpu_exec_end(cs);
+    process_queued_cpu_work(cs);
+
+    return trapnr;
+}

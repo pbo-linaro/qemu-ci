@@ -118,10 +118,7 @@ static inline void target_cpu_loop(CPUX86State *env)
     /* target_siginfo_t info; */
 
     for (;;) {
-        cpu_exec_start(cs);
-        trapnr = cpu_exec(cs);
-        cpu_exec_end(cs);
-        process_queued_cpu_work(cs);
+        trapnr = cpu_exec_user(cs);
 
         switch (trapnr) {
         case EXCP_SYSCALL:

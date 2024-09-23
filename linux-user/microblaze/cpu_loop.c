@@ -29,10 +29,7 @@ void cpu_loop(CPUMBState *env)
     CPUState *cs = env_cpu(env);
 
     while (1) {
-        cpu_exec_start(cs);
-        trapnr = cpu_exec(cs);
-        cpu_exec_end(cs);
-        process_queued_cpu_work(cs);
+        trapnr = cpu_exec_user(cs);
 
         switch (trapnr) {
         case EXCP_INTERRUPT:

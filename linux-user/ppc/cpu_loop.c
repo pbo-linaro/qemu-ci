@@ -74,10 +74,7 @@ void cpu_loop(CPUPPCState *env)
     for(;;) {
         bool arch_interrupt;
 
-        cpu_exec_start(cs);
-        trapnr = cpu_exec(cs);
-        cpu_exec_end(cs);
-        process_queued_cpu_work(cs);
+        trapnr = cpu_exec_user(cs);
 
         arch_interrupt = true;
         switch (trapnr) {

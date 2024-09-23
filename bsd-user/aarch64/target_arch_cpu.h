@@ -51,11 +51,7 @@ static inline void target_cpu_loop(CPUARMState *env)
     abi_long ret;
 
     for (;;) {
-        cpu_exec_start(cs);
-        trapnr = cpu_exec(cs);
-        cpu_exec_end(cs);
-        process_queued_cpu_work(cs);
-
+        trapnr = cpu_exec_user(cs);
         switch (trapnr) {
         case EXCP_SWI:
             /* See arm64/arm64/trap.c cpu_fetch_syscall_args() */

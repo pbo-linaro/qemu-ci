@@ -32,10 +32,7 @@ void cpu_loop(CPUAlphaState *env)
     while (1) {
         bool arch_interrupt = true;
 
-        cpu_exec_start(cs);
-        trapnr = cpu_exec(cs);
-        cpu_exec_end(cs);
-        process_queued_cpu_work(cs);
+        trapnr = cpu_exec_user(cs);
 
         switch (trapnr) {
         case EXCP_RESET:
