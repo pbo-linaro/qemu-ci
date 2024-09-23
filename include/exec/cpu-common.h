@@ -231,6 +231,9 @@ int cpu_exec_user(CPUState *cs);
 void cpu_enter_syscall(CPUState *cs);
 void cpu_exit_syscall(CPUState *cs);
 
+int cpu_thread_is_idle_common(CPUState *cpu);
+bool cpu_thread_is_idle(CPUState *cpu);
+
 /**
  * env_archcpu(env)
  * @env: The architecture environment

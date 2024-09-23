@@ -497,3 +497,22 @@ void run_on_cpu(CPUState *cpu, run_on_cpu_func func, run_on_cpu_data data)
 {
     do_run_on_cpu(cpu, func, data, &bql);
 }
+
+bool cpu_work_list_empty(CPUState *cpu)
+{
+    return QSIMPLEQ_EMPTY_ATOMIC(&cpu->work_list);
+}
+
+int cpu_thread_is_idle_common(CPUState *cpu)
+{
+    if (cpu->stop || !cpu_work_list_empty(cpu)) {
+        return 0;
+    }
+    if (cpu_is_stopped(cpu)) {
+        return 1;
+    }
+    if (!cpu->halted || cpu_has_work(cpu)) {
+        return 0;
+    }
+    return -1;
+}

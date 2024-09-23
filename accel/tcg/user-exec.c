@@ -1317,3 +1317,15 @@ void cpu_exit_syscall(CPUState *cs)
 {
     cs->in_syscall = false;
 }
+
+bool cpu_is_stopped(CPUState *cpu)
+{
+    return cpu->stopped;
+}
+
+bool cpu_thread_is_idle(CPUState *cpu)
+{
+    int ret = cpu_thread_is_idle_common(cpu);
+
+    return ret == -1 ? true : ret;
+}

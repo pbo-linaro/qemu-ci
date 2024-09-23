@@ -75,21 +75,12 @@ bool cpu_is_stopped(CPUState *cpu)
     return cpu->stopped || !runstate_is_running();
 }
 
-bool cpu_work_list_empty(CPUState *cpu)
-{
-    return QSIMPLEQ_EMPTY_ATOMIC(&cpu->work_list);
-}
-
 bool cpu_thread_is_idle(CPUState *cpu)
 {
-    if (cpu->stop || !cpu_work_list_empty(cpu)) {
-        return false;
-    }
-    if (cpu_is_stopped(cpu)) {
-        return true;
-    }
-    if (!cpu->halted || cpu_has_work(cpu)) {
-        return false;
+    int ret = cpu_thread_is_idle_common(cpu);
+
+    if (ret != -1) {
+        return ret;
     }
     if (cpus_accel->cpu_thread_is_idle) {
         return cpus_accel->cpu_thread_is_idle(cpu);
