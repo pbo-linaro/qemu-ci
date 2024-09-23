@@ -24,6 +24,21 @@ SRST
     Display version information and exit
 ERST
 
+DEF("build-info", 0, QEMU_OPTION_build_info,
+    "-build-info     display build information of executable and exit\n", QEMU_ARCH_ALL)
+SRST
+``-build-info``
+    Display build information of executable and exit
+ERST
+
+DEF("build-info-json", 0, QEMU_OPTION_build_info_json,
+    "-build-info-json\n"
+    "                dump build information of executable in JSON format and exit\n", QEMU_ARCH_ALL)
+SRST
+``-build-info-json``
+    Dump build information of executable in JSON format and exit
+ERST
+
 DEF("machine", HAS_ARG, QEMU_OPTION_machine, \
     "-machine [type=]name[,prop[=value][,...]]\n"
     "                selects emulated machine ('-machine help' for list)\n"

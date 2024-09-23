@@ -3292,7 +3292,20 @@ endif
 # Generated sources #
 #####################
 
-genh += configure_file(output: 'config-host.h', configuration: config_host_data)
+config_host_h = configure_file(output: 'config-host.h', configuration: config_host_data)
+genh += config_host_h
+
+build_info_h = custom_target('build-info.h',
+                             output: 'build-info.h',
+                             command: [
+                               find_program('scripts/build_info_gen.py'),
+                               '--config-headers',
+                               config_host_h
+                             ],
+                             capture: true,
+                             build_by_default: true,
+                             build_always_stale: true)
+genh += build_info_h
 
 hxtool = find_program('scripts/hxtool')
 shaderinclude = find_program('scripts/shaderinclude.py')
