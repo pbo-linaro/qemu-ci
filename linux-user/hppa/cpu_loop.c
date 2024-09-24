@@ -43,7 +43,7 @@ static abi_ulong hppa_lws(CPUHPPAState *env)
         old = tswap32(old);
         new = tswap32(new);
         ret = qatomic_cmpxchg((uint32_t *)g2h(cs, addr), old, new);
-        ret = tswap32(ret);
+        env->gr[28] = tswap32(ret);
         break;
 
     case 2: /* elf32 atomic "new" cmpxchg */
@@ -64,19 +64,19 @@ static abi_ulong hppa_lws(CPUHPPAState *env)
             old = *(uint8_t *)g2h(cs, old);
             new = *(uint8_t *)g2h(cs, new);
             ret = qatomic_cmpxchg((uint8_t *)g2h(cs, addr), old, new);
-            ret = ret != old;
+            env->gr[28] = ret != old;
             break;
         case 1:
             old = *(uint16_t *)g2h(cs, old);
             new = *(uint16_t *)g2h(cs, new);
             ret = qatomic_cmpxchg((uint16_t *)g2h(cs, addr), old, new);
-            ret = ret != old;
+            env->gr[28] = ret != old;
             break;
         case 2:
             old = *(uint32_t *)g2h(cs, old);
             new = *(uint32_t *)g2h(cs, new);
             ret = qatomic_cmpxchg((uint32_t *)g2h(cs, addr), old, new);
-            ret = ret != old;
+            env->gr[28] = ret != old;
             break;
         case 3:
             {
@@ -97,13 +97,13 @@ static abi_ulong hppa_lws(CPUHPPAState *env)
                 }
                 end_exclusive();
 #endif
+                env->gr[28] = ret;
             }
             break;
         }
         break;
     }
 
-    env->gr[28] = ret;
     return 0;
 }
 
