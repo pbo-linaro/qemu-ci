@@ -1732,6 +1732,7 @@ void kvm_arch_accel_class_init(ObjectClass *oc)
     object_class_property_add_str(oc, "riscv-aia", riscv_get_kvm_aia,
                                   riscv_set_kvm_aia);
     object_class_property_set_description(oc, "riscv-aia",
+        "DEPRECATED: use riscv-aia-<mode> properties instead. "
         "Set KVM AIA mode. Valid values are 'emul', 'hwaccel' and 'auto'. "
         "Changing KVM AIA modes relies on host support. Defaults to 'auto' "
         "if the host supports it");

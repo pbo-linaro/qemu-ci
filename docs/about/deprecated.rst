@@ -482,6 +482,14 @@ available firmwares that are using the current (wrong) name.  The
 property is kept as is in 9.1, together with "riscv,delegation", to
 give more time for firmware developers to change their code.
 
+RISC-V "riscv-aia" KVM property (since 9.2)
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+This property was deprecated in favor of using the boolean properties
+'riscv-aia-emul', 'riscv-aia-hwaccel' and 'riscv-aia-auto'.  The
+motivation behind it is to make it easier to expose the internal
+state of the KVM accelerator in APIs such as query-cpu-model-expansion.
+
 Migration
 ---------
 
