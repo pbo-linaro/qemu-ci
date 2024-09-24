@@ -1671,6 +1671,62 @@ static void riscv_set_kvm_aia(Object *obj, const char *val, Error **errp)
     }
 }
 
+static void riscv_set_kvm_aia_bool(uint32_t aia_bool, bool val)
+{
+    bool default_aia_mode = KVM_DEV_RISCV_AIA_MODE_AUTO;
+
+    g_assert(aia_bool <= KVM_DEV_RISCV_AIA_MODE_AUTO);
+
+    if (val) {
+        aia_mode = aia_bool;
+        return;
+    }
+
+    /*
+     * Setting an aia_bool to 'false' does nothing if
+     * aia_mode isn't set to aia_bool.
+     */
+    if (aia_mode != aia_bool) {
+        return;
+    }
+
+    /*
+     * Return to default value if we're disabling the
+     * current set aia_mode.
+     */
+    aia_mode = default_aia_mode;
+}
+
+static bool riscv_get_kvm_aia_emul(Object *obj, Error **errp)
+{
+    return aia_mode == KVM_DEV_RISCV_AIA_MODE_EMUL;
+}
+
+static void riscv_set_kvm_aia_emul(Object *obj,  bool val, Error **errp)
+{
+    riscv_set_kvm_aia_bool(KVM_DEV_RISCV_AIA_MODE_EMUL, val);
+}
+
+static bool riscv_get_kvm_aia_hwaccel(Object *obj, Error **errp)
+{
+    return aia_mode == KVM_DEV_RISCV_AIA_MODE_HWACCEL;
+}
+
+static void riscv_set_kvm_aia_hwaccel(Object *obj,  bool val, Error **errp)
+{
+    riscv_set_kvm_aia_bool(KVM_DEV_RISCV_AIA_MODE_HWACCEL, val);
+}
+
+static bool riscv_get_kvm_aia_auto(Object *obj, Error **errp)
+{
+    return aia_mode == KVM_DEV_RISCV_AIA_MODE_AUTO;
+}
+
+static void riscv_set_kvm_aia_auto(Object *obj,  bool val, Error **errp)
+{
+    riscv_set_kvm_aia_bool(KVM_DEV_RISCV_AIA_MODE_AUTO, val);
+}
+
 void kvm_arch_accel_class_init(ObjectClass *oc)
 {
     object_class_property_add_str(oc, "riscv-aia", riscv_get_kvm_aia,
@@ -1681,6 +1737,27 @@ void kvm_arch_accel_class_init(ObjectClass *oc)
         "if the host supports it");
     object_property_set_default_str(object_class_property_find(oc, "riscv-aia"),
                                     "auto");
+
+    object_class_property_add_bool(oc, "riscv-aia-emul",
+                                   riscv_get_kvm_aia_emul,
+                                   riscv_set_kvm_aia_emul);
+    object_class_property_set_description(oc, "riscv-aia-emul",
+        "Set KVM AIA mode to 'emul'. Changing KVM AIA modes relies on host "
+        "support. Default mode is 'auto' if the host supports it");
+
+    object_class_property_add_bool(oc, "riscv-aia-hwaccel",
+                                   riscv_get_kvm_aia_hwaccel,
+                                   riscv_set_kvm_aia_hwaccel);
+    object_class_property_set_description(oc, "riscv-aia-hwaccel",
+        "Set KVM AIA mode to 'hwaccel'. Changing KVM AIA modes relies on host "
+        "support. Default mode is 'auto' if the host supports it");
+
+    object_class_property_add_bool(oc, "riscv-aia-auto",
+                                   riscv_get_kvm_aia_auto,
+                                   riscv_set_kvm_aia_auto);
+    object_class_property_set_description(oc, "riscv-aia-auto",
+        "Set KVM AIA mode to 'auto'. Changing KVM AIA modes "
+        "relies on host support");
 }
 
 void kvm_riscv_aia_create(MachineState *machine, uint64_t group_shift,
