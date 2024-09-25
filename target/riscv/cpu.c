@@ -923,6 +923,13 @@ static void riscv_cpu_reset_hold(Object *obj, ResetType type)
     if (mcc->parent_phases.hold) {
         mcc->parent_phases.hold(obj, type);
     }
+    if (riscv_has_ext(env, RVF) || riscv_has_ext(env, RVD)) {
+        env->mstatus = set_field(env->mstatus, MSTATUS_FS, env->misa_mxl);
+        for (int regnr = 0; regnr < 32; ++regnr) {
+            env->fpr[regnr] = 0;
+        }
+        riscv_csrrw(env, CSR_FCSR, NULL, 0, -1);
+    }
 #ifndef CONFIG_USER_ONLY
     env->misa_mxl = mcc->misa_mxl_max;
     env->priv = PRV_M;
