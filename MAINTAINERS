@@ -1430,8 +1430,9 @@ F: hw/pci-host/ppc4xx_pci.c
 F: tests/functional/test_ppc_bamboo.py
 
 e500
+M: Bernhard Beschow <shentey@gmail.com>
 L: qemu-ppc@nongnu.org
-S: Orphan
+S: Odd Fixes
 F: hw/ppc/e500*
 F: hw/ppc/ppce500_spin.c
 F: hw/gpio/mpc8xxx.c
@@ -1446,8 +1447,9 @@ F: include/hw/ppc/openpic_kvm.h
 F: docs/system/ppc/ppce500.rst
 
 mpc8544ds
+M: Bernhard Beschow <shentey@gmail.com>
 L: qemu-ppc@nongnu.org
-S: Orphan
+S: Odd Fixes
 F: hw/ppc/mpc8544ds.c
 F: hw/ppc/mpc8544_guts.c
 F: tests/functional/test_ppc_mpc8544ds.py
