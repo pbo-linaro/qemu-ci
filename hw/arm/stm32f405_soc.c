@@ -26,6 +26,7 @@
 #include "qapi/error.h"
 #include "exec/address-spaces.h"
 #include "sysemu/sysemu.h"
+#include "hw/arm/stm32.h"
 #include "hw/arm/stm32f405_soc.h"
 #include "hw/qdev-clock.h"
 #include "hw/misc/unimp.h"
@@ -43,6 +44,7 @@ static const uint32_t adc_addr[] = { 0x40012000, 0x40012100, 0x40012200,
 static const uint32_t spi_addr[] =   { 0x40013000, 0x40003800, 0x40003C00,
                                        0x40013400, 0x40015000, 0x40015400 };
 #define EXTI_ADDR                      0x40013C00
+#define GPIO_ADDR                      0x40020000
 
 #define SYSCFG_IRQ               71
 static const int usart_irq[] = { 37, 38, 39, 52, 53, 71, 82, 83 };
@@ -80,6 +82,10 @@ static void stm32f405_soc_initfn(Object *obj)
 
     for (i = 0; i < STM_NUM_SPIS; i++) {
         object_initialize_child(obj, "spi[*]", &s->spi[i], TYPE_STM32F2XX_SPI);
+    }
+
+    for (i = STM32_GPIO_PORT_A; i <= STM32_GPIO_PORT_I; i++) {
+        object_initialize_child(obj, "gpio[*]", &s->gpio[i], TYPE_STM32_GPIO);
     }
 
     object_initialize_child(obj, "exti", &s->exti, TYPE_STM32F4XX_EXTI);
@@ -240,6 +246,31 @@ static void stm32f405_soc_realize(DeviceState *dev_soc, Error **errp)
         sysbus_connect_irq(busdev, 0, qdev_get_gpio_in(armv7m, spi_irq[i]));
     }
 
+    /* GPIO devices */
+    for (i = STM32_GPIO_PORT_A; i <= STM32_GPIO_PORT_I; i++) {
+        dev = DEVICE(&(s->gpio[i]));
+        qdev_prop_set_uint32(dev, "family", STM32_F4);
+        qdev_prop_set_uint32(dev, "port", i);
+        qdev_prop_set_uint32(dev, "ngpio", STM32_GPIO_NPINS);
+        if (!sysbus_realize(SYS_BUS_DEVICE(&s->gpio[i]), errp)) {
+            return;
+        }
+        busdev = SYS_BUS_DEVICE(dev);
+        sysbus_mmio_map(busdev, 0,
+                        GPIO_ADDR + (i * STM32_GPIO_PERIPHERAL_SIZE));
+
+        qdev_connect_gpio_out(DEVICE(&s->rcc), STM32_RCC_GPIO_IRQ_OFFSET + i,
+                              qdev_get_gpio_in_named(dev, "reset-in", 0));
+        qdev_connect_gpio_out(DEVICE(&s->rcc),
+                              STM32_RCC_GPIO_IRQ_OFFSET + i + STM32_RCC_NIRQS,
+                              qdev_get_gpio_in_named(dev, "enable-in", 0));
+        for (int j = 0; j < STM32_GPIO_NPINS; j++) {
+            qdev_connect_gpio_out_named(dev, "input-out", j,
+                                        qdev_get_gpio_in(DEVICE(&s->syscfg),
+                                        i * STM32_GPIO_NPINS + j));
+        }
+    }
+
     /* EXTI device */
     dev = DEVICE(&s->exti);
     if (!sysbus_realize(SYS_BUS_DEVICE(&s->exti), errp)) {
@@ -277,15 +308,6 @@ static void stm32f405_soc_realize(DeviceState *dev_soc, Error **errp)
     create_unimplemented_device("timer[9]",    0x40014000, 0x400);
     create_unimplemented_device("timer[10]",   0x40014400, 0x400);
     create_unimplemented_device("timer[11]",   0x40014800, 0x400);
-    create_unimplemented_device("GPIOA",       0x40020000, 0x400);
-    create_unimplemented_device("GPIOB",       0x40020400, 0x400);
-    create_unimplemented_device("GPIOC",       0x40020800, 0x400);
-    create_unimplemented_device("GPIOD",       0x40020C00, 0x400);
-    create_unimplemented_device("GPIOE",       0x40021000, 0x400);
-    create_unimplemented_device("GPIOF",       0x40021400, 0x400);
-    create_unimplemented_device("GPIOG",       0x40021800, 0x400);
-    create_unimplemented_device("GPIOH",       0x40021C00, 0x400);
-    create_unimplemented_device("GPIOI",       0x40022000, 0x400);
     create_unimplemented_device("CRC",         0x40023000, 0x400);
     create_unimplemented_device("Flash Int",   0x40023C00, 0x400);
     create_unimplemented_device("BKPSRAM",     0x40024000, 0x400);
