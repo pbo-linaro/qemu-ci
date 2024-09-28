@@ -152,3 +152,8 @@ config MAC_PVG_VMAPPLE
     bool
     depends on MAC_PVG
     depends on ARM
+
+config MAC_PVG_PCI
+    bool
+    depends on MAC_PVG && PCI
+    default y if PCI_DEVICES
