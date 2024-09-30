@@ -23,7 +23,7 @@ static void __attribute__((constructor)) migration_threads_init(void)
     qemu_mutex_init(&migration_threads_lock);
 }
 
-MigrationThread *migration_threads_add(const char *name)
+void migration_threads_add(const char *name)
 {
     MigrationThread *thread =  g_new0(MigrationThread, 1);
 
@@ -33,17 +33,26 @@ MigrationThread *migration_threads_add(const char *name)
     WITH_QEMU_LOCK_GUARD(&migration_threads_lock) {
         QLIST_INSERT_HEAD(&migration_threads, thread, node);
     }
-
-    return thread;
 }
 
-void migration_threads_remove(MigrationThread *thread)
+void migration_threads_remove(void)
 {
+    int tid = qemu_get_thread_id();
+    MigrationThread *thread;
+
     QEMU_LOCK_GUARD(&migration_threads_lock);
-    if (thread) {
+
+    QLIST_FOREACH(thread, &migration_threads, node) {
+        if (tid != thread->thread_id) {
+            continue;
+        }
+
         QLIST_REMOVE(thread, node);
         g_free(thread);
+        return;
     }
+
+    g_assert_not_reached();
 }
 
 MigrationThreadInfoList *qmp_query_migrationthreads(Error **errp)

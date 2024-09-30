@@ -570,12 +570,11 @@ int multifd_send_sync_main(void)
 static void *multifd_send_thread(void *opaque)
 {
     MultiFDSendParams *p = opaque;
-    MigrationThread *thread = NULL;
     Error *local_err = NULL;
     int ret = 0;
     bool use_packets = multifd_use_packets();
 
-    thread = migration_threads_add(p->name);
+    migration_threads_add(p->name);
 
     trace_multifd_send_thread_start(p->id);
     rcu_register_thread();
@@ -669,7 +668,7 @@ out:
     }
 
     rcu_unregister_thread();
-    migration_threads_remove(thread);
+    migration_threads_remove();
     trace_multifd_send_thread_end(p->id, p->packets_sent);
 
     return NULL;

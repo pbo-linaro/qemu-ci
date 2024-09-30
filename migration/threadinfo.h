@@ -21,5 +21,5 @@ struct MigrationThread {
     QLIST_ENTRY(MigrationThread) node;
 };
 
-MigrationThread *migration_threads_add(const char *name);
-void migration_threads_remove(MigrationThread *info);
+void migration_threads_add(const char *name);
+void migration_threads_remove(void);
