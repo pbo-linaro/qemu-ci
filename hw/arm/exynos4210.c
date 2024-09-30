@@ -23,7 +23,6 @@
 
 #include "qemu/osdep.h"
 #include "qapi/error.h"
-#include "exec/tswap.h"
 #include "cpu.h"
 #include "hw/cpu/a9mpcore.h"
 #include "hw/irq.h"
@@ -473,7 +472,7 @@ static const MemoryRegionOps exynos4210_chipid_and_omr_ops = {
 void exynos4210_write_secondary(ARMCPU *cpu,
         const struct arm_boot_info *info)
 {
-    int n;
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     uint32_t smpboot[] = {
         0xe59f3034, /* ldr r3, External gic_cpu_if */
         0xe59f2034, /* ldr r2, Internal gic_cpu_if */
@@ -496,8 +495,8 @@ void exynos4210_write_secondary(ARMCPU *cpu,
     };
     smpboot[ARRAY_SIZE(smpboot) - 1] = info->smp_bootreg_addr;
     smpboot[ARRAY_SIZE(smpboot) - 2] = info->gic_cpu_if_addr;
-    for (n = 0; n < ARRAY_SIZE(smpboot); n++) {
-        smpboot[n] = tswap32(smpboot[n]);
+    for (int n = 0; n < ARRAY_SIZE(smpboot); n++) {
+        stl_endian_p(be, &smpboot[n], smpboot[n]);
     }
     rom_add_blob_fixed("smpboot", smpboot, sizeof(smpboot),
                        info->smp_loader_start);

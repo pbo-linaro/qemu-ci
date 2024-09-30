@@ -309,6 +309,7 @@ static const struct {
 static void npcm7xx_write_board_setup(ARMCPU *cpu,
                                       const struct arm_boot_info *info)
 {
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     uint32_t board_setup[] = {
         0xe59f0010,     /* ldr r0, clk_base_addr */
         0xe59f1010,     /* ldr r1, pllcon1_value */
@@ -323,7 +324,7 @@ static void npcm7xx_write_board_setup(ARMCPU *cpu,
     int i;
 
     for (i = 0; i < ARRAY_SIZE(board_setup); i++) {
-        board_setup[i] = tswap32(board_setup[i]);
+        stl_endian_p(be, &board_setup[i], board_setup[i]);
     }
     rom_add_blob_fixed("board-setup", board_setup, sizeof(board_setup),
                        info->board_setup_addr);
@@ -332,6 +333,7 @@ static void npcm7xx_write_board_setup(ARMCPU *cpu,
 static void npcm7xx_write_secondary_boot(ARMCPU *cpu,
                                          const struct arm_boot_info *info)
 {
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     /*
      * The default smpboot stub halts the secondary CPU with a 'wfi'
      * instruction, but the arch/arm/mach-npcm/platsmp.c in the Linux kernel
@@ -353,7 +355,7 @@ static void npcm7xx_write_secondary_boot(ARMCPU *cpu,
     int i;
 
     for (i = 0; i < ARRAY_SIZE(smpboot); i++) {
-        smpboot[i] = tswap32(smpboot[i]);
+        stl_endian_p(be, &smpboot[i], smpboot[i]);
     }
 
     rom_add_blob_fixed("smpboot", smpboot, sizeof(smpboot),

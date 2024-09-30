@@ -137,6 +137,7 @@ void arm_write_bootloader(const char *name,
                           const uint32_t *fixupcontext)
 {
     AddressSpace *as = arm_boot_address_space(cpu, info);
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     /* Fix up the specified bootloader fragment and write it into
      * guest memory using rom_add_blob_fixed(). fixupcontext is
      * an array giving the values to write in for the fixup types
@@ -173,7 +174,7 @@ void arm_write_bootloader(const char *name,
         default:
             abort();
         }
-        code[i] = tswap32(insn);
+        stl_endian_p(be, &code[i], insn);
     }
 
     assert((len * sizeof(uint32_t)) < BOOTLOADER_MAX_SIZE);
@@ -205,6 +206,7 @@ void arm_write_secure_board_setup_dummy_smc(ARMCPU *cpu,
                                             hwaddr mvbar_addr)
 {
     AddressSpace *as = arm_boot_address_space(cpu, info);
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     int n;
     uint32_t mvbar_blob[] = {
         /* mvbar_addr: secure monitor vectors
@@ -243,13 +245,13 @@ void arm_write_secure_board_setup_dummy_smc(ARMCPU *cpu,
           || (info->board_setup_addr + sizeof(board_setup_blob) <= mvbar_addr));
 
     for (n = 0; n < ARRAY_SIZE(mvbar_blob); n++) {
-        mvbar_blob[n] = tswap32(mvbar_blob[n]);
+        stl_endian_p(be, &mvbar_blob[n], mvbar_blob[n]);
     }
     rom_add_blob_fixed_as("board-setup-mvbar", mvbar_blob, sizeof(mvbar_blob),
                           mvbar_addr, as);
 
     for (n = 0; n < ARRAY_SIZE(board_setup_blob); n++) {
-        board_setup_blob[n] = tswap32(board_setup_blob[n]);
+        stl_endian_p(be, &board_setup_blob[n], board_setup_blob[n]);
     }
     rom_add_blob_fixed_as("board-setup", board_setup_blob,
                           sizeof(board_setup_blob), info->board_setup_addr, as);

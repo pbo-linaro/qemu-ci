@@ -36,9 +36,9 @@
 #include "hw/qdev-clock.h"
 #include "sysemu/reset.h"
 #include "qom/object.h"
-#include "exec/tswap.h"
 #include "target/arm/cpu-qom.h"
 #include "qapi/visitor.h"
+#include "cpu.h"
 
 #define TYPE_ZYNQ_MACHINE MACHINE_TYPE_NAME("xilinx-zynq-a9")
 OBJECT_DECLARE_SIMPLE_TYPE(ZynqMachineState, ZYNQ_MACHINE)
@@ -97,6 +97,7 @@ struct ZynqMachineState {
 static void zynq_write_board_setup(ARMCPU *cpu,
                                    const struct arm_boot_info *info)
 {
+    bool be = arm_cpu_code_is_big_endian(&cpu->env);
     int n;
     uint32_t board_setup_blob[] = {
         0xe3a004f8, /* mov r0, #0xf8000000 */
@@ -106,7 +107,7 @@ static void zynq_write_board_setup(ARMCPU *cpu,
         0xe12fff1e, /* bx lr */
     };
     for (n = 0; n < ARRAY_SIZE(board_setup_blob); n++) {
-        board_setup_blob[n] = tswap32(board_setup_blob[n]);
+        stl_endian_p(be, &board_setup_blob[n], board_setup_blob[n]);
     }
     rom_add_blob_fixed("board-setup", board_setup_blob,
                        sizeof(board_setup_blob), BOARD_SETUP_ADDR);
