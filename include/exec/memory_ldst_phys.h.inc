@@ -74,6 +74,16 @@ static inline uint16_t glue(lduw_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr)
                                                MEMTXATTRS_UNSPECIFIED, NULL);
 }
 
+static inline uint16_t glue(lduw_endian_phys, SUFFIX)(bool big_endian,
+                                                      ARG1_DECL, hwaddr addr)
+{
+    return big_endian
+           ? glue(address_space_lduw_le, SUFFIX)(ARG1, addr,
+                                                 MEMTXATTRS_UNSPECIFIED, NULL)
+           : glue(address_space_lduw_be, SUFFIX)(ARG1, addr,
+                                                 MEMTXATTRS_UNSPECIFIED, NULL);
+}
+
 static inline uint32_t glue(ldl_le_phys, SUFFIX)(ARG1_DECL, hwaddr addr)
 {
     return glue(address_space_ldl_le, SUFFIX)(ARG1, addr,
@@ -86,6 +96,16 @@ static inline uint32_t glue(ldl_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr)
                                               MEMTXATTRS_UNSPECIFIED, NULL);
 }
 
+static inline uint32_t glue(ldl_endian_phys, SUFFIX)(bool big_endian,
+                                                     ARG1_DECL, hwaddr addr)
+{
+    return big_endian
+           ? glue(address_space_ldl_le, SUFFIX)(ARG1, addr,
+                                                MEMTXATTRS_UNSPECIFIED, NULL)
+           : glue(address_space_ldl_be, SUFFIX)(ARG1, addr,
+                                                MEMTXATTRS_UNSPECIFIED, NULL);
+}
+
 static inline uint64_t glue(ldq_le_phys, SUFFIX)(ARG1_DECL, hwaddr addr)
 {
     return glue(address_space_ldq_le, SUFFIX)(ARG1, addr,
@@ -96,6 +116,16 @@ static inline uint64_t glue(ldq_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr)
 {
     return glue(address_space_ldq_be, SUFFIX)(ARG1, addr,
                                               MEMTXATTRS_UNSPECIFIED, NULL);
+}
+
+static inline uint32_t glue(ldq_endian_phys, SUFFIX)(bool big_endian,
+                                                     ARG1_DECL, hwaddr addr)
+{
+    return big_endian
+           ? glue(address_space_ldq_le, SUFFIX)(ARG1, addr,
+                                                MEMTXATTRS_UNSPECIFIED, NULL)
+           : glue(address_space_ldq_be, SUFFIX)(ARG1, addr,
+                                                MEMTXATTRS_UNSPECIFIED, NULL);
 }
 
 static inline void glue(stb_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint8_t val)
@@ -116,6 +146,18 @@ static inline void glue(stw_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint16_t va
                                        MEMTXATTRS_UNSPECIFIED, NULL);
 }
 
+static inline void glue(stw_endian_phys, SUFFIX)(bool big_endian, ARG1_DECL,
+                                                 hwaddr addr, uint16_t val)
+{
+    if (big_endian) {
+        glue(address_space_stw_be, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+   } else {
+        glue(address_space_stw_le, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+    }
+}
+
 static inline void glue(stl_le_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint32_t val)
 {
     glue(address_space_stl_le, SUFFIX)(ARG1, addr, val,
@@ -128,6 +170,18 @@ static inline void glue(stl_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint32_t va
                                        MEMTXATTRS_UNSPECIFIED, NULL);
 }
 
+static inline void glue(stl_endian_phys, SUFFIX)(bool big_endian, ARG1_DECL,
+                                                 hwaddr addr, uint32_t val)
+{
+    if (big_endian) {
+        glue(address_space_stl_be, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+   } else {
+        glue(address_space_stl_le, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+    }
+}
+
 static inline void glue(stq_le_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint64_t val)
 {
     glue(address_space_stq_le, SUFFIX)(ARG1, addr, val,
@@ -138,6 +192,18 @@ static inline void glue(stq_be_phys, SUFFIX)(ARG1_DECL, hwaddr addr, uint64_t va
 {
     glue(address_space_stq_be, SUFFIX)(ARG1, addr, val,
                                        MEMTXATTRS_UNSPECIFIED, NULL);
+}
+
+static inline void glue(stq_endian_phys, SUFFIX)(bool big_endian, ARG1_DECL,
+                                                 hwaddr addr, uint64_t val)
+{
+    if (big_endian) {
+        glue(address_space_stq_be, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+   } else {
+        glue(address_space_stq_le, SUFFIX)(ARG1, addr, val,
+                                           MEMTXATTRS_UNSPECIFIED, NULL);
+    }
 }
 #endif
 
