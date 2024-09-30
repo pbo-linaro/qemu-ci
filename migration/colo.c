@@ -823,6 +823,7 @@ static void *colo_process_incoming_thread(void *opaque)
     QIOChannelBuffer *bioc = NULL; /* Cache incoming device state */
     Error *local_err = NULL;
 
+    migration_threads_add(MIGRATION_THREAD_DST_COLO);
     rcu_register_thread();
     qemu_sem_init(&mis->colo_incoming_sem, 0);
 
@@ -831,7 +832,7 @@ static void *colo_process_incoming_thread(void *opaque)
 
     if (get_colo_mode() != COLO_MODE_SECONDARY) {
         error_report("COLO mode must be COLO_MODE_SECONDARY");
-        return NULL;
+        goto out_last;
     }
 
     /* Make sure all file formats throw away their mutable metadata */
@@ -840,7 +841,7 @@ static void *colo_process_incoming_thread(void *opaque)
     bql_unlock();
     if (local_err) {
         error_report_err(local_err);
-        return NULL;
+        goto out_last;
     }
 
     failover_init_state();
@@ -923,7 +924,9 @@ out:
     qemu_sem_wait(&mis->colo_incoming_sem);
     qemu_sem_destroy(&mis->colo_incoming_sem);
 
+out_last:
     rcu_unregister_thread();
+    migration_threads_remove();
     return NULL;
 }
 

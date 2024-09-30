@@ -14,6 +14,7 @@
 #include "qemu/queue.h"
 #include "qemu/lockable.h"
 #include "threadinfo.h"
+#include "migration.h"
 
 QemuMutex migration_threads_lock;
 static QLIST_HEAD(, MigrationThread) migration_threads;

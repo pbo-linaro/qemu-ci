@@ -2321,6 +2321,7 @@ static void *source_return_path_thread(void *opaque)
     int res;
 
     trace_source_return_path_thread_entry();
+    migration_threads_add(MIGRATION_THREAD_SRC_RETURN);
     rcu_register_thread();
 
     while (migration_is_setup_or_active()) {
@@ -2463,8 +2464,9 @@ out:
         migration_rp_kick(ms);
     }
 
-    trace_source_return_path_thread_end();
     rcu_unregister_thread();
+    migration_threads_remove();
+    trace_source_return_path_thread_end();
 
     return NULL;
 }
@@ -3602,6 +3604,8 @@ static void *bg_migration_thread(void *opaque)
     Error *local_err = NULL;
     int ret;
 
+    migration_threads_add(MIGRATION_THREAD_SNAPSHOT);
+
     rcu_register_thread();
     object_ref(OBJECT(s));
 
@@ -3726,6 +3730,7 @@ fail_setup:
     qemu_fclose(fb);
     object_unref(OBJECT(s));
     rcu_unregister_thread();
+    migration_threads_remove();
 
     return NULL;
 }

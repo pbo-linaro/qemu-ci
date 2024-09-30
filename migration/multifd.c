@@ -685,12 +685,16 @@ static void *multifd_tls_handshake_thread(void *opaque)
 {
     MultiFDTLSThreadArgs *args = opaque;
 
+    migration_threads_add(MIGRATION_THREAD_SRC_TLS);
+
     qio_channel_tls_handshake(args->tioc,
                               multifd_new_send_channel_async,
                               args->p,
                               NULL,
                               NULL);
     g_free(args);
+
+    migration_threads_remove();
 
     return NULL;
 }
@@ -1122,6 +1126,7 @@ static void *multifd_recv_thread(void *opaque)
     int ret;
 
     trace_multifd_recv_thread_start(p->id);
+    migration_threads_add(MIGRATION_THREAD_DST_MULTIFD);
     rcu_register_thread();
 
     while (true) {
@@ -1209,6 +1214,7 @@ static void *multifd_recv_thread(void *opaque)
     }
 
     rcu_unregister_thread();
+    migration_threads_remove();
     trace_multifd_recv_thread_end(p->id, p->packets_recved);
 
     return NULL;

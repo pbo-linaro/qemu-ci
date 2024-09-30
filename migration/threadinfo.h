@@ -20,6 +20,3 @@ struct MigrationThread {
     int thread_id; /* ID of the underlying host thread */
     QLIST_ENTRY(MigrationThread) node;
 };
-
-void migration_threads_add(const char *name);
-void migration_threads_remove(void);

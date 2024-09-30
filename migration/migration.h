@@ -551,4 +551,7 @@ int migration_rp_wait(MigrationState *s);
  */
 void migration_rp_kick(MigrationState *s);
 
+void migration_threads_add(const char *name);
+void migration_threads_remove(void);
+
 #endif

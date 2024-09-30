@@ -970,6 +970,7 @@ static void *postcopy_ram_fault_thread(void *opaque)
     RAMBlock *rb = NULL;
 
     trace_postcopy_ram_fault_thread_entry();
+    migration_threads_add(MIGRATION_THREAD_DST_FAULT);
     rcu_register_thread();
     mis->last_rb = NULL; /* last RAMBlock we sent part of */
     qemu_sem_post(&mis->thread_sync_sem);
@@ -1150,9 +1151,12 @@ retry:
             }
         }
     }
-    rcu_unregister_thread();
-    trace_postcopy_ram_fault_thread_exit();
+
     g_free(pfd);
+    rcu_unregister_thread();
+    migration_threads_remove();
+    trace_postcopy_ram_fault_thread_exit();
+
     return NULL;
 }
 
@@ -1733,7 +1737,7 @@ void *postcopy_preempt_thread(void *opaque)
     int ret;
 
     trace_postcopy_preempt_thread_entry();
-
+    migration_threads_add(MIGRATION_THREAD_DST_PREEMPT);
     rcu_register_thread();
 
     qemu_sem_post(&mis->thread_sync_sem);
@@ -1760,7 +1764,7 @@ void *postcopy_preempt_thread(void *opaque)
     qemu_mutex_unlock(&mis->postcopy_prio_thread_mutex);
 
     rcu_unregister_thread();
-
+    migration_threads_remove();
     trace_postcopy_preempt_thread_exit();
 
     return NULL;

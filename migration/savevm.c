@@ -2002,14 +2002,15 @@ static void *postcopy_ram_listen_thread(void *opaque)
     int load_res;
     MigrationState *migr = migrate_get_current();
 
-    object_ref(OBJECT(migr));
+    trace_postcopy_ram_listen_thread_start();
+    migration_threads_add(MIGRATION_THREAD_DST_LISTEN);
+    rcu_register_thread();
 
+    object_ref(OBJECT(migr));
     migrate_set_state(&mis->state, MIGRATION_STATUS_ACTIVE,
                                    MIGRATION_STATUS_POSTCOPY_ACTIVE);
     qemu_sem_post(&mis->thread_sync_sem);
-    trace_postcopy_ram_listen_thread_start();
 
-    rcu_register_thread();
     /*
      * Because we're a thread and not a coroutine we can't yield
      * in qemu_file, and thus we must be blocking now.
@@ -2078,11 +2079,12 @@ static void *postcopy_ram_listen_thread(void *opaque)
     migration_incoming_state_destroy();
     qemu_loadvm_state_cleanup();
 
-    rcu_unregister_thread();
     mis->have_listen_thread = false;
     postcopy_state_set(POSTCOPY_INCOMING_END);
 
     object_unref(OBJECT(migr));
+    rcu_unregister_thread();
+    migration_threads_remove();
 
     return NULL;
 }

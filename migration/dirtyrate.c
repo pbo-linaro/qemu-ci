@@ -729,13 +729,15 @@ void *get_dirtyrate_thread(void *arg)
 {
     struct DirtyRateConfig config = *(struct DirtyRateConfig *)arg;
     int ret;
+
+    migration_threads_add(MIGRATION_THREAD_DIRTY_RATE);
     rcu_register_thread();
 
     ret = dirtyrate_set_state(&CalculatingState, DIRTY_RATE_STATUS_UNSTARTED,
                               DIRTY_RATE_STATUS_MEASURING);
     if (ret == -1) {
         error_report("change dirtyrate state failed.");
-        return NULL;
+        goto out;
     }
 
     calculate_dirtyrate(config);
@@ -746,7 +748,10 @@ void *get_dirtyrate_thread(void *arg)
         error_report("change dirtyrate state failed.");
     }
 
+out:
     rcu_unregister_thread();
+    migration_threads_remove();
+
     return NULL;
 }
 
