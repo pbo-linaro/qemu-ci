@@ -71,36 +71,24 @@ static void tulip_desc_read(TULIPState *s, hwaddr p,
         struct tulip_descriptor *desc)
 {
     const MemTxAttrs attrs = { .memory = true };
+    bool use_big_endian = s->csr[0] & CSR0_DBO;
 
-    if (s->csr[0] & CSR0_DBO) {
-        ldl_be_pci_dma(&s->dev, p, &desc->status, attrs);
-        ldl_be_pci_dma(&s->dev, p + 4, &desc->control, attrs);
-        ldl_be_pci_dma(&s->dev, p + 8, &desc->buf_addr1, attrs);
-        ldl_be_pci_dma(&s->dev, p + 12, &desc->buf_addr2, attrs);
-    } else {
-        ldl_le_pci_dma(&s->dev, p, &desc->status, attrs);
-        ldl_le_pci_dma(&s->dev, p + 4, &desc->control, attrs);
-        ldl_le_pci_dma(&s->dev, p + 8, &desc->buf_addr1, attrs);
-        ldl_le_pci_dma(&s->dev, p + 12, &desc->buf_addr2, attrs);
-    }
+    ldl_endian_pci_dma(use_big_endian, &s->dev, p, &desc->status, attrs);
+    ldl_endian_pci_dma(use_big_endian, &s->dev, p + 4, &desc->control, attrs);
+    ldl_endian_pci_dma(use_big_endian, &s->dev, p + 8, &desc->buf_addr1, attrs);
+    ldl_endian_pci_dma(use_big_endian, &s->dev, p + 12, &desc->buf_addr2, attrs);
 }
 
 static void tulip_desc_write(TULIPState *s, hwaddr p,
         struct tulip_descriptor *desc)
 {
     const MemTxAttrs attrs = { .memory = true };
+    bool use_big_endian = s->csr[0] & CSR0_DBO;
 
-    if (s->csr[0] & CSR0_DBO) {
-        stl_be_pci_dma(&s->dev, p, desc->status, attrs);
-        stl_be_pci_dma(&s->dev, p + 4, desc->control, attrs);
-        stl_be_pci_dma(&s->dev, p + 8, desc->buf_addr1, attrs);
-        stl_be_pci_dma(&s->dev, p + 12, desc->buf_addr2, attrs);
-    } else {
-        stl_le_pci_dma(&s->dev, p, desc->status, attrs);
-        stl_le_pci_dma(&s->dev, p + 4, desc->control, attrs);
-        stl_le_pci_dma(&s->dev, p + 8, desc->buf_addr1, attrs);
-        stl_le_pci_dma(&s->dev, p + 12, desc->buf_addr2, attrs);
-    }
+    stl_endian_pci_dma(use_big_endian, &s->dev, p, desc->status, attrs);
+    stl_endian_pci_dma(use_big_endian, &s->dev, p + 4, desc->control, attrs);
+    stl_endian_pci_dma(use_big_endian, &s->dev, p + 8, desc->buf_addr1, attrs);
+    stl_endian_pci_dma(use_big_endian, &s->dev, p + 12, desc->buf_addr2, attrs);
 }
 
 static void tulip_update_int(TULIPState *s)
