@@ -298,13 +298,14 @@ static inline MemTxResult pci_dma_write(PCIDevice *dev, dma_addr_t addr,
         return st##_s##_dma(pci_get_address_space(dev), addr, val, attrs); \
     }
 
+#define PCI_DMA_DEFINE_LDST_END(_l, _s, _bits) \
+    PCI_DMA_DEFINE_LDST(_l##_le, _s##_le, _bits) \
+    PCI_DMA_DEFINE_LDST(_l##_be, _s##_be, _bits)
+
 PCI_DMA_DEFINE_LDST(ub, b, 8);
-PCI_DMA_DEFINE_LDST(uw_le, w_le, 16)
-PCI_DMA_DEFINE_LDST(l_le, l_le, 32);
-PCI_DMA_DEFINE_LDST(q_le, q_le, 64);
-PCI_DMA_DEFINE_LDST(uw_be, w_be, 16)
-PCI_DMA_DEFINE_LDST(l_be, l_be, 32);
-PCI_DMA_DEFINE_LDST(q_be, q_be, 64);
+PCI_DMA_DEFINE_LDST_END(uw, w, 16)
+PCI_DMA_DEFINE_LDST_END(l,  l, 32)
+PCI_DMA_DEFINE_LDST_END(q,  q, 64)
 
 #undef PCI_DMA_DEFINE_LDST
 
