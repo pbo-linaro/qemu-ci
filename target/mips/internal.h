@@ -293,6 +293,11 @@ static inline bool cpu_is_bigendian_env(CPUMIPSState *env)
     return extract32(env->CP0_Config0, CP0C0_BE, 1);
 }
 
+static inline MemOp mo_endian_env(CPUMIPSState *env)
+{
+    return cpu_is_bigendian_env(env) ? MO_BE : MO_LE;
+}
+
 static inline void compute_hflags(CPUMIPSState *env)
 {
     env->hflags &= ~(MIPS_HFLAG_COP1X | MIPS_HFLAG_64 | MIPS_HFLAG_CP0 |
