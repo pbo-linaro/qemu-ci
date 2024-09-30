@@ -248,10 +248,11 @@ static void mmubooke_create_initial_mapping(CPUPPCState *env,
 static void main_cpu_reset(void *opaque)
 {
     PowerPCCPU *cpu = opaque;
+    CPUState *cs = CPU(cpu);
     CPUPPCState *env = &cpu->env;
     struct boot_info *bi = env->load_info;
 
-    cpu_reset(CPU(cpu));
+    cpu_reset(cs);
 
     /* either we have a kernel to boot or we jump to U-Boot */
     if (bi->entry != UBOOT_ENTRY) {
@@ -261,7 +262,7 @@ static void main_cpu_reset(void *opaque)
 
         /* Create a mapping for the kernel.  */
         mmubooke_create_initial_mapping(env, 0, 0);
-        env->gpr[6] = tswap32(EPAPR_MAGIC);
+        stl_endian_p(ppc_cpu_is_big_endian(cs), &env->gpr[6], EPAPR_MAGIC);
         env->gpr[7] = (16 * MiB) - 8; /* bi->ima_size; */
 
     } else {
