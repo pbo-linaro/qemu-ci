@@ -3467,8 +3467,7 @@ static void *migration_thread(void *opaque)
     Error *local_err = NULL;
     int ret;
 
-    thread = migration_threads_add(MIGRATION_THREAD_SRC_MAIN,
-                                   qemu_get_thread_id());
+    thread = migration_threads_add(MIGRATION_THREAD_SRC_MAIN);
 
     rcu_register_thread();
 

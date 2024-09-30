@@ -23,11 +23,12 @@ static void __attribute__((constructor)) migration_threads_init(void)
     qemu_mutex_init(&migration_threads_lock);
 }
 
-MigrationThread *migration_threads_add(const char *name, int thread_id)
+MigrationThread *migration_threads_add(const char *name)
 {
     MigrationThread *thread =  g_new0(MigrationThread, 1);
+
     thread->name = name;
-    thread->thread_id = thread_id;
+    thread->thread_id = qemu_get_thread_id();
 
     WITH_QEMU_LOCK_GUARD(&migration_threads_lock) {
         QLIST_INSERT_HEAD(&migration_threads, thread, node);

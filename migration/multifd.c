@@ -575,7 +575,7 @@ static void *multifd_send_thread(void *opaque)
     int ret = 0;
     bool use_packets = multifd_use_packets();
 
-    thread = migration_threads_add(p->name, qemu_get_thread_id());
+    thread = migration_threads_add(p->name);
 
     trace_multifd_send_thread_start(p->id);
     rcu_register_thread();
