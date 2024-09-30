@@ -3057,6 +3057,13 @@ static inline bool arm_cpu_data_is_big_endian(CPUARMState *env)
     }
 }
 
+static inline bool bswap_code(bool sctlr_b);
+
+static inline bool arm_cpu_code_is_big_endian(CPUARMState *env)
+{
+    return bswap_code(arm_sctlr_b(env));
+}
+
 #include "exec/cpu-all.h"
 
 /*

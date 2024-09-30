@@ -1167,7 +1167,6 @@ static void arm_disas_set_info(CPUState *cpu, disassemble_info *info)
 {
     ARMCPU *ac = ARM_CPU(cpu);
     CPUARMState *env = &ac->env;
-    bool sctlr_b;
 
     if (is_a64(env)) {
         info->cap_arch = CS_ARCH_ARM64;
@@ -1194,8 +1193,7 @@ static void arm_disas_set_info(CPUState *cpu, disassemble_info *info)
         info->cap_mode = cap_mode;
     }
 
-    sctlr_b = arm_sctlr_b(env);
-    if (bswap_code(sctlr_b)) {
+    if (arm_cpu_code_is_big_endian(env)) {
 #if TARGET_BIG_ENDIAN
         info->endian = BFD_ENDIAN_LITTLE;
 #else
@@ -1204,7 +1202,7 @@ static void arm_disas_set_info(CPUState *cpu, disassemble_info *info)
     }
     info->flags &= ~INSN_ARM_BE32;
 #ifndef CONFIG_USER_ONLY
-    if (sctlr_b) {
+    if (arm_sctlr_b(env)) {
         info->flags |= INSN_ARM_BE32;
     }
 #endif

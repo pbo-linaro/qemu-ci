@@ -29,7 +29,7 @@
 
 #define get_user_code_u32(x, gaddr, env)                \
     ({ abi_long __r = get_user_u32((x), (gaddr));       \
-        if (!__r && bswap_code(arm_sctlr_b(env))) {     \
+        if (!__r && arm_cpu_code_is_big_endian(env)) {  \
             (x) = bswap32(x);                           \
         }                                               \
         __r;                                            \
@@ -37,7 +37,7 @@
 
 #define get_user_code_u16(x, gaddr, env)                \
     ({ abi_long __r = get_user_u16((x), (gaddr));       \
-        if (!__r && bswap_code(arm_sctlr_b(env))) {     \
+        if (!__r && arm_cpu_code_is_big_endian(env)) {  \
             (x) = bswap16(x);                           \
         }                                               \
         __r;                                            \
