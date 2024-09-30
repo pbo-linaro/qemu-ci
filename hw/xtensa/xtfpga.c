@@ -438,11 +438,9 @@ static void xtfpga_init(const XtfpgaBoardDesc *board, MachineState *machine)
             const size_t boot_sz = TARGET_BIG_ENDIAN ? sizeof(boot_be)
                                                      : sizeof(boot_le);
             uint8_t *boot = TARGET_BIG_ENDIAN ? boot_be : boot_le;
-            uint32_t entry_pc = tswap32(entry_point);
-            uint32_t entry_a2 = tswap32(tagptr);
 
-            memcpy(boot + 4, &entry_pc, sizeof(entry_pc));
-            memcpy(boot + 8, &entry_a2, sizeof(entry_a2));
+            stl_endian_p(TARGET_BIG_ENDIAN, boot + 4, entry_point);
+            stl_endian_p(TARGET_BIG_ENDIAN, boot + 8, tagptr);
             cpu_physical_memory_write(env->pc, boot, boot_sz);
         }
     } else {
