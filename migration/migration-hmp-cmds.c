@@ -814,3 +814,28 @@ void loadvm_completion(ReadLineState *rs, int nb_args, const char *str)
         vm_completion(rs, str);
     }
 }
+
+void hmp_info_migrationthreads(Monitor *mon, const QDict *qdict)
+{
+    MigrationThreadInfoList *list;
+    MigrationThreadInfo *entry;
+    Error *err = NULL;
+
+    list = qmp_query_migrationthreads(&err);
+
+    if (!list) {
+        monitor_printf(mon, "No migration threads found\n");
+        return;
+    }
+
+    monitor_printf(mon, "%-16s%s\n", "TID", "Thread Name");
+    while (list) {
+        entry = list->value;
+        monitor_printf(mon, "%-16" PRId64 "%s\n",
+                       entry->thread_id, entry->name);
+        list = list->next;
+    }
+
+    qapi_free_MigrationThreadInfoList(list);
+    hmp_handle_error(mon, err);
+}

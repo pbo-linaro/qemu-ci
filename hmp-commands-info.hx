@@ -513,6 +513,19 @@ SRST
 ERST
 
     {
+        .name       = "migrationthreads",
+        .args_type  = "",
+        .params     = "",
+        .help       = "show migration threads information",
+        .cmd        = hmp_info_migrationthreads,
+    },
+
+SRST
+  ``info migrationthreads``
+    Show migration threads information.
+ERST
+
+    {
         .name       = "balloon",
         .args_type  = "",
         .params     = "",
