@@ -300,7 +300,29 @@ static inline MemTxResult pci_dma_write(PCIDevice *dev, dma_addr_t addr,
 
 #define PCI_DMA_DEFINE_LDST_END(_l, _s, _bits) \
     PCI_DMA_DEFINE_LDST(_l##_le, _s##_le, _bits) \
-    PCI_DMA_DEFINE_LDST(_l##_be, _s##_be, _bits)
+    PCI_DMA_DEFINE_LDST(_l##_be, _s##_be, _bits) \
+    static inline MemTxResult ld##_l##_endian_pci_dma(bool is_big_endian, \
+                                                      PCIDevice *dev, \
+                                                      dma_addr_t addr, \
+                                                      uint##_bits##_t *val, \
+                                                      MemTxAttrs attrs) \
+    { \
+        AddressSpace *pci_as = pci_get_address_space(dev); \
+        return is_big_endian \
+               ? ld##_l##_be_dma(pci_as, addr, val, attrs) \
+               : ld##_l##_le_dma(pci_as, addr, val, attrs); \
+    } \
+    static inline MemTxResult st##_s##_endian_pci_dma(bool is_big_endian, \
+                                                      PCIDevice *dev, \
+                                                      dma_addr_t addr, \
+                                                      uint##_bits##_t val, \
+                                                      MemTxAttrs attrs) \
+    { \
+        AddressSpace *pci_as = pci_get_address_space(dev); \
+        return is_big_endian \
+               ? st##_s##_be_dma(pci_as, addr, val, attrs) \
+               : st##_s##_le_dma(pci_as, addr, val, attrs); \
+    }
 
 PCI_DMA_DEFINE_LDST(ub, b, 8);
 PCI_DMA_DEFINE_LDST_END(uw, w, 16)
