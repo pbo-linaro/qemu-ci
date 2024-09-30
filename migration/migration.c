@@ -2073,6 +2073,9 @@ static bool migrate_prepare(MigrationState *s, bool resume, Error **errp)
     return true;
 }
 
+static void qmp_migrate_finish(MigrationAddress *addr, bool resume_requested,
+                               Error **errp);
+
 void qmp_migrate(const char *uri, bool has_channels,
                  MigrationChannelList *channels, bool has_detach, bool detach,
                  bool has_resume, bool resume, Error **errp)
@@ -2120,12 +2123,6 @@ void qmp_migrate(const char *uri, bool has_channels,
         return;
     }
 
-    if (!resume_requested) {
-        if (!yank_register_instance(MIGRATION_YANK_INSTANCE, errp)) {
-            return;
-        }
-    }
-
     if (migrate_mode_is_cpr(s)) {
         int ret = migration_stop_vm(s, RUN_STATE_FINISH_MIGRATE);
         if (ret < 0) {
@@ -2137,6 +2134,30 @@ void qmp_migrate(const char *uri, bool has_channels,
 
     if (cpr_state_save(&local_err)) {
         goto out;
+    }
+
+    qmp_migrate_finish(addr, resume_requested, errp);
+
+out:
+    if (local_err) {
+        migrate_fd_error(s, local_err);
+        error_propagate(errp, local_err);
+        if (stopped) {
+            vm_resume(s->vm_old_state);
+        }
+    }
+}
+
+static void qmp_migrate_finish(MigrationAddress *addr, bool resume_requested,
+                               Error **errp)
+{
+    MigrationState *s = migrate_get_current();
+    Error *local_err = NULL;
+
+    if (!resume_requested) {
+        if (!yank_register_instance(MIGRATION_YANK_INSTANCE, errp)) {
+            return;
+        }
     }
 
     if (addr->transport == MIGRATION_ADDRESS_TYPE_SOCKET) {
@@ -2163,14 +2184,13 @@ void qmp_migrate(const char *uri, bool has_channels,
                           MIGRATION_STATUS_FAILED);
     }
 
-out:
     if (local_err) {
         if (!resume_requested) {
             yank_unregister_instance(MIGRATION_YANK_INSTANCE);
         }
         migrate_fd_error(s, local_err);
         error_propagate(errp, local_err);
-        if (stopped) {
+        if (migrate_mode_is_cpr(s)) {
             vm_resume(s->vm_old_state);
         }
         return;
