@@ -43,30 +43,21 @@ static inline uint16_t virtio_lduw_phys(VirtIODevice *vdev, hwaddr pa)
 {
     AddressSpace *dma_as = vdev->dma_as;
 
-    if (virtio_access_is_big_endian(vdev)) {
-        return lduw_be_phys(dma_as, pa);
-    }
-    return lduw_le_phys(dma_as, pa);
+    return lduw_endian_phys(virtio_access_is_big_endian(vdev), dma_as, pa);
 }
 
 static inline uint32_t virtio_ldl_phys(VirtIODevice *vdev, hwaddr pa)
 {
     AddressSpace *dma_as = vdev->dma_as;
 
-    if (virtio_access_is_big_endian(vdev)) {
-        return ldl_be_phys(dma_as, pa);
-    }
-    return ldl_le_phys(dma_as, pa);
+    return ldl_endian_phys(virtio_access_is_big_endian(vdev), dma_as, pa);
 }
 
 static inline uint64_t virtio_ldq_phys(VirtIODevice *vdev, hwaddr pa)
 {
     AddressSpace *dma_as = vdev->dma_as;
 
-    if (virtio_access_is_big_endian(vdev)) {
-        return ldq_be_phys(dma_as, pa);
-    }
-    return ldq_le_phys(dma_as, pa);
+    return ldq_endian_phys(virtio_access_is_big_endian(vdev), dma_as, pa);
 }
 
 static inline void virtio_stw_phys(VirtIODevice *vdev, hwaddr pa,
@@ -74,11 +65,7 @@ static inline void virtio_stw_phys(VirtIODevice *vdev, hwaddr pa,
 {
     AddressSpace *dma_as = vdev->dma_as;
 
-    if (virtio_access_is_big_endian(vdev)) {
-        stw_be_phys(dma_as, pa, value);
-    } else {
-        stw_le_phys(dma_as, pa, value);
-    }
+    stw_endian_phys(virtio_access_is_big_endian(vdev), dma_as, pa, value);
 }
 
 static inline void virtio_stl_phys(VirtIODevice *vdev, hwaddr pa,
@@ -86,11 +73,7 @@ static inline void virtio_stl_phys(VirtIODevice *vdev, hwaddr pa,
 {
     AddressSpace *dma_as = vdev->dma_as;
 
-    if (virtio_access_is_big_endian(vdev)) {
-        stl_be_phys(dma_as, pa, value);
-    } else {
-        stl_le_phys(dma_as, pa, value);
-    }
+    stl_endian_phys(virtio_access_is_big_endian(vdev), dma_as, pa, value);
 }
 
 static inline void virtio_stw_p(VirtIODevice *vdev, void *ptr, uint16_t v)
