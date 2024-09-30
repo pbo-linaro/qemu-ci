@@ -624,7 +624,7 @@ static void bl_setup_gt64120_jump_kernel(void **p, uint64_t run_addr,
     static const char pci_pins_cfg[PCI_NUM_PINS] = {
         10, 10, 11, 11 /* PIIX IRQRC[A:D] */
     };
-    const BlCpuCfg bl_cfg = { };
+    const BlCpuCfg bl_cfg = { .cpu_is_bigendian = TARGET_BIG_ENDIAN };
 
     /* Bus endianness is always reversed */
 #if TARGET_BIG_ENDIAN

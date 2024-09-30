@@ -13,6 +13,7 @@
 #include "exec/target_long.h"
 
 typedef struct bl_cpu_cfg {
+    bool cpu_is_bigendian;
 } BlCpuCfg;
 
 void bl_gen_jump_to(const BlCpuCfg *cfg, void **p, target_ulong jump_addr);

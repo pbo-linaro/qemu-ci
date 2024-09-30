@@ -165,7 +165,7 @@ static uint64_t load_kernel(MIPSCPU *cpu)
 static void write_bootloader(CPUMIPSState *env, uint8_t *base,
                              uint64_t kernel_addr)
 {
-    const BlCpuCfg bl_cfg = { };
+    const BlCpuCfg bl_cfg = { .cpu_is_bigendian = false };
     uint32_t *p;
 
     /* Small bootloader */

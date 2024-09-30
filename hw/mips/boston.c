@@ -325,7 +325,7 @@ type_init(boston_register_types)
 
 static void gen_firmware(void *p, hwaddr kernel_entry, hwaddr fdt_addr)
 {
-    const BlCpuCfg bl_cfg = { };
+    const BlCpuCfg bl_cfg = { .cpu_is_bigendian = TARGET_BIG_ENDIAN };
     uint64_t regaddr;
 
     /* Move CM GCRs */

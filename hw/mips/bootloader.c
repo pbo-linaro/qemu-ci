@@ -58,9 +58,9 @@ static void st_nm32_p(const BlCpuCfg *cfg, void **ptr, uint32_t insn)
 {
     uint16_t *p = *ptr;
 
-    stw_p(p, insn >> 16);
+    stw_endian_p(cfg->cpu_is_bigendian, p, insn >> 16);
     p++;
-    stw_p(p, insn >> 0);
+    stw_endian_p(cfg->cpu_is_bigendian, p, insn >> 0);
     p++;
 
     *ptr = p;
@@ -74,7 +74,7 @@ static void bl_gen_nop(const BlCpuCfg *cfg, void **ptr)
     } else {
         uint32_t *p = *ptr;
 
-        stl_p(p, 0);
+        stl_endian_p(cfg->cpu_is_bigendian, p, 0);
         p++;
         *ptr = p;
     }
@@ -95,7 +95,7 @@ static void bl_gen_r_type(const BlCpuCfg *cfg,
     insn = deposit32(insn, 6, 5, shift);
     insn = deposit32(insn, 0, 6, funct);
 
-    stl_p(p, insn);
+    stl_endian_p(cfg->cpu_is_bigendian, p, insn);
     p++;
 
     *ptr = p;
@@ -113,7 +113,7 @@ static void bl_gen_i_type(const BlCpuCfg *cfg,
     insn = deposit32(insn, 16, 5, rt);
     insn = deposit32(insn, 0, 16, imm);
 
-    stl_p(p, insn);
+    stl_endian_p(cfg->cpu_is_bigendian, p, insn);
     p++;
 
     *ptr = p;
