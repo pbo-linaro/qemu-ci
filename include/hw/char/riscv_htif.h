@@ -35,6 +35,7 @@ typedef struct HTIFState {
     hwaddr tohost_offset;
     hwaddr fromhost_offset;
     MemoryRegion mmio;
+    bool target_is_bigendian;
 
     CharBackend chr;
     uint64_t pending_read;
@@ -49,6 +50,7 @@ void htif_symbol_callback(const char *st_name, int st_info, uint64_t st_value,
 
 /* legacy pre qom */
 HTIFState *htif_mm_init(MemoryRegion *address_space, Chardev *chr,
-                        uint64_t nonelf_base, bool custom_base);
+                        uint64_t nonelf_base, bool custom_base,
+                        bool target_is_bigendian);
 
 #endif

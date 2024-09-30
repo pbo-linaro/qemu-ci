@@ -327,7 +327,7 @@ static void spike_board_init(MachineState *machine)
 
     /* initialize HTIF using symbols found in load_kernel */
     htif_mm_init(system_memory, serial_hd(0), memmap[SPIKE_HTIF].base,
-                 htif_custom_base);
+                 htif_custom_base, TARGET_BIG_ENDIAN);
 }
 
 static void spike_set_signature(Object *obj, const char *val, Error **errp)

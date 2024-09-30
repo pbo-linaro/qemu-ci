@@ -30,7 +30,6 @@
 #include "qemu/timer.h"
 #include "qemu/error-report.h"
 #include "exec/address-spaces.h"
-#include "exec/tswap.h"
 #include "sysemu/dma.h"
 #include "sysemu/runstate.h"
 
@@ -211,13 +210,17 @@ static void htif_handle_tohost_write(HTIFState *s, uint64_t val_written)
                     SHUTDOWN_CAUSE_GUEST_SHUTDOWN, exit_code);
                 return;
             } else {
+                bool be = s->target_is_bigendian;
                 uint64_t syscall[8];
+
                 cpu_physical_memory_read(payload, syscall, sizeof(syscall));
-                if (tswap64(syscall[0]) == PK_SYS_WRITE &&
-                    tswap64(syscall[1]) == HTIF_DEV_CONSOLE &&
-                    tswap64(syscall[3]) == HTIF_CONSOLE_CMD_PUTC) {
+                if (ldq_endian_p(be, &syscall[0]) == PK_SYS_WRITE &&
+                    ldq_endian_p(be, &syscall[1]) == HTIF_DEV_CONSOLE &&
+                    ldq_endian_p(be, &syscall[3]) == HTIF_CONSOLE_CMD_PUTC) {
                     uint8_t ch;
-                    cpu_physical_memory_read(tswap64(syscall[2]), &ch, 1);
+
+                    cpu_physical_memory_read(ldl_endian_p(be, &syscall[2]),
+                                             &ch, 1);
                     qemu_chr_fe_write(&s->chr, &ch, 1);
                     resp = 0x100 | (uint8_t)payload;
                 } else {
@@ -320,7 +323,8 @@ static const MemoryRegionOps htif_mm_ops = {
 };
 
 HTIFState *htif_mm_init(MemoryRegion *address_space, Chardev *chr,
-                        uint64_t nonelf_base, bool custom_base)
+                        uint64_t nonelf_base, bool custom_base,
+                        bool target_is_bigendian)
 {
     uint64_t base, size, tohost_offset, fromhost_offset;
 
@@ -345,6 +349,7 @@ HTIFState *htif_mm_init(MemoryRegion *address_space, Chardev *chr,
     s->pending_read = 0;
     s->allow_tohost = 0;
     s->fromhost_inprogress = 0;
+    s->target_is_bigendian = target_is_bigendian;
     qemu_chr_fe_init(&s->chr, chr, &error_abort);
     qemu_chr_fe_set_handlers(&s->chr, htif_can_recv, htif_recv, htif_event,
         htif_be_change, s, NULL, true);
