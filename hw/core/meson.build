@@ -45,3 +45,6 @@ system_ss.add(files(
   'vm-change-state-handler.c',
   'clock-vmstate.c',
 ))
+specific_ss.add(files(
+  'machine-compat.c',
+))
