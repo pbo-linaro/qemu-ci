@@ -131,10 +131,12 @@ static const ARMInsnFixup smpboot[] = {
 };
 
 void arm_write_bootloader(const char *name,
-                          AddressSpace *as, hwaddr addr,
+                          ARMCPU *cpu, const struct arm_boot_info *info,
+                          hwaddr addr,
                           const ARMInsnFixup *insns,
                           const uint32_t *fixupcontext)
 {
+    AddressSpace *as = arm_boot_address_space(cpu, info);
     /* Fix up the specified bootloader fragment and write it into
      * guest memory using rom_add_blob_fixed(). fixupcontext is
      * an array giving the values to write in for the fixup types
@@ -185,7 +187,6 @@ static void default_write_secondary(ARMCPU *cpu,
                                     const struct arm_boot_info *info)
 {
     uint32_t fixupcontext[FIXUP_MAX];
-    AddressSpace *as = arm_boot_address_space(cpu, info);
 
     fixupcontext[FIXUP_GIC_CPU_IF] = info->gic_cpu_if_addr;
     fixupcontext[FIXUP_BOOTREG] = info->smp_bootreg_addr;
@@ -195,7 +196,7 @@ static void default_write_secondary(ARMCPU *cpu,
         fixupcontext[FIXUP_DSB] = CP15_DSB_INSN;
     }
 
-    arm_write_bootloader("smpboot", as, info->smp_loader_start,
+    arm_write_bootloader("smpboot", cpu, info, info->smp_loader_start,
                          smpboot, fixupcontext);
 }
 
@@ -1128,7 +1129,7 @@ static void arm_setup_direct_kernel_boot(ARMCPU *cpu,
         fixupcontext[FIXUP_ENTRYPOINT_LO] = entry;
         fixupcontext[FIXUP_ENTRYPOINT_HI] = entry >> 32;
 
-        arm_write_bootloader("bootloader", as, info->loader_start,
+        arm_write_bootloader("bootloader", cpu, info, info->loader_start,
                              primary_loader, fixupcontext);
 
         if (info->write_board_setup) {

@@ -206,13 +206,15 @@ typedef struct ARMInsnFixup {
 /**
  * arm_write_bootloader - write a bootloader to guest memory
  * @name: name of the bootloader blob
- * @as: AddressSpace to write the bootloader
+ * @cpu: handle to the first CPU object
+ * @info: handle to the boot info struct
  * @addr: guest address to write it
  * @insns: the blob to be loaded
  * @fixupcontext: context to be used for any fixups in @insns
  *
  * Write a bootloader to guest memory at address @addr in the address
- * space @as. @name is the name to use for the resulting ROM blob, so
+ * space returned by @arm_boot_address_space().
+ * @name is the name to use for the resulting ROM blob, so
  * it should be unique in the system and reasonably identifiable for debugging.
  *
  * @insns must be an array of ARMInsnFixup structs, each of which has
@@ -228,7 +230,8 @@ typedef struct ARMInsnFixup {
  * the entries that @insns refers to.
  */
 void arm_write_bootloader(const char *name,
-                          AddressSpace *as, hwaddr addr,
+                          ARMCPU *cpu, const struct arm_boot_info *info,
+                          hwaddr addr,
                           const ARMInsnFixup *insns,
                           const uint32_t *fixupcontext);
 

@@ -217,7 +217,6 @@ struct AspeedMachineState {
 static void aspeed_write_smpboot(ARMCPU *cpu,
                                  const struct arm_boot_info *info)
 {
-    AddressSpace *as = arm_boot_address_space(cpu, info);
     static const ARMInsnFixup poll_mailbox_ready[] = {
         /*
          * r2 = per-cpu go sign value
@@ -244,7 +243,7 @@ static void aspeed_write_smpboot(ARMCPU *cpu,
     };
     static const uint32_t fixupcontext[FIXUP_MAX] = { 0 };
 
-    arm_write_bootloader("aspeed.smpboot", as, info->smp_loader_start,
+    arm_write_bootloader("aspeed.smpboot", cpu, info, info->smp_loader_start,
                          poll_mailbox_ready, fixupcontext);
 }
 

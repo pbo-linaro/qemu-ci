@@ -137,7 +137,7 @@ static void write_smpboot(ARMCPU *cpu, const struct arm_boot_info *info)
     QEMU_BUILD_BUG_ON((BOARDSETUP_ADDR & 0xf) != 0
                       || (BOARDSETUP_ADDR >> 4) >= 0x100);
 
-    arm_write_bootloader("raspi_smpboot", arm_boot_address_space(cpu, info),
+    arm_write_bootloader("raspi_smpboot", cpu, info,
                          info->smp_loader_start, smpboot, fixupcontext);
 }
 
@@ -172,7 +172,7 @@ static void write_smpboot64(ARMCPU *cpu, const struct arm_boot_info *info)
         0, 0, 0, 0
     };
 
-    arm_write_bootloader("raspi_smpboot", as, info->smp_loader_start,
+    arm_write_bootloader("raspi_smpboot", cpu, info, info->smp_loader_start,
                          smpboot, fixupcontext);
     rom_add_blob_fixed_as("raspi_spintables", spintables, sizeof(spintables),
                           SPINTABLE_ADDR, as);
