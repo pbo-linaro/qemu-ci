@@ -699,11 +699,7 @@ static uint64_t arm_ldq_ptw(CPUARMState *env, S1Translate *ptw,
             data = le64_to_cpu(data);
         }
 #else
-        if (ptw->out_be) {
-            data = ldq_be_p(host);
-        } else {
-            data = ldq_le_p(host);
-        }
+        data = ldq_endian_p(ptw->out_be, host);
 #endif
     } else {
         /* Page tables are in MMIO. */
@@ -860,16 +856,9 @@ static uint64_t arm_casq_ptw(CPUARMState *env, uint64_t old_val,
     if (!locked) {
         bql_lock();
     }
-    if (ptw->out_be) {
-        cur_val = ldq_be_p(host);
-        if (cur_val == old_val) {
-            stq_be_p(host, new_val);
-        }
-    } else {
-        cur_val = ldq_le_p(host);
-        if (cur_val == old_val) {
-            stq_le_p(host, new_val);
-        }
+    cur_val = ldq_endian_p(ptw->out_be, host);
+    if (cur_val == old_val) {
+        stq_endian_p(ptw->out_be, host, new_val);
     }
     if (!locked) {
         bql_unlock();
