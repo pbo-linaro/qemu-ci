@@ -3007,6 +3007,8 @@ static inline bool ppc_interrupts_little_endian(PowerPCCPU *cpu, bool hv)
 
     return ile;
 }
+
+bool ppc_cpu_is_big_endian(CPUState *cs);
 #endif
 
 void dump_mmu(CPUPPCState *env);

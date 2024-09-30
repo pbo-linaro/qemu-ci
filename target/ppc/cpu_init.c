@@ -7343,7 +7343,7 @@ static void ppc_cpu_reset_hold(Object *obj, ResetType type)
 
 #ifndef CONFIG_USER_ONLY
 
-static bool ppc_cpu_is_big_endian(CPUState *cs)
+bool ppc_cpu_is_big_endian(CPUState *cs)
 {
     cpu_synchronize_state(cs);
 
