@@ -13,11 +13,13 @@
 #include "qemu/osdep.h"
 #include "qemu/queue.h"
 #include "qemu/lockable.h"
-#include "threadinfo.h"
 #include "migration.h"
+#include "qapi/qapi-commands-migration.h"
+#include "qapi/qapi-visit-migration.h"
+#include "qapi/clone-visitor.h"
 
 QemuMutex migration_threads_lock;
-static QLIST_HEAD(, MigrationThread) migration_threads;
+static MigrationThreadInfoList *migration_threads;
 
 static void __attribute__((constructor)) migration_threads_init(void)
 {
@@ -26,31 +28,40 @@ static void __attribute__((constructor)) migration_threads_init(void)
 
 void migration_threads_add(const char *name)
 {
-    MigrationThread *thread =  g_new0(MigrationThread, 1);
+    MigrationThreadInfo *thread = g_new0(MigrationThreadInfo, 1);
 
-    thread->name = name;
+    thread->name = g_strdup(name);
     thread->thread_id = qemu_get_thread_id();
 
     WITH_QEMU_LOCK_GUARD(&migration_threads_lock) {
-        QLIST_INSERT_HEAD(&migration_threads, thread, node);
+        QAPI_LIST_PREPEND(migration_threads, thread);
     }
 }
 
 void migration_threads_remove(void)
 {
     int tid = qemu_get_thread_id();
-    MigrationThread *thread;
+    MigrationThreadInfoList *thread, *prev;
 
     QEMU_LOCK_GUARD(&migration_threads_lock);
 
-    QLIST_FOREACH(thread, &migration_threads, node) {
-        if (tid != thread->thread_id) {
-            continue;
-        }
+    prev = NULL;
+    thread = migration_threads;
 
-        QLIST_REMOVE(thread, node);
-        g_free(thread);
-        return;
+    while (thread) {
+        if (tid == thread->value->thread_id) {
+            if (!prev) {
+                migration_threads = thread->next;
+            } else {
+                prev->next = thread->next;
+            }
+            /* Terminate this single object to not free the rest */
+            thread->next = NULL;
+            qapi_free_MigrationThreadInfoList(thread);
+            return;
+        }
+        prev = thread;
+        thread = thread->next;
     }
 
     g_assert_not_reached();
@@ -58,18 +69,7 @@ void migration_threads_remove(void)
 
 MigrationThreadInfoList *qmp_query_migrationthreads(Error **errp)
 {
-    MigrationThreadInfoList *head = NULL;
-    MigrationThreadInfoList **tail = &head;
-    MigrationThread *thread = NULL;
-
     QEMU_LOCK_GUARD(&migration_threads_lock);
-    QLIST_FOREACH(thread, &migration_threads, node) {
-        MigrationThreadInfo *info = g_new0(MigrationThreadInfo, 1);
-        info->name = g_strdup(thread->name);
-        info->thread_id = thread->thread_id;
 
-        QAPI_LIST_APPEND(tail, info);
-    }
-
-    return head;
+    return QAPI_CLONE(MigrationThreadInfoList, migration_threads);
 }
