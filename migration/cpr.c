@@ -21,10 +21,23 @@
 typedef QLIST_HEAD(CprFdList, CprFd) CprFdList;
 
 typedef struct CprState {
+    MigMode mode;
     CprFdList fds;
 } CprState;
 
-static CprState cpr_state;
+static CprState cpr_state = {
+    .mode = MIG_MODE_NONE,
+};
+
+MigMode cpr_get_incoming_mode(void)
+{
+    return cpr_state.mode;
+}
+
+void cpr_set_incoming_mode(MigMode mode)
+{
+    cpr_state.mode = mode;
+}
 
 /****************************************************************************/
 
@@ -124,11 +137,19 @@ void cpr_resave_fd(const char *name, int id, int fd)
 /*************************************************************************/
 #define CPR_STATE "CprState"
 
+static int cpr_state_presave(void *opaque)
+{
+    cpr_state.mode = migrate_mode();
+    return 0;
+}
+
 static const VMStateDescription vmstate_cpr_state = {
     .name = CPR_STATE,
     .version_id = 1,
     .minimum_version_id = 1,
+    .pre_save = cpr_state_presave,
     .fields = (VMStateField[]) {
+        VMSTATE_UINT32(mode, CprState),
         VMSTATE_QLIST_V(fds, CprState, 1, vmstate_cpr_fd, CprFd, next),
         VMSTATE_END_OF_LIST()
     }

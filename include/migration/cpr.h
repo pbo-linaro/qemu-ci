@@ -8,8 +8,15 @@
 #ifndef MIGRATION_CPR_H
 #define MIGRATION_CPR_H
 
+#include "qapi/qapi-types-migration.h"
+
+#define MIG_MODE_NONE           -1
+
 #define QEMU_CPR_FILE_MAGIC     0x51435052
 #define QEMU_CPR_FILE_VERSION   0x00000001
+
+MigMode cpr_get_incoming_mode(void);
+void cpr_set_incoming_mode(MigMode mode);
 
 typedef int (*cpr_walk_fd_cb)(int fd);
 void cpr_save_fd(const char *name, int id, int fd);
