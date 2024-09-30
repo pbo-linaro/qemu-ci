@@ -9,6 +9,7 @@
 #include "qapi/error.h"
 #include "migration/cpr.h"
 #include "migration/misc.h"
+#include "migration/options.h"
 #include "migration/qemu-file.h"
 #include "migration/savevm.h"
 #include "migration/vmstate.h"
@@ -57,7 +58,7 @@ static const VMStateDescription vmstate_cpr_fd = {
         VMSTATE_UINT32(namelen, CprFd),
         VMSTATE_VBUFFER_ALLOC_UINT32(name, CprFd, 0, NULL, namelen),
         VMSTATE_INT32(id, CprFd),
-        VMSTATE_INT32(fd, CprFd),
+        VMSTATE_FD(fd, CprFd),
         VMSTATE_END_OF_LIST()
     }
 };
@@ -174,9 +175,16 @@ int cpr_state_save(Error **errp)
 {
     int ret;
     QEMUFile *f;
+    MigMode mode = migrate_mode();
 
-    /* set f based on mode in a later patch in this series */
-    return 0;
+    if (mode == MIG_MODE_CPR_TRANSFER) {
+        f = cpr_transfer_output(migrate_cpr_uri(), errp);
+    } else {
+        return 0;
+    }
+    if (!f) {
+        return -1;
+    }
 
     qemu_put_be32(f, QEMU_CPR_FILE_MAGIC);
     qemu_put_be32(f, QEMU_CPR_FILE_VERSION);
@@ -205,8 +213,18 @@ int cpr_state_load(Error **errp)
     uint32_t v;
     QEMUFile *f;
 
-    /* set f based on mode in a later patch in this series */
-    return 0;
+    /*
+     * Mode will be loaded in CPR state, so cannot use it to decide which
+     * form of state to load.
+     */
+    if (cpr_uri) {
+        f = cpr_transfer_input(cpr_uri, errp);
+    } else {
+        return 0;
+    }
+    if (!f) {
+        return -1;
+    }
 
     v = qemu_get_be32(f);
     if (v != QEMU_CPR_FILE_MAGIC) {
@@ -242,4 +260,10 @@ void cpr_state_close(void)
         qemu_fclose(cpr_state_file);
         cpr_state_file = NULL;
     }
+}
+
+bool cpr_needed_for_reuse(void *opaque)
+{
+    MigMode mode = migrate_mode();
+    return mode == MIG_MODE_CPR_TRANSFER;
 }

@@ -15,6 +15,7 @@
 #include "qemu-file.h"
 #include "migration.h"
 #include "migration/vmstate.h"
+#include "migration/client-options.h"
 #include "qemu/error-report.h"
 #include "qemu/queue.h"
 #include "trace.h"
@@ -321,7 +322,7 @@ static int get_fd(QEMUFile *f, void *pv, size_t size,
 {
     int32_t *v = pv;
     qemu_get_sbe32s(f, v);
-    if (*v < 0) {
+    if (*v < 0 || migrate_mode() != MIG_MODE_CPR_TRANSFER) {
         return 0;
     }
     *v = qemu_file_get_fd(f);
@@ -334,7 +335,7 @@ static int put_fd(QEMUFile *f, void *pv, size_t size,
     int32_t *v = pv;
 
     qemu_put_sbe32s(f, v);
-    if (*v < 0) {
+    if (*v < 0 || migrate_mode() != MIG_MODE_CPR_TRANSFER) {
         return 0;
     }
     return qemu_file_put_fd(f, *v);
