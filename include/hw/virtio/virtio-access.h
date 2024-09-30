@@ -95,56 +95,32 @@ static inline void virtio_stl_phys(VirtIODevice *vdev, hwaddr pa,
 
 static inline void virtio_stw_p(VirtIODevice *vdev, void *ptr, uint16_t v)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        stw_be_p(ptr, v);
-    } else {
-        stw_le_p(ptr, v);
-    }
+    stw_endian_p(virtio_access_is_big_endian(vdev), ptr, v);
 }
 
 static inline void virtio_stl_p(VirtIODevice *vdev, void *ptr, uint32_t v)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        stl_be_p(ptr, v);
-    } else {
-        stl_le_p(ptr, v);
-    }
+    stl_endian_p(virtio_access_is_big_endian(vdev), ptr, v);
 }
 
 static inline void virtio_stq_p(VirtIODevice *vdev, void *ptr, uint64_t v)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        stq_be_p(ptr, v);
-    } else {
-        stq_le_p(ptr, v);
-    }
+    stq_endian_p(virtio_access_is_big_endian(vdev), ptr, v);
 }
 
 static inline int virtio_lduw_p(VirtIODevice *vdev, const void *ptr)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        return lduw_be_p(ptr);
-    } else {
-        return lduw_le_p(ptr);
-    }
+    return lduw_endian_p(virtio_access_is_big_endian(vdev), ptr);
 }
 
 static inline int virtio_ldl_p(VirtIODevice *vdev, const void *ptr)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        return ldl_be_p(ptr);
-    } else {
-        return ldl_le_p(ptr);
-    }
+    return ldl_endian_p(virtio_access_is_big_endian(vdev), ptr);
 }
 
 static inline uint64_t virtio_ldq_p(VirtIODevice *vdev, const void *ptr)
 {
-    if (virtio_access_is_big_endian(vdev)) {
-        return ldq_be_p(ptr);
-    } else {
-        return ldq_le_p(ptr);
-    }
+    return ldq_endian_p(virtio_access_is_big_endian(vdev), ptr);
 }
 
 static inline uint16_t virtio_tswap16(VirtIODevice *vdev, uint16_t s)
