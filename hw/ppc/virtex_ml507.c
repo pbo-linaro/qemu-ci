@@ -141,7 +141,7 @@ static void main_cpu_reset(void *opaque)
 
     /* Create a mapping for the kernel.  */
     mmubooke_create_initial_mapping(env, 0, 0);
-    env->gpr[6] = tswap32(EPAPR_MAGIC);
+    stl_endian_p(ppc_cpu_is_big_endian(CPU(cpu)), &env->gpr[6], EPAPR_MAGIC);
     env->gpr[7] = bi->ima_size;
 }
 
