@@ -358,6 +358,11 @@ void hmp_info_migrate_parameters(Monitor *mon, const QDict *qdict)
                                MIGRATION_PARAMETER_DIRECT_IO),
                            params->direct_io ? "on" : "off");
         }
+
+        assert(params->cpr_uri);
+        monitor_printf(mon, "%s: '%s'\n",
+            MigrationParameter_str(MIGRATION_PARAMETER_CPR_URI),
+            params->cpr_uri);
     }
 
     qapi_free_MigrationParameters(params);
@@ -638,6 +643,11 @@ void hmp_migrate_set_parameter(Monitor *mon, const QDict *qdict)
     case MIGRATION_PARAMETER_DIRECT_IO:
         p->has_direct_io = true;
         visit_type_bool(v, param, &p->direct_io, &err);
+        break;
+    case MIGRATION_PARAMETER_CPR_URI:
+        p->cpr_uri = g_new0(StrOrNull, 1);
+        p->cpr_uri->type = QTYPE_QSTRING;
+        visit_type_str(v, param, &p->cpr_uri->u.s, &err);
         break;
     default:
         g_assert_not_reached();

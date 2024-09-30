@@ -841,6 +841,9 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @cpr-uri: URI for an additional migration channel needed by
+#     @cpr-transfer mode. (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -867,7 +870,8 @@
            'vcpu-dirty-limit',
            'mode',
            'zero-page-detection',
-           'direct-io'] }
+           'direct-io',
+           'cpr-uri'] }
 
 ##
 # @MigrateSetParameters:
@@ -1022,6 +1026,9 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @cpr-uri: URI for an additional migration channel needed by
+#     @cpr-transfer mode. (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -1063,7 +1070,8 @@
             '*vcpu-dirty-limit': 'uint64',
             '*mode': 'MigMode',
             '*zero-page-detection': 'ZeroPageDetection',
-            '*direct-io': 'bool' } }
+            '*direct-io': 'bool',
+            '*cpr-uri': 'StrOrNull' } }
 
 ##
 # @migrate-set-parameters:
@@ -1232,6 +1240,9 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @cpr-uri: URI for an additional migration channel needed by
+#     @cpr-transfer mode. (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -1270,7 +1281,8 @@
             '*vcpu-dirty-limit': 'uint64',
             '*mode': 'MigMode',
             '*zero-page-detection': 'ZeroPageDetection',
-            '*direct-io': 'bool' } }
+            '*direct-io': 'bool',
+            '*cpr-uri': 'str' } }
 
 ##
 # @query-migrate-parameters:
