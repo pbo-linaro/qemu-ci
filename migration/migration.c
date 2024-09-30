@@ -3467,7 +3467,8 @@ static void *migration_thread(void *opaque)
     Error *local_err = NULL;
     int ret;
 
-    thread = migration_threads_add("live_migration", qemu_get_thread_id());
+    thread = migration_threads_add(MIGRATION_THREAD_SRC_MAIN,
+                                   qemu_get_thread_id());
 
     rcu_register_thread();
 
@@ -3820,7 +3821,7 @@ void migrate_fd_connect(MigrationState *s, Error *error_in)
         qemu_thread_create(&s->thread, "mig/snapshot",
                 bg_migration_thread, s, QEMU_THREAD_JOINABLE);
     } else {
-        qemu_thread_create(&s->thread, "mig/src/main",
+        qemu_thread_create(&s->thread, MIGRATION_THREAD_SRC_MAIN,
                 migration_thread, s, QEMU_THREAD_JOINABLE);
     }
     s->migration_thread_running = true;

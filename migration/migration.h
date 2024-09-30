@@ -28,6 +28,8 @@
 #include "sysemu/runstate.h"
 #include "migration/misc.h"
 
+#define  MIGRATION_THREAD_SRC_MAIN  "mig/src/main"
+
 struct PostcopyBlocktimeContext;
 
 #define  MIGRATION_RESUME_ACK_VALUE  (1)
