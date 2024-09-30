@@ -18,8 +18,8 @@ class MicroblazeelMachine(QemuSystemTest):
     timeout = 90
 
     ASSET_IMAGE = Asset(
-        ('http://www.qemu-advent-calendar.org/2023/download/day13.tar.gz'),
-        'b9b3d43c5dd79db88ada495cc6e0d1f591153fe41355e925d791fbf44de50c22')
+        ('https://qemu-advcal.gitlab.io/qac-best-of-multiarch/download/day13.tar.xz'),
+        '67e4c502651f8801e724ecc26403f1d0cdbc00549b033166e2e8cd14e9d49fef')
 
     def test_microblazeel_s3adsp1800(self):
         self.require_netdev('user')
