@@ -8213,7 +8213,7 @@ void helper_msa_ffint_u_df(CPUMIPSState *env, uint32_t df, uint32_t wd,
 
 #if !defined(CONFIG_USER_ONLY)
 #define MEMOP_IDX(DF)                                                   \
-    MemOpIdx oi = make_memop_idx(MO_TE | DF | MO_UNALN,                 \
+    MemOpIdx oi = make_memop_idx(mo_endian(dc) | DF | MO_UNALN,                 \
                                  mips_env_mmu_index(env));
 #else
 #define MEMOP_IDX(DF)
