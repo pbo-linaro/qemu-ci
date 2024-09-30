@@ -25,6 +25,7 @@ int cpr_find_fd(const char *name, int id);
 int cpr_walk_fd(cpr_walk_fd_cb cb);
 void cpr_resave_fd(const char *name, int id, int fd);
 
+void cpr_set_cpr_uri(const char *uri);
 int cpr_state_save(Error **errp);
 int cpr_state_load(Error **errp);
 void cpr_state_close(void);
