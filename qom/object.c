@@ -2201,6 +2201,9 @@ Object *object_resolve_path_type(const char *path, const char *typename,
         }
     } else {
         obj = object_resolve_abs_path(object_get_root(), parts + 1, typename);
+        if (ambiguousp) {
+            *ambiguousp = false;
+        }
     }
 
     g_strfreev(parts);
@@ -2226,7 +2229,7 @@ Object *object_resolve_path_at(Object *parent, const char *path)
 
 Object *object_resolve_type_unambiguous(const char *typename, Error **errp)
 {
-    bool ambig;
+    bool ambig = false;
     Object *o = object_resolve_path_type("", typename, &ambig);
 
     if (ambig) {
