@@ -1898,3 +1898,17 @@
 { 'command': 'x-query-interrupt-controllers',
   'returns': 'HumanReadableText',
   'features': [ 'unstable' ]}
+
+##
+# @AnonAllocOption:
+#
+# An enumeration of the options for allocating anonymous guest memory.
+#
+# @mmap: allocate using mmap MAP_ANON
+#
+# @memfd: allocate using memfd_create
+#
+# Since: 9.2
+##
+{ 'enum': 'AnonAllocOption',
+  'data': [ 'mmap', 'memfd' ] }
