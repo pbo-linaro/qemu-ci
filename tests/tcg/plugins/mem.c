@@ -163,13 +163,9 @@ static void update_region_info(uint64_t region, uint64_t offset,
     {
         uint16_t *p = (uint16_t *) &ri->data[offset];
         if (is_store) {
-            if (be) {
-                stw_be_p(p, value.data.u16);
-            } else {
-                stw_le_p(p, value.data.u16);
-            }
+            stw_endian_p(be, p, value.data.u16);
         } else {
-            uint16_t val = be ? lduw_be_p(p) : lduw_le_p(p);
+            uint16_t val = lduw_endian_p(be, p);
             unseen_data = val != value.data.u16;
         }
         break;
@@ -178,13 +174,9 @@ static void update_region_info(uint64_t region, uint64_t offset,
     {
         uint32_t *p = (uint32_t *) &ri->data[offset];
         if (is_store) {
-            if (be) {
-                stl_be_p(p, value.data.u32);
-            } else {
-                stl_le_p(p, value.data.u32);
-            }
+            stl_endian_p(be, p, value.data.u32);
         } else {
-            uint32_t val = be ? ldl_be_p(p) : ldl_le_p(p);
+            uint32_t val = ldl_endian_p(be, p);
             unseen_data = val != value.data.u32;
         }
         break;
@@ -193,13 +185,9 @@ static void update_region_info(uint64_t region, uint64_t offset,
     {
         uint64_t *p = (uint64_t *) &ri->data[offset];
         if (is_store) {
-            if (be) {
-                stq_be_p(p, value.data.u64);
-            } else {
-                stq_le_p(p, value.data.u64);
-            }
+            stq_endian_p(be, p, value.data.u64);
         } else {
-            uint64_t val = be ? ldq_be_p(p) : ldq_le_p(p);
+            uint64_t val = ldq_endian_p(be, p);
             unseen_data = val != value.data.u64;
         }
         break;
