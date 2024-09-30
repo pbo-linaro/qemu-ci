@@ -9,6 +9,7 @@
 #define MIPS_INTERNAL_H
 
 #include "exec/memattrs.h"
+#include "exec/memop.h"
 #ifdef CONFIG_TCG
 #include "tcg/tcg-internal.h"
 #endif
@@ -285,6 +286,11 @@ static inline int mips_vp_active(CPUMIPSState *env)
         }
     }
     return 1;
+}
+
+static inline bool cpu_is_bigendian_env(CPUMIPSState *env)
+{
+    return extract32(env->CP0_Config0, CP0C0_BE, 1);
 }
 
 static inline void compute_hflags(CPUMIPSState *env)
