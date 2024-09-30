@@ -433,4 +433,23 @@ DO_STN_LDN_P(be)
 #undef le_bswaps
 #undef be_bswaps
 
+#define lduw_endian_p(big_endian, p) \
+                     (big_endian) ? lduw_be_p(p) : lduw_le_p(p)
+#define ldsw_endian_p(big_endian, p) \
+                     (big_endian) ? ldsw_be_p(p) : ldsw_be_p(p)
+#define ldl_endian_p(big_endian, p) \
+                    (big_endian) ? ldl_be_p(p) : ldl_le_p(p)
+#define ldq_endian_p(big_endian, p) \
+                    (big_endian) ? ldq_be_p(p) : ldq_le_p(p)
+#define stw_endian_p(big_endian, p, v) \
+                    (big_endian) ? stw_be_p(p, v) : stw_le_p(p, v)
+#define stl_endian_p(big_endian, p, v) \
+                    (big_endian) ? stl_be_p(p, v) : stl_le_p(p, v)
+#define stq_endian_p(big_endian, p, v) \
+                    (big_endian) ? stq_be_p(p, v) : stq_le_p(p, v)
+#define ldn_endian_p(big_endian, p, sz) \
+                     (big_endian) ? ldn_be_p(p, sz) : ldn_le_p(p, sz)
+#define stn_endian_p(big_endian, p, sz, v) \
+                    (big_endian) ? stn_be_p(p, sz, v) : stn_le_p(p, sz, v)
+
 #endif /* BSWAP_H */
