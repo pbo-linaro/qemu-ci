@@ -240,4 +240,9 @@ static inline bool cpu_is_bigendian(DisasContext *ctx)
     return extract32(ctx->CP0_Config0, CP0C0_BE, 1);
 }
 
+static inline MemOp mo_endian(DisasContext *dc)
+{
+    return cpu_is_bigendian(dc) ? MO_BE : MO_LE;
+}
+
 #endif
