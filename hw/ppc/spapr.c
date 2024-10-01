@@ -5334,21 +5334,6 @@ static void spapr_machine_2_5_class_options(MachineClass *mc)
 
 DEFINE_SPAPR_MACHINE(2, 5);
 
-/*
- * pseries-2.4
- */
-
-static void spapr_machine_2_4_class_options(MachineClass *mc)
-{
-    SpaprMachineClass *smc = SPAPR_MACHINE_CLASS(mc);
-
-    spapr_machine_2_5_class_options(mc);
-    smc->dr_lmb_enabled = false;
-    compat_props_add(mc->compat_props, hw_compat_2_4, hw_compat_2_4_len);
-}
-
-DEFINE_SPAPR_MACHINE(2, 4);
-
 static void spapr_machine_register_types(void)
 {
     type_register_static(&spapr_machine_info);
