@@ -1684,6 +1684,26 @@ static void mmu_watch_or_dirty(CPUState *cpu, MMULookupPageData *data,
     data->flags = flags;
 }
 
+/* when accessing unreadable memory unaligned, will the CPU issue
+ * a alignment trap or a memory access trap ? */
+#ifdef TARGET_HPPA
+# define CPU_ALIGNMENT_CHECK_AFTER_MEMCHECK  1
+#else
+# define CPU_ALIGNMENT_CHECK_AFTER_MEMCHECK  0
+#endif
+
+static void mmu_check_alignment(CPUState *cpu, vaddr addr,
+                       uintptr_t ra, MMUAccessType type, MMULookupLocals *l)
+{
+    unsigned a_bits;
+
+    /* Handle CPU specific unaligned behaviour */
+    a_bits = get_alignment_bits(l->memop);
+    if (addr & ((1 << a_bits) - 1)) {
+        cpu_unaligned_access(cpu, addr, type, l->mmu_idx, ra);
+    }
+}
+
 /**
  * mmu_lookup: translate page(s)
  * @cpu: generic cpu state
@@ -1699,7 +1719,6 @@ static void mmu_watch_or_dirty(CPUState *cpu, MMULookupPageData *data,
 static bool mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
                        uintptr_t ra, MMUAccessType type, MMULookupLocals *l)
 {
-    unsigned a_bits;
     bool crosspage;
     int flags;
 
@@ -1708,10 +1727,8 @@ static bool mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
 
     tcg_debug_assert(l->mmu_idx < NB_MMU_MODES);
 
-    /* Handle CPU specific unaligned behaviour */
-    a_bits = get_alignment_bits(l->memop);
-    if (addr & ((1 << a_bits) - 1)) {
-        cpu_unaligned_access(cpu, addr, type, l->mmu_idx, ra);
+    if (!CPU_ALIGNMENT_CHECK_AFTER_MEMCHECK) {
+        mmu_check_alignment(cpu, addr, ra, type, l);
     }
 
     l->page[0].addr = addr;
@@ -1758,6 +1775,10 @@ static bool mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
          * would be arbitrary.  Refuse it until there's a use.
          */
         tcg_debug_assert((flags & TLB_BSWAP) == 0);
+    }
+
+    if (CPU_ALIGNMENT_CHECK_AFTER_MEMCHECK) {
+        mmu_check_alignment(cpu, addr, ra, type, l);
     }
 
     /*
