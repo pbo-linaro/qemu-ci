@@ -28,7 +28,9 @@ sub_file="${sub_tdir}/submodule.tar"
 # different to the host OS.
 subprojects="keycodemapdb libvfio-user berkeley-softfloat-3
   berkeley-testfloat-3 unicode-ident-1.0.12 proc-macro2-1.0.84
-  quote-1.0.36 syn-2.0.66"
+  quote-1.0.36 syn-2.0.66 arbitrary-int-1.2.7 bilge-0.2.0 bilge-impl-0.2.0
+  either-1.12.0 itertools-0.11.0 proc-macro-error-1.0.4
+  proc-macro-error-attr-1.0.4"
 sub_deinit=""
 
 function cleanup() {
