@@ -2852,6 +2852,13 @@ if has_int128_type
     config_host_data.set('CONFIG_ATOMIC128_OPT', has_atomic128_opt)
 
     if not has_atomic128_opt
+
+      host_flags = []
+      if host_arch == 'x86_64'
+        # for x86_64, x86_version must be >= 1, and we always enable cmpxchg16
+        # in this case.
+        host_flags += ['-mcx16']
+      endif
       config_host_data.set('CONFIG_CMPXCHG128', cc.links('''
         int main(void)
         {
@@ -2859,7 +2866,8 @@ if has_int128_type
           __sync_val_compare_and_swap_16(&x, y, x);
           return 0;
         }
-      '''))
+      ''',
+      args: host_flags))
     endif
   endif
 endif
