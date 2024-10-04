@@ -28,12 +28,15 @@ struct VhostIOVATree {
 
     /* IOVA address to qemu memory maps. */
     IOVATree *iova_taddr_map;
+
+    /* IOVA address to guest memory maps. */
+    IOVATree *iova_gpa_map;
 };
 
 /**
- * Create a new IOVA tree
+ * Create a new VhostIOVATree
  *
- * Returns the new IOVA tree
+ * Returns the new VhostIOVATree
  */
 VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
 {
@@ -44,6 +47,7 @@ VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
     tree->iova_last = iova_last;
 
     tree->iova_taddr_map = iova_tree_new();
+    tree->iova_gpa_map = iova_tree_new();
     return tree;
 }
 
@@ -53,6 +57,7 @@ VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
 void vhost_iova_tree_delete(VhostIOVATree *iova_tree)
 {
     iova_tree_destroy(iova_tree->iova_taddr_map);
+    iova_tree_destroy(iova_tree->iova_gpa_map);
     g_free(iova_tree);
 }
 
@@ -71,7 +76,7 @@ const DMAMap *vhost_iova_tree_find_iova(const VhostIOVATree *tree,
 }
 
 /**
- * Allocate a new mapping
+ * Allocate a new mapping in the IOVA->HVA tree
  *
  * @tree: The iova tree
  * @map: The iova map
@@ -106,5 +111,72 @@ int vhost_iova_tree_map_alloc(VhostIOVATree *tree, DMAMap *map)
  */
 void vhost_iova_tree_remove(VhostIOVATree *iova_tree, DMAMap map)
 {
+    iova_tree_remove(iova_tree->iova_taddr_map, map);
+}
+
+/**
+ * Find the IOVA address stored from a guest memory address
+ *
+ * @tree: The VhostIOVATree
+ * @map: The map with the guest memory address
+ *
+ * Return the stored mapping, or NULL if not found.
+ */
+const DMAMap *vhost_iova_gpa_tree_find_iova(const VhostIOVATree *tree,
+                                            const DMAMap *map)
+{
+    return iova_tree_find_iova(tree->iova_gpa_map, map);
+}
+
+/**
+ * Allocate new mappings in the IOVA->HVA & IOVA->GPA trees
+ *
+ * @tree: The VhostIOVATree
+ * @map: The iova map
+ * @gpa: The guest physical address (GPA)
+ *
+ * Returns:
+ * - IOVA_OK if the map fits both containers
+ * - IOVA_ERR_INVALID if the map does not make sense (like size overflow)
+ * - IOVA_ERR_NOMEM if the IOVA->HVA tree cannot allocate more space
+ *
+ * It returns an assigned iova in map->iova if return value is IOVA_OK.
+ */
+int vhost_iova_tree_map_alloc_gpa(VhostIOVATree *tree, DMAMap *map, hwaddr gpa)
+{
+    int ret;
+
+    /* Some vhost devices don't like addr 0. Skip first page */
+    hwaddr iova_first = tree->iova_first ?: qemu_real_host_page_size();
+
+    if (map->translated_addr + map->size < map->translated_addr ||
+        map->perm == IOMMU_NONE) {
+        return IOVA_ERR_INVALID;
+    }
+
+    /* Allocate a node in the IOVA->HVA tree */
+    ret = iova_tree_alloc_map(tree->iova_taddr_map, map, iova_first,
+                              tree->iova_last);
+    if (unlikely(ret != IOVA_OK)) {
+        return ret;
+    }
+
+    /* Insert a node in the IOVA->GPA tree */
+    map->translated_addr = gpa;
+    return iova_tree_insert(tree->iova_gpa_map, map);
+}
+
+/**
+ * Remove existing mappings from the IOVA->HVA & IOVA->GPA trees
+ *
+ * @iova_tree: The VhostIOVATree
+ * @map: The map to remove
+ */
+void vhost_iova_tree_remove_gpa(VhostIOVATree *iova_tree, DMAMap map)
+{
+    /* Remove the existing mapping from the IOVA->GPA tree */
+    iova_tree_remove(iova_tree->iova_gpa_map, map);
+
+    /* Remove the corresponding mapping from the IOVA->HVA tree */
     iova_tree_remove(iova_tree->iova_taddr_map, map);
 }
