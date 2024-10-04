@@ -16,6 +16,7 @@
 #include "qemu/log.h"
 #include "qemu/memalign.h"
 #include "linux-headers/linux/vhost.h"
+#include "exec/ramblock.h"
 
 /**
  * Validate the transport device features that both guests can use with the SVQ
@@ -78,24 +79,55 @@ uint16_t vhost_svq_available_slots(const VhostShadowVirtqueue *svq)
  * @vaddr: Translated IOVA addresses
  * @iovec: Source qemu's VA addresses
  * @num: Length of iovec and minimum length of vaddr
+ * @is_guest_memory: True if iovec is backed by guest memory
  */
 static bool vhost_svq_translate_addr(const VhostShadowVirtqueue *svq,
                                      hwaddr *addrs, const struct iovec *iovec,
-                                     size_t num)
+                                     size_t num, bool is_guest_memory)
 {
     if (num == 0) {
         return true;
     }
 
     for (size_t i = 0; i < num; ++i) {
-        DMAMap needle = {
-            .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
-            .size = iovec[i].iov_len,
-        };
         Int128 needle_last, map_last;
         size_t off;
+        const DMAMap *map;
+        DMAMap needle;
 
-        const DMAMap *map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        /*
+         * If the HVA is backed by guest memory, find its GPA and search the
+         * IOVA->GPA tree for the translated IOVA
+         */
+        if (is_guest_memory) {
+            RAMBlock *rb;
+            hwaddr gpa;
+            ram_addr_t offset;
+
+            rb = qemu_ram_block_from_host(iovec[i].iov_base, false, &offset);
+            if (unlikely(!rb)) {
+                qemu_log_mask(LOG_GUEST_ERROR,
+                              "No expected RAMBlock found at HVA 0x%"HWADDR_PRIx"",
+                              (hwaddr)(uintptr_t)iovec[i].iov_base);
+                return false;
+            }
+            gpa = rb->offset + offset;
+
+            /* Search IOVA->GPA tree */
+            needle = (DMAMap) {
+                .translated_addr = gpa,
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_gpa_tree_find_iova(svq->iova_tree, &needle);
+        } else {
+            /* Search IOVA->HVA tree */
+            needle = (DMAMap) {
+                .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        }
+
         /*
          * Map cannot be NULL since iova map contains all guest space and
          * qemu already has a physical address mapped
@@ -132,12 +164,14 @@ static bool vhost_svq_translate_addr(const VhostShadowVirtqueue *svq,
  * @num: iovec length
  * @more_descs: True if more descriptors come in the chain
  * @write: True if they are writeable descriptors
+ * @is_guest_memory: True if iovec is backed by guest memory
  *
  * Return true if success, false otherwise and print error.
  */
 static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
                                         const struct iovec *iovec, size_t num,
-                                        bool more_descs, bool write)
+                                        bool more_descs, bool write,
+                                        bool is_guest_memory)
 {
     uint16_t i = svq->free_head, last = svq->free_head;
     unsigned n;
@@ -149,7 +183,7 @@ static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
         return true;
     }
 
-    ok = vhost_svq_translate_addr(svq, sg, iovec, num);
+    ok = vhost_svq_translate_addr(svq, sg, iovec, num, is_guest_memory);
     if (unlikely(!ok)) {
         return false;
     }
@@ -175,7 +209,7 @@ static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
 static bool vhost_svq_add_split(VhostShadowVirtqueue *svq,
                                 const struct iovec *out_sg, size_t out_num,
                                 const struct iovec *in_sg, size_t in_num,
-                                unsigned *head)
+                                unsigned *head, bool is_guest_memory)
 {
     unsigned avail_idx;
     vring_avail_t *avail = svq->vring.avail;
@@ -192,12 +226,13 @@ static bool vhost_svq_add_split(VhostShadowVirtqueue *svq,
     }
 
     ok = vhost_svq_vring_write_descs(svq, sgs, out_sg, out_num, in_num > 0,
-                                     false);
+                                     false, is_guest_memory);
     if (unlikely(!ok)) {
         return false;
     }
 
-    ok = vhost_svq_vring_write_descs(svq, sgs, in_sg, in_num, false, true);
+    ok = vhost_svq_vring_write_descs(svq, sgs, in_sg, in_num, false, true,
+                                     is_guest_memory);
     if (unlikely(!ok)) {
         return false;
     }
@@ -253,12 +288,14 @@ int vhost_svq_add(VhostShadowVirtqueue *svq, const struct iovec *out_sg,
     unsigned qemu_head;
     unsigned ndescs = in_num + out_num;
     bool ok;
+    bool is_guest_memory = (elem != NULL) ? true : false;
 
     if (unlikely(ndescs > vhost_svq_available_slots(svq))) {
         return -ENOSPC;
     }
 
-    ok = vhost_svq_add_split(svq, out_sg, out_num, in_sg, in_num, &qemu_head);
+    ok = vhost_svq_add_split(svq, out_sg, out_num, in_sg, in_num, &qemu_head,
+                             is_guest_memory);
     if (unlikely(!ok)) {
         return -EINVAL;
     }
