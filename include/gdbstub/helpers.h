@@ -99,5 +99,7 @@ static inline uint8_t *gdb_get_reg_ptr(GByteArray *buf, int len)
 #endif
 
 #define ldtul_p(addr) ldn_p(addr, TARGET_LONG_SIZE)
+#define ldtul_le_p(addr) ldn_le_p(addr, TARGET_LONG_SIZE)
+#define ldtul_be_p(addr) ldn_be_p(addr, TARGET_LONG_SIZE)
 
 #endif /* _GDBSTUB_HELPERS_H_ */
