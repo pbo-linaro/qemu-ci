@@ -64,9 +64,9 @@ static void spin_reset(DeviceState *dev)
     for (i = 0; i < MAX_CPUS; i++) {
         SpinInfo *info = &s->spin[i];
 
-        stl_p(&info->pir, i);
-        stq_p(&info->r3, i);
-        stq_p(&info->addr, 1);
+        stl_be_p(&info->pir, i);
+        stq_be_p(&info->r3, i);
+        stq_be_p(&info->addr, 1);
     }
 }
 
@@ -96,9 +96,9 @@ static void spin_kick(CPUState *cs, run_on_cpu_data data)
     hwaddr map_start;
 
     cpu_synchronize_state(cs);
-    stl_p(&curspin->pir, env->spr[SPR_BOOKE_PIR]);
-    env->nip = ldq_p(&curspin->addr) & (map_size - 1);
-    env->gpr[3] = ldq_p(&curspin->r3);
+    stl_be_p(&curspin->pir, env->spr[SPR_BOOKE_PIR]);
+    env->nip = ldq_be_p(&curspin->addr) & (map_size - 1);
+    env->gpr[3] = ldq_be_p(&curspin->r3);
     env->gpr[4] = 0;
     env->gpr[5] = 0;
     env->gpr[6] = 0;
@@ -106,7 +106,7 @@ static void spin_kick(CPUState *cs, run_on_cpu_data data)
     env->gpr[8] = 0;
     env->gpr[9] = 0;
 
-    map_start = ldq_p(&curspin->addr) & ~(map_size - 1);
+    map_start = ldq_be_p(&curspin->addr) & ~(map_size - 1);
     mmubooke_create_initial_mapping(env, 0, map_start, map_size);
 
     cs->halted = 0;
@@ -141,14 +141,14 @@ static void spin_write(void *opaque, hwaddr addr, uint64_t value,
         stb_p(curspin_p, value);
         break;
     case 2:
-        stw_p(curspin_p, value);
+        stw_be_p(curspin_p, value);
         break;
     case 4:
-        stl_p(curspin_p, value);
+        stl_be_p(curspin_p, value);
         break;
     }
 
-    if (!(ldq_p(&curspin->addr) & 1)) {
+    if (!(ldq_be_p(&curspin->addr) & 1)) {
         /* run CPU */
         run_on_cpu(cpu, spin_kick, RUN_ON_CPU_HOST_PTR(curspin));
     }
@@ -163,9 +163,9 @@ static uint64_t spin_read(void *opaque, hwaddr addr, unsigned len)
     case 1:
         return ldub_p(spin_p);
     case 2:
-        return lduw_p(spin_p);
+        return lduw_be_p(spin_p);
     case 4:
-        return ldl_p(spin_p);
+        return ldl_be_p(spin_p);
     default:
         hw_error("ppce500: unexpected %s with len = %u", __func__, len);
     }
