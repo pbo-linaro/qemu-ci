@@ -80,59 +80,59 @@ int superh_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     switch (n) {
     case 0 ... 7:
         if ((env->sr & (1u << SR_MD)) && (env->sr & (1u << SR_RB))) {
-            env->gregs[n + 16] = ldl_p(mem_buf);
+            env->gregs[n + 16] = ldl_le_p(mem_buf);
         } else {
-            env->gregs[n] = ldl_p(mem_buf);
+            env->gregs[n] = ldl_le_p(mem_buf);
         }
         break;
     case 8 ... 15:
-        env->gregs[n] = ldl_p(mem_buf);
+        env->gregs[n] = ldl_le_p(mem_buf);
         break;
     case 16:
-        env->pc = ldl_p(mem_buf);
+        env->pc = ldl_le_p(mem_buf);
         break;
     case 17:
-        env->pr = ldl_p(mem_buf);
+        env->pr = ldl_le_p(mem_buf);
         break;
     case 18:
-        env->gbr = ldl_p(mem_buf);
+        env->gbr = ldl_le_p(mem_buf);
         break;
     case 19:
-        env->vbr = ldl_p(mem_buf);
+        env->vbr = ldl_le_p(mem_buf);
         break;
     case 20:
-        env->mach = ldl_p(mem_buf);
+        env->mach = ldl_le_p(mem_buf);
         break;
     case 21:
-        env->macl = ldl_p(mem_buf);
+        env->macl = ldl_le_p(mem_buf);
         break;
     case 22:
-        cpu_write_sr(env, ldl_p(mem_buf));
+        cpu_write_sr(env, ldl_le_p(mem_buf));
         break;
     case 23:
-        env->fpul = ldl_p(mem_buf);
+        env->fpul = ldl_le_p(mem_buf);
         break;
     case 24:
-        env->fpscr = ldl_p(mem_buf);
+        env->fpscr = ldl_le_p(mem_buf);
         break;
     case 25 ... 40:
         if (env->fpscr & FPSCR_FR) {
-            env->fregs[n - 9] = ldl_p(mem_buf);
+            env->fregs[n - 9] = ldl_le_p(mem_buf);
         } else {
-            env->fregs[n - 25] = ldl_p(mem_buf);
+            env->fregs[n - 25] = ldl_le_p(mem_buf);
         }
         break;
     case 41:
-        env->ssr = ldl_p(mem_buf);
+        env->ssr = ldl_le_p(mem_buf);
         break;
     case 42:
-        env->spc = ldl_p(mem_buf);
+        env->spc = ldl_le_p(mem_buf);
         break;
     case 43 ... 50:
-        env->gregs[n - 43] = ldl_p(mem_buf);
+        env->gregs[n - 43] = ldl_le_p(mem_buf);
         break;
     case 51 ... 58:
-        env->gregs[n - (51 - 16)] = ldl_p(mem_buf);
+        env->gregs[n - (51 - 16)] = ldl_le_p(mem_buf);
         break;
     default:
         return 0;
