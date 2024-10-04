@@ -496,6 +496,75 @@ The hotpages plugin can be configured using the following arguments:
   * - pagesize=N
     - The page size used. (Default: N = 4096)
 
+Basic Block Vectors
+...................
+
+``contrib/plugins/bbvgen.c``
+
+The bbvgen.c plugin is a much more accurate basic-block analyzer than
+bb.c, and a more sophisticated hot path analyzer than hotblocks.c
+
+  $ qemu-riscv64 $(QEMU_ARGS) \
+    -plugin contrib/plugins/libbbvgen.so,ilen=200000000,nblocks=200,bbv=bbv.gz,bbvi=bbvi.gz
+
+  * ilen=N (default = 200,000,000)
+
+  Divide counts into intervals of N instructions. Since interval
+  divisions occur at block boundaries, an interval might cover a few
+  more or fewer instructions than N.
+
+  * nblocks=N (default = 200)
+
+  The topblocks report contains the N most executed blocks. Block
+  counts are weighted as EXECS * INSNS, where EXECS is the number of
+  times the block executed, and INSNS is the number of instructions in
+  the block.
+
+  * bbv=PATH.gz
+
+  Output simple CFG block-count data into gzip stream in PATH.gz.
+
+  * bbv_tcg=PATH.gz
+
+  Output simple TCG block-count data into gzip stream in PATH.gz.
+
+  * bbvi=PATH.gz
+
+  Output richer CFG block-count data as JSON into gzip stream in PATH.gz.
+
+  * bbvi_tcg=PATH.gz
+
+  Output richer TCG block-count data as JSON into gzip stream in PATH.gz.
+
+  * trace=PATH.gz
+
+  Output debug traces whenever as TCG blocks are translated and
+  transformed to CFG blocks.
+
+  * trace_exec=BOOL
+
+  Augment the debug trace with a line for every time a TCG block is
+  executed. This greatly expands the trace file size.
+
+  * hexaddrs=BOOL
+
+  Print addresses as hex numbers in the JSON outputs. These are nicer
+  for correlating with disassembled code listings, but require
+  JSON5 parsers, which are typically much slower than standard JSON.
+
+  * nextpc=BOOL
+
+  Whenever a block's PC appears in the JSON output, also print its
+  NEXT_PC to fully explicate the block's range as [PC..NEXT_PC).
+
+  * so_save_path=DIR
+
+  Save all dynamically-linked objects in directory DIR. For each block
+  that resides in a shared object, print its filename and location in
+  the BBVI file. This info is used to produce a report annotated with
+  disassembled listings of hot blocks. Statically linked guest
+  programs do not need this option.
+
 Instruction Distribution
 ........................
 
