@@ -89,10 +89,10 @@ static int gdb_read_reg_cs64(uint32_t hflags, GByteArray *buf, target_ulong val)
 static int gdb_write_reg_cs64(uint32_t hflags, uint8_t *buf, target_ulong *val)
 {
     if (hflags & HF_CS64_MASK) {
-        *val = ldq_p(buf);
+        *val = ldq_le_p(buf);
         return 8;
     }
-    *val = ldl_p(buf);
+    *val = ldl_le_p(buf);
     return 4;
 }
 
@@ -221,7 +221,7 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
 static int x86_cpu_gdb_load_seg(X86CPU *cpu, X86Seg sreg, uint8_t *mem_buf)
 {
     CPUX86State *env = &cpu->env;
-    uint16_t selector = ldl_p(mem_buf);
+    uint16_t selector = ldl_le_p(mem_buf);
 
     if (selector != env->segs[sreg].selector) {
 #if defined(CONFIG_USER_ONLY)
@@ -262,15 +262,15 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     if (n < CPU_NB_REGS) {
         if (TARGET_LONG_BITS == 64) {
             if (env->hflags & HF_CS64_MASK) {
-                env->regs[gpr_map[n]] = ldtul_p(mem_buf);
+                env->regs[gpr_map[n]] = ldtul_le_p(mem_buf);
             } else if (n < CPU_NB_REGS32) {
-                env->regs[gpr_map[n]] = ldtul_p(mem_buf) & 0xffffffffUL;
+                env->regs[gpr_map[n]] = ldtul_le_p(mem_buf) & 0xffffffffUL;
             }
             return sizeof(target_ulong);
         } else if (n < CPU_NB_REGS32) {
             n = gpr_map32[n];
             env->regs[n] &= ~0xffffffffUL;
-            env->regs[n] |= (uint32_t)ldl_p(mem_buf);
+            env->regs[n] |= (uint32_t)ldl_le_p(mem_buf);
             return 4;
         }
     } else if (n >= IDX_FP_REGS && n < IDX_FP_REGS + 8) {
@@ -281,8 +281,8 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     } else if (n >= IDX_XMM_REGS && n < IDX_XMM_REGS + CPU_NB_REGS) {
         n -= IDX_XMM_REGS;
         if (n < CPU_NB_REGS32 || TARGET_LONG_BITS == 64) {
-            env->xmm_regs[n].ZMM_Q(0) = ldq_p(mem_buf);
-            env->xmm_regs[n].ZMM_Q(1) = ldq_p(mem_buf + 8);
+            env->xmm_regs[n].ZMM_Q(0) = ldq_le_p(mem_buf);
+            env->xmm_regs[n].ZMM_Q(1) = ldq_le_p(mem_buf + 8);
             return 16;
         }
     } else {
@@ -290,18 +290,18 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
         case IDX_IP_REG:
             if (TARGET_LONG_BITS == 64) {
                 if (env->hflags & HF_CS64_MASK) {
-                    env->eip = ldq_p(mem_buf);
+                    env->eip = ldq_le_p(mem_buf);
                 } else {
-                    env->eip = ldq_p(mem_buf) & 0xffffffffUL;
+                    env->eip = ldq_le_p(mem_buf) & 0xffffffffUL;
                 }
                 return 8;
             } else {
                 env->eip &= ~0xffffffffUL;
-                env->eip |= (uint32_t)ldl_p(mem_buf);
+                env->eip |= (uint32_t)ldl_le_p(mem_buf);
                 return 4;
             }
         case IDX_FLAGS_REG:
-            env->eflags = ldl_p(mem_buf);
+            env->eflags = ldl_le_p(mem_buf);
             return 4;
 
         case IDX_SEG_REGS:
@@ -327,10 +327,10 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             return 4;
 
         case IDX_FP_REGS + 8:
-            cpu_set_fpuc(env, ldl_p(mem_buf));
+            cpu_set_fpuc(env, ldl_le_p(mem_buf));
             return 4;
         case IDX_FP_REGS + 9:
-            tmp = ldl_p(mem_buf);
+            tmp = ldl_le_p(mem_buf);
             env->fpstt = (tmp >> 11) & 7;
             env->fpus = tmp & ~0x3800;
             return 4;
@@ -348,7 +348,7 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             return 4;
 
         case IDX_MXCSR_REG:
-            cpu_set_mxcsr(env, ldl_p(mem_buf));
+            cpu_set_mxcsr(env, ldl_le_p(mem_buf));
             return 4;
 
         case IDX_CTL_CR0_REG:
