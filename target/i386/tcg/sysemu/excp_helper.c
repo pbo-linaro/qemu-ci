@@ -86,7 +86,7 @@ static bool ptw_translate(PTETranslate *inout, hwaddr addr, uint64_t ra)
 static inline uint32_t ptw_ldl(const PTETranslate *in, uint64_t ra)
 {
     if (likely(in->haddr)) {
-        return ldl_p(in->haddr);
+        return ldl_le_p(in->haddr);
     }
     return cpu_ldl_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
 }
@@ -94,7 +94,7 @@ static inline uint32_t ptw_ldl(const PTETranslate *in, uint64_t ra)
 static inline uint64_t ptw_ldq(const PTETranslate *in, uint64_t ra)
 {
     if (likely(in->haddr)) {
-        return ldq_p(in->haddr);
+        return ldq_le_p(in->haddr);
     }
     return cpu_ldq_mmuidx_ra(in->env, in->gaddr, in->ptw_idx, ra);
 }
