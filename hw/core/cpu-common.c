@@ -26,6 +26,7 @@
 #include "qemu/main-loop.h"
 #include "exec/log.h"
 #include "exec/gdbstub.h"
+#include "exec/tswap.h"
 #include "sysemu/tcg.h"
 #include "hw/boards.h"
 #include "hw/qdev-properties.h"
@@ -136,6 +137,11 @@ static void cpu_common_reset_hold(Object *obj, ResetType type)
     cpu->cflags_next_tb = -1;
 
     cpu_exec_reset_hold(cpu);
+}
+
+static bool cpu_common_is_big_endian(CPUState *cs)
+{
+    return target_words_bigendian();
 }
 
 static bool cpu_common_has_work(CPUState *cs)
@@ -306,6 +312,7 @@ static void cpu_common_class_init(ObjectClass *klass, void *data)
 
     k->parse_features = cpu_common_parse_features;
     k->get_arch_id = cpu_common_get_arch_id;
+    k->is_big_endian = cpu_common_is_big_endian;
     k->has_work = cpu_common_has_work;
     k->gdb_read_register = cpu_common_gdb_read_register;
     k->gdb_write_register = cpu_common_gdb_write_register;
