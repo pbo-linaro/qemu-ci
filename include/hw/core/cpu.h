@@ -609,6 +609,14 @@ extern bool mttcg_enabled;
 #define qemu_tcg_mttcg_enabled() (mttcg_enabled)
 
 /**
+ * cpu_is_big_endian:
+ * @cpu: The CPU whose state is to be inspected.
+ *
+ * Returns: %true if the CPU runs in big endianness, %false otherwise.
+ */
+bool cpu_is_big_endian(CPUState *cpu);
+
+/**
  * cpu_paging_enabled:
  * @cpu: The CPU whose state is to be inspected.
  *
