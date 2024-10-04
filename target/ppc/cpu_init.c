@@ -7341,14 +7341,14 @@ static void ppc_cpu_reset_hold(Object *obj, ResetType type)
 #endif
 }
 
-#ifndef CONFIG_USER_ONLY
-
 static bool ppc_cpu_is_big_endian(CPUState *cs)
 {
     cpu_synchronize_state(cs);
 
     return !FIELD_EX64(cpu_env(cs)->msr, MSR, LE);
 }
+
+#ifndef CONFIG_USER_ONLY
 
 static bool ppc_get_irq_stats(InterruptStatsProvider *obj,
                               uint64_t **irq_counts, unsigned int *nb_irqs)
@@ -7515,6 +7515,7 @@ static void ppc_cpu_class_init(ObjectClass *oc, void *data)
                                        &pcc->parent_phases);
 
     cc->class_by_name = ppc_cpu_class_by_name;
+    cc->is_big_endian = ppc_cpu_is_big_endian;
     cc->has_work = ppc_cpu_has_work;
     cc->mmu_index = ppc_cpu_mmu_index;
     cc->dump_state = ppc_cpu_dump_state;
