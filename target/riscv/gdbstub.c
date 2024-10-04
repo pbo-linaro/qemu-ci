@@ -84,15 +84,15 @@ int riscv_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 
     switch (mcc->misa_mxl_max) {
     case MXL_RV32:
-        tmp = (int32_t)ldl_p(mem_buf);
+        tmp = (int32_t)ldl_le_p(mem_buf);
         length = 4;
         break;
     case MXL_RV64:
     case MXL_RV128:
         if (env->xl < MXL_RV64) {
-            tmp = (int32_t)ldq_p(mem_buf);
+            tmp = (int32_t)ldq_le_p(mem_buf);
         } else {
-            tmp = ldq_p(mem_buf);
+            tmp = ldq_le_p(mem_buf);
         }
         length = 8;
         break;
@@ -130,7 +130,7 @@ static int riscv_gdb_set_fpu(CPUState *cs, uint8_t *mem_buf, int n)
     CPURISCVState *env = &cpu->env;
 
     if (n < 32) {
-        env->fpr[n] = ldq_p(mem_buf); /* always 64-bit */
+        env->fpr[n] = ldq_le_p(mem_buf); /* always 64-bit */
         return sizeof(uint64_t);
     }
     return 0;
@@ -162,7 +162,7 @@ static int riscv_gdb_set_vector(CPUState *cs, uint8_t *mem_buf, int n)
     if (n < 32) {
         int i;
         for (i = 0; i < vlenb; i += 8) {
-            env->vreg[(n * vlenb + i) / 8] = ldq_p(mem_buf + i);
+            env->vreg[(n * vlenb + i) / 8] = ldq_le_p(mem_buf + i);
         }
         return vlenb;
     }
@@ -193,7 +193,7 @@ static int riscv_gdb_set_csr(CPUState *cs, uint8_t *mem_buf, int n)
     CPURISCVState *env = &cpu->env;
 
     if (n < CSR_TABLE_SIZE) {
-        target_ulong val = ldtul_p(mem_buf);
+        target_ulong val = ldtul_le_p(mem_buf);
         int result;
 
         result = riscv_csrrw_debug(env, n, NULL, val, -1);
@@ -226,7 +226,7 @@ static int riscv_gdb_set_virtual(CPUState *cs, uint8_t *mem_buf, int n)
         RISCVCPU *cpu = RISCV_CPU(cs);
         CPURISCVState *env = &cpu->env;
 
-        env->priv = ldtul_p(mem_buf) & 0x3;
+        env->priv = ldtul_le_p(mem_buf) & 0x3;
         if (env->priv == PRV_RESERVED) {
             env->priv = PRV_S;
         }
