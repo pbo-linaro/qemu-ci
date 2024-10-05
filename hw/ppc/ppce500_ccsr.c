@@ -13,12 +13,42 @@
 
 #include "qemu/osdep.h"
 #include "ppce500_ccsr.h"
+#include "qemu/log.h"
+#include "trace.h"
+
+static uint64_t ppce500_ccsr_io_read(void *opaque, hwaddr addr, unsigned size)
+{
+    uint64_t value = 0;
+
+    trace_ppce500_ccsr_io_read(addr, value, size);
+    qemu_log_mask(LOG_UNIMP,
+                  "%s: unimplemented [0x%" HWADDR_PRIx "] -> 0\n",
+                  __func__, addr);
+
+    return value;
+}
+
+static void ppce500_ccsr_io_write(void *opaque, hwaddr addr, uint64_t value,
+                                  unsigned size)
+{
+    trace_ppce500_ccsr_io_write(addr, value, size);
+    qemu_log_mask(LOG_UNIMP,
+                  "%s: unimplemented [0x%" HWADDR_PRIx "] <- 0x%" PRIx32 "\n",
+                  __func__, addr, (uint32_t)value);
+}
+
+static const MemoryRegionOps ppce500_ccsr_ops = {
+    .read = ppce500_ccsr_io_read,
+    .write = ppce500_ccsr_io_write,
+    .endianness = DEVICE_NATIVE_ENDIAN,
+};
 
 static void ppce500_ccsr_init(Object *obj)
 {
     PPCE500CCSRState *s = CCSR(obj);
 
-    memory_region_init(&s->ccsr_space, obj, "e500-ccsr", MPC85XX_CCSRBAR_SIZE);
+    memory_region_init_io(&s->ccsr_space, obj, &ppce500_ccsr_ops, obj,
+                          "e500-ccsr", MPC85XX_CCSRBAR_SIZE);
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->ccsr_space);
 }
 
