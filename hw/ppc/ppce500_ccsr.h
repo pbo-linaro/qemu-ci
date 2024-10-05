@@ -1,13 +1,13 @@
-#ifndef E500_CCSR_H
-#define E500_CCSR_H
+#ifndef PPCE500_CCSR_H
+#define PPCE500_CCSR_H
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
 
+#define MPC85XX_CCSRBAR_SIZE       0x00100000ULL
+
 struct PPCE500CCSRState {
-    /*< private >*/
     SysBusDevice parent;
-    /*< public >*/
 
     MemoryRegion ccsr_space;
 };

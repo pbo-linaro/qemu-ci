@@ -81,6 +81,7 @@ ppc_ss.add(when: 'CONFIG_MPC8544DS', if_true: files('mpc8544ds.c'))
 ppc_ss.add(when: 'CONFIG_E500', if_true: files(
   'e500.c',
   'mpc8544_guts.c',
+  'ppce500_ccsr.c',
   'ppce500_spin.c'
 ))
 # PowerPC 440 Xilinx ML507 reference board.
