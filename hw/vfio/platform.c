@@ -318,13 +318,12 @@ static void vfio_platform_eoi(VFIODevice *vbasedev)
 /**
  * vfio_start_eventfd_injection - starts the virtual IRQ injection using
  * user-side handled eventfds
- * @sbdev: the sysbus device handle
+ * @vdev: the VFIO platform device handle
  * @irq: the qemu irq handle
  */
 
-static void vfio_start_eventfd_injection(SysBusDevice *sbdev, qemu_irq irq)
+static void vfio_start_eventfd_injection(VFIOPlatformDevice *vdev, qemu_irq irq)
 {
-    VFIOPlatformDevice *vdev = VFIO_PLATFORM_DEVICE(sbdev);
     VFIOINTp *intp;
 
     QLIST_FOREACH(intp, &vdev->intp_list, next) {
@@ -417,7 +416,7 @@ fail_vfio:
     kvm_irqchip_remove_irqfd_notifier(kvm_state, intp->interrupt, irq);
     abort();
 fail_irqfd:
-    vfio_start_eventfd_injection(sbdev, irq);
+    vfio_start_eventfd_injection(vdev, irq);
     return;
 }
 
