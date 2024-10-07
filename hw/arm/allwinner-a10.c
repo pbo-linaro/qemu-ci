@@ -17,6 +17,7 @@
 
 #include "qemu/osdep.h"
 #include "qapi/error.h"
+#include "qemu/error-report.h"
 #include "qemu/module.h"
 #include "hw/char/serial-mm.h"
 #include "hw/sysbus.h"
@@ -49,9 +50,9 @@ void allwinner_a10_bootrom_setup(AwA10State *s, BlockBackend *blk)
     g_autofree uint8_t *buffer = g_new0(uint8_t, rom_size);
 
     if (blk_pread(blk, 8 * KiB, rom_size, buffer, 0) < 0) {
-        error_setg(&error_fatal, "%s: failed to read BlockBackend data",
+        error_report("%s: failed to read BlockBackend data",
                    __func__);
-        return;
+        exit(1);
     }
 
     rom_add_blob("allwinner-a10.bootrom", buffer, rom_size,
