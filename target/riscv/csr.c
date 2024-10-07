@@ -2893,7 +2893,7 @@ static RISCVException read_sstatus_i128(CPURISCVState *env, int csrno,
 {
     uint64_t mask = sstatus_v1_10_mask;
     uint64_t sstatus = env->mstatus & mask;
-    if (env->xl != MXL_RV32 || env->debugger) {
+    if (riscv_cpu_sxl(env) != MXL_RV32 || env->debugger) {
         mask |= SSTATUS64_UXL;
     }
 
@@ -2905,11 +2905,10 @@ static RISCVException read_sstatus(CPURISCVState *env, int csrno,
                                    target_ulong *val)
 {
     target_ulong mask = (sstatus_v1_10_mask);
-    if (env->xl != MXL_RV32 || env->debugger) {
+    if (riscv_cpu_sxl(env) != MXL_RV32 || env->debugger) {
         mask |= SSTATUS64_UXL;
     }
-    /* TODO: Use SXL not MXL. */
-    *val = add_status_sd(riscv_cpu_mxl(env), env->mstatus & mask);
+    *val = add_status_sd(riscv_cpu_sxl(env), env->mstatus & mask);
     return RISCV_EXCP_NONE;
 }
 
@@ -2918,7 +2917,7 @@ static RISCVException write_sstatus(CPURISCVState *env, int csrno,
 {
     target_ulong mask = (sstatus_v1_10_mask);
 
-    if (env->xl != MXL_RV32 || env->debugger) {
+    if (riscv_cpu_sxl(env) != MXL_RV32 || env->debugger) {
         if ((val & SSTATUS64_UXL) != 0) {
             mask |= SSTATUS64_UXL;
         }
