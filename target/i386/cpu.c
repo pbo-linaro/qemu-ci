@@ -261,6 +261,12 @@ static uint32_t max_thread_ids_for_cache(X86CPUTopoInfo *topo_info,
     return num_ids - 1;
 }
 
+static uint32_t max_thread_number_in_package(X86CPUTopoInfo *topo_info)
+{
+    uint32_t num_threads = 1 << apicid_pkg_offset(topo_info);
+    return num_threads;
+}
+
 static uint32_t max_core_ids_in_package(X86CPUTopoInfo *topo_info)
 {
     uint32_t num_cores = 1 << (apicid_pkg_offset(topo_info) -
@@ -6462,7 +6468,7 @@ void cpu_x86_cpuid(CPUX86State *env, uint32_t index, uint32_t count,
         }
         *edx = env->features[FEAT_1_EDX];
         if (threads_per_pkg > 1) {
-            *ebx |= threads_per_pkg << 16;
+            *ebx |= max_thread_number_in_package(&topo_info) << 16;
             *edx |= CPUID_HT;
         }
         if (!cpu->enable_pmu) {
