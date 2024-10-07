@@ -161,7 +161,7 @@ skip_ext_pmu_check:
 
 static RISCVException ctr32(CPURISCVState *env, int csrno)
 {
-    if (riscv_cpu_mxl(env) != MXL_RV32) {
+    if (env->xl != MXL_RV32) {
         return RISCV_EXCP_ILLEGAL_INST;
     }
 
@@ -481,7 +481,7 @@ static RISCVException sstc(CPURISCVState *env, int csrno)
 
 static RISCVException sstc_32(CPURISCVState *env, int csrno)
 {
-    if (riscv_cpu_mxl(env) != MXL_RV32) {
+    if (env->xl != MXL_RV32) {
         return RISCV_EXCP_ILLEGAL_INST;
     }
 
