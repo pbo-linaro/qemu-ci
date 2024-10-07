@@ -69,7 +69,8 @@ char *riscv_plic_hart_config_string(int hart_count)
 
 target_ulong riscv_calc_kernel_start_addr(RISCVHartArrayState *harts,
                                           target_ulong firmware_end_addr) {
-    if (riscv_is_32bit(harts)) {
+    RISCVCPU *cpu = &harts->harts[0];
+    if (riscv_is_32bit(harts) || cpu->cfg.sxl32) {
         return QEMU_ALIGN_UP(firmware_end_addr, 4 * MiB);
     } else {
         return QEMU_ALIGN_UP(firmware_end_addr, 2 * MiB);
