@@ -851,7 +851,7 @@ static int get_physical_address(CPURISCVState *env, hwaddr *physical,
                 vm = get_field(env->vsatp, SATP64_MODE);
             }
         } else {
-            if (riscv_cpu_mxl(env) == MXL_RV32) {
+            if (riscv_cpu_sxl(env) == MXL_RV32) {
                 base = (hwaddr)get_field(env->satp, SATP32_PPN) << PGSHIFT;
                 vm = get_field(env->satp, SATP32_MODE);
             } else {
@@ -970,7 +970,7 @@ restart:
             return TRANSLATE_PMP_FAIL;
         }
 
-        if (riscv_cpu_mxl(env) == MXL_RV32) {
+        if (riscv_cpu_sxl(env) == MXL_RV32) {
             pte = address_space_ldl(cs->as, pte_addr, attrs, &res);
         } else {
             pte = address_space_ldq(cs->as, pte_addr, attrs, &res);
