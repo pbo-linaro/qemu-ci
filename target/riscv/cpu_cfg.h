@@ -175,6 +175,10 @@ struct RISCVCPUConfig {
     bool short_isa_string;
 
 #ifndef CONFIG_USER_ONLY
+    /*
+     * true when RV64 QEMU running with mxlen==64 but sxlen==32.
+     */
+    bool sxl32;
     RISCVSATPMap satp_mode;
 #endif
 };

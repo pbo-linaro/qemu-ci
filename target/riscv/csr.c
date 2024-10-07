@@ -1504,16 +1504,29 @@ static RISCVException read_mstatus(CPURISCVState *env, int csrno,
 
 static bool validate_vm(CPURISCVState *env, target_ulong vm)
 {
-    uint64_t mode_supported = riscv_cpu_cfg(env)->satp_mode.map;
+    uint64_t mode_supported = 0;
+    if (riscv_cpu_cfg(env)->sxl32 && (riscv_cpu_mxl(env) != MXL_RV32)) {
+        mode_supported = (1 << VM_1_10_MBARE) | (1 << VM_1_10_SV32);
+    } else {
+        mode_supported = riscv_cpu_cfg(env)->satp_mode.map;
+    }
     return get_field(mode_supported, (1 << vm));
 }
 
 static target_ulong legalize_xatp(CPURISCVState *env, target_ulong old_xatp,
-                                  target_ulong val)
+                                  target_ulong val, int csrno)
 {
     target_ulong mask;
     bool vm;
-    if (riscv_cpu_mxl(env) == MXL_RV32) {
+    RISCVMXL xl;
+
+    if (csrno == CSR_SATP) {
+        xl = riscv_cpu_sxl(env);
+    } else {
+        xl = riscv_cpu_mxl(env);
+    }
+
+    if (xl == MXL_RV32) {
         vm = validate_vm(env, get_field(val, SATP32_MODE));
         mask = (val ^ old_xatp) & (SATP32_MODE | SATP32_ASID | SATP32_PPN);
     } else {
@@ -3316,7 +3329,7 @@ static RISCVException write_satp(CPURISCVState *env, int csrno,
         return RISCV_EXCP_NONE;
     }
 
-    env->satp = legalize_xatp(env, env->satp, val);
+    env->satp = legalize_xatp(env, env->satp, val, csrno);
     return RISCV_EXCP_NONE;
 }
 
@@ -3834,7 +3847,7 @@ static RISCVException read_hgatp(CPURISCVState *env, int csrno,
 static RISCVException write_hgatp(CPURISCVState *env, int csrno,
                                   target_ulong val)
 {
-    env->hgatp = legalize_xatp(env, env->hgatp, val);
+    env->hgatp = legalize_xatp(env, env->hgatp, val, csrno);
     return RISCV_EXCP_NONE;
 }
 
@@ -4116,7 +4129,7 @@ static RISCVException read_vsatp(CPURISCVState *env, int csrno,
 static RISCVException write_vsatp(CPURISCVState *env, int csrno,
                                   target_ulong val)
 {
-    env->vsatp = legalize_xatp(env, env->vsatp, val);
+    env->vsatp = legalize_xatp(env, env->vsatp, val, csrno);
     return RISCV_EXCP_NONE;
 }
 
