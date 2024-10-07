@@ -365,7 +365,7 @@ static void xlnx_zynq_devcfg_init(Object *obj)
 
     sysbus_init_irq(sbd, &s->irq);
 
-    memory_region_init(&s->iomem, obj, "devcfg", XLNX_ZYNQ_DEVCFG_R_MAX * 4);
+    memory_region_init(&s->iomem, obj, "devcfg", XLNX_ZYNQ_DEVCFG_R_MAX);
     reg_array =
         register_init_block32(DEVICE(obj), xlnx_zynq_devcfg_regs_info,
                               ARRAY_SIZE(xlnx_zynq_devcfg_regs_info),
