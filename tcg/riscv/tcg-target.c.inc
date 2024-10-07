@@ -32,38 +32,14 @@
 
 #ifdef CONFIG_DEBUG_TCG
 static const char * const tcg_target_reg_names[TCG_TARGET_NB_REGS] = {
-    "zero",
-    "ra",
-    "sp",
-    "gp",
-    "tp",
-    "t0",
-    "t1",
-    "t2",
-    "s0",
-    "s1",
-    "a0",
-    "a1",
-    "a2",
-    "a3",
-    "a4",
-    "a5",
-    "a6",
-    "a7",
-    "s2",
-    "s3",
-    "s4",
-    "s5",
-    "s6",
-    "s7",
-    "s8",
-    "s9",
-    "s10",
-    "s11",
-    "t3",
-    "t4",
-    "t5",
-    "t6"
+    "zero", "ra",  "sp",  "gp",  "tp",  "t0",  "t1",  "t2",
+    "s0",   "s1",  "a0",  "a1",  "a2",  "a3",  "a4",  "a5",
+    "a6",   "a7",  "s2",  "s3",  "s4",  "s5",  "s6",  "s7",
+    "s8",   "s9",  "s10", "s11", "t3",  "t4",  "t5",  "t6",
+    "v0",   "v1",  "v2",  "v3",  "v4",  "v5",  "v6",  "v7",
+    "v8",   "v9",  "v10", "v11", "v12", "v13", "v14", "v15",
+    "v16",  "v17", "v18", "v19", "v20", "v21", "v22", "v23",
+    "v24",  "v25", "v26", "v27", "v28", "v29", "v30", "v31",
 };
 #endif
 
@@ -100,6 +76,16 @@ static const int tcg_target_reg_alloc_order[] = {
     TCG_REG_A5,
     TCG_REG_A6,
     TCG_REG_A7,
+
+    /* Vector registers and TCG_REG_V0 reserved for mask. */
+    TCG_REG_V1,  TCG_REG_V2,  TCG_REG_V3,  TCG_REG_V4,
+    TCG_REG_V5,  TCG_REG_V6,  TCG_REG_V7,  TCG_REG_V8,
+    TCG_REG_V9,  TCG_REG_V10, TCG_REG_V11, TCG_REG_V12,
+    TCG_REG_V13, TCG_REG_V14, TCG_REG_V15, TCG_REG_V16,
+    TCG_REG_V17, TCG_REG_V18, TCG_REG_V19, TCG_REG_V20,
+    TCG_REG_V21, TCG_REG_V22, TCG_REG_V23, TCG_REG_V24,
+    TCG_REG_V25, TCG_REG_V26, TCG_REG_V27, TCG_REG_V28,
+    TCG_REG_V29, TCG_REG_V30, TCG_REG_V31,
 };
 
 static const int tcg_target_call_iarg_regs[] = {
@@ -127,6 +113,9 @@ static TCGReg tcg_target_call_oarg_reg(TCGCallReturnKind kind, int slot)
 #define TCG_CT_CONST_J12  0x1000
 
 #define ALL_GENERAL_REGS   MAKE_64BIT_MASK(0, 32)
+#define ALL_VECTOR_REGS    MAKE_64BIT_MASK(32, 32)
+#define ALL_DVECTOR_REG_GROUPS 0x5555555500000000
+#define ALL_QVECTOR_REG_GROUPS 0x1111111100000000
 
 #define sextreg  sextract64
 
@@ -764,6 +753,23 @@ static void tcg_out_addsub2(TCGContext *s,
         }
         tcg_out_opc_reg(s, opc_add, rh, th, TCG_REG_TMP0);
     }
+}
+
+static bool tcg_out_dup_vec(TCGContext *s, TCGType type, unsigned vece,
+                                   TCGReg dst, TCGReg src)
+{
+    return false;
+}
+
+static bool tcg_out_dupm_vec(TCGContext *s, TCGType type, unsigned vece,
+                                    TCGReg dst, TCGReg base, intptr_t offset)
+{
+    return false;
+}
+
+static void tcg_out_dupi_vec(TCGContext *s, TCGType type, unsigned vece,
+                                    TCGReg dst, int64_t arg)
+{
 }
 
 static const struct {
@@ -1881,6 +1887,36 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
     }
 }
 
+static void tcg_out_vec_op(TCGContext *s, TCGOpcode opc,
+                           unsigned vecl, unsigned vece,
+                           const TCGArg args[TCG_MAX_OP_ARGS],
+                           const int const_args[TCG_MAX_OP_ARGS])
+{
+    switch (opc) {
+    case INDEX_op_mov_vec: /* Always emitted via tcg_out_mov.  */
+    case INDEX_op_dup_vec: /* Always emitted via tcg_out_dup_vec.  */
+    default:
+        g_assert_not_reached();
+    }
+}
+
+void tcg_expand_vec_op(TCGOpcode opc, TCGType type, unsigned vece,
+                       TCGArg a0, ...)
+{
+    switch (opc) {
+    default:
+        g_assert_not_reached();
+    }
+}
+
+int tcg_can_emit_vec_op(TCGOpcode opc, TCGType type, unsigned vece)
+{
+    switch (opc) {
+    default:
+        return 0;
+    }
+}
+
 static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
 {
     switch (op) {
@@ -2100,6 +2136,30 @@ static void tcg_target_init(TCGContext *s)
 {
     tcg_target_available_regs[TCG_TYPE_I32] = 0xffffffff;
     tcg_target_available_regs[TCG_TYPE_I64] = 0xffffffff;
+    s->reserved_regs = 0;
+
+    switch (riscv_lg2_vlenb) {
+    case TCG_TYPE_V64:
+        tcg_target_available_regs[TCG_TYPE_V64] = ALL_VECTOR_REGS;
+        tcg_target_available_regs[TCG_TYPE_V128] = ALL_DVECTOR_REG_GROUPS;
+        tcg_target_available_regs[TCG_TYPE_V256] = ALL_QVECTOR_REG_GROUPS;
+        s->reserved_regs |= (~ALL_QVECTOR_REG_GROUPS & ALL_VECTOR_REGS);
+        break;
+    case TCG_TYPE_V128:
+        tcg_target_available_regs[TCG_TYPE_V64] = ALL_VECTOR_REGS;
+        tcg_target_available_regs[TCG_TYPE_V128] = ALL_VECTOR_REGS;
+        tcg_target_available_regs[TCG_TYPE_V256] = ALL_DVECTOR_REG_GROUPS;
+        s->reserved_regs |= (~ALL_DVECTOR_REG_GROUPS & ALL_VECTOR_REGS);
+        break;
+    default:
+        /* Guaranteed by Zve64x. */
+        tcg_debug_assert(riscv_lg2_vlenb >= TCG_TYPE_V256);
+
+        tcg_target_available_regs[TCG_TYPE_V64] = ALL_VECTOR_REGS;
+        tcg_target_available_regs[TCG_TYPE_V128] = ALL_VECTOR_REGS;
+        tcg_target_available_regs[TCG_TYPE_V256] = ALL_VECTOR_REGS;
+        break;
+    }
 
     tcg_target_call_clobber_regs = -1u;
     tcg_regset_reset_reg(tcg_target_call_clobber_regs, TCG_REG_S0);
@@ -2115,7 +2175,6 @@ static void tcg_target_init(TCGContext *s)
     tcg_regset_reset_reg(tcg_target_call_clobber_regs, TCG_REG_S10);
     tcg_regset_reset_reg(tcg_target_call_clobber_regs, TCG_REG_S11);
 
-    s->reserved_regs = 0;
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_ZERO);
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_TMP0);
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_TMP1);
@@ -2123,6 +2182,7 @@ static void tcg_target_init(TCGContext *s)
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_SP);
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_GP);
     tcg_regset_set_reg(s->reserved_regs, TCG_REG_TP);
+    tcg_regset_set_reg(s->reserved_regs, TCG_REG_V0);
 }
 
 typedef struct {
