@@ -144,7 +144,12 @@ static void xlnx_zynq_devcfg_reset(DeviceState *dev)
     int i;
 
     for (i = 0; i < XLNX_ZYNQ_DEVCFG_R_MAX; ++i) {
-        register_reset(&s->regs_info[i]);
+        if (s->regs_info[i].access) {
+            if (s->regs_info[i].access->addr == A_UNLOCK) {
+                continue;
+            }
+            register_reset(&s->regs_info[i]);
+        }
     }
 }
 
