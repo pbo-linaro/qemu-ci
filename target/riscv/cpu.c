@@ -944,8 +944,17 @@ static void riscv_cpu_reset_hold(Object *obj, ResetType type)
          * The reset status of SXL/UXL is undefined, but mstatus is WARL
          * and we must ensure that the value after init is valid for read.
          */
-        env->mstatus = set_field(env->mstatus, MSTATUS64_SXL, env->misa_mxl);
-        env->mstatus = set_field(env->mstatus, MSTATUS64_UXL, env->misa_mxl);
+        if (cpu->cfg.sxl32) {
+            env->mstatus = set_field(env->mstatus, MSTATUS64_SXL,
+                                      MXL_RV32);
+            env->mstatus = set_field(env->mstatus, MSTATUS64_UXL,
+                                      MXL_RV32);
+        } else {
+            env->mstatus = set_field(env->mstatus, MSTATUS64_SXL,
+                                      env->misa_mxl);
+            env->mstatus = set_field(env->mstatus, MSTATUS64_UXL,
+                                      env->misa_mxl);
+        }
         if (riscv_has_ext(env, RVH)) {
             env->vsstatus = set_field(env->vsstatus,
                                       MSTATUS64_SXL, env->misa_mxl);
