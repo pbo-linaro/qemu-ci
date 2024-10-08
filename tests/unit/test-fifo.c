@@ -13,6 +13,7 @@
 #include "qemu/osdep.h"
 #include "migration/vmstate.h"
 #include "qemu/fifo8.h"
+#include "qemu/fifo32.h"
 
 const VMStateInfo vmstate_info_uint32;
 const VMStateInfo vmstate_info_buffer;
@@ -432,6 +433,53 @@ static void test_fifo8_pushpop(void)
     fifo8_destroy(&fifo);
 }
 
+static void test_fifo32_pushpop(void)
+{
+    Fifo32 fifo;
+    uint32_t e;
+
+    fifo32_create(&fifo, 2);
+    fifo32_push(&fifo, 0x11121314);
+    fifo32_push(&fifo, 0x21222324);
+    g_assert(fifo32_num_used(&fifo) == 2);
+
+    e = fifo32_pop(&fifo);
+    g_assert(e == 0x11121314);
+    g_assert(fifo32_num_used(&fifo) == 1);
+
+    e = fifo32_peek(&fifo);
+    g_assert(e == 0x21222324);
+
+    g_assert(fifo32_num_used(&fifo) == 1);
+    fifo32_destroy(&fifo);
+}
+
+static void test_fifo32_peek(void)
+{
+    Fifo32 fifo;
+    uint32_t e;
+
+    fifo32_create(&fifo, 2);
+    fifo32_push(&fifo, 0x11121314);
+    fifo32_push(&fifo, 0x21222324);
+    g_assert(fifo32_num_used(&fifo) == 2);
+
+    e = fifo32_peek(&fifo);
+    g_assert(e == 0x11121314);
+    g_assert(fifo32_num_used(&fifo) == 2);
+
+    e = fifo32_pop(&fifo);
+    g_assert(e == 0x11121314);
+    g_assert(fifo32_num_used(&fifo) == 1);
+
+    e = fifo32_peek(&fifo);
+    g_assert(e == 0x21222324);
+    g_assert(fifo32_num_used(&fifo) == 1);
+
+    fifo32_destroy(&fifo);
+}
+
+
 int main(int argc, char *argv[])
 {
     g_test_init(&argc, &argv, NULL);
@@ -445,5 +493,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/fifo8/peek_bufptr_wrap", test_fifo8_peek_bufptr_wrap);
     g_test_add_func("/fifo8/pop_bufptr", test_fifo8_pop_bufptr);
     g_test_add_func("/fifo8/pop_bufptr_wrap", test_fifo8_pop_bufptr_wrap);
+    g_test_add_func("/fifo32/pushpop", test_fifo32_pushpop);
+    g_test_add_func("/fifo32/peek", test_fifo32_peek);
     return g_test_run();
 }
