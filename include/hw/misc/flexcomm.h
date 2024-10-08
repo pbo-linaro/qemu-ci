@@ -15,6 +15,7 @@
 #include "hw/sysbus.h"
 #include "hw/arm/svd/flexcomm.h"
 #include "qemu/fifo32.h"
+#include "hw/char/flexcomm_usart.h"
 
 #define FLEXCOMM_FUNC_USART     0
 #define FLEXCOMM_FUNC_SPI       1
@@ -46,6 +47,7 @@ struct FlexcommState {
     bool irq_state;
     Fifo32 rx_fifo;
     Fifo32 tx_fifo;
+    FlexcommUsartState usart;
 };
 
 #endif /* HW_FLEXCOMM_H */

@@ -23,6 +23,7 @@
 #include "migration/vmstate.h"
 #include "hw/misc/flexcomm.h"
 #include "hw/arm/svd/flexcomm_usart.h"
+#include "hw/char/flexcomm_usart.h"
 
 #define REG(s, reg) (s->regs[R_FLEXCOMM_##reg])
 #define RF_WR(s, reg, field, val) \
@@ -218,6 +219,7 @@ static void flexcomm_init(Object *obj)
                           TYPE_FLEXCOMM, sizeof(s->regs));
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->container);
     sysbus_init_irq(sbd, &s->irq);
+    object_initialize_child(obj, "usart", &s->usart, TYPE_FLEXCOMM_USART);
 }
 
 static void flexcomm_finalize(Object *obj)
@@ -247,6 +249,7 @@ static void flexcomm_realize(DeviceState *dev, Error **errp)
     FlexcommState *s = FLEXCOMM(dev);
 
     memory_region_add_subregion_overlap(&s->container, 0, &s->mmio, -1);
+    flexcomm_func_realize_and_unref(FLEXCOMM_FUNCTION(&s->usart), errp);
 }
 
 static const VMStateDescription vmstate_flexcomm = {
