@@ -634,3 +634,5 @@ config RT500
     bool
     select FLEXCOMM
     select RT500_CLKCTL
+    select FLEXSPI
+    select RT500_RSTCTL

@@ -36,4 +36,8 @@ if get_option('mcux-soc-svd')
     [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/rt500_rstctl1.h',
       '-p', 'RSTCTL1', '-t', 'RT500_RSTCTL1',
       '--fields', 'SYSRSTSTAT: PRSTCTL*:'])
+  run_target('svd-rt500', command: svd_gen_header +
+    [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/rt500.h',
+      '-s', 'RT500', '-p', 'FLEXCOMM0', '-p', 'CLKCTL0', '-p', 'CLKCTL1',
+      '-p', 'FLEXSPI0', '-p', 'FLEXSPI1', '-p', 'RSTCTL0', '-p', 'RSTCTL1'])
 endif
