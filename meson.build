@@ -1683,6 +1683,8 @@ if (have_system or have_tools) and (virgl.found() or opengl.found())
 endif
 have_vhost_user_gpu = have_vhost_user_gpu and virgl.found() and opengl.found() and gbm.found()
 
+libcbor = dependency('libcbor', version: '>=0.7.0', required: false)
+
 gnutls = not_found
 gnutls_crypto = not_found
 if get_option('gnutls').enabled() or (get_option('gnutls').auto() and have_system)
