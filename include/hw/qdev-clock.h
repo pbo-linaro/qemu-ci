@@ -15,6 +15,7 @@
 #define QDEV_CLOCK_H
 
 #include "hw/clock.h"
+#include "hw/qdev-core.h"
 
 /**
  * qdev_init_clock_in:
@@ -160,5 +161,14 @@ typedef struct ClockPortInitElem ClockPortInitArray[];
  * clocks information.
  */
 void qdev_init_clocks(DeviceState *dev, const ClockPortInitArray clocks);
+
+/**
+ * qdev_get_clocklist:
+ * @dev: the device to find clock for
+ * @name: clock name
+ *
+ * Returns: a named clock list entry or NULL if the clock was not found
+ */
+NamedClockList *qdev_get_clocklist(DeviceState *dev, const char *name);
 
 #endif /* QDEV_CLOCK_H */
