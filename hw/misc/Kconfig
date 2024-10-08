@@ -215,5 +215,6 @@ config XLNX_VERSAL_TRNG
 
 config FLEXCOMM
     bool
+    select I2C
 
 source macio/Kconfig
