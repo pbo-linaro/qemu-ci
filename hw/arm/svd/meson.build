@@ -16,4 +16,12 @@ if get_option('mcux-soc-svd')
     [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/flexcomm_spi.h',
       '-p', 'SPI0', '-t', 'FLEXCOMM_SPI',
       '--fields', 'CFG FIFOCFG:ENABLE*,EMPTY* FIFO*:* INT*: STAT'])
+  run_target('svd-rt500-clkctl0', command: svd_gen_header +
+    [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/rt500_clkctl0.h',
+      '-p', 'CLKCTL0', '-t', 'RT500_CLKCTL0',
+      '--fields', 'PSCCTL*:ROM_CTRLR_CLK,DSP_CLK SYSPLL0PFD SYSTICKFCLKSEL SYSTICKFCLKDIV FROCLKSTATUS:'])
+  run_target('svd-rt500-clkctl1', command: svd_gen_header +
+    [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/rt500_clkctl1.h',
+      '-p', 'CLKCTL1', '-t', 'RT500_CLKCTL1',
+      '--fields', 'PSCCTL*:FlexIO AUDIOPLL0PFD OSEVENTTFCLKSEL'])
 endif

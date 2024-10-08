@@ -218,4 +218,7 @@ config FLEXCOMM
     select I2C
     select SSI
 
+config RT500_CLKCTL
+    bool
+
 source macio/Kconfig

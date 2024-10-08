@@ -629,3 +629,8 @@ config ARMSSE
     select UNIMP
     select SSE_COUNTER
     select SSE_TIMER
+
+config RT500
+    bool
+    select FLEXCOMM
+    select RT500_CLKCTL
