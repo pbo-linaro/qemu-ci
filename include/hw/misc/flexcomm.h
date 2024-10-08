@@ -17,6 +17,7 @@
 #include "qemu/fifo32.h"
 #include "hw/char/flexcomm_usart.h"
 #include "hw/i2c/flexcomm_i2c.h"
+#include "hw/ssi/flexcomm_spi.h"
 
 #define FLEXCOMM_FUNC_USART     0
 #define FLEXCOMM_FUNC_SPI       1
@@ -50,6 +51,7 @@ struct FlexcommState {
     Fifo32 tx_fifo;
     FlexcommUsartState usart;
     FlexcommI2cState i2c;
+    FlexcommSpiState spi;
 };
 
 #endif /* HW_FLEXCOMM_H */

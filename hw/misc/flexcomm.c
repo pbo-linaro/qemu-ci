@@ -25,6 +25,7 @@
 #include "hw/arm/svd/flexcomm_usart.h"
 #include "hw/char/flexcomm_usart.h"
 #include "hw/i2c/flexcomm_i2c.h"
+#include "hw/ssi/flexcomm_spi.h"
 
 #define REG(s, reg) (s->regs[R_FLEXCOMM_##reg])
 #define RF_WR(s, reg, field, val) \
@@ -222,6 +223,7 @@ static void flexcomm_init(Object *obj)
     sysbus_init_irq(sbd, &s->irq);
     object_initialize_child(obj, "usart", &s->usart, TYPE_FLEXCOMM_USART);
     object_initialize_child(obj, "i2c", &s->i2c, TYPE_FLEXCOMM_I2C);
+    object_initialize_child(obj, "spi", &s->spi, TYPE_FLEXCOMM_SPI);
 }
 
 static void flexcomm_finalize(Object *obj)
@@ -253,6 +255,7 @@ static void flexcomm_realize(DeviceState *dev, Error **errp)
     memory_region_add_subregion_overlap(&s->container, 0, &s->mmio, -1);
     flexcomm_func_realize_and_unref(FLEXCOMM_FUNCTION(&s->usart), errp);
     flexcomm_func_realize_and_unref(FLEXCOMM_FUNCTION(&s->i2c), errp);
+    flexcomm_func_realize_and_unref(FLEXCOMM_FUNCTION(&s->spi), errp);
 }
 
 static const VMStateDescription vmstate_flexcomm = {
