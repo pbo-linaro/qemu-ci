@@ -221,4 +221,7 @@ config FLEXCOMM
 config RT500_CLKCTL
     bool
 
+config RT500_RSTCTL
+    bool
+
 source macio/Kconfig
