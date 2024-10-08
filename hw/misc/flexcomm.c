@@ -22,6 +22,7 @@
 #include "trace.h"
 #include "migration/vmstate.h"
 #include "hw/misc/flexcomm.h"
+#include "hw/arm/svd/flexcomm_usart.h"
 
 #define REG(s, reg) (s->regs[R_FLEXCOMM_##reg])
 #define RF_WR(s, reg, field, val) \
@@ -219,12 +220,22 @@ static void flexcomm_init(Object *obj)
     sysbus_init_irq(sbd, &s->irq);
 }
 
+static void flexcomm_finalize(Object *obj)
+{
+    FlexcommState *s = FLEXCOMM(obj);
+
+    /* release resources allocated by the function select (e.g. fifos) */
+    flexcomm_func_select(s, false);
+}
+
 static void flexcomm_func_realize_and_unref(FlexcommFunction *f, Error **errp)
 {
     FlexcommState *s = FLEXCOMM(OBJECT(f)->parent);
     FlexcommFunctionClass *fc = FLEXCOMM_FUNCTION_GET_CLASS(f);
 
     f->regs = s->regs;
+    f->tx_fifo = &s->tx_fifo;
+    f->rx_fifo = &s->rx_fifo;
     memory_region_add_subregion_overlap(&s->container, 0, &f->mmio, 0);
     DEVICE(f)->id = g_strdup_printf("%s-%s", DEVICE(s)->id, fc->name);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(f), errp);
@@ -274,11 +285,82 @@ void flexcomm_set_irq(FlexcommFunction *f, bool irq)
     }
 }
 
+/* FIFO is shared between USART and SPI, provide common functions here */
+#define FIFO_REG(s, reg) (s->regs[R_FLEXCOMM_USART_FIFO##reg])
+#define FIFO_WR(s, reg, field, val) \
+    ARRAY_FIELD_DP32(s->regs, FLEXCOMM_USART_FIFO##reg, field, val)
+#define FIFO_RD(s, reg, field) \
+    ARRAY_FIELD_EX32(s->regs, FLEXCOMM_USART_FIFO##reg, field)
+
+void flexcomm_update_fifostat(FlexcommFunction *f)
+{
+    int rxlvl = fifo32_num_used(f->rx_fifo);
+    int txlvl = fifo32_num_used(f->tx_fifo);
+
+    FIFO_WR(f, STAT, RXLVL, rxlvl);
+    FIFO_WR(f, STAT, TXLVL, txlvl);
+    FIFO_WR(f, STAT, RXFULL, fifo32_is_full(f->rx_fifo) ? 1 : 0);
+    FIFO_WR(f, STAT, RXNOTEMPTY, !fifo32_is_empty(f->rx_fifo) ? 1 : 0);
+    FIFO_WR(f, STAT, TXNOTFULL, !fifo32_is_full(f->tx_fifo) ? 1 : 0);
+    FIFO_WR(f, STAT, TXEMPTY, fifo32_is_empty(f->tx_fifo) ? 1 : 0);
+
+    if (FIFO_RD(f, TRIG, RXLVLENA) && (rxlvl > FIFO_RD(f, TRIG, RXLVL))) {
+        FIFO_WR(f, INTSTAT, RXLVL, 1);
+    } else {
+        FIFO_WR(f, INTSTAT, RXLVL, 0);
+    }
+
+    if (FIFO_RD(f, TRIG, TXLVLENA) && (txlvl <= FIFO_RD(f, TRIG, TXLVL))) {
+        FIFO_WR(f, INTSTAT, TXLVL, 1);
+    } else {
+        FIFO_WR(f, INTSTAT, TXLVL, 0);
+    }
+
+    trace_flexcomm_fifostat(DEVICE(f)->id, FIFO_REG(f, STAT),
+                            FIFO_REG(f, INTSTAT));
+}
+
+void flexcomm_reset_fifos(FlexcommFunction *f)
+{
+    if (FIFO_RD(f, CFG, EMPTYRX)) {
+        FIFO_WR(f, CFG, EMPTYRX, 0);
+        fifo32_reset(f->rx_fifo);
+    }
+    if (FIFO_RD(f, CFG, EMPTYTX)) {
+        FIFO_WR(f, CFG, EMPTYTX, 0);
+        fifo32_reset(f->tx_fifo);
+    }
+}
+
+void flexcomm_clear_fifostat(FlexcommFunction *f, uint64_t value)
+{
+    bool rxerr = FIELD_EX32(value, FLEXCOMM_USART_FIFOSTAT, RXERR);
+    bool txerr = FIELD_EX32(value, FLEXCOMM_USART_FIFOSTAT, TXERR);
+
+    if (rxerr) {
+        FIFO_WR(f, STAT, RXERR, 0);
+    }
+    if (txerr) {
+        FIFO_WR(f, STAT, TXERR, 0);
+    }
+}
+
 static void flexcomm_function_select(FlexcommFunction *f, bool selected)
 {
     FlexcommFunctionClass *fc = FLEXCOMM_FUNCTION_GET_CLASS(f);
 
     memory_region_set_enabled(&f->mmio, selected);
+    if (fc->has_fifos) {
+        if (selected) {
+            unsigned num = FIFO_RD(f, SIZE, FIFOSIZE);
+
+            fifo32_create(f->tx_fifo, num);
+            fifo32_create(f->rx_fifo, num);
+        } else {
+            fifo32_destroy(f->tx_fifo);
+            fifo32_destroy(f->rx_fifo);
+        }
+    }
 }
 
 static void flexcomm_function_init(Object *obj)
@@ -303,6 +385,7 @@ static const TypeInfo flexcomm_types[] = {
         .parent        = TYPE_SYS_BUS_DEVICE,
         .instance_size = sizeof(FlexcommState),
         .instance_init = flexcomm_init,
+        .instance_finalize = flexcomm_finalize,
         .class_init    = flexcomm_class_init,
     },
     {

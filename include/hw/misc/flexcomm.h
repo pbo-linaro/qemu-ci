@@ -44,6 +44,8 @@ struct FlexcommState {
     uint32_t functions;
     qemu_irq irq;
     bool irq_state;
+    Fifo32 rx_fifo;
+    Fifo32 tx_fifo;
 };
 
 #endif /* HW_FLEXCOMM_H */

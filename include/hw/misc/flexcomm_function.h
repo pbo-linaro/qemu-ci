@@ -23,6 +23,8 @@ struct FlexcommFunction {
 
     MemoryRegion mmio;
     uint32_t *regs;
+    Fifo32 *tx_fifo;
+    Fifo32 *rx_fifo;
 };
 
 typedef void (*FlexcommFunctionSelect)(FlexcommFunction *f, bool selected);
@@ -32,6 +34,7 @@ struct FlexcommFunctionClass {
 
     const MemoryRegionOps *mmio_ops;
     const char *name;
+    bool has_fifos;
     FlexcommFunctionSelect select;
 };
 
@@ -43,5 +46,10 @@ static inline void flexcomm_select(FlexcommFunction *obj, bool selected)
 }
 
 void flexcomm_set_irq(FlexcommFunction *f, bool irq);
+void flexcomm_update_fifostat(FlexcommFunction *f);
+void flexcomm_clear_fifostat(FlexcommFunction *f, uint64_t value);
+void flexcomm_init_fifos(FlexcommFunction *f, unsigned num);
+void flexcomm_cleanup_fifos(FlexcommFunction *f);
+void flexcomm_reset_fifos(FlexcommFunction *f);
 
 #endif /* HW_FLEXCOMM_FUNCTION_H */
