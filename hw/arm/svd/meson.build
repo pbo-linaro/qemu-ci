@@ -24,4 +24,8 @@ if get_option('mcux-soc-svd')
     [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/rt500_clkctl1.h',
       '-p', 'CLKCTL1', '-t', 'RT500_CLKCTL1',
       '--fields', 'PSCCTL*:FlexIO AUDIOPLL0PFD OSEVENTTFCLKSEL'])
+  run_target('svd-flexspi', command: svd_gen_header +
+    [ '-i', rt595, '-o', '@SOURCE_ROOT@/include/hw/arm/svd/flexspi.h',
+      '-p', 'FLEXSPI0', '-t', 'FLEXSPI',
+      '--fields', 'STS0:SEQIDLE MCR0:SWRESET INTR:IPCMDDONE'])
 endif
