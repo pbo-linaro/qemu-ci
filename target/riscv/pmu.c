@@ -265,6 +265,21 @@ static void riscv_pmu_cycle_update_priv(CPURISCVState *env,
     counter_arr[env->priv] += delta;
 }
 
+static bool riscv_pmu_htable_lookup(RISCVCPU *cpu, uint32_t key,
+                                    uint32_t *value)
+{
+    GHashTable *table = cpu->pmu_event_ctr_map;
+    gpointer val_ptr;
+
+    val_ptr = g_hash_table_lookup(table, GUINT_TO_POINTER(key));
+    if (!val_ptr) {
+        return false;
+    }
+
+    *value = GPOINTER_TO_UINT(val_ptr);
+    return true;
+}
+
 void riscv_pmu_update_fixed_ctrs(CPURISCVState *env, target_ulong newpriv,
                                  bool new_virt)
 {
@@ -277,18 +292,15 @@ int riscv_pmu_incr_ctr(RISCVCPU *cpu, enum riscv_pmu_event_idx event_idx)
     uint32_t ctr_idx;
     int ret;
     CPURISCVState *env = &cpu->env;
-    gpointer value;
 
     if (!cpu->cfg.pmu_mask) {
         return 0;
     }
-    value = g_hash_table_lookup(cpu->pmu_event_ctr_map,
-                                GUINT_TO_POINTER(event_idx));
-    if (!value) {
+
+    if (!riscv_pmu_htable_lookup(cpu, event_idx, &ctr_idx)) {
         return -1;
     }
 
-    ctr_idx = GPOINTER_TO_UINT(value);
     if (!riscv_pmu_counter_enabled(cpu, ctr_idx)) {
         return -1;
     }
@@ -306,7 +318,6 @@ bool riscv_pmu_ctr_monitor_instructions(CPURISCVState *env,
                                         uint32_t target_ctr)
 {
     RISCVCPU *cpu;
-    uint32_t event_idx;
     uint32_t ctr_idx;
 
     /* Fixed instret counter */
@@ -315,14 +326,8 @@ bool riscv_pmu_ctr_monitor_instructions(CPURISCVState *env,
     }
 
     cpu = env_archcpu(env);
-    if (!cpu->pmu_event_ctr_map) {
-        return false;
-    }
-
-    event_idx = RISCV_PMU_EVENT_HW_INSTRUCTIONS;
-    ctr_idx = GPOINTER_TO_UINT(g_hash_table_lookup(cpu->pmu_event_ctr_map,
-                               GUINT_TO_POINTER(event_idx)));
-    if (!ctr_idx) {
+    if (!riscv_pmu_htable_lookup(cpu, RISCV_PMU_EVENT_HW_INSTRUCTIONS,
+                                 &ctr_idx)) {
         return false;
     }
 
@@ -332,7 +337,6 @@ bool riscv_pmu_ctr_monitor_instructions(CPURISCVState *env,
 bool riscv_pmu_ctr_monitor_cycles(CPURISCVState *env, uint32_t target_ctr)
 {
     RISCVCPU *cpu;
-    uint32_t event_idx;
     uint32_t ctr_idx;
 
     /* Fixed mcycle counter */
@@ -341,16 +345,8 @@ bool riscv_pmu_ctr_monitor_cycles(CPURISCVState *env, uint32_t target_ctr)
     }
 
     cpu = env_archcpu(env);
-    if (!cpu->pmu_event_ctr_map) {
-        return false;
-    }
-
-    event_idx = RISCV_PMU_EVENT_HW_CPU_CYCLES;
-    ctr_idx = GPOINTER_TO_UINT(g_hash_table_lookup(cpu->pmu_event_ctr_map,
-                               GUINT_TO_POINTER(event_idx)));
-
-    /* Counter zero is not used for event_ctr_map */
-    if (!ctr_idx) {
+    if (!riscv_pmu_htable_lookup(cpu, RISCV_PMU_EVENT_HW_CPU_CYCLES,
+                                &ctr_idx)) {
         return false;
     }
 
@@ -381,6 +377,7 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
 {
     uint32_t event_idx;
     RISCVCPU *cpu = env_archcpu(env);
+    uint32_t mapped_ctr_idx;
 
     if (!riscv_pmu_counter_valid(cpu, ctr_idx) || !cpu->pmu_event_ctr_map) {
         return -1;
@@ -398,8 +395,7 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
     }
 
     event_idx = value & MHPMEVENT_IDX_MASK;
-    if (g_hash_table_lookup(cpu->pmu_event_ctr_map,
-                            GUINT_TO_POINTER(event_idx))) {
+    if (riscv_pmu_htable_lookup(cpu, event_idx, &mapped_ctr_idx)) {
         return 0;
     }
 
@@ -472,8 +468,10 @@ static void pmu_timer_trigger_irq(RISCVCPU *cpu,
         return;
     }
 
-    ctr_idx = GPOINTER_TO_UINT(g_hash_table_lookup(cpu->pmu_event_ctr_map,
-                               GUINT_TO_POINTER(evt_idx)));
+    if (!riscv_pmu_htable_lookup(cpu, evt_idx, &ctr_idx)) {
+        return;
+    }
+
     if (!riscv_pmu_counter_enabled(cpu, ctr_idx)) {
         return;
     }
