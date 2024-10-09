@@ -56,6 +56,61 @@
 #include "qapi/qapi-visit-common.h"
 #include "hw/virtio/virtio-iommu.h"
 
+static PMUEventInfo pmu_events_arr[] = {
+    {
+        .event_id = VIRT_PMU_EVENT_HW_CPU_CYCLES,
+        .counter_mask = 0x01,
+    },
+    {
+        .event_id = VIRT_PMU_EVENT_HW_INSTRUCTIONS,
+        .counter_mask = 0x04,
+    },
+    {
+        .event_id = VIRT_PMU_EVENT_CACHE_DTLB_READ_MISS,
+        .counter_mask = 0,
+    },
+    {
+        .event_id = VIRT_PMU_EVENT_CACHE_DTLB_WRITE_MISS,
+        .counter_mask = 0,
+    },
+    {
+        .event_id = VIRT_PMU_EVENT_CACHE_ITLB_PREFETCH_MISS,
+        .counter_mask = 0,
+    },
+};
+
+static inline uint64_t virt_pmu_get_cycle_event_id(RISCVCPU *cpu)
+{
+    return VIRT_PMU_EVENT_HW_CPU_CYCLES;
+}
+
+static inline uint64_t virt_pmu_get_instret_event_id(RISCVCPU *cpu)
+{
+    return VIRT_PMU_EVENT_HW_INSTRUCTIONS;
+}
+
+static uint64_t virt_pmu_get_tlb_event_id(RISCVCPU *cpu,
+                                          MMUAccessType access_type)
+{
+    uint64_t tlb_event_type = ULONG_MAX;
+
+    switch (access_type) {
+    case MMU_INST_FETCH:
+        tlb_event_type = VIRT_PMU_EVENT_CACHE_ITLB_PREFETCH_MISS;
+        break;
+    case MMU_DATA_LOAD:
+        tlb_event_type = VIRT_PMU_EVENT_CACHE_DTLB_READ_MISS;
+        break;
+    case MMU_DATA_STORE:
+        tlb_event_type = VIRT_PMU_EVENT_CACHE_DTLB_WRITE_MISS;
+        break;
+    default:
+        break;
+    }
+
+    return tlb_event_type;
+}
+
 /* KVM AIA only supports APLIC MSI. APLIC Wired is always emulated by QEMU. */
 static bool virt_use_kvm_aia(RISCVVirtState *s)
 {
@@ -708,6 +763,29 @@ static void create_fdt_socket_aplic(RISCVVirtState *s,
     }
 
     aplic_phandles[socket] = aplic_s_phandle;
+}
+
+static void virt_pmu_events_init(RISCVVirtState *s)
+{
+    int cpu, socket, i;
+    MachineState *ms = MACHINE(s);
+    int num_sockets = riscv_socket_count(ms);
+    RISCVCPU *hart;
+
+    for (socket = 0 ; socket < num_sockets; socket++) {
+        for (cpu = s->soc[socket].num_harts - 1; cpu >= 0; cpu--) {
+            hart = &s->soc[socket].harts[cpu];
+            hart->env.num_pmu_events = 5;
+            /* All hpmcounters can monitor all supported events */
+            for (i = 0; i < ARRAY_SIZE(pmu_events_arr); i++) {
+                pmu_events_arr[i].counter_mask |= hart->cfg.pmu_mask;
+            }
+            hart->env.pmu_events = pmu_events_arr;
+            hart->env.pmu_efuncs.get_cycle_id = virt_pmu_get_cycle_event_id;
+            hart->env.pmu_efuncs.get_intstret_id = virt_pmu_get_instret_event_id;
+            hart->env.pmu_efuncs.get_tlb_access_id = virt_pmu_get_tlb_event_id;
+        }
+    }
 }
 
 static void create_fdt_pmu(RISCVVirtState *s)
@@ -1613,6 +1691,9 @@ static void virt_machine_init(MachineState *machine)
                                   drive_get(IF_PFLASH, 0, i));
     }
     virt_flash_map(s, system_memory);
+
+    /* Setup the PMU Event details. This must happen before fdt setup */
+    virt_pmu_events_init(s);
 
     /* load/create device tree */
     if (machine->dtb) {
