@@ -2057,6 +2057,7 @@ static void virtio_pci_device_plugged(DeviceState *d, Error **errp)
         if (modern_pio) {
             memory_region_init(&proxy->io_bar, OBJECT(proxy),
                                "virtio-pci-io", 0x4);
+            address_space_init(&proxy->modern_cfg_io_as, &proxy->io_bar, "virtio-pci-cfg-io-as");
 
             pci_register_bar(&proxy->pci_dev, proxy->modern_io_bar_idx,
                              PCI_BASE_ADDRESS_SPACE_IO, &proxy->io_bar);
@@ -2180,6 +2181,8 @@ static void virtio_pci_realize(PCIDevice *pci_dev, Error **errp)
                        /* PCI BAR regions must be powers of 2 */
                        pow2ceil(proxy->notify.offset + proxy->notify.size));
 
+    address_space_init(&proxy->modern_cfg_mem_as, &proxy->modern_bar, "virtio-pci-cfg-mem-as");
+
     if (proxy->disable_legacy == ON_OFF_AUTO_AUTO) {
         proxy->disable_legacy = pcie_port ? ON_OFF_AUTO_ON : ON_OFF_AUTO_OFF;
     }
@@ -2275,6 +2278,8 @@ static void virtio_pci_exit(PCIDevice *pci_dev)
         pci_is_express(pci_dev)) {
         pcie_aer_exit(pci_dev);
     }
+    address_space_destroy(&proxy->modern_cfg_mem_as);
+    address_space_destroy(&proxy->modern_cfg_io_as);
 }
 
 static void virtio_pci_reset(DeviceState *qdev)
