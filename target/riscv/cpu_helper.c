@@ -1288,23 +1288,16 @@ void riscv_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
 
 static void pmu_tlb_fill_incr_ctr(RISCVCPU *cpu, MMUAccessType access_type)
 {
-    enum virt_pmu_event_idx pmu_event_type;
+    uint64_t event_type = ULONG_MAX;
+    CPURISCVState *env = &cpu->env;
 
-    switch (access_type) {
-    case MMU_INST_FETCH:
-        pmu_event_type = VIRT_PMU_EVENT_CACHE_ITLB_PREFETCH_MISS;
-        break;
-    case MMU_DATA_LOAD:
-        pmu_event_type = VIRT_PMU_EVENT_CACHE_DTLB_READ_MISS;
-        break;
-    case MMU_DATA_STORE:
-        pmu_event_type = VIRT_PMU_EVENT_CACHE_DTLB_WRITE_MISS;
-        break;
-    default:
-        return;
+    if (env->pmu_efuncs.get_tlb_access_id) {
+        event_type = env->pmu_efuncs.get_tlb_access_id(cpu, access_type);
     }
 
-    riscv_pmu_incr_ctr(cpu, pmu_event_type);
+    if (event_type != ULONG_MAX) {
+        riscv_pmu_incr_ctr(cpu, event_type);
+    }
 }
 
 bool riscv_cpu_tlb_fill(CPUState *cs, vaddr address, int size,

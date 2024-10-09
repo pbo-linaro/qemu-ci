@@ -274,7 +274,7 @@ void riscv_pmu_update_fixed_ctrs(CPURISCVState *env, target_ulong newpriv,
     riscv_pmu_icount_update_priv(env, newpriv, new_virt);
 }
 
-int riscv_pmu_incr_ctr(RISCVCPU *cpu, enum virt_pmu_event_idx event_idx)
+int riscv_pmu_incr_ctr(RISCVCPU *cpu, uint64_t event_idx)
 {
     uint32_t ctr_idx;
     int ret;
