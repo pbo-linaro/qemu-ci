@@ -271,12 +271,15 @@ static bool riscv_pmu_htable_lookup(RISCVCPU *cpu, uint32_t key,
     GHashTable *table = cpu->pmu_event_ctr_map;
     gpointer val_ptr;
 
-    val_ptr = g_hash_table_lookup(table, GUINT_TO_POINTER(key));
+    pthread_rwlock_rdlock(&cpu->pmu_map_lock);
+    gpointer val_ptr = g_hash_table_lookup(table, GUINT_TO_POINTER(key));
     if (!val_ptr) {
+        pthread_rwlock_unlock(&cpu->pmu_map_lock);
         return false;
     }
 
     *value = GPOINTER_TO_UINT(val_ptr);
+    pthread_rwlock_unlock(&cpu->pmu_map_lock);
     return true;
 }
 
@@ -388,9 +391,11 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
      * mapping.
      */
     if (!value) {
+        pthread_rwlock_wrlock(&cpu->pmu_map_lock);
         g_hash_table_foreach_remove(cpu->pmu_event_ctr_map,
                                     pmu_remove_event_map,
                                     GUINT_TO_POINTER(ctr_idx));
+        pthread_rwlock_unlock(&cpu->pmu_map_lock);
         return 0;
     }
 
@@ -410,8 +415,10 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
         /* We don't support any raw events right now */
         return -1;
     }
+    pthread_rwlock_wrlock(&cpu->pmu_map_lock);
     g_hash_table_insert(cpu->pmu_event_ctr_map, GUINT_TO_POINTER(event_idx),
                         GUINT_TO_POINTER(ctr_idx));
+    pthread_rwlock_unlock(&cpu->pmu_map_lock);
 
     return 0;
 }
@@ -597,4 +604,5 @@ void riscv_pmu_init(RISCVCPU *cpu, Error **errp)
     }
 
     cpu->pmu_avail_ctrs = cpu->cfg.pmu_mask;
+    pthread_rwlock_init(&cpu->pmu_map_lock, NULL);
 }
