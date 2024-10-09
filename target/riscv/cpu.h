@@ -189,6 +189,28 @@ typedef struct PMUFixedCtrState {
         uint64_t counter_virt_prev[2];
 } PMUFixedCtrState;
 
+typedef uint64_t (*PMU_EVENT_CYCLE_FUNC)(RISCVCPU *);
+typedef uint64_t (*PMU_EVENT_INSTRET_FUNC)(RISCVCPU *);
+typedef uint64_t (*PMU_EVENT_TLB_FUNC)(RISCVCPU *, MMUAccessType access_type);
+
+typedef struct PMUEventInfo {
+    /* Event ID (BIT [0:55] valid) */
+    uint64_t event_id;
+    /* Supported hpmcounters for this event */
+    uint32_t counter_mask;
+    /* Bitmask of valid event bits */
+    uint64_t event_mask;
+} PMUEventInfo;
+
+typedef struct PMUEventFunc {
+    /* Get the ID of the event that can monitor cycles */
+    PMU_EVENT_CYCLE_FUNC get_cycle_id;
+    /* Get the ID of the event that can monitor cycles */
+    PMU_EVENT_INSTRET_FUNC get_intstret_id;
+    /* Get the ID of the event that can monitor TLB events*/
+    PMU_EVENT_TLB_FUNC get_tlb_access_id;
+} PMUEventFunc;
+
 struct CPUArchState {
     target_ulong gpr[32];
     target_ulong gprh[32]; /* 64 top bits of the 128-bit registers */
@@ -386,6 +408,9 @@ struct CPUArchState {
     target_ulong mhpmeventh_val[RV_MAX_MHPMEVENTS];
 
     PMUFixedCtrState pmu_fixed_ctrs[2];
+    PMUEventInfo *pmu_events;
+    PMUEventFunc pmu_efuncs;
+    int num_pmu_events;
 
     target_ulong sscratch;
     target_ulong mscratch;
