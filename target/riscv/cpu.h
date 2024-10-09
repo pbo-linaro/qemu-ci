@@ -817,14 +817,28 @@ enum {
 /*
  * The event id are encoded based on the encoding specified in the
  * SBI specification v0.3
+ *
+ * The event encoding is specified in the SBI specification
+ * Event idx is a 20bits wide number encoded as follows:
+ * event_idx[19:16] = type
+ * event_idx[15:0] = code
+ * The code field in cache events are encoded as follows:
+ * event_idx.code[15:3] = cache_id
+ * event_idx.code[2:1] = op_id
+ * event_idx.code[0:0] = result_id
  */
 
-enum riscv_pmu_event_idx {
-    RISCV_PMU_EVENT_HW_CPU_CYCLES = 0x01,
-    RISCV_PMU_EVENT_HW_INSTRUCTIONS = 0x02,
-    RISCV_PMU_EVENT_CACHE_DTLB_READ_MISS = 0x10019,
-    RISCV_PMU_EVENT_CACHE_DTLB_WRITE_MISS = 0x1001B,
-    RISCV_PMU_EVENT_CACHE_ITLB_PREFETCH_MISS = 0x10021,
+enum virt_pmu_event_idx {
+    /* SBI_PMU_HW_CPU_CYCLES: 0x01 : type(0x00) */
+    VIRT_PMU_EVENT_HW_CPU_CYCLES = 0x01,
+    /* SBI_PMU_HW_INSTRUCTIONS: 0x02 : type(0x00) */
+    VIRT_PMU_EVENT_HW_INSTRUCTIONS = 0x02,
+    /* SBI_PMU_HW_CACHE_DTLB : 0x03 READ : 0x00 MISS : 0x00 type(0x01) */
+    VIRT_PMU_EVENT_CACHE_DTLB_READ_MISS = 0x10019,
+    /* SBI_PMU_HW_CACHE_DTLB : 0x03 WRITE : 0x01 MISS : 0x00 type(0x01) */
+    VIRT_PMU_EVENT_CACHE_DTLB_WRITE_MISS = 0x1001B,
+    /* SBI_PMU_HW_CACHE_ITLB : 0x04 READ : 0x00 MISS : 0x00 type(0x01) */
+    VIRT_PMU_EVENT_CACHE_ITLB_PREFETCH_MISS = 0x10021,
 };
 
 /* used by tcg/tcg-cpu.c*/
