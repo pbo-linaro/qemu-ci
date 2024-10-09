@@ -6462,7 +6462,15 @@ void cpu_x86_cpuid(CPUX86State *env, uint32_t index, uint32_t count,
         }
         *edx = env->features[FEAT_1_EDX];
         if (threads_per_pkg > 1) {
-            *ebx |= threads_per_pkg << 16;
+            /*
+             * AMD requires logical processor count, but Intel needs maximum
+             * number of addressable IDs for logical processors per package.
+             */
+            if (cpu->vendor_cpuid_only && IS_AMD_CPU(env)) {
+                *ebx |= threads_per_pkg << 16;
+            } else {
+                *ebx |= 1 << apicid_pkg_offset(&topo_info) << 16;
+            }
             *edx |= CPUID_HT;
         }
         if (!cpu->enable_pmu) {
