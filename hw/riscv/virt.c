@@ -792,11 +792,28 @@ static void create_fdt_pmu(RISCVVirtState *s)
 {
     g_autofree char *pmu_name = g_strdup_printf("/pmu");
     MachineState *ms = MACHINE(s);
-    RISCVCPU hart = s->soc[0].harts[0];
+    uint32_t fdt_event_ctr_map[15] = {};
+    int i;
 
     qemu_fdt_add_subnode(ms->fdt, pmu_name);
     qemu_fdt_setprop_string(ms->fdt, pmu_name, "compatible", "riscv,pmu");
-    riscv_pmu_generate_fdt_node(ms->fdt, hart.pmu_avail_ctrs, pmu_name);
+
+    /*
+     * To keep it simple, any event can be mapped to any programmable counters
+     * in QEMU. The generic cycle & instruction count events can also be
+     * monitored using programmable counters. In that case, mcycle & minstret
+     * must continue to provide the correct value as well. Heterogeneous PMU per
+     * hart is not supported yet. Thus, number of counters are same across all
+     * harts.
+     */
+    for (i = 0; i < ARRAY_SIZE(pmu_events_arr); i++) {
+        fdt_event_ctr_map[0 + i * 3] = cpu_to_be32(pmu_events_arr[i].event_id);
+        fdt_event_ctr_map[1 + i * 3] = cpu_to_be32(pmu_events_arr[i].event_id);
+        fdt_event_ctr_map[2 + i * 3] = cpu_to_be32(pmu_events_arr[i].counter_mask);
+    }
+    /* This a OpenSBI specific DT property documented in OpenSBI docs */
+    qemu_fdt_setprop(ms->fdt, pmu_name, "riscv,event-to-mhpmcounters",
+                     fdt_event_ctr_map, sizeof(fdt_event_ctr_map));
 }
 
 static void create_fdt_sockets(RISCVVirtState *s, const MemMapEntry *memmap,
