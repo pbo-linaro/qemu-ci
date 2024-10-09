@@ -854,6 +854,10 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @multifd-packet-size: Packet size in bytes used to migrate data.
+#     The value needs to be a multiple of guest page size.
+#     The default value is 524288 and max value is 4190208.  (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -880,7 +884,8 @@
            'vcpu-dirty-limit',
            'mode',
            'zero-page-detection',
-           'direct-io'] }
+           'direct-io',
+           'multifd-packet-size'] }
 
 ##
 # @MigrateSetParameters:
@@ -1041,6 +1046,10 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @multifd-packet-size: Packet size in bytes used to migrate data.
+#     The value needs to be a multiple of guest page size.
+#     The default value is 524288 and max value is 4190208.  (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -1083,7 +1092,8 @@
             '*mode': 'MigMode',
             '*zero-page-detection': 'ZeroPageDetection',
             '*direct-io': 'bool',
-            '*dsa-accel-path': [ 'str' ] } }
+            '*dsa-accel-path': [ 'str' ],
+            '*multifd-packet-size' : 'uint64'} }
 
 ##
 # @migrate-set-parameters:
@@ -1258,6 +1268,10 @@
 #     only has effect if the @mapped-ram capability is enabled.
 #     (Since 9.1)
 #
+# @multifd-packet-size: Packet size in bytes used to migrate data.
+#     The value needs to be a multiple of guest page size.
+#     The default value is 524288 and max value is 4190208.  (Since 9.2)
+#
 # Features:
 #
 # @unstable: Members @x-checkpoint-delay and
@@ -1297,7 +1311,8 @@
             '*mode': 'MigMode',
             '*zero-page-detection': 'ZeroPageDetection',
             '*direct-io': 'bool',
-            '*dsa-accel-path': [ 'str' ] } }
+            '*dsa-accel-path': [ 'str' ],
+            '*multifd-packet-size': 'uint64' } }
 
 ##
 # @query-migrate-parameters:
