@@ -387,12 +387,26 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
         return -1;
     }
 
+    event_idx = value & MHPMEVENT_IDX_MASK;
+    if (riscv_pmu_htable_lookup(cpu, event_idx, &mapped_ctr_idx)) {
+        return 0;
+    }
+
+    for (i = 0; i < env->num_pmu_events; i++) {
+        if ((event_idx == env->pmu_events[i].event_id) &&
+            (BIT(ctr_idx) & env->pmu_events[i].counter_mask)) {
+            valid_event = true;
+            break;
+        }
+    }
+
+    pthread_rwlock_wrlock(&cpu->pmu_map_lock);
     /*
-     * Expected mhpmevent value is zero for reset case. Remove the current
-     * mapping.
+     * Remove the current mapping in the following cases:
+     * 1. mhpmevent value is zero which indicates a reset case.
+     * 2. An invalid event is programmed for mapping to a counter.
      */
-    if (!value) {
-        pthread_rwlock_wrlock(&cpu->pmu_map_lock);
+    if (!value || !valid_event) {
         g_hash_table_foreach_remove(cpu->pmu_event_ctr_map,
                                     pmu_remove_event_map,
                                     GUINT_TO_POINTER(ctr_idx));
@@ -400,26 +414,15 @@ int riscv_pmu_update_event_map(CPURISCVState *env, uint64_t value,
         return 0;
     }
 
-    event_idx = value & MHPMEVENT_IDX_MASK;
-    if (riscv_pmu_htable_lookup(cpu, event_idx, &mapped_ctr_idx)) {
-        return 0;
-    }
-
-    for (i = 0; i < env->num_pmu_events; i++) {
-        if (event_idx == env->pmu_events[i].event_id) {
-            valid_event = true;
-            break;
-        }
-    }
-
-    if (!valid_event) {
-        return -1;
-    }
     eid_ptr = g_new(gint64, 1);
     *eid_ptr = event_idx;
-    pthread_rwlock_wrlock(&cpu->pmu_map_lock);
+    /*
+     * Insert operation will replace the value if the key exists
+     * As per the documentation, it will free the passed key is freed as well.
+     * No special handling is required for replace or key management.
+     */
     g_hash_table_insert(cpu->pmu_event_ctr_map, eid_ptr,
-                        GUINT_TO_POINTER(ctr_idx));
+                GUINT_TO_POINTER(ctr_idx));
     pthread_rwlock_unlock(&cpu->pmu_map_lock);
 
     return 0;
