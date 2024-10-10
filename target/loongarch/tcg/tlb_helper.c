@@ -160,11 +160,33 @@ static void invalidate_tlb(CPULoongArchState *env, int index)
     invalidate_tlb_entry(env, index);
 }
 
-static void fill_tlb_entry(CPULoongArchState *env, int index)
+static void do_fill_tlb_entry(CPULoongArchState *env, uint64_t vppn,
+                              uint64_t lo0, uint64_t lo1, int index, uint8_t ps)
 {
     LoongArchTLB *tlb = &env->tlb[index];
+    uint16_t asid;
+
+    if (ps == 0) {
+        qemu_log_mask(CPU_LOG_MMU, "page size is 0\n");
+    }
+
+    /* Only MTLB has the ps fields */
+    if (index >= LOONGARCH_STLB) {
+        tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, ps);
+    }
+
+    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, VPPN, vppn);
+    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, E, 1);
+    asid = FIELD_EX64(env->CSR_ASID, CSR_ASID, ASID);
+    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, ASID, asid);
+
+    tlb->tlb_entry0 = lo0;
+    tlb->tlb_entry1 = lo1;
+}
+
+static void fill_tlb_entry(CPULoongArchState *env, int index)
+{
     uint64_t lo0, lo1, csr_vppn;
-    uint16_t csr_asid;
     uint8_t csr_ps;
 
     if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
@@ -187,22 +209,7 @@ static void fill_tlb_entry(CPULoongArchState *env, int index)
         lo1 = env->CSR_TLBELO1;
     }
 
-    if (csr_ps == 0) {
-        qemu_log_mask(CPU_LOG_MMU, "page size is 0\n");
-    }
-
-    /* Only MTLB has the ps fields */
-    if (index >= LOONGARCH_STLB) {
-        tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, csr_ps);
-    }
-
-    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, VPPN, csr_vppn);
-    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, E, 1);
-    csr_asid = FIELD_EX64(env->CSR_ASID, CSR_ASID, ASID);
-    tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, ASID, csr_asid);
-
-    tlb->tlb_entry0 = lo0;
-    tlb->tlb_entry1 = lo1;
+    do_fill_tlb_entry(env, csr_vppn, lo0, lo1, index, csr_ps);
 }
 
 /* Return an random value between low and high */
