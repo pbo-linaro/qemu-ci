@@ -8,6 +8,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/guest-random.h"
+#include "qemu/atomic.h"
 
 #include "cpu.h"
 #include "internals.h"
@@ -504,7 +505,7 @@ bool loongarch_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
 
     /* Data access */
     ret = get_physical_address(env, &physical, &prot, address,
-                               access_type, mmu_idx);
+                               access_type, mmu_idx, false);
 
     if (ret == TLBRET_MATCH) {
         tlb_set_page(cs, address & TARGET_PAGE_MASK,
@@ -650,4 +651,148 @@ void helper_ldpte(CPULoongArchState *env, target_ulong base, target_ulong odd,
         env->CSR_TLBRELO0 = tmp0;
     }
     env->CSR_TLBREHI = FIELD_DP64(env->CSR_TLBREHI, CSR_TLBREHI, PS, ps);
+}
+
+static target_ulong get_pte_base(CPULoongArchState *env, vaddr address)
+{
+    uint64_t dir_base, dir_width;
+    target_ulong base;
+    int i;
+
+    /* Get PGD */
+    base = ((address >> 63) & 0x1) ? env->CSR_PGDH : env->CSR_PGDL;
+
+    for (i = 4; i > 0; i--) {
+        get_dir_base_width(env, &dir_base, &dir_width, i);
+        /*
+         * LDDIR: level = 2 corresponds to Dir1 in PWCL.
+         * PWCL/PWCH: dir >= 1 && dir_width == 0 means no such level.
+         */
+        if (i >= 2 && dir_width == 0) {
+            continue;
+        }
+        base = do_lddir(env, base, address, i);
+    }
+
+    return base;
+}
+
+bool do_page_walk(CPULoongArchState *env, vaddr address,
+                  MMUAccessType access_type, int tlb_error,
+                  hwaddr *physical, bool is_debug)
+{
+    CPUState *cs = env_cpu(env);
+    target_ulong base, ps, tmp0, tmp1, ptindex, ptoffset, cur_val, new_val, old_val;
+    uint64_t entrylo0, entrylo1, tlbehi, vppn;
+    uint64_t ptbase = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTBASE);
+    uint64_t ptwidth = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTWIDTH);
+    int index, shift;
+    bool ret = false;
+
+    /*
+     * tlb error map :
+     * TLBRET_NOMATCH : tlb fill
+     * TLBRET_INVALID : access_type = 0/2  tlb_load
+     *                : access_type = 1    tlb_store
+     * TLBRET_DIRTY   : tlb_modify
+     */
+    switch (tlb_error) {
+    case TLBRET_NOMATCH:
+        base = get_pte_base(env, address);
+        if (base == 0) {
+            return ret;
+        }
+        do_ldpte(env, base, address, &tmp0, &tmp1, &ps);
+        entrylo0 = tmp0;
+        entrylo1 = tmp1;
+        tlbehi = address & (TARGET_PAGE_MASK << 1);
+        vppn = FIELD_EX64(tlbehi, CSR_TLBEHI_64, VPPN);
+        if (is_debug) {
+            uint64_t tlb_ppn, tlb_entry;
+            uint8_t n;
+            n = (address >> ps) & 0x1;/* Odd or even */
+
+            tlb_entry = n ? entrylo1: entrylo1;
+            tlb_ppn = FIELD_EX64(tlb_entry, TLBENTRY_64, PPN);
+            /* Remove sw bit between bit12 -- bit PS */
+            tlb_ppn = tlb_ppn & ~(((0x1UL << (ps - 12)) -1));
+            *physical = (tlb_ppn << R_TLBENTRY_64_PPN_SHIFT) |
+                        (address & MAKE_64BIT_MASK(0, ps));
+        } else {
+            index = get_random_tlb_index(env, tlbehi, ps);
+            invalidate_tlb(env, index);
+            do_fill_tlb_entry(env, vppn, entrylo0, entrylo1, index, ps);
+        }
+
+        ret = true;
+        break;
+    case TLBRET_DIRTY:
+    case TLBRET_INVALID:
+        base = get_pte_base(env, address);
+
+        /* 0:64bit, 1:128bit, 2:192bit, 3:256bit */
+        shift = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTEWIDTH);
+        shift = (shift + 1) * 3;
+        ptindex = (address >> ptbase) & ((1 << ptwidth) -1);
+        ptoffset = ptindex << shift;
+        tmp0 = base | ptoffset;
+      retry:
+        old_val = ldq_phys(cs->as, tmp0) & TARGET_PHYS_MASK;
+
+        if (old_val == 0) {
+            return ret;
+        }
+
+        new_val = old_val;
+        /* Check pte val, and do tlb modify. */
+        if ((tlb_error == TLBRET_INVALID) &&
+            (access_type == MMU_INST_FETCH )) {
+            if (!(FIELD_EX64(new_val, TLBENTRY, PRESENT))) {
+                break;
+            }
+            new_val = FIELD_DP64(new_val, TLBENTRY, V, 1);
+        } else if ((tlb_error == TLBRET_INVALID) &&
+                   access_type == MMU_DATA_STORE) {
+            if (!((FIELD_EX64(new_val, TLBENTRY, PRESENT) &&
+                  (FIELD_EX64(new_val, TLBENTRY, WRITE))))){
+                break;
+            }
+            new_val = FIELD_DP64(new_val, TLBENTRY, V, 1);
+        } else if (tlb_error ==  TLBRET_DIRTY) {
+            if (!(FIELD_EX64(new_val, TLBENTRY, PRESENT) &&
+                 (FIELD_EX64(new_val, TLBENTRY, WRITE)))) {
+                break;
+            }
+            new_val = FIELD_DP64(new_val, TLBENTRY, V, 1);
+        }
+
+        if (old_val != new_val) {
+            cur_val = qatomic_cmpxchg((uint64_t *)tmp0, old_val, new_val);
+            if (cur_val == old_val) {
+                goto retry;
+            }
+        }
+
+        tmp0 = tmp0 & (~0x8);
+        entrylo0 = ldq_phys(cs->as, tmp0) & TARGET_PHYS_MASK;
+        entrylo1 = ldq_phys(cs->as, tmp0 | 0x8) & TARGET_PHYS_MASK;
+        tlbehi = address & (TARGET_PAGE_MASK << 1);
+        ps = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTBASE);
+        vppn = FIELD_EX64(tlbehi, CSR_TLBEHI_64, VPPN);
+
+        /*
+         * srch tlb index with tlb entryhi
+         * if no match, we use get_random_tlb_index() to get random index.
+         */
+        if (!loongarch_tlb_search(env, tlbehi, &index)) {
+            index = get_random_tlb_index(env, tlbehi, ps);
+        }
+        invalidate_tlb(env, index);
+        do_fill_tlb_entry(env, vppn, entrylo0, entrylo1, index, ps);
+        ret = true;
+        break;
+    default:
+        ;
+    }
+    return ret;
 }

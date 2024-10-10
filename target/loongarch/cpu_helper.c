@@ -178,10 +178,11 @@ static hwaddr dmw_va2pa(CPULoongArchState *env, target_ulong va,
 
 int get_physical_address(CPULoongArchState *env, hwaddr *physical,
                          int *prot, target_ulong address,
-                         MMUAccessType access_type, int mmu_idx)
+                         MMUAccessType access_type, int mmu_idx, bool is_debug)
 {
     int user_mode = mmu_idx == MMU_USER_IDX;
     int kernel_mode = mmu_idx == MMU_KERNEL_IDX;
+    int ret;
     uint32_t plv, base_c, base_v;
     int64_t addr_high;
     uint8_t da = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, DA);
@@ -221,8 +222,25 @@ int get_physical_address(CPULoongArchState *env, hwaddr *physical,
     }
 
     /* Mapped address */
-    return loongarch_map_address(env, physical, prot, address,
-                                 access_type, mmu_idx);
+    ret = loongarch_map_address(env, physical, prot, address,
+                                access_type, mmu_idx);
+#ifdef CONFIG_TCG
+    if (!FIELD_EX32(env->cpucfg[2], CPUCFG2, HPTW)) {
+        return ret;
+    }
+
+    if (!FIELD_EX32(env->CSR_PWCH, CSR_PWCH, HPTW_EN)) {
+        return ret;
+    }
+
+    if (do_page_walk(env, address, access_type, ret, physical, is_debug)) {
+        if (!is_debug) {
+            ret = loongarch_map_address(env, physical, prot, address,
+                                        access_type, mmu_idx);
+        }
+    }
+#endif
+    return ret;
 }
 
 hwaddr loongarch_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
@@ -232,7 +250,7 @@ hwaddr loongarch_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     int prot;
 
     if (get_physical_address(env, &phys_addr, &prot, addr, MMU_DATA_LOAD,
-                             cpu_mmu_index(cs, false)) != 0) {
+                             cpu_mmu_index(cs, false), true) != 0) {
         return -1;
     }
     return phys_addr;

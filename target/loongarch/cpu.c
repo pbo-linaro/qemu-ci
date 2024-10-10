@@ -476,6 +476,7 @@ static void loongarch_la664_initfn(Object *obj)
     env->cpucfg[0] = 0x14d000; /* PRID */
 
     loongarch_common_initfn(env, obj);
+    env->cpucfg[2] = FIELD_DP32(env->cpucfg[2], CPUCFG2, HPTW, 1);
 }
 
 static void loongarch_la464_initfn(Object *obj)
