@@ -24,6 +24,11 @@
 typedef struct {
     char syscall_buf[256];
     gdb_syscall_complete_cb current_syscall_cb;
+    enum {
+        GDB_SYS_UNKNOWN,
+        GDB_SYS_ENABLED,
+        GDB_SYS_DISABLED,
+    } mode;
 } GDBSyscallState;
 
 static GDBSyscallState gdbserver_syscall_state;
@@ -36,12 +41,6 @@ static bool gdb_attached(void)
 {
     return gdbserver_state.init && gdbserver_state.c_cpu;
 }
-
-static enum {
-    GDB_SYS_UNKNOWN,
-    GDB_SYS_ENABLED,
-    GDB_SYS_DISABLED,
-} gdb_syscall_mode;
 
 /* Decide if either remote gdb syscalls or native file IO should be used. */
 int use_gdb_syscalls(void)
@@ -57,16 +56,17 @@ int use_gdb_syscalls(void)
 
     /* -semihosting-config target=auto */
     /* On the first call check if gdb is connected and remember. */
-    if (gdb_syscall_mode == GDB_SYS_UNKNOWN) {
-        gdb_syscall_mode = gdb_attached() ? GDB_SYS_ENABLED : GDB_SYS_DISABLED;
+    if (gdbserver_syscall_state.mode == GDB_SYS_UNKNOWN) {
+        gdbserver_syscall_state.mode = gdb_attached() ? GDB_SYS_ENABLED :
+                                                        GDB_SYS_DISABLED;
     }
-    return gdb_syscall_mode == GDB_SYS_ENABLED;
+    return gdbserver_syscall_state.mode == GDB_SYS_ENABLED;
 }
 
 /* called when the stub detaches */
 void gdb_disable_syscalls(void)
 {
-    gdb_syscall_mode = GDB_SYS_DISABLED;
+    gdbserver_syscall_state.mode = GDB_SYS_DISABLED;
 }
 
 void gdb_syscall_reset(void)
