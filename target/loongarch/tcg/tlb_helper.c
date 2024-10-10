@@ -291,19 +291,12 @@ void helper_tlbwr(CPULoongArchState *env)
     fill_tlb_entry(env, index);
 }
 
-void helper_tlbfill(CPULoongArchState *env)
+static int get_random_tlb_index(CPULoongArchState *env,
+                                uint64_t entryhi, uint16_t pagesize)
 {
-    uint64_t address, entryhi;
+    uint64_t address;
+    uint16_t stlb_ps;
     int index, set, stlb_idx;
-    uint16_t pagesize, stlb_ps;
-
-    if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
-        entryhi = env->CSR_TLBREHI;
-        pagesize = FIELD_EX64(env->CSR_TLBREHI, CSR_TLBREHI, PS);
-    } else {
-        entryhi = env->CSR_TLBEHI;
-        pagesize = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, PS);
-    }
 
     stlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
 
@@ -322,6 +315,25 @@ void helper_tlbfill(CPULoongArchState *env)
         /* Only write into MTLB */
         index = get_random_tlb(LOONGARCH_STLB, LOONGARCH_TLB_MAX - 1);
     }
+
+    return index;
+}
+
+void helper_tlbfill(CPULoongArchState *env)
+{
+    uint64_t entryhi;
+    uint16_t pagesize;
+    int index;
+
+    if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
+        entryhi = env->CSR_TLBREHI;
+        pagesize = FIELD_EX64(env->CSR_TLBREHI, CSR_TLBREHI, PS);
+    } else {
+        entryhi = env->CSR_TLBEHI;
+        pagesize = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, PS);
+    }
+
+    index = get_random_tlb_index(env, entryhi, pagesize);
 
     invalidate_tlb(env, index);
     fill_tlb_entry(env, index);
