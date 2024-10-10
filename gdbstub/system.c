@@ -141,7 +141,7 @@ static void gdb_vm_state_change(void *opaque, bool running, RunState state)
         return;
     }
 
-    if (!gdbserver_state.allow_stop_reply) {
+    if (!gdb_try_stop()) {
         return;
     }
 
@@ -211,7 +211,6 @@ static void gdb_vm_state_change(void *opaque, bool running, RunState state)
 
 send_packet:
     gdb_put_packet(buf->str);
-    gdbserver_state.allow_stop_reply = false;
 
     /* disable single step if it was enabled */
     cpu_single_step(cpu, 0);
@@ -428,10 +427,9 @@ void gdb_exit(int code)
 
     trace_gdbstub_op_exiting((uint8_t)code);
 
-    if (gdbserver_state.allow_stop_reply) {
+    if (gdb_try_stop()) {
         snprintf(buf, sizeof(buf), "W%02x", (uint8_t)code);
         gdb_put_packet(buf);
-        gdbserver_state.allow_stop_reply = false;
     }
 
     qemu_chr_fe_deinit(&gdbserver_system_state.chr, true);

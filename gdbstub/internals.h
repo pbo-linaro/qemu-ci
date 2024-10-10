@@ -215,4 +215,6 @@ void gdb_breakpoint_remove_all(CPUState *cs);
 int gdb_target_memory_rw_debug(CPUState *cs, hwaddr addr,
                                uint8_t *buf, int len, bool is_write);
 
+bool gdb_try_stop(void);
+
 #endif /* GDBSTUB_INTERNALS_H */
