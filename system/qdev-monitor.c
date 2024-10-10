@@ -735,6 +735,68 @@ err_del_dev:
     return NULL;
 }
 
+static DeviceState *qdev_from_opt(QemuOpts *opts, const char *name,
+                                  Error **errp)
+{
+    Object *obj;
+    const char *path = qemu_opt_get(opts, name);
+
+    if (!path) {
+        error_setg(errp, QERR_MISSING_PARAMETER, name);
+        return NULL;
+    }
+
+    obj = object_resolve_path(path, NULL);
+    if (!obj) {
+        error_setg(errp, "Could not resolve path: %s", path);
+        return NULL;
+    }
+
+    if (!object_dynamic_cast(obj, TYPE_DEVICE)) {
+        error_setg(errp, "%s is not a device", path);
+        return NULL;
+    }
+
+    return DEVICE(obj);
+}
+
+int qdev_connect_gpios(QemuOpts *opts, Error **errp)
+{
+    qemu_irq in_irq;
+    const char *in_gpio_name, *out_gpio_name;
+    int in_gpio_idx = 0, out_gpio_idx = 0;
+    DeviceState *dev;
+
+    dev = qdev_from_opt(opts, "in-dev-path", errp);
+    if (!dev) {
+        return -1;
+    }
+
+    in_gpio_name = qemu_opt_get(opts, "in-gpio-name");
+    out_gpio_name = qemu_opt_get(opts, "out-gpio-name");
+    in_gpio_idx = qemu_opt_get_number(opts, "out-gpio-index", 0);
+    out_gpio_idx = qemu_opt_get_number(opts, "out-gpio-index", 0);
+
+    if (in_gpio_name) {
+        in_irq = qdev_get_gpio_in_named(dev, in_gpio_name, in_gpio_idx);
+    } else {
+        in_irq = qdev_get_gpio_in(dev, in_gpio_idx);
+    }
+
+    dev = qdev_from_opt(opts, "out-dev-path", errp);
+    if (!dev) {
+        return -1;
+    }
+
+    if (out_gpio_name) {
+        qdev_connect_gpio_out_named(dev, out_gpio_name, out_gpio_idx, in_irq);
+    } else {
+        qdev_connect_gpio_out(dev, out_gpio_idx, in_irq);
+    }
+
+    return 0;
+}
+
 /* Takes ownership of @opts on success */
 DeviceState *qdev_device_add(QemuOpts *opts, Error **errp)
 {
@@ -883,6 +945,20 @@ void qmp_device_add(QDict *qdict, QObject **ret_data, Error **errp)
         return;
     }
     object_unref(OBJECT(dev));
+}
+
+void qmp_connect_gpios(QDict *qdict, QObject **ret_data, Error **errp)
+{
+    QemuOpts *opts;
+
+    opts = qemu_opts_from_qdict(qemu_find_opts("connect-gpios"), qdict, errp);
+    if (!opts) {
+        return;
+    }
+
+    qdev_connect_gpios(opts, errp);
+
+    qemu_opts_del(opts);
 }
 
 static DeviceState *find_device_state(const char *id, Error **errp)
@@ -1098,6 +1174,33 @@ QemuOptsList qemu_device_opts = {
          * sanity checking will happen later
          * when setting device properties
          */
+        { /* end of list */ }
+    },
+};
+
+QemuOptsList qemu_connect_gpios_opts = {
+    .name = "connect-gpios",
+    .head = QTAILQ_HEAD_INITIALIZER(qemu_connect_gpios_opts.head),
+    .desc = {
+        {
+            .name = "in-dev-path",
+            .type = QEMU_OPT_STRING,
+        },{
+            .name = "in-gpio-name",
+            .type = QEMU_OPT_STRING,
+        },{
+            .name = "in-gpio-index",
+            .type = QEMU_OPT_NUMBER,
+        },{
+            .name = "out-dev-path",
+            .type = QEMU_OPT_STRING,
+        },{
+            .name = "out-gpio-name",
+            .type = QEMU_OPT_STRING,
+        },{
+            .name = "out-gpio-index",
+            .type = QEMU_OPT_NUMBER,
+        },
         { /* end of list */ }
     },
 };

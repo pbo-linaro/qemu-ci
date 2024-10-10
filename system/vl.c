@@ -1222,6 +1222,19 @@ static int device_init_func(void *opaque, QemuOpts *opts, Error **errp)
     return 0;
 }
 
+static int connect_gpios_func(void *opaque, QemuOpts *opts, Error **errp)
+{
+    int err;
+
+    err = qdev_connect_gpios(opts, errp);
+    if (err != 0 && *errp) {
+        error_report_err(*errp);
+        return err;
+    }
+
+    return 0;
+}
+
 static int chardev_init_func(void *opaque, QemuOpts *opts, Error **errp)
 {
     Error *local_err = NULL;
@@ -2665,6 +2678,10 @@ static void qemu_create_cli_devices(void)
         object_unref(OBJECT(dev));
         loc_pop(&opt->loc);
     }
+
+    qemu_opts_foreach(qemu_find_opts("connect-gpios"),
+                      connect_gpios_func, NULL, &error_fatal);
+
     rom_reset_order_override();
 }
 
@@ -2765,6 +2782,7 @@ void qemu_init(int argc, char **argv)
     qemu_add_drive_opts(&bdrv_runtime_opts);
     qemu_add_opts(&qemu_chardev_opts);
     qemu_add_opts(&qemu_device_opts);
+    qemu_add_opts(&qemu_connect_gpios_opts);
     qemu_add_opts(&qemu_netdev_opts);
     qemu_add_opts(&qemu_nic_opts);
     qemu_add_opts(&qemu_net_opts);
@@ -3371,6 +3389,12 @@ void qemu_init(int argc, char **argv)
                                                  optarg, true)) {
                         exit(1);
                     }
+                }
+                break;
+            case QEMU_OPTION_connect_gpios:
+                if (!qemu_opts_parse_noisily(qemu_find_opts("connect-gpios"),
+                                             optarg, false)) {
+                    exit(1);
                 }
                 break;
             case QEMU_OPTION_smp:

@@ -1187,6 +1187,37 @@ SRST
 
 ERST
 
+DEF("connect-gpios", HAS_ARG, QEMU_OPTION_connect_gpios,
+    "-connect-gpios in-dev-path=path,out-dev-path=path[,in-gpio-name=name][,out-gpio-name=name][,in-gpio-index=index][,out-gpio-index=index]\n"
+    "                connect an input and an output gpio.\n",
+    QEMU_ARCH_ALL)
+SRST
+``-connect-gpios in-dev-path=path,out-dev-path=path[,in-gpio-name=name][,out-gpio-name=name][,in-gpio-index=index][,out-gpio-index=index]``
+    Connect an input and an output gpio.
+
+    ``in-dev-path``, ``out-dev-path`` required, the device canonical
+        object path (e.g. /machine/peripheral-anon/device[0],
+        /machine/iotkit/cluster0/armv7m0) for the devices that should
+        have their in <-> out GPIOs connected
+
+    ``in-gpio-name``, ``out-gpio-name`` optional, the name of the GPIO list;
+      if not specified, the unnamed GPIO list is used
+
+    ``in-gpio-index``, ``out-gpio-index`` optional, the index in the GPIO list
+      that identifies the GPIO to be used; if not specified 0 (the first
+      GPIO in the list) is used
+
+    Examples:
+
+    .. parsed-literal::
+
+        # add the tmp105 sensor and connects its irq line to the CPU
+        qemu-system-arm \\
+         --machine mps2-an505 \\
+         --device tmp105,bus=/versatile_i2c/i2c,address=0x50 \\
+         --connect-gpios out-dev-path=/machine/peripheral-anon/device[0],in-dev-path=/machine/iotkit/cluster0/armv7m0,in-gpio-index=100
+ERST
+
 DEF("name", HAS_ARG, QEMU_OPTION_name,
     "-name string1[,process=string2][,debug-threads=on|off]\n"
     "                set the name of the guest\n"
