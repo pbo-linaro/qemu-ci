@@ -103,7 +103,7 @@ typedef struct {
 
 static GDBUserState gdbserver_user_state;
 
-int gdb_get_char(void)
+static int gdb_get_char(void)
 {
     uint8_t ch;
     int ret;
