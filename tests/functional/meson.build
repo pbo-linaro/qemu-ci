@@ -13,6 +13,7 @@ endif
 test_timeouts = {
   'aarch64_raspi4' : 120,
   'aarch64_sbsaref' : 600,
+  'aarch64_tuxrun' : 120,
   'aarch64_virt' : 360,
   'acpi_bits' : 240,
   'arm_raspi2' : 120,
@@ -41,6 +42,7 @@ tests_aarch64_system_thorough = [
   'aarch64_raspi3',
   'aarch64_raspi4',
   'aarch64_sbsaref',
+  'aarch64_tuxrun',
   'aarch64_virt',
   'multiprocess',
 ]
