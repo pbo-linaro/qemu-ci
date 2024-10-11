@@ -2137,8 +2137,7 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
         is_ipv6 = (i == 1);
         fp = fopen(routeFiles[i], "r");
         if (fp == NULL) {
-            error_setg_errno(errp, errno, "open(\"%s\")", routeFiles[i]);
-            free(line);
+            error_setg_errno(errp, errno, "open(\"%s\")", route_files[i]);
             continue;
         }
 
@@ -2218,9 +2217,8 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
             QAPI_LIST_APPEND(tail, route);
         }
 
-        free(line);
         fclose(fp);
     }
-
+    free(line);
     return head;
 }
