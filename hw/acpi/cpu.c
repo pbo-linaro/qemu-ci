@@ -291,6 +291,8 @@ void acpi_cpu_plug_cb(HotplugHandler *hotplug_dev,
     }
 
     cdev->cpu = CPU(dev);
+    cdev->is_present = true;
+    cdev->is_enabled = true;
     if (dev->hotplugged) {
         cdev->is_inserting = true;
         acpi_send_event(DEVICE(hotplug_dev), ACPI_CPU_HOTPLUG_STATUS);
@@ -320,6 +322,11 @@ void acpi_cpu_unplug_cb(CPUHotplugState *cpu_st,
     cdev = get_cpu_status(cpu_st, dev);
     if (!cdev) {
         return;
+    }
+
+    cdev->is_enabled = false;
+    if (!acpi_persistent_cpu(CPU(dev))) {
+        cdev->is_present = false;
     }
 
     cdev->cpu = NULL;
