@@ -542,6 +542,27 @@ struct CPUState {
     CPUPluginState *plugin_state;
 #endif
 
+    /*
+     * To implement the vCPU hotplug feature (which simulates CPU hotplug
+     * behavior), we need to dynamically create and destroy QOM vCPU objects,
+     * and (de)associate them with pre-existing KVM vCPUs while (un)parking the
+     * KVM vCPU context. One challenge is ensuring that these dynamically
+     * appearing or disappearing QOM vCPU objects are accurately reflected
+     * through ACPI to the Guest Kernel. Due to architectural constraints,
+     * changing the number of vCPUs after the guest kernel has booted may not
+     * always be possible.
+     *
+     * In certain architectures, to provide the guest kernel with a *persistent*
+     * view of vCPU presence, even when the QOM does not have a corresponding
+     * vCPU object, ACPI may simulate the presence of vCPUs by marking them as
+     * ACPI-disabled. This is achieved by setting `_STA.PRES=True` and
+     * `_STA.Ena=False` for unplugged vCPUs in QEMU's QOM.
+     *
+     * By default, this flag is set to `FALSE`, and it must be explicitly set
+     * to `TRUE` for architectures like ARM.
+     */
+    bool acpi_persistent;
+
     /* TODO Move common fields from CPUArchState here. */
     int cpu_index;
     int cluster_index;

@@ -26,6 +26,8 @@ typedef struct AcpiCpuStatus {
     uint64_t arch_id;
     bool is_inserting;
     bool is_removing;
+    bool is_present;
+    bool is_enabled;
     bool fw_remove;
     uint32_t ost_event;
     uint32_t ost_status;
@@ -75,4 +77,23 @@ extern const VMStateDescription vmstate_cpu_hotplug;
     VMSTATE_STRUCT(cpuhp, state, 1, \
                    vmstate_cpu_hotplug, CPUHotplugState)
 
+/**
+ * acpi_persistent_cpu:
+ * @cpu: The vCPU to check
+ *
+ * Checks if the vCPU state should always be reflected as *present* via ACPI
+ * to the Guest. By default, this is False on all architectures and has to be
+ * explicity set during initialization.
+ *
+ * Returns: True if it is ACPI 'persistent' CPU
+ *
+ */
+static inline bool acpi_persistent_cpu(CPUState *cpu)
+{
+    /*
+     * returns if 'Presence' of the vCPU is persistent and should be simulated
+     * via ACPI even after vCPUs have been unplugged in QOM
+     */
+    return cpu && cpu->acpi_persistent;
+}
 #endif

@@ -225,7 +225,40 @@ void cpu_hotplug_hw_init(MemoryRegion *as, Object *owner,
     state->dev_count = id_list->len;
     state->devs = g_new0(typeof(*state->devs), state->dev_count);
     for (i = 0; i < id_list->len; i++) {
-        state->devs[i].cpu =  CPU(id_list->cpus[i].cpu);
+        struct CPUState *cpu = CPU(id_list->cpus[i].cpu);
+        /*
+         * In most architectures, CPUs that are marked as ACPI 'present' are
+         * also ACPI 'enabled' by default. These states remain consistent at
+         * both the QOM and ACPI levels.
+         */
+        if (cpu) {
+            state->devs[i].is_enabled = true;
+            state->devs[i].is_present = true;
+            state->devs[i].cpu = cpu;
+        } else {
+            state->devs[i].is_enabled = false;
+            /*
+             * In some architectures, even 'unplugged' or 'disabled' QOM CPUs
+             * may be exposed as ACPI 'present.' This approach provides a
+             * persistent view of the vCPUs to the guest kernel. This could be
+             * due to an architectural constraint that requires every per-CPU
+             * component to be present at boot time, meaning the exact count of
+             * vCPUs must be known and cannot be altered after the kernel has
+             * booted. As a result, the vCPU states at the QOM and ACPI levels
+             * might become inconsistent. However, in such cases, the presence
+             * of vCPUs has been deliberately simulated at the ACPI level.
+             */
+            if (acpi_persistent_cpu(first_cpu)) {
+                state->devs[i].is_present = true;
+                /*
+                 * `CPUHotplugState::AcpiCpuStatus::cpu` becomes insignificant
+                 * in this case
+                 */
+            } else {
+                state->devs[i].is_present = false;
+                state->devs[i].cpu = cpu;
+            }
+        }
         state->devs[i].arch_id = id_list->cpus[i].arch_id;
     }
     memory_region_init_io(&state->ctrl_reg, owner, &cpu_hotplug_ops, state,
