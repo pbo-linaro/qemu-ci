@@ -1959,6 +1959,12 @@ static bool trans_DSB_DMB(DisasContext *s, arg_DSB_DMB *a)
     return true;
 }
 
+static bool trans_DSB_nXS(DisasContext *ctx, arg_DSB_nXS *a)
+{
+    tcg_gen_mb(TCG_BAR_SC | TCG_MO_ALL);
+    return true;
+}
+
 static bool trans_ISB(DisasContext *s, arg_ISB *a)
 {
     /*
