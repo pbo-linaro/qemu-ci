@@ -31,6 +31,7 @@ pub mod c_str;
 pub mod definitions;
 pub mod device_class;
 pub mod offset_of;
+pub mod zeroable;
 
 #[cfg(test)]
 mod tests;

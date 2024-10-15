@@ -7,7 +7,8 @@ use core::ptr::NonNull;
 use qemu_api::{
     bindings::*,
     c_str,
-    definitions::ObjectImpl
+    definitions::ObjectImpl,
+    zeroable::Zeroable,
 };
 
 use crate::device::PL011State;
@@ -16,7 +17,7 @@ use crate::device::PL011State;
 pub static VMSTATE_PL011: VMStateDescription = VMStateDescription {
     name: PL011State::TYPE_INFO.name,
     unmigratable: true,
-    ..unsafe { ::core::mem::MaybeUninit::<VMStateDescription>::zeroed().assume_init() }
+    ..Zeroable::ZERO
 };
 
 qemu_api::declare_properties! {

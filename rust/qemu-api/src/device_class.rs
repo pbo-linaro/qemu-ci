@@ -100,7 +100,7 @@ macro_rules! declare_properties {
         fn _make_properties() -> [$crate::bindings::Property; PROP_LEN] {
             [
                 $($prop),*,
-                    unsafe { ::core::mem::MaybeUninit::<$crate::bindings::Property>::zeroed().assume_init() },
+                $crate::zeroable::Zeroable::ZERO,
             ]
         }
 
@@ -125,7 +125,7 @@ macro_rules! vm_state_description {
                 $vname.as_ptr()
             },)*
             unmigratable: true,
-            ..unsafe { ::core::mem::MaybeUninit::<$crate::bindings::VMStateDescription>::zeroed().assume_init() }
+            ..$crate::zeroable::Zeroable::ZERO
         };
     }
 }
