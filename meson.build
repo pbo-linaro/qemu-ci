@@ -3931,7 +3931,6 @@ if have_rust and have_system
     '--merge-extern-blocks',
     '--no-doc-comments',
     '--with-derive-default',
-    '--no-size_t-is-usize',
     '--no-layout-tests',
     '--no-prepend-enum-name',
     '--allowlist-file', meson.project_source_root() + '/include/.*',
