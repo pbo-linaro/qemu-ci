@@ -43,7 +43,7 @@ fn test_device_decl_macros() {
         dummy_class_init,
         props => DUMMY_PROPERTIES,
         realize_fn => None,
-        reset_fn => None,
+        legacy_reset_fn => None,
         vmsd => VMSTATE,
     }
 }

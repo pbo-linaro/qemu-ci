@@ -5,6 +5,7 @@ _qemu_api_rs = static_library(
       'src/lib.rs',
       'src/definitions.rs',
       'src/device_class.rs',
+      'src/tests.rs',
     ],
     {'.' : bindings_rs},
   ),
@@ -18,6 +19,8 @@ _qemu_api_rs = static_library(
     qemu_api_macros,
   ],
 )
+
+rust.test('rust-qemu-api-tests', _qemu_api_rs)
 
 qemu_api = declare_dependency(
   link_with: _qemu_api_rs,
