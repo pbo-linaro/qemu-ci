@@ -76,11 +76,11 @@ if not get_option('rust').disabled() and add_languages('rust', required: get_opt
     and add_languages('rust', required: get_option('rust'), native: true)
   rustc = meson.get_compiler('rust')
   have_rust = true
-  if rustc.version().version_compare('<1.80.0')
+  if rustc.version().version_compare('<1.63.0')
     if get_option('rust').enabled()
-      error('rustc version ' + rustc.version() + ' is unsupported: Please upgrade to at least 1.80.0')
+      error('rustc version ' + rustc.version() + ' is unsupported: Please upgrade to at least 1.63.0')
     else
-      warning('rustc version ' + rustc.version() + ' is unsupported: Disabling Rust compilation. Please upgrade to at least 1.80.0 to use Rust.')
+      warning('rustc version ' + rustc.version() + ' is unsupported: Disabling Rust compilation. Please upgrade to at least 1.63.0 to use Rust.')
       have_rust = false
     endif
   endif
