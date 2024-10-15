@@ -35,6 +35,8 @@ mod tests;
 
 use std::alloc::{GlobalAlloc, Layout};
 
+use std::os::raw::c_void;
+
 #[cfg(HAVE_GLIB_WITH_ALIGNED_ALLOC)]
 extern "C" {
     fn g_aligned_alloc0(
@@ -47,8 +49,8 @@ extern "C" {
 
 #[cfg(not(HAVE_GLIB_WITH_ALIGNED_ALLOC))]
 extern "C" {
-    fn qemu_memalign(alignment: usize, size: usize) -> *mut ::core::ffi::c_void;
-    fn qemu_vfree(ptr: *mut ::core::ffi::c_void);
+    fn qemu_memalign(alignment: usize, size: usize) -> *mut c_void;
+    fn qemu_vfree(ptr: *mut c_void);
 }
 
 extern "C" {
@@ -113,7 +115,7 @@ impl Default for QemuAllocator {
 }
 
 // Sanity check.
-const _: [(); 8] = [(); ::core::mem::size_of::<*mut ::core::ffi::c_void>()];
+const _: [(); 8] = [(); ::core::mem::size_of::<*mut c_void>()];
 
 unsafe impl GlobalAlloc for QemuAllocator {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {

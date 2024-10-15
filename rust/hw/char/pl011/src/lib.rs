@@ -45,7 +45,7 @@ pub mod device;
 pub mod device_class;
 pub mod memory_ops;
 
-pub const TYPE_PL011: &::core::ffi::CStr = c"pl011";
+pub const TYPE_PL011: &::std::ffi::CStr = c"pl011";
 
 /// Offset of each register from the base memory address of the device.
 ///

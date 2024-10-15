@@ -10,7 +10,7 @@ macro_rules! device_class_init {
         #[no_mangle]
         pub unsafe extern "C" fn $func(
             klass: *mut $crate::bindings::ObjectClass,
-            _: *mut ::core::ffi::c_void,
+            _: *mut ::std::os::raw::c_void,
         ) {
             let mut dc =
                 ::core::ptr::NonNull::new(klass.cast::<$crate::bindings::DeviceClass>()).unwrap();
@@ -30,7 +30,7 @@ macro_rules! define_property {
         $crate::bindings::Property {
             name: {
                 #[used]
-                static _TEMP: &::core::ffi::CStr = $name;
+                static _TEMP: &::std::ffi::CStr = $name;
                 _TEMP.as_ptr()
             },
             info: $prop,
@@ -51,7 +51,7 @@ macro_rules! define_property {
         $crate::bindings::Property {
             name: {
                 #[used]
-                static _TEMP: &::core::ffi::CStr = $name;
+                static _TEMP: &::std::ffi::CStr = $name;
                 _TEMP.as_ptr()
             },
             info: $prop,
@@ -121,7 +121,7 @@ macro_rules! vm_state_description {
         pub static $name: $crate::bindings::VMStateDescription = $crate::bindings::VMStateDescription {
             $(name: {
                 #[used]
-                static VMSTATE_NAME: &::core::ffi::CStr = $vname;
+                static VMSTATE_NAME: &::std::ffi::CStr = $vname;
                 $vname.as_ptr()
             },)*
             unmigratable: true,
