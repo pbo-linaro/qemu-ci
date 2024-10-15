@@ -2,8 +2,6 @@
 // Author(s): Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-use std::sync::OnceLock;
-
 use crate::bindings::Property;
 
 #[macro_export]
@@ -73,12 +71,15 @@ macro_rules! define_property {
 }
 
 #[repr(C)]
-pub struct Properties<const N: usize>(pub OnceLock<[Property; N]>, pub fn() -> [Property; N]);
+pub struct Properties<const N: usize>(pub Option<[Property; N]>, pub fn() -> [Property; N]);
 
 impl<const N: usize> Properties<N> {
     pub fn as_mut_ptr(&mut self) -> *mut Property {
-        _ = self.0.get_or_init(self.1);
-        self.0.get_mut().unwrap().as_mut_ptr()
+        match self.0 {
+            None => { self.0 = Some(self.1()); },
+            Some(_) => {},
+        }
+        self.0.as_mut().unwrap().as_mut_ptr()
     }
 }
 
@@ -104,7 +105,7 @@ macro_rules! declare_properties {
         }
 
         #[no_mangle]
-        pub static mut $ident: $crate::device_class::Properties<PROP_LEN> = $crate::device_class::Properties(::std::sync::OnceLock::new(), _make_properties);
+        pub static mut $ident: $crate::device_class::Properties<PROP_LEN> = $crate::device_class::Properties(None, _make_properties);
     };
 }
 
