@@ -4,6 +4,7 @@
 
 use crate::{
     bindings::*, c_str, declare_properties, define_property, device_class_init, vm_state_description,
+    with_offsets,
 };
 
 #[test]
@@ -15,10 +16,12 @@ fn test_device_decl_macros() {
         unmigratable: true,
     }
 
-    #[repr(C)]
-    pub struct DummyState {
-        pub char_backend: CharBackend,
-        pub migrate_clock: bool,
+    with_offsets! {
+        #[repr(C)]
+        pub struct DummyState {
+            pub char_backend: CharBackend,
+            pub migrate_clock: bool,
+        }
     }
 
     declare_properties! {

@@ -26,7 +26,7 @@ macro_rules! device_class_init {
 
 #[macro_export]
 macro_rules! define_property {
-    ($name:expr, $state:ty, $field:expr, $prop:expr, $type:expr, default = $defval:expr$(,)*) => {
+    ($name:expr, $state:ty, $field:ident, $prop:expr, $type:expr, default = $defval:expr$(,)*) => {
         $crate::bindings::Property {
             name: {
                 #[used]
@@ -34,7 +34,7 @@ macro_rules! define_property {
                 _TEMP.as_ptr()
             },
             info: $prop,
-            offset: ::core::mem::offset_of!($state, $field)
+            offset: $crate::offset_of!($state, $field)
                 .try_into()
                 .expect("Could not fit offset value to type"),
             bitnr: 0,
@@ -47,7 +47,7 @@ macro_rules! define_property {
             link_type: ::core::ptr::null(),
         }
     };
-    ($name:expr, $state:ty, $field:expr, $prop:expr, $type:expr$(,)*) => {
+    ($name:expr, $state:ty, $field:ident, $prop:expr, $type:expr$(,)*) => {
         $crate::bindings::Property {
             name: {
                 #[used]
@@ -55,7 +55,7 @@ macro_rules! define_property {
                 _TEMP.as_ptr()
             },
             info: $prop,
-            offset: ::core::mem::offset_of!($state, $field)
+            offset: $crate::offset_of!($state, $field)
                 .try_into()
                 .expect("Could not fit offset value to type"),
             bitnr: 0,

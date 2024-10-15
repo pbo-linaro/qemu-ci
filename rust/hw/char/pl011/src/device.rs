@@ -13,6 +13,7 @@ use qemu_api::{
     bindings::{self, *},
     c_str,
     definitions::ObjectImpl,
+    with_offsets,
 };
 
 use crate::{
@@ -28,50 +29,52 @@ const DATA_BREAK: u32 = 1 << 10;
 /// QEMU sourced constant.
 pub const PL011_FIFO_DEPTH: usize = 16_usize;
 
-#[repr(C)]
-#[derive(Debug, qemu_api_macros::Object)]
-/// PL011 Device Model in QEMU
-pub struct PL011State {
-    pub parent_obj: SysBusDevice,
-    pub iomem: MemoryRegion,
-    #[doc(alias = "fr")]
-    pub flags: registers::Flags,
-    #[doc(alias = "lcr")]
-    pub line_control: registers::LineControl,
-    #[doc(alias = "rsr")]
-    pub receive_status_error_clear: registers::ReceiveStatusErrorClear,
-    #[doc(alias = "cr")]
-    pub control: registers::Control,
-    pub dmacr: u32,
-    pub int_enabled: u32,
-    pub int_level: u32,
-    pub read_fifo: [u32; PL011_FIFO_DEPTH],
-    pub ilpr: u32,
-    pub ibrd: u32,
-    pub fbrd: u32,
-    pub ifl: u32,
-    pub read_pos: usize,
-    pub read_count: usize,
-    pub read_trigger: usize,
-    #[doc(alias = "chr")]
-    pub char_backend: CharBackend,
-    /// QEMU interrupts
-    ///
-    /// ```text
-    ///  * sysbus MMIO region 0: device registers
-    ///  * sysbus IRQ 0: `UARTINTR` (combined interrupt line)
-    ///  * sysbus IRQ 1: `UARTRXINTR` (receive FIFO interrupt line)
-    ///  * sysbus IRQ 2: `UARTTXINTR` (transmit FIFO interrupt line)
-    ///  * sysbus IRQ 3: `UARTRTINTR` (receive timeout interrupt line)
-    ///  * sysbus IRQ 4: `UARTMSINTR` (momem status interrupt line)
-    ///  * sysbus IRQ 5: `UARTEINTR` (error interrupt line)
-    /// ```
-    #[doc(alias = "irq")]
-    pub interrupts: [qemu_irq; 6usize],
-    #[doc(alias = "clk")]
-    pub clock: NonNull<Clock>,
-    #[doc(alias = "migrate_clk")]
-    pub migrate_clock: bool,
+with_offsets! {
+    #[repr(C)]
+    #[derive(Debug, qemu_api_macros::Object)]
+    /// PL011 Device Model in QEMU
+    pub struct PL011State {
+        pub parent_obj: SysBusDevice,
+        pub iomem: MemoryRegion,
+        #[doc(alias = "fr")]
+        pub flags: registers::Flags,
+        #[doc(alias = "lcr")]
+        pub line_control: registers::LineControl,
+        #[doc(alias = "rsr")]
+        pub receive_status_error_clear: registers::ReceiveStatusErrorClear,
+        #[doc(alias = "cr")]
+        pub control: registers::Control,
+        pub dmacr: u32,
+        pub int_enabled: u32,
+        pub int_level: u32,
+        pub read_fifo: [u32; PL011_FIFO_DEPTH],
+        pub ilpr: u32,
+        pub ibrd: u32,
+        pub fbrd: u32,
+        pub ifl: u32,
+        pub read_pos: usize,
+        pub read_count: usize,
+        pub read_trigger: usize,
+        #[doc(alias = "chr")]
+        pub char_backend: CharBackend,
+        /// QEMU interrupts
+        ///
+        /// ```text
+        ///  * sysbus MMIO region 0: device registers
+        ///  * sysbus IRQ 0: `UARTINTR` (combined interrupt line)
+        ///  * sysbus IRQ 1: `UARTRXINTR` (receive FIFO interrupt line)
+        ///  * sysbus IRQ 2: `UARTTXINTR` (transmit FIFO interrupt line)
+        ///  * sysbus IRQ 3: `UARTRTINTR` (receive timeout interrupt line)
+        ///  * sysbus IRQ 4: `UARTMSINTR` (momem status interrupt line)
+        ///  * sysbus IRQ 5: `UARTEINTR` (error interrupt line)
+        /// ```
+        #[doc(alias = "irq")]
+        pub interrupts: [qemu_irq; 6usize],
+        #[doc(alias = "clk")]
+        pub clock: NonNull<Clock>,
+        #[doc(alias = "migrate_clk")]
+        pub migrate_clock: bool,
+    }
 }
 
 impl ObjectImpl for PL011State {
