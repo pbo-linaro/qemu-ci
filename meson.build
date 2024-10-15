@@ -15,6 +15,7 @@ meson.add_postconf_script(find_program('scripts/symlink-install-tree.py'))
 
 not_found = dependency('', required: false)
 keyval = import('keyval')
+rust = import('rust')
 ss = import('sourceset')
 fs = import('fs')
 
