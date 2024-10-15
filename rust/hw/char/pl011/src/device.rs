@@ -11,6 +11,7 @@ use std::{
 
 use qemu_api::{
     bindings::{self, *},
+    c_str,
     definitions::ObjectImpl,
 };
 
@@ -99,7 +100,7 @@ impl qemu_api::definitions::Class for PL011Class {
 }
 
 #[used]
-pub static CLK_NAME: &CStr = c"clk";
+pub static CLK_NAME: &CStr = c_str!("clk");
 
 impl PL011State {
     /// Initializes a pre-allocated, unitialized instance of `PL011State`.

@@ -27,6 +27,7 @@ unsafe impl Sync for bindings::Property {}
 unsafe impl Sync for bindings::TypeInfo {}
 unsafe impl Sync for bindings::VMStateDescription {}
 
+pub mod c_str;
 pub mod definitions;
 pub mod device_class;
 

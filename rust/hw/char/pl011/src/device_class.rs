@@ -4,7 +4,11 @@
 
 use core::ptr::NonNull;
 
-use qemu_api::{bindings::*, definitions::ObjectImpl};
+use qemu_api::{
+    bindings::*,
+    c_str,
+    definitions::ObjectImpl
+};
 
 use crate::device::PL011State;
 
@@ -18,14 +22,14 @@ pub static VMSTATE_PL011: VMStateDescription = VMStateDescription {
 qemu_api::declare_properties! {
     PL011_PROPERTIES,
     qemu_api::define_property!(
-        c"chardev",
+        c_str!("chardev"),
         PL011State,
         char_backend,
         unsafe { &qdev_prop_chr },
         CharBackend
     ),
     qemu_api::define_property!(
-        c"migrate-clk",
+        c_str!("migrate-clk"),
         PL011State,
         migrate_clock,
         unsafe { &qdev_prop_bool },

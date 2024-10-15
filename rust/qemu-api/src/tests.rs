@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 use crate::{
-    bindings::*, declare_properties, define_property, device_class_init, vm_state_description,
+    bindings::*, c_str, declare_properties, define_property, device_class_init, vm_state_description,
 };
 
 #[test]
@@ -11,7 +11,7 @@ fn test_device_decl_macros() {
     // Test that macros can compile.
     vm_state_description! {
         VMSTATE,
-        name: c"name",
+        name: c_str!("name"),
         unmigratable: true,
     }
 
@@ -24,14 +24,14 @@ fn test_device_decl_macros() {
     declare_properties! {
         DUMMY_PROPERTIES,
             define_property!(
-                c"chardev",
+                c_str!("chardev"),
                 DummyState,
                 char_backend,
                 unsafe { &qdev_prop_chr },
                 CharBackend
             ),
             define_property!(
-                c"migrate-clk",
+                c_str!("migrate-clk"),
                 DummyState,
                 migrate_clock,
                 unsafe { &qdev_prop_bool },
