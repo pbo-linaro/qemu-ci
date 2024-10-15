@@ -2,7 +2,9 @@
 // Author(s): Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-use crate::bindings::Property;
+use std::ffi::CStr;
+
+use crate::bindings::{self, Property};
 
 #[macro_export]
 macro_rules! device_class_init {
@@ -129,3 +131,7 @@ macro_rules! vm_state_description {
         };
     }
 }
+
+// workaround until we can use --generate-cstr in bindgen.
+pub const TYPE_SYS_BUS_DEVICE: &CStr =
+    unsafe { CStr::from_bytes_with_nul_unchecked(bindings::TYPE_SYS_BUS_DEVICE) };
