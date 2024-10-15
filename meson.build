@@ -3956,13 +3956,6 @@ if have_rust and have_system
     bindgen_args += ['--bitfield-enum', enum]
   endforeach
 
-  # TODO: Remove this comment when the clang/libclang mismatch issue is solved.
-  #
-  # Rust bindings generation with `bindgen` might fail in some cases where the
-  # detected `libclang` does not match the expected `clang` version/target. In
-  # this case you must pass the path to `clang` and `libclang` to your build
-  # command invocation using the environment variables CLANG_PATH and
-  # LIBCLANG_PATH
   bindings_rs = import('rust').bindgen(
     input: 'rust/wrapper.h',
     dependencies: common_ss.all_dependencies(),
