@@ -74,6 +74,7 @@ endif
 have_rust = false
 if not get_option('rust').disabled() and add_languages('rust', required: get_option('rust'), native: false) \
     and add_languages('rust', required: get_option('rust'), native: true)
+  bindgen = find_program('bindgen')
   rustc = meson.get_compiler('rust')
   have_rust = true
   if rustc.version().version_compare('<1.63.0')
@@ -3939,6 +3940,9 @@ if have_rust and have_system
     '--allowlist-file', meson.project_source_root() + '/.*',
     '--allowlist-file', meson.project_build_root() + '/.*'
     ]
+  if bindgen.version().version_compare('<0.65.0')
+    bindgen_args += ['--size_t-is-usize']
+  endif
   c_enums = [
     'DeviceCategory',
     'GpioPolarity',
@@ -3974,7 +3978,7 @@ if have_rust and have_system
     dependencies: common_ss.all_dependencies(),
     output: 'bindings.rs',
     include_directories: include_directories('.', 'include'),
-    bindgen_version: ['>=0.69.4'],
+    bindgen_version: ['>=0.59.1'],
     args: bindgen_args,
     )
   subdir('rust')
