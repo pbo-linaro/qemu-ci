@@ -444,7 +444,7 @@ static void get_ramblock_dirty_info(RAMBlock *block,
     info->ramblock_pages = qemu_ram_get_used_length(block) >>
                            qemu_target_page_bits();
     info->ramblock_addr = qemu_ram_get_host_addr(block);
-    strcpy(info->idstr, qemu_ram_get_idstr(block));
+    g_strlcpy(info->idstr, qemu_ram_get_idstr(block), sizeof(info->idstr));
 }
 
 static void free_ramblock_dirty_info(struct RamblockDirtyInfo *infos, int count)
