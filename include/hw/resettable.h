@@ -40,6 +40,7 @@ typedef enum ResetType {
     RESET_TYPE_WAKEUP,
     RESET_TYPE_S390_CPU_INITIAL,
     RESET_TYPE_S390_CPU_NORMAL,
+    RESET_TYPE_SOFT,
 } ResetType;
 
 /*
