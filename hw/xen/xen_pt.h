@@ -36,6 +36,7 @@ void xen_pt_log(const PCIDevice *d, const char *f, ...) G_GNUC_PRINTF(2, 3);
 #  define XEN_PT_LOG_CONFIG(d, addr, val, len)
 #endif
 
+#define DOMID_RUN_QEMU 0
 
 /* Helper */
 #define XEN_PFN(x) ((x) >> XC_PAGE_SHIFT)
