@@ -27,7 +27,7 @@
 #include "hw/core/cpu.h"
 #include "qemu/main-loop.h"
 #include "sysemu/cpus.h"
-#include "sysemu/cpu-throttle.h"
+#include "cpu-throttle.h"
 #include "trace.h"
 
 /* vcpu throttling controls */
