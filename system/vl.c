@@ -1801,13 +1801,13 @@ static void qemu_apply_legacy_machine_options(QDict *qdict)
     }
 }
 
-static void object_option_foreach_add(bool (*type_opt_predicate)(const char *))
+static void object_option_foreach_add(
+    bool (*type_opt_predicate)(const ObjectOption *opt))
 {
     ObjectOption *opt, *next;
 
     QTAILQ_FOREACH_SAFE(opt, &object_opts, next, next) {
-        const char *type = ObjectType_str(opt->opts->qom_type);
-        if (type_opt_predicate(type)) {
+        if (type_opt_predicate(opt)) {
             user_creatable_add_qapi(opt->opts, &error_fatal);
             qapi_free_ObjectOptions(opt->opts);
             QTAILQ_REMOVE(&object_opts, opt, next);
@@ -1859,8 +1859,10 @@ static void object_option_parse(const char *str)
 /*
  * Very early object creation, before the sandbox options have been activated.
  */
-static bool object_create_pre_sandbox(const char *type)
+static bool object_create_pre_sandbox(const ObjectOption *opt)
 {
+    const char *type = ObjectType_str(opt->opts->qom_type);
+
     /*
      * Objects should in general not get initialized "too early" without
      * a reason. If you add one, state the reason in a comment!
@@ -1884,15 +1886,17 @@ static bool object_create_pre_sandbox(const char *type)
  * cannot be created here, as it depends on the chardev
  * already existing.
  */
-static bool object_create_early(const char *type)
+static bool object_create_early(const ObjectOption *opt)
 {
+    const char *type = ObjectType_str(opt->opts->qom_type);
+
     /*
      * Objects should not be made "delayed" without a reason.  If you
      * add one, state the reason in a comment!
      */
 
     /* Reason: already created. */
-    if (object_create_pre_sandbox(type)) {
+    if (object_create_pre_sandbox(opt)) {
         return false;
     }
 
@@ -2014,9 +2018,9 @@ static void qemu_create_early_backends(void)
  * The remainder of object creation happens after the
  * creation of chardev, fsdev, net clients and device data types.
  */
-static bool object_create_late(const char *type)
+static bool object_create_late(const ObjectOption *opt)
 {
-    return !object_create_early(type) && !object_create_pre_sandbox(type);
+    return !object_create_early(opt) && !object_create_pre_sandbox(opt);
 }
 
 static void qemu_create_late_backends(void)
