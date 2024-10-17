@@ -1816,6 +1816,19 @@ static void object_option_foreach_add(
     }
 }
 
+static void object_option_foreach(
+    bool (*type_opt_predicate)(const ObjectOption *opt),
+    void (*func)(ObjectOptions *opts))
+{
+    ObjectOption *opt, *next;
+
+    QTAILQ_FOREACH_SAFE(opt, &object_opts, next, next) {
+        if (type_opt_predicate(opt)) {
+            func(opt->opts);
+        }
+    }
+}
+
 static void object_option_add_visitor(Visitor *v)
 {
     ObjectOption *opt = g_new0(ObjectOption, 1);
@@ -2000,6 +2013,18 @@ static int monitor_add_chardev(void *opaque, QemuOpts *opts, Error **errp)
     return ret;
 }
 
+static void qtest_add_chardev(ObjectOptions *opts)
+{
+    g_autoptr(QDict) props = user_creatable_get_props(opts);
+    const char *chardev = qdict_get_str(props, "chardev");
+    chardev_add(chardev);
+}
+
+static bool option_is_qtest(const ObjectOption *opt)
+{
+    return g_str_equal(ObjectType_str(opt->opts->qom_type), "qtest");
+}
+
 static bool option_is_monitor_chardev(void *opaque, QemuOpts *opts)
 {
     return chardev_find(qemu_opts_id(opts));
@@ -2012,8 +2037,16 @@ static bool option_is_not_monitor_chardev(void *opaque, QemuOpts *opts)
 
 static void qemu_create_monitors(void)
 {
+    const char *name;
+
     qemu_opts_foreach(qemu_find_opts("mon"),
                       monitor_add_chardev, NULL, &error_fatal);
+
+    object_option_foreach(option_is_qtest, qtest_add_chardev);
+
+    if (qtest_chrdev && strstart(qtest_chrdev, "chardev:", &name)) {
+        chardev_add(g_strdup(name));
+    }
 
     qemu_opts_filter_foreach(qemu_find_opts("chardev"),
                       option_is_monitor_chardev,
@@ -2021,6 +2054,10 @@ static void qemu_create_monitors(void)
 
     qemu_opts_foreach(qemu_find_opts("mon"),
                       mon_init_func, NULL, &error_fatal);
+
+    if (qtest_chrdev) {
+        qtest_server_init(qtest_chrdev, qtest_log, &error_fatal);
+    }
 }
 
 static void qemu_create_early_backends(void)
@@ -2098,10 +2135,6 @@ static bool object_create_late(const ObjectOption *opt)
 
 static void qemu_create_late_backends(void)
 {
-    if (qtest_chrdev) {
-        qtest_server_init(qtest_chrdev, qtest_log, &error_fatal);
-    }
-
     net_init_clients();
 
     object_option_foreach_add(object_create_late);
