@@ -109,6 +109,18 @@ void gdb_feature_builder_end(const GDBFeatureBuilder *builder);
 const GDBFeature *gdb_find_static_feature(const char *xmlname);
 
 /**
+ * Tests if the CPUs belong to the same group for the purposes of breakpoint
+ * insertion and deletion when running multiprocesses gdb. The test is only
+ * valid for multiprocess gdb and should not affect the insertion or deletion of
+ * breakpoints when we are not running in that mode.
+ * @cs: The CPU used as reference
+ * @cpu: The CPU to test
+ *
+ * Return: True if they belong to the same group or it is not a multiprocess gdb
+ */
+bool gdb_cpu_in_source_group(CPUState *cs, CPUState *cpu);
+
+/**
  * gdb_read_register() - Read a register associated with a CPU.
  * @cpu: The CPU associated with the register.
  * @buf: The buffer that the read register will be appended to.

@@ -493,6 +493,12 @@ const GDBFeature *gdb_find_static_feature(const char *xmlname)
     g_assert_not_reached();
 }
 
+bool gdb_cpu_in_source_group(CPUState *cs, CPUState *cpu)
+{
+    return !gdbserver_state.multiprocess ||
+           (gdb_get_cpu_pid(cs) == gdb_get_cpu_pid(cpu));
+}
+
 GArray *gdb_get_register_list(CPUState *cpu)
 {
     GArray *results = g_array_new(true, true, sizeof(GDBRegDesc));
