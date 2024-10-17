@@ -98,6 +98,14 @@ Object *user_creatable_add_type(const char *type, const char *id,
 void user_creatable_add_qapi(ObjectOptions *options, Error **errp);
 
 /**
+ * user_creatable_get_props:
+ * @options: the object definition
+ *
+ * Convert @options to a dictionary of properties and return it.
+ */
+QDict *user_creatable_get_props(ObjectOptions *options);
+
+/**
  * user_creatable_parse_str:
  * @str: the object definition string as passed on the command line
  * @errp: if an error occurs, a pointer to an area to store the error

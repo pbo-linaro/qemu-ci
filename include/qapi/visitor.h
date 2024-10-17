@@ -268,6 +268,7 @@ void visit_complete(Visitor *v, void *opaque);
  */
 void visit_free(Visitor *v);
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(Visitor, visit_free)
 
 /*** Visiting structures ***/
 

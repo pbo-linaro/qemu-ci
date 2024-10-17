@@ -139,26 +139,27 @@ out:
 
 void user_creatable_add_qapi(ObjectOptions *options, Error **errp)
 {
-    Visitor *v;
-    QObject *qobj;
-    QDict *props;
-    Object *obj;
+    g_autoptr(Visitor) v;
+    g_autoptr(Object) obj;
+    g_autoptr(QDict) props = user_creatable_get_props(options);
 
-    v = qobject_output_visitor_new(&qobj);
-    visit_type_ObjectOptions(v, NULL, &options, &error_abort);
-    visit_complete(v, &qobj);
-    visit_free(v);
-
-    props = qobject_to(QDict, qobj);
     qdict_del(props, "qom-type");
     qdict_del(props, "id");
 
     v = qobject_input_visitor_new(QOBJECT(props));
     obj = user_creatable_add_type(ObjectType_str(options->qom_type),
                                   options->id, props, v, errp);
-    object_unref(obj);
-    qobject_unref(qobj);
-    visit_free(v);
+}
+
+QDict *user_creatable_get_props(ObjectOptions *options)
+{
+    g_autoptr(Visitor) v;
+    QObject *qobj;
+
+    v = qobject_output_visitor_new(&qobj);
+    visit_type_ObjectOptions(v, NULL, &options, &error_abort);
+    visit_complete(v, &qobj);
+    return qobject_to(QDict, qobj);
 }
 
 char *object_property_help(const char *name, const char *type,
