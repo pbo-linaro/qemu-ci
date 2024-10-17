@@ -2304,9 +2304,14 @@ static int accelerator_set_property(void *opaque,
     return object_parse_property_opt(opaque, name, value, "accel", errp);
 }
 
+typedef struct {
+    AccelState *accel;
+    bool init_failed;
+} AccelSearch;
+
 static int do_configure_accelerator(void *opaque, QemuOpts *opts, Error **errp)
 {
-    bool *p_init_failed = opaque;
+    AccelSearch *acs = opaque;
     const char *acc = qemu_opt_get(opts, "accel");
     AccelClass *ac = accel_find(acc);
     AccelState *accel;
@@ -2340,16 +2345,17 @@ static int do_configure_accelerator(void *opaque, QemuOpts *opts, Error **errp)
         goto bad;
     }
 
+    acs->accel = accel;
     return 1;
 
 bad:
-    *p_init_failed = true;
+    acs->init_failed = true;
     return 0;
 }
 
 static void configure_accelerators(const char *progname)
 {
-    bool init_failed = false;
+    AccelSearch acs = {0};
 
     qemu_opts_foreach(qemu_find_opts("icount"),
                       do_configure_icount, NULL, &error_fatal);
@@ -2389,7 +2395,7 @@ static void configure_accelerators(const char *progname)
             if (accel_find(*tmp)) {
                 qemu_opts_parse_noisily(qemu_find_opts("accel"), *tmp, true);
             } else {
-                init_failed = true;
+                acs.init_failed = true;
                 error_report("invalid accelerator %s", *tmp);
             }
         }
@@ -2402,15 +2408,15 @@ static void configure_accelerators(const char *progname)
     }
 
     if (!qemu_opts_foreach(qemu_find_opts("accel"),
-                           do_configure_accelerator, &init_failed, &error_fatal)) {
-        if (!init_failed) {
+                           do_configure_accelerator, &acs, &error_fatal)) {
+        if (!acs.init_failed) {
             error_report("no accelerator found");
         }
         exit(1);
     }
 
-    if (init_failed && !qtest_chrdev) {
-        error_report("falling back to %s", current_accel_name());
+    if (acs.init_failed && !qtest_chrdev) {
+        error_report("falling back to %s", ACCEL_GET_CLASS(acs.accel)->name);
     }
 
     if (icount_enabled() && !tcg_enabled()) {
