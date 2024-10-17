@@ -2,7 +2,7 @@ chardev_ss.add(files(
   'char-fe.c',
   'char-file.c',
   'char-io.c',
-  'char-mux.c',
+  'char-mux-fe.c',
   'char-null.c',
   'char-pipe.c',
   'char-ringbuf.c',
