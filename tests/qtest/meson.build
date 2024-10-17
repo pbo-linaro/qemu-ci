@@ -406,14 +406,43 @@ foreach dir : target_dirs
         test: executable(test, src, dependencies: deps)
       }
     endif
-    test('qtest-@0@/@1@'.format(target_base, test),
-         qtest_executables[test],
-         depends: [test_deps, qtest_emulator, emulator_modules],
-         env: qtest_env,
-         args: ['--tap', '-k'],
-         protocol: 'tap',
-         timeout: slow_qtests.get(test, 60),
-         priority: slow_qtests.get(test, 60),
-         suite: ['qtest', 'qtest-' + target_base])
+
+    # The migration-test test runs several slow sub-tests. Add it to
+    # two separate targets, one for executing a few tests
+    # (migration-quick) and another for executing the full set
+    # (migration). This is done to reduce the amount of tests that run
+    # via make check.
+    if test == 'migration-test'
+      foreach opts : [
+        {
+          'test-args': ['--tap', '-k', '-m', 'slow'],
+          'test-suite': ['migration']
+        },
+        {
+          'test-args': ['--tap', '-k', '-m', 'quick'],
+          'test-suite': ['migration-quick']
+        }]
+
+        test(target_base,
+             qtest_executables[test],
+             depends: [test_deps, qtest_emulator, emulator_modules],
+             env: qtest_env,
+             args: opts['test-args'],
+             protocol: 'tap',
+             timeout: slow_qtests.get(test, 60),
+             priority: slow_qtests.get(test, 60),
+             suite: opts['test-suite'])
+      endforeach
+    else
+      test('qtest-@0@/@1@'.format(target_base, test),
+           qtest_executables[test],
+           depends: [test_deps, qtest_emulator, emulator_modules],
+           env: qtest_env,
+           args: ['--tap', '-k'],
+           protocol: 'tap',
+           timeout: slow_qtests.get(test, 60),
+           priority: slow_qtests.get(test, 60),
+           suite: ['qtest', 'qtest-' + target_base])
+    endif
   endforeach
 endforeach

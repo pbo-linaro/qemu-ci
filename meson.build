@@ -3,9 +3,9 @@ project('qemu', ['c'], meson_version: '>=1.5.0',
                           'b_staticpic=false', 'stdsplit=false', 'optimization=2', 'b_pie=true'],
         version: files('VERSION'))
 
-add_test_setup('quick', exclude_suites: ['slow', 'thorough'], is_default: true)
-add_test_setup('slow', exclude_suites: ['thorough'], env: ['G_TEST_SLOW=1', 'SPEED=slow'])
-add_test_setup('thorough', env: ['G_TEST_SLOW=1', 'SPEED=thorough'])
+add_test_setup('quick', exclude_suites: ['slow', 'thorough', 'migration'], is_default: true)
+add_test_setup('slow', exclude_suites: ['thorough', 'migration-quick'], env: ['G_TEST_SLOW=1', 'SPEED=slow'])
+add_test_setup('thorough', exclude_suites: ['migration-quick'], env: ['G_TEST_SLOW=1', 'SPEED=thorough'])
 
 meson.add_postconf_script(find_program('scripts/symlink-install-tree.py'))
 

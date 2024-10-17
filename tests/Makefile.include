@@ -11,6 +11,8 @@ check-help:
 	@echo " $(MAKE) check-qtest              Run qtest tests"
 	@echo " $(MAKE) check-functional         Run python-based functional tests"
 	@echo " $(MAKE) check-functional-TARGET  Run functional tests for a given target"
+	@echo " $(MAKE) check-migration-quick    Run a small set of migration tests"
+	@echo " $(MAKE) check-migration          Run all migration tests"
 	@echo " $(MAKE) check-unit               Run qobject tests"
 	@echo " $(MAKE) check-qapi-schema        Run QAPI schema tests"
 	@echo " $(MAKE) check-block              Run block tests"
