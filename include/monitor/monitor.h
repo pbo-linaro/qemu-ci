@@ -23,6 +23,7 @@ void monitor_init_qmp(Chardev *chr, bool pretty, Error **errp);
 void monitor_init_hmp(Chardev *chr, bool use_readline, Error **errp);
 int monitor_init(MonitorOptions *opts, bool allow_hmp, Error **errp);
 int monitor_init_opts(QemuOpts *opts, Error **errp);
+int monitor_chardev_name(QemuOpts *opts, char **name, Error **errp);
 void monitor_cleanup(void);
 
 int monitor_suspend(Monitor *mon);

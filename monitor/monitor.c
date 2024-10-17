@@ -777,6 +777,27 @@ int monitor_init_opts(QemuOpts *opts, Error **errp)
     return ret;
 }
 
+int monitor_chardev_name(QemuOpts *opts, char **namep, Error **errp)
+{
+    Visitor *v = opts_visitor_new(opts);
+    MonitorOptions *options;
+
+    visit_type_MonitorOptions(v, NULL, &options, errp);
+    visit_free(v);
+    if (!options) {
+        return -1;
+    }
+
+    if (options->chardev) {
+        *namep = g_strdup(options->chardev);
+    } else {
+        *namep = NULL;
+    }
+
+    qapi_free_MonitorOptions(options);
+    return 0;
+}
+
 QemuOptsList qemu_mon_opts = {
     .name = "mon",
     .implied_opt_name = "chardev",
