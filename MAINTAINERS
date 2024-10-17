@@ -1279,6 +1279,12 @@ M: Edgar E. Iglesias <edgar.iglesias@gmail.com>
 S: Maintained
 F: hw/microblaze/petalogix_ml605_mmu.c
 
+amd-microblaze-v-virt
+M: Sai Pavan Boddu <sai.pavan.boddu@amd.com>
+S: Maintained
+F: hw/riscv/microblaze-v-virt.c
+F: docs/system/riscv/microblaze-v-virt.rst
+
 MIPS Machines
 -------------
 Overall MIPS Machines
