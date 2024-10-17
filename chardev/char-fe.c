@@ -197,7 +197,7 @@ bool qemu_chr_fe_init(CharBackend *b, Chardev *s, Error **errp)
         if (CHARDEV_IS_MUX_FE(s)) {
             MuxFeChardev *d = MUX_FE_CHARDEV(s);
 
-            if (!mux_chr_attach_frontend(d, b, &tag, errp)) {
+            if (!mux_fe_chr_attach_frontend(d, b, &tag, errp)) {
                 return false;
             }
         } else if (s->be) {
@@ -225,7 +225,7 @@ void qemu_chr_fe_deinit(CharBackend *b, bool del)
         }
         if (CHARDEV_IS_MUX_FE(b->chr)) {
             MuxFeChardev *d = MUX_FE_CHARDEV(b->chr);
-            mux_chr_detach_frontend(d, b->tag);
+            mux_fe_chr_detach_frontend(d, b->tag);
         }
         if (del) {
             Object *obj = OBJECT(b->chr);
@@ -306,7 +306,7 @@ void qemu_chr_fe_take_focus(CharBackend *b)
     }
 
     if (CHARDEV_IS_MUX_FE(b->chr)) {
-        mux_set_focus(b->chr, b->tag);
+        mux_fe_chr_set_focus(b->chr, b->tag);
     }
 }
 
