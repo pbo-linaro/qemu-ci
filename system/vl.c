@@ -182,6 +182,7 @@ static const char *log_file;
 static bool list_data_dirs;
 static const char *qtest_chrdev;
 static const char *qtest_log;
+static AccelState *accel;
 
 static int has_defaults = 1;
 static int default_audio = 1;
@@ -2337,7 +2338,7 @@ static int do_configure_accelerator(void *opaque, QemuOpts *opts, Error **errp)
                      accel,
                      &error_fatal);
 
-    ret = accel_init_machine(accel, current_machine);
+    ret = ac->preinit ? ac->preinit(accel) : 0;
     if (ret < 0) {
         if (!qtest_with_kvm || ret != -ENOENT) {
             error_report("failed to initialize %s: %s", acc, strerror(-ret));
@@ -2353,12 +2354,9 @@ bad:
     return 0;
 }
 
-static void configure_accelerators(const char *progname)
+static AccelState *configure_accelerators(const char *progname)
 {
     AccelSearch acs = {0};
-
-    qemu_opts_foreach(qemu_find_opts("icount"),
-                      do_configure_icount, NULL, &error_fatal);
 
     if (QTAILQ_EMPTY(&qemu_accel_opts.head)) {
         char **accel_list, **tmp;
@@ -2417,6 +2415,22 @@ static void configure_accelerators(const char *progname)
 
     if (acs.init_failed && !qtest_chrdev) {
         error_report("falling back to %s", ACCEL_GET_CLASS(acs.accel)->name);
+    }
+    return acs.accel;
+}
+
+static void create_accelerator(AccelState *accel)
+{
+    int ret;
+
+    qemu_opts_foreach(qemu_find_opts("icount"),
+                      do_configure_icount, NULL, &error_fatal);
+
+    ret = accel_init_machine(accel, current_machine);
+    if (ret < 0) {
+        error_report("failed to initialize %s: %s",
+                      ACCEL_GET_CLASS(accel)->name, strerror(-ret));
+        exit(1);
     }
 
     if (icount_enabled() && !tcg_enabled()) {
@@ -3701,7 +3715,8 @@ void qemu_init(int argc, char **argv)
      * Note: uses machine properties such as kernel-irqchip, must run
      * after qemu_apply_machine_options.
      */
-    configure_accelerators(argv[0]);
+    accel = configure_accelerators(argv[0]);
+    create_accelerator(accel);
     phase_advance(PHASE_ACCEL_CREATED);
 
     /*

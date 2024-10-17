@@ -36,14 +36,8 @@ int accel_init_machine(AccelState *accel, MachineState *ms)
     int ret;
     ms->accelerator = accel;
     *(acc->allowed) = true;
-    ret = acc->preinit(accel);
-    if (ret < 0) {
-        goto fail;
-    }
-
     ret = acc->init_machine(ms);
     if (ret < 0) {
-fail:
         ms->accelerator = NULL;
         *(acc->allowed) = false;
         object_unref(OBJECT(accel));
