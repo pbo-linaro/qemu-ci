@@ -3679,7 +3679,7 @@ void qemu_init(int argc, char **argv)
 
     qemu_create_machine(machine_opts_dict);
 
-    suspend_mux_open();
+    mux_suspend_open();
 
     qemu_disable_default_devices();
     qemu_setup_display();
@@ -3757,5 +3757,5 @@ void qemu_init(int argc, char **argv)
     qemu_init_displays();
     accel_setup_post(current_machine);
     os_setup_post();
-    resume_mux_open();
+    mux_resume_open();
 }

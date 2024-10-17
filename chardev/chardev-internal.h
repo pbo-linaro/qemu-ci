@@ -65,6 +65,9 @@ bool mux_chr_detach_frontend(MuxFeChardev *d, unsigned int tag);
 void mux_set_focus(Chardev *chr, unsigned int focus);
 void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event);
 
+/* Mux type dependent calls */
+void mux_fe_chr_send_all_event(MuxFeChardev *d, QEMUChrEvent event);
+
 Object *get_chardevs_root(void);
 
 #endif /* CHARDEV_INTERNAL_H */
