@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "s390-ccw.h"
 #include "s390-arch.h"
+#include "iplb.h"
 
 #define KERN_IMAGE_START 0x010000UL
 #define RESET_PSW_MASK (PSW_MASK_SHORTPSW | PSW_MASK_64)
