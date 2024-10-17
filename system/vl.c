@@ -2346,6 +2346,7 @@ static int do_configure_accelerator(void *opaque, QemuOpts *opts, Error **errp)
         goto bad;
     }
 
+    object_set_accelerator_compat_props(ac->compat_props);
     acs->accel = accel;
     return 1;
 
@@ -3698,29 +3699,14 @@ void qemu_init(int argc, char **argv)
     parse_memory_options();
 
     qemu_create_machine(machine_opts_dict);
-
-    suspend_mux_open();
-
-    qemu_disable_default_devices();
-    qemu_setup_display();
-    qemu_create_default_devices();
-    qemu_create_early_backends();
-
     qemu_apply_legacy_machine_options(machine_opts_dict);
     qemu_apply_machine_options(machine_opts_dict);
     qobject_unref(machine_opts_dict);
-    phase_advance(PHASE_MACHINE_CREATED);
 
-    /*
-     * Note: uses machine properties such as kernel-irqchip, must run
-     * after qemu_apply_machine_options.
-     */
     accel = configure_accelerators(argv[0]);
-    create_accelerator(accel);
-    phase_advance(PHASE_ACCEL_CREATED);
 
     /*
-     * Beware, QOM objects created before this point miss global and
+     * QOM objects created after this point see all global and
      * compat properties.
      *
      * Global properties get set up by qdev_prop_register_global(),
@@ -3734,6 +3720,22 @@ void qemu_init(int argc, char **argv)
      * Accelerator compat props: object_set_accelerator_compat_props(),
      * called from do_configure_accelerator().
      */
+
+    suspend_mux_open();
+
+    qemu_disable_default_devices();
+    qemu_setup_display();
+    qemu_create_default_devices();
+    qemu_create_early_backends();
+
+    phase_advance(PHASE_MACHINE_CREATED);
+
+    /*
+     * Note: uses machine properties such as kernel-irqchip, must run
+     * after qemu_apply_machine_options.
+     */
+    create_accelerator(accel);
+    phase_advance(PHASE_ACCEL_CREATED);
 
     machine_class = MACHINE_GET_CLASS(current_machine);
     if (!qtest_enabled() && machine_class->deprecation_reason) {
