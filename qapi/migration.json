@@ -373,7 +373,8 @@
 #           }
 #        }
 ##
-{ 'command': 'query-migrate', 'returns': 'MigrationInfo' }
+{ 'command': 'query-migrate', 'returns': 'MigrationInfo',
+  'allow-preconfig': true }
 
 ##
 # @MigrationCapability:
@@ -527,7 +528,8 @@
 #     <- { "return": {} }
 ##
 { 'command': 'migrate-set-capabilities',
-  'data': { 'capabilities': ['MigrationCapabilityStatus'] } }
+  'data': { 'capabilities': ['MigrationCapabilityStatus'] },
+  'allow-preconfig': true }
 
 ##
 # @query-migrate-capabilities:
@@ -551,7 +553,9 @@
 #           {"state": false, "capability": "x-colo"}
 #        ]}
 ##
-{ 'command': 'query-migrate-capabilities', 'returns':   ['MigrationCapabilityStatus']}
+{ 'command': 'query-migrate-capabilities',
+  'returns':   ['MigrationCapabilityStatus'],
+  'allow-preconfig': true }
 
 ##
 # @MultiFDCompression:
@@ -1297,7 +1301,8 @@
 #        }
 ##
 { 'command': 'query-migrate-parameters',
-  'returns': 'MigrationParameters' }
+  'returns': 'MigrationParameters',
+  'allow-preconfig': true }
 
 ##
 # @migrate-start-postcopy:
@@ -1751,7 +1756,8 @@
 { 'command': 'migrate-incoming',
              'data': {'*uri': 'str',
                       '*channels': [ 'MigrationChannel' ],
-                      '*exit-on-error': 'bool' } }
+                      '*exit-on-error': 'bool' },
+  'allow-preconfig': true }
 
 ##
 # @xen-save-devices-state:

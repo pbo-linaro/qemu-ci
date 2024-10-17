@@ -959,6 +959,7 @@ ERST
         .params     = "uri",
         .help       = "Continue an incoming migration from an -incoming defer",
         .cmd        = hmp_migrate_incoming,
+        .flags      = "p",
     },
 
 SRST
@@ -1000,6 +1001,7 @@ ERST
         .help       = "Enable/Disable the usage of a capability for migration",
         .cmd        = hmp_migrate_set_capability,
         .command_completion = migrate_set_capability_completion,
+        .flags      = "p",
     },
 
 SRST
