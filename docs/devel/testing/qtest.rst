@@ -5,6 +5,7 @@ QTest Device Emulation Testing Framework
 .. toctree::
 
    qgraph
+   migration
 
 QTest is a device emulation testing framework.  It can be very useful to test
 device models; it could also control certain aspects of QEMU (such as virtual

@@ -9,6 +9,7 @@ testing infrastructure.
 
    main
    qtest
+   migration
    functional
    avocado
    acpi-bits
