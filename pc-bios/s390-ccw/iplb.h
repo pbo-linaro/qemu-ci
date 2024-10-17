@@ -94,6 +94,8 @@ struct QemuIplParameters {
 typedef struct QemuIplParameters QemuIplParameters;
 
 extern QemuIplParameters qipl;
+extern IplParameterBlock iplb __attribute__((__aligned__(PAGE_SIZE)));
+extern bool have_iplb;
 
 #define S390_IPL_TYPE_FCP 0x00
 #define S390_IPL_TYPE_CCW 0x02
