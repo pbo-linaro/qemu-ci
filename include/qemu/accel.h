@@ -37,6 +37,7 @@ typedef struct AccelClass {
     /*< public >*/
 
     const char *name;
+    int (*preinit)(AccelState *accel);
     int (*init_machine)(MachineState *ms);
 #ifndef CONFIG_USER_ONLY
     void (*setup_post)(MachineState *ms, AccelState *accel);

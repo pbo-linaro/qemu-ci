@@ -1153,7 +1153,7 @@ static struct RAMBlockNotifier nvmm_ram_notifier = {
 /* -------------------------------------------------------------------------- */
 
 static int
-nvmm_accel_init(MachineState *ms)
+nvmm_accel_preinit(MachineState *ms)
 {
     int ret, err;
 
@@ -1178,6 +1178,13 @@ nvmm_accel_init(MachineState *ms)
         error_report("NVMM: Wrong state size %u", qemu_mach.cap.state_size);
         return -EPROGMISMATCH;
     }
+    return 0;
+}
+
+static int
+nvmm_accel_init(MachineState *ms)
+{
+    int ret, err;
 
     ret = nvmm_machine_create(&qemu_mach.mach);
     if (ret == -1) {
@@ -1204,6 +1211,7 @@ nvmm_accel_class_init(ObjectClass *oc, void *data)
 {
     AccelClass *ac = ACCEL_CLASS(oc);
     ac->name = "NVMM";
+    ac->preinit = nvmm_accel_preinit;
     ac->init_machine = nvmm_accel_init;
     ac->allowed = &nvmm_allowed;
 }

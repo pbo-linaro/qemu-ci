@@ -75,10 +75,8 @@ static void xen_setup_post(MachineState *ms, AccelState *accel)
     }
 }
 
-static int xen_init(MachineState *ms)
+static int xen_preinit(AccelState *accel)
 {
-    MachineClass *mc = MACHINE_GET_CLASS(ms);
-
     xen_xc = xc_interface_open(0, 0, 0);
     if (xen_xc == NULL) {
         xen_pv_printf(NULL, 0, "can't open xen interface\n");
@@ -97,6 +95,12 @@ static int xen_init(MachineState *ms)
         xc_interface_close(xen_xc);
         return -1;
     }
+    return 0;
+}
+
+static int xen_init(MachineState *ms)
+{
+    MachineClass *mc = MACHINE_GET_CLASS(ms);
 
     /*
      * The XenStore write would fail when running restricted so don't attempt
@@ -125,6 +129,7 @@ static void xen_accel_class_init(ObjectClass *oc, void *data)
     };
 
     ac->name = "Xen";
+    ac->preinit = xen_preinit;
     ac->init_machine = xen_init;
     ac->setup_post = xen_setup_post;
     ac->allowed = &xen_allowed;

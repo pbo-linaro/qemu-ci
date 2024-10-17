@@ -2484,6 +2484,42 @@ static int kvm_setup_dirty_ring(KVMState *s)
     return 0;
 }
 
+static int kvm_preinit(AccelState *accel)
+{
+    int ret;
+    KVMState *s = KVM_STATE(accel);
+
+    s->fd = qemu_open_old(s->device ?: "/dev/kvm", O_RDWR);
+    if (s->fd == -1) {
+        error_report("Could not access KVM kernel module: %m");
+        ret = -errno;
+        goto err;
+    }
+
+    ret = kvm_ioctl(s, KVM_GET_API_VERSION, 0);
+    if (ret < KVM_API_VERSION) {
+        if (ret >= 0) {
+            ret = -EINVAL;
+        }
+        fprintf(stderr, "kvm version too old\n");
+        goto err;
+    }
+
+    if (ret > KVM_API_VERSION) {
+        ret = -EINVAL;
+        error_report("kvm version not supported");
+        goto err;
+    }
+    return 0;
+
+err:
+    assert(ret < 0);
+    if (s->fd != -1) {
+        close(s->fd);
+    }
+    return ret;
+}
+
 static int kvm_init(MachineState *ms)
 {
     MachineClass *mc = MACHINE_GET_CLASS(ms);
@@ -2523,27 +2559,6 @@ static int kvm_init(MachineState *ms)
     QTAILQ_INIT(&s->kvm_sw_breakpoints);
 #endif
     QLIST_INIT(&s->kvm_parked_vcpus);
-    s->fd = qemu_open_old(s->device ?: "/dev/kvm", O_RDWR);
-    if (s->fd == -1) {
-        error_report("Could not access KVM kernel module: %m");
-        ret = -errno;
-        goto err;
-    }
-
-    ret = kvm_ioctl(s, KVM_GET_API_VERSION, 0);
-    if (ret < KVM_API_VERSION) {
-        if (ret >= 0) {
-            ret = -EINVAL;
-        }
-        error_report("kvm version too old");
-        goto err;
-    }
-
-    if (ret > KVM_API_VERSION) {
-        ret = -EINVAL;
-        error_report("kvm version not supported");
-        goto err;
-    }
 
     kvm_supported_memory_attributes = kvm_check_extension(s, KVM_CAP_MEMORY_ATTRIBUTES);
     kvm_guest_memfd_supported =
@@ -3891,6 +3906,7 @@ static void kvm_accel_class_init(ObjectClass *oc, void *data)
 {
     AccelClass *ac = ACCEL_CLASS(oc);
     ac->name = "KVM";
+    ac->preinit = kvm_preinit;
     ac->init_machine = kvm_init;
     ac->has_memory = kvm_accel_has_memory;
     ac->allowed = &kvm_allowed;

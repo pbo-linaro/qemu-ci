@@ -2516,6 +2516,14 @@ static void whpx_set_kernel_irqchip(Object *obj, Visitor *v,
  * Partition support
  */
 
+static int whpx_accel_preinit(AccelState *accel)
+{
+    if (!init_whp_dispatch()) {
+        return -ENOSYS;
+    }
+    return 0;
+}
+
 static int whpx_accel_init(MachineState *ms)
 {
     struct whpx_state *whpx;
@@ -2528,11 +2536,6 @@ static int whpx_accel_init(MachineState *ms)
     WHV_CAPABILITY_FEATURES features = {0};
 
     whpx = &whpx_global;
-
-    if (!init_whp_dispatch()) {
-        ret = -ENOSYS;
-        goto error;
-    }
 
     whpx->mem_quota = ms->ram_size;
 
@@ -2713,6 +2716,7 @@ static void whpx_accel_class_init(ObjectClass *oc, void *data)
 {
     AccelClass *ac = ACCEL_CLASS(oc);
     ac->name = "WHPX";
+    ac->preinit = whpx_accel_preinit;
     ac->init_machine = whpx_accel_init;
     ac->allowed = &whpx_allowed;
 
