@@ -200,6 +200,12 @@ bool qemu_chr_fe_init(CharBackend *b, Chardev *s, Error **errp)
             if (!mux_fe_chr_attach_frontend(d, b, &tag, errp)) {
                 return false;
             }
+        } else if (CHARDEV_IS_MUX_BE(s)) {
+            MuxBeChardev *d = MUX_BE_CHARDEV(s);
+
+            if (!mux_be_chr_attach_frontend(d, b, errp)) {
+                return false;
+            }
         } else if (s->be) {
             error_setg(errp, "chardev '%s' is already in use", s->label);
             return false;
@@ -226,6 +232,9 @@ void qemu_chr_fe_deinit(CharBackend *b, bool del)
         if (CHARDEV_IS_MUX_FE(b->chr)) {
             MuxFeChardev *d = MUX_FE_CHARDEV(b->chr);
             mux_fe_chr_detach_frontend(d, b->tag);
+        } else if (CHARDEV_IS_MUX_BE(b->chr)) {
+            MuxBeChardev *d = MUX_BE_CHARDEV(b->chr);
+            mux_be_chr_detach_frontend(d);
         }
         if (del) {
             Object *obj = OBJECT(b->chr);
