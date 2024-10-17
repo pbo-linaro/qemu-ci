@@ -1142,6 +1142,31 @@ int qemu_opts_foreach(QemuOptsList *list, qemu_opts_loopfunc func,
     return rc;
 }
 
+int qemu_opts_filter_foreach(QemuOptsList *list,
+                             qemu_opts_filterfunc filter,
+                             qemu_opts_loopfunc func,
+                             void *opaque, Error **errp)
+{
+    Location loc;
+    QemuOpts *opts, *next;
+    int rc = 0;
+
+    loc_push_none(&loc);
+    QTAILQ_FOREACH_SAFE(opts, &list->head, next, next) {
+        if (!filter(opaque, opts)) {
+            continue;
+        }
+        loc_restore(&opts->loc);
+        rc = func(opaque, opts, errp);
+        if (rc) {
+            break;
+        }
+        assert(!errp || !*errp);
+    }
+    loc_pop(&loc);
+    return rc;
+}
+
 static size_t count_opts_list(QemuOptsList *list)
 {
     QemuOptDesc *desc = NULL;
