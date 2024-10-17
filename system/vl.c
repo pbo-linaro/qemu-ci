@@ -1939,6 +1939,11 @@ static bool object_create_early(const ObjectOption *opt)
         return false;
     }
 
+    /* Reason: already created. */
+    if (g_str_equal(type, "mon")) {
+        return false;
+    }
+
     return true;
 }
 
@@ -1954,6 +1959,68 @@ static void qemu_apply_machine_options(QDict *qdict)
     if (current_machine->smp.cpus > 1) {
         replay_add_blocker("multiple CPUs");
     }
+}
+
+typedef struct NamedElement {
+    char *name;
+    QTAILQ_ENTRY(NamedElement) next;
+} NamedElement;
+
+static QTAILQ_HEAD(, NamedElement) monitor_chardevs =
+    QTAILQ_HEAD_INITIALIZER(monitor_chardevs);
+
+static void chardev_add(const char *name)
+{
+    NamedElement *elem = g_new0(NamedElement, 1);
+
+    elem->name = g_strdup(name);
+    QTAILQ_INSERT_TAIL(&monitor_chardevs, elem, next);
+}
+
+static bool chardev_find(const char *name)
+{
+    NamedElement *elem;
+
+    QTAILQ_FOREACH(elem, &monitor_chardevs, next) {
+        if (g_str_equal(elem->name, name)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static int monitor_add_chardev(void *opaque, QemuOpts *opts, Error **errp)
+{
+    g_autofree char *chardev = NULL;
+    int ret = monitor_chardev_name(opts, &chardev, errp);
+
+    if (!ret && chardev) {
+        chardev_add(chardev);
+    }
+    return ret;
+}
+
+static bool option_is_monitor_chardev(void *opaque, QemuOpts *opts)
+{
+    return chardev_find(qemu_opts_id(opts));
+}
+
+static bool option_is_not_monitor_chardev(void *opaque, QemuOpts *opts)
+{
+    return !chardev_find(qemu_opts_id(opts));
+}
+
+static void qemu_create_monitors(void)
+{
+    qemu_opts_foreach(qemu_find_opts("mon"),
+                      monitor_add_chardev, NULL, &error_fatal);
+
+    qemu_opts_filter_foreach(qemu_find_opts("chardev"),
+                      option_is_monitor_chardev,
+                      chardev_init_func, NULL, &error_fatal);
+
+    qemu_opts_foreach(qemu_find_opts("mon"),
+                      mon_init_func, NULL, &error_fatal);
 }
 
 static void qemu_create_early_backends(void)
@@ -1994,7 +2061,8 @@ static void qemu_create_early_backends(void)
     /* spice must initialize before chardevs (for spicevmc and spiceport) */
     qemu_spice.init();
 
-    qemu_opts_foreach(qemu_find_opts("chardev"),
+    qemu_opts_filter_foreach(qemu_find_opts("chardev"),
+                      option_is_not_monitor_chardev,
                       chardev_init_func, NULL, &error_fatal);
 
 #ifdef CONFIG_VIRTFS
@@ -2020,6 +2088,11 @@ static void qemu_create_early_backends(void)
  */
 static bool object_create_late(const ObjectOption *opt)
 {
+    /* Reason: already created. */
+    if (g_str_equal(ObjectType_str(opt->opts->qom_type), "mon")) {
+        return false;
+    }
+
     return !object_create_early(opt) && !object_create_pre_sandbox(opt);
 }
 
@@ -2044,9 +2117,6 @@ static void qemu_create_late_backends(void)
     if (tpm_init() < 0) {
         exit(1);
     }
-
-    qemu_opts_foreach(qemu_find_opts("mon"),
-                      mon_init_func, NULL, &error_fatal);
 
     if (foreach_device_config(DEV_SERIAL, serial_parse) < 0)
         exit(1);
@@ -3699,6 +3769,9 @@ void qemu_init(int argc, char **argv)
     qobject_unref(machine_opts_dict);
 
     accel = configure_accelerators(argv[0]);
+
+    os_setup_signal_handling();
+    qemu_create_monitors();
 
     /*
      * QOM objects created after this point see all global and
