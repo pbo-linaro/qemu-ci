@@ -1452,6 +1452,14 @@ int qemu_console_get_height(QemuConsole *con, int fallback)
     }
 }
 
+const char *qemu_console_get_name(QemuConsole *con, const char *fallback)
+{
+    if (con == NULL) {
+        return fallback;
+    }
+    return con->name;
+}
+
 void qemu_console_set_name(QemuConsole *con, const char *name)
 {
     if (con == NULL) {
