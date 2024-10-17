@@ -18,6 +18,7 @@ struct QemuConsole {
     Object parent;
 
     int index;
+    const char *name;
     DisplayState *ds;
     DisplaySurface *surface;
     DisplayScanout scanout;

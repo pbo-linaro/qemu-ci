@@ -3595,6 +3595,9 @@ static QemuOptsList qemu_vnc_opts = {
         },{
             .name = "power-control",
             .type = QEMU_OPT_BOOL,
+        },{
+            .name = "name",
+            .type = QEMU_OPT_STRING,
         },
         { /* end of list */ }
     },
@@ -4016,7 +4019,7 @@ void vnc_display_open(const char *id, Error **errp)
     QemuOpts *opts = qemu_opts_find(&qemu_vnc_opts, id);
     g_autoptr(SocketAddressList) saddr_list = NULL;
     g_autoptr(SocketAddressList) wsaddr_list = NULL;
-    const char *share, *device_id;
+    const char *share, *device_id, *name;
     QemuConsole *con;
     bool password = false;
     bool reverse = false;
@@ -4216,6 +4219,9 @@ void vnc_display_open(const char *id, Error **errp)
         vd->kbd = qkbd_state_init(vd->dcl.con);
     }
     qkbd_state_set_delay(vd->kbd, key_delay_ms);
+
+    name = qemu_opt_get(opts, "name");
+    qemu_console_set_name(vd->dcl.con, name);
 
     if (saddr_list == NULL) {
         return;

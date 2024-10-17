@@ -408,6 +408,7 @@ int qemu_console_get_index(QemuConsole *con);
 uint32_t qemu_console_get_head(QemuConsole *con);
 int qemu_console_get_width(QemuConsole *con, int fallback);
 int qemu_console_get_height(QemuConsole *con, int fallback);
+void qemu_console_set_name(QemuConsole *con, const char *name);
 /* Return the low-level window id for the console */
 int qemu_console_get_window_id(QemuConsole *con);
 /* Set the low-level window id for the console */

@@ -1452,6 +1452,14 @@ int qemu_console_get_height(QemuConsole *con, int fallback)
     }
 }
 
+void qemu_console_set_name(QemuConsole *con, const char *name)
+{
+    if (con == NULL) {
+        return;
+    }
+    con->name = name;
+}
+
 int qemu_invalidate_text_consoles(void)
 {
     QemuConsole *s;
