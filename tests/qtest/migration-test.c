@@ -43,6 +43,7 @@ static bool uffd_feature_thread_id;
 static QTestMigrationState src_state;
 static QTestMigrationState dst_state;
 
+
 /*
  * An initial 3 MB offset is used as that corresponds
  * to ~1 sec of data transfer with our bandwidth setting.
@@ -3785,20 +3786,20 @@ int main(int argc, char **argv)
 #endif
 
     if (is_x86) {
-        migration_test_add("/migration/precopy/unix/suspend/live",
-                           test_precopy_unix_suspend_live);
-        migration_test_add("/migration/precopy/unix/suspend/notlive",
-                           test_precopy_unix_suspend_notlive);
+        migration_test_add_quick("/migration/precopy/unix/suspend/live",
+                                 test_precopy_unix_suspend_live);
+        migration_test_add_quick("/migration/precopy/unix/suspend/notlive",
+                                 test_precopy_unix_suspend_notlive);
     }
 
     if (has_uffd) {
-        migration_test_add("/migration/postcopy/plain", test_postcopy);
+        migration_test_add_quick("/migration/postcopy/plain", test_postcopy);
         migration_test_add("/migration/postcopy/recovery/plain",
                            test_postcopy_recovery);
-        migration_test_add("/migration/postcopy/preempt/plain",
-                           test_postcopy_preempt);
-        migration_test_add("/migration/postcopy/preempt/recovery/plain",
-                           test_postcopy_preempt_recovery);
+        migration_test_add_quick("/migration/postcopy/preempt/plain",
+                                 test_postcopy_preempt);
+        migration_test_add_quick("/migration/postcopy/preempt/recovery/plain",
+                                 test_postcopy_preempt_recovery);
         migration_test_add("/migration/postcopy/recovery/double-failures/handshake",
                            test_postcopy_recovery_fail_handshake);
         migration_test_add("/migration/postcopy/recovery/double-failures/reconnect",
@@ -3809,12 +3810,12 @@ int main(int argc, char **argv)
         }
     }
 
-    migration_test_add("/migration/precopy/unix/plain",
-                       test_precopy_unix_plain);
-    if (g_test_slow()) {
-        migration_test_add("/migration/precopy/unix/xbzrle",
-                           test_precopy_unix_xbzrle);
-    }
+    migration_test_add_quick("/migration/precopy/unix/plain",
+                             test_precopy_unix_plain);
+
+    migration_test_add("/migration/precopy/unix/xbzrle",
+                       test_precopy_unix_xbzrle);
+
     migration_test_add("/migration/precopy/file",
                        test_precopy_file);
     migration_test_add("/migration/precopy/file/offset",
@@ -3881,14 +3882,14 @@ int main(int argc, char **argv)
 #endif /* CONFIG_TASN1 */
 #endif /* CONFIG_GNUTLS */
 
-    migration_test_add("/migration/precopy/tcp/plain", test_precopy_tcp_plain);
+    migration_test_add_quick("/migration/precopy/tcp/plain", test_precopy_tcp_plain);
 
     migration_test_add("/migration/precopy/tcp/plain/switchover-ack",
                        test_precopy_tcp_switchover_ack);
 
 #ifdef CONFIG_GNUTLS
-    migration_test_add("/migration/precopy/tcp/tls/psk/match",
-                       test_precopy_tcp_tls_psk_match);
+    migration_test_add_quick("/migration/precopy/tcp/tls/psk/match",
+                             test_precopy_tcp_tls_psk_match);
     migration_test_add("/migration/precopy/tcp/tls/psk/mismatch",
                        test_precopy_tcp_tls_psk_mismatch);
 #ifdef CONFIG_TASN1
@@ -3930,25 +3931,23 @@ int main(int argc, char **argv)
     /*
      * See explanation why this test is slow on function definition
      */
-    if (g_test_slow()) {
-        migration_test_add("/migration/auto_converge",
-                           test_migrate_auto_converge);
-        if (g_str_equal(arch, "x86_64") &&
-            has_kvm && kvm_dirty_ring_supported()) {
-            migration_test_add("/migration/dirty_limit",
-                               test_migrate_dirty_limit);
-        }
+    migration_test_add("/migration/auto_converge",
+                       test_migrate_auto_converge);
+    if (g_str_equal(arch, "x86_64") &&
+        has_kvm && kvm_dirty_ring_supported()) {
+        migration_test_add("/migration/dirty_limit",
+                           test_migrate_dirty_limit);
     }
-    migration_test_add("/migration/multifd/tcp/uri/plain/none",
-                       test_multifd_tcp_uri_none);
+    migration_test_add_quick("/migration/multifd/tcp/uri/plain/none",
+                             test_multifd_tcp_uri_none);
     migration_test_add("/migration/multifd/tcp/channels/plain/none",
                        test_multifd_tcp_channels_none);
     migration_test_add("/migration/multifd/tcp/plain/zero-page/legacy",
                        test_multifd_tcp_zero_page_legacy);
     migration_test_add("/migration/multifd/tcp/plain/zero-page/none",
                        test_multifd_tcp_no_zero_page);
-    migration_test_add("/migration/multifd/tcp/plain/cancel",
-                       test_multifd_tcp_cancel);
+    migration_test_add_quick("/migration/multifd/tcp/plain/cancel",
+                             test_multifd_tcp_cancel);
     migration_test_add("/migration/multifd/tcp/plain/zlib",
                        test_multifd_tcp_zlib);
 #ifdef CONFIG_ZSTD
@@ -3957,7 +3956,7 @@ int main(int argc, char **argv)
 #endif
 #ifdef CONFIG_QATZIP
     migration_test_add("/migration/multifd/tcp/plain/qatzip",
-                test_multifd_tcp_qatzip);
+                       test_multifd_tcp_qatzip);
 #endif
 #ifdef CONFIG_QPL
     migration_test_add("/migration/multifd/tcp/plain/qpl",
@@ -3987,9 +3986,9 @@ int main(int argc, char **argv)
 #endif /* CONFIG_GNUTLS */
 
     if (g_str_equal(arch, "x86_64") && has_kvm && kvm_dirty_ring_supported()) {
-        migration_test_add("/migration/dirty_ring",
-                           test_precopy_unix_dirty_ring);
-        if (qtest_has_machine("pc") && g_test_slow()) {
+        migration_test_add_quick("/migration/dirty_ring",
+                                 test_precopy_unix_dirty_ring);
+        if (qtest_has_machine("pc")) {
             migration_test_add("/migration/vcpu_dirty_limit",
                                test_vcpu_dirty_limit);
         }

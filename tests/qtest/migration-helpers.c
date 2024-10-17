@@ -457,6 +457,15 @@ static void migration_test_wrapper(const void *data)
 
 void migration_test_add(const char *path, void (*fn)(void))
 {
+    if (!g_test_slow()) {
+        return;
+    }
+
+    migration_test_add_quick(path, fn);
+}
+
+void migration_test_add_quick(const char *path, void (*fn)(void))
+{
     MigrationTest *test = g_new0(MigrationTest, 1);
 
     test->func = fn;

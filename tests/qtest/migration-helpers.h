@@ -62,7 +62,23 @@ static inline bool probe_o_direct_support(const char *tmpfs)
     return false;
 }
 #endif
+
+/*
+ * Tests that would only break due to core migration changes should be
+ * added with migration_test_add(). Those are considered 'slow' by
+ * default and run during make check-migration, or when '-m slow' is
+ * added on the cmdline.
+ *
+ * Tests that are quick and simple, as well as those that are
+ * succeptible to changes outside of migration/ (e.g. depend on TLS,
+ * qio_channel, etc), should be added with
+ * migration_test_add_quick(). Those are considered 'quick' and run as
+ * part of make check (i.e. execute in CI and with every developer's
+ * invocation of make check). Avoid adding too much time to those.
+ */
 void migration_test_add(const char *path, void (*fn)(void));
+void migration_test_add_quick(const char *path, void (*fn)(void));
+
 void migration_event_wait(QTestState *s, const char *target);
 
 #endif /* MIGRATION_HELPERS_H */
