@@ -1687,7 +1687,9 @@ void net_cleanup(void)
         }
     }
 
-    qemu_del_vm_change_state_handler(net_change_state_entry);
+    if (net_change_state_entry) {
+        qemu_del_vm_change_state_handler(net_change_state_entry);
+    }
 }
 
 void net_check_clients(void)
