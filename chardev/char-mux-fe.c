@@ -34,13 +34,6 @@
 
 /* MUX driver for serial I/O splitting */
 
-/*
- * Set to false by suspend_mux_open.  Open events are delayed until
- * resume_mux_open.  Usually suspend_mux_open is called before
- * command line processing and resume_mux_open afterwards.
- */
-static bool muxes_opened = true;
-
 /* Called with chr_write_lock held.  */
 static int mux_chr_write(Chardev *chr, const uint8_t *buf, int len)
 {
@@ -248,14 +241,9 @@ static void mux_chr_read(void *opaque, const uint8_t *buf, int size)
         }
 }
 
-void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event)
+void mux_fe_chr_send_all_event(MuxFeChardev *d, QEMUChrEvent event)
 {
-    MuxFeChardev *d = MUX_FE_CHARDEV(chr);
     int bit;
-
-    if (!muxes_opened) {
-        return;
-    }
 
     /* Send the event to all registered listeners */
     bit = -1;
@@ -381,7 +369,7 @@ static void qemu_chr_open_mux(Chardev *chr,
     /* only default to opened state if we've realized the initial
      * set of muxes
      */
-    *be_opened = muxes_opened;
+    *be_opened = mux_is_opened();
     qemu_chr_fe_init(&d->chr, drv, errp);
 }
 
@@ -399,53 +387,6 @@ static void qemu_chr_parse_mux(QemuOpts *opts, ChardevBackend *backend,
     mux = backend->u.mux.data = g_new0(ChardevMux, 1);
     qemu_chr_parse_common(opts, qapi_ChardevMux_base(mux));
     mux->chardev = g_strdup(chardev);
-}
-
-/**
- * Called after processing of default and command-line-specified
- * chardevs to deliver CHR_EVENT_OPENED events to any FEs attached
- * to a mux chardev. This is done here to ensure that
- * output/prompts/banners are only displayed for the FE that has
- * focus when initial command-line processing/machine init is
- * completed.
- *
- * After this point, any new FE attached to any new or existing
- * mux will receive CHR_EVENT_OPENED notifications for the BE
- * immediately.
- */
-static void open_muxes(Chardev *chr)
-{
-    /* send OPENED to all already-attached FEs */
-    mux_chr_send_all_event(chr, CHR_EVENT_OPENED);
-
-    /*
-     * mark mux as OPENED so any new FEs will immediately receive
-     * OPENED event
-     */
-    chr->be_open = 1;
-}
-
-void suspend_mux_open(void)
-{
-    muxes_opened = false;
-}
-
-static int chardev_options_parsed_cb(Object *child, void *opaque)
-{
-    Chardev *chr = (Chardev *)child;
-
-    if (!chr->be_open && CHARDEV_IS_MUX_FE(chr)) {
-        open_muxes(chr);
-    }
-
-    return 0;
-}
-
-void resume_mux_open(void)
-{
-    muxes_opened = true;
-    object_child_foreach(get_chardevs_root(),
-                         chardev_options_parsed_cb, NULL);
 }
 
 static void char_mux_class_init(ObjectClass *oc, void *data)

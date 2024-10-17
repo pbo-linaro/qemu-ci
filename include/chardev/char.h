@@ -317,7 +317,8 @@ extern int term_escape_char;
 GSource *qemu_chr_timeout_add_ms(Chardev *chr, guint ms,
                                  GSourceFunc func, void *private);
 
-void suspend_mux_open(void);
-void resume_mux_open(void);
+bool mux_is_opened(void);
+void mux_suspend_open(void);
+void mux_resume_open(void);
 
 #endif

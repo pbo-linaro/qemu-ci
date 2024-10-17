@@ -43,6 +43,13 @@
 
 #include "chardev-internal.h"
 
+/*
+ * Set to false by mux_suspend_open().  Open events are delayed until
+ * mux_resume_open().  Usually mux_suspend_open() is called before
+ * command line processing and mux_resume_open() afterwards.
+ */
+static bool muxes_opened = true;
+
 /***********************************************************/
 /* character device */
 
@@ -1257,6 +1264,71 @@ GSource *qemu_chr_timeout_add_ms(Chardev *chr, guint ms,
 void qemu_chr_cleanup(void)
 {
     object_unparent(get_chardevs_root());
+}
+
+/**
+ * Called after processing of default and command-line-specified
+ * chardevs to deliver CHR_EVENT_OPENED events to any FEs attached
+ * to a mux chardev. This is done here to ensure that
+ * output/prompts/banners are only displayed for the FE that has
+ * focus when initial command-line processing/machine init is
+ * completed.
+ *
+ * After this point, any new FE attached to any new or existing
+ * mux will receive CHR_EVENT_OPENED notifications for the BE
+ * immediately.
+ */
+static void open_muxes(Chardev *chr)
+{
+    /* send OPENED to all already-attached FEs */
+    mux_chr_send_all_event(chr, CHR_EVENT_OPENED);
+
+    /*
+     * mark mux as OPENED so any new FEs will immediately receive
+     * OPENED event
+     */
+    chr->be_open = 1;
+}
+
+void mux_suspend_open(void)
+{
+    muxes_opened = false;
+}
+
+static int chardev_options_parsed_cb(Object *child, void *opaque)
+{
+    Chardev *chr = (Chardev *)child;
+
+    if (!chr->be_open && CHARDEV_IS_MUX_FE(chr)) {
+        open_muxes(chr);
+    }
+
+    return 0;
+}
+
+void mux_resume_open(void)
+{
+    muxes_opened = true;
+    object_child_foreach(get_chardevs_root(),
+                         chardev_options_parsed_cb, NULL);
+}
+
+bool mux_is_opened(void)
+{
+    return muxes_opened;
+}
+
+void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event)
+{
+    if (!mux_is_opened()) {
+        return;
+    }
+
+    if (CHARDEV_IS_MUX_FE(chr)) {
+        MuxFeChardev *d = MUX_FE_CHARDEV(chr);
+
+        mux_fe_chr_send_all_event(d, event);
+    }
 }
 
 static void register_types(void)
