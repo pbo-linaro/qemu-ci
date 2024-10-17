@@ -341,6 +341,9 @@ static bool qemu_chr_is_busy(Chardev *s)
     if (CHARDEV_IS_MUX_FE(s)) {
         MuxFeChardev *d = MUX_FE_CHARDEV(s);
         return d->mux_bitset != 0;
+    } else if (CHARDEV_IS_MUX_BE(s)) {
+        MuxBeChardev *d = MUX_BE_CHARDEV(s);
+        return d->frontend != NULL;
     } else {
         return s->be != NULL;
     }
@@ -648,7 +651,8 @@ static Chardev *__qemu_chr_new_from_opts(QemuOpts *opts, GMainContext *context,
     ChardevBackend *backend = NULL;
     const char *name = qemu_opt_get(opts, "backend");
     const char *id = qemu_opts_id(opts);
-    char *bid = NULL;
+    const char *mux_be_id = NULL;
+    char *mux_fe_id = NULL;
 
     if (name && is_help_option(name)) {
         GString *str = g_string_new("");
@@ -676,10 +680,25 @@ static Chardev *__qemu_chr_new_from_opts(QemuOpts *opts, GMainContext *context,
     }
 
     if (qemu_opt_get_bool(opts, "mux", 0)) {
-        bid = g_strdup_printf("%s-base", id);
+        mux_fe_id = g_strdup_printf("%s-base", id);
+    }
+    mux_be_id = qemu_opt_get(opts, "mux-be-id");
+    if (mux_be_id && mux_fe_id) {
+        error_setg(errp, "chardev: mux and mux-be can't be used for the same "
+                   "device");
+        goto out;
+    } else if (mux_be_id) {
+        const ObjectClass *oc = &cc->parent_class;
+
+        if (oc == object_class_by_name(TYPE_CHARDEV_MUX_FE) ||
+            oc == object_class_by_name(TYPE_CHARDEV_MUX_BE)) {
+            /* Stacking is not supported due to possible dependency loops */
+            error_setg(errp, "chardev: multiplexers can't be stacked");
+            goto out;
+        }
     }
 
-    chr = qemu_chardev_new(bid ? bid : id,
+    chr = qemu_chardev_new(mux_fe_id ? mux_fe_id : id,
                            object_class_get_name(OBJECT_CLASS(cc)),
                            backend, context, errp);
     if (chr == NULL) {
@@ -687,25 +706,40 @@ static Chardev *__qemu_chr_new_from_opts(QemuOpts *opts, GMainContext *context,
     }
 
     base = chr;
-    if (bid) {
+    if (mux_fe_id) {
         Chardev *mux;
         qapi_free_ChardevBackend(backend);
         backend = g_new0(ChardevBackend, 1);
         backend->type = CHARDEV_BACKEND_KIND_MUX;
         backend->u.mux.data = g_new0(ChardevMux, 1);
-        backend->u.mux.data->chardev = g_strdup(bid);
+        backend->u.mux.data->chardev = g_strdup(mux_fe_id);
         mux = qemu_chardev_new(id, TYPE_CHARDEV_MUX_FE, backend, context, errp);
         if (mux == NULL) {
-            object_unparent(OBJECT(chr));
-            chr = NULL;
-            goto out;
+            goto unparent_and_out;
         }
         chr = mux;
+    } else if (mux_be_id) {
+        Chardev *s;
+
+        s = qemu_chr_find(mux_be_id);
+        if (!s) {
+            error_setg(errp, "chardev: mux-be device can't be found by id '%s'",
+                       mux_be_id);
+            goto unparent_and_out;
+        }
+        if (!CHARDEV_IS_MUX_BE(s)) {
+            error_setg(errp, "chardev: device '%s' is not a multiplexer device"
+                       " of 'mux-be' type", mux_be_id);
+            goto unparent_and_out;
+        }
+        if (!mux_be_chr_attach_chardev(MUX_BE_CHARDEV(s), chr, errp)) {
+            goto unparent_and_out;
+        }
     }
 
 out:
     qapi_free_ChardevBackend(backend);
-    g_free(bid);
+    g_free(mux_fe_id);
 
     if (replay && base) {
         /* RR should be set on the base device, not the mux */
@@ -713,6 +747,11 @@ out:
     }
 
     return chr;
+
+unparent_and_out:
+    object_unparent(OBJECT(chr));
+    chr = NULL;
+    goto out;
 }
 
 Chardev *qemu_chr_new_from_opts(QemuOpts *opts, GMainContext *context,
@@ -1114,7 +1153,7 @@ ChardevReturn *qmp_chardev_change(const char *id, ChardevBackend *backend,
         return NULL;
     }
 
-    if (CHARDEV_IS_MUX_FE(chr)) {
+    if (CHARDEV_IS_MUX_FE(chr) || CHARDEV_IS_MUX_BE(chr)) {
         error_setg(errp, "Mux device hotswap not supported yet");
         return NULL;
     }
@@ -1302,7 +1341,7 @@ static int chardev_options_parsed_cb(Object *child, void *opaque)
 {
     Chardev *chr = (Chardev *)child;
 
-    if (!chr->be_open && CHARDEV_IS_MUX_FE(chr)) {
+    if (!chr->be_open && (CHARDEV_IS_MUX_FE(chr) || CHARDEV_IS_MUX_BE(chr))) {
         open_muxes(chr);
     }
 
@@ -1329,8 +1368,10 @@ void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event)
 
     if (CHARDEV_IS_MUX_FE(chr)) {
         MuxFeChardev *d = MUX_FE_CHARDEV(chr);
-
         mux_fe_chr_send_all_event(d, event);
+    } else if (CHARDEV_IS_MUX_BE(chr)) {
+        MuxBeChardev *d = MUX_BE_CHARDEV(chr);
+        mux_be_chr_send_all_event(d, event);
     }
 }
 

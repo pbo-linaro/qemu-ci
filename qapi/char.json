@@ -337,6 +337,17 @@
   'base': 'ChardevCommon' }
 
 ##
+# @ChardevMuxBe:
+#
+# Configuration info for mux-be chardevs.
+#
+# Since: 9.2
+##
+{ 'struct': 'ChardevMuxBe',
+  'data': { },
+  'base': 'ChardevCommon' }
+
+##
 # @ChardevStdio:
 #
 # Configuration info for stdio chardevs.
@@ -483,6 +494,8 @@
 #
 # @mux: (since 1.5)
 #
+# @mux-be: (since 9.2)
+#
 # @msmouse: emulated Microsoft serial mouse (since 1.5)
 #
 # @wctablet: emulated Wacom Penpartner serial tablet (since 2.9)
@@ -525,6 +538,7 @@
             'pty',
             'null',
             'mux',
+            'mux-be',
             'msmouse',
             'wctablet',
             { 'name': 'braille', 'if': 'CONFIG_BRLAPI' },
@@ -598,6 +612,16 @@
 ##
 { 'struct': 'ChardevMuxWrapper',
   'data': { 'data': 'ChardevMux' } }
+
+##
+# @ChardevMuxBeWrapper:
+#
+# @data: Configuration info for mux-be chardevs
+#
+# Since: 9.2
+##
+{ 'struct': 'ChardevMuxBeWrapper',
+  'data': { 'data': 'ChardevMuxBe' } }
 
 ##
 # @ChardevStdioWrapper:
@@ -707,6 +731,7 @@
             'pty': 'ChardevPtyWrapper',
             'null': 'ChardevCommonWrapper',
             'mux': 'ChardevMuxWrapper',
+            'mux-be': 'ChardevMuxBeWrapper',
             'msmouse': 'ChardevCommonWrapper',
             'wctablet': 'ChardevCommonWrapper',
             'braille': { 'type': 'ChardevCommonWrapper',

@@ -35,7 +35,9 @@
 
 struct MuxFeChardev {
     Chardev parent;
+    /* Linked frontends */
     CharBackend *backends[MAX_MUX];
+    /* Linked backend */
     CharBackend chr;
     unsigned long mux_bitset;
     int focus;
@@ -54,10 +56,36 @@ struct MuxFeChardev {
 };
 typedef struct MuxFeChardev MuxFeChardev;
 
+struct MuxBeChardev {
+    Chardev parent;
+    /* Linked frontend */
+    CharBackend *frontend;
+    /* Linked backends */
+    CharBackend backends[MAX_MUX];
+    /*
+     * Number of backends attached to this mux. Once attached, a
+     * backend can't be detached, so the counter is only increasing.
+     * To safely remove a backend, mux has to be removed first.
+     */
+    unsigned int be_cnt;
+    /*
+     * Counters of written bytes from a single frontend device
+     * to multiple backend devices.
+     */
+    unsigned int be_written[MAX_MUX];
+    unsigned int be_min_written;
+};
+typedef struct MuxBeChardev MuxBeChardev;
+
 DECLARE_INSTANCE_CHECKER(MuxFeChardev, MUX_FE_CHARDEV,
                          TYPE_CHARDEV_MUX_FE)
-#define CHARDEV_IS_MUX_FE(chr)                             \
+DECLARE_INSTANCE_CHECKER(MuxBeChardev, MUX_BE_CHARDEV,
+                         TYPE_CHARDEV_MUX_BE)
+
+#define CHARDEV_IS_MUX_FE(chr)                              \
     object_dynamic_cast(OBJECT(chr), TYPE_CHARDEV_MUX_FE)
+#define CHARDEV_IS_MUX_BE(chr)                              \
+    object_dynamic_cast(OBJECT(chr), TYPE_CHARDEV_MUX_BE)
 
 void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event);
 
@@ -67,6 +95,10 @@ void mux_fe_chr_send_all_event(MuxFeChardev *d, QEMUChrEvent event);
 bool mux_fe_chr_attach_frontend(MuxFeChardev *d, CharBackend *b,
                                 unsigned int *tag, Error **errp);
 bool mux_fe_chr_detach_frontend(MuxFeChardev *d, unsigned int tag);
+void mux_be_chr_send_all_event(MuxBeChardev *d, QEMUChrEvent event);
+bool mux_be_chr_attach_chardev(MuxBeChardev *d, Chardev *chr, Error **errp);
+bool mux_be_chr_attach_frontend(MuxBeChardev *d, CharBackend *b, Error **errp);
+void mux_be_chr_detach_frontend(MuxBeChardev *d);
 
 Object *get_chardevs_root(void);
 
