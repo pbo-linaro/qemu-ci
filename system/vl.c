@@ -183,6 +183,7 @@ static bool list_data_dirs;
 static const char *qtest_chrdev;
 static const char *qtest_log;
 static AccelState *accel;
+static FILE *vmstate_dump_file;
 
 static int has_defaults = 1;
 static int default_audio = 1;
@@ -2731,6 +2732,8 @@ static bool qemu_machine_creation_done(Error **errp)
     return true;
 }
 
+static void qemu_exit_precreate(void);
+
 void qmp_x_exit_preconfig(Error **errp)
 {
     if (phase_check(PHASE_MACHINE_INITIALIZED)) {
@@ -2765,9 +2768,7 @@ void qemu_init(int argc, char **argv)
     QemuOptsList *olist;
     int optind;
     const char *optarg;
-    MachineClass *machine_class;
     bool userconfig = true;
-    FILE *vmstate_dump_file = NULL;
 
     qemu_add_opts(&qemu_drive_opts);
     qemu_add_drive_opts(&qemu_legacy_drive_opts);
@@ -3722,6 +3723,13 @@ void qemu_init(int argc, char **argv)
             exit(1);
         }
     }
+
+    qemu_exit_precreate();
+}
+
+static void qemu_exit_precreate(void)
+{
+    MachineClass *machine_class;
 
     suspend_mux_open();
 
