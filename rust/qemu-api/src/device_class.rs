@@ -4,7 +4,7 @@
 
 use std::sync::OnceLock;
 
-use crate::bindings::Property;
+use crate::bindings::{CharBackend, Property, PropertyInfo, qdev_prop_chr, qdev_prop_bool};
 
 #[macro_export]
 macro_rules! device_class_init {
@@ -24,16 +24,54 @@ macro_rules! device_class_init {
     };
 }
 
+pub trait PropertyType {
+    fn get_prop_info() -> *const PropertyInfo;
+}
+
+pub trait PropertyTypeImpl<T: PropertyType> {
+    fn get_prop_info(_: *const T) -> *const PropertyInfo;
+}
+
+impl<T: PropertyType> PropertyTypeImpl<T> for () {
+    fn get_prop_info(_: *const T) -> *const PropertyInfo {
+        T::get_prop_info()
+    }
+}
+
+impl PropertyType for CharBackend {
+    fn get_prop_info() -> *const PropertyInfo {
+        // SAFETY: Access to a defined c-structure, no other operation is performed.
+        unsafe { std::ptr::addr_of!(qdev_prop_chr) }
+    }
+}
+
+impl PropertyType for bool {
+    fn get_prop_info() -> *const PropertyInfo {
+        // SAFETY: Access to a defined c-structure, no other operation is performed.
+        unsafe { std::ptr::addr_of!(qdev_prop_bool) }
+    }
+}
+
+#[macro_export]
+macro_rules! get_prop_info {
+    ($state:ty, $field:ident) => {{
+    use $crate::device_class::PropertyTypeImpl;
+    let base = std::mem::MaybeUninit::<$state>::uninit().as_ptr();
+    <()>::get_prop_info(unsafe { std::ptr::addr_of!((*base).$field) })
+    }};
+}
+
+
 #[macro_export]
 macro_rules! define_property {
-    ($name:expr, $state:ty, $field:ident, $prop:expr, $type:ty, default = $defval:expr$(,)*) => {
+    ($name:expr, $state:ty, $field:ident, default = $defval:expr$(,)*) => {
         $crate::bindings::Property {
             name: {
                 #[used]
                 static _TEMP: &::core::ffi::CStr = $name;
                 _TEMP.as_ptr()
             },
-            info: $prop,
+            info: $crate::get_prop_info!($state, $field),
             offset: ::core::mem::offset_of!($state, $field)
                 .try_into()
                 .expect("Could not fit offset value to type"),
@@ -47,14 +85,14 @@ macro_rules! define_property {
             link_type: ::core::ptr::null(),
         }
     };
-    ($name:expr, $state:ty, $field:ident, $prop:expr, $type:ty$(,)*) => {
+    ($name:expr, $state:ty, $field:ident$(,)*) => {
         $crate::bindings::Property {
             name: {
                 #[used]
                 static _TEMP: &::core::ffi::CStr = $name;
                 _TEMP.as_ptr()
             },
-            info: $prop,
+            info: $crate::get_prop_info!($state, $field),
             offset: ::core::mem::offset_of!($state, $field)
                 .try_into()
                 .expect("Could not fit offset value to type"),

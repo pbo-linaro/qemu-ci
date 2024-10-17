@@ -27,15 +27,11 @@ fn test_device_decl_macros() {
                 c"chardev",
                 DummyState,
                 char_backend,
-                unsafe { &qdev_prop_chr },
-                CharBackend
             ),
             define_property!(
                 c"migrate-clk",
                 DummyState,
                 migrate_clock,
-                unsafe { &qdev_prop_bool },
-                bool
             ),
     }
 

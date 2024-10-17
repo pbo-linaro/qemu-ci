@@ -21,15 +21,11 @@ qemu_api::declare_properties! {
         c"chardev",
         PL011State,
         char_backend,
-        unsafe { &qdev_prop_chr },
-        CharBackend
     ),
     qemu_api::define_property!(
         c"migrate-clk",
         PL011State,
         migrate_clock,
-        unsafe { &qdev_prop_bool },
-        bool
     ),
 }
 
