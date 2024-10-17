@@ -3677,37 +3677,37 @@ DEFHEADING(Character device options:)
 
 DEF("chardev", HAS_ARG, QEMU_OPTION_chardev,
     "-chardev help\n"
-    "-chardev null,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev null,id=id[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
     "-chardev socket,id=id[,host=host],port=port[,to=to][,ipv4=on|off][,ipv6=on|off][,nodelay=on|off]\n"
-    "         [,server=on|off][,wait=on|off][,telnet=on|off][,websocket=on|off][,reconnect=seconds][,mux=on|off]\n"
+    "         [,server=on|off][,wait=on|off][,telnet=on|off][,websocket=on|off][,reconnect=seconds][,mux=on|off][,mux-be-id=id]\n"
     "         [,logfile=PATH][,logappend=on|off][,tls-creds=ID][,tls-authz=ID] (tcp)\n"
     "-chardev socket,id=id,path=path[,server=on|off][,wait=on|off][,telnet=on|off][,websocket=on|off][,reconnect=seconds]\n"
-    "         [,mux=on|off][,logfile=PATH][,logappend=on|off][,abstract=on|off][,tight=on|off] (unix)\n"
+    "         [,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off][,abstract=on|off][,tight=on|off] (unix)\n"
     "-chardev udp,id=id[,host=host],port=port[,localaddr=localaddr]\n"
-    "         [,localport=localport][,ipv4=on|off][,ipv6=on|off][,mux=on|off]\n"
+    "         [,localport=localport][,ipv4=on|off][,ipv6=on|off][,mux=on|off][,mux-be-id=id]\n"
     "         [,logfile=PATH][,logappend=on|off]\n"
-    "-chardev msmouse,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev msmouse,id=id[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
     "-chardev vc,id=id[[,width=width][,height=height]][[,cols=cols][,rows=rows]]\n"
-    "         [,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "         [,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
     "-chardev ringbuf,id=id[,size=size][,logfile=PATH][,logappend=on|off]\n"
-    "-chardev file,id=id,path=path[,input-path=input-file][,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
-    "-chardev pipe,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev file,id=id,path=path[,input-path=input-file][,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev pipe,id=id,path=path[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
 #ifdef _WIN32
-    "-chardev console,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
-    "-chardev serial,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev console,id=id[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev serial,id=id,path=path[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
 #else
-    "-chardev pty,id=id[,path=path][,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
-    "-chardev stdio,id=id[,mux=on|off][,signal=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev pty,id=id[,path=path][,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev stdio,id=id[,mux=on|off][,mux-be-id=id][,signal=on|off][,logfile=PATH][,logappend=on|off]\n"
 #endif
 #ifdef CONFIG_BRLAPI
-    "-chardev braille,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev braille,id=id[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
 #endif
 #if defined(__linux__) || defined(__sun__) || defined(__FreeBSD__) \
         || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
-    "-chardev serial,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev serial,id=id,path=path[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
 #endif
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__)
-    "-chardev parallel,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]\n"
+    "-chardev parallel,id=id,path=path[,mux=on|off][,mux-be-id=id][,logfile=PATH][,logappend=on|off]\n"
 #endif
 #if defined(CONFIG_SPICE)
     "-chardev spicevmc,id=id,name=name[,debug=debug][,logfile=PATH][,logappend=on|off]\n"
@@ -3719,8 +3719,8 @@ DEF("chardev", HAS_ARG, QEMU_OPTION_chardev,
 SRST
 The general form of a character device option is:
 
-``-chardev backend,id=id[,mux=on|off][,options]``
-    Backend is one of: ``null``, ``socket``, ``udp``, ``msmouse``,
+``-chardev backend,id=id[,mux=on|off][,mux-be-id=id][,options]``
+    Backend is one of: ``null``, ``socket``, ``udp``, ``msmouse``, ``mux-be``,
     ``vc``, ``ringbuf``, ``file``, ``pipe``, ``console``, ``serial``,
     ``pty``, ``stdio``, ``braille``, ``parallel``,
     ``spicevmc``, ``spiceport``. The specific backend will determine the
@@ -3777,9 +3777,11 @@ The general form of a character device option is:
     the QEMU monitor, and ``-nographic`` also multiplexes the console
     and the monitor to stdio.
 
-    There is currently no support for multiplexing in the other
-    direction (where a single QEMU front end takes input and output from
-    multiple chardevs).
+    If you need to multiplex in the opposite direction (where one QEMU
+    interface receives input and output from multiple chardev devices),
+    each character device needs the ``mux-be-id=ID`` option. Please
+    refer to the paragraph below regarding chardev ``mux-be``
+    configuration.
 
     Every backend supports the ``logfile`` option, which supplies the
     path to a file to record all data transmitted via the backend. The
@@ -3878,6 +3880,44 @@ The available backends are:
 ``-chardev msmouse,id=id``
     Forward QEMU's emulated msmouse events to the guest. ``msmouse``
     does not take any options.
+
+``-chardev mux-be,id=id``
+    Explicitly create chardev backend multiplexer with the possibility
+    to multiplex in the opposite direction, where one QEMU interface
+    (frontend device) receives input and output from multiple chardev
+    backend devices. (Since 9.2)
+
+    For example, the following is a use case of 2 backend devices:
+    virtual console ``vc0`` and a socket ``sock0`` connected to a
+    single virtio hvc console frontend device with multiplexer
+    ``mux0`` help. Virtual console renders text to an image, which can
+    be shared over the VNC protocol. In turn, socket backend provides
+    bidirectional communication to the virtio hvc console over the
+    socket. The example configuration can be as follows:
+
+    ::
+
+       -chardev mux-be,id=mux0 \
+       -chardev socket,path=/tmp/sock,server=on,wait=off,id=sock0,mux-be-id=mux0 \
+       -chardev vc,id=vc0,mux-be-id=mux0 \
+       -device virtconsole,chardev=mux0 \
+       -vnc 0.0.0.0:0
+
+    Once QEMU starts VNC client and any TTY emulator can be used to
+    control a single hvc console:
+
+    ::
+
+       # VNC client
+       vncviewer :0
+
+       # TTY emulator
+       socat unix-connect:/tmp/sock pty,link=/tmp/pty & \
+       tio /tmp/pty
+
+    Multiplexing of several backend devices with several frontend
+    devices is not supported. Stacking of multiplexers is not
+    supported as well.
 
 ``-chardev vc,id=id[[,width=width][,height=height]][[,cols=cols][,rows=rows]]``
     Connect to a QEMU text console. ``vc`` may optionally be given a
