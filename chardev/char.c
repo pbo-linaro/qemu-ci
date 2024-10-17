@@ -331,8 +331,8 @@ static const TypeInfo char_type_info = {
 
 static bool qemu_chr_is_busy(Chardev *s)
 {
-    if (CHARDEV_IS_MUX(s)) {
-        MuxChardev *d = MUX_CHARDEV(s);
+    if (CHARDEV_IS_MUX_FE(s)) {
+        MuxFeChardev *d = MUX_FE_CHARDEV(s);
         return d->mux_bitset != 0;
     } else {
         return s->be != NULL;
@@ -687,7 +687,7 @@ static Chardev *__qemu_chr_new_from_opts(QemuOpts *opts, GMainContext *context,
         backend->type = CHARDEV_BACKEND_KIND_MUX;
         backend->u.mux.data = g_new0(ChardevMux, 1);
         backend->u.mux.data->chardev = g_strdup(bid);
-        mux = qemu_chardev_new(id, TYPE_CHARDEV_MUX, backend, context, errp);
+        mux = qemu_chardev_new(id, TYPE_CHARDEV_MUX_FE, backend, context, errp);
         if (mux == NULL) {
             object_unparent(OBJECT(chr));
             chr = NULL;
@@ -1104,7 +1104,7 @@ ChardevReturn *qmp_chardev_change(const char *id, ChardevBackend *backend,
         return NULL;
     }
 
-    if (CHARDEV_IS_MUX(chr)) {
+    if (CHARDEV_IS_MUX_FE(chr)) {
         error_setg(errp, "Mux device hotswap not supported yet");
         return NULL;
     }

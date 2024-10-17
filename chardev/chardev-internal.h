@@ -33,7 +33,7 @@
 #define MUX_BUFFER_SIZE 32 /* Must be a power of 2.  */
 #define MUX_BUFFER_MASK (MUX_BUFFER_SIZE - 1)
 
-struct MuxChardev {
+struct MuxFeChardev {
     Chardev parent;
     CharBackend *backends[MAX_MUX];
     CharBackend chr;
@@ -52,16 +52,16 @@ struct MuxChardev {
     bool linestart;
     int64_t timestamps_start;
 };
-typedef struct MuxChardev MuxChardev;
+typedef struct MuxFeChardev MuxFeChardev;
 
-DECLARE_INSTANCE_CHECKER(MuxChardev, MUX_CHARDEV,
-                         TYPE_CHARDEV_MUX)
-#define CHARDEV_IS_MUX(chr)                             \
-    object_dynamic_cast(OBJECT(chr), TYPE_CHARDEV_MUX)
+DECLARE_INSTANCE_CHECKER(MuxFeChardev, MUX_FE_CHARDEV,
+                         TYPE_CHARDEV_MUX_FE)
+#define CHARDEV_IS_MUX_FE(chr)                             \
+    object_dynamic_cast(OBJECT(chr), TYPE_CHARDEV_MUX_FE)
 
-bool mux_chr_attach_frontend(MuxChardev *d, CharBackend *b,
+bool mux_chr_attach_frontend(MuxFeChardev *d, CharBackend *b,
                              unsigned int *tag, Error **errp);
-bool mux_chr_detach_frontend(MuxChardev *d, unsigned int tag);
+bool mux_chr_detach_frontend(MuxFeChardev *d, unsigned int tag);
 void mux_set_focus(Chardev *chr, unsigned int focus);
 void mux_chr_send_all_event(Chardev *chr, QEMUChrEvent event);
 

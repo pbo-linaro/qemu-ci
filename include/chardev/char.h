@@ -231,7 +231,7 @@ int qemu_chr_wait_connected(Chardev *chr, Error **errp);
 OBJECT_DECLARE_TYPE(Chardev, ChardevClass, CHARDEV)
 
 #define TYPE_CHARDEV_NULL "chardev-null"
-#define TYPE_CHARDEV_MUX "chardev-mux"
+#define TYPE_CHARDEV_MUX_FE "chardev-mux"
 #define TYPE_CHARDEV_RINGBUF "chardev-ringbuf"
 #define TYPE_CHARDEV_PTY "chardev-pty"
 #define TYPE_CHARDEV_CONSOLE "chardev-console"
