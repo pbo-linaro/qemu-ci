@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20240910164714.1993531-1-armbru@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 74 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/19] qapi: Smarter camel_to_upper() to reduce need for 'prefix'
+  [32m✓[0m [PATCH 2/19] tests/qapi-schema: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 3/19] qapi/block-core: Drop temporary 'prefix'
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH 4/19] qapi/common: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 5/19] qapi/crypto: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 6/19] qapi/ebpf: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 7/19] qapi/machine: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 8/19] qapi/ui: Drop temporary 'prefix'
+  [32m✓[0m [PATCH 9/19] qapi/machine: Rename CpuS390* to S390Cpu*, and drop 'prefix'
+  [32m✓[0m [PATCH 10/19] qapi/crypto: Drop unwanted 'prefix'
+  [32m✓[0m [PATCH 11/19] qapi/crypto: Rename QCryptoHashAlgorithm to *Algo, and drop prefix
+  [32m✓[0m [PATCH 12/19] qapi/crypto: Rename QCryptoCipherAlgorithm to *Algo, and drop prefix
+  [32m✓[0m [PATCH 13/19] qapi/crypto: Rename QCryptoIVGenAlgorithm to *Algo, and drop prefix
+  [32m✓[0m [PATCH 14/19] qapi/crypto: Rename QCryptoAkCipherAlgorithm to *Algo, and drop prefix
+  [32m✓[0m [PATCH 15/19] qapi/crypto: Rename QCryptoRSAPaddingAlgorithm to *Algo, and drop prefix
+  [32m✓[0m [PATCH 16/19] qapi/crypto: Rename QCryptoAFAlg to QCryptoAFAlgo
+  [32m✓[0m [PATCH 17/19] qapi/cryptodev: Drop unwanted 'prefix'
+  [32m✓[0m [PATCH 18/19] qapi/cryptodev: Rename QCryptodevBackendAlgType to *Algo, and drop prefix
+  [32m✓[0m [PATCH 19/19] qapi/vfio: Rename VfioMigrationState to Qapi*, and drop prefix
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 19
+---
+Applying: qapi: Smarter camel_to_upper() to reduce need for 'prefix'
+Patch failed at 0001 qapi: Smarter camel_to_upper() to reduce need for 'prefix'
+error: patch failed: qapi/migration.json:571
+error: qapi/migration.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
