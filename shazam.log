@@ -1,0 +1,56 @@
+Grabbing thread from lore.kernel.org/all/20240923093016.66437-1-shentey@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 24 patches
+Analyzing 100 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/23] hw/ppc/e500: Do not leak struct boot_info
+  [31m✗[0m [PATCH v2 2/23] hw/ppc/e500: Remove firstenv variable
+  [31m✗[0m [PATCH v2 3/23] hw/ppc/e500: Prefer QOM cast
+  [31m✗[0m [PATCH v2 4/23] hw/ppc/e500: Remove unused "irqs" parameter
+  [31m✗[0m [PATCH v2 5/23] hw/ppc/e500: Add missing device tree properties to i2c controller node
+  [31m✗[0m [PATCH v2 6/23] hw/ppc/e500: Use SysBusDevice API to access TYPE_CCSR's internal resources
+  [31m✗[0m [PATCH v2 7/23] hw/ppc/e500: Extract ppce500_ccsr.c
+  [31m✗[0m [PATCH v2 8/23] hw/ppc/ppce500_ccsr: Log access to unimplemented registers
+  [31m✗[0m [PATCH v2 9/23] hw/ppc/mpc8544_guts: Populate POR PLL ratio status register
+    + Reviewed-by: BALATON Zoltan <balaton@eik.bme.hu>
+  [31m✗[0m [PATCH v2 10/23] hw/i2c/mpc_i2c: Convert DPRINTF to trace events for register access
+  [31m✗[0m [PATCH v2 11/23] hw/i2c/mpc_i2c: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 12/23] hw/pci-host/ppce500: Reuse TYPE_PPC_E500_PCI_BRIDGE define
+  [31m✗[0m [PATCH v2 13/23] hw/pci-host/ppce500: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 14/23] hw/gpio/mpc8xxx: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 15/23] hw/ppc/mpc8544_guts: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 16/23] hw/net/fsl_etsec/etsec: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 17/23] hw/intc: Guard openpic_kvm.c by dedicated OPENPIC_KVM Kconfig switch
+  [31m✗[0m [PATCH v2 18/23] hw/sd/sdhci: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 19/23] hw/block/pflash_cfi01: Prefer DEFINE_TYPES() macro
+    + Reviewed-by: Kevin Wolf <kwolf@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [31m✗[0m [PATCH v2 20/23] hw/i2c/smbus_eeprom: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 21/23] hw/rtc/ds1338: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 22/23] hw/usb/hcd-ehci-sysbus: Prefer DEFINE_TYPES() macro
+  [31m✗[0m [PATCH v2 23/23] hw/vfio/platform: Let vfio_start_eventfd_injection() take VFIOPlatformDevice pointer
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 23
+---
+Applying: hw/ppc/e500: Do not leak struct boot_info
+Applying: hw/ppc/e500: Remove firstenv variable
+Applying: hw/ppc/e500: Prefer QOM cast
+Applying: hw/ppc/e500: Remove unused "irqs" parameter
+Applying: hw/ppc/e500: Add missing device tree properties to i2c controller node
+Applying: hw/ppc/e500: Use SysBusDevice API to access TYPE_CCSR's internal resources
+Applying: hw/ppc/e500: Extract ppce500_ccsr.c
+Patch failed at 0007 hw/ppc/e500: Extract ppce500_ccsr.c
+error: patch failed: MAINTAINERS:1382
+error: MAINTAINERS: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
