@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20240912023537.1004979-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 9 patches
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/8] include: Add loongarch_pic_common header file
+  [PATCH v2 2/8] include: Move struct LoongArchPCHPIC to loongarch_pic_common header file
+  [PATCH v2 3/8] hw/intc/loongarch_pch: Merge instance_init() into realize()
+  [PATCH v2 4/8] hw/intc/loongarch_pch: Rename LoongArchPCHPIC with LoongArchPICCommonState
+  [PATCH v2 5/8] hw/intc/loongarch_pch: Move some functions to file loongarch_pic_common
+  [PATCH v2 6/8] hw/intc/loongarch_pch: Inherit from loongarch_pic_common
+  [PATCH v2 7/8] hw/intc/loongarch_pch: Add pre_save and post_load interfaces
+  [PATCH v2 8/8] hw/intc/loongarch_pch: Code cleanup about loongarch_pch_pic
+---
+Total patches: 8
+---
+ Base: using specified base-commit 2b81c046252fbfb375ad30632362fc16e6e22bd5
+Applying: include: Add loongarch_pic_common header file
+Applying: include: Move struct LoongArchPCHPIC to loongarch_pic_common header file
+Applying: hw/intc/loongarch_pch: Merge instance_init() into realize()
+Applying: hw/intc/loongarch_pch: Rename LoongArchPCHPIC with LoongArchPICCommonState
+Patch failed at 0004 hw/intc/loongarch_pch: Rename LoongArchPCHPIC with LoongArchPICCommonState
+error: patch failed: hw/intc/loongarch_pch_pic.c:437
+error: hw/intc/loongarch_pch_pic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
