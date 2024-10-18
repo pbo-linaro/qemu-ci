@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20240930095130.3120092-1-zhenzhong.duan@intel.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/17]!
+  ERROR: missing [2/17]!
+  ERROR: missing [3/17]!
+  ERROR: missing [4/17]!
+  ERROR: missing [5/17]!
+  ERROR: missing [6/17]!
+  ERROR: missing [7/17]!
+  ERROR: missing [8/17]!
+  ERROR: missing [9/17]!
+  ERROR: missing [10/17]!
+  ERROR: missing [11/17]!
+  ERROR: missing [12/17]!
+  ERROR: missing [13/17]!
+  ERROR: missing [14/17]!
+  ERROR: missing [15/17]!
+  ERROR: missing [16/17]!
+  [32m✓[0m [PATCH v4 17/17] tests/qtest: Add intel-iommu test
+    [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 1
+---
+WARNING: Thread incomplete!
+Applying: tests/qtest: Add intel-iommu test
+Patch failed at 0001 tests/qtest: Add intel-iommu test
+error: patch failed: include/hw/i386/intel_iommu.h:47
+error: include/hw/i386/intel_iommu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
