@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20240904061859.86615-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v5: 3 patches
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v5
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/2] target/loongarch: Add loongson binary translation feature
+    + Reviewed-by: Song Gao <gaosong@loongson.cn>
+  [PATCH v5 2/2] target/loongarch: Implement lbt registers save/restore function
+---
+Total patches: 2
+---
+ Base: using specified base-commit 3b14a767eaca3df5534a162851f04787b363670e
+Applying: target/loongarch: Add loongson binary translation feature
+Applying: target/loongarch: Implement lbt registers save/restore function
+Patch failed at 0002 target/loongarch: Implement lbt registers save/restore function
+error: patch failed: target/loongarch/kvm/kvm.c:477
+error: target/loongarch/kvm/kvm.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
