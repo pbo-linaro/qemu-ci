@@ -1,0 +1,66 @@
+Grabbing thread from lore.kernel.org/all/20241004163415.951106-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 102 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/23] target/i386: Delete duplicated macro definition CR4_FRED_MASK
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 2/23] target/i386: Add VMX control bits for nested FRED support
+  [32m✓[0m [PATCH 3/23] target/i386: Raise the highest index value used for any VMCS encoding
+  [32m✓[0m [PATCH 4/23] tests/unit: remove block layer code from test-nested-aio-poll
+    + Tested-by: Richard W.M. Jones <rjones@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 5/23] hw/i386/pc: Add a description for the i8042 property
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 6/23] kvm/i386: make kvm_filter_msr() and related definitions private to kvm module
+  [32m✓[0m [PATCH 7/23] kvm/i386: fix return values of is_host_cpu_intel()
+  [32m✓[0m [PATCH 8/23] kvm: replace fprintf with error_report()/printf() in kvm_init()
+  [32m✓[0m [PATCH 9/23] kvm/i386: refactor kvm_arch_init and split it into smaller functions
+  [32m✓[0m [PATCH 10/23] kvm/i386: replace identity_base variable with a constant
+    + Reviewed-by: Ani Sinha <anisinha@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 11/23] kvm: refactor core virtual machine creation into its own function
+  [32m✓[0m [PATCH 12/23] target/i386: Expose IBPB-BRTYPE and SBPB CPUID bits to the guest
+  [32m✓[0m [PATCH 13/23] hw: Remove unused inclusion of hw/char/serial.h
+    + Acked-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 14/23] hw/char/serial.h: Extract serial-isa.h
+  [32m✓[0m [PATCH 15/23] hw/char: Extract serial-mm
+  [32m✓[0m [PATCH 16/23] 9p: remove 'proxy' filesystem backend driver
+  [32m✓[0m [PATCH 17/23] minikconf: print error entirely on stderr
+  [32m✓[0m [PATCH 18/23] accel/kvm: refactor dirty ring setup
+  [32m✓[0m [PATCH 19/23] kvm: Allow kvm_arch_get/put_registers to accept Error**
+  [32m✓[0m [PATCH 20/23] target/i386/kvm: Report which action failed in kvm_arch_put/get_registers
+  [32m✓[0m [PATCH 21/23] qom: rename object_resolve_path_type() "ambiguousp"
+  [32m✓[0m [PATCH 22/23] qom: set *ambiguous on all paths
+  [32m✓[0m [PATCH 23/23] qom: update object_resolve_path*() documentation
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 23
+---
+Applying: target/i386: Delete duplicated macro definition CR4_FRED_MASK
+Applying: target/i386: Add VMX control bits for nested FRED support
+Applying: target/i386: Raise the highest index value used for any VMCS encoding
+Applying: tests/unit: remove block layer code from test-nested-aio-poll
+Applying: hw/i386/pc: Add a description for the i8042 property
+Applying: kvm/i386: make kvm_filter_msr() and related definitions private to kvm module
+Applying: kvm/i386: fix return values of is_host_cpu_intel()
+Applying: kvm: replace fprintf with error_report()/printf() in kvm_init()
+Applying: kvm/i386: refactor kvm_arch_init and split it into smaller functions
+Applying: kvm/i386: replace identity_base variable with a constant
+Applying: kvm: refactor core virtual machine creation into its own function
+Applying: target/i386: Expose IBPB-BRTYPE and SBPB CPUID bits to the guest
+Applying: hw: Remove unused inclusion of hw/char/serial.h
+Applying: hw/char/serial.h: Extract serial-isa.h
+Applying: hw/char: Extract serial-mm
+Patch failed at 0015 hw/char: Extract serial-mm
+error: hw/arm/pxa2xx.c: does not exist in index
+error: patch failed: hw/arm/Kconfig:179
+error: hw/arm/Kconfig: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
