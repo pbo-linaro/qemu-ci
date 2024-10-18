@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20240911030922.877259-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 3 patches
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 17 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v3 1/2] acpi: ged: Add macro for acpi sleep control register
+    + Reviewed-by: Igor Mammedov <imammedo@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v3 2/2] hw/loongarch/virt: Add FDT table support with acpi ged pm register
+    + Reviewed-by: Song Gao <gaosong@loongson.cn>
+    + Tested-by: Song Gao <gaosong@loongson.cn>
+---
+Total patches: 2
+---
+ Base: using specified base-commit 2b81c046252fbfb375ad30632362fc16e6e22bd5
+Applying: acpi: ged: Add macro for acpi sleep control register
+Applying: hw/loongarch/virt: Add FDT table support with acpi ged pm register
+Patch failed at 0002 hw/loongarch/virt: Add FDT table support with acpi ged pm register
+error: patch failed: hw/loongarch/virt.c:280
+error: hw/loongarch/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
