@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20240926074546.24507-1-luchangqi.123@bytedance.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v14: 11 patches
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 188 code-review messages
+Will use the latest revision: v14
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v14 1/10] block: add persistent reservation in/out api
+  [31m✗[0m [PATCH v14 2/10] block/raw: add persistent reservation in/out driver
+  [31m✗[0m [PATCH v14 3/10] scsi/constant: add persistent reservation in/out protocol constants
+  [31m✗[0m [PATCH v14 4/10] scsi/util: add helper functions for persistent reservation types conversion
+  [31m✗[0m [PATCH v14 5/10] hw/scsi: add persistent reservation in/out api for scsi device
+  [31m✗[0m [PATCH v14 6/10] block/nvme: add reservation command protocol constants
+  [31m✗[0m [PATCH v14 7/10] hw/nvme: add helper functions for converting reservation types
+  [31m✗[0m [PATCH v14 8/10] hw/nvme: enable ONCS and rescap function
+  [31m✗[0m [PATCH v14 9/10] hw/nvme: add reservation protocal command
+  [31m✗[0m [PATCH v14 10/10] block/iscsi: add persistent reservation in/out driver
+  ---
+  [31m✗[0m BADSIG: DKIM/bytedance.com
+---
+Total patches: 10
+---
+Applying: block: add persistent reservation in/out api
+Applying: block/raw: add persistent reservation in/out driver
+Applying: scsi/constant: add persistent reservation in/out protocol constants
+Applying: scsi/util: add helper functions for persistent reservation types conversion
+Applying: hw/scsi: add persistent reservation in/out api for scsi device
+Applying: block/nvme: add reservation command protocol constants
+Applying: hw/nvme: add helper functions for converting reservation types
+Applying: hw/nvme: enable ONCS and rescap function
+Patch failed at 0008 hw/nvme: enable ONCS and rescap function
+error: patch failed: hw/nvme/ctrl.c:8248
+error: hw/nvme/ctrl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
