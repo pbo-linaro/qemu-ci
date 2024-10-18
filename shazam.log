@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20240903215309.32111-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 29 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] hw/arm/omap1: Remove unused omap_uwire_attach() method
+  ---
+  [31m✗[0m BADSIG: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: hw/arm/omap1: Remove unused omap_uwire_attach() method
+Patch failed at 0001 hw/arm/omap1: Remove unused omap_uwire_attach() method
+error: patch failed: include/hw/arm/omap.h:490
+error: include/hw/arm/omap.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
