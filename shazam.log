@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/172835886767.17327.15494840848441210001-0@git.sr.ht/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v6] target/riscv: Add Zilsd and Zclsd extension support
+  ---
+  [31m✗[0m BADSIG: DKIM/git.sr.ht
+---
+Total patches: 1
+---
+Applying: target/riscv: Add Zilsd and Zclsd extension support
+Patch failed at 0001 target/riscv: Add Zilsd and Zclsd extension support
+error: patch failed: target/riscv/cpu.c:113
+error: target/riscv/cpu.c: patch does not apply
+error: patch failed: target/riscv/cpu_cfg.h:71
+error: target/riscv/cpu_cfg.h: patch does not apply
+error: patch failed: target/riscv/translate.c:1113
+error: target/riscv/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
