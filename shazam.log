@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20240915-hash-v3-0-79cb08d28647@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH RFC v3 1/11] qdev-properties: DEFINE_PROP_ON_OFF_AUTO_BIT()
+  [31m✗[0m [PATCH RFC v3 2/11] net/vhost-vdpa: Report hashing capability
+  [31m✗[0m [PATCH RFC v3 3/11] virtio-net: Move virtio_net_get_features() down
+  [31m✗[0m [PATCH RFC v3 4/11] virtio-net: Retrieve peer hashing capability
+  [31m✗[0m [PATCH RFC v3 5/11] net/vhost-vdpa: Remove dummy SetSteeringEBPF
+  [31m✗[0m [PATCH RFC v3 6/11] virtio-net: Add hash type options
+  [31m✗[0m [PATCH RFC v3 7/11] net: Allow configuring virtio hashing
+  [31m✗[0m [PATCH RFC v3 8/11] virtio-net: Use qemu_set_vnet_hash()
+  [31m✗[0m [PATCH RFC v3 9/11] virtio-net: Offload hashing without vhost
+  [31m✗[0m [PATCH RFC v3 10/11] tap: Report virtio-net hashing support on Linux
+  [31m✗[0m [PATCH RFC v3 11/11] docs/devel/ebpf_rss.rst: Update for peer RSS
+  ---
+  [31m✗[0m BADSIG: DKIM/daynix-com.20230601.gappssmtp.com
+---
+Total patches: 11
+---
+ Base: base-commit decf357a35b1201b34cc37c47b4b027f9601855e not known, ignoring
+Applying: qdev-properties: DEFINE_PROP_ON_OFF_AUTO_BIT()
+Applying: net/vhost-vdpa: Report hashing capability
+Applying: virtio-net: Move virtio_net_get_features() down
+Applying: virtio-net: Retrieve peer hashing capability
+Applying: net/vhost-vdpa: Remove dummy SetSteeringEBPF
+Applying: virtio-net: Add hash type options
+Applying: net: Allow configuring virtio hashing
+Applying: virtio-net: Use qemu_set_vnet_hash()
+Applying: virtio-net: Offload hashing without vhost
+Patch failed at 0009 virtio-net: Offload hashing without vhost
+error: patch failed: hw/net/virtio-net.c:1695
+error: hw/net/virtio-net.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
