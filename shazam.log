@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/cover.1725891841.git.yong.huang@smartx.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 4 patches
+  Added from v4: 7 patches
+  Added from v3: 5 patches
+Analyzing 98 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 11 code-review messages
+Will use the latest revision: v4
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/6] accel/tcg/icount-common: Remove the reference to the unused header file
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  [32m✓[0m [PATCH v4 2/6] migration: Stop CPU throttling conditionally
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  [32m✓[0m [PATCH v4 3/6] migration: Move cpu-throttole.c from system to migration
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  [32m✓[0m [PATCH v4 4/6] migration: Remove "rs" parameter in migration_bitmap_sync_precopy
+  [32m✓[0m [PATCH v4 5/6] migration: Support periodic RAMBlock dirty bitmap sync
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+    + Signed-off-by: Peter Xu <peterx@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Acked-by: Hyman Huang <yong.huang@smartx.com> ([32m✓[0m DKIM/smartx-com.20230601.gappssmtp.com)
+  [32m✓[0m [PATCH v4 6/6] tests/migration: Add case for periodic ramblock dirty sync
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  ---
+  [32m✓[0m Signed: DKIM/smartx-com.20230601.gappssmtp.com (From: yong.huang@smartx.com)
+---
+Total patches: 6
+---
+Applying: accel/tcg/icount-common: Remove the reference to the unused header file
+Applying: migration: Stop CPU throttling conditionally
+Applying: migration: Move cpu-throttole.c from system to migration
+Patch failed at 0003 migration: Move cpu-throttole.c from system to migration
+error: patch failed: system/cpu-throttle.c:27
+error: system/cpu-throttle.c: patch does not apply
+error: patch failed: system/trace-events:44
+error: system/trace-events: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
