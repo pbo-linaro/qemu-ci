@@ -1,0 +1,71 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.14-20240906080824@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 1 patches
+Analyzing 42 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 919 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/40] qapi/qom: Document feature unstable of @x-vfio-user-server
+  [PATCH 2/40] target/arm: Use float_status copy in sme_fmopa_s
+  [PATCH 3/40] target/arm: Use FPST_F16 for SME FMOPA (widening)
+  [PATCH 4/40] hw/nvme: fix memory leak in nvme_dsm
+  [PATCH 5/40] hw/cxl/cxl-host: Fix segmentation fault when getting cxl-fmw property
+  [PATCH 6/40] intel_iommu: fix FRCD construction macro
+  [PATCH 7/40] target/i386: do not crash if microvm guest uses SGX CPUID leaves
+  [PATCH 8/40] chardev/char-win-stdio.c: restore old console mode
+  [PATCH 9/40] hw/intc/loongson_ipi: Access memory in little endian
+  [PATCH 10/40] util/async.c: Forbid negative min/max in aio_context_set_thread_pool_params()
+  [PATCH 11/40] hw/virtio: Fix the de-initialization of vhost-user devices
+  [PATCH 12/40] target/rx: Use target_ulong for address in LI
+  [PATCH 13/40] hw/char/bcm2835_aux: Fix assert when receive FIFO fills up
+  [PATCH 14/40] hw/misc/bcm2835_property: Fix handling of FRAMEBUFFER_SET_PALETTE
+  [PATCH 15/40] target/arm: Don't assert for 128-bit tile accesses when SVL is 128
+  [PATCH 16/40] target/arm: Fix UMOPA/UMOPS of 16-bit values
+  [PATCH 17/40] target/arm: Avoid shifts by -1 in tszimm_shr() and tszimm_shl()
+  [PATCH 18/40] target/arm: Ignore SMCR_EL2.LEN and SVCR_EL2.LEN if EL2 is not enabled
+  [PATCH 19/40] docs/sphinx/depfile.py: Handle env.doc2path() returning a Path not a str
+  [PATCH 20/40] hw/i386/amd_iommu: Don't leak memory in amdvi_update_iotlb()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 21/40] hw/arm/mps2-tz.c: fix RX/TX interrupts order
+  [PATCH 22/40] target/arm: Handle denormals correctly for FMOPA (widening)
+  [PATCH 23/40] virtio-net: Ensure queue index fits with RSS
+  [PATCH 24/40] virtio-net: Fix network stall at the host side waiting for kick
+  [PATCH 25/40] hw/sd/sdhci: Reset @data_count index on invalid ADMA transfers
+  [PATCH 26/40] vvfat: Fix bug in writing to middle of file
+  [PATCH 27/40] vvfat: Fix usage of `info.file.offset`
+  [PATCH 28/40] vvfat: Fix wrong checks for cluster mappings invariant
+  [PATCH 29/40] vvfat: Fix reading files with non-continuous clusters
+  [PATCH 30/40] iotests: Add `vvfat` tests
+  [PATCH 31/40] nbd/server: Plumb in new args to nbd_client_add()
+  [PATCH 32/40] nbd/server: CVE-2024-7409: Cap default max-connections to 100
+  [PATCH 33/40] nbd/server: CVE-2024-7409: Drop non-negotiating clients
+  [PATCH 34/40] nbd/server: CVE-2024-7409: Close stray clients at server-stop
+  [PATCH 35/40] nbd/server: CVE-2024-7409: Avoid use-after-free when closing server
+  [PATCH 36/40] block/blkio: use FUA flag on write zeroes only if supported
+  [PATCH 37/40] target/i386: Do not apply REX to MMX operands
+  [PATCH 38/40] module: Prevent crash by resetting local_err in module_load_qom_all()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+  [PATCH 39/40] crypto/tlscredspsk: Free username on finalize
+  [PATCH 40/40] hw/core/ptimer: fix timer zero period condition for freq > 1GHz
+---
+Total patches: 40
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Xingtao Yao <yaoxt.fnst@fujitsu.com>
+     Msg From: Xingtao Yao (Fujitsu) via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
+     Msg From: Zhijian Li (Fujitsu) via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: qapi/qom: Document feature unstable of @x-vfio-user-server
+Patch failed at 0001 qapi/qom: Document feature unstable of @x-vfio-user-server
+error: patch failed: qapi/qom.json:860
+error: qapi/qom.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
