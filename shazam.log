@@ -1,0 +1,72 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.1.1-20241016195251@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 277 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/49]!
+  ERROR: missing [2/49]!
+  ERROR: missing [3/49]!
+  ERROR: missing [4/49]!
+  ERROR: missing [5/49]!
+  ERROR: missing [6/49]!
+  ERROR: missing [7/49]!
+  ERROR: missing [8/49]!
+  ERROR: missing [9/49]!
+  ERROR: missing [10/49]!
+  ERROR: missing [11/49]!
+  ERROR: missing [12/49]!
+  ERROR: missing [13/49]!
+  ERROR: missing [14/49]!
+  ERROR: missing [15/49]!
+  ERROR: missing [16/49]!
+  ERROR: missing [17/49]!
+  ERROR: missing [18/49]!
+  ERROR: missing [19/49]!
+  ERROR: missing [20/49]!
+  ERROR: missing [21/49]!
+  ERROR: missing [22/49]!
+  ERROR: missing [23/49]!
+  ERROR: missing [24/49]!
+  ERROR: missing [25/49]!
+  ERROR: missing [26/49]!
+  ERROR: missing [27/49]!
+  ERROR: missing [28/49]!
+  ERROR: missing [29/49]!
+  ERROR: missing [30/49]!
+  ERROR: missing [31/49]!
+  ERROR: missing [32/49]!
+  [PATCH 33/49] linux-user/flatload: Take mmap_lock in load_flt_binary()
+  [PATCH 34/49] linux-user: Fix parse_elf_properties GNU0_MAGIC check
+  [PATCH 35/49] tcg/ppc: Use TCG_REG_TMP2 for scratch tcg_out_qemu_st
+  [PATCH 36/49] tcg/ppc: Use TCG_REG_TMP2 for scratch index in prepare_host_addr
+  [PATCH 37/49] target/m68k: Always return a temporary from gen_lea_mode
+  [PATCH 38/49] meson: fix machine option for x86_version
+    + Fixes: v9.0.0-1771-gef7d1adfa8 "meson: allow configuring the x86-64 baseline"
+  [PATCH 39/49] meson: define qemu_isa_flags
+  [PATCH 40/49] meson: ensure -mcx16 is passed when detecting ATOMIC128
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 41/49] hw/intc/arm_gicv3: Add cast to match the documentation
+  [PATCH 42/49] hw/intc/arm_gicv3: Add cast to match the documentation
+  [PATCH 43/49] hw/intc/arm_gicv3_cpuif: Add cast to match the documentation
+  [PATCH 44/49] hw/char/pl011: Use correct masks for IBRD and FBRD
+  [PATCH 45/49] hw/audio/hda: free timer on exit
+  [PATCH 46/49] hw/audio/hda: fix memory leak on audio setup
+  [PATCH 47/49] ui/dbus: fix leak on message filtering
+  [PATCH 48/49] ui/win32: fix potential use-after-free with dbus shared memory
+  [PATCH 49/49] ui/dbus: fix filtering all update messages
+---
+Total patches: 17
+---
+WARNING: Thread incomplete!
+Applying: linux-user/flatload: Take mmap_lock in load_flt_binary()
+Patch failed at 0001 linux-user/flatload: Take mmap_lock in load_flt_binary()
+error: patch failed: linux-user/flatload.c:487
+error: linux-user/flatload.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
