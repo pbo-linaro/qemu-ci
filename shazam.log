@@ -1,0 +1,70 @@
+Grabbing thread from lore.kernel.org/all/20240916150853.1216703-1-edgar.iglesias@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 11 patches
+Analyzing 29 messages in the thread
+WARNING: duplicate messages found at index 4
+   Subject 1: hw/arm: xenpvh: Enable PCI for ARM PVH
+   Subject 2: hw/xen: xenpvh: Add pci-intx-irq-base property
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: hw/xen: Remove deadcode
+   Subject 2: hw/xen: Expose handle_bufioreq in xen_register_ioreq
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+   Subject 2: hw/xen: Expose handle_bufioreq in xen_register_ioreq
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: hw/xen: Expose handle_bufioreq in xen_register_ioreq
+   Subject 2: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 3
+   Subject 1: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+   Subject 2: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 37 code-review messages
+Analyzing 37 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/5] hw/xen: Remove deadcode
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  [31m✗[0m [PATCH v2 2/5] hw/xen: Expose handle_bufioreq in xen_register_ioreq
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  [31m✗[0m [PATCH v2 3/5] hw/xen: xenpvh: Disable buffered IOREQs for ARM
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  [31m✗[0m [PATCH v2 2/4] hw/xen: xenpvh: Disable buffered IOREQs for ARM
+    [31m✗[0m BADSIG: DKIM/gmail.com
+    + Reviewed-by: Stefano Stabellini <sstabellini@kernel.org> ([32m✓[0m DKIM/kernel.org)
+  [31m✗[0m [PATCH v2 4/5] hw/xen: xenpvh: Add pci-intx-irq-base property
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  ERROR: missing [6/5]!
+  ERROR: missing [7/5]!
+  ERROR: missing [8/5]!
+  ERROR: missing [9/5]!
+  ERROR: missing [10/5]!
+---
+Total patches: 5
+---
+WARNING: Thread incomplete!
+Applying: hw/xen: Remove deadcode
+Applying: hw/xen: Expose handle_bufioreq in xen_register_ioreq
+Applying: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+Applying: hw/xen: xenpvh: Disable buffered IOREQs for ARM
+Patch failed at 0004 hw/xen: xenpvh: Disable buffered IOREQs for ARM
+error: patch failed: hw/arm/xen-pvh.c:66
+error: hw/arm/xen-pvh.c: patch does not apply
+error: patch failed: hw/i386/xen/xen-pvh.c:89
+error: hw/i386/xen/xen-pvh.c: patch does not apply
+error: patch failed: hw/xen/xen-pvh-common.c:195
+error: hw/xen/xen-pvh-common.c: patch does not apply
+error: patch failed: include/hw/xen/xen-pvh-common.h:43
+error: include/hw/xen/xen-pvh-common.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
