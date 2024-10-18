@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20240912133829.400-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 7 patches
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 8 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v3 1/6] bios-tables-test: prepare to change ARM ACPI virt PPTT
+  [PATCH v3 2/6] i386/cpu: add IsDefined flag to smp-cache property
+  [PATCH v3 3/6] target/arm/tcg: increase cache level for cpu=max
+  [PATCH v3 4/6] hw/acpi: add cache hierarchy node to pptt table
+  [PATCH v3 5/6] tests/qtest/bios-table-test: testing new ARM ACPI PPTT topology
+  [PATCH v3 6/6] Update the ACPI tables according to the acpi aml_build change, also empty bios-tables-test-allowed-diff.h.
+---
+Total patches: 6
+---
+Applying: bios-tables-test: prepare to change ARM ACPI virt PPTT
+Applying: i386/cpu: add IsDefined flag to smp-cache property
+Patch failed at 0002 i386/cpu: add IsDefined flag to smp-cache property
+error: patch failed: hw/core/machine-smp.c:371
+error: hw/core/machine-smp.c: patch does not apply
+error: patch failed: include/hw/boards.h:373
+error: include/hw/boards.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
