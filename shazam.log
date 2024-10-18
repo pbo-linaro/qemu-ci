@@ -1,0 +1,54 @@
+Grabbing thread from lore.kernel.org/all/20240917060300.943496-1-harshpb@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 15 patches
+  Added from v2: 12 patches
+  Added from v4: 14 patches
+Analyzing 68 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v4
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/13] ppc/spapr: remove deprecated machine pseries-2.1
+  [32m✓[0m [PATCH v4 2/13] ppc/spapr: remove deprecated machine pseries-2.2
+  [32m✓[0m [PATCH v4 3/13] ppc/spapr: remove deprecated machine pseries-2.3
+  [32m✓[0m [PATCH v4 4/13] ppc/spapr: remove deprecated machine pseries-2.4
+  [32m✓[0m [PATCH v4 5/13] ppc/spapr: remove deprecated machine pseries-2.5
+  [32m✓[0m [PATCH v4 6/13] ppc/spapr: remove deprecated machine pseries-2.6
+  [32m✓[0m [PATCH v4 7/13] ppc/spapr: remove deprecated machine pseries-2.7
+  [32m✓[0m [PATCH v4 8/13] ppc/spapr: remove deprecated machine pseries-2.8
+  [32m✓[0m [PATCH v4 9/13] ppc/spapr: remove deprecated machine pseries-2.9
+  [32m✓[0m [PATCH v4 10/13] ppc/spapr: remove deprecated machine pseries-2.10
+  [32m✓[0m [PATCH v4 11/13] ppc/spapr: remove deprecated machine pseries-2.11
+  [32m✓[0m [PATCH v4 12/13] ppc/spapr: remove deprecated machine pseries-2.12-sxxm
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com>
+  [32m✓[0m [PATCH v4 13/13] ppc/spapr: remove deprecated machine pseries-2.12
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com>
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: harshpb@linux.ibm.com)
+---
+Total patches: 13
+---
+Applying: ppc/spapr: remove deprecated machine pseries-2.1
+Applying: ppc/spapr: remove deprecated machine pseries-2.2
+Applying: ppc/spapr: remove deprecated machine pseries-2.3
+Applying: ppc/spapr: remove deprecated machine pseries-2.4
+Applying: ppc/spapr: remove deprecated machine pseries-2.5
+Applying: ppc/spapr: remove deprecated machine pseries-2.6
+Applying: ppc/spapr: remove deprecated machine pseries-2.7
+Applying: ppc/spapr: remove deprecated machine pseries-2.8
+Applying: ppc/spapr: remove deprecated machine pseries-2.9
+Applying: ppc/spapr: remove deprecated machine pseries-2.10
+Applying: ppc/spapr: remove deprecated machine pseries-2.11
+Applying: ppc/spapr: remove deprecated machine pseries-2.12-sxxm
+Applying: ppc/spapr: remove deprecated machine pseries-2.12
+Patch failed at 0013 ppc/spapr: remove deprecated machine pseries-2.12
+error: patch failed: docs/about/deprecated.rst:243
+error: docs/about/deprecated.rst: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
