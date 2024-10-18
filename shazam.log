@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20241002010314.1928515-1-dbarboza@ventanamicro.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v9: 13 patches
+  Added from v10: 13 patches
+Analyzing 49 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 336 code-review messages
+Will use the latest revision: v10
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v10 1/12] exec/memtxattr: add process identifier to the transaction attributes
+  [32m✓[0m [PATCH v10 2/12] hw/riscv: add riscv-iommu-bits.h
+  [32m✓[0m [PATCH v10 3/12] hw/riscv: add RISC-V IOMMU base emulation
+  [32m✓[0m [PATCH v10 4/12] pci-ids.rst: add Red Hat pci-id for RISC-V IOMMU device
+  [32m✓[0m [PATCH v10 5/12] hw/riscv: add riscv-iommu-pci reference device
+  [32m✓[0m [PATCH v10 6/12] hw/riscv/virt.c: support for RISC-V IOMMU PCIDevice hotplug
+  [32m✓[0m [PATCH v10 7/12] test/qtest: add riscv-iommu-pci tests
+  [32m✓[0m [PATCH v10 8/12] hw/riscv/riscv-iommu: add Address Translation Cache (IOATC)
+  [32m✓[0m [PATCH v10 9/12] hw/riscv/riscv-iommu: add ATS support
+  [32m✓[0m [PATCH v10 10/12] hw/riscv/riscv-iommu: add DBG support
+  [32m✓[0m [PATCH v10 11/12] qtest/riscv-iommu-test: add init queues test
+  [32m✓[0m [PATCH v10 12/12] docs/specs: add riscv-iommu
+  ---
+  [32m✓[0m Signed: DKIM/ventanamicro.com
+---
+Total patches: 12
+---
+Applying: exec/memtxattr: add process identifier to the transaction attributes
+Applying: hw/riscv: add riscv-iommu-bits.h
+Applying: hw/riscv: add RISC-V IOMMU base emulation
+Patch failed at 0003 hw/riscv: add RISC-V IOMMU base emulation
+error: patch failed: hw/riscv/Kconfig:47
+error: hw/riscv/Kconfig: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
