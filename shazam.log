@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20240924-add-ctratt-mem-knob-v1-1-0674de9b88b4@samsung.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] hw/nvme: add knob for CTRATT.MEM
+    + Reviewed-by: Minwoo Im <minwoo.im@samsung.com> ([31m✗[0m DKIM/gmail.com)
+  ---
+  [31m✗[0m No key: openpgp/k.jensen@samsung.com
+  [31m✗[0m BADSIG: DKIM/messagingengine.com
+  [31m✗[0m BADSIG: DKIM/irrelevant.dk
+---
+Total patches: 1
+---
+ Base: base-commit 3245de3f3d002bc9ce2ecae61e8d86cb9e375808 not known, ignoring
+Applying: hw/nvme: add knob for CTRATT.MEM
+Patch failed at 0001 hw/nvme: add knob for CTRATT.MEM
+error: patch failed: hw/nvme/ctrl.c:8492
+error: hw/nvme/ctrl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
