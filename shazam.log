@@ -1,0 +1,64 @@
+Grabbing thread from lore.kernel.org/all/20240912052953.2552501-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 36 patches
+  Added from v2: 48 patches
+Analyzing 160 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 496 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v3 1/35] target/riscv: Add a property to set vl to ceil(AVL/2)
+  [31m✗[0m [PATCH v3 2/35] tests/acpi: Add empty ACPI SRAT data file for RISC-V
+  [31m✗[0m [PATCH v3 3/35] tests/qtest/bios-tables-test.c: Enable numamem testing for RISC-V
+  [31m✗[0m [PATCH v3 4/35] tests/acpi: Add expected ACPI SRAT AML file for RISC-V
+  [31m✗[0m [PATCH v3 5/35] target/riscv/tcg/tcg-cpu.c: consider MISA bit choice in implied rule
+  [31m✗[0m [PATCH v3 6/35] target/riscv: fix za64rs enabling
+  [31m✗[0m [PATCH v3 7/35] target: riscv: Enable Bit Manip for OpenTitan Ibex CPU
+  [31m✗[0m [PATCH v3 8/35] target/riscv/kvm: Fix the group bit setting of AIA
+  [31m✗[0m [PATCH v3 9/35] target/riscv: Stop timer with infinite timecmp
+  [31m✗[0m [PATCH v3 10/35] target/riscv/cpu.c: Add 'fcsr' register to QEMU log as a part of F extension
+  [31m✗[0m [PATCH v3 11/35] util/util/cpuinfo-riscv.c: fix riscv64 build on musl libc
+  [31m✗[0m [PATCH v3 12/35] target/riscv: Preliminary textra trigger CSR writting support
+  [31m✗[0m [PATCH v3 13/35] target/riscv: Add textra matching condition for the triggers
+  [31m✗[0m [PATCH v3 14/35] hw/riscv: Respect firmware ELF entry point
+  [31m✗[0m [PATCH v3 15/35] target: riscv: Add Svvptc extension support
+  [31m✗[0m [PATCH v3 16/35] target/riscv32: Fix masking of physical address
+  [31m✗[0m [PATCH v3 17/35] target/riscv/cpu_helper: Fix linking problem with semihosting disabled
+  [31m✗[0m [PATCH v3 18/35] hw/intc: riscv-imsic: Fix interrupt state updates.
+  [31m✗[0m [PATCH v3 19/35] bsd-user: Implement RISC-V CPU initialization and main loop
+  [31m✗[0m [PATCH v3 20/35] bsd-user: Add RISC-V CPU execution loop and syscall handling
+  [31m✗[0m [PATCH v3 21/35] bsd-user: Implement RISC-V CPU register cloning and reset functions
+  [31m✗[0m [PATCH v3 22/35] bsd-user: Implement RISC-V TLS register setup
+  [31m✗[0m [PATCH v3 23/35] bsd-user: Add RISC-V ELF definitions and hardware capability detection
+  [31m✗[0m [PATCH v3 24/35] bsd-user: Define RISC-V register structures and register copying
+  [31m✗[0m [PATCH v3 25/35] bsd-user: Add RISC-V signal trampoline setup function
+  [31m✗[0m [PATCH v3 26/35] bsd-user: Implement RISC-V sysarch system call emulation
+  [31m✗[0m [PATCH v3 27/35] bsd-user: Add RISC-V thread setup and initialization support
+  [31m✗[0m [PATCH v3 28/35] bsd-user: Define RISC-V VM parameters and helper functions
+  [31m✗[0m [PATCH v3 29/35] bsd-user: Define RISC-V system call structures and constants
+  [31m✗[0m [PATCH v3 30/35] bsd-user: Add generic RISC-V64 target definitions
+  [31m✗[0m [PATCH v3 31/35] bsd-user: Define RISC-V signal handling structures and constants
+  [31m✗[0m [PATCH v3 32/35] bsd-user: Implement RISC-V signal trampoline setup functions
+  [31m✗[0m [PATCH v3 33/35] bsd-user: Implement 'get_mcontext' for RISC-V
+  [31m✗[0m [PATCH v3 34/35] bsd-user: Implement set_mcontext and get_ucontext_sigreturn for RISCV
+  [31m✗[0m [PATCH v3 35/35] bsd-user: Add RISC-V 64-bit Target Configuration and Debug XML Files
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 35
+---
+Applying: target/riscv: Add a property to set vl to ceil(AVL/2)
+Applying: tests/acpi: Add empty ACPI SRAT data file for RISC-V
+Applying: tests/qtest/bios-tables-test.c: Enable numamem testing for RISC-V
+Applying: tests/acpi: Add expected ACPI SRAT AML file for RISC-V
+Patch failed at 0004 tests/acpi: Add expected ACPI SRAT AML file for RISC-V
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/SRAT.numamem' without full index line
+error: tests/data/acpi/riscv64/virt/SRAT.numamem: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
