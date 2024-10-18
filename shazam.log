@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20240913163636.253949-1-r.peniaev@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v5: 9 patches
+  Added from v4: 9 patches
+  Added from v2: 6 patches
+Analyzing 41 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 9 code-review messages
+Will use the latest revision: v5
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/8] chardev/char: rename `MuxChardev` struct to `MuxFeChardev`
+  [32m✓[0m [PATCH v5 2/8] chardev/char: rename `char-mux.c` to `char-mux-fe.c`
+  [32m✓[0m [PATCH v5 3/8] chardev/char: move away mux suspend/resume calls
+  [32m✓[0m [PATCH v5 4/8] chardev/char: rename frontend mux calls
+  [32m✓[0m [PATCH v5 5/8] chardev/char: introduce `mux-be-id=ID` option
+  [32m✓[0m [PATCH v5 6/8] chardev/char-mux: implement backend chardev multiplexing
+  [32m✓[0m [PATCH v5 7/8] tests/unit/test-char: add unit test for the `mux-be` multiplexer
+  [32m✓[0m [PATCH v5 8/8] qemu-options.hx: describe multiplexing of several backend devices
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 8
+---
+Applying: chardev/char: rename `MuxChardev` struct to `MuxFeChardev`
+Patch failed at 0001 chardev/char: rename `MuxChardev` struct to `MuxFeChardev`
+error: patch failed: chardev/char-fe.c:194
+error: chardev/char-fe.c: patch does not apply
+error: patch failed: chardev/char-mux.c:125
+error: chardev/char-mux.c: patch does not apply
+error: patch failed: chardev/char.c:331
+error: chardev/char.c: patch does not apply
+error: patch failed: chardev/chardev-internal.h:52
+error: chardev/chardev-internal.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
