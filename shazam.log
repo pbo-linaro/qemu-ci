@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20240927183906.1248-1-annie.li@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v2 1/11] acpi: hmp/qmp: Add hmp/qmp support for system_sleep
+  [32m✓[0m [PATCH RFC v2 2/11] acpi: Implement control method sleep button
+  [32m✓[0m [PATCH RFC v2 3/11] test/acpi: allow DSDT table changes
+  [32m✓[0m [PATCH RFC v2 4/11] acpi: Support Control Method sleep button for x86
+  [32m✓[0m [PATCH RFC v2 5/11] tests/acpi: Update DSDT tables for Control method sleep button
+  [32m✓[0m [PATCH RFC v2 6/11] acpi: Send the GPE event of suspend and wakeup for x86
+  [32m✓[0m [PATCH RFC v2 7/11] hw/acpi: Add ACPI GED support for the sleep event
+  [32m✓[0m [PATCH RFC v2 8/11] tests/acpi: allow FACP and DSDT table changes for arm/virt
+  [32m✓[0m [PATCH RFC v2 9/11] hw/arm: enable sleep support for arm/virt
+  [32m✓[0m [PATCH RFC v2 10/11] tests/acpi: Update FACP and DSDT tables for sleep button
+  [32m✓[0m [PATCH RFC v2 11/11] arm/virt: enable sleep support
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 11
+---
+Applying: acpi: hmp/qmp: Add hmp/qmp support for system_sleep
+Applying: acpi: Implement control method sleep button
+Applying: test/acpi: allow DSDT table changes
+Applying: acpi: Support Control Method sleep button for x86
+Applying: tests/acpi: Update DSDT tables for Control method sleep button
+Patch failed at 0005 tests/acpi: Update DSDT tables for Control method sleep button
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT' (92225236e717b2e522a2ee00492fb0ded418dc7b), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.acpierst' (25b39955059409b177870800949eaf937cd39005), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.acpierst: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.acpihmat' (73a9ce59e9426b180fea0ec5820c4841ebdb6700), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.acpihmat: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.bridge' (4cef454e379e1009141694e0f4036a2a701c80d7), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.bridge: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.cphp' (1dc928333d7ae7e4df6bb51d850af5e1cb480158), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.cphp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.dimmpxm' (9f71d2e58b1707e733584e38dab7f73f9bda5eb7), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.dimmpxm: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.hpbridge' (db420593a3c51eced25cd57420353fbb9ccdf63c), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.hpbridge: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.hpbrroot' (31b6adb4eb941e5bf0c02ec8c3819c9213adf022), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.hpbrroot: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.ipmikcs' (c2a0330d97d495298889b9e28bde2f90235cea88), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.ipmikcs: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.memhp' (c15a9fae947bb3929a30c60b7c0f2092705868f8), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.memhp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.nohpet' (dd29f5cb620e5164601e303e37524530ddb12684), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.nohpet: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.numamem' (8a6b56fe7da18bf42c339d13b863aabf81780527), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.numamem: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.roothp' (a16b0d9d4becec47fa3cf57ed0077ff6cff88908), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.roothp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/q35/DSDT.cxl' (f561750cab8b061c123c041fe2209d74c7a740f1), which does not match the current contents.
+error: tests/data/acpi/x86/q35/DSDT.cxl: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/q35/DSDT.viot' (8d98dd8845a60a08df5aff27097646bea4913b75), which does not match the current contents.
+error: tests/data/acpi/x86/q35/DSDT.viot: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
