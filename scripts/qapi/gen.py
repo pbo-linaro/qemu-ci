@@ -41,10 +41,10 @@ from .schema import (
 from .source import QAPISourceInfo
 
 
-def gen_special_features(features: Sequence[QAPISchemaFeature]) -> str:
-    special_features = [f"1u << {c_enum_const('qapi', feat.name)}"
+def gen_features(features: Sequence[QAPISchemaFeature]) -> str:
+    features = [f"1u << {c_enum_const('qapi', feat.name)}"
                         for feat in features if feat.is_special()]
-    return ' | '.join(special_features) or '0'
+    return ' | '.join(features) or '0'
 
 
 class QAPIGen:
