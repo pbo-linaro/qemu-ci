@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20240913203216.15265-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/60]!
+  ERROR: missing [2/60]!
+  ERROR: missing [3/60]!
+  ERROR: missing [4/60]!
+  ERROR: missing [5/60]!
+  ERROR: missing [6/60]!
+  ERROR: missing [7/60]!
+  ERROR: missing [8/60]!
+  ERROR: missing [9/60]!
+  ERROR: missing [10/60]!
+  ERROR: missing [11/60]!
+  ERROR: missing [12/60]!
+  ERROR: missing [13/60]!
+  ERROR: missing [14/60]!
+  ERROR: missing [15/60]!
+  ERROR: missing [16/60]!
+  ERROR: missing [17/60]!
+  ERROR: missing [18/60]!
+  ERROR: missing [19/60]!
+  ERROR: missing [20/60]!
+  ERROR: missing [21/60]!
+  ERROR: missing [22/60]!
+  ERROR: missing [23/60]!
+  ERROR: missing [24/60]!
+  ERROR: missing [25/60]!
+  ERROR: missing [26/60]!
+  ERROR: missing [27/60]!
+  ERROR: missing [28/60]!
+  ERROR: missing [29/60]!
+  ERROR: missing [30/60]!
+  ERROR: missing [31/60]!
+  ERROR: missing [32/60]!
+  ERROR: missing [33/60]!
+  ERROR: missing [34/60]!
+  ERROR: missing [35/60]!
+  ERROR: missing [36/60]!
+  ERROR: missing [37/60]!
+  ERROR: missing [38/60]!
+  ERROR: missing [39/60]!
+  ERROR: missing [40/60]!
+  ERROR: missing [41/60]!
+  ERROR: missing [42/60]!
+  ERROR: missing [43/60]!
+  ERROR: missing [44/60]!
+  ERROR: missing [45/60]!
+  ERROR: missing [46/60]!
+  [31m✗[0m [PATCH v3 47/60] hw/sensor/tmp105: Lower 4 bit of limit registers are always 0
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  ERROR: missing [48/60]!
+  ERROR: missing [49/60]!
+  ERROR: missing [50/60]!
+  ERROR: missing [51/60]!
+  ERROR: missing [52/60]!
+  ERROR: missing [53/60]!
+  ERROR: missing [54/60]!
+  ERROR: missing [55/60]!
+  ERROR: missing [56/60]!
+  ERROR: missing [57/60]!
+  ERROR: missing [58/60]!
+  ERROR: missing [59/60]!
+  ERROR: missing [60/60]!
+---
+Total patches: 1
+---
+WARNING: Thread incomplete!
+Applying: hw/sensor/tmp105: Lower 4 bit of limit registers are always 0
+Patch failed at 0001 hw/sensor/tmp105: Lower 4 bit of limit registers are always 0
+error: patch failed: hw/sensor/tmp105.c:171
+error: hw/sensor/tmp105.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
