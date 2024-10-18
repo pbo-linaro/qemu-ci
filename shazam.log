@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20241004175022.21134-1-kowal@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3] tests/qtest: Add XIVE tests for the powernv10 machine
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com>
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+---
+Total patches: 1
+---
+Applying: tests/qtest: Add XIVE tests for the powernv10 machine
+Patch failed at 0001 tests/qtest: Add XIVE tests for the powernv10 machine
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:36: trailing whitespace.
+ * 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:338: new blank line at EOF.
++
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:549: new blank line at EOF.
++
+error: patch failed: tests/qtest/meson.build:172
+error: tests/qtest/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
