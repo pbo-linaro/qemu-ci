@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20240913041337.912876-1-harshpb@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v4: 10 patches
+Analyzing 31 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 30 code-review messages
+Will use the latest revision: v4
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/9] target/ppc: use locally stored msr and avoid indirect access
+  [32m✓[0m [PATCH v4 2/9] target/ppc: optimize hreg_compute_pmu_hflags_value
+  [32m✓[0m [PATCH v4 3/9] target/ppc: optimize hreg_compute_pmu_hflags_value
+  [32m✓[0m [PATCH v4 4/9] target/ppc: optimize p9 exception handling routines
+  [32m✓[0m [PATCH v4 5/9] target/ppc: optimize p8 exception handling routines
+  [32m✓[0m [PATCH v4 6/9] target/ppc: optimize p7 exception handling routines
+  [32m✓[0m [PATCH v4 7/9] target/ppc: simplify var usage in ppc_next_unmasked_interrupt
+  [32m✓[0m [PATCH v4 8/9] target/ppc: combine multiple ail checks into one
+  [32m✓[0m [PATCH v4 9/9] target/ppc: reduce duplicate code between init_proc_POWER{9, 10}
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: harshpb@linux.ibm.com)
+---
+Total patches: 9
+---
+Applying: target/ppc: use locally stored msr and avoid indirect access
+Applying: target/ppc: optimize hreg_compute_pmu_hflags_value
+Applying: target/ppc: optimize hreg_compute_pmu_hflags_value
+Applying: target/ppc: optimize p9 exception handling routines
+Patch failed at 0004 target/ppc: optimize p9 exception handling routines
+error: patch failed: target/ppc/excp_helper.c:2020
+error: target/ppc/excp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
