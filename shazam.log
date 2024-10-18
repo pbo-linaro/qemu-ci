@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/78969a39b51ec00e85551b752767be65f6794b46.camel@infradead.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v7] ptp: Add support for the AMZNC10C 'vmclock' device
+    + Acked-by: Richard Cochran <richardcochran@gmail.com> ([31m✗[0m DKIM/gmail.com)
+  ---
+  [32m✓[0m Signed: DKIM/infradead.org
+---
+Total patches: 1
+---
+Applying: ptp: Add support for the AMZNC10C 'vmclock' device
+Patch failed at 0001 ptp: Add support for the AMZNC10C 'vmclock' device
+error: patch failed: MAINTAINERS:18551
+error: MAINTAINERS: patch does not apply
+error: drivers/ptp/Kconfig: does not exist in index
+error: drivers/ptp/Makefile: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
