@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20240905195735.16911-1-dorjoychy111@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v8: 7 patches
+  Added from v7: 6 patches
+Analyzing 38 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 62 code-review messages
+Will use the latest revision: v8
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v8 1/6] tests/lcitool: Update libvirt-ci and add libcbor dependency
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  [31m✗[0m [PATCH v8 2/6] device/virtio-nsm: Support for Nitro Secure Module device
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  [31m✗[0m [PATCH v8 3/6] hw/core: Add Enclave Image Format (EIF) related helpers
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  [31m✗[0m [PATCH v8 4/6] core/machine: Make create_default_memdev machine class property
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  [31m✗[0m [PATCH v8 5/6] machine/nitro-enclave: New machine type for AWS Nitro Enclaves
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  [31m✗[0m [PATCH v8 6/6] docs/nitro-enclave: Documentation for nitro-enclave machine type
+    + Reviewed-by: Alexander Graf <graf@amazon.com> ([32m✓[0m DKIM/amazon.com)
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 6
+---
+Applying: tests/lcitool: Update libvirt-ci and add libcbor dependency
+Patch failed at 0001 tests/lcitool: Update libvirt-ci and add libcbor dependency
+error: .gitlab-ci.d/cirrus/macos-15.vars: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
