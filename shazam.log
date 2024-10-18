@@ -1,0 +1,81 @@
+Grabbing thread from lore.kernel.org/all/20240912161150.483515-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 207 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/48]!
+  ERROR: missing [2/48]!
+  ERROR: missing [3/48]!
+  ERROR: missing [4/48]!
+  ERROR: missing [5/48]!
+  ERROR: missing [6/48]!
+  ERROR: missing [7/48]!
+  ERROR: missing [8/48]!
+  ERROR: missing [9/48]!
+  ERROR: missing [10/48]!
+  ERROR: missing [11/48]!
+  ERROR: missing [12/48]!
+  ERROR: missing [13/48]!
+  ERROR: missing [14/48]!
+  ERROR: missing [15/48]!
+  ERROR: missing [16/48]!
+  ERROR: missing [17/48]!
+  ERROR: missing [18/48]!
+  ERROR: missing [19/48]!
+  ERROR: missing [20/48]!
+  ERROR: missing [21/48]!
+  ERROR: missing [22/48]!
+  ERROR: missing [23/48]!
+  ERROR: missing [24/48]!
+  ERROR: missing [25/48]!
+  ERROR: missing [26/48]!
+  ERROR: missing [27/48]!
+  ERROR: missing [28/48]!
+  ERROR: missing [29/48]!
+  ERROR: missing [30/48]!
+  ERROR: missing [31/48]!
+  ERROR: missing [32/48]!
+  ERROR: missing [33/48]!
+  ERROR: missing [34/48]!
+  ERROR: missing [35/48]!
+  ERROR: missing [36/48]!
+  ERROR: missing [37/48]!
+  ERROR: missing [38/48]!
+  ERROR: missing [39/48]!
+  ERROR: missing [40/48]!
+  ERROR: missing [41/48]!
+  ERROR: missing [42/48]!
+  ERROR: missing [43/48]!
+  [31m✗[0m [PATCH v2 44/48] migration: remove return after g_assert_not_reached()
+    [31m✗[0m BADSIG: DKIM/linaro.org
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [31m✗[0m [PATCH v2 45/48] qobject: remove return after g_assert_not_reached()
+    [31m✗[0m BADSIG: DKIM/linaro.org
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH v2 46/48] qom: remove return after g_assert_not_reached()
+    [31m✗[0m BADSIG: DKIM/linaro.org
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH v2 47/48] tests/qtest: remove return after g_assert_not_reached()
+    [31m✗[0m BADSIG: DKIM/linaro.org
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH v2 48/48] scripts/checkpatch.pl: emit error when using assert(false)
+    [31m✗[0m BADSIG: DKIM/linaro.org
+---
+Total patches: 5
+---
+WARNING: Thread incomplete!
+Applying: migration: remove return after g_assert_not_reached()
+Patch failed at 0001 migration: remove return after g_assert_not_reached()
+error: patch failed: migration/dirtyrate.c:229
+error: migration/dirtyrate.c: patch does not apply
+error: patch failed: migration/postcopy-ram.c:1412
+error: migration/postcopy-ram.c: patch does not apply
+error: patch failed: migration/ram.c:1766
+error: migration/ram.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
