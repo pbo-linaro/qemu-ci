@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20240919015533.766754-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v2 1/15] qdev: Add pointer to BusChild in DeviceState
+  [32m✓[0m [PATCH RFC v2 2/15] qdev: Add the interface to reparent the device
+  [32m✓[0m [PATCH RFC v2 3/15] hw/cpu: Introduce CPU topology device and CPU bus
+  [32m✓[0m [PATCH RFC v2 4/15] hw/cpu: Introduce CPU slot to manage CPU topology
+  [32m✓[0m [PATCH RFC v2 5/15] qdev: Add method in BusClass to customize device index
+  [32m✓[0m [PATCH RFC v2 6/15] hw/core: Create CPU slot in MachineState to manage CPU topology tree
+  [32m✓[0m [PATCH RFC v2 7/15] hw/core/cpu: Convert CPU from general device to topology device
+  [32m✓[0m [PATCH RFC v2 8/15] hw/cpu/core: Convert cpu-core from general device to topology device
+  [32m✓[0m [PATCH RFC v2 9/15] hw/cpu: Abstract module/die/socket levels as topology devices
+  [32m✓[0m [PATCH RFC v2 10/15] hw/machine: Build smp topology tree from -smp
+  [32m✓[0m [PATCH RFC v2 11/15] hw/core: Support topology tree in none machine for compatibility
+  [32m✓[0m [PATCH RFC v2 12/15] hw/i386: Allow i386 to create new CPUs in topology tree
+  [32m✓[0m [PATCH RFC v2 13/15] system/qdev-monitor: Introduce bus-finder interface for compatibility with bus-less plug behavior
+  [32m✓[0m [PATCH RFC v2 14/15] i386/cpu: Support CPU plugged in topology tree via bus-finder
+  [32m✓[0m [PATCH RFC v2 15/15] i386: Support topology device tree
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 15
+---
+Applying: qdev: Add pointer to BusChild in DeviceState
+Applying: qdev: Add the interface to reparent the device
+Applying: hw/cpu: Introduce CPU topology device and CPU bus
+Applying: hw/cpu: Introduce CPU slot to manage CPU topology
+Applying: qdev: Add method in BusClass to customize device index
+Applying: hw/core: Create CPU slot in MachineState to manage CPU topology tree
+Patch failed at 0006 hw/core: Create CPU slot in MachineState to manage CPU topology tree
+error: patch failed: hw/core/machine.c:1239
+error: hw/core/machine.c: patch does not apply
+error: patch failed: include/hw/boards.h:152
+error: include/hw/boards.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
