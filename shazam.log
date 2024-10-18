@@ -1,0 +1,88 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-8.2.7-20240906080902@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 1 patches
+Analyzing 55 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1339 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/53] qapi/qom: Document feature unstable of @x-vfio-user-server
+    + Reported-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 2/53] target/arm: Fix handling of LDAPR/STLR with negative offset
+  [PATCH 3/53] target/arm: LDAPR should honour SCTLR_ELx.nAA
+  [PATCH 4/53] target/arm: Use float_status copy in sme_fmopa_s
+  [PATCH 5/53] target/arm: Use FPST_F16 for SME FMOPA (widening)
+  [PATCH 6/53] hvf: arm: Do not advance PC when raising an exception
+  [PATCH 7/53] hw/nvme: fix memory leak in nvme_dsm
+  [PATCH 8/53] hw/cxl/cxl-host: Fix segmentation fault when getting cxl-fmw property
+  [PATCH 9/53] virtio-snd: add max size bounds check in input cb
+  [PATCH 10/53] virtio-snd: check for invalid param shift operands
+  [PATCH 11/53] intel_iommu: fix FRCD construction macro
+  [PATCH 12/53] target/i386: do not crash if microvm guest uses SGX CPUID leaves
+  [PATCH 13/53] chardev/char-win-stdio.c: restore old console mode
+  [PATCH 14/53] hw/intc/loongson_ipi: Access memory in little endian
+  [PATCH 15/53] util/async.c: Forbid negative min/max in aio_context_set_thread_pool_params()
+  [PATCH 16/53] hw/virtio: Fix the de-initialization of vhost-user devices
+  [PATCH 17/53] target/rx: Use target_ulong for address in LI
+  [PATCH 18/53] hw/char/bcm2835_aux: Fix assert when receive FIFO fills up
+  [PATCH 19/53] hw/misc/bcm2835_property: Fix handling of FRAMEBUFFER_SET_PALETTE
+  [PATCH 20/53] target/arm: Don't assert for 128-bit tile accesses when SVL is 128
+  [PATCH 21/53] target/arm: Fix UMOPA/UMOPS of 16-bit values
+  [PATCH 22/53] target/arm: Avoid shifts by -1 in tszimm_shr() and tszimm_shl()
+  [PATCH 23/53] target/arm: Ignore SMCR_EL2.LEN and SVCR_EL2.LEN if EL2 is not enabled
+  [PATCH 24/53] docs/sphinx/depfile.py: Handle env.doc2path() returning a Path not a str
+  [PATCH 25/53] hw/i386/amd_iommu: Don't leak memory in amdvi_update_iotlb()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 26/53] hw/arm/mps2-tz.c: fix RX/TX interrupts order
+  [PATCH 27/53] target/arm: Handle denormals correctly for FMOPA (widening)
+    + Fixes: 3916841ac75 ("target/arm: Implement FMOPA, FMOPS (widening)")
+  [PATCH 28/53] virtio-net: Ensure queue index fits with RSS
+  [PATCH 29/53] virtio-net: Fix network stall at the host side waiting for kick
+  [PATCH 30/53] target/i386: Fix VSIB decode
+  [PATCH 31/53] hw/sd/sdhci: Reset @data_count index on invalid ADMA transfers
+  [PATCH 32/53] vvfat: Fix bug in writing to middle of file
+  [PATCH 33/53] vvfat: Fix usage of `info.file.offset`
+  [PATCH 34/53] vvfat: Fix wrong checks for cluster mappings invariant
+  [PATCH 35/53] vvfat: Fix reading files with non-continuous clusters
+  [PATCH 36/53] iotests: Add `vvfat` tests
+  [PATCH 37/53] nbd/server: Plumb in new args to nbd_client_add()
+  [PATCH 38/53] nbd/server: CVE-2024-7409: Cap default max-connections to 100
+  [PATCH 39/53] nbd/server: CVE-2024-7409: Drop non-negotiating clients
+  [PATCH 40/53] nbd/server: CVE-2024-7409: Close stray clients at server-stop
+  [PATCH 41/53] nbd/server: CVE-2024-7409: Avoid use-after-free when closing server
+  [PATCH 42/53] hw/core/ptimer: fix timer zero period condition for freq > 1GHz
+  [PATCH 43/53] block/blkio: use FUA flag on write zeroes only if supported
+  [PATCH 44/53] target/i386: Do not apply REX to MMX operands
+  [PATCH 45/53] target/arm: Clear high SVE elements in handle_vec_simd_wshli
+  [PATCH 46/53] module: Prevent crash by resetting local_err in module_load_qom_all()
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 47/53] target/hexagon: don't look for static glib
+    + Reviewed-by: Alex Bennée <alex.bennee@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Brian Cain <bcain@quicinc.com> ([32m✓[0m DKIM/quicinc.com)
+  [PATCH 48/53] target/sparc: Restrict STQF to sparcv9
+  [PATCH 49/53] crypto/tlscredspsk: Free username on finalize
+  [PATCH 50/53] hw/nvme: fix leak of uninitialized memory in io_mgmt_recv
+  [PATCH 51/53] virtio-pci: Fix the use of an uninitialized irqfd
+  [PATCH 52/53] hw/audio/virtio-snd: fix invalid param check
+  [PATCH 53/53] target/hppa: Fix PSW V-bit packaging in cpu_hppa_get for hppa64
+---
+Total patches: 53
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
+     Msg From: Zhijian Li (Fujitsu) via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Xingtao Yao <yaoxt.fnst@fujitsu.com>
+     Msg From: Xingtao Yao (Fujitsu) via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: qapi/qom: Document feature unstable of @x-vfio-user-server
+Patch failed at 0001 qapi/qom: Document feature unstable of @x-vfio-user-server
+error: patch failed: qapi/qom.json:905
+error: qapi/qom.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
