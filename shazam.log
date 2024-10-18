@@ -1,0 +1,51 @@
+Grabbing thread from lore.kernel.org/all/20241010145630.985335-1-armbru@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 8 patches
+Analyzing 36 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 75 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/7] error: Drop superfluous #include "qapi/qmp/qerror.h"
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 2/7] block: Improve errors about block sizes
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 3/7] block: Adjust check_block_size() signature
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 4/7] target/i386/cpu: Avoid mixing signed and unsigned in property setters
+    + Reviewed-by: Igor Mammedov <imammedo@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 5/7] target/i386/cpu: Improve errors for out of bounds property values
+    + Reviewed-by: Igor Mammedov <imammedo@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 6/7] hw/intc/openpic: Improve errors for out of bounds property values
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v2 7/7] qerror: QERR_PROPERTY_VALUE_OUT_OF_RANGE is no longer used, drop
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 7
+---
+Applying: error: Drop superfluous #include "qapi/qmp/qerror.h"
+Applying: block: Improve errors about block sizes
+Applying: block: Adjust check_block_size() signature
+Applying: target/i386/cpu: Avoid mixing signed and unsigned in property setters
+Applying: target/i386/cpu: Improve errors for out of bounds property values
+Applying: hw/intc/openpic: Improve errors for out of bounds property values
+Applying: qerror: QERR_PROPERTY_VALUE_OUT_OF_RANGE is no longer used, drop
+Patch failed at 0007 qerror: QERR_PROPERTY_VALUE_OUT_OF_RANGE is no longer used, drop
+error: patch failed: include/qapi/qmp/qerror.h:23
+error: include/qapi/qmp/qerror.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
