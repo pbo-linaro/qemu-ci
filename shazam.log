@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20240918082315.2345034-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] target/loongarch/kvm: Implement LoongArch PMU extension
+    + Reviewed-by: Song Gao <gaosong@loongson.cn>
+---
+Total patches: 1
+---
+ Base: using specified base-commit 2b81c046252fbfb375ad30632362fc16e6e22bd5
+Applying: target/loongarch/kvm: Implement LoongArch PMU extension
+Patch failed at 0001 target/loongarch/kvm: Implement LoongArch PMU extension
+error: patch failed: target/loongarch/cpu.c:676
+error: target/loongarch/cpu.c: patch does not apply
+error: patch failed: target/loongarch/cpu.h:284
+error: target/loongarch/cpu.h: patch does not apply
+error: patch failed: target/loongarch/kvm/kvm.c:748
+error: target/loongarch/kvm/kvm.c: patch does not apply
+error: patch failed: target/loongarch/loongarch-qmp-cmds.c:40
+error: target/loongarch/loongarch-qmp-cmds.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
