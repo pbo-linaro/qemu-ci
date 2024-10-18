@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20240925125622.197915-1-sjg@chromium.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 29 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/19] spl: Reduce the size of the bl_len field
+  [31m✗[0m [PATCH 2/19] spl: Provide a way of indicating the phase to load
+  [31m✗[0m [PATCH 3/19] spl: Avoid including hash algorithms which are not wanted
+  [31m✗[0m [PATCH 4/19] spl: Provide a way to mark code needed for relocation
+  [31m✗[0m [PATCH 5/19] lib: Mark crc8 as relocation code
+  [31m✗[0m [PATCH 6/19] lib: Mark lz4 as relocation code
+  [31m✗[0m [PATCH 7/19] lib: Mark memcpy() and memmove() as relocation code
+  [31m✗[0m [PATCH 8/19] spl: Add a type for the jumper function
+  [31m✗[0m [PATCH 9/19] spl: Add support for a relocating jump to the next phase
+  [31m✗[0m [PATCH 10/19] spl: Plumb in the relocating loader
+  [31m✗[0m [PATCH 11/19] spl: Support jumping to VPL from TPL
+  [31m✗[0m [PATCH 12/19] spl: Record the correct name of the next phase
+  [31m✗[0m [PATCH 13/19] spl: Show how to fill in the size of the next image
+  [31m✗[0m [PATCH 14/19] spl: Add debugging in spl_set_header_raw_uboot()
+  [31m✗[0m [PATCH 15/19] arm: qemu: Allow SPL and TPL
+  [31m✗[0m [PATCH 16/19] arm: Add a new qemu_arm64_tpl board
+  [31m✗[0m [PATCH 17/19] arm: Provide an rcode section in ARMv8 link script
+  [31m✗[0m [PATCH 18/19] arm: qemu_arm64_tpl: Enable the relocating loader
+  [31m✗[0m [PATCH 19/19] CI: Add new test for reloc loader
+  ---
+  [31m✗[0m BADSIG: DKIM/chromium.org
+---
+Total patches: 19
+---
+Applying: spl: Reduce the size of the bl_len field
+Patch failed at 0001 spl: Reduce the size of the bl_len field
+error: include/spl.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
