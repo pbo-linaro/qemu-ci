@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20240919061128.769139-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 24 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v2 1/12] qdev: Allow qdev_device_add() to add specific category device
+  [32m✓[0m [PATCH RFC v2 2/12] qdev: Introduce new device category to cover basic topology device
+  [32m✓[0m [PATCH RFC v2 3/12] system/vl: Create CPU topology devices from CLI early
+    + Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+  [32m✓[0m [PATCH RFC v2 4/12] hw/core/machine: Split machine initialization around qemu_add_cli_devices_early()
+  [32m✓[0m [PATCH RFC v2 5/12] hw/core/machine: Introduce custom CPU topology with max limitations
+  [32m✓[0m [PATCH RFC v2 6/12] hw/cpu: Constrain CPU topology tree with max_limit
+  [32m✓[0m [PATCH RFC v2 7/12] hw/core: Re-implement topology helpers to honor max limitations
+  [32m✓[0m [PATCH RFC v2 8/12] hw/i386: Use get_max_topo_by_level() to get topology information
+  [32m✓[0m [PATCH RFC v2 9/12] i386: Introduce x86 CPU core abstractions
+  [32m✓[0m [PATCH RFC v2 10/12] i386/cpu: Support Intel hybrid CPUID
+  [32m✓[0m [PATCH RFC v2 11/12] i386/machine: Split machine initialization after CPU creation into post_init()
+  [32m✓[0m [PATCH RFC v2 12/12] i386: Support custom topology for microvm, pc-i440fx and pc-q35
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 12
+---
+Applying: qdev: Allow qdev_device_add() to add specific category device
+Applying: qdev: Introduce new device category to cover basic topology device
+Patch failed at 0002 qdev: Introduce new device category to cover basic topology device
+error: hw/cpu/cpu-topology.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
