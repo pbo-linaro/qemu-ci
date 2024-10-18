@@ -1,0 +1,54 @@
+Grabbing thread from lore.kernel.org/all/20240918192254.3136903-1-tavip@google.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 26 patches
+Analyzing 65 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 28 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/25] fifo32: add peek function
+  [31m✗[0m [PATCH v2 2/25] tests/unit: add fifo32 tests
+  [31m✗[0m [PATCH v2 3/25] scripts: add script to generate C header files from SVD XML files
+  [31m✗[0m [PATCH v2 4/25] Add mcux-soc-svd subproject
+  [31m✗[0m [PATCH v2 5/25] hw/misc: add support for flexcomm
+  [31m✗[0m [PATCH v2 6/25] hw/misc/flexcomm.c: add common fifo functionality
+  [31m✗[0m [PATCH v2 7/25] hw/char: add support for flexcomm usart
+  [31m✗[0m [PATCH v2 8/25] hw/i2c: add support for flexcomm i2c
+  [31m✗[0m [PATCH v2 9/25] hw/ssi: add support for flexcomm spi
+  [31m✗[0m [PATCH v2 10/25] hw/misc: add support for RT500's clock controller
+  [31m✗[0m [PATCH v2 11/25] hw/ssi: add support for flexspi
+  [31m✗[0m [PATCH v2 12/25] hw/misc: add support for RT500's reset controller
+  [31m✗[0m [PATCH v2 13/25] hw/arm: add basic support for the RT500 SoC
+  [31m✗[0m [PATCH v2 14/25] hw/arm: add RT595-EVK board
+  [31m✗[0m [PATCH v2 15/25] tests/qtest: add register access macros and functions
+  [31m✗[0m [PATCH v2 16/25] system/qtest: add APIS to check for memory access failures
+  [31m✗[0m [PATCH v2 17/25] tests/qtest: add flexcomm tests
+  [31m✗[0m [PATCH v2 18/25] tests/qtest: add flexcomm usart tests
+  [31m✗[0m [PATCH v2 19/25] hw/misc: add i2c-tester
+  [31m✗[0m [PATCH v2 20/25] tests/qtest: add tests for flexcomm i2c
+  [31m✗[0m [PATCH v2 21/25] hw/ssi: allow NULL realize callbacks for peripherals
+  [31m✗[0m [PATCH v2 22/25] hw/misc: add spi-tester
+  [31m✗[0m [PATCH v2 23/25] tests/qtest: add tests for flexcomm spi
+  [31m✗[0m [PATCH v2 24/25] systems/qtest: add device clock APIs
+  [31m✗[0m [PATCH v2 25/25] tests/qtest: add tests for RT500's clock controller
+  ---
+  [31m✗[0m BADSIG: DKIM/google.com
+---
+Total patches: 25
+---
+Applying: fifo32: add peek function
+Applying: tests/unit: add fifo32 tests
+Applying: scripts: add script to generate C header files from SVD XML files
+Applying: Add mcux-soc-svd subproject
+Applying: hw/misc: add support for flexcomm
+Patch failed at 0005 hw/misc: add support for flexcomm
+error: patch failed: hw/arm/meson.build:73
+error: hw/arm/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
