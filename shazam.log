@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20240920151034.859533-1-laurent@vivier.eu/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 33 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/6] linux-user,aarch64: move to syscalltbl file
+  [PATCH 2/6] linux-user,openrisc: move to syscalltbl file
+  [PATCH 3/6] linux-user,riscv: move to syscalltbl file
+  [PATCH 4/6] linux-user,hexagon: move to syscalltbl file
+  [PATCH 5/6] linux-user,loongarch: move to syscalltbl file
+  [PATCH 6/6] linux-user: update syscall.tbl to Linux v6.11
+---
+Total patches: 6
+---
+Applying: linux-user,aarch64: move to syscalltbl file
+Patch failed at 0001 linux-user,aarch64: move to syscalltbl file
+error: patch failed: linux-user/aarch64/syscall_nr.h:1
+error: linux-user/aarch64/syscall_nr.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
