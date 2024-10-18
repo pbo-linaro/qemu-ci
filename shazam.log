@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20240910054138.1458555-1-sw@weilnetz.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 7 patches
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 71 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/6] tests/qtest/migration: Move a couple of slow tests under g_test_slow
+  [32m✓[0m [PATCH v2 2/6] migration/multifd: Fix build for qatzip
+  [32m✓[0m [PATCH v2 3/6] migration/multifd: Fix loop conditions in multifd_zstd_send_prepare and multifd_zstd_recv
+  [32m✓[0m [PATCH v2 4/6] softmmu/physmem.c: Keep transaction attribute in address_space_map()
+  [32m✓[0m [PATCH v2 5/6] migration/savevm: Remove extra load cleanup calls
+  [32m✓[0m [PATCH v2 6/6] migration/multifd: Fix rb->receivedmap cleanup race
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 6
+---
+Applying: tests/qtest/migration: Move a couple of slow tests under g_test_slow
+Applying: migration/multifd: Fix build for qatzip
+Patch failed at 0002 migration/multifd: Fix build for qatzip
+error: migration/multifd-qatzip.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
