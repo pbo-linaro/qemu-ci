@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20241015100012.254223-1-salil.mehta@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 33 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 256 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC v5 1/30] arm/virt, target/arm: Add new ARMCPU {socket, cluster, core, thread}-id property
+    + Reviewed-by: Miguel Luis <miguel.luis@oracle.com> ([32m✓[0m DKIM/oracle.com)
+  [PATCH RFC v5 2/30] hw/arm/virt: Disable vCPU hotplug for *unsupported* Accel or GIC Type
+  [PATCH RFC v5 3/30] hw/arm/virt: Move setting of common vCPU properties in a function
+  [PATCH RFC v5 4/30] arm/virt, target/arm: Machine init time change common to vCPU {cold|hot}-plug
+  [PATCH RFC v5 5/30] arm/virt, kvm: Pre-create KVM vCPUs for all unplugged QOM vCPUs @machine init
+  [PATCH RFC v5 6/30] arm/virt, gicv3: Changes to pre-size GIC with possible vCPUs @machine init
+  [PATCH RFC v5 7/30] arm/virt, gicv3: Introduce GICv3 CPU Interface *accessibility* flag and checks
+  [PATCH RFC v5 8/30] hw/intc/arm-gicv3*: Changes required to (re)init the GICv3 vCPU Interface
+  [PATCH RFC v5 9/30] arm/acpi: Enable ACPI support for vCPU hotplug
+  [PATCH RFC v5 10/30] arm/virt: Enhance GED framework to handle vCPU hotplug events
+  [PATCH RFC v5 11/30] arm/virt: Init PMU at host for all possible vCPUs
+  [PATCH RFC v5 12/30] arm/virt: Release objects for *disabled* possible vCPUs after init
+  [PATCH RFC v5 13/30] arm/virt/acpi: Update ACPI DSDT Tbl to include CPUs AML with hotplug support
+  [PATCH RFC v5 14/30] hw/acpi: Make _MAT method optional
+  [PATCH RFC v5 15/30] hw/arm/acpi: MADT Tbl change to size the guest with possible vCPUs
+  [PATCH RFC v5 16/30] target/arm: Force ARM vCPU *present* status ACPI *persistent*
+  [PATCH RFC v5 17/30] arm/virt: Add/update basic hot-(un)plug framework
+  [PATCH RFC v5 18/30] arm/virt: Changes to (un)wire GICC<->vCPU IRQs during hot-(un)plug
+  [PATCH RFC v5 19/30] hw/arm, gicv3: Changes to notify GICv3 CPU state with vCPU hot-(un)plug event
+  [PATCH RFC v5 20/30] hw/arm: Changes required for reset and to support next boot
+  [PATCH RFC v5 21/30] arm/virt: Update the guest(via GED) about vCPU hot-(un)plug events
+  [PATCH RFC v5 22/30] target/arm/cpu: Check if hotplugged ARM vCPU's FEAT match existing
+  [PATCH RFC v5 23/30] tcg: Update tcg_register_thread() leg to handle region alloc for hotplugged vCPU
+  [PATCH RFC v5 24/30] target/arm: Add support to *unrealize* ARMCPU during vCPU Hot-unplug
+  [PATCH RFC v5 25/30] tcg/mttcg: Introduce MTTCG thread unregistration leg
+  [PATCH RFC v5 26/30] hw/intc/arm_gicv3_common: Add GICv3CPUState 'accessible' flag migration handling
+  [PATCH RFC v5 27/30] target/arm/kvm, tcg: Handle SMCCC hypercall exits in VMM during PSCI_CPU_{ON, OFF}
+  [PATCH RFC v5 28/30] target/arm/kvm: Write vCPU's state back to KVM on cold-reset
+  [PATCH RFC v5 29/30] hw/intc/arm_gicv3_kvm: Pause all vCPU to ensure locking in KVM of resetting vCPU
+  [PATCH RFC v5 30/30] hw/arm/virt: Expose cold-booted vCPUs as MADT GICC *Enabled*
+---
+Total patches: 30
+---
+Applying: arm/virt, target/arm: Add new ARMCPU {socket, cluster, core, thread}-id property
+Applying: hw/arm/virt: Disable vCPU hotplug for *unsupported* Accel or GIC Type
+Applying: hw/arm/virt: Move setting of common vCPU properties in a function
+Applying: arm/virt, target/arm: Machine init time change common to vCPU {cold|hot}-plug
+Applying: arm/virt, kvm: Pre-create KVM vCPUs for all unplugged QOM vCPUs @machine init
+Applying: arm/virt, gicv3: Changes to pre-size GIC with possible vCPUs @machine init
+Applying: arm/virt, gicv3: Introduce GICv3 CPU Interface *accessibility* flag and checks
+Applying: hw/intc/arm-gicv3*: Changes required to (re)init the GICv3 vCPU Interface
+Applying: arm/acpi: Enable ACPI support for vCPU hotplug
+Applying: arm/virt: Enhance GED framework to handle vCPU hotplug events
+Applying: arm/virt: Init PMU at host for all possible vCPUs
+Applying: arm/virt: Release objects for *disabled* possible vCPUs after init
+Applying: arm/virt/acpi: Update ACPI DSDT Tbl to include CPUs AML with hotplug support
+Applying: hw/acpi: Make _MAT method optional
+Applying: hw/arm/acpi: MADT Tbl change to size the guest with possible vCPUs
+Patch failed at 0015 hw/arm/acpi: MADT Tbl change to size the guest with possible vCPUs
+error: patch failed: include/hw/acpi/cpu.h:96
+error: include/hw/acpi/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
