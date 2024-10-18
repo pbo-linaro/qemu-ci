@@ -1,0 +1,75 @@
+Grabbing thread from lore.kernel.org/all/20240910090747.2741475-1-william.roche@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+WARNING: duplicate messages found at index 6
+   Subject 1: system/hugetlb_ras: Replay lost BUS_MCEERR_AO signals on VM resume
+   Subject 2: system/hugetlb_ras: Replay lost BUS_MCEERR_AO signals on VM resume
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 5
+   Subject 1: system/hugetlb_ras: Handle madvise SIGBUS signal on listener
+   Subject 2: system/hugetlb_ras: Handle madvise SIGBUS signal on listener
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 4
+   Subject 1: system: Introducing hugetlbfs largepage RAS feature
+   Subject 2: system: Introducing hugetlbfs largepage RAS feature
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: accel/kvm: Keep track of the HWPoisonPage sizes
+   Subject 2: accel/kvm: Keep track of the HWPoisonPage sizes
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 3
+   Subject 1: system/physmem: Remap memory pages on reset based on the page size
+   Subject 2: accel/kvm: Keep track of the HWPoisonPage sizes
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+   Subject 2: accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/6] accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 1/6] accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 3/6] system/physmem: Remap memory pages on reset based on the page size
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 2/6] accel/kvm: Keep track of the HWPoisonPage sizes
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 4/6] system: Introducing hugetlbfs largepage RAS feature
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 5/6] system/hugetlb_ras: Handle madvise SIGBUS signal on listener
+    [32m✓[0m Signed: DKIM/oracle.com
+  [32m✓[0m [PATCH RFC 6/6] system/hugetlb_ras: Replay lost BUS_MCEERR_AO signals on VM resume
+    [32m✓[0m Signed: DKIM/oracle.com
+  ERROR: missing [8/6]!
+  ERROR: missing [9/6]!
+  ERROR: missing [10/6]!
+  ERROR: missing [11/6]!
+  ERROR: missing [12/6]!
+---
+Total patches: 7
+---
+WARNING: Thread incomplete!
+Applying: accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+Applying: accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+Patch failed at 0002 accel/kvm: SIGBUS handler should also deal with si_addr_lsb
+error: patch failed: accel/kvm/kvm-all.c:2836
+error: accel/kvm/kvm-all.c: patch does not apply
+error: patch failed: accel/stubs/kvm-stub.c:38
+error: accel/stubs/kvm-stub.c: patch does not apply
+error: patch failed: include/qemu/osdep.h:585
+error: include/qemu/osdep.h: patch does not apply
+error: patch failed: include/sysemu/kvm.h:207
+error: include/sysemu/kvm.h: patch does not apply
+error: patch failed: system/cpus.c:376
+error: system/cpus.c: patch does not apply
+error: patch failed: util/oslib-posix.c:767
+error: util/oslib-posix.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
