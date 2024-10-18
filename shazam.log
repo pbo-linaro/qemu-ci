@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20240930092631.2997543-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 203 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/17] intel_iommu: Use the latest fault reasons defined by spec
+  [32m✓[0m [PATCH v4 2/17] intel_iommu: Make pasid entry type check accurate
+  [32m✓[0m [PATCH v4 3/17] intel_iommu: Add a placeholder variable for scalable modern mode
+    + Reviewed-by: Clément Mathieu--Drif <clement.mathieu--drif@eviden.com> ([32m✓[0m DKIM/eviden.com)
+  [32m✓[0m [PATCH v4 4/17] intel_iommu: Flush stage-2 cache in PASID-selective PASID-based iotlb invalidation
+  [32m✓[0m [PATCH v4 5/17] intel_iommu: Rename slpte to pte
+  [32m✓[0m [PATCH v4 6/17] intel_iommu: Implement stage-1 translation
+  [32m✓[0m [PATCH v4 7/17] intel_iommu: Check if the input address is canonical
+  [32m✓[0m [PATCH v4 8/17] intel_iommu: Set accessed and dirty bits during first stage translation
+  [32m✓[0m [PATCH v4 9/17] intel_iommu: Flush stage-1 cache in iotlb invalidation
+  [32m✓[0m [PATCH v4 10/17] intel_iommu: Process PASID-based iotlb invalidation
+  [32m✓[0m [PATCH v4 11/17] intel_iommu: Add an internal API to find an address space with PASID
+  [32m✓[0m [PATCH v4 12/17] intel_iommu: Add support for PASID-based device IOTLB invalidation
+  [32m✓[0m [PATCH v4 13/17] intel_iommu: piotlb invalidation should notify unmap
+  [32m✓[0m [PATCH v4 14/17] intel_iommu: Set default aw_bits to 48 in scalable modern mode
+  [32m✓[0m [PATCH v4 15/17] intel_iommu: Introduce a property x-fls for scalable modern mode
+  [32m✓[0m [PATCH v4 16/17] intel_iommu: Introduce a property to control FS1GP cap bit setting
+  [32m✓[0m [PATCH v4 17/17] tests/qtest: Add intel-iommu test
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 17
+---
+Applying: intel_iommu: Use the latest fault reasons defined by spec
+Applying: intel_iommu: Make pasid entry type check accurate
+Applying: intel_iommu: Add a placeholder variable for scalable modern mode
+Applying: intel_iommu: Flush stage-2 cache in PASID-selective PASID-based iotlb invalidation
+Patch failed at 0004 intel_iommu: Flush stage-2 cache in PASID-selective PASID-based iotlb invalidation
+error: patch failed: hw/i386/intel_iommu_internal.h:433
+error: hw/i386/intel_iommu_internal.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
