@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20240904161537.664189-1-edgar.iglesias@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 6 patches
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 109 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/5] hw/xen: Remove deadcode
+  [31m✗[0m [PATCH v2 2/5] hw/xen: Expose handle_bufioreq in xen_register_ioreq
+  [31m✗[0m [PATCH v2 3/5] hw/xen: xenpvh: Disable buffered IOREQs for ARM
+  [31m✗[0m [PATCH v2 4/5] hw/xen: xenpvh: Add pci-intx-irq-base property
+  [31m✗[0m [PATCH v2 5/5] hw/arm: xenpvh: Enable PCI for ARM PVH
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 5
+---
+Applying: hw/xen: Remove deadcode
+Applying: hw/xen: Expose handle_bufioreq in xen_register_ioreq
+Patch failed at 0002 hw/xen: Expose handle_bufioreq in xen_register_ioreq
+error: hw/xen/xen-pvh-common.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
