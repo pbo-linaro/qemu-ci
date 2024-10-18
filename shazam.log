@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20240917083709.571436-1-kraxel@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] tests/acpi: allow acpi test data updates
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 2/7] update submodule and version file to edk2-stable202408
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [3/7]!
+  [32m✓[0m [PATCH 4/7] roms: Support compile the efi bios for loongarch
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 5/7] add loongarch binaries for edk2-stable202408
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 6/7] tests/acpi: update aarch64/virt/SSDT.memhp
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 7/7] tests/acpi: disallow acpi test data updates
+    [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 6
+---
+WARNING: Thread incomplete!
+Applying: tests/acpi: allow acpi test data updates
+Applying: update submodule and version file to edk2-stable202408
+Applying: roms: Support compile the efi bios for loongarch
+Applying: add loongarch binaries for edk2-stable202408
+Applying: tests/acpi: update aarch64/virt/SSDT.memhp
+Patch failed at 0005 tests/acpi: update aarch64/virt/SSDT.memhp
+error: corrupt binary patch at line 22115: -- 
+error: corrupt binary patch at line 13: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
