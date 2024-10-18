@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20240915-queue-v1-0-b49bd49b926d@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/7] net: checksum: Convert data to void *
+  [31m✗[0m [PATCH 2/7] virtio-net: Fix size check in dhclient workaround
+  [31m✗[0m [PATCH 3/7] virtio-net: Do not check for the queue before RSS
+  [31m✗[0m [PATCH 4/7] virtio-net: Fix hash reporting when the queue changes
+  [31m✗[0m [PATCH 5/7] virtio-net: Initialize hash reporting values
+  [31m✗[0m [PATCH 6/7] virtio-net: Copy received header to buffer
+  [31m✗[0m [PATCH 7/7] virtio-net: Fix num_buffers for version 1
+  ---
+  [31m✗[0m BADSIG: DKIM/daynix-com.20230601.gappssmtp.com
+---
+Total patches: 7
+---
+ Base: using specified base-commit 31669121a01a14732f57c49400bc239cf9fd505f
+Applying: net: checksum: Convert data to void *
+Applying: virtio-net: Fix size check in dhclient workaround
+Applying: virtio-net: Do not check for the queue before RSS
+Applying: virtio-net: Fix hash reporting when the queue changes
+Patch failed at 0004 virtio-net: Fix hash reporting when the queue changes
+error: patch failed: hw/net/virtio-net.c:1901
+error: hw/net/virtio-net.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
