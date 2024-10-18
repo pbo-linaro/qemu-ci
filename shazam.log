@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20241015211329.21113-1-kowal@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] ppc/xive2: Update NVP save/restore for group attributes
+  [32m✓[0m [PATCH 2/14] ppc/xive2: Add grouping level to notification
+  [32m✓[0m [PATCH 3/14] ppc/xive2: Support group-matching when looking for target
+  [32m✓[0m [PATCH 4/14] ppc/xive2: Add undelivered group interrupt to backlog
+  [32m✓[0m [PATCH 5/14] ppc/xive2: Process group backlog when pushing an OS context
+  [32m✓[0m [PATCH 6/14] ppc/xive2: Process group backlog when updating the CPPR
+  [32m✓[0m [PATCH 7/14] qtest/xive: Add group-interrupt test
+  [32m✓[0m [PATCH 8/14] Add support for MMIO operations on the NVPG/NVC BAR
+  [32m✓[0m [PATCH 9/14] ppc/xive2: Support crowd-matching when looking for target
+  [32m✓[0m [PATCH 10/14] ppc/xive2: Check crowd backlog when scanning group backlog
+  [32m✓[0m [PATCH 11/14] pnv/xive: Only support crowd size of 0, 2, 4 and 16
+  [32m✓[0m [PATCH 12/14] pnv/xive: Support ESB Escalation
+  [32m✓[0m [PATCH 13/14] pnv/xive: Fix problem with treating NVGC as a NVP
+  [32m✓[0m [PATCH 14/14] qtest/xive: Add test of pool interrupts
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+---
+Total patches: 14
+---
+Applying: ppc/xive2: Update NVP save/restore for group attributes
+Patch failed at 0001 ppc/xive2: Update NVP save/restore for group attributes
+error: patch failed: include/hw/ppc/xive2_regs.h:152
+error: include/hw/ppc/xive2_regs.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
