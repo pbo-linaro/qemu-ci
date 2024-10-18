@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20241017145226.365825-1-cleger@rivosinc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 52 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/9] target/riscv: fix henvcfg potentially containing stale bits
+  [32m✓[0m [PATCH v4 2/9] target/riscv: Add Ssdbltrp CSRs handling
+  [32m✓[0m [PATCH v4 3/9] target/riscv: Implement Ssdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH v4 4/9] target/riscv: Implement Ssdbltrp exception handling
+  [32m✓[0m [PATCH v4 5/9] target/riscv: Add Ssdbltrp ISA extension enable switch
+  [32m✓[0m [PATCH v4 6/9] target/riscv: Add Smdbltrp CSRs handling
+  [32m✓[0m [PATCH v4 7/9] target/riscv: Implement Smdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH v4 8/9] target/riscv: Implement Smdbltrp behavior
+  [32m✓[0m [PATCH v4 9/9] target/riscv: Add Smdbltrp ISA extension enable switch
+  ---
+  [32m✓[0m Signed: DKIM/rivosinc-com.20230601.gappssmtp.com (From: cleger@rivosinc.com)
+---
+Total patches: 9
+---
+Applying: target/riscv: fix henvcfg potentially containing stale bits
+Applying: target/riscv: Add Ssdbltrp CSRs handling
+Applying: target/riscv: Implement Ssdbltrp sret, mret and mnret behavior
+Patch failed at 0003 target/riscv: Implement Ssdbltrp sret, mret and mnret behavior
+error: patch failed: target/riscv/op_helper.c:328
+error: target/riscv/op_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
