@@ -1,0 +1,53 @@
+Grabbing thread from lore.kernel.org/all/20241018053112.1886173-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v1 1/16] aspeed/smc: Fix write incorrect data into flash in user mode
+  [PATCH v1 2/16] hw/block:m25p80: Fix coding style
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com>
+  [PATCH v1 3/16] hw/block:m25p80: Support write status register 2 command (0x31) for w25q01jvq
+  [PATCH v1 4/16] hw/block/m25p80: Add SFDP table for w25q80bl flash
+  [PATCH v1 5/16] hw/arm/aspeed: Correct spi_model w25q256 for ast1030-a1 EVB.
+  [PATCH v1 6/16] hw/arm/aspeed: Correct fmc_model w25q80bl for ast1030-a1 EVB
+  [PATCH v1 7/16] test/qtest/aspeed_smc-test: Fix coding style
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v1 8/16] test/qtest/aspeed_smc-test: Move testcases to test_palmetto_bmc function
+  [PATCH v1 9/16] test/qtest/aspeed_smc-test: Introduce a new TestData to test different BMC SOCs
+  [PATCH v1 10/16] test/qtest/aspeed_smc-test: Support to test all CE pins
+  [PATCH v1 11/16] test/qtest/aspeed_smc-test: Support to test all flash models
+  [PATCH v1 12/16] test/qtest/aspeed_smc-test: Support to test AST2500
+  [PATCH v1 13/16] test/qtest/aspeed_smc-test: Support to test AST2600
+  [PATCH v1 14/16] test/qtest/aspeed_smc-test: Support to test AST1030
+  [PATCH v1 15/16] test/qtest/aspeed_smc-test: Support write page command with QPI mode
+  [PATCH v1 16/16] test/qtest/ast2700-smc-test: Support to test AST2700
+---
+Total patches: 16
+---
+Applying: aspeed/smc: Fix write incorrect data into flash in user mode
+Applying: hw/block:m25p80: Fix coding style
+Applying: hw/block:m25p80: Support write status register 2 command (0x31) for w25q01jvq
+Applying: hw/block/m25p80: Add SFDP table for w25q80bl flash
+Applying: hw/arm/aspeed: Correct spi_model w25q256 for ast1030-a1 EVB.
+Applying: hw/arm/aspeed: Correct fmc_model w25q80bl for ast1030-a1 EVB
+Applying: test/qtest/aspeed_smc-test: Fix coding style
+Applying: test/qtest/aspeed_smc-test: Move testcases to test_palmetto_bmc function
+Applying: test/qtest/aspeed_smc-test: Introduce a new TestData to test different BMC SOCs
+Applying: test/qtest/aspeed_smc-test: Support to test all CE pins
+Applying: test/qtest/aspeed_smc-test: Support to test all flash models
+Applying: test/qtest/aspeed_smc-test: Support to test AST2500
+Applying: test/qtest/aspeed_smc-test: Support to test AST2600
+Applying: test/qtest/aspeed_smc-test: Support to test AST1030
+Applying: test/qtest/aspeed_smc-test: Support write page command with QPI mode
+Applying: test/qtest/ast2700-smc-test: Support to test AST2700
+Patch failed at 0016 test/qtest/ast2700-smc-test: Support to test AST2700
+error: patch failed: tests/qtest/meson.build:210
+error: tests/qtest/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
