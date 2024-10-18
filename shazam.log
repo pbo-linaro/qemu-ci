@@ -1,0 +1,66 @@
+Grabbing thread from lore.kernel.org/all/20240924130222.748369-1-marcandre.lureau@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 23 patches
+Analyzing 79 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 93 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/22] util/coroutine: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 2/22] util/timer: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 3/22] hw/qxl: fix -Werror=maybe-uninitialized false-positives
+  [32m✓[0m [PATCH v3 4/22] nbd: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 5/22] block/mirror: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 6/22] block/mirror: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v3 7/22] block/stream: fix -Werror=maybe-uninitialized false-positives
+  [32m✓[0m [PATCH v3 8/22] hw/ahci: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 9/22] hw/vhost-scsi: fix -Werror=maybe-uninitialized
+  [32m✓[0m [PATCH v3 10/22] hw/sdhci: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Alex Bennée <alex.bennee@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 11/22] block/block-copy: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v3 12/22] migration: fix -Werror=maybe-uninitialized false-positives
+  [32m✓[0m [PATCH v3 13/22] hw/virtio-blk: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 14/22] migration: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 15/22] linux-user/hppa: fix -Werror=maybe-uninitialized false-positive
+  [32m✓[0m [PATCH v3 16/22] target/loongarch: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v3 17/22] tests: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v3 18/22] hw/virtio: fix -Werror=maybe-uninitialized
+    + Reviewed-by: Stefano Garzarella <sgarzare@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 19/22] RFC: hw/virtio: a potential leak fix
+    + Reviewed-by: Eugenio Pérez <eperezma@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 20/22] block: fix -Werror=maybe-uninitialized false-positive
+    + Reviewed-by: Kevin Wolf <kwolf@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Reviewed-by: Eric Blake <eblake@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 21/22] qom/object: fix -Werror=maybe-uninitialized
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Fixes: 81c48dd79655 (hw/i386/acpi: Add object_resolve_type_unambiguous to improve modularity) ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 22/22] fsdep/9p: fix -Werror=maybe-uninitialized false-positive
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 22
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Christian Schoenebeck <qemu_oss@crudebyte.com>
+     Msg From: Christian Schoenebeck via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: util/coroutine: fix -Werror=maybe-uninitialized false-positive
+Applying: util/timer: fix -Werror=maybe-uninitialized false-positive
+Applying: hw/qxl: fix -Werror=maybe-uninitialized false-positives
+Patch failed at 0003 hw/qxl: fix -Werror=maybe-uninitialized false-positives
+error: patch failed: roms/openbios:1
+error: roms/openbios: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
