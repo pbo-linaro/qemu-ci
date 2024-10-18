@@ -42,8 +42,8 @@ from .source import QAPISourceInfo
 
 
 def gen_features(features: Sequence[QAPISchemaFeature]) -> str:
-    features = [f"1u << {c_enum_const('qapi', feat.name)}"
-                        for feat in features if feat.is_special()]
+    features = [f"1u << {c_enum_const('qapi_feature', feat.name)}"
+                        for feat in features]
     return ' | '.join(features) or '0'
 
 

@@ -933,8 +933,11 @@ class QAPISchemaEnumMember(QAPISchemaMember):
 class QAPISchemaFeature(QAPISchemaMember):
     role = 'feature'
 
+    # Features which are standardized across all schemas
+    SPECIAL_NAMES = ['deprecated', 'unstable']
+
     def is_special(self) -> bool:
-        return self.name in ('deprecated', 'unstable')
+        return self.name in QAPISchemaFeature.SPECIAL_NAMES
 
 
 class QAPISchemaObjectTypeMember(QAPISchemaMember):
@@ -1138,6 +1141,11 @@ class QAPISchema:
         self._entity_list: List[QAPISchemaEntity] = []
         self._entity_dict: Dict[str, QAPISchemaDefinition] = {}
         self._module_dict: Dict[str, QAPISchemaModule] = OrderedDict()
+        self._feature_dict: Dict[str, QAPISchemaFeature] = {}
+
+        for f in QAPISchemaFeature.SPECIAL_NAMES:
+            self._feature_dict[f] = QAPISchemaFeature(f, "special feature")
+
         self._schema_dir = os.path.dirname(fname)
         self._make_module(QAPISchemaModule.BUILTIN_MODULE_NAME)
         self._make_module(fname)
@@ -1258,6 +1266,15 @@ class QAPISchema:
     ) -> List[QAPISchemaFeature]:
         if features is None:
             return []
+
+        for f in features:
+            feat = QAPISchemaFeature(f['name'], info)
+            if feat.name not in self._feature_dict:
+                if len(self._feature_dict) == 64:
+                    raise Exception("Maximum of 64 schema features is permitted")
+
+                self._feature_dict[feat.name] = feat
+
         return [QAPISchemaFeature(f['name'], info,
                                   QAPISchemaIfCond(f.get('if')))
                 for f in features]
