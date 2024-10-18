@@ -1,0 +1,68 @@
+Grabbing thread from lore.kernel.org/all/cover.1725969898.git.lixianglai@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 12 patches
+Analyzing 24 messages in the thread
+WARNING: duplicate messages found at index 4
+   Subject 1: LoongArch: KVM: Add IPI user mode read and write function
+   Subject 2: LoongArch: KVM: Add IPI user mode read and write function
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 5
+   Subject 1: LoongArch: KVM: Add EIOINTC device support
+   Subject 2: LoongArch: KVM: Add IPI user mode read and write function
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 3
+   Subject 1: LoongArch: KVM: Add IPI read and write function
+   Subject 2: LoongArch: KVM: Add IPI read and write function
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+   Subject 2: LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: LoongArch: KVM: Add IPI device support
+   Subject 2: LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 5
+   Subject 1: LoongArch: KVM: Add EIOINTC device support
+   Subject 2: LoongArch: KVM: Add EIOINTC device support
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 7 code-review messages
+Analyzing 7 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v3 1/11] LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+  [PATCH v3 2/11] LoongArch: KVM: Add IPI device support
+  [PATCH v3 1/11] LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+  [PATCH v3 3/11] LoongArch: KVM: Add IPI read and write function
+  [PATCH v3 5/11] LoongArch: KVM: Add EIOINTC device support
+  [PATCH v3 5/11] LoongArch: KVM: Add EIOINTC device support
+  ERROR: missing [7/11]!
+  ERROR: missing [8/11]!
+  ERROR: missing [9/11]!
+  ERROR: missing [10/11]!
+  ERROR: missing [11/11]!
+  ERROR: missing [12/11]!
+  ERROR: missing [13/11]!
+  ERROR: missing [14/11]!
+  ERROR: missing [15/11]!
+  ERROR: missing [16/11]!
+  ERROR: missing [17/11]!
+---
+Total patches: 6
+---
+WARNING: Thread incomplete!
+ Base: base-commit bc83b4d1f08695e85e85d36f7b803da58010161d not known, ignoring
+Applying: LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+Patch failed at 0001 LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+error: arch/loongarch/kvm/exit.c: does not exist in index
+error: include/linux/kvm_host.h: does not exist in index
+error: include/trace/events/kvm.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
