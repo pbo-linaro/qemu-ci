@@ -1,0 +1,55 @@
+Grabbing thread from lore.kernel.org/all/20241004160331.1282441-1-mjt@tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 125 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/23] hw/audio/virtio-snd: Remove unnecessary "exec/tswap.h" header
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 2/23] qemu-keymap: Release local allocation references
+  [PATCH 3/23] vnc: fix crash when no console attached
+  [PATCH 4/23] MAINTAINERS: remove gensyscalls.sh from the linux-user section
+  [PATCH 5/23] hw/xen: Remove deadcode
+  [PATCH 6/23] q35: Remove unused mch_mcfg_base
+  [PATCH 7/23] net: Remove deadcode
+  [PATCH 8/23] hw/net/net_rx_pkt: Remove deadcode
+  [PATCH 9/23] hw/char: Remove unused serial_set_frequency
+  [PATCH 10/23] linux-user: Remove unused handle_vm86_fault
+  [PATCH 11/23] hw: Remove unused fw_cfg_init_io
+  [PATCH 12/23] ui/cursor: remove cursor_get_mono_image
+  [PATCH 13/23] vhost: Remove unused vhost_dev_{load|save}_inflight
+  [PATCH 14/23] remote: Remove unused remote_iohub_finalize
+  [PATCH 15/23] replay: Remove unused replay_disable_events
+  [PATCH 16/23] hw/pci: Remove unused pcie_chassis_find_slot
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 17/23] hw/net/rocker: Remove unused rocker_fp_ports
+  [PATCH 18/23] block-backend: Remove deadcode
+  [PATCH 19/23] tests/tcg/plugins: Remove remainder of the cris target
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 20/23] hw/mips: Build fw_cfg.c once
+  [PATCH 21/23] tests/functional: Fix hash validation
+    + Reviewed-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 22/23] docs/devel: Mention post_load hook restrictions where we document the hook
+  [PATCH 23/23] MAINTAINERS: Add myself as maintainer of e500 machines
+---
+Total patches: 23
+---
+Applying: hw/audio/virtio-snd: Remove unnecessary "exec/tswap.h" header
+Applying: qemu-keymap: Release local allocation references
+Applying: vnc: fix crash when no console attached
+Applying: MAINTAINERS: remove gensyscalls.sh from the linux-user section
+Applying: hw/xen: Remove deadcode
+Patch failed at 0005 hw/xen: Remove deadcode
+error: patch failed: hw/xen/xen-legacy-backend.c:147
+error: hw/xen/xen-legacy-backend.c: patch does not apply
+error: patch failed: hw/xen/xen_devconfig.c:66
+error: hw/xen/xen_devconfig.c: patch does not apply
+error: patch failed: include/hw/xen/xen-legacy-backend.h:50
+error: include/hw/xen/xen-legacy-backend.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
