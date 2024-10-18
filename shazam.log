@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20241010190337.376987-1-dbarboza@ventanamicro.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/8] hw/intc/riscv_aplic: rename is_kvm_aia()
+  [31m✗[0m [PATCH 2/8] hw/riscv/virt.c: reduce virt_use_kvm_aia() usage
+  [31m✗[0m [PATCH 3/8] hw/riscv/virt.c: rename helper to virt_use_kvm_aia_aplic_imsic()
+  [31m✗[0m [PATCH 4/8] target/riscv/kvm: consider irqchip_split() in aia_create()
+  [31m✗[0m [PATCH 5/8] hw/riscv/virt.c, riscv_aplic.c: add 'emulated_aplic' helpers
+  [31m✗[0m [PATCH 6/8] hw/intc/riscv_aplic: add kvm_msicfgaddr for split mode aplic-imsic
+  [31m✗[0m [PATCH 7/8] target/riscv/kvm: remove irqchip_split() restriction
+  [31m✗[0m [PATCH 8/8] docs: update riscv/virt.rst with kernel-irqchip=split support
+  ---
+  [31m✗[0m BADSIG: DKIM/ventanamicro.com
+---
+Total patches: 8
+---
+Applying: hw/intc/riscv_aplic: rename is_kvm_aia()
+Applying: hw/riscv/virt.c: reduce virt_use_kvm_aia() usage
+Applying: hw/riscv/virt.c: rename helper to virt_use_kvm_aia_aplic_imsic()
+Applying: target/riscv/kvm: consider irqchip_split() in aia_create()
+Applying: hw/riscv/virt.c, riscv_aplic.c: add 'emulated_aplic' helpers
+Patch failed at 0005 hw/riscv/virt.c, riscv_aplic.c: add 'emulated_aplic' helpers
+error: patch failed: hw/intc/riscv_aplic.c:159
+error: hw/intc/riscv_aplic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
