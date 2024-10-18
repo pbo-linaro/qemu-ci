@@ -1,0 +1,58 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.1.1-20241007221311@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 35 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 901 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/32] target/hppa: Fix PSW V-bit packaging in cpu_hppa_get for hppa64
+  [PATCH 2/32] iotests: fix expected output from gnutls
+    + Tested-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 3/32] crypto: run qcrypto_pbkdf2_count_iters in a new thread
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 4/32] crypto: check gnutls & gcrypt support the requested pbkdf hash
+  [PATCH 5/32] crypto: avoid leak of ctx when bad cipher mode is given
+  [PATCH 6/32] tests/docker: remove debian-armel-cross
+  [PATCH 7/32] tests/docker: update debian i686 and mipsel images to bookworm
+  [PATCH 8/32] contrib/plugins/Makefile: Add a 'distclean' target
+  [PATCH 9/32] hw/audio/virtio-sound: fix heap buffer overflow
+    + Acked-by: Gerd Hoffmann <kraxel@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 10/32] hw/intc/arm_gic: fix spurious level triggered interrupts
+  [PATCH 11/32] ui/sdl2: set swap interval explicitly when OpenGL is enabled
+  [PATCH 12/32] gitlab: fix logic for changing docker tag on stable branches
+  [PATCH 13/32] softmmu: Support concurrent bounce buffers
+  [PATCH 14/32] softmmu/physmem: fix memory leak in dirty_memory_extend()
+  [PATCH 15/32] softmmu/physmem.c: Keep transaction attribute in address_space_map()
+  [PATCH 16/32] mac_dbdma: Remove leftover `dma_memory_unmap` calls
+  [PATCH 17/32] migration/multifd: Fix rb->receivedmap cleanup race
+  [PATCH 18/32] hw/char/stm32l4x5_usart.c: Enable USART ACK bit response
+  [PATCH 19/32] target/arm: Correct ID_AA64ISAR1_EL1 value for neoverse-v1
+  [PATCH 20/32] target/hppa: Fix random 32-bit linux-user crashes
+  [PATCH 21/32] target/ppc: Fix migration of CPUs with TLB_EMB TLB type
+  [PATCH 22/32] migration/multifd: Fix p->iov leak in multifd-uadk.c
+  [PATCH 23/32] hw/loongarch/virt: Add description for virt machine type
+  [PATCH 24/32] tcg: Fix iteration step in 32-bit gvec operation
+  [PATCH 25/32] target/ppc: Fix lxvx/stxvx facility check
+  [PATCH 26/32] hw/mips/jazz: fix typo in in-built NIC alias
+  [PATCH 27/32] util/timer: avoid deadlock when shutting down
+  [PATCH 28/32] block/reqlist: allow adding overlapping requests
+  [PATCH 29/32] target/arm: Avoid target_ulong for physical address lookups
+  [PATCH 30/32] hw/sd/sdcard: Fix handling of disabled boot partitions
+  [PATCH 31/32] testing: bump mips64el cross to bookworm and fix package list
+    + Acked-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 32/32] vnc: fix crash when no console attached
+---
+Total patches: 32
+---
+Applying: target/hppa: Fix PSW V-bit packaging in cpu_hppa_get for hppa64
+Patch failed at 0001 target/hppa: Fix PSW V-bit packaging in cpu_hppa_get for hppa64
+error: patch failed: target/hppa/cpu.h:211
+error: target/hppa/cpu.h: patch does not apply
+error: patch failed: target/hppa/helper.c:53
+error: target/hppa/helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
