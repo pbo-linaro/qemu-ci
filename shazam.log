@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20240903062953.3926498-1-erbse.13@gmx.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+WARNING: duplicate messages found at index 1
+   Subject 1: Ping: [PATCH] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+   Subject 2: accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] Ping: [PATCH] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+  [31m✗[0m [PATCH] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+  ---
+  [31m✗[0m BADSIG: DKIM/gmx.de
+---
+Total patches: 2
+---
+Applying: Ping: [PATCH] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+Applying: accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+Patch failed at 0002 accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+error: patch failed: accel/kvm/kvm-all.c:2603
+error: accel/kvm/kvm-all.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
