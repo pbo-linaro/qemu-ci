@@ -1,0 +1,59 @@
+Grabbing thread from lore.kernel.org/all/20240910210021.895851-1-gregorhaas1997@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v5: 8 patches
+Analyzing 19 messages in the thread
+WARNING: duplicate messages found at index 2
+   Subject 1: docs/system/riscv: Add documentation for command-line OpenSBI domains
+   Subject 2: Add documentation for command-line OpenSBI domains
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: hw/riscv: Add support for generating OpenSBI domains in the device tree
+   Subject 2: hw/riscv: Add support for generating OpenSBI domains in the device tree
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: docs/system/riscv: Add documentation for command-line OpenSBI domains
+   Subject 2: hw/riscv: Add support for generating OpenSBI domains in the device tree
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: Add support for generating OpenSBI domains in the device tree
+   Subject 2: hw/riscv: Add support for generating OpenSBI domains in the device tree
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Analyzing 0 code-review messages
+Will use the latest revision: v5
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v5 1/2] Add support for generating OpenSBI domains in the device tree
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  [31m✗[0m [PATCH v5 1/2] hw/riscv: Add support for generating OpenSBI domains in the device tree
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  [31m✗[0m [PATCH v5 1/2] hw/riscv: Add support for generating OpenSBI domains in the device tree
+    [31m✗[0m BADSIG: DKIM/gmail.com
+  ERROR: missing [4/2]!
+  ERROR: missing [5/2]!
+  ERROR: missing [6/2]!
+---
+Total patches: 3
+---
+WARNING: Thread incomplete!
+Applying: Add support for generating OpenSBI domains in the device tree
+Applying: hw/riscv: Add support for generating OpenSBI domains in the device tree
+Patch failed at 0002 hw/riscv: Add support for generating OpenSBI domains in the device tree
+error: patch failed: MAINTAINERS:357
+error: MAINTAINERS: patch does not apply
+error: patch failed: hw/riscv/Kconfig:1
+error: hw/riscv/Kconfig: patch does not apply
+error: patch failed: hw/riscv/meson.build:1
+error: hw/riscv/meson.build: patch does not apply
+error: hw/riscv/opensbi_domain.c: already exists in index
+error: patch failed: hw/riscv/virt.c:55
+error: hw/riscv/virt.c: patch does not apply
+error: include/hw/riscv/opensbi_domain.h: already exists in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
