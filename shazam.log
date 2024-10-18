@@ -1,0 +1,107 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.0.3-20240906141259@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 1 patches
+Analyzing 71 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1635 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/69] hw/scsi/lsi53c895a: bump instruction limit in scripts processing to fix regression
+  [PATCH 2/69] scsi: fix regression and honor bootindex again for legacy drives
+  [PATCH 3/69] qapi/qom: Document feature unstable of @x-vfio-user-server
+    + Reported-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 4/69] target/arm: Fix handling of LDAPR/STLR with negative offset
+  [PATCH 5/69] target/arm: LDAPR should honour SCTLR_ELx.nAA
+  [PATCH 6/69] target/arm: Use float_status copy in sme_fmopa_s
+  [PATCH 7/69] target/arm: Use FPST_F16 for SME FMOPA (widening)
+  [PATCH 8/69] hvf: arm: Do not advance PC when raising an exception
+  [PATCH 9/69] hw/nvme: fix memory leak in nvme_dsm
+  [PATCH 10/69] hw/cxl/cxl-host: Fix segmentation fault when getting cxl-fmw property
+  [PATCH 11/69] virtio-snd: add max size bounds check in input cb
+  [PATCH 12/69] virtio-snd: check for invalid param shift operands
+  [PATCH 13/69] intel_iommu: fix FRCD construction macro
+  [PATCH 14/69] target/i386: do not crash if microvm guest uses SGX CPUID leaves
+  [PATCH 15/69] chardev/char-win-stdio.c: restore old console mode
+  [PATCH 16/69] hw/intc/loongson_ipi: Access memory in little endian
+  [PATCH 17/69] hw/intc/loongson_ipi: Fix resource leak
+  [PATCH 18/69] target/loongarch: Fix helper_lddir() a CID INTEGER_OVERFLOW issue
+  [PATCH 19/69] util/async.c: Forbid negative min/max in aio_context_set_thread_pool_params()
+  [PATCH 20/69] Revert "qemu-char: do not operate on sources from finalize callbacks"
+  [PATCH 21/69] hw/virtio: Fix the de-initialization of vhost-user devices
+  [PATCH 22/69] target/rx: Use target_ulong for address in LI
+  [PATCH 23/69] hw/char/bcm2835_aux: Fix assert when receive FIFO fills up
+  [PATCH 24/69] hw/misc/bcm2835_property: Fix handling of FRAMEBUFFER_SET_PALETTE
+  [PATCH 25/69] target/arm: Don't assert for 128-bit tile accesses when SVL is 128
+  [PATCH 26/69] target/arm: Fix UMOPA/UMOPS of 16-bit values
+  [PATCH 27/69] target/arm: Avoid shifts by -1 in tszimm_shr() and tszimm_shl()
+  [PATCH 28/69] target/arm: Ignore SMCR_EL2.LEN and SVCR_EL2.LEN if EL2 is not enabled
+  [PATCH 29/69] docs/sphinx/depfile.py: Handle env.doc2path() returning a Path not a str
+  [PATCH 30/69] hw/i386/amd_iommu: Don't leak memory in amdvi_update_iotlb()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 31/69] hw/arm/mps2-tz.c: fix RX/TX interrupts order
+  [PATCH 32/69] target/arm: Handle denormals correctly for FMOPA (widening)
+    + Fixes: 3916841ac75 ("target/arm: Implement FMOPA, FMOPS (widening)")
+  [PATCH 33/69] virtio-net: Ensure queue index fits with RSS
+  [PATCH 34/69] virtio-net: Fix network stall at the host side waiting for kick
+  [PATCH 35/69] net: Reinstate '-net nic, model=help' output as documented in man page
+  [PATCH 36/69] migration/multifd: Fix multifd_send_setup cleanup when channel creation fails
+  [PATCH 37/69] linux-user/elfload: Fix pr_pid values in core files
+    + Fixes: edf8e2af14 ("linux-user: implemented ELF coredump") ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 38/69] target/i386: Fix VSIB decode
+  [PATCH 39/69] tcg/ppc: Sync tcg_out_test and constraints
+  [PATCH 40/69] hw/sd/sdhci: Reset @data_count index on invalid ADMA transfers
+  [PATCH 41/69] vvfat: Fix bug in writing to middle of file
+  [PATCH 42/69] vvfat: Fix usage of `info.file.offset`
+  [PATCH 43/69] vvfat: Fix wrong checks for cluster mappings invariant
+  [PATCH 44/69] vvfat: Fix reading files with non-continuous clusters
+  [PATCH 45/69] iotests: Add `vvfat` tests
+  [PATCH 46/69] nbd/server: Plumb in new args to nbd_client_add()
+  [PATCH 47/69] nbd/server: CVE-2024-7409: Cap default max-connections to 100
+  [PATCH 48/69] nbd/server: CVE-2024-7409: Drop non-negotiating clients
+  [PATCH 49/69] nbd/server: CVE-2024-7409: Close stray clients at server-stop
+  [PATCH 50/69] nbd/server: CVE-2024-7409: Avoid use-after-free when closing server
+  [PATCH 51/69] net: Fix '-net nic, model=' for non-help arguments
+  [PATCH 52/69] hw/core/ptimer: fix timer zero period condition for freq > 1GHz
+  [PATCH 53/69] block/blkio: use FUA flag on write zeroes only if supported
+  [PATCH 54/69] target/i386: Do not apply REX to MMX operands
+  [PATCH 55/69] target/arm: Clear high SVE elements in handle_vec_simd_wshli
+  [PATCH 56/69] target/arm: Update translation regime comment for new features
+  [PATCH 57/69] target/arm: Fix usage of MMU indexes when EL3 is AArch32
+  [PATCH 58/69] module: Prevent crash by resetting local_err in module_load_qom_all()
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 59/69] target/hexagon: don't look for static glib
+    + Reviewed-by: Brian Cain <bcain@quicinc.com> ([32m✓[0m DKIM/quicinc.com)
+    + Reviewed-by: Alex Bennée <alex.bennee@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 60/69] linux-user: Preserve NULL hit in target_mmap subroutines
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 61/69] target/sparc: Restrict STQF to sparcv9
+  [PATCH 62/69] crypto/tlscredspsk: Free username on finalize
+  [PATCH 63/69] hw/nvme: fix leak of uninitialized memory in io_mgmt_recv
+  [PATCH 64/69] virtio-pci: Fix the use of an uninitialized irqfd
+  [PATCH 65/69] migration/multifd: Free MultiFDRecvParams::data
+  [PATCH 66/69] linux-user: Handle short reads in mmap_h_gt_g
+  [PATCH 67/69] Revert "replay: stop us hanging in rr_wait_io_event"
+  [PATCH 68/69] hw/audio/virtio-snd: fix invalid param check
+  [PATCH 69/69] target/hppa: Fix PSW V-bit packaging in cpu_hppa_get for hppa64
+---
+Total patches: 69
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
+     Msg From: Zhijian Li (Fujitsu) via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Xingtao Yao <yaoxt.fnst@fujitsu.com>
+     Msg From: Xingtao Yao (Fujitsu) via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/scsi/lsi53c895a: bump instruction limit in scripts processing to fix regression
+Patch failed at 0001 hw/scsi/lsi53c895a: bump instruction limit in scripts processing to fix regression
+error: patch failed: hw/scsi/lsi53c895a.c:188
+error: hw/scsi/lsi53c895a.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
