@@ -1,0 +1,96 @@
+on: push
+
+# For personal repositories, limit workflow runs using:
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#
+#concurrency:
+#  group: ${{ github.workflow }}
+#  cancel-in-progress: true
+
+jobs:
+  checkapply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: bash -c '[ ! -f shazam.log ] || { cat shazam.log; exit 1; }'
+
+  checkpatch:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: fetch all commits
+        run: git fetch -a origin --unshallow || true
+      - name: add upstream
+        run: git remote add upstream -f https://gitlab.com/qemu-project/qemu
+      - name: checkpatch
+        run: ./scripts/checkpatch.pl $(git merge-base upstream/master HEAD)..HEAD
+
+  # list of make docker-test commands:
+  # make -pn | tr ' ' '\n' | grep docker-test | sort -u | grep -v ':$'
+  #
+  # scripts for every docker-test: ./tests/docker/test-*
+
+  build:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [alpine,centos9,debian,debian-all-test-cross,debian-arm64-cross,debian-armhf-cross,debian-hexagon-cross,debian-i686-cross,debian-legacy-test-cross,debian-mips64el-cross,debian-mipsel-cross,debian-ppc64el-cross,debian-riscv64-cross,debian-s390x-cross,debian-tricore-cross,fedora,fedora-rust-nightly,opensuse-leap,ubuntu2204]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-build@${{matrix.container}} J=$(nproc)
+
+  build-clang:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-clang@debian-all-test-cross J=$(nproc)
+
+  build-misc:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-misc@debian-all-test-cross J=$(nproc)
+
+  build-static:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-static@debian-all-test-cross J=$(nproc)
+
+  check-full:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-full@debian-all-test-cross J=$(nproc)
+
+  check-full-debug:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-test-debug@debian-all-test-cross J=$(nproc)
