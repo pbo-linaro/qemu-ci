@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20241009140051.771660-1-den@openvz.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 1 patches
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 2 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/2] preallocate: do not allow to change BDS permission improperly
+    + Reviewed-by: Andrey Drobyshev <andrey.drobyshev@virtuozzo.com> ([32m✓[0m DKIM/virtuozzo.com)
+  [31m✗[0m [PATCH 2/2] block/preallocate: fix image truncation logic
+  ---
+  [31m✗[0m BADSIG: DKIM/virtuozzo.com
+---
+Total patches: 2
+---
+Applying: preallocate: do not allow to change BDS permission improperly
+Applying: block/preallocate: fix image truncation logic
+Patch failed at 0002 block/preallocate: fix image truncation logic
+error: patch failed: block/preallocate.c:200
+error: block/preallocate.c: patch does not apply
+error: patch failed: tests/qemu-iotests/298:94
+error: tests/qemu-iotests/298: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
