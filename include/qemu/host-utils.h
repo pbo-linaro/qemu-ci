@@ -126,6 +126,13 @@ static inline uint64_t muldiv64_round_up(uint64_t a, uint32_t b, uint32_t c)
 }
 #endif
 
+#if defined __POPCNT__ || defined __s390x__|| defined __riscv_zbb
+#define HAVE_FAST_CTPOP 1
+#endif
+#if defined __i386__ || defined __x86_64__ || defined HAVE_FAST_CTPOP
+#define HAVE_FAST_PARITY8 1
+#endif
+
 /**
  * clz8 - count leading zeros in a 8-bit value.
  * @val: The value to search
@@ -311,6 +318,15 @@ static inline int clrsb64(uint64_t val)
 static inline int ctpop8(uint8_t val)
 {
     return __builtin_popcount(val);
+}
+
+/*
+ * parity8 - return the parity (1 = odd) of an 8-bit value.
+ * @val: The value to search
+ */
+static inline int parity8(uint8_t val)
+{
+    return __builtin_parity(val);
 }
 
 /**

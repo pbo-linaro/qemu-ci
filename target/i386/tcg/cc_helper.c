@@ -22,6 +22,7 @@
 #include "exec/helper-proto.h"
 #include "helper-tcg.h"
 
+#ifndef HAVE_FAST_PARITY8
 const uint8_t parity_table[256] = {
     CC_P, 0, 0, CC_P, 0, CC_P, CC_P, 0,
     0, CC_P, CC_P, 0, CC_P, 0, 0, CC_P,
@@ -56,6 +57,7 @@ const uint8_t parity_table[256] = {
     CC_P, 0, 0, CC_P, 0, CC_P, CC_P, 0,
     0, CC_P, CC_P, 0, CC_P, 0, 0, CC_P,
 };
+#endif
 
 #define SHIFT 0
 #include "cc_helper_template.h.inc"
