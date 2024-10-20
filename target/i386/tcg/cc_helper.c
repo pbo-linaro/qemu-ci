@@ -95,6 +95,26 @@ static target_ulong compute_all_adcox(target_ulong dst, target_ulong src1,
     return (src1 & ~(CC_C | CC_O)) | (dst * CC_C) | (src2 * CC_O);
 }
 
+target_ulong helper_cc_compute_nz(target_ulong dst, target_ulong src1,
+                                  int op)
+{
+    target_ulong mask;
+
+    if (CC_OP_HAS_EFLAGS(op)) {
+        return ~src1 & CC_Z;
+    } else {
+        MemOp size = cc_op_size(op);
+
+        if (size == MO_TL) {
+            /* Avoid shift count overflow when computing the mask below.  */
+            return dst;
+        }
+
+        mask = (1ull << (8 << size)) - 1;
+        return dst & mask;
+    }
+}
+
 target_ulong helper_cc_compute_all(target_ulong dst, target_ulong src1,
                                    target_ulong src2, int op)
 {
