@@ -1,0 +1,88 @@
+on: push
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checkapply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: bash -c '[ ! -f shazam.log ] || { cat shazam.log; exit 1; }'
+
+  checkpatch:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: fetch all commits
+        run: git fetch -a origin --unshallow || true
+      - name: add upstream
+        run: git remote add upstream -f https://gitlab.com/qemu-project/qemu
+      - name: checkpatch
+        run: ./scripts/checkpatch.pl $(git merge-base upstream/master HEAD)..HEAD
+
+  # use docker-run to not rebuild images
+  # images are built daily and pushed on pbolinaro/qemu-ci:*
+  # scripts for every docker-test: ./tests/docker/test-*
+
+  build:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [alpine,centos9,debian,debian-all-test-cross,debian-amd64-cross,debian-arm64-cross,debian-armhf-cross,debian-hexagon-cross,debian-i686-cross,debian-legacy-test-cross,debian-mips64el-cross,debian-mipsel-cross,debian-ppc64el-cross,debian-s390x-cross,debian-tricore-cross,fedora,fedora-rust-nightly,opensuse-leap,ubuntu2204]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-build IMAGE=pbolinaro/qemu-ci:${{matrix.container}}
+
+  build-clang:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-clang IMAGE=pbolinaro/qemu-ci:debian-all-test-cross
+
+  build-misc:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-misc IMAGE=pbolinaro/qemu-ci:debian-all-test-cross
+
+  build-static:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-static IMAGE=pbolinaro/qemu-ci:debian-all-test-cross
+
+  check-full:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-full IMAGE=pbolinaro/qemu-ci:debian-all-test-cross
+
+  check-full-debug:
+    needs: checkapply
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) TEST=test-debug IMAGE=pbolinaro/qemu-ci:debian-all-test-cross
