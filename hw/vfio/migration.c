@@ -783,6 +783,25 @@ static const SaveVMHandlers savevm_vfio_handlers = {
 
 /* ---------------------------------------------------------------------- */
 
+static void vfio_vmstate_change_error_report(int ret, Error *err,
+                                             RunState state)
+{
+    if (state == RUN_STATE_SHUTDOWN) {
+        /*
+         * If VM is being shut down, migration object might have already been
+         * freed, so just report the error.
+         */
+        error_report_err(err);
+        return;
+    }
+
+    /*
+     * Migration should be aborted in this case, but vm_state_notify()
+     * currently does not support reporting failures.
+     */
+    migration_file_set_error(ret, err);
+}
+
 static void vfio_vmstate_change_prepare(void *opaque, bool running,
                                         RunState state)
 {
@@ -798,11 +817,7 @@ static void vfio_vmstate_change_prepare(void *opaque, bool running,
 
     ret = vfio_migration_set_state_or_reset(vbasedev, new_state, &local_err);
     if (ret) {
-        /*
-         * Migration should be aborted in this case, but vm_state_notify()
-         * currently does not support reporting failures.
-         */
-        migration_file_set_error(ret, local_err);
+        vfio_vmstate_change_error_report(ret, local_err, state);
     }
 
     trace_vfio_vmstate_change_prepare(vbasedev->name, running,
@@ -829,11 +844,7 @@ static void vfio_vmstate_change(void *opaque, bool running, RunState state)
 
     ret = vfio_migration_set_state_or_reset(vbasedev, new_state, &local_err);
     if (ret) {
-        /*
-         * Migration should be aborted in this case, but vm_state_notify()
-         * currently does not support reporting failures.
-         */
-        migration_file_set_error(ret, local_err);
+        vfio_vmstate_change_error_report(ret, local_err, state);
     }
 
     trace_vfio_vmstate_change(vbasedev->name, running, RunState_str(state),
