@@ -182,6 +182,7 @@ static void riscv_load_initrd(MachineState *machine, uint64_t kernel_entry)
     void *fdt = machine->fdt;
     hwaddr start, end;
     ssize_t size;
+    uint32_t acells;
 
     g_assert(filename != NULL);
 
@@ -209,9 +210,18 @@ static void riscv_load_initrd(MachineState *machine, uint64_t kernel_entry)
 
     /* Some RISC-V machines (e.g. opentitan) don't have a fdt. */
     if (fdt) {
+        acells = qemu_fdt_getprop_cell(fdt, "/", "#address-cells",
+                                       NULL, NULL);
+        if (acells == 0) {
+            error_report("dtb file invalid (#address-cells 0)");
+            exit(1);
+        }
+
         end = start + size;
-        qemu_fdt_setprop_u64(fdt, "/chosen", "linux,initrd-start", start);
-        qemu_fdt_setprop_u64(fdt, "/chosen", "linux,initrd-end", end);
+        qemu_fdt_setprop_sized_cells(fdt, "/chosen", "linux,initrd-start",
+                                     acells, start);
+        qemu_fdt_setprop_sized_cells(fdt, "/chosen", "linux,initrd-end",
+                                     acells, end);
     }
 }
 
