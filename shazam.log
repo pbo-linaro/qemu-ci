@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241021161957.1431919-1-berrange@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] ui/vnc: don't return an empty SASL mechlist to the client
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [2/6]!
+  [32m✓[0m [PATCH 3/6] ui/vnc: fix skipping SASL SSF on UNIX sockets
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [4/6]!
+  [32m✓[0m [PATCH 5/6] ui: fix handling of NULL SASL server data
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 6/6] ui: validate NUL byte padding in SASL client data more strictly
+    [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 4
+---
+WARNING: Thread incomplete!
+Applying: ui/vnc: don't return an empty SASL mechlist to the client
+Applying: ui/vnc: fix skipping SASL SSF on UNIX sockets
+Patch failed at 0002 ui/vnc: fix skipping SASL SSF on UNIX sockets
+error: patch failed: ui/vnc-auth-sasl.c:551
+error: ui/vnc-auth-sasl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
