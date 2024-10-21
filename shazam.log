@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/SY0P300MB10265E25557DB71EE426525795432@SY0P300MB1026.AUSP300.PROD.OUTLOOK.COM/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Nothing matching that query.
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] rust: introduce alternative implementation of offset_of!
+  ---
+  [32m✓[0m Signed: DKIM/hotmail.com
+---
+Total patches: 1
+---
+Applying: rust: introduce alternative implementation of offset_of!
+Patch failed at 0001 rust: introduce alternative implementation of offset_of!
+error: patch failed: rust/qemu-api/meson.build:12
+error: rust/qemu-api/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/src/tests.rs:3
+error: rust/qemu-api/src/tests.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
