@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20241021030358.12454-1-frank.chang@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 36 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v8 1/5] target/riscv: Add 'ext_smrnmi' in the RISCVCPUConfig
+  [32m✓[0m [PATCH v8 2/5] target/riscv: Handle Smrnmi interrupt and exception
+  [32m✓[0m [PATCH v8 3/5] target/riscv: Add Smrnmi CSRs
+  [32m✓[0m [PATCH v8 4/5] target/riscv: Add Smrnmi mnret instruction
+  [32m✓[0m [PATCH v8 5/5] target/riscv: Add Smrnmi cpu extension
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 5
+---
+Applying: target/riscv: Add 'ext_smrnmi' in the RISCVCPUConfig
+Applying: target/riscv: Handle Smrnmi interrupt and exception
+Patch failed at 0002 target/riscv: Handle Smrnmi interrupt and exception
+error: patch failed: target/riscv/cpu_helper.c:1679
+error: target/riscv/cpu_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
