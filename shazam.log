@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20241021161156.176427-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 22 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/20]!
+  ERROR: missing [2/20]!
+  ERROR: missing [3/20]!
+  ERROR: missing [4/20]!
+  ERROR: missing [5/20]!
+  ERROR: missing [6/20]!
+  ERROR: missing [7/20]!
+  ERROR: missing [8/20]!
+  [32m✓[0m [PATCH v2 9/20] tests/functional: Convert the Avocado arm tuxrun tests
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [10/20]!
+  ERROR: missing [11/20]!
+  [32m✓[0m [PATCH v2 12/20] tests/functional: Convert the Avocado i386 tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 13/20] tests/functional: Convert the Avocado x86_64 tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 14/20] tests/functional: Convert the Avocado mips tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 15/20] tests/functional: Convert the Avocado mipsel tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 16/20] tests/functional: Convert the Avocado mips64 tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 17/20] tests/functional: Convert the Avocado mips64el tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH v2 18/20] tests/functional: Convert the Avocado ppc32 tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [19/20]!
+  [32m✓[0m [PATCH v2 20/20] tests/functional: Convert the Avocado sh4 tuxrun test
+    [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+WARNING: Thread incomplete!
+Applying: tests/functional: Convert the Avocado arm tuxrun tests
+Applying: tests/functional: Convert the Avocado i386 tuxrun test
+Applying: tests/functional: Convert the Avocado x86_64 tuxrun test
+Patch failed at 0003 tests/functional: Convert the Avocado x86_64 tuxrun test
+error: patch failed: tests/avocado/tuxrun_baselines.py:341
+error: tests/avocado/tuxrun_baselines.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
