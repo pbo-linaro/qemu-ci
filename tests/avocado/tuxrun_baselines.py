@@ -192,22 +192,6 @@ class TuxRunBaselineTest(QemuSystemTest):
     #        --kernel https://storage.tuxboot.com/{TUXBOOT}/{IMAGE}
     #
 
-    def test_i386(self):
-        """
-        :avocado: tags=arch:i386
-        :avocado: tags=cpu:coreduo
-        :avocado: tags=machine:q35
-        :avocado: tags=tuxboot:i386
-        :avocado: tags=image:bzImage
-        :avocado: tags=shutdown:nowait
-        """
-        sums = {"bzImage" :
-                "a3e5b32a354729e65910f5a1ffcda7c14a6c12a55e8213fb86e277f1b76ed956",
-                "rootfs.ext4.zst" :
-                "f15e66b2bf673a210ec2a4b2e744a80530b36289e04f5388aab812b97f69754a" }
-
-        self.common_tuxrun(csums=sums, drive="virtio-blk-pci")
-
     def test_mips32(self):
         """
         :avocado: tags=arch:mips
