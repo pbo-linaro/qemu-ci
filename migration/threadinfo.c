@@ -13,6 +13,7 @@
 #include "qemu/osdep.h"
 #include "qemu/queue.h"
 #include "qemu/lockable.h"
+#include "qemu/error-report.h"
 #include "threadinfo.h"
 
 QemuMutex migration_threads_lock;
@@ -52,6 +53,9 @@ MigrationThreadInfoList *qmp_query_migrationthreads(Error **errp)
     MigrationThread *thread = NULL;
 
     QEMU_LOCK_GUARD(&migration_threads_lock);
+
+    warn_report("Command 'query-migrationthreads' is deprecated");
+
     QLIST_FOREACH(thread, &migration_threads, node) {
         MigrationThreadInfo *info = g_new0(MigrationThreadInfo, 1);
         info->name = g_strdup(thread->name);
