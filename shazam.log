@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20241018161252.8896-1-gourry@gourry.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 5 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v3 1/3] cxl-mailbox-utils: move CXLUpdateDCExtentListInPl into header
+  [32m✓[0m [PATCH RFC v3 2/3] cxl_type3: add MHD callbacks
+  [32m✓[0m [PATCH RFC v3 3/3] mhsld: implement MHSLD device
+  ---
+  [32m✓[0m Signed: DKIM/gourry.net
+---
+Total patches: 3
+---
+ Base: base-commit c4f85d1b04caf0a2baeccb13790da5e2a42fb0d9 not known, ignoring
+Applying: cxl-mailbox-utils: move CXLUpdateDCExtentListInPl into header
+Applying: cxl_type3: add MHD callbacks
+Patch failed at 0002 cxl_type3: add MHD callbacks
+error: patch failed: hw/mem/cxl_type3.c:2304
+error: hw/mem/cxl_type3.c: patch does not apply
+error: patch failed: include/hw/cxl/cxl_device.h:14
+error: include/hw/cxl/cxl_device.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
