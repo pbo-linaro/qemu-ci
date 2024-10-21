@@ -192,23 +192,6 @@ class TuxRunBaselineTest(QemuSystemTest):
     #        --kernel https://storage.tuxboot.com/{TUXBOOT}/{IMAGE}
     #
 
-    def test_mips64(self):
-        """
-        :avocado: tags=arch:mips64
-        :avocado: tags=machine:malta
-        :avocado: tags=tuxboot:mips64
-        :avocado: tags=endian:big
-        :avocado: tags=image:vmlinux
-        :avocado: tags=root:sda
-        :avocado: tags=shutdown:nowait
-        """
-        sums = { "rootfs.ext4.zst" :
-                 "69d91eeb04df3d8d172922c6993bb37d4deeb6496def75d8580f6f9de3e431da",
-                 "vmlinux" :
-                 "09010e51e4b8bcbbd2494786ffb48eca78f228e96e5c5438344b0eac4029dc61" }
-
-        self.common_tuxrun(csums=sums, drive="driver=ide-hd,bus=ide.0,unit=0")
-
     def test_mips64el(self):
         """
         :avocado: tags=arch:mips64el
