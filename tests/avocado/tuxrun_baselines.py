@@ -192,22 +192,6 @@ class TuxRunBaselineTest(QemuSystemTest):
     #        --kernel https://storage.tuxboot.com/{TUXBOOT}/{IMAGE}
     #
 
-    def test_ppc32(self):
-        """
-        :avocado: tags=arch:ppc
-        :avocado: tags=machine:ppce500
-        :avocado: tags=cpu:e500mc
-        :avocado: tags=tuxboot:ppc32
-        :avocado: tags=image:uImage
-        :avocado: tags=shutdown:nowait
-        """
-        sums = { "rootfs.ext4.zst" :
-                 "8885b9d999cc24d679542a02e9b6aaf48f718f2050ece6b8347074b6ee41dd09",
-                 "uImage" :
-                 "1a68f74b860fda022fb12e03c5efece8c2b8b590d96cca37a8481a3ae0b3f81f" }
-
-        self.common_tuxrun(csums=sums, drive="virtio-blk-pci")
-
     # Note: some segfaults caused by unaligned userspace access
     @skipUnless(os.getenv('QEMU_TEST_FLAKY_TESTS'), 'Test is unstable on GitLab')
     def test_sh4(self):
