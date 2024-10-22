@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20241022160720.1013543-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] migration: Make all helpers in misc.h safe to use without migration
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 2/2] migration: Unexport dirty_bitmap_mig_init() in misc.h
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: migration: Make all helpers in misc.h safe to use without migration
+Applying: migration: Unexport dirty_bitmap_mig_init() in misc.h
+Patch failed at 0002 migration: Unexport dirty_bitmap_mig_init() in misc.h
+error: patch failed: migration/migration.h:552
+error: migration/migration.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
