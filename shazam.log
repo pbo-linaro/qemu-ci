@@ -1,0 +1,55 @@
+Grabbing thread from lore.kernel.org/all/20241022100956.196657-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 51 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/14] rust: patch bilge-impl to allow compilation with 1.63.0
+  [32m✓[0m [PATCH v2 2/14] rust: fix cfgs of proc-macro2 for 1.63.0
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH v2 3/14] rust: use std::os::raw instead of core::ffi
+  [32m✓[0m [PATCH v2 4/14] rust: introduce a c_str macro
+  [32m✓[0m [PATCH v2 5/14] rust: silence unknown warnings for the sake of old compilers
+  [32m✓[0m [PATCH v2 6/14] rust: synchronize dependencies between subprojects and Cargo.lock
+  [32m✓[0m [PATCH v2 7/14] rust: introduce alternative implementation of offset_of!
+  [32m✓[0m [PATCH v2 8/14] rust: do not use MaybeUninit::zeroed()
+  [32m✓[0m [PATCH v2 9/14] rust: clean up detection of the language
+  [32m✓[0m [PATCH v2 10/14] rust: allow version 1.63.0 of rustc
+  [32m✓[0m [PATCH v2 11/14] rust: do not use --generate-cstr
+  [32m✓[0m [PATCH v2 12/14] rust: allow older version of bindgen
+  [32m✓[0m [PATCH v2 13/14] rust: make rustfmt optional
+  [32m✓[0m [PATCH v2 14/14] dockerfiles: install bindgen from cargo on Ubuntu 22.04
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: rust: patch bilge-impl to allow compilation with 1.63.0
+Applying: rust: fix cfgs of proc-macro2 for 1.63.0
+Applying: rust: use std::os::raw instead of core::ffi
+Patch failed at 0003 rust: use std::os::raw instead of core::ffi
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:47: trailing whitespace.
+ 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:71: trailing whitespace.
+ 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:85: trailing whitespace.
+ 
+warning: 3 lines add whitespace errors.
+error: patch failed: meson.build:3933
+error: meson.build: patch does not apply
+error: patch failed: rust/hw/char/pl011/src/device.rs:530
+error: rust/hw/char/pl011/src/device.rs: patch does not apply
+error: patch failed: rust/hw/char/pl011/src/memory_ops.rs:4
+error: rust/hw/char/pl011/src/memory_ops.rs: patch does not apply
+error: patch failed: rust/qemu-api/src/device_class.rs:7
+error: rust/qemu-api/src/device_class.rs: patch does not apply
+error: patch failed: rust/qemu-api/src/lib.rs:31
+error: rust/qemu-api/src/lib.rs: patch does not apply
+error: rust/qemu-api/tests/tests.rs: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
