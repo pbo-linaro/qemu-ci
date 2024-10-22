@@ -2102,7 +2102,9 @@ static char *hexToIPAddress(const void *hexValue, int is_ipv6)
         int i;
 
         for (i = 0; i < 16; i++) {
-            sscanf(&hexStr[i * 2], "%02hhx", &in6.s6_addr[i]);
+            if (sscanf(&hex_str[i * 2], "%02hhx", &in6.s6_addr[i]) != 1) {
+                return NULL;
+            }
         }
         inet_ntop(AF_INET6, &in6, addr, INET6_ADDRSTRLEN);
 
@@ -2163,6 +2165,10 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
                 networkroute = route;
                 networkroute->iface = g_strdup(Iface);
                 networkroute->destination = hexToIPAddress(Destination, 1);
+                if (networkroute->destination == NULL) {
+                    g_free(route);
+                    continue;
+                }
                 networkroute->metric = Metric;
                 networkroute->source = hexToIPAddress(Source, 1);
                 networkroute->desprefixlen = g_strdup_printf(
@@ -2194,6 +2200,10 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
                 networkroute = route;
                 networkroute->iface = g_strdup(Iface);
                 networkroute->destination = hexToIPAddress(&Destination, 0);
+                if (networkroute->destination == NULL) {
+                    g_free(route);
+                    continue;
+                }
                 networkroute->gateway = hexToIPAddress(&Gateway, 0);
                 networkroute->mask = hexToIPAddress(&Mask, 0);
                 networkroute->metric = Metric;
