@@ -2157,15 +2157,13 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
                     continue;
                 }
 
-                GuestNetworkRoute *route = g_new0(GuestNetworkRoute, 1);
+                g_autoptr(GuestNetworkRoute) route = g_new0(GuestNetworkRoute, 1);
 
                 route->destination = hex_to_ip_address(destination, 1);
-                if (route->destination == NULL) {
-                    g_free(route);
+                route->iface = g_strdup(iface);
+                if (route->destination == NULL  || route->iface == NULL) {
                     continue;
                 }
-                route->iface = g_strdup(iface);
-                route->destination = hex_to_ip_address(destination, 1);
                 route->source = hex_to_ip_address(source, 1);
                 route->nexthop = hex_to_ip_address(next_hop, 1);
                 route->desprefixlen = g_strdup_printf("%d", des_prefixlen);
@@ -2187,15 +2185,13 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
                     continue;
                 }
 
-                GuestNetworkRoute *route = g_new0(GuestNetworkRoute, 1);
+                g_autoptr(GuestNetworkRoute) route = g_new0(GuestNetworkRoute, 1);
 
                 route->destination = hex_to_ip_address(destination, 1);
-                if (route->destination == NULL) {
-                    g_free(route);
+                route->iface = g_strdup(iface);
+                if (route->destination == NULL  || route->iface == NULL) {
                     continue;
                 }
-                route->iface = g_strdup(iface);
-                route->destination = hex_to_ip_address(&destination, 0);
                 route->gateway = hex_to_ip_address(&gateway, 0);
                 route->mask = hex_to_ip_address(&mask, 0);
                 route->metric = metric;
