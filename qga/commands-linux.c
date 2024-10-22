@@ -2125,7 +2125,7 @@ GuestNetworkRouteList *qmp_guest_network_get_route(Error **errp)
     GuestNetworkRouteList *head = NULL, **tail = &head;
     const char *routeFiles[] = {"/proc/net/route", "/proc/net/ipv6_route"};
     FILE *fp;
-    size_t n;
+    size_t n = 0;
     char *line = NULL;
     int firstLine;
     int is_ipv6;
