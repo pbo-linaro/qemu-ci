@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20241022094110.1574011-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 41 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/18] aspeed/smc: Fix write incorrect data into flash in user mode
+  [PATCH v2 2/18] hw/block:m25p80: Fix coding style
+  [PATCH v2 3/18] hw/block:m25p80: Support write status register 2 command (0x31) for w25q01jvq
+  [PATCH v2 4/18] hw/block/m25p80: Add SFDP table for w25q80bl flash
+  [PATCH v2 5/18] hw/arm/aspeed: Correct spi_model w25q256 for ast1030-a1 EVB.
+  [PATCH v2 6/18] hw/arm/aspeed: Correct fmc_model w25q80bl for ast1030-a1 EVB
+  [PATCH v2 7/18] aspeed: Fix hardcode attach flash model of spi controllers
+  [PATCH v2 8/18] test/qtest/aspeed_smc-test: Fix coding style
+  [PATCH v2 9/18] test/qtest/aspeed_smc-test: Move testcases to test_palmetto_bmc function
+  [PATCH v2 10/18] test/qtest/aspeed_smc-test: Introduce a new TestData to test different BMC SOCs
+  [PATCH v2 11/18] test/qtest/aspeed_smc-test: Support to test all CE pins
+  ERROR: missing [12/18]!
+  [PATCH v2 13/18] test/qtest/aspeed_smc-test: Support to test AST2500
+  [PATCH v2 14/18] test/qtest/aspeed_smc-test: Support to test AST2600
+  ERROR: missing [15/18]!
+  [PATCH v2 16/18] test/qtest/aspeed_smc-test: Support write page command with QPI mode
+  [PATCH v2 17/18] test/qtest: Introduce a new aspeed-smc-utils.c to place common testcases
+  [PATCH v2 18/18] test/qtest/ast2700-smc-test: Support to test AST2700
+---
+Total patches: 16
+---
+WARNING: Thread incomplete!
+Applying: aspeed/smc: Fix write incorrect data into flash in user mode
+Applying: hw/block:m25p80: Fix coding style
+Applying: hw/block:m25p80: Support write status register 2 command (0x31) for w25q01jvq
+Applying: hw/block/m25p80: Add SFDP table for w25q80bl flash
+Applying: hw/arm/aspeed: Correct spi_model w25q256 for ast1030-a1 EVB.
+Applying: hw/arm/aspeed: Correct fmc_model w25q80bl for ast1030-a1 EVB
+Applying: aspeed: Fix hardcode attach flash model of spi controllers
+Applying: test/qtest/aspeed_smc-test: Fix coding style
+Applying: test/qtest/aspeed_smc-test: Move testcases to test_palmetto_bmc function
+Applying: test/qtest/aspeed_smc-test: Introduce a new TestData to test different BMC SOCs
+Applying: test/qtest/aspeed_smc-test: Support to test all CE pins
+Applying: test/qtest/aspeed_smc-test: Support to test AST2500
+Applying: test/qtest/aspeed_smc-test: Support to test AST2600
+Applying: test/qtest/aspeed_smc-test: Support write page command with QPI mode
+Patch failed at 0014 test/qtest/aspeed_smc-test: Support write page command with QPI mode
+error: patch failed: tests/qtest/aspeed_smc-test.c:773
+error: tests/qtest/aspeed_smc-test.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
