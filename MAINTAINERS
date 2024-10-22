@@ -3403,6 +3403,11 @@ F: migration/dirtyrate.h
 F: include/sysemu/dirtyrate.h
 F: docs/devel/migration/dirty-limit.rst
 
+Migration performance test tool
+M: Hyman Huang <yong.huang@smartx.com>
+S: Maintained
+F: scripts/migration/guestperf*
+
 Detached LUKS header
 M: Hyman Huang <yong.huang@smartx.com>
 S: Maintained
