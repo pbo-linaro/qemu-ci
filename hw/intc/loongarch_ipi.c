@@ -42,7 +42,8 @@ static CPUState *loongarch_cpu_by_arch_id(int64_t arch_id)
     CPUArchId *archid;
 
     archid = find_cpu_by_archid(machine, arch_id);
-    if (archid) {
+    /* For offlined cpus, archid->cpu may be NULL */
+    if (archid && archid->cpu) {
         return CPU(archid->cpu);
     }
 

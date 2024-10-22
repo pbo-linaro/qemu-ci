@@ -510,8 +510,10 @@ static void loongarch_max_initfn(Object *obj)
 static void loongarch_cpu_reset_hold(Object *obj, ResetType type)
 {
     CPUState *cs = CPU(obj);
+    LoongArchCPU *cpu = LOONGARCH_CPU(obj);
     LoongArchCPUClass *lacc = LOONGARCH_CPU_GET_CLASS(obj);
     CPULoongArchState *env = cpu_env(cs);
+    int n;
 
     if (lacc->parent_phases.hold) {
         lacc->parent_phases.hold(obj, type);
@@ -522,7 +524,6 @@ static void loongarch_cpu_reset_hold(Object *obj, ResetType type)
 #endif
     env->fcsr0 = 0x0;
 
-    int n;
     /* Set csr registers value after reset, see the manual 6.4. */
     env->CSR_CRMD = FIELD_DP64(env->CSR_CRMD, CSR_CRMD, PLV, 0);
     env->CSR_CRMD = FIELD_DP64(env->CSR_CRMD, CSR_CRMD, IE, 0);
@@ -543,7 +544,11 @@ static void loongarch_cpu_reset_hold(Object *obj, ResetType type)
 
     env->CSR_ESTAT = env->CSR_ESTAT & (~MAKE_64BIT_MASK(0, 2));
     env->CSR_RVACFG = FIELD_DP64(env->CSR_RVACFG, CSR_RVACFG, RBITS, 0);
+#ifndef CONFIG_USER_ONLY
+    env->CSR_CPUID = cpu->phy_id;
+#else
     env->CSR_CPUID = cs->cpu_index;
+#endif
     env->CSR_TCFG = FIELD_DP64(env->CSR_TCFG, CSR_TCFG, EN, 0);
     env->CSR_LLBCTL = FIELD_DP64(env->CSR_LLBCTL, CSR_LLBCTL, KLO, 0);
     env->CSR_TLBRERA = FIELD_DP64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR, 0);
