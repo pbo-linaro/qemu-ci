@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/SJ2PR15MB642247C424ED44DB51FEA6FBC44C2@SJ2PR15MB6422.namprd15.prod.outlook.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] tcg/ppc/tcg-target.c.inc: Fix tcg_out_rlw_rc
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com
+---
+Total patches: 1
+---
+Applying: tcg/ppc/tcg-target.c.inc: Fix tcg_out_rlw_rc
+Patch failed at 0001 tcg/ppc/tcg-target.c.inc: Fix tcg_out_rlw_rc
+error: corrupt patch at line 10
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
