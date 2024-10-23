@@ -1,0 +1,66 @@
+Grabbing thread from lore.kernel.org/all/20241023131710.906748-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 24 messages in the thread
+Analyzing 167 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/23] hw/s390x/ipl: Provide more memory to the s390-ccw.img firmware
+  [32m✓[0m [PATCH 2/23] pc-bios/s390-ccw: Use the libc from SLOF and remove sclp prints
+  [32m✓[0m [PATCH 3/23] pc-bios/s390-ccw: Link the netboot code into the main s390-ccw.img binary
+  [32m✓[0m [PATCH 4/23] hw/s390x: Remove the possibility to load the s390-netboot.img binary
+  [32m✓[0m [PATCH 5/23] pc-bios/s390-ccw: Merge netboot.mak into the main Makefile
+  [32m✓[0m [PATCH 6/23] docs/system/s390x/bootdevices: Update the documentation about network booting
+  [32m✓[0m [PATCH 7/23] pc-bios/s390-ccw: Remove panics from ISO IPL path
+  [32m✓[0m [PATCH 8/23] pc-bios/s390-ccw: Remove panics from ECKD IPL path
+  [32m✓[0m [PATCH 9/23] pc-bios/s390-ccw: Remove panics from SCSI IPL path
+  [32m✓[0m [PATCH 10/23] pc-bios/s390-ccw: Remove panics from DASD IPL path
+  [32m✓[0m [PATCH 11/23] pc-bios/s390-ccw: Remove panics from Netboot IPL path
+  [32m✓[0m [PATCH 12/23] pc-bios/s390-ccw: Enable failed IPL to return after error
+  [32m✓[0m [PATCH 13/23] include/hw/s390x: Add include files for common IPL structs
+  [32m✓[0m [PATCH 14/23] s390x: Add individual loadparm assignment to CCW device
+  [32m✓[0m [PATCH 15/23] hw/s390x: Build an IPLB for each boot device
+  [32m✓[0m [PATCH 16/23] s390x: Rebuild IPLB for SCSI device directly from DIAG308
+  [32m✓[0m [PATCH 17/23] pc-bios/s390x: Enable multi-device boot loop
+  [32m✓[0m [PATCH 18/23] docs/system: Update documentation for s390x IPL
+  [32m✓[0m [PATCH 19/23] tests/qtest: Add s390x boot order tests to cdrom-test.c
+  [32m✓[0m [PATCH 20/23] pc-bios/s390-ccw: Clarify alignment is in bytes
+  [32m✓[0m [PATCH 21/23] pc-bios/s390-ccw: Don't generate TEXTRELs
+  [32m✓[0m [PATCH 22/23] pc-bios/s390-ccw: Introduce `EXTRA_LDFLAGS`
+  [32m✓[0m [PATCH 23/23] pc-bios/s390-ccw: Update s390-ccw.img with the full boot order support feature
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 23
+---
+Applying: hw/s390x/ipl: Provide more memory to the s390-ccw.img firmware
+Applying: pc-bios/s390-ccw: Use the libc from SLOF and remove sclp prints
+Applying: pc-bios/s390-ccw: Link the netboot code into the main s390-ccw.img binary
+Applying: hw/s390x: Remove the possibility to load the s390-netboot.img binary
+Applying: pc-bios/s390-ccw: Merge netboot.mak into the main Makefile
+Applying: docs/system/s390x/bootdevices: Update the documentation about network booting
+Applying: pc-bios/s390-ccw: Remove panics from ISO IPL path
+Applying: pc-bios/s390-ccw: Remove panics from ECKD IPL path
+Applying: pc-bios/s390-ccw: Remove panics from SCSI IPL path
+Applying: pc-bios/s390-ccw: Remove panics from DASD IPL path
+Applying: pc-bios/s390-ccw: Remove panics from Netboot IPL path
+Applying: pc-bios/s390-ccw: Enable failed IPL to return after error
+Applying: include/hw/s390x: Add include files for common IPL structs
+Applying: s390x: Add individual loadparm assignment to CCW device
+Applying: hw/s390x: Build an IPLB for each boot device
+Applying: s390x: Rebuild IPLB for SCSI device directly from DIAG308
+Applying: pc-bios/s390x: Enable multi-device boot loop
+Applying: docs/system: Update documentation for s390x IPL
+Applying: tests/qtest: Add s390x boot order tests to cdrom-test.c
+Applying: pc-bios/s390-ccw: Clarify alignment is in bytes
+Applying: pc-bios/s390-ccw: Don't generate TEXTRELs
+Applying: pc-bios/s390-ccw: Introduce `EXTRA_LDFLAGS`
+Applying: pc-bios/s390-ccw: Update s390-ccw.img with the full boot order support feature
+Patch failed at 0023 pc-bios/s390-ccw: Update s390-ccw.img with the full boot order support feature
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: corrupt binary patch at line 784: -- 
+error: corrupt binary patch at line 1180: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
