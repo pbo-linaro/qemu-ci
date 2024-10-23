@@ -4337,7 +4337,7 @@ print_syscall(CPUArchState *cpu_env, int num,
     if (!f) {
         return;
     }
-    fprintf(f, "%d ", getpid());
+    fprintf(f, "%d ", gettid());
 
     for (i = 0; i < nsyscalls; i++) {
         if (scnames[i].nr == num) {
