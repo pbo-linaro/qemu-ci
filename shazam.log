@@ -1,0 +1,91 @@
+Grabbing thread from lore.kernel.org/all/20241023085852.1061031-1-mark.cave-ayland@ilande.co.uk/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 30 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/36] next-cube: fix up compilation when DEBUG_NEXT is enabled
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 2/36] next-cube: remove 0x14020 dummy value from next_mmio_read()
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 3/36] next-cube: remove overlap between next.dma and next.mmio memory regions
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 4/36] next-cube: remove cpu parameter from next_scsi_init()
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 5/36] next-cube: create new next.scsi container memory region
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [6/36]!
+  [31m✗[0m [PATCH 7/36] next-cube: introduce next_pc_init() object init function
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [8/36]!
+  [31m✗[0m [PATCH 9/36] next-cube: move SCSI CSRs from next-pc to the next-scsi device
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [10/36]!
+  [31m✗[0m [PATCH 11/36] next-cube: move floppy disk MMIO to separate memory region in next-pc
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 12/36] next-cube: map ESCC registers as a subregion of the next.scr memory region
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 13/36] next-cube: move ESCC to be QOM child of next-pc device
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 14/36] next-cube: move timer MMIO to separate memory region on next-pc device
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 15/36] next-cube: move en ethernet MMIO to separate memory region on next-pc device
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 16/36] next-cube: add empty slots for unknown accesses to next.scr memory region
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 17/36] next-cube: remove unused next.scr memory region
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 18/36] next-cube: rearrange NeXTState declarations to improve readability
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 19/36] next-cube: convert next-pc device to use Resettable interface
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 20/36] next-cube: rename typedef struct NextRtc to NeXTRTC
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 21/36] next-cube: use qemu_irq to drive int_status in next_scr2_rtc_update()
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 22/36] next-cube: separate rtc read and write shift logic
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 23/36] next-cube: always use retval to return rtc read values
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 24/36] next-cube: use named gpio to set RTC data bit in scr2
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 25/36] next-cube: use named gpio to read RTC data bit in scr2
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [26/36]!
+  [31m✗[0m [PATCH 27/36] next-cube: QOMify NeXTRTC
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 28/36] next-cube: move reset of next-rtc fields from next-pc to next-rtc
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 29/36] next-cube: move rtc-data-in gpio from next-pc to next-rtc device
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [30/36]!
+  ERROR: missing [31/36]!
+  [31m✗[0m [PATCH 32/36] next-cube: add rtc-power-out named gpio to reset the rtc state machine
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 33/36] next-cube: move next_rtc_cmd_is_write() and next_rtc_data_in_irq() functions
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  [31m✗[0m [PATCH 34/36] next-cube: rename old_scr2 and scr2_2 in next_scr2_rtc_update()
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+  ERROR: missing [35/36]!
+  [31m✗[0m [PATCH 36/36] next-cube: replace boiler-plate GPL 2.0 or later license text with SPDX identifier
+    [31m✗[0m BADSIG: DKIM/ilande.co.uk
+---
+Total patches: 29
+---
+WARNING: Thread incomplete!
+Applying: next-cube: fix up compilation when DEBUG_NEXT is enabled
+Applying: next-cube: remove 0x14020 dummy value from next_mmio_read()
+Applying: next-cube: remove overlap between next.dma and next.mmio memory regions
+Applying: next-cube: remove cpu parameter from next_scsi_init()
+Applying: next-cube: create new next.scsi container memory region
+Applying: next-cube: introduce next_pc_init() object init function
+Patch failed at 0006 next-cube: introduce next_pc_init() object init function
+error: patch failed: hw/m68k/next-cube.c:897
+error: hw/m68k/next-cube.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
