@@ -136,6 +136,7 @@
 #include "loader.h"
 #include "user-mmap.h"
 #include "user/safe-syscall.h"
+#include "user/signal.h"
 #include "qemu/guest-random.h"
 #include "qemu/selfmap.h"
 #include "user/syscall-trace.h"
