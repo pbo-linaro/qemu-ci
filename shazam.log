@@ -1,0 +1,17 @@
+Grabbing thread from lore.kernel.org/all/CAFEAcA_y6xYLyK_qEjngtCm%2BY5-Yuw-rqK2Qm0UhVAFHtp610w@mail.gmail.com/t.mbox.gz
+Analyzing 4 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] qemu-iotests test 297 tries to run python linters on editor backup files
+  ---
+  [31m✗[0m BADSIG: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: qemu-iotests test 297 tries to run python linters on editor backup files
+Patch failed at 0001 qemu-iotests test 297 tries to run python linters on editor backup files
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: corrupt patch at line 7
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
