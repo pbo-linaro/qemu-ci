@@ -97,3 +97,17 @@ void qemu_hexdump(FILE *fp, const char *prefix,
     }
 
 }
+
+void qemu_hexdump_to_buffer(char *restrict buffer, size_t buffer_size,
+                            const uint8_t *restrict data, size_t data_size)
+{
+    size_t i;
+
+    assert(buffer_size >= data_size * 2 + 1 && buffer_size > data_size);
+    for (i = 0; i < data_size; i++) {
+        uint8_t val = data[i];
+        *(buffer++) = hexdump_nibble(val >> 4);
+        *(buffer++) = hexdump_nibble(val & 0xf);
+    }
+    *buffer = '\0';
+}
