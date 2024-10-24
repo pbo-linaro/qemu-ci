@@ -553,6 +553,9 @@ static void object_initialize_with_type(Object *obj, size_t size, TypeImpl *type
     g_assert(type->abstract == false);
     g_assert(size >= type->instance_size);
 
+    /* Singleton class can only create one object */
+    g_assert(!singleton_get_instance(type->class));
+
     memset(obj, 0, type->instance_size);
     obj->class = type->class;
     object_ref(obj);

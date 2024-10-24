@@ -354,6 +354,23 @@ void user_creatable_cleanup(void)
     object_unparent(object_get_objects_root());
 }
 
+bool object_class_is_singleton(ObjectClass *class)
+{
+    return !!object_class_dynamic_cast(class, TYPE_SINGLETON);
+}
+
+Object *singleton_get_instance(ObjectClass *class)
+{
+    SingletonClass *singleton =
+        (SingletonClass *)object_class_dynamic_cast(class, TYPE_SINGLETON);
+
+    if (!singleton) {
+        return NULL;
+    }
+
+    return singleton->get_instance(&error_abort);
+}
+
 static void register_types(void)
 {
     static const TypeInfo uc_interface_info = {
@@ -362,7 +379,14 @@ static void register_types(void)
         .class_size = sizeof(UserCreatableClass),
     };
 
+    static const TypeInfo singleton_interface_info = {
+        .name          = TYPE_SINGLETON,
+        .parent        = TYPE_INTERFACE,
+        .class_size = sizeof(SingletonClass),
+    };
+
     type_register_static(&uc_interface_info);
+    type_register_static(&singleton_interface_info);
 }
 
 type_init(register_types)

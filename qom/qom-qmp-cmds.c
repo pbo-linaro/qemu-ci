@@ -126,6 +126,7 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
     ObjectProperty *prop;
     ObjectPropertyIterator iter;
     ObjectPropertyInfoList *prop_list = NULL;
+    bool create;
 
     klass = module_object_class_by_name(typename);
     if (klass == NULL) {
@@ -141,7 +142,15 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
         return NULL;
     }
 
-    obj = object_new(typename);
+    /* Avoid creating multiple instances if the class is a singleton */
+    create = !object_class_is_singleton(klass) ||
+        !singleton_get_instance(klass);
+
+    if (create) {
+        obj = object_new(typename);
+    } else {
+        obj = singleton_get_instance(klass);
+    }
 
     object_property_iter_init(&iter, obj);
     while ((prop = object_property_iter_next(&iter))) {
@@ -172,7 +181,9 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
         QAPI_LIST_PREPEND(prop_list, info);
     }
 
-    object_unref(obj);
+    if (create) {
+        object_unref(obj);
+    }
 
     return prop_list;
 }
@@ -199,7 +210,12 @@ ObjectPropertyInfoList *qmp_qom_list_properties(const char *typename,
         return NULL;
     }
 
-    if (object_class_is_abstract(klass)) {
+    /*
+     * Abstract classes are not for instantiations, meanwhile avoid
+     * creating temporary singleton objects because it can cause conflicts
+     * if there's already one created.
+     */
+    if (object_class_is_abstract(klass) || object_class_is_singleton(klass)) {
         object_class_property_iter_init(&iter, klass);
     } else {
         obj = object_new(typename);

@@ -36,6 +36,7 @@
 #include "qemu/option.h"
 #include "qemu/qemu-print.h"
 #include "qemu/option_int.h"
+#include "qom/object_interfaces.h"
 #include "sysemu/block-backend.h"
 #include "migration/misc.h"
 #include "qemu/cutils.h"
@@ -640,6 +641,12 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
     /* find driver */
     dc = qdev_get_device_class(&driver, errp);
     if (!dc) {
+        return NULL;
+    }
+
+    if (singleton_get_instance(OBJECT_CLASS(dc))) {
+        error_setg(errp, "Class '%s' only supports one instance",
+                   driver);
         return NULL;
     }
 
