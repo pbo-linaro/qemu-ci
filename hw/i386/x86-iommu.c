@@ -26,6 +26,7 @@
 #include "qemu/error-report.h"
 #include "trace.h"
 #include "sysemu/kvm.h"
+#include "qom/object_interfaces.h"
 
 void x86_iommu_iec_register_notifier(X86IOMMUState *iommu,
                                      iec_notify_fn fn, void *data)
@@ -133,10 +134,19 @@ static Property x86_iommu_properties[] = {
     DEFINE_PROP_END_OF_LIST(),
 };
 
+static Object *x86_iommu_get_instance(Error **errp)
+{
+    return OBJECT(x86_iommu_get_default());
+}
+
 static void x86_iommu_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    SingletonClass *singleton = SINGLETON_CLASS(klass);
+
     dc->realize = x86_iommu_realize;
+    singleton->get_instance = x86_iommu_get_instance;
+
     device_class_set_props(dc, x86_iommu_properties);
 }
 
@@ -152,6 +162,10 @@ static const TypeInfo x86_iommu_info = {
     .class_init    = x86_iommu_class_init,
     .class_size    = sizeof(X86IOMMUClass),
     .abstract      = true,
+    .interfaces = (InterfaceInfo[]) {
+        { TYPE_SINGLETON },
+        { }
+    }
 };
 
 static void x86_iommu_register_types(void)
