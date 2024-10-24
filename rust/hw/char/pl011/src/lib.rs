@@ -42,7 +42,6 @@ extern crate bilge_impl;
 extern crate qemu_api;
 
 pub mod device;
-pub mod device_class;
 pub mod memory_ops;
 
 pub const TYPE_PL011: &::core::ffi::CStr = c"pl011";

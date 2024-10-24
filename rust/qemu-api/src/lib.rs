@@ -27,11 +27,7 @@ unsafe impl Sync for bindings::Property {}
 unsafe impl Sync for bindings::TypeInfo {}
 unsafe impl Sync for bindings::VMStateDescription {}
 
-pub mod definitions;
-pub mod device_class;
-
-#[cfg(test)]
-mod tests;
+pub mod objects;
 
 use std::alloc::{GlobalAlloc, Layout};
 

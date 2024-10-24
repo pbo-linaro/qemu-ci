@@ -9,7 +9,7 @@ use core::{
 
 use qemu_api::{
     bindings::{self, *},
-    definitions::ObjectImpl,
+    objects::*,
 };
 
 use crate::{
@@ -26,7 +26,8 @@ const DATA_BREAK: u32 = 1 << 10;
 pub const PL011_FIFO_DEPTH: usize = 16_usize;
 
 #[repr(C)]
-#[derive(Debug, qemu_api_macros::Object)]
+#[derive(Debug, qemu_api_macros::Object, qemu_api_macros::Device)]
+#[device(class_name_override = PL011Class)]
 /// PL011 Device Model in QEMU
 pub struct PL011State {
     pub parent_obj: SysBusDevice,
@@ -51,6 +52,7 @@ pub struct PL011State {
     pub read_count: usize,
     pub read_trigger: usize,
     #[doc(alias = "chr")]
+    #[property(name = c"chardev", qdev_prop = qdev_prop_chr)]
     pub char_backend: CharBackend,
     /// QEMU interrupts
     ///
@@ -68,38 +70,17 @@ pub struct PL011State {
     #[doc(alias = "clk")]
     pub clock: NonNull<Clock>,
     #[doc(alias = "migrate_clk")]
+    #[property(name = c"migrate-clk", qdev_prop = qdev_prop_bool)]
     pub migrate_clock: bool,
 }
 
 impl ObjectImpl for PL011State {
     type Class = PL011Class;
-    const TYPE_INFO: qemu_api::bindings::TypeInfo = qemu_api::type_info! { Self };
+
     const TYPE_NAME: &'static CStr = crate::TYPE_PL011;
     const PARENT_TYPE_NAME: Option<&'static CStr> = Some(TYPE_SYS_BUS_DEVICE);
     const ABSTRACT: bool = false;
-    const INSTANCE_INIT: Option<unsafe extern "C" fn(obj: *mut Object)> = Some(pl011_init);
-    const INSTANCE_POST_INIT: Option<unsafe extern "C" fn(obj: *mut Object)> = None;
-    const INSTANCE_FINALIZE: Option<unsafe extern "C" fn(obj: *mut Object)> = None;
-}
 
-#[repr(C)]
-pub struct PL011Class {
-    _inner: [u8; 0],
-}
-
-impl qemu_api::definitions::Class for PL011Class {
-    const CLASS_INIT: Option<
-        unsafe extern "C" fn(klass: *mut ObjectClass, data: *mut core::ffi::c_void),
-    > = Some(crate::device_class::pl011_class_init);
-    const CLASS_BASE_INIT: Option<
-        unsafe extern "C" fn(klass: *mut ObjectClass, data: *mut core::ffi::c_void),
-    > = None;
-}
-
-#[used]
-pub static CLK_NAME: &CStr = c"clk";
-
-impl PL011State {
     /// Initializes a pre-allocated, unitialized instance of `PL011State`.
     ///
     /// # Safety
@@ -108,7 +89,7 @@ impl PL011State {
     /// `PL011State` type. It must not be called more than once on the same
     /// location/instance. All its fields are expected to hold unitialized
     /// values with the sole exception of `parent_obj`.
-    pub unsafe fn init(&mut self) {
+    unsafe fn instance_init(&mut self) {
         let dev = addr_of_mut!(*self).cast::<DeviceState>();
         // SAFETY:
         //
@@ -120,7 +101,7 @@ impl PL011State {
                 addr_of_mut!(*self).cast::<Object>(),
                 &PL011_OPS,
                 addr_of_mut!(*self).cast::<c_void>(),
-                Self::TYPE_INFO.name,
+                Self::TYPE_NAME.as_ptr(),
                 0x1000,
             );
             let sbd = addr_of_mut!(*self).cast::<SysBusDevice>();
@@ -147,7 +128,49 @@ impl PL011State {
             .unwrap();
         }
     }
+}
 
+impl DeviceImpl for PL011State {
+    fn realize(&mut self) {
+        // SAFETY: self.char_backend has the correct size and alignment for a
+        // CharBackend object, and its callbacks are of the correct types.
+        unsafe {
+            qemu_chr_fe_set_handlers(
+                addr_of_mut!(self.char_backend),
+                Some(pl011_can_receive),
+                Some(pl011_receive),
+                Some(pl011_event),
+                None,
+                addr_of_mut!(*self).cast::<c_void>(),
+                core::ptr::null_mut(),
+                true,
+            );
+        }
+    }
+
+    fn reset(&mut self) {
+        self.line_control.reset();
+        self.receive_status_error_clear.reset();
+        self.dmacr = 0;
+        self.int_enabled = 0;
+        self.int_level = 0;
+        self.ilpr = 0;
+        self.ibrd = 0;
+        self.fbrd = 0;
+        self.read_trigger = 1;
+        self.ifl = 0x12;
+        self.control.reset();
+        self.flags = 0.into();
+        self.reset_fifo();
+    }
+}
+
+impl qemu_api::objects::Migrateable for PL011State {}
+
+#[used]
+pub static CLK_NAME: &CStr = c"clk";
+
+impl PL011State {
     pub fn read(
         &mut self,
         offset: hwaddr,
@@ -394,39 +417,6 @@ impl PL011State {
         self.read_trigger = 1;
     }
 
-    pub fn realize(&mut self) {
-        // SAFETY: self.char_backend has the correct size and alignment for a
-        // CharBackend object, and its callbacks are of the correct types.
-        unsafe {
-            qemu_chr_fe_set_handlers(
-                addr_of_mut!(self.char_backend),
-                Some(pl011_can_receive),
-                Some(pl011_receive),
-                Some(pl011_event),
-                None,
-                addr_of_mut!(*self).cast::<c_void>(),
-                core::ptr::null_mut(),
-                true,
-            );
-        }
-    }
-
-    pub fn reset(&mut self) {
-        self.line_control.reset();
-        self.receive_status_error_clear.reset();
-        self.dmacr = 0;
-        self.int_enabled = 0;
-        self.int_level = 0;
-        self.ilpr = 0;
-        self.ibrd = 0;
-        self.fbrd = 0;
-        self.read_trigger = 1;
-        self.ifl = 0x12;
-        self.control.reset();
-        self.flags = 0.into();
-        self.reset_fifo();
-    }
-
     pub fn reset_fifo(&mut self) {
         self.read_count = 0;
         self.read_pos = 0;
@@ -581,19 +571,5 @@ pub unsafe extern "C" fn pl011_create(
         sysbus_mmio_map(sysbus, 0, addr);
         sysbus_connect_irq(sysbus, 0, irq);
         dev
-    }
-}
-
-/// # Safety
-///
-/// We expect the FFI user of this function to pass a valid pointer, that has
-/// the same size as [`PL011State`]. We also expect the device is
-/// readable/writeable from one thread at any time.
-#[no_mangle]
-pub unsafe extern "C" fn pl011_init(obj: *mut Object) {
-    unsafe {
-        debug_assert!(!obj.is_null());
-        let mut state = NonNull::new_unchecked(obj.cast::<PL011State>());
-        state.as_mut().init();
     }
 }

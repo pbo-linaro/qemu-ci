@@ -3,8 +3,7 @@ _qemu_api_rs = static_library(
   structured_sources(
     [
       'src/lib.rs',
-      'src/definitions.rs',
-      'src/device_class.rs',
+      'src/objects.rs',
     ],
     {'.' : bindings_rs},
   ),
