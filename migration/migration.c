@@ -45,6 +45,7 @@
 #include "qapi/qmp/qerror.h"
 #include "qapi/qmp/qnull.h"
 #include "qemu/rcu.h"
+#include "qom/object_interfaces.h"
 #include "postcopy-ram.h"
 #include "qemu/thread.h"
 #include "trace.h"
@@ -3833,11 +3834,19 @@ fail:
     migrate_fd_cleanup(s);
 }
 
+static Object* migration_get_instance(Error **errp)
+{
+    return OBJECT(current_migration);
+}
+
 static void migration_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    SingletonClass *singleton = SINGLETON_CLASS(klass);
 
     dc->user_creatable = false;
+    singleton->get_instance = migration_get_instance;
+
     device_class_set_props(dc, migration_properties);
 }
 
@@ -3910,6 +3919,10 @@ static const TypeInfo migration_type = {
     .instance_size = sizeof(MigrationState),
     .instance_init = migration_instance_init,
     .instance_finalize = migration_instance_finalize,
+    .interfaces = (InterfaceInfo[]) {
+        { TYPE_SINGLETON },
+        { }
+    }
 };
 
 static void register_migration_types(void)
