@@ -219,6 +219,56 @@ impl ObjectImpl for PL011State {
 
 impl DeviceImpl for PL011State {
     fn realize(&mut self) {
+        /// # Safety
+        ///
+        /// We expect the FFI user of this function to pass a valid pointer, that has
+        /// the same size as [`PL011State`]. We also expect the device is
+        /// readable/writeable from one thread at any time.
+        unsafe extern "C" fn pl011_can_receive(opaque: *mut c_void) -> c_int {
+            unsafe {
+                debug_assert!(!opaque.is_null());
+                let state = NonNull::new_unchecked(opaque.cast::<PL011State>());
+                state.as_ref().can_receive().into()
+            }
+        }
+        /// # Safety
+        ///
+        /// We expect the FFI user of this function to pass a valid pointer, that has
+        /// the same size as [`PL011State`]. We also expect the device is
+        /// readable/writeable from one thread at any time.
+        ///
+        /// The buffer and size arguments must also be valid.
+        unsafe extern "C" fn pl011_receive(
+            opaque: *mut core::ffi::c_void,
+            buf: *const u8,
+            size: core::ffi::c_int,
+        ) {
+            unsafe {
+                debug_assert!(!opaque.is_null());
+                let mut state = NonNull::new_unchecked(opaque.cast::<PL011State>());
+                if state.as_ref().loopback_enabled() {
+                    return;
+                }
+                if size > 0 {
+                    debug_assert!(!buf.is_null());
+                    state.as_mut().put_fifo(c_uint::from(buf.read_volatile()))
+                }
+            }
+        }
+
+        /// # Safety
+        ///
+        /// We expect the FFI user of this function to pass a valid pointer, that has
+        /// the same size as [`PL011State`]. We also expect the device is
+        /// readable/writeable from one thread at any time.
+        unsafe extern "C" fn pl011_event(opaque: *mut core::ffi::c_void, event: QEMUChrEvent) {
+            unsafe {
+                debug_assert!(!opaque.is_null());
+                let mut state = NonNull::new_unchecked(opaque.cast::<PL011State>());
+                state.as_mut().event(event)
+            }
+        }
+
         // SAFETY: self.char_backend has the correct size and alignment for a
         // CharBackend object, and its callbacks are of the correct types.
         unsafe {
@@ -608,60 +658,6 @@ pub const IRQMASK: [u32; 6] = [
     Interrupt::MS,
     Interrupt::E,
 ];
-
-/// # Safety
-///
-/// We expect the FFI user of this function to pass a valid pointer, that has
-/// the same size as [`PL011State`]. We also expect the device is
-/// readable/writeable from one thread at any time.
-#[no_mangle]
-pub unsafe extern "C" fn pl011_can_receive(opaque: *mut c_void) -> c_int {
-    unsafe {
-        debug_assert!(!opaque.is_null());
-        let state = NonNull::new_unchecked(opaque.cast::<PL011State>());
-        state.as_ref().can_receive().into()
-    }
-}
-
-/// # Safety
-///
-/// We expect the FFI user of this function to pass a valid pointer, that has
-/// the same size as [`PL011State`]. We also expect the device is
-/// readable/writeable from one thread at any time.
-///
-/// The buffer and size arguments must also be valid.
-#[no_mangle]
-pub unsafe extern "C" fn pl011_receive(
-    opaque: *mut core::ffi::c_void,
-    buf: *const u8,
-    size: core::ffi::c_int,
-) {
-    unsafe {
-        debug_assert!(!opaque.is_null());
-        let mut state = NonNull::new_unchecked(opaque.cast::<PL011State>());
-        if state.as_ref().loopback_enabled() {
-            return;
-        }
-        if size > 0 {
-            debug_assert!(!buf.is_null());
-            state.as_mut().put_fifo(c_uint::from(buf.read_volatile()))
-        }
-    }
-}
-
-/// # Safety
-///
-/// We expect the FFI user of this function to pass a valid pointer, that has
-/// the same size as [`PL011State`]. We also expect the device is
-/// readable/writeable from one thread at any time.
-#[no_mangle]
-pub unsafe extern "C" fn pl011_event(opaque: *mut core::ffi::c_void, event: QEMUChrEvent) {
-    unsafe {
-        debug_assert!(!opaque.is_null());
-        let mut state = NonNull::new_unchecked(opaque.cast::<PL011State>());
-        state.as_mut().event(event)
-    }
-}
 
 /// # Safety
 ///
