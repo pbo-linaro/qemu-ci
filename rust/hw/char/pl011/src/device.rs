@@ -20,8 +20,6 @@ use crate::{
     RegisterOffset,
 };
 
-static PL011_ID_ARM: [c_uchar; 8] = [0x11, 0x10, 0x14, 0x00, 0x0d, 0xf0, 0x05, 0xb1];
-
 /// Integer Baud Rate Divider, `UARTIBRD`
 const IBRD_MASK: u32 = 0x3f;
 
@@ -62,6 +60,29 @@ qemu_api::vmstate_description! {
         },
         subsections: ::core::ptr::null(),
     };
+}
+
+#[derive(Clone, Copy, Debug)]
+enum DeviceId {
+    #[allow(dead_code)]
+    Arm = 0,
+    Luminary,
+}
+
+impl std::ops::Index<hwaddr> for DeviceId {
+    type Output = c_uchar;
+
+    fn index(&self, idx: hwaddr) -> &Self::Output {
+        match self {
+            Self::Arm => &Self::PL011_ID_ARM[idx as usize],
+            Self::Luminary => &Self::PL011_ID_LUMINARY[idx as usize],
+        }
+    }
+}
+
+impl DeviceId {
+    const PL011_ID_ARM: [c_uchar; 8] = [0x11, 0x10, 0x14, 0x00, 0x0d, 0xf0, 0x05, 0xb1];
+    const PL011_ID_LUMINARY: [c_uchar; 8] = [0x11, 0x00, 0x18, 0x01, 0x0d, 0xf0, 0x05, 0xb1];
 }
 
 #[repr(C)]
@@ -134,6 +155,8 @@ pub struct PL011State {
     #[doc(alias = "migrate_clk")]
     #[property(name = c"migrate-clk", qdev_prop = qdev_prop_bool)]
     pub migrate_clock: bool,
+    /// The byte string that identifies the device.
+    device_id: DeviceId,
 }
 
 impl ObjectImpl for PL011State {
@@ -267,7 +290,7 @@ impl PL011State {
 
         std::ops::ControlFlow::Break(match RegisterOffset::try_from(offset) {
             Err(v) if (0x3f8..0x400).contains(&v) => {
-                u64::from(PL011_ID_ARM[((offset - 0xfe0) >> 2) as usize])
+                u64::from(self.device_id[(offset - 0xfe0) >> 2])
             }
             Err(_) => {
                 // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
@@ -660,3 +683,33 @@ pub unsafe extern "C" fn pl011_create(
         dev
     }
 }
+
+#[repr(C)]
+#[derive(Debug, qemu_api_macros::Object, qemu_api_macros::Device)]
+/// PL011 Luminary device model.
+pub struct PL011Luminary {
+    parent_obj: PL011State,
+}
+
+impl ObjectImpl for PL011Luminary {
+    type Class = PL011LuminaryClass;
+
+    const TYPE_NAME: &'static CStr = crate::TYPE_PL011_LUMINARY;
+    const PARENT_TYPE_NAME: Option<&'static CStr> = Some(crate::TYPE_PL011);
+    const ABSTRACT: bool = false;
+
+    /// Initializes a pre-allocated, unitialized instance of `PL011Luminary`.
+    ///
+    /// # Safety
+    ///
+    /// `self` must point to a correctly sized and aligned location for the
+    /// `PL011Luminary` type. It must not be called more than once on the same
+    /// location/instance. All its fields are expected to hold unitialized
+    /// values with the sole exception of `parent_obj`.
+    unsafe fn instance_init(&mut self) {
+        self.parent_obj.device_id = DeviceId::Luminary;
+    }
+}
+
+impl DeviceImpl for PL011Luminary {}
+impl qemu_api::objects::Migrateable for PL011Luminary {}
