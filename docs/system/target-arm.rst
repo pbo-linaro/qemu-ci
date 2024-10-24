@@ -102,6 +102,7 @@ undocumented; you can get a complete list by running
    arm/stellaris
    arm/stm32
    arm/virt
+   arm/vmapple
    arm/xenpvh
    arm/xlnx-versal-virt
    arm/xlnx-zynq
