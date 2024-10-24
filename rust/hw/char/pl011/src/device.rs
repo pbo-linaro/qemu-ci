@@ -152,6 +152,8 @@ impl ObjectImpl for PL011State {
     /// location/instance. All its fields are expected to hold unitialized
     /// values with the sole exception of `parent_obj`.
     unsafe fn instance_init(&mut self) {
+        const CLK_NAME: &CStr = c"clk";
+
         let dev = addr_of_mut!(*self).cast::<DeviceState>();
         // SAFETY:
         //
@@ -254,9 +256,6 @@ impl qemu_api::objects::Migrateable for PL011State {
         0
     }
 }
-
-#[used]
-pub static CLK_NAME: &CStr = c"clk";
 
 impl PL011State {
     pub fn read(
