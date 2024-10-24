@@ -3,6 +3,7 @@ _qemu_api_rs = static_library(
   structured_sources(
     [
       'src/lib.rs',
+      'src/log.rs',
       'src/objects.rs',
       'src/vmstate.rs',
     ],
