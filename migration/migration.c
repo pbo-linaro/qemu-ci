@@ -233,9 +233,11 @@ static int migration_stop_vm(MigrationState *s, RunState state)
 
 void migration_object_init(void)
 {
-    /* This can only be called once. */
-    assert(!current_migration);
-    current_migration = MIGRATION_OBJ(object_new(TYPE_MIGRATION));
+    /* This creates the singleton migration object */
+    object_new(TYPE_MIGRATION);
+
+    /* This should be set now when initialize the singleton object */
+    assert(current_migration);
 
     /*
      * Init the migrate incoming object as well no matter whether
@@ -3864,11 +3866,26 @@ static void migration_instance_finalize(Object *obj)
     qemu_sem_destroy(&ms->rp_state.rp_pong_acks);
     qemu_sem_destroy(&ms->postcopy_qemufile_src_sem);
     error_free(ms->error);
+
+    /*
+     * We know we only have one intance of migration, and when reaching
+     * here it means migration object is gone.  Clear the global reference
+     * to reflect that.
+     */
+    current_migration = NULL;
 }
 
 static void migration_instance_init(Object *obj)
 {
     MigrationState *ms = MIGRATION_OBJ(obj);
+
+    /*
+     * There can only be one migration object globally. Keep a record of
+     * the pointer in current_migration, which will be reset after the
+     * object finalize().
+     */
+    assert(!current_migration);
+    current_migration = ms;
 
     ms->state = MIGRATION_STATUS_NONE;
     ms->mbps = -1;
