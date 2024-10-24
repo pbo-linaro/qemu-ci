@@ -37,6 +37,8 @@
 
 #ifdef CONFIG_LINUX
 #include <sys/prctl.h>
+#elif defined(CONFIG_DARWIN)
+#include <CoreFoundation/CoreFoundation.h>
 #endif
 
 
@@ -340,5 +342,23 @@ int os_mlock(void)
     return ret;
 #else
     return -ENOSYS;
+#endif
+}
+
+#ifdef CONFIG_DARWIN
+static int os_darwin_cfrunloop_main(void)
+{
+    CFRunLoopRun();
+    abort();
+}
+#endif
+
+qemu_main_fn os_non_loop_main_thread_fn(void)
+{
+#ifdef CONFIG_DARWIN
+    /* By default, run the OS's event runloop on the main thread. */
+    return os_darwin_cfrunloop_main;
+#else
+    return NULL;
 #endif
 }

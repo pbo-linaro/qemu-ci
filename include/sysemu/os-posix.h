@@ -26,6 +26,7 @@
 #ifndef QEMU_OS_POSIX_H
 #define QEMU_OS_POSIX_H
 
+#include "qemu/typedefs.h"
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -54,6 +55,7 @@ void os_set_chroot(const char *path);
 void os_setup_limits(void);
 void os_setup_post(void);
 int os_mlock(void);
+qemu_main_fn os_non_loop_main_thread_fn(void);
 
 /**
  * qemu_alloc_stack:

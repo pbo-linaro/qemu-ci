@@ -971,6 +971,8 @@ static QemuDisplay qemu_display_sdl2 = {
     .type       = DISPLAY_TYPE_SDL,
     .early_init = sdl2_display_early_init,
     .init       = sdl2_display_init,
+    /* SDL must poll for events (via dpy_refresh) on main thread */
+    .qemu_main_on_bg_thread = ON_OFF_AUTO_OFF,
 };
 
 static void register_sdl1(void)

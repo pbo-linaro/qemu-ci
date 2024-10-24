@@ -440,6 +440,18 @@ typedef struct QemuDisplay QemuDisplay;
 
 struct QemuDisplay {
     DisplayType type;
+    /*
+     * Some UIs have special requirements, for the qemu_main event loop running
+     * on either the process's initial (main) thread ('Off'), or on an
+     * explicitly created background thread ('On') because of platform-specific
+     * event handling.
+     * The default, 'Auto', indicates the display will work with both setups.
+     * If 'On', either a qemu_main_thread_fn must be supplied, or it must be
+     * ensured that all applicable host OS platforms supply a default main.
+     * (via os_non_loop_main_thread_fn())
+     */
+    OnOffAuto qemu_main_on_bg_thread;
+    qemu_main_fn qemu_main_thread_fn;
     void (*early_init)(DisplayOptions *opts);
     void (*init)(DisplayState *ds, DisplayOptions *opts);
     const char *vc;

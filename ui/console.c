@@ -33,6 +33,7 @@
 #include "qemu/main-loop.h"
 #include "qemu/module.h"
 #include "qemu/option.h"
+#include "qemu-main.h"
 #include "chardev/char.h"
 #include "trace.h"
 #include "exec/memory.h"
@@ -1569,12 +1570,39 @@ void qemu_display_early_init(DisplayOptions *opts)
 
 void qemu_display_init(DisplayState *ds, DisplayOptions *opts)
 {
+    QemuDisplay *display;
+    bool bg_main_loop;
+
     assert(opts->type < DISPLAY_TYPE__MAX);
     if (opts->type == DISPLAY_TYPE_NONE) {
         return;
     }
-    assert(dpys[opts->type] != NULL);
-    dpys[opts->type]->init(ds, opts);
+    display = dpys[opts->type];
+    assert(display != NULL);
+    display->init(ds, opts);
+
+    switch (display->qemu_main_on_bg_thread) {
+    case ON_OFF_AUTO_OFF:
+        bg_main_loop = false;
+        qemu_main = NULL;
+        break;
+    case ON_OFF_AUTO_ON:
+        bg_main_loop = true;
+        break;
+    case ON_OFF_AUTO_AUTO:
+    default:
+        bg_main_loop = qemu_main;
+        break;
+    }
+
+    trace_qemu_display_init_main_thread(
+        DisplayType_str(display->type), display->qemu_main_thread_fn, qemu_main,
+        OnOffAuto_lookup.array[display->qemu_main_on_bg_thread],
+        display->qemu_main_on_bg_thread, bg_main_loop);
+    if (bg_main_loop && display->qemu_main_thread_fn) {
+        qemu_main = display->qemu_main_thread_fn;
+    }
+    assert(!bg_main_loop || qemu_main);
 }
 
 const char *qemu_display_get_vc(DisplayOptions *opts)
