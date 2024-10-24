@@ -10,6 +10,7 @@
  */
 
 #include "qemu/osdep.h"
+#include <sys/syscall.h>
 #include "qemu/bitops.h"
 #include "qemu/cutils.h"
 #include "qemu/sockets.h"
@@ -21,6 +22,7 @@
 #include "gdbstub/user.h"
 #include "gdbstub/enums.h"
 #include "hw/core/cpu.h"
+#include "user/signal.h"
 #include "trace.h"
 #include "internals.h"
 
@@ -416,11 +418,101 @@ static int gdbserver_open_port(int port)
     return fd;
 }
 
-int gdbserver_start(const char *port_or_path)
+static bool gdbserver_accept(int port, int gdb_fd, const char *port_or_path)
 {
-    int port = g_ascii_strtoull(port_or_path, NULL, 10);
-    int gdb_fd;
+    bool ret;
 
+    if (port > 0) {
+        ret = gdb_accept_tcp(gdb_fd);
+    } else {
+        ret = gdb_accept_socket(gdb_fd);
+        if (ret) {
+            gdbserver_user_state.socket_path = g_strdup(port_or_path);
+        }
+    }
+
+    if (!ret) {
+        close(gdb_fd);
+    }
+
+    return ret;
+}
+
+struct {
+    int port;
+    int gdb_fd;
+    char *port_or_path;
+} gdbserver_args;
+
+static void do_gdb_handlesig(CPUState *cs, run_on_cpu_data arg)
+{
+    int sig;
+
+    sig = target_to_host_signal(gdb_handlesig(cs, 0, NULL, NULL, 0));
+    if (sig >= 1 && sig < NSIG) {
+        qemu_kill_thread(gdb_get_cpu_index(cs), sig);
+    }
+}
+
+static void *gdbserver_accept_thread(void *arg)
+{
+    if (gdbserver_accept(gdbserver_args.port, gdbserver_args.gdb_fd,
+                         gdbserver_args.port_or_path)) {
+        CPUState *cs = first_cpu;
+
+        async_safe_run_on_cpu(cs, do_gdb_handlesig, RUN_ON_CPU_NULL);
+        qemu_kill_thread(gdb_get_cpu_index(cs), host_interrupt_signal);
+    }
+
+    g_free(gdbserver_args.port_or_path);
+
+    return NULL;
+}
+
+__attribute__((__format__(__printf__, 1, 2)))
+static void print_usage(const char *format, ...)
+{
+    va_list ap;
+
+    va_start(ap, format);
+    vfprintf(stderr, format, ap);
+    va_end(ap);
+    fprintf(stderr, "Usage: -g {port|path}[,suspend={y|n}]\n");
+}
+
+#define SUSPEND "suspend="
+
+int gdbserver_start(const char *args)
+{
+    g_auto(GStrv) argv = g_strsplit(args, ",", 0);
+    const char *port_or_path = NULL;
+    bool suspend = true;
+    int gdb_fd, port;
+    GStrv arg;
+
+    for (arg = argv; *arg; arg++) {
+        if (g_str_has_prefix(*arg, SUSPEND)) {
+            const char *val = *arg + strlen(SUSPEND);
+
+            suspend = (strcmp(val, "y") == 0);
+            if (!suspend && (strcmp(val, "n") != 0)) {
+                print_usage("Bad option value: %s", *arg);
+                return -1;
+            }
+        } else {
+            if (port_or_path) {
+                print_usage("Unknown option: %s", *arg);
+                return -1;
+            }
+            port_or_path = *arg;
+        }
+    }
+    if (!port_or_path) {
+        print_usage("Port or path not specified");
+        return -1;
+    }
+
+    port = g_ascii_strtoull(port_or_path, NULL, 10);
     if (port > 0) {
         gdb_fd = gdbserver_open_port(port);
     } else {
@@ -431,16 +523,24 @@ int gdbserver_start(const char *port_or_path)
         return -1;
     }
 
-    if (port > 0 && gdb_accept_tcp(gdb_fd)) {
-        return 0;
-    } else if (gdb_accept_socket(gdb_fd)) {
-        gdbserver_user_state.socket_path = g_strdup(port_or_path);
+    if (suspend) {
+        if (gdbserver_accept(port, gdb_fd, port_or_path)) {
+            gdb_handlesig(first_cpu, 0, NULL, NULL, 0);
+            return 0;
+        } else {
+            return -1;
+        }
+    } else {
+        QemuThread thread;
+
+        gdbserver_args.port = port;
+        gdbserver_args.gdb_fd = gdb_fd;
+        gdbserver_args.port_or_path = g_strdup(port_or_path);
+        qemu_thread_create(&thread, "gdb-accept",
+                           &gdbserver_accept_thread, NULL,
+                           QEMU_THREAD_DETACHED);
         return 0;
     }
-
-    /* gone wrong */
-    close(gdb_fd);
-    return -1;
 }
 
 void gdbserver_fork_start(void)
