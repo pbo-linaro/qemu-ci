@@ -16,6 +16,7 @@ displaysurface_free(void *display_surface) "surface=%p"
 displaychangelistener_register(void *dcl, const char *name) "%p [ %s ]"
 displaychangelistener_unregister(void *dcl, const char *name) "%p [ %s ]"
 ppm_save(int fd, void *image) "fd=%d image=%p"
+qemu_display_init_main_thread(const char *display_name, bool qemu_display_sets_main_fn, bool qemu_main_is_set, const char *display_bg_main_loop_preference, int preference, bool bg_main_loop) "display '%s': sets main thread function: %d, platform provides main function: %d, display background main loop preference: %s (%d); main loop will run on background thread: %d"
 
 # gtk-egl.c
 # gtk-gl-area.c

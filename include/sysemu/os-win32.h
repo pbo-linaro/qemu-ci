@@ -26,6 +26,7 @@
 #ifndef QEMU_OS_WIN32_H
 #define QEMU_OS_WIN32_H
 
+#include "qemu/typedefs.h"
 #include <winsock2.h>
 #include <windows.h>
 #include <ws2tcpip.h>
@@ -105,6 +106,7 @@ void os_set_line_buffering(void);
 void os_setup_early_signal_handling(void);
 
 int getpagesize(void);
+static inline qemu_main_fn os_non_loop_main_thread_fn(void) { return NULL; }
 
 #if !defined(EPROTONOSUPPORT)
 # define EPROTONOSUPPORT EINVAL

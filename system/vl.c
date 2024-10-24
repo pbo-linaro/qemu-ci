@@ -134,6 +134,7 @@
 #include "sysemu/iothread.h"
 #include "qemu/guest-random.h"
 #include "qemu/keyval.h"
+#include "qemu-main.h"
 
 #define MAX_VIRTIO_CONSOLES 1
 
@@ -3668,6 +3669,7 @@ void qemu_init(int argc, char **argv)
     trace_init_file();
 
     qemu_init_main_loop(&error_fatal);
+    qemu_main = os_non_loop_main_thread_fn();
     cpu_timers_init();
 
     user_register_global_props();
