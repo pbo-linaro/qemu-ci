@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20241024123459.59350-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 166 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] stubs: avoid duplicate symbols in libqemuutil.a
+  [32m✓[0m [PATCH 2/8] sockets: Remove deadcode
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 3/8] tests: add 'rust' and 'bindgen' to CI package list
+  [32m✓[0m [PATCH 4/8] ci: enable rust in the Fedora system build job
+  [32m✓[0m [PATCH 5/8] configure: Replace literally printed '\n' with newline
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 6/8] target/i386: fix CPUID check for LFENCE and SFENCE
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/8] scripts: remove erroneous file that breaks git clone on Windows
+    + Reviewed-by: Daniel P. Berrangé <berrange@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 8/8] qdev: make properties array "const"
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: stubs: avoid duplicate symbols in libqemuutil.a
+Applying: sockets: Remove deadcode
+Applying: tests: add 'rust' and 'bindgen' to CI package list
+Applying: ci: enable rust in the Fedora system build job
+Applying: configure: Replace literally printed '\n' with newline
+Patch failed at 0005 configure: Replace literally printed '\n' with newline
+error: patch failed: configure:2062
+error: configure: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
