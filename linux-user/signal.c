@@ -514,6 +514,8 @@ static int core_dump_signal(int sig)
     }
 }
 
+int host_interrupt_signal;
+
 static void signal_table_init(void)
 {
     int hsig, tsig, count;
@@ -540,6 +542,7 @@ static void signal_table_init(void)
     hsig = SIGRTMIN;
     host_to_target_signal_table[SIGABRT] = 0;
     host_to_target_signal_table[hsig++] = TARGET_SIGABRT;
+    host_interrupt_signal = hsig++;
 
     for (tsig = TARGET_SIGRTMIN;
          hsig <= SIGRTMAX && tsig <= TARGET_NSIG;
@@ -619,6 +622,8 @@ void signal_init(void)
         }
         sigact_table[tsig - 1]._sa_handler = thand;
     }
+
+    sigaction(host_interrupt_signal, &act, NULL);
 }
 
 /* Force a synchronously taken signal. The kernel force_sig() function
@@ -965,6 +970,12 @@ static void host_signal_handler(int host_sig, siginfo_t *info, void *puc)
     uintptr_t pc = 0;
     bool sync_sig = false;
     void *sigmask;
+
+    if (host_sig == host_interrupt_signal) {
+        ts->signal_pending = 1;
+        cpu_exit(thread_cpu);
+        return;
+    }
 
     /*
      * Non-spoofed SIGSEGV and SIGBUS are synchronous, and need special
