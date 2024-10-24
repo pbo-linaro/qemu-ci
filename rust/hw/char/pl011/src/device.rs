@@ -9,6 +9,7 @@ use core::{
 
 use qemu_api::{
     bindings::{self, *},
+    log::*,
     objects::*,
     vmstate_clock, vmstate_fields, vmstate_int32, vmstate_subsections, vmstate_uint32,
     vmstate_uint32_array, vmstate_unused,
@@ -343,7 +344,14 @@ impl PL011State {
                 u64::from(self.device_id[(offset - 0xfe0) >> 2])
             }
             Err(_) => {
-                // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
+                qemu_log_mask(
+                    LogMask::GUEST_ERROR,
+                    &format!(
+                        "pl011:{file}:{line}: Bad offset 0x{offset:x}",
+                        file = file!(),
+                        line = line!(),
+                    ),
+                );
                 0
             }
             Ok(DR) => {
@@ -389,15 +397,30 @@ impl PL011State {
     }
 
     pub fn write(&mut self, offset: hwaddr, value: u64) {
-        // eprintln!("write offset {offset} value {value}");
         use RegisterOffset::*;
         let value: u32 = value as u32;
         match RegisterOffset::try_from(offset) {
             Err(_bad_offset) => {
-                eprintln!("write bad offset {offset} value {value}");
+                qemu_log_mask(
+                    LogMask::GUEST_ERROR,
+                    &format!(
+                        "pl011:{file}:{line}: Bad write offset 0x{offset:x} of value 0x:{value:x}",
+                        file = file!(),
+                        line = line!(),
+                    ),
+                );
             }
             Ok(DR) => {
-                // ??? Check if transmitter is enabled.
+                // Check if transmitter is enabled.
+                if !self.control.enable_uart() {
+                    qemu_log_mask(LogMask::GUEST_ERROR, "PL011 data written to disabled UART");
+                }
+                if !self.control.enable_transmit() {
+                    qemu_log_mask(
+                        LogMask::GUEST_ERROR,
+                        "PL011 data written to disabled TX UART",
+                    );
+                }
                 let ch: u8 = value as u8;
                 // XXX this blocks entire thread. Rewrite to use
                 // qemu_chr_fe_write and background I/O callbacks
@@ -474,8 +497,10 @@ impl PL011State {
             Ok(DMACR) => {
                 self.dmacr = value;
                 if value & 3 > 0 {
-                    // qemu_log_mask(LOG_UNIMP, "pl011: DMA not implemented\n");
-                    eprintln!("pl011: DMA not implemented");
+                    qemu_log_mask(
+                        LogMask::UNIMPLEMENTED,
+                        "pl011: DMA functionality is not implemented",
+                    );
                 }
             }
         }
