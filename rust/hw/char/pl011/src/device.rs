@@ -10,6 +10,8 @@ use core::{
 use qemu_api::{
     bindings::{self, *},
     objects::*,
+    vmstate_clock, vmstate_fields, vmstate_int32, vmstate_subsections, vmstate_uint32,
+    vmstate_uint32_array, vmstate_unused,
 };
 
 use crate::{
@@ -20,14 +22,74 @@ use crate::{
 
 static PL011_ID_ARM: [c_uchar; 8] = [0x11, 0x10, 0x14, 0x00, 0x0d, 0xf0, 0x05, 0xb1];
 
+/// Integer Baud Rate Divider, `UARTIBRD`
+const IBRD_MASK: u32 = 0x3f;
+
+/// Fractional Baud Rate Divider, `UARTFBRD`
+const FBRD_MASK: u32 = 0xffff;
+
 const DATA_BREAK: u32 = 1 << 10;
 
 /// QEMU sourced constant.
 pub const PL011_FIFO_DEPTH: usize = 16_usize;
 
+#[no_mangle]
+extern "C" fn pl011_clock_needed(opaque: *mut c_void) -> bool {
+    unsafe {
+        debug_assert!(!opaque.is_null());
+        let state = NonNull::new_unchecked(opaque.cast::<PL011State>());
+        state.as_ref().migrate_clock
+    }
+}
+
+qemu_api::vmstate_description! {
+    /// Migration subsection for [`PL011State`] clock.
+    pub static VMSTATE_PL011_CLOCK: VMStateDescription = VMStateDescription {
+        name: c"pl011/clock",
+        unmigratable: false,
+        early_setup: false,
+        version_id: 1,
+        minimum_version_id: 1,
+        priority: MigrationPriority::MIG_PRI_DEFAULT,
+        pre_load: None,
+        post_load: None,
+        pre_save: None,
+        post_save: None,
+        needed: Some(pl011_clock_needed),
+        dev_unplug_pending: None,
+        fields: vmstate_fields!{
+            vmstate_clock!(clock, PL011State),
+        },
+        subsections: ::core::ptr::null(),
+    };
+}
+
 #[repr(C)]
 #[derive(Debug, qemu_api_macros::Object, qemu_api_macros::Device)]
-#[device(class_name_override = PL011Class)]
+#[device(
+    class_name_override = PL011Class,
+    vmstate_fields = vmstate_fields!{
+        vmstate_unused!(u32::BITS as u64),
+        vmstate_uint32!(flags, PL011State),
+        vmstate_uint32!(line_control, PL011State),
+        vmstate_uint32!(receive_status_error_clear, PL011State),
+        vmstate_uint32!(control, PL011State),
+        vmstate_uint32!(dmacr, PL011State),
+        vmstate_uint32!(int_enabled, PL011State),
+        vmstate_uint32!(int_level, PL011State),
+        vmstate_uint32_array!(read_fifo, PL011State, PL011_FIFO_DEPTH),
+        vmstate_uint32!(ilpr, PL011State),
+        vmstate_uint32!(ibrd, PL011State),
+        vmstate_uint32!(fbrd, PL011State),
+        vmstate_uint32!(ifl, PL011State),
+        vmstate_int32!(read_pos, PL011State),
+        vmstate_int32!(read_count, PL011State),
+        vmstate_int32!(read_trigger, PL011State),
+    },
+    vmstate_subsections = vmstate_subsections!{
+        VMSTATE_PL011_CLOCK
+    }
+)]
 /// PL011 Device Model in QEMU
 pub struct PL011State {
     pub parent_obj: SysBusDevice,
@@ -165,7 +227,33 @@ impl DeviceImpl for PL011State {
     }
 }
 
-impl qemu_api::objects::Migrateable for PL011State {}
+impl qemu_api::objects::Migrateable for PL011State {
+    const NAME: Option<&'static CStr> = Some(c"pl011");
+    const UNMIGRATABLE: bool = false;
+    const VERSION_ID: c_int = 2;
+    const MINIMUM_VERSION_ID: c_int = 2;
+
+    unsafe fn post_load(&mut self, _version_id: c_int) -> c_int {
+        /* Sanity-check input state */
+        if self.read_pos >= self.read_fifo.len() || self.read_count > self.read_fifo.len() {
+            return -1;
+        }
+
+        if !self.fifo_enabled() && self.read_count > 0 && self.read_pos > 0 {
+            // Older versions of PL011 didn't ensure that the single
+            // character in the FIFO in FIFO-disabled mode is in
+            // element 0 of the array; convert to follow the current
+            // code's assumptions.
+            self.read_fifo[0] = self.read_fifo[self.read_pos];
+            self.read_pos = 0;
+        }
+
+        self.ibrd &= IBRD_MASK;
+        self.fbrd &= FBRD_MASK;
+
+        0
+    }
+}
 
 #[used]
 pub static CLK_NAME: &CStr = c"clk";

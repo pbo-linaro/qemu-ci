@@ -15,6 +15,8 @@ pub const CLASS_NAME: Symbol = Symbol("class_name");
 pub const CLASS_NAME_OVERRIDE: Symbol = Symbol("class_name_override");
 pub const QDEV_PROP: Symbol = Symbol("qdev_prop");
 pub const MIGRATEABLE: Symbol = Symbol("migrateable");
+pub const VMSTATE_FIELDS: Symbol = Symbol("vmstate_fields");
+pub const VMSTATE_SUBSECTIONS: Symbol = Symbol("vmstate_subsections");
 pub const PROPERTIES: Symbol = Symbol("properties");
 pub const PROPERTY: Symbol = Symbol("property");
 

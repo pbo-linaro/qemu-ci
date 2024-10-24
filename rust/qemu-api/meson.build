@@ -4,6 +4,7 @@ _qemu_api_rs = static_library(
     [
       'src/lib.rs',
       'src/objects.rs',
+      'src/vmstate.rs',
     ],
     {'.' : bindings_rs},
   ),

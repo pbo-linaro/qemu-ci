@@ -10,11 +10,13 @@ use syn::{
 };
 use syn::{parse_macro_input, DeriveInput};
 
-use crate::{symbols::*, utilities::*};
+use crate::{symbols::*, utilities::*, vmstate};
 
 #[derive(Debug, Default)]
 struct DeriveContainer {
     category: Option<syn::Path>,
+    vmstate_fields: Option<syn::Expr>,
+    vmstate_subsections: Option<syn::Expr>,
     class_name: Option<syn::Ident>,
     class_name_override: Option<syn::Ident>,
 }
@@ -27,6 +29,8 @@ impl Parse for DeriveContainer {
         assert_eq!(DEVICE, bracketed.parse::<syn::Ident>()?);
         let mut retval = Self {
             category: None,
+            vmstate_fields: None,
+            vmstate_subsections: None,
             class_name: None,
             class_name_override: None,
         };
@@ -54,6 +58,20 @@ impl Parse for DeriveContainer {
                 let lit: syn::LitStr = content.parse()?;
                 let path: syn::Path = lit.parse()?;
                 retval.category = Some(path);
+            } else if value == VMSTATE_FIELDS {
+                let _: syn::Token![=] = content.parse()?;
+                if retval.vmstate_fields.is_some() {
+                    panic!("{} can only be used at most once", VMSTATE_FIELDS);
+                }
+                let expr: syn::Expr = content.parse()?;
+                retval.vmstate_fields = Some(expr);
+            } else if value == VMSTATE_SUBSECTIONS {
+                let _: syn::Token![=] = content.parse()?;
+                if retval.vmstate_subsections.is_some() {
+                    panic!("{} can only be used at most once", VMSTATE_SUBSECTIONS);
+                }
+                let expr: syn::Expr = content.parse()?;
+                retval.vmstate_subsections = Some(expr);
             } else {
                 panic!("unrecognized token `{}`", value);
             }
@@ -272,7 +290,11 @@ fn gen_device_class(
     let class_base_init_fn = format_ident!("__{}_class_base_init_generated", class_name);
 
     let (vmsd, vmsd_impl) = {
-        let (i, vmsd) = make_vmstate(name);
+        let (i, vmsd) = vmstate::make_vmstate(
+            name,
+            derive_container.vmstate_fields,
+            derive_container.vmstate_subsections,
+        );
         (quote! { &#i }, vmsd)
     };
     let category = if let Some(category) = derive_container.category {
@@ -345,89 +367,4 @@ fn gen_device_class(
 
         #vmsd_impl
     }
-}
-
-fn make_vmstate(name: &syn::Ident) -> (syn::Ident, proc_macro2::TokenStream) {
-    let vmstate_description_ident = format_ident!("__VMSTATE_{}", name);
-
-    let pre_load = format_ident!("__{}_pre_load_generated", name);
-    let post_load = format_ident!("__{}_post_load_generated", name);
-    let pre_save = format_ident!("__{}_pre_save_generated", name);
-    let post_save = format_ident!("__{}_post_save_generated", name);
-    let needed = format_ident!("__{}_needed_generated", name);
-    let dev_unplug_pending = format_ident!("__{}_dev_unplug_pending_generated", name);
-
-    let migrateable_fish = quote! {<#name as ::qemu_api::objects::Migrateable>};
-    let vmstate_description = quote! {
-        #[used]
-        #[allow(non_upper_case_globals)]
-        pub static #vmstate_description_ident: ::qemu_api::bindings::VMStateDescription = ::qemu_api::bindings::VMStateDescription {
-            name: if let Some(name) = #migrateable_fish::NAME {
-                name.as_ptr()
-            } else {
-                <#name as ::qemu_api::objects::ObjectImplUnsafe>::TYPE_INFO.name
-            },
-            unmigratable: #migrateable_fish::UNMIGRATABLE,
-            early_setup: #migrateable_fish::EARLY_SETUP,
-            version_id: #migrateable_fish::VERSION_ID,
-            minimum_version_id: #migrateable_fish::MINIMUM_VERSION_ID,
-            priority: #migrateable_fish::PRIORITY,
-            pre_load: Some(#pre_load),
-            post_load: Some(#post_load),
-            pre_save: Some(#pre_save),
-            post_save: Some(#post_save),
-            needed: Some(#needed),
-            dev_unplug_pending: Some(#dev_unplug_pending),
-            fields: ::core::ptr::null(),
-            subsections: ::core::ptr::null(),
-        };
-
-        #[no_mangle]
-        pub unsafe extern "C" fn #pre_load(opaque: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::pre_load(instance.as_mut())
-            }
-        }
-        #[no_mangle]
-        pub unsafe extern "C" fn #post_load(opaque: *mut ::core::ffi::c_void, version_id: core::ffi::c_int) -> ::core::ffi::c_int {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::post_load(instance.as_mut(), version_id)
-            }
-        }
-        #[no_mangle]
-        pub unsafe extern "C" fn #pre_save(opaque: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::pre_save(instance.as_mut())
-            }
-        }
-        #[no_mangle]
-        pub unsafe extern "C" fn #post_save(opaque: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::post_save(instance.as_mut())
-            }
-        }
-        #[no_mangle]
-        pub unsafe extern "C" fn #needed(opaque: *mut ::core::ffi::c_void) -> bool {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::needed(instance.as_mut())
-            }
-        }
-        #[no_mangle]
-        pub unsafe extern "C" fn #dev_unplug_pending(opaque: *mut ::core::ffi::c_void) -> bool {
-            let mut instance = NonNull::new(opaque.cast::<#name>()).expect(concat!("Expected opaque to be a non-null pointer of type ", stringify!(#name), "::Object"));
-            unsafe {
-                ::qemu_api::objects::Migrateable::dev_unplug_pending(instance.as_mut())
-            }
-        }
-    };
-
-    let expanded = quote! {
-        #vmstate_description
-    };
-    (vmstate_description_ident, expanded)
 }

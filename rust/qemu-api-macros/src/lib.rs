@@ -10,6 +10,7 @@ mod device;
 mod object;
 mod symbols;
 mod utilities;
+mod vmstate;
 
 #[proc_macro_derive(Object)]
 pub fn derive_object(input: TokenStream) -> TokenStream {

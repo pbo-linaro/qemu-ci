@@ -26,8 +26,11 @@ unsafe impl Send for bindings::Property {}
 unsafe impl Sync for bindings::Property {}
 unsafe impl Sync for bindings::TypeInfo {}
 unsafe impl Sync for bindings::VMStateDescription {}
+unsafe impl Sync for bindings::VMStateField {}
+unsafe impl Sync for bindings::VMStateInfo {}
 
 pub mod objects;
+pub mod vmstate;
 
 use std::alloc::{GlobalAlloc, Layout};
 
