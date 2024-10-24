@@ -9,6 +9,7 @@
 #import <ParavirtualizedGraphics/ParavirtualizedGraphics.h>
 #include "qemu/typedefs.h"
 #include "exec/memory.h"
+#include "hw/qdev-properties.h"
 #include "ui/surface.h"
 
 @class PGDeviceDescriptor;
@@ -20,6 +21,7 @@
 
 typedef QTAILQ_HEAD(, PGTask_s) PGTaskList;
 
+struct AppleGFXDisplayMode;
 struct AppleGFXMapMemoryJob;
 typedef struct AppleGFXState {
     MemoryRegion iomem_gfx;
@@ -31,6 +33,8 @@ typedef struct AppleGFXState {
     id<MTLCommandQueue> mtl_queue;
     bool cursor_show;
     QEMUCursor *cursor;
+    struct AppleGFXDisplayMode *display_modes;
+    uint32_t num_display_modes;
 
     /* For running PVG memory-mapping requests in the AIO context */
     QemuCond job_cond;
@@ -47,12 +51,20 @@ typedef struct AppleGFXState {
     id<MTLTexture> texture;
 } AppleGFXState;
 
+typedef struct AppleGFXDisplayMode {
+    uint16_t width_px;
+    uint16_t height_px;
+    uint16_t refresh_rate_hz;
+} AppleGFXDisplayMode;
+
 void apple_gfx_common_init(Object *obj, AppleGFXState *s, const char* obj_name);
 void apple_gfx_common_realize(AppleGFXState *s, PGDeviceDescriptor *desc,
                               Error **errp);
 uintptr_t apple_gfx_host_address_for_gpa_range(uint64_t guest_physical,
                                                uint64_t length, bool read_only);
 void apple_gfx_await_bh_job(AppleGFXState *s, bool *job_done_flag);
+
+extern const PropertyInfo qdev_prop_display_mode;
 
 #endif
 
