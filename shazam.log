@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241024233355.136867-1-dmitry.osipenko@collabora.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 36 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/6] ui/sdl2: Restore original context after new context creation
+  [32m✓[0m [PATCH v3 2/6] ui/sdl2: Implement dpy dmabuf functions
+  [32m✓[0m [PATCH v3 3/6] linux-headers: Update to Linux v6.12-rc1
+  [32m✓[0m [PATCH v3 4/6] virtio-gpu: Handle virgl fence creation errors
+  [32m✓[0m [PATCH v3 5/6] virtio-gpu: Support asynchronous fencing
+  [32m✓[0m [PATCH v3 6/6] virtio-gpu: Support DRM native context
+  ---
+  [32m✓[0m Signed: DKIM/collabora.com
+---
+Total patches: 6
+---
+Applying: ui/sdl2: Restore original context after new context creation
+Applying: ui/sdl2: Implement dpy dmabuf functions
+Applying: linux-headers: Update to Linux v6.12-rc1
+Applying: virtio-gpu: Handle virgl fence creation errors
+Patch failed at 0004 virtio-gpu: Handle virgl fence creation errors
+error: patch failed: hw/display/virtio-gpu-virgl.c:892
+error: hw/display/virtio-gpu-virgl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
