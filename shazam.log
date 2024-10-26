@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241026154550.78880-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] target/mips: Remove unreachable 32-bit code on 64-bit Loongson Ext
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: target/mips: Remove unreachable 32-bit code on 64-bit Loongson Ext
+Patch failed at 0001 target/mips: Remove unreachable 32-bit code on 64-bit Loongson Ext
+error: target/mips/tcg/loong_translate.c: does not exist in index
+error: patch failed: target/mips/tcg/translate.c:15020
+error: target/mips/tcg/translate.c: patch does not apply
+error: patch failed: target/mips/tcg/meson.build:16
+error: target/mips/tcg/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
