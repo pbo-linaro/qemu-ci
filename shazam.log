@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20241023180216.1072575-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 9 patches
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 9 code-review messages
+Will use the latest revision: v3
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/8] migration: Take migration object refcount earlier for threads
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 2/8] migration: Unexport dirty_bitmap_mig_init()
+  [32m✓[0m [PATCH v3 3/8] migration: Unexport ram_mig_init()
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 4/8] migration: Drop migration_is_setup_or_active()
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 5/8] migration: Drop migration_is_idle()
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 6/8] migration: Drop migration_is_device()
+  [32m✓[0m [PATCH v3 7/8] migration: Unexport migration_is_active()
+  [32m✓[0m [PATCH v3 8/8] migration: Protect updates to current_migration with a mutex
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: migration: Take migration object refcount earlier for threads
+Patch failed at 0001 migration: Take migration object refcount earlier for threads
+error: patch failed: migration/migration.c:3841
+error: migration/migration.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
