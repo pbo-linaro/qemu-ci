@@ -1,0 +1,53 @@
+Grabbing thread from lore.kernel.org/all/20241025160209.194307-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 42 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 95 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/23] rust: add definitions for vmstate
+  [32m✓[0m [PATCH 2/23] rust/pl011: fix default value for migrate-clock
+  [32m✓[0m [PATCH 3/23] rust/pl011: add support for migration
+  [32m✓[0m [PATCH 4/23] rust/pl011: move CLK_NAME static to function scope
+  [32m✓[0m [PATCH 5/23] rust/pl011: add TYPE_PL011_LUMINARY device
+  [32m✓[0m [PATCH 6/23] rust/pl011: remove commented out C code
+  [32m✓[0m [PATCH 7/23] rust/pl011: Use correct masks for IBRD and FBRD
+  [32m✓[0m [PATCH 8/23] rust: patch bilge-impl to allow compilation with 1.63.0
+  [32m✓[0m [PATCH 9/23] rust: fix cfgs of proc-macro2 for 1.63.0
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 10/23] rust: use std::os::raw instead of core::ffi
+  [32m✓[0m [PATCH 11/23] rust: introduce a c_str macro
+  [32m✓[0m [PATCH 12/23] rust: silence unknown warnings for the sake of old compilers
+  [32m✓[0m [PATCH 13/23] rust: synchronize dependencies between subprojects and Cargo.lock
+  [32m✓[0m [PATCH 14/23] rust: create a cargo workspace
+  [32m✓[0m [PATCH 15/23] rust: introduce alternative implementation of offset_of!
+  [32m✓[0m [PATCH 16/23] rust: do not use MaybeUninit::zeroed()
+  [32m✓[0m [PATCH 17/23] rust: clean up detection of the language
+  [32m✓[0m [PATCH 18/23] rust: allow version 1.63.0 of rustc
+  [32m✓[0m [PATCH 19/23] rust: do not use --generate-cstr
+  [32m✓[0m [PATCH 20/23] rust: allow older version of bindgen
+  [32m✓[0m [PATCH 21/23] rust: make rustfmt optional
+  [32m✓[0m [PATCH 22/23] dockerfiles: install bindgen from cargo on Ubuntu 22.04
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 23/23] ci: enable rust in the Debian and Ubuntu system build job
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 23
+---
+Applying: rust: add definitions for vmstate
+Patch failed at 0001 rust: add definitions for vmstate
+error: patch failed: rust/qemu-api/meson.build:5
+error: rust/qemu-api/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/src/device_class.rs:62
+error: rust/qemu-api/src/device_class.rs: patch does not apply
+error: patch failed: rust/qemu-api/src/lib.rs:26
+error: rust/qemu-api/src/lib.rs: patch does not apply
+error: rust/qemu-api/tests/tests.rs: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
