@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20241025101959.601048-1-eric.auger@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/21] kvm: kvm_get_writable_id_regs
+  [32m✓[0m [PATCH RFC 2/21] arm/cpu: Add sysreg definitions in cpu-sysegs.h
+  [32m✓[0m [PATCH RFC 3/21] arm/cpu: Store aa64isar0 into the idregs arrays
+  [32m✓[0m [PATCH RFC 4/21] arm/cpu: Store aa64isar1/2 into the idregs array
+  [32m✓[0m [PATCH RFC 5/21] arm/cpu: Store aa64drf0/1 into the idregs array
+  [32m✓[0m [PATCH RFC 6/21] arm/cpu: Store aa64mmfr0-3 into the idregs array
+  [32m✓[0m [PATCH RFC 7/21] arm/cpu: Store aa64drf0/1 into the idregs array
+  [32m✓[0m [PATCH RFC 8/21] arm/cpu: Store aa64smfr0 into the idregs array
+  [32m✓[0m [PATCH RFC 9/21] arm/cpu: Store id_isar0-7 into the idregs array
+  [32m✓[0m [PATCH RFC 10/21] arm/cpu: Store id_mfr0/1 into the idregs array
+  [32m✓[0m [PATCH RFC 11/21] arm/cpu: Store id_dfr0/1 into the idregs array
+  [32m✓[0m [PATCH RFC 12/21] arm/cpu: Store id_mmfr0-5 into the idregs array
+  [32m✓[0m [PATCH RFC 13/21] arm/cpu: Add infra to handle generated ID register definitions
+  [32m✓[0m [PATCH RFC 14/21] arm/cpu: Add sysreg generation scripts
+  [32m✓[0m [PATCH RFC 15/21] arm/cpu: Add generated files
+  [32m✓[0m [PATCH RFC 16/21] arm/kvm: Allow reading all the writable ID registers
+  [32m✓[0m [PATCH RFC 17/21] arm/kvm: write back modified ID regs to KVM
+  [32m✓[0m [PATCH RFC 18/21] arm/cpu: Introduce a customizable kvm host cpu model
+  [32m✓[0m [PATCH RFC 19/21] virt: Allow custom vcpu model in arm virt
+  [32m✓[0m [PATCH RFC 20/21] arm-qmp-cmds: introspection for custom model
+  [32m✓[0m [PATCH RFC 21/21] arm/cpu-features: Document custom vcpu model
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 21
+---
+Applying: kvm: kvm_get_writable_id_regs
+Applying: arm/cpu: Add sysreg definitions in cpu-sysegs.h
+Applying: arm/cpu: Store aa64isar0 into the idregs arrays
+Patch failed at 0003 arm/cpu: Store aa64isar0 into the idregs arrays
+error: patch failed: target/arm/cpu-features.h:21
+error: target/arm/cpu-features.h: patch does not apply
+error: patch failed: target/arm/tcg/cpu64.c:445
+error: target/arm/tcg/cpu64.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
