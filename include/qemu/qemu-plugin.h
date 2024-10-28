@@ -497,8 +497,8 @@ uint64_t qemu_plugin_tb_vaddr(const struct qemu_plugin_tb *tb);
  * Returns: opaque handle to instruction
  */
 QEMU_PLUGIN_API
-struct qemu_plugin_insn *
-qemu_plugin_tb_get_insn(const struct qemu_plugin_tb *tb, size_t idx);
+struct qemu_plugin_insn *qemu_plugin_tb_get_insn(const struct qemu_plugin_tb *tb,
+                                                 size_t idx);
 
 /**
  * qemu_plugin_insn_data() - copy instruction data
@@ -743,9 +743,8 @@ typedef void
                                      int64_t num, int64_t ret);
 
 QEMU_PLUGIN_API
-void
-qemu_plugin_register_vcpu_syscall_ret_cb(qemu_plugin_id_t id,
-                                         qemu_plugin_vcpu_syscall_ret_cb_t cb);
+void qemu_plugin_register_vcpu_syscall_ret_cb(qemu_plugin_id_t id,
+                                              qemu_plugin_vcpu_syscall_ret_cb_t cb);
 
 
 /**
@@ -803,6 +802,7 @@ void qemu_plugin_register_atexit_cb(qemu_plugin_id_t id,
                                     qemu_plugin_udata_cb_t cb, void *userdata);
 
 /* returns how many vcpus were started at this point */
+QEMU_PLUGIN_API
 int qemu_plugin_num_vcpus(void);
 
 /**
