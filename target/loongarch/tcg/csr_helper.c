@@ -37,10 +37,6 @@ target_ulong helper_csrrd_pgd(CPULoongArchState *env)
 
 target_ulong helper_csrrd_cpuid(CPULoongArchState *env)
 {
-    LoongArchCPU *lac = env_archcpu(env);
-
-    env->CSR_CPUID = CPU(lac)->cpu_index;
-
     return env->CSR_CPUID;
 }
 
