@@ -7177,6 +7177,13 @@ static void x86_cpu_reset_hold(Object *obj, ResetType type)
         }
         if (env->features[esa->feature] & esa->bits) {
             xcr0 |= 1ull << i;
+            continue;
+        }
+        if (i == XSTATE_OPMASK_BIT || i == XSTATE_ZMM_Hi256_BIT ||
+            i == XSTATE_Hi16_ZMM_BIT) {
+            if (env->features[FEAT_7_1_EDX] & CPUID_7_1_EDX_AVX10) {
+                xcr0 |= 1ull << i;
+            }
         }
     }
 
@@ -7315,6 +7322,13 @@ static void x86_cpu_enable_xsave_components(X86CPU *cpu)
         const ExtSaveArea *esa = &x86_ext_save_areas[i];
         if (env->features[esa->feature] & esa->bits) {
             mask |= (1ULL << i);
+            continue;
+        }
+        if (i == XSTATE_OPMASK_BIT || i == XSTATE_ZMM_Hi256_BIT ||
+            i == XSTATE_Hi16_ZMM_BIT) {
+            if (env->features[FEAT_7_1_EDX] & CPUID_7_1_EDX_AVX10) {
+                mask |= (1ULL << i);
+            }
         }
     }
 
