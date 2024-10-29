@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/67208ed8.2.LyTFmhUE60iMyTFm@inspur.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] Introduce SM3 hash hmac pbkdf algorithm
+---
+Total patches: 1
+---
+Applying: Introduce SM3 hash hmac pbkdf algorithm
+Patch failed at 0001 Introduce SM3 hash hmac pbkdf algorithm
+error: patch fragment without header at line 54: @@ -33,6 +33,9 @@ static int qcrypto_hash_alg_map[QCRYPTO_HASH_ALG__MAX] = {
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
