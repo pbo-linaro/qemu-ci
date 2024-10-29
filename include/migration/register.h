@@ -210,6 +210,8 @@ typedef struct SaveVMHandlers {
     void (*state_pending_exact)(void *opaque, uint64_t *must_precopy,
                                 uint64_t *can_postcopy);
 
+    /* This runs inside the BQL. */
+
     /**
      * @load_state
      *
@@ -226,6 +228,8 @@ typedef struct SaveVMHandlers {
      * Returns zero to indicate success and negative for error
      */
     int (*load_state)(QEMUFile *f, void *opaque, int version_id);
+
+    /* The following handlers run inside the BQL. */
 
     /**
      * @load_setup
