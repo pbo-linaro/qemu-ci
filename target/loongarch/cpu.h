@@ -19,6 +19,12 @@
 #include "cpu-csr.h"
 #include "cpu-qom.h"
 
+/*
+ * CPU can't have 0xFFFFFFFF physical ID, use that value to distinguish
+ * that physical ID hasn't been set yet
+ */
+#define UNSET_PHY_ID 0xFFFFFFFF
+
 #define IOCSRF_TEMP             0
 #define IOCSRF_NODECNT          1
 #define IOCSRF_MSI              2
@@ -369,6 +375,12 @@ typedef struct CPUArchState {
 #endif
 } CPULoongArchState;
 
+typedef struct LoongArchCPUTopo {
+    int32_t socket_id;  /* socket-id of this VCPU */
+    int32_t core_id;    /* core-id of this VCPU */
+    int32_t thread_id;  /* thread-id of this VCPU */
+} LoongArchCPUTopo;
+
 /**
  * LoongArchCPU:
  * @env: #CPULoongArchState
@@ -381,6 +393,10 @@ struct ArchCPU {
     CPULoongArchState env;
     QEMUTimer timer;
     uint32_t  phy_id;
+    int32_t socket_id;  /* socket-id of this VCPU */
+    int32_t core_id;    /* core-id of this VCPU */
+    int32_t thread_id;  /* thread-id of this VCPU */
+    int32_t node_id;    /* NUMA node of this VCPU */
 
     /* 'compatible' string for this CPU for Linux device trees */
     const char *dtb_compatible;
@@ -399,6 +415,7 @@ struct LoongArchCPUClass {
     CPUClass parent_class;
 
     DeviceRealize parent_realize;
+    DeviceUnrealize parent_unrealize;
     ResettablePhases parent_phases;
 };
 
