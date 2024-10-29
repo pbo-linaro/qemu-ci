@@ -1580,6 +1580,9 @@ void postcopy_unregister_shared_ufd(struct PostCopyFD *pcfd)
 
 void postcopy_preempt_new_channel(MigrationIncomingState *mis, QEMUFile *file)
 {
+    if (mis->postcopy_qemufile_dst) {
+        return;
+    }
     /*
      * The new loading channel has its own threads, so it needs to be
      * blocked too.  It's by default true, just be explicit.
@@ -1612,6 +1615,10 @@ postcopy_preempt_send_channel_done(MigrationState *s,
      * postcopy_qemufile_src to know whether it failed or not.
      */
     qemu_sem_post(&s->postcopy_qemufile_src_sem);
+
+    /* Send magic value to identify postcopy channel on the destination */
+    uint32_t magic = cpu_to_be32(POSTCOPY_MAGIC);
+    qio_channel_write_all(ioc, (char *)&magic, sizeof(magic), NULL);
 }
 
 static void

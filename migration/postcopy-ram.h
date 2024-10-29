@@ -15,6 +15,9 @@
 
 #include "qapi/qapi-types-migration.h"
 
+/* Magic value to identify postcopy channel on the destination */
+#define POSTCOPY_MAGIC  0x55667788U
+
 /* Return true if the host supports everything we need to do postcopy-ram */
 bool postcopy_ram_supported_by_host(MigrationIncomingState *mis,
                                     Error **errp);
