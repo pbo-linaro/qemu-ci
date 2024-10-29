@@ -26,6 +26,7 @@
 #include "qemu/error-report.h"
 #include "trace.h"
 #include "sysemu/kvm.h"
+#include "qom/object_interfaces.h"
 
 void x86_iommu_iec_register_notifier(X86IOMMUState *iommu,
                                      iec_notify_fn fn, void *data)
@@ -79,9 +80,15 @@ void x86_iommu_irq_to_msi_message(X86IOMMUIrq *irq, MSIMessage *msg_out)
 
 X86IOMMUState *x86_iommu_get_default(void)
 {
-    MachineState *ms = MACHINE(qdev_get_machine());
-    PCMachineState *pcms =
-        PC_MACHINE(object_dynamic_cast(OBJECT(ms), TYPE_PC_MACHINE));
+    Object *machine = qdev_get_machine();
+    PCMachineState *pcms;
+
+    /* If machine has not been created, so is the vIOMMU */
+    if (!machine) {
+        return NULL;
+    }
+
+    pcms = PC_MACHINE(object_dynamic_cast(machine, TYPE_PC_MACHINE));
 
     if (pcms &&
         object_dynamic_cast(OBJECT(pcms->iommu), TYPE_X86_IOMMU_DEVICE)) {
@@ -133,10 +140,19 @@ static Property x86_iommu_properties[] = {
     DEFINE_PROP_END_OF_LIST(),
 };
 
+static Object *x86_iommu_get_instance(void)
+{
+    return object_ref(OBJECT(x86_iommu_get_default()));
+}
+
 static void x86_iommu_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    SingletonClass *singleton = SINGLETON_CLASS(klass);
+
     dc->realize = x86_iommu_realize;
+    singleton->get_instance = x86_iommu_get_instance;
+
     device_class_set_props(dc, x86_iommu_properties);
 }
 
@@ -152,6 +168,10 @@ static const TypeInfo x86_iommu_info = {
     .class_init    = x86_iommu_class_init,
     .class_size    = sizeof(X86IOMMUClass),
     .abstract      = true,
+    .interfaces = (InterfaceInfo[]) {
+        { TYPE_SINGLETON },
+        { }
+    }
 };
 
 static void x86_iommu_register_types(void)
