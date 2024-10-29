@@ -840,7 +840,13 @@ Object *qdev_get_machine(void)
     static Object *dev;
 
     if (dev == NULL) {
-        dev = container_get(object_get_root(), "/machine");
+        /*
+         * NOTE: dev can keep being NULL if machine is not yet created!
+         * In which case the function will properly return NULL.
+         *
+         * Whenever machine object is created and found once, we cache it.
+         */
+        dev = object_resolve_path_component(object_get_root(), "machine");
     }
 
     return dev;
