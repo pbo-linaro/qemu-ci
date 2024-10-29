@@ -1985,17 +1985,35 @@ int ram_save_queue_pages(const char *rbname, ram_addr_t start, ram_addr_t len,
 }
 
 /**
- * ram_save_target_page_legacy: save one target page
+ * ram_save_target_page_common:
+ * send one target page to multifd workers OR save one target page.
  *
- * Returns the number of pages written
+ * Multifd mode: returns 1 if the page was queued, -1 otherwise.
+ *
+ * Non-multifd mode: returns the number of pages written
  *
  * @rs: current RAM state
  * @pss: data about the page we want to send
  */
-static int ram_save_target_page_legacy(RAMState *rs, PageSearchStatus *pss)
+static int ram_save_target_page_common(RAMState *rs, PageSearchStatus *pss)
 {
     ram_addr_t offset = ((ram_addr_t)pss->page) << TARGET_PAGE_BITS;
     int res;
+
+    if (migrate_multifd()) {
+        RAMBlock *block = pss->block;
+        /*
+         * While using multifd live migration, we still need to handle zero
+         * page checking on the migration main thread.
+         */
+        if (migrate_zero_page_detection() == ZERO_PAGE_DETECTION_LEGACY) {
+            if (save_zero_page(rs, pss, offset)) {
+                return 1;
+            }
+        }
+
+        return ram_save_multifd_page(block, offset);
+    }
 
     if (control_save_page(pss, offset, &res)) {
         return res;
@@ -2006,32 +2024,6 @@ static int ram_save_target_page_legacy(RAMState *rs, PageSearchStatus *pss)
     }
 
     return ram_save_page(rs, pss);
-}
-
-/**
- * ram_save_target_page_multifd: send one target page to multifd workers
- *
- * Returns 1 if the page was queued, -1 otherwise.
- *
- * @rs: current RAM state
- * @pss: data about the page we want to send
- */
-static int ram_save_target_page_multifd(RAMState *rs, PageSearchStatus *pss)
-{
-    RAMBlock *block = pss->block;
-    ram_addr_t offset = ((ram_addr_t)pss->page) << TARGET_PAGE_BITS;
-
-    /*
-     * While using multifd live migration, we still need to handle zero
-     * page checking on the migration main thread.
-     */
-    if (migrate_zero_page_detection() == ZERO_PAGE_DETECTION_LEGACY) {
-        if (save_zero_page(rs, pss, offset)) {
-            return 1;
-        }
-    }
-
-    return ram_save_multifd_page(block, offset);
 }
 
 /* Should be called before sending a host page */
@@ -3055,12 +3047,10 @@ static int ram_save_setup(QEMUFile *f, void *opaque, Error **errp)
     }
 
     migration_ops = g_malloc0(sizeof(MigrationOps));
+    migration_ops->ram_save_target_page = ram_save_target_page_common;
 
     if (migrate_multifd()) {
         multifd_ram_save_setup();
-        migration_ops->ram_save_target_page = ram_save_target_page_multifd;
-    } else {
-        migration_ops->ram_save_target_page = ram_save_target_page_legacy;
     }
 
     bql_unlock();
