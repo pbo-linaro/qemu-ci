@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20241029194348.59574-1-paolo.savini@embecosm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v4 1/2] target/riscv: rvv: reduce the overhead for simple RISC-V vector unit-stride loads and stores
+  [32m✓[0m [PATCH RFC v4 2/2] target/riscv: rvv: improve performance of RISC-V vector loads and stores on large amounts of data.
+  ---
+  [32m✓[0m Signed: DKIM/embecosm.com
+---
+Total patches: 2
+---
+Applying: target/riscv: rvv: reduce the overhead for simple RISC-V vector unit-stride loads and stores
+Patch failed at 0001 target/riscv: rvv: reduce the overhead for simple RISC-V vector unit-stride loads and stores
+error: patch failed: target/riscv/vector_helper.c:635
+error: target/riscv/vector_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
