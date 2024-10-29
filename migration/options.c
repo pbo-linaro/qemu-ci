@@ -266,7 +266,8 @@ bool migrate_multifd(void)
 {
     MigrationState *s = migrate_get_current();
 
-    return s->capabilities[MIGRATION_CAPABILITY_MULTIFD];
+    return s->capabilities[MIGRATION_CAPABILITY_MULTIFD]
+            && !migration_in_postcopy();
 }
 
 bool migrate_pause_before_switchover(void)
@@ -477,11 +478,6 @@ bool migrate_caps_check(bool *old_caps, bool *new_caps, Error **errp)
 
         if (new_caps[MIGRATION_CAPABILITY_X_IGNORE_SHARED]) {
             error_setg(errp, "Postcopy is not compatible with ignore-shared");
-            return false;
-        }
-
-        if (new_caps[MIGRATION_CAPABILITY_MULTIFD]) {
-            error_setg(errp, "Postcopy is not yet compatible with multifd");
             return false;
         }
     }
