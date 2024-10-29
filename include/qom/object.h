@@ -628,6 +628,19 @@ Object *object_new_with_class(ObjectClass *klass);
 Object *object_new(const char *typename);
 
 /**
+ * object_new_allowed:
+ * @klass: The class to instantiate, or fetch instance from.
+ * @errp: The pointer to an Error* that might be filled
+ *
+ * This function detects whether creating a new object of specificed class
+ * is allowed.  For example, we do not allow initiations of abstract class.
+ *
+ * Returns: True if new objects allowed, false otherwise.  When false is
+ *          returned, errp will be set with a proper error message.
+ */
+bool object_new_allowed(ObjectClass *klass, Error **errp);
+
+/**
  * object_new_with_props:
  * @typename:  The name of the type of the object to instantiate.
  * @parent: the parent object

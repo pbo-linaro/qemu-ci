@@ -797,6 +797,19 @@ Object *object_new(const char *typename)
     return object_new_with_type(ti);
 }
 
+bool object_new_allowed(ObjectClass *klass, Error **errp)
+{
+    ERRP_GUARD();
+
+    /* Abstract classes are not instantiable */
+    if (object_class_is_abstract(klass)) {
+        error_setg(errp, "Object type '%s' is abstract",
+                   klass->type->name);
+        return false;
+    }
+
+    return true;
+}
 
 Object *object_new_with_props(const char *typename,
                               Object *parent,
@@ -831,10 +844,10 @@ Object *object_new_with_propv(const char *typename,
         return NULL;
     }
 
-    if (object_class_is_abstract(klass)) {
-        error_setg(errp, "object type '%s' is abstract", typename);
+    if (!object_new_allowed(klass, errp)) {
         return NULL;
     }
+
     obj = object_new_with_type(klass->type);
 
     if (!object_set_propv(obj, errp, vargs)) {

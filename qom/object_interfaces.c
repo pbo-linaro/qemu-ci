@@ -102,8 +102,7 @@ Object *user_creatable_add_type(const char *type, const char *id,
         return NULL;
     }
 
-    if (object_class_is_abstract(klass)) {
-        error_setg(errp, "object type '%s' is abstract", type);
+    if (!object_new_allowed(klass, errp)) {
         return NULL;
     }
 

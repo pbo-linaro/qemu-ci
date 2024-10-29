@@ -154,12 +154,17 @@ ObjectClass *cpu_class_by_name(const char *typename, const char *cpu_model)
     assert(cc->class_by_name);
     assert(cpu_model);
     oc = cc->class_by_name(cpu_model);
-    if (object_class_dynamic_cast(oc, typename) &&
-        !object_class_is_abstract(oc)) {
-        return oc;
+
+    if (!object_class_dynamic_cast(oc, typename)) {
+        return NULL;
     }
 
-    return NULL;
+    /* TODO: allow error message to be passed to the callers */
+    if (!object_new_allowed(oc, NULL)) {
+        return NULL;
+    }
+
+    return oc;
 }
 
 static void cpu_common_parse_features(const char *typename, char *features,
