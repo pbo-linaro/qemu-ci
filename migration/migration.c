@@ -92,6 +92,9 @@ enum mig_rp_message_type {
     MIG_RP_MSG_MAX
 };
 
+/* Migration channel types */
+enum { CH_DEFAULT, CH_MULTIFD, CH_POSTCOPY };
+
 /* When we add fault tolerance, we could have several
    migrations at once.  For now we don't need to add
    dynamic creation of migration */
@@ -919,16 +922,15 @@ void migration_fd_process_incoming(QEMUFile *f)
  * Returns true when we want to start a new incoming migration process,
  * false otherwise.
  */
-static bool migration_should_start_incoming(bool main_channel)
+static bool migration_should_start_incoming(uint8_t channel)
 {
-    /* Multifd doesn't start unless all channels are established */
-    if (migrate_multifd()) {
-        return migration_has_all_channels();
+    if (channel == CH_POSTCOPY) {
+        return false;
     }
 
-    /* Preempt channel only starts when the main channel is created */
-    if (migrate_postcopy_preempt()) {
-        return main_channel;
+    /* Multifd doesn't start unless all channels are established */
+    if (migrate_multifd()) {
+        return multifd_recv_all_channels_created();
     }
 
     /*
@@ -936,7 +938,7 @@ static bool migration_should_start_incoming(bool main_channel)
      * it's the main channel that's being created, and we should always
      * proceed with this channel.
      */
-    assert(main_channel);
+    assert(channel == CH_DEFAULT);
     return true;
 }
 
@@ -945,13 +947,11 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
     MigrationIncomingState *mis = migration_incoming_get_current();
     Error *local_err = NULL;
     QEMUFile *f;
-    bool default_channel = true;
     uint32_t channel_magic = 0;
+    uint8_t channel = CH_DEFAULT;
     int ret = 0;
 
-    if (migrate_multifd() && !migrate_mapped_ram() &&
-        !migrate_postcopy_ram() &&
-        qio_channel_has_feature(ioc, QIO_CHANNEL_FEATURE_READ_MSG_PEEK)) {
+    if (qio_channel_has_feature(ioc, QIO_CHANNEL_FEATURE_READ_MSG_PEEK)) {
         /*
          * With multiple channels, it is possible that we receive channels
          * out of order on destination side, causing incorrect mapping of
@@ -969,35 +969,49 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
             return;
         }
 
-        default_channel = (channel_magic == cpu_to_be32(QEMU_VM_FILE_MAGIC));
-    } else {
-        default_channel = !mis->from_src_file;
+        if (channel_magic == cpu_to_be32(QEMU_VM_FILE_MAGIC)) {
+            channel = CH_DEFAULT;
+        } else if (channel_magic == cpu_to_be32(MULTIFD_MAGIC)) {
+            channel = CH_MULTIFD;
+        } else if (channel_magic == cpu_to_be32(POSTCOPY_MAGIC)) {
+            if (qio_channel_read_all(ioc, (char *)&channel_magic,
+                                sizeof(channel_magic), &local_err)) {
+                error_report_err(local_err);
+                return;
+            }
+            channel = CH_POSTCOPY;
+        } else {
+            error_report("%s: could not identify channel, unknown magic: %u",
+                           __func__, channel_magic);
+            return;
+        }
     }
 
     if (multifd_recv_setup(errp) != 0) {
         return;
     }
 
-    if (default_channel) {
+    if (channel == CH_DEFAULT) {
         f = qemu_file_new_input(ioc);
         migration_incoming_setup(f);
-    } else {
+    } else if (channel == CH_MULTIFD) {
         /* Multiple connections */
-        assert(migration_needs_multiple_sockets());
         if (migrate_multifd()) {
             multifd_recv_new_channel(ioc, &local_err);
-        } else {
-            assert(migrate_postcopy_preempt());
-            f = qemu_file_new_input(ioc);
-            postcopy_preempt_new_channel(mis, f);
         }
         if (local_err) {
             error_propagate(errp, local_err);
             return;
         }
+    } else if (channel == CH_POSTCOPY) {
+        if (migrate_postcopy()) {
+            assert(migrate_postcopy_preempt());
+            f = qemu_file_new_input(ioc);
+            postcopy_preempt_new_channel(mis, f);
+        }
     }
 
-    if (migration_should_start_incoming(default_channel)) {
+    if (migration_should_start_incoming(channel)) {
         /* If it's a recovery, we're done */
         if (postcopy_try_recover()) {
             return;
@@ -1014,21 +1028,22 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
  */
 bool migration_has_all_channels(void)
 {
+    bool ret = false;
     MigrationIncomingState *mis = migration_incoming_get_current();
 
     if (!mis->from_src_file) {
-        return false;
+        return ret;
     }
 
     if (migrate_multifd()) {
-        return multifd_recv_all_channels_created();
+        ret = multifd_recv_all_channels_created();
     }
 
-    if (migrate_postcopy_preempt()) {
-        return mis->postcopy_qemufile_dst != NULL;
+    if (ret && migrate_postcopy_preempt()) {
+        ret = mis->postcopy_qemufile_dst != NULL;
     }
 
-    return true;
+    return ret;
 }
 
 int migrate_send_rp_switchover_ack(MigrationIncomingState *mis)
