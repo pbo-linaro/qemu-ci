@@ -110,9 +110,9 @@ uint32_t hvf_get_supported_cpuid(uint32_t func, uint32_t idx,
         if (idx == 0) {
             uint64_t host_xcr0;
             if (xgetbv(ecx, 0, &host_xcr0)) {
+                /* Only show xcr0 bits corresponding to usable features.  */
                 uint64_t supp_xcr0 = host_xcr0 & (XSTATE_FP_MASK |
                                   XSTATE_SSE_MASK | XSTATE_YMM_MASK |
-                                  XSTATE_BNDREGS_MASK | XSTATE_BNDCSR_MASK |
                                   XSTATE_OPMASK_MASK | XSTATE_ZMM_Hi256_MASK |
                                   XSTATE_Hi16_ZMM_MASK);
                 eax &= supp_xcr0;
