@@ -177,4 +177,55 @@ bool user_creatable_del(const char *id, Error **errp);
  */
 void user_creatable_cleanup(void);
 
+#define TYPE_SINGLETON "singleton"
+
+typedef struct SingletonClass SingletonClass;
+DECLARE_CLASS_CHECKERS(SingletonClass, SINGLETON, TYPE_SINGLETON)
+
+/**
+ * SingletonClass:
+ *
+ * @parent_class: the base class
+ * @get_instance: fetch the singleton instance and elevate its refcount if
+ *                it is created, NULL otherwise.
+ *
+ * Singleton class describes the type of object classes that can only
+ * provide one instance for the whole lifecycle of QEMU.  It will fail the
+ * operation if one attemps to create more than one instance.
+ *
+ * One can fetch the single object using class's get_instance() callback if
+ * it was created before.  This can be useful for operations like QMP
+ * qom-list-properties, where dynamically creating an object might not be
+ * feasible.
+ *
+ * Classes with TYPE_SINGLETON must provide get_instance() implementation,
+ * make sure the refcount is elevanted before returning, so that the
+ * instance (if existed) can never be freed concurrently once returned.
+ */
+struct SingletonClass {
+    /* <private> */
+    InterfaceClass parent_class;
+    /* <public> */
+    Object *(*get_instance)(void);
+};
+
+/**
+ * object_class_is_singleton:
+ *
+ * @class: the class to detect singleton
+ *
+ * Returns: true if it's a singleton class, false otherwise.
+ */
+bool object_class_is_singleton(ObjectClass *class);
+
+/**
+ * singleton_get_instance:
+ *
+ * @class: the class to fetch singleton instance
+ *
+ * Returns: the Object with elevated refcount if the class is a singleton
+ *          class and the singleton object is created, NULL otherwise.
+ */
+Object *singleton_get_instance(ObjectClass *class);
+
 #endif

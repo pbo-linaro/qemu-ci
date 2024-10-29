@@ -553,6 +553,9 @@ static void object_initialize_with_type(Object *obj, size_t size, TypeImpl *type
     g_assert(type->abstract == false);
     g_assert(size >= type->instance_size);
 
+    /* Singleton class can only create one object */
+    g_assert(!singleton_get_instance(type->class));
+
     memset(obj, 0, type->instance_size);
     obj->class = type->class;
     object_ref(obj);
@@ -808,7 +811,37 @@ bool object_new_allowed(ObjectClass *klass, Error **errp)
         return false;
     }
 
+    if (object_class_is_singleton(klass)) {
+        Object *obj = singleton_get_instance(klass);
+
+        if (obj) {
+            object_unref(obj);
+            /*
+             * TODO: Enhance the error message.  E.g., the singleton class
+             * can provide a per-class error message in SingletonClass.
+             */
+            error_setg(errp, "Object type '%s' conflicts with "
+                       "an existing singleton instance",
+                       klass->type->name);
+            return false;
+        }
+    }
+
     return true;
+}
+
+Object *object_new_or_fetch(ObjectClass *klass)
+{
+    Object *obj;
+
+    if (object_class_is_singleton(klass)) {
+        obj = singleton_get_instance(klass);
+        if (obj) {
+            return obj;
+        }
+    }
+
+    return object_new_with_class(klass);
 }
 
 Object *object_new_with_props(const char *typename,

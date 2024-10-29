@@ -641,6 +641,18 @@ Object *object_new(const char *typename);
 bool object_new_allowed(ObjectClass *klass, Error **errp);
 
 /**
+ * object_new_or_fetch:
+ * @klass: The class to instantiate, or fetch instance from.
+ *
+ * This function will either initialize a new object using heap allocated
+ * memory, or fetch one object if the object is a singleton and the only
+ * instance has already been created.
+ *
+ * Returns: The fetched object (either newly initiated or existing).
+ */
+Object *object_new_or_fetch(ObjectClass *klass);
+
+/**
  * object_new_with_props:
  * @typename:  The name of the type of the object to instantiate.
  * @parent: the parent object
