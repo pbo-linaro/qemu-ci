@@ -16,6 +16,7 @@
 #import <ParavirtualizedGraphics/ParavirtualizedGraphics.h>
 #include "qemu/typedefs.h"
 #include "exec/memory.h"
+#include "hw/qdev-properties.h"
 #include "ui/surface.h"
 
 @class PGDeviceDescriptor;
@@ -27,6 +28,7 @@
 
 typedef QTAILQ_HEAD(, PGTask_s) PGTaskList;
 
+struct AppleGFXDisplayMode;
 typedef struct AppleGFXState {
     /* Initialised on init/realize() */
     MemoryRegion iomem_gfx;
@@ -36,6 +38,8 @@ typedef struct AppleGFXState {
     id<MTLDevice> mtl;
     id<MTLCommandQueue> mtl_queue;
     dispatch_queue_t render_queue;
+    struct AppleGFXDisplayMode *display_modes;
+    uint32_t num_display_modes;
     /*
      * QemuMutex & QemuConds for awaiting completion of PVG memory-mapping and
      * reading requests after submitting them to run in the AIO context.
@@ -66,6 +70,12 @@ typedef struct AppleGFXState {
     id<MTLTexture> texture;
 } AppleGFXState;
 
+typedef struct AppleGFXDisplayMode {
+    uint16_t width_px;
+    uint16_t height_px;
+    uint16_t refresh_rate_hz;
+} AppleGFXDisplayMode;
+
 void apple_gfx_common_init(Object *obj, AppleGFXState *s, const char* obj_name);
 void apple_gfx_common_realize(AppleGFXState *s, PGDeviceDescriptor *desc,
                               Error **errp);
@@ -74,6 +84,8 @@ uintptr_t apple_gfx_host_address_for_gpa_range(uint64_t guest_physical,
                                                MemoryRegion **mapping_in_region);
 void apple_gfx_await_bh_job(AppleGFXState *s, QemuCond *job_cond,
                             bool *job_done_flag);
+
+extern const PropertyInfo qdev_prop_display_mode;
 
 #endif
 
