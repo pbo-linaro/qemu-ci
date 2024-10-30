@@ -189,7 +189,6 @@ static void memory_dump(Monitor *mon, int count, int format, int wsize,
         i = 0;
         while (i < l) {
             switch(wsize) {
-            default:
             case 1:
                 v = ldub_p(buf + i);
                 break;
@@ -201,6 +200,9 @@ static void memory_dump(Monitor *mon, int count, int format, int wsize,
                 break;
             case 8:
                 v = ldq_p(buf + i);
+                break;
+            default:
+                v = ldub_p(buf + i);
                 break;
             }
             monitor_printf(mon, " ");
