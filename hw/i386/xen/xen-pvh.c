@@ -28,7 +28,7 @@ struct XenPVHx86State {
 static DeviceState *xen_pvh_cpu_new(MachineState *ms,
                                     int64_t apic_id)
 {
-    Object *cpu = object_new(ms->cpu_type);
+    Object *cpu = object_new_dynamic(ms->cpu_type, &error_abort);
 
     object_property_add_child(OBJECT(ms), "cpu[*]", cpu);
     object_property_set_uint(cpu, "apic-id", apic_id, &error_fatal);

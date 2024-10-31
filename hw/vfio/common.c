@@ -1550,7 +1550,11 @@ bool vfio_attach_device(char *name, VFIODevice *vbasedev,
 
 
     if (!vbasedev->mdev) {
-        hiod = HOST_IOMMU_DEVICE(object_new(ops->hiod_typename));
+        Object *obj = object_new_dynamic(ops->hiod_typename, errp);
+        if (!obj) {
+            return false;
+        }
+        hiod = HOST_IOMMU_DEVICE(obj);
         vbasedev->hiod = hiod;
     }
 

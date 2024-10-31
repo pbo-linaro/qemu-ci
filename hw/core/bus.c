@@ -163,7 +163,7 @@ BusState *qbus_new(const char *typename, DeviceState *parent, const char *name)
 {
     BusState *bus;
 
-    bus = BUS(object_new(typename));
+    bus = BUS(object_new_dynamic(typename, &error_abort));
     qbus_init_internal(bus, parent, name);
 
     return bus;

@@ -162,7 +162,7 @@ DeviceState *qdev_new(const char *name)
         error_report("unknown type '%s'", name);
         abort();
     }
-    return DEVICE(object_new(name));
+    return DEVICE(object_new_dynamic(name, &error_abort));
 }
 
 DeviceState *qdev_try_new(const char *name)
@@ -170,7 +170,7 @@ DeviceState *qdev_try_new(const char *name)
     if (!module_object_class_by_name(name)) {
         return NULL;
     }
-    return DEVICE(object_new(name));
+    return DEVICE(object_new_dynamic(name, &error_abort));
 }
 
 static QTAILQ_HEAD(, DeviceListener) device_listeners

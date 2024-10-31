@@ -419,6 +419,7 @@ static VFIOContainer *vfio_create_container(int fd, VFIOGroup *group,
 {
     int iommu_type;
     const char *vioc_name;
+    Object *obj;
     VFIOContainer *container;
 
     iommu_type = vfio_get_iommu_type(fd, errp);
@@ -432,7 +433,10 @@ static VFIOContainer *vfio_create_container(int fd, VFIOGroup *group,
 
     vioc_name = vfio_get_iommu_class_name(iommu_type);
 
-    container = VFIO_IOMMU_LEGACY(object_new(vioc_name));
+    if (!(obj = object_new_dynamic(vioc_name, NULL))) {
+        return NULL;
+    }
+    container = VFIO_IOMMU_LEGACY(obj);
     container->fd = fd;
     container->iommu_type = iommu_type;
     return container;

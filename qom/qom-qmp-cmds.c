@@ -134,14 +134,15 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
         return NULL;
     }
 
-    if (!object_class_dynamic_cast(klass, TYPE_DEVICE)
-        || object_class_is_abstract(klass)) {
-        error_setg(errp, QERR_INVALID_PARAMETER_VALUE, "typename",
-                   "a non-abstract device type");
+    if (!object_class_dynamic_cast(klass, TYPE_DEVICE)) {
+        error_setg(errp, "Object type '%s' is not a device",
+                   typename);
         return NULL;
     }
 
-    obj = object_new(typename);
+    if (!(obj = object_new_dynamic(typename, errp))) {
+        return NULL;
+    }
 
     object_property_iter_init(&iter, obj);
     while ((prop = object_property_iter_next(&iter))) {
@@ -202,7 +203,9 @@ ObjectPropertyInfoList *qmp_qom_list_properties(const char *typename,
     if (object_class_is_abstract(klass)) {
         object_class_property_iter_init(&iter, klass);
     } else {
-        obj = object_new(typename);
+        if (!(obj = object_new_dynamic(typename, errp))) {
+            return NULL;
+        }
         object_property_iter_init(&iter, obj);
     }
     while ((prop = object_property_iter_next(&iter))) {

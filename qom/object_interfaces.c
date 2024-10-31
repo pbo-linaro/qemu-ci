@@ -102,13 +102,10 @@ Object *user_creatable_add_type(const char *type, const char *id,
         return NULL;
     }
 
-    if (object_class_is_abstract(klass)) {
-        error_setg(errp, "object type '%s' is abstract", type);
+    assert(qdict);
+    if (!(obj = object_new_dynamic(type, errp))) {
         return NULL;
     }
-
-    assert(qdict);
-    obj = object_new(type);
     object_set_properties_from_qdict(obj, qdict, v, &local_err);
     if (local_err) {
         goto out;
