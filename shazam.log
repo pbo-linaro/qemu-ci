@@ -1,0 +1,120 @@
+Grabbing thread from lore.kernel.org/all/20241031035319.731906-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 35 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 815 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/50] target/riscv/csr.c: Fix an access to VXSAT
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 2/50] target/riscv: Add fw_dynamic_info32 for booting RV32 OpenSBI
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 3/50] target/riscv: Adjust PMP size for no-MMU RV64 QEMU running RV32
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 4/50] target/riscv: Correct SXL return value for RV32 in RV64 QEMU
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 5/50] target/riscv: Detect sxl to set bit width for RV32 in RV64
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 6/50] target/riscv: Correct mcause/scause bit width for RV32 in RV64 QEMU
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 7/50] target/riscv: Enable RV32 CPU support in RV64 QEMU
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 8/50] target/riscv: Add max32 CPU for RV64 QEMU
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 9/50] tests/avocado: Boot Linux for RV32 cpu on RV64 QEMU
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 10/50] hw/intc: Make zeroth priority register read-only
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [11/50]!
+  [32m✓[0m [PATCH 12/50] target/riscv: Set vtype.vill on CPU reset
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 13/50] hw/intc/riscv_aplic: Check and update pending when write sourcecfg
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 14/50] hw/char: riscv_htif: Use blocking qemu_chr_fe_write_all
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 15/50] hw/char: sifive_uart: Print uart characters async
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [16/50]!
+  [32m✓[0m [PATCH 17/50] target/riscv: Add zicfilp extension
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 18/50] target/riscv: Introduce elp state and enabling controls for zicfilp
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 19/50] target/riscv: save and restore elp state on priv transitions
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 20/50] target/riscv: additional code information for sw check
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 21/50] target/riscv: tracking indirect branches (fcfi) for zicfilp
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 22/50] target/riscv: zicfilp `lpad` impl and branch tracking
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 23/50] disas/riscv: enable `lpad` disassembly
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 24/50] target/riscv: Expose zicfilp extension as a cpu property
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 25/50] target/riscv: Add zicfiss extension
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [26/50]!
+  [32m✓[0m [PATCH 27/50] target/riscv: tb flag for shadow stack instructions
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [28/50]!
+  ERROR: missing [29/50]!
+  ERROR: missing [30/50]!
+  ERROR: missing [31/50]!
+  [32m✓[0m [PATCH 32/50] target/riscv: compressed encodings for sspush and sspopchk
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [33/50]!
+  [32m✓[0m [PATCH 34/50] disas/riscv: enable disassembly for compressed sspush/sspopchk
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 35/50] target/riscv: Expose zicfiss extension as a cpu property
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 36/50] exec/memtxattr: add process identifier to the transaction attributes
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 37/50] hw/riscv: add riscv-iommu-bits.h
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 38/50] hw/riscv: add RISC-V IOMMU base emulation
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 39/50] pci-ids.rst: add Red Hat pci-id for RISC-V IOMMU device
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [40/50]!
+  ERROR: missing [41/50]!
+  [32m✓[0m [PATCH 42/50] test/qtest: add riscv-iommu-pci tests
+    [32m✓[0m Signed: DKIM/gmail.com
+  ERROR: missing [43/50]!
+  ERROR: missing [44/50]!
+  ERROR: missing [45/50]!
+  ERROR: missing [46/50]!
+  ERROR: missing [47/50]!
+  ERROR: missing [48/50]!
+  [32m✓[0m [PATCH 49/50] target/riscv/kvm: clarify how 'riscv-aia' default works
+    [32m✓[0m Signed: DKIM/gmail.com
+  [32m✓[0m [PATCH 50/50] target/riscv: Fix vcompress with rvv_ta_all_1s
+    [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 34
+---
+WARNING: Thread incomplete!
+Applying: target/riscv/csr.c: Fix an access to VXSAT
+Applying: target/riscv: Add fw_dynamic_info32 for booting RV32 OpenSBI
+Applying: target/riscv: Adjust PMP size for no-MMU RV64 QEMU running RV32
+Applying: target/riscv: Correct SXL return value for RV32 in RV64 QEMU
+Applying: target/riscv: Detect sxl to set bit width for RV32 in RV64
+Applying: target/riscv: Correct mcause/scause bit width for RV32 in RV64 QEMU
+Applying: target/riscv: Enable RV32 CPU support in RV64 QEMU
+Applying: target/riscv: Add max32 CPU for RV64 QEMU
+Applying: tests/avocado: Boot Linux for RV32 cpu on RV64 QEMU
+Applying: hw/intc: Make zeroth priority register read-only
+Applying: target/riscv: Set vtype.vill on CPU reset
+Applying: hw/intc/riscv_aplic: Check and update pending when write sourcecfg
+Applying: hw/char: riscv_htif: Use blocking qemu_chr_fe_write_all
+Applying: hw/char: sifive_uart: Print uart characters async
+Applying: target/riscv: Add zicfilp extension
+Applying: target/riscv: Introduce elp state and enabling controls for zicfilp
+Patch failed at 0016 target/riscv: Introduce elp state and enabling controls for zicfilp
+error: patch failed: target/riscv/cpu.c:1011
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
