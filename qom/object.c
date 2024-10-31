@@ -545,13 +545,18 @@ static void object_class_property_init_all(Object *obj)
     }
 }
 
-static void object_initialize_with_type(Object *obj, size_t size, TypeImpl *type)
+static bool object_initialize_with_type(Object *obj, size_t size, TypeImpl *type, Error **errp)
 {
     type_initialize(type);
 
     g_assert(type->instance_size >= sizeof(Object));
-    g_assert(type->abstract == false);
     g_assert(size >= type->instance_size);
+
+    if (type->abstract) {
+        error_setg(errp, "Abstract type '%s' cannot be instantiated",
+                   type->name);
+        return false;
+    }
 
     memset(obj, 0, type->instance_size);
     obj->class = type->class;
@@ -561,6 +566,8 @@ static void object_initialize_with_type(Object *obj, size_t size, TypeImpl *type
                                             NULL, object_property_free);
     object_init_with_type(obj, type);
     object_post_init_with_type(obj, type);
+
+    return true;
 }
 
 void object_initialize(void *data, size_t size, const char *typename)
@@ -583,7 +590,7 @@ void object_initialize(void *data, size_t size, const char *typename)
         abort();
     }
 
-    object_initialize_with_type(data, size, type);
+    object_initialize_with_type(data, size, type, &error_abort);
 }
 
 bool object_initialize_child_with_props(Object *parentobj,
@@ -755,7 +762,7 @@ typedef union {
 } qemu_max_align_t;
 #endif
 
-static Object *object_new_with_type(Type type)
+static Object *object_new_with_type(Type type, Error **errp)
 {
     Object *obj;
     size_t size, align;
@@ -779,7 +786,10 @@ static Object *object_new_with_type(Type type)
         obj_free = qemu_vfree;
     }
 
-    object_initialize_with_type(obj, size, type);
+    if (!object_initialize_with_type(obj, size, type, errp)) {
+        g_free(obj);
+        return NULL;
+    }
     obj->free = obj_free;
 
     return obj;
@@ -787,14 +797,14 @@ static Object *object_new_with_type(Type type)
 
 Object *object_new_with_class(ObjectClass *klass)
 {
-    return object_new_with_type(klass->type);
+    return object_new_with_type(klass->type, &error_abort);
 }
 
 Object *object_new(const char *typename)
 {
     TypeImpl *ti = type_get_by_name(typename);
 
-    return object_new_with_type(ti);
+    return object_new_with_type(ti, &error_abort);
 }
 
 
@@ -831,11 +841,9 @@ Object *object_new_with_propv(const char *typename,
         return NULL;
     }
 
-    if (object_class_is_abstract(klass)) {
-        error_setg(errp, "object type '%s' is abstract", typename);
+    if (!(obj = object_new_with_type(klass->type, errp))) {
         return NULL;
     }
-    obj = object_new_with_type(klass->type);
 
     if (!object_set_propv(obj, errp, vargs)) {
         goto error;
