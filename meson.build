@@ -334,6 +334,10 @@ elif host_os == 'windows'
   # We use this compilation option instead of relying on gcc_struct attribute
   # because clang does not support it (but supports the option).
   qemu_common_flags += ['-mno-ms-bitfields']
+
+  if compiler.get_id() == 'clang' and compiler.get_linker_id() != 'ld.lld'
+    error('On windows, you need to use lld with clang - use msys2 clang64/clangarm64 env')
+  endif
 endif
 
 # Choose instruction set (currently x86-only)
