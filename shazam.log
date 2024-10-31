@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20241031174832.6574-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 95 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] .gitlab-ci.d/cirrus: Remove the macos-15 job
+  [32m✓[0m [PATCH 2/14] tests/functional: make tuxrun disk images writable
+  [32m✓[0m [PATCH 3/14] tests/functional: make cached asset files read-only
+  [32m✓[0m [PATCH 4/14] Revert "Remove the unused sh4eb target"
+    + Signed-off-by: Rob Landley <rob@landley.net> ([32m✓[0m DKIM/landley.net)
+  [32m✓[0m [PATCH 5/14] tests/functional: Add a test for sh4eb
+  [32m✓[0m [PATCH 6/14] tests/vm/openbsd: Remove the "Time appears wrong" workaround
+  [32m✓[0m [PATCH 7/14] tests/functional: Fix the s390x and ppc64 tuxrun tests
+  [32m✓[0m [PATCH 8/14] hw/s390x: Re-enable the pci-bridge device on s390x
+  [32m✓[0m [PATCH 9/14] next-cube: fix up compilation when DEBUG_NEXT is enabled
+  [32m✓[0m [PATCH 10/14] next-cube: remove cpu parameter from next_scsi_init()
+  [32m✓[0m [PATCH 11/14] tests/functional: Convert the tcg_plugins test
+  [32m✓[0m [PATCH 12/14] tests/functional: Convert BananaPi tests to the functional framework
+  [32m✓[0m [PATCH 13/14] tests/functional: Convert the OrangePi tests to the functional framework
+  [32m✓[0m [PATCH 14/14] tests/functional: Convert the riscv_opensbi avocado test into a standalone test
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: .gitlab-ci.d/cirrus: Remove the macos-15 job
+Applying: tests/functional: make tuxrun disk images writable
+Applying: tests/functional: make cached asset files read-only
+Applying: Revert "Remove the unused sh4eb target"
+Applying: tests/functional: Add a test for sh4eb
+Applying: tests/vm/openbsd: Remove the "Time appears wrong" workaround
+Applying: tests/functional: Fix the s390x and ppc64 tuxrun tests
+Applying: hw/s390x: Re-enable the pci-bridge device on s390x
+Applying: next-cube: fix up compilation when DEBUG_NEXT is enabled
+Applying: next-cube: remove cpu parameter from next_scsi_init()
+Applying: tests/functional: Convert the tcg_plugins test
+Applying: tests/functional: Convert BananaPi tests to the functional framework
+Patch failed at 0012 tests/functional: Convert BananaPi tests to the functional framework
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: tests/functional/meson.build:16
+error: tests/functional/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
