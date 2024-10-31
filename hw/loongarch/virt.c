@@ -1434,6 +1434,19 @@ static int64_t virt_get_default_cpu_node_id(const MachineState *ms, int idx)
     }
 }
 
+static void virt_reset(MachineState *machine, ResetType type)
+{
+    CPUState *cs;
+
+    /* Reset all devices including CPU devices */
+    qemu_devices_reset(type);
+
+    /* Reset PC and register context for kernel direct booting method */
+    CPU_FOREACH(cs) {
+        reset_load_elf(LOONGARCH_CPU(cs));
+    }
+}
+
 static void virt_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -1457,6 +1470,7 @@ static void virt_class_init(ObjectClass *oc, void *data)
     mc->auto_enable_numa_with_memdev = true;
     mc->get_hotplug_handler = virt_get_hotplug_handler;
     mc->default_nic = "virtio-net-pci";
+    mc->reset = virt_reset;
     hc->plug = virt_device_plug_cb;
     hc->pre_plug = virt_device_pre_plug;
     hc->unplug_request = virt_device_unplug_request;

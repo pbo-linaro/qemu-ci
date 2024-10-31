@@ -592,6 +592,13 @@ static void loongarch_cpu_disas_set_info(CPUState *s, disassemble_info *info)
     info->print_insn = print_insn_loongarch;
 }
 
+#ifndef CONFIG_USER_ONLY
+static void loongarch_cpu_reset_cb(void *opaque)
+{
+    cpu_reset((CPUState *) opaque);
+}
+#endif
+
 static void loongarch_cpu_realizefn(DeviceState *dev, Error **errp)
 {
     CPUState *cs = CPU(dev);
@@ -607,6 +614,9 @@ static void loongarch_cpu_realizefn(DeviceState *dev, Error **errp)
     loongarch_cpu_register_gdb_regs_for_features(cs);
 
     cpu_reset(cs);
+#ifndef CONFIG_USER_ONLY
+    qemu_register_reset(loongarch_cpu_reset_cb, dev);
+#endif
     qemu_init_vcpu(cs);
 
     lacc->parent_realize(dev, errp);
