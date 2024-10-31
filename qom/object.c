@@ -807,6 +807,12 @@ Object *object_new(const char *typename)
     return object_new_with_type(ti, &error_abort);
 }
 
+Object *object_new_dynamic(const char *typename, Error **errp)
+{
+    TypeImpl *ti = type_get_by_name(typename);
+
+    return object_new_with_type(ti, errp);
+}
 
 Object *object_new_with_props(const char *typename,
                               Object *parent,
