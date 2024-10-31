@@ -18,7 +18,8 @@ AccelState *current_accel(void)
         AccelClass *ac = accel_find("tcg");
 
         g_assert(ac != NULL);
-        accel = ACCEL(object_new_with_class(OBJECT_CLASS(ac)));
+        accel = ACCEL(object_new_with_class(OBJECT_CLASS(ac),
+                                            &error_abort));
     }
     return accel;
 }
