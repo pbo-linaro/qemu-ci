@@ -330,10 +330,10 @@ elif host_os == 'sunos'
 elif host_os == 'haiku'
   qemu_common_flags += ['-DB_USE_POSITIVE_POSIX_ERRORS', '-D_BSD_SOURCE', '-fPIC']
 elif host_os == 'windows'
-  if not compiler.compiles('struct x { int y; } __attribute__((gcc_struct));',
-                           args: '-Werror')
-    error('Your compiler does not support __attribute__((gcc_struct)) - please use GCC instead of Clang')
-  endif
+  # https://gcc.gnu.org/onlinedocs/gcc/x86-Type-Attributes.html
+  # We use this compilation option instead of relying on gcc_struct attribute
+  # because clang does not support it (but supports the option).
+  qemu_common_flags += ['-mno-ms-bitfields']
 endif
 
 # Choose instruction set (currently x86-only)
