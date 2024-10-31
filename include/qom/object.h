@@ -637,7 +637,17 @@ Object *object_new_with_class(ObjectClass *klass, Error **errp);
  *
  * Returns: The newly allocated and instantiated object.
  */
-Object *object_new(const char *typename);
+
+/*
+ * NB, object_new_helper is just an internal helper, wrapped by
+ * the object_new() macro which prevents invokation unless given
+ * a static, const string.
+ *
+ * Code should call object_new(), or object_new_dynamic(), not
+ * object_new_helper().
+ */
+Object *object_new_helper(const char *typename);
+#define object_new(typename) object_new_static(typename "")
 
 /**
  * object_new_dynamic:

@@ -800,7 +800,7 @@ Object *object_new_with_class(ObjectClass *klass, Error **errp)
     return object_new_with_type(klass->type, errp);
 }
 
-Object *object_new(const char *typename)
+Object *object_new_helper(const char *typename)
 {
     TypeImpl *ti = type_get_by_name(typename);
 
