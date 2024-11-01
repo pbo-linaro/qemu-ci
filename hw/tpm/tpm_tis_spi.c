@@ -17,6 +17,7 @@
 #include "trace.h"
 #include "tpm_tis.h"
 #include "hw/ssi/ssi.h"
+#include "migration/vmstate.h"
 
 typedef struct TPMStateSPI {
     /*< private >*/
@@ -26,7 +27,6 @@ typedef struct TPMStateSPI {
     uint8_t     wait_state_cnt;  /* wait state counter */
     uint8_t     xfer_size;       /* data size of transfer */
     uint32_t    reg_addr;        /* register address of transfer */
-    uint32_t    tis_addr;        /* tis address including locty */
 
     uint8_t     spi_state;       /* READ / WRITE / IDLE */
 #define SPI_STATE_IDLE   0
@@ -46,14 +46,47 @@ typedef struct TPMStateSPI {
 
 DECLARE_INSTANCE_CHECKER(TPMStateSPI, TPM_TIS_SPI, TYPE_TPM_TIS_SPI)
 
+static int tpm_tis_spi_pre_save(void *opaque)
+{
+    TPMStateSPI *spist = opaque;
+
+    return tpm_tis_pre_save(&spist->tpm_state);
+}
+
+static const VMStateDescription vmstate_tpm_tis_spi = {
+     .name = "tpm-tis-spi",
+     .version_id = 0,
+     .pre_save  = tpm_tis_spi_pre_save,
+     .fields = (const VMStateField[]) {
+         VMSTATE_BUFFER(tpm_state.buffer, TPMStateSPI),
+         VMSTATE_UINT16(tpm_state.rw_offset, TPMStateSPI),
+         VMSTATE_UINT8(tpm_state.active_locty, TPMStateSPI),
+         VMSTATE_UINT8(tpm_state.aborting_locty, TPMStateSPI),
+         VMSTATE_UINT8(tpm_state.next_locty, TPMStateSPI),
+
+         VMSTATE_STRUCT_ARRAY(tpm_state.loc, TPMStateSPI,
+                              TPM_TIS_NUM_LOCALITIES, 0,
+                              vmstate_locty, TPMLocality),
+
+         /* spi specifics */
+         VMSTATE_UINT8(byte_offset, TPMStateSPI),
+         VMSTATE_UINT8(wait_state_cnt, TPMStateSPI),
+         VMSTATE_UINT8(xfer_size, TPMStateSPI),
+         VMSTATE_UINT32(reg_addr, TPMStateSPI),
+         VMSTATE_UINT8(spi_state, TPMStateSPI),
+         VMSTATE_BOOL(command, TPMStateSPI),
+
+         VMSTATE_END_OF_LIST()
+     }
+};
+
 static inline void tpm_tis_spi_clear_data(TPMStateSPI *spist)
 {
-    spist->spi_state = 0;
+    spist->spi_state = SPI_STATE_IDLE;
     spist->byte_offset = 0;
     spist->wait_state_cnt = 0;
     spist->xfer_size = 0;
     spist->reg_addr = 0;
-    spist->tis_addr = 0xffffffff;
 
     return;
 }
@@ -126,6 +159,7 @@ static uint32_t tpm_transfer(SSIPeripheral *ss, uint32_t tx)
     uint8_t byte;       /* reversed byte value */
     uint8_t offset = 0; /* offset of byte in payload */
     uint8_t index;      /* index of data byte in transfer */
+    uint32_t tis_addr;  /* tis address including locty */
 
     /* new transfer or not */
     if (spist->command) {   /* new transfer start */
@@ -230,11 +264,11 @@ static uint32_t tpm_transfer(SSIPeripheral *ss, uint32_t tx)
                     trace_tpm_tis_spi_transfer_event("index exceeds xfer_size");
                     return rx;
                 }
-                spist->tis_addr = spist->reg_addr + (index % 4);
+                tis_addr = spist->reg_addr + (index % 4);
                 if (spist->spi_state == SPI_STATE_WRITE) {
-                    tpm_tis_spi_write(spist, spist->tis_addr, byte);
+                    tpm_tis_spi_write(spist, tis_addr, byte);
                 } else {
-                    byte = tpm_tis_spi_read(spist, spist->tis_addr);
+                    byte = tpm_tis_spi_read(spist, tis_addr);
                     rx = rx | (byte << (24 - offset * 8));
                     trace_tpm_tis_spi_transfer_data("byte added to response",
                                                      byte);
@@ -271,9 +305,6 @@ static void tpm_realize(SSIPeripheral *dev, Error **errp)
     TPMStateSPI *spist = TPM_TIS_SPI(dev);
     TPMState *s = &spist->tpm_state;
 
-    spist->command = true;
-    spist->spi_state = SPI_STATE_IDLE;
-
     if (!tpm_find()) {
         error_setg(errp, "at most one TPM device is permitted");
         return;
@@ -303,6 +334,7 @@ static void tpm_tis_spi_class_init(ObjectClass *klass, void *data)
     set_bit(DEVICE_CATEGORY_MISC, dc->categories);
 
     dc->desc = "SPI TPM";
+    dc->vmsd = &vmstate_tpm_tis_spi;
 
     tc->model = TPM_MODEL_TPM_TIS;
     tc->request_completed = tpm_tis_spi_request_completed;
