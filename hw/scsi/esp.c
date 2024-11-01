@@ -1015,6 +1015,7 @@ void esp_transfer_data(SCSIRequest *req, uint32_t len)
              */
              s->rregs[ESP_RINTR] |= INTR_BS | INTR_FC;
              s->rregs[ESP_RSEQ] = SEQ_CD;
+             esp_raise_irq(s);
              break;
 
         case CMD_SELATNS | CMD_DMA:
@@ -1025,6 +1026,7 @@ void esp_transfer_data(SCSIRequest *req, uint32_t len)
              */
              s->rregs[ESP_RINTR] |= INTR_BS;
              s->rregs[ESP_RSEQ] = SEQ_MO;
+             esp_raise_irq(s);
              break;
 
         case CMD_TI | CMD_DMA:
@@ -1035,10 +1037,9 @@ void esp_transfer_data(SCSIRequest *req, uint32_t len)
              */
             s->rregs[ESP_CMD] = 0;
             s->rregs[ESP_RINTR] |= INTR_BS;
+            esp_raise_irq(s);
             break;
         }
-
-        esp_raise_irq(s);
     }
 
     /*
