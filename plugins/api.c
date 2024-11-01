@@ -485,6 +485,22 @@ const char *qemu_plugin_path_to_binary(void)
     return path;
 }
 
+const char **qemu_plugin_argv_to_binary(void)
+{
+    const char **argv = NULL;
+#ifdef CONFIG_USER_ONLY
+    int i, argc;
+    TaskState *ts = get_task_state(current_cpu);
+    argc = ts->bprm->argc;
+    argv = g_malloc(sizeof(char *) * (argc + 1));
+    for (i = 0; i < argc; ++i) {
+        argv[i] = g_strdup(ts->bprm->argv[i]);
+    }
+    argv[argc] = NULL;
+#endif
+    return argv;
+}
+
 uint64_t qemu_plugin_start_code(void)
 {
     uint64_t start = 0;

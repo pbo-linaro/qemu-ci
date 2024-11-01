@@ -838,6 +838,17 @@ QEMU_PLUGIN_API
 const char *qemu_plugin_path_to_binary(void);
 
 /**
+ * qemu_plugin_argv_to_binary() - argv to binary file being executed
+ *
+ * Return a string array representing the argv to the binary. For user-mode
+ * this is the main executable's argv. For system emulation we currently
+ * return NULL. The user should g_free() the string array once no longer
+ * needed.
+ */
+QEMU_PLUGIN_API
+const char **qemu_plugin_argv_to_binary(void);
+
+/**
  * qemu_plugin_start_code() - returns start of text segment
  *
  * Returns the nominal start address of the main text segment in
