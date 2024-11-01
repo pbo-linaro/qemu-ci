@@ -20,4 +20,7 @@ int cpr_state_load(Error **errp);
 void cpr_state_close(void);
 struct QIOChannel *cpr_state_ioc(void);
 
+QEMUFile *cpr_transfer_output(const char *uri, Error **errp);
+QEMUFile *cpr_transfer_input(const char *uri, Error **errp);
+
 #endif
