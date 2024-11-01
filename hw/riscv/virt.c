@@ -1542,12 +1542,19 @@ static void virt_machine_init(MachineState *machine)
         }
     }
 
-    if (kvm_enabled() && virt_use_kvm_aia(s)) {
-        kvm_riscv_aia_create(machine, IMSIC_MMIO_GROUP_MIN_SHIFT,
-                             VIRT_IRQCHIP_NUM_SOURCES, VIRT_IRQCHIP_NUM_MSIS,
-                             memmap[VIRT_APLIC_S].base,
-                             memmap[VIRT_IMSIC_S].base,
-                             s->aia_guests);
+    if (kvm_enabled() && s->aia_type == VIRT_AIA_TYPE_APLIC_IMSIC) {
+        if (virt_use_kvm_aia(s)) {
+            kvm_riscv_aia_create(machine, IMSIC_MMIO_GROUP_MIN_SHIFT,
+                                 VIRT_IRQCHIP_NUM_SOURCES,
+                                 VIRT_IRQCHIP_NUM_MSIS,
+                                 memmap[VIRT_APLIC_S].base,
+                                 memmap[VIRT_IMSIC_S].base,
+                                 s->aia_guests);
+        } else {
+            error_report("Host machine doesn't support in-kernel APLIC MSI, "
+                         "please use aia=none or aia=aplic");
+            exit(1);
+        }
     }
 
     if (riscv_is_32bit(&s->soc[0])) {
