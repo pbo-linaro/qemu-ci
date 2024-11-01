@@ -460,6 +460,20 @@ static void machine_set_mem_merge(Object *obj, bool value, Error **errp)
     ms->mem_merge = value;
 }
 
+static int machine_get_anon_alloc(Object *obj, Error **errp)
+{
+    MachineState *ms = MACHINE(obj);
+
+    return ms->anon_alloc;
+}
+
+static void machine_set_anon_alloc(Object *obj, int value, Error **errp)
+{
+    MachineState *ms = MACHINE(obj);
+
+    ms->anon_alloc = value;
+}
+
 static bool machine_get_usb(Object *obj, Error **errp)
 {
     MachineState *ms = MACHINE(obj);
@@ -1077,6 +1091,11 @@ static void machine_class_init(ObjectClass *oc, void *data)
         machine_get_mem_merge, machine_set_mem_merge);
     object_class_property_set_description(oc, "mem-merge",
         "Enable/disable memory merge support");
+
+    object_class_property_add_enum(oc, "anon-alloc", "AnonAllocOption",
+                                   &AnonAllocOption_lookup,
+                                   machine_get_anon_alloc,
+                                   machine_set_anon_alloc);
 
     object_class_property_add_bool(oc, "usb",
         machine_get_usb, machine_set_usb);

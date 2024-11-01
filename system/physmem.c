@@ -47,6 +47,7 @@
 #include "qemu/qemu-print.h"
 #include "qemu/log.h"
 #include "qemu/memalign.h"
+#include "qemu/memfd.h"
 #include "exec/memory.h"
 #include "exec/ioport.h"
 #include "sysemu/dma.h"
@@ -69,6 +70,8 @@
 
 #include "qemu/pmem.h"
 
+#include "qapi/qapi-types-migration.h"
+#include "migration/options.h"
 #include "migration/vmstate.h"
 
 #include "qemu/range.h"
@@ -1849,6 +1852,35 @@ static void ram_block_add(RAMBlock *new_block, Error **errp)
                 qemu_mutex_unlock_ramlist();
                 return;
             }
+
+        } else if (current_machine->anon_alloc == ANON_ALLOC_OPTION_MEMFD &&
+                   !object_dynamic_cast(new_block->mr->parent_obj.parent,
+                                        TYPE_MEMORY_BACKEND)) {
+            size_t max_length = new_block->max_length;
+            MemoryRegion *mr = new_block->mr;
+            const char *name = memory_region_name(mr);
+
+            new_block->mr->align = QEMU_VMALLOC_ALIGN;
+            new_block->flags |= RAM_SHARED;
+
+            if (new_block->fd == -1) {
+                new_block->fd = qemu_memfd_create(name, max_length + mr->align,
+                                                  0, 0, 0, errp);
+            }
+
+            if (new_block->fd >= 0) {
+                int mfd = new_block->fd;
+                qemu_set_cloexec(mfd);
+                new_block->host = file_ram_alloc(new_block, max_length, mfd,
+                                                 false, 0, errp);
+            }
+            if (!new_block->host) {
+                qemu_mutex_unlock_ramlist();
+                return;
+            }
+            memory_try_enable_merging(new_block->host, new_block->max_length);
+            free_on_error = true;
+
         } else {
             new_block->host = qemu_anon_ram_alloc(new_block->max_length,
                                                   &new_block->mr->align,
@@ -1932,6 +1964,9 @@ static void ram_block_add(RAMBlock *new_block, Error **errp)
         ram_block_notify_add(new_block->host, new_block->used_length,
                              new_block->max_length);
     }
+    trace_ram_block_add(memory_region_name(new_block->mr), new_block->flags,
+                        new_block->fd, new_block->used_length,
+                        new_block->max_length);
     return;
 
 out_free:
