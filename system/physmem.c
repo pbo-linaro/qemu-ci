@@ -72,6 +72,7 @@
 
 #include "qapi/qapi-types-migration.h"
 #include "migration/options.h"
+#include "migration/cpr.h"
 #include "migration/vmstate.h"
 
 #include "qemu/range.h"
@@ -1663,6 +1664,19 @@ void qemu_ram_unset_idstr(RAMBlock *block)
     }
 }
 
+static char *cpr_name(RAMBlock *block)
+{
+    MemoryRegion *mr = block->mr;
+    const char *mr_name = memory_region_name(mr);
+    g_autofree char *id = mr->dev ? qdev_get_dev_path(mr->dev) : NULL;
+
+    if (id) {
+        return g_strdup_printf("%s/%s", id, mr_name);
+    } else {
+        return g_strdup(mr_name);
+    }
+}
+
 size_t qemu_ram_pagesize(RAMBlock *rb)
 {
     return rb->page_size;
@@ -1858,14 +1872,23 @@ static void ram_block_add(RAMBlock *new_block, Error **errp)
                                         TYPE_MEMORY_BACKEND)) {
             size_t max_length = new_block->max_length;
             MemoryRegion *mr = new_block->mr;
-            const char *name = memory_region_name(mr);
+            g_autofree char *name = cpr_name(new_block);
 
             new_block->mr->align = QEMU_VMALLOC_ALIGN;
             new_block->flags |= RAM_SHARED;
+            new_block->fd = cpr_find_fd(name, 0);
 
             if (new_block->fd == -1) {
                 new_block->fd = qemu_memfd_create(name, max_length + mr->align,
                                                   0, 0, 0, errp);
+                cpr_save_fd(name, 0, new_block->fd);
+            } else if (lseek(new_block->fd, 0, SEEK_END) < max_length &&
+                       ftruncate(new_block->fd, max_length)) {
+                error_setg_errno(errp, errno,
+                                 "cannot grow ram block %s fd %d to %ld bytes",
+                                 name, new_block->fd, max_length);
+                qemu_mutex_unlock_ramlist();
+                return;
             }
 
             if (new_block->fd >= 0) {
@@ -1875,6 +1898,7 @@ static void ram_block_add(RAMBlock *new_block, Error **errp)
                                                  false, 0, errp);
             }
             if (!new_block->host) {
+                cpr_delete_fd(name, 0);
                 qemu_mutex_unlock_ramlist();
                 return;
             }
@@ -2182,6 +2206,8 @@ static void reclaim_ramblock(RAMBlock *block)
 
 void qemu_ram_free(RAMBlock *block)
 {
+    g_autofree char *name = NULL;
+
     if (!block) {
         return;
     }
@@ -2192,6 +2218,8 @@ void qemu_ram_free(RAMBlock *block)
     }
 
     qemu_mutex_lock_ramlist();
+    name = cpr_name(block);
+    cpr_delete_fd(name, 0);
     QLIST_REMOVE_RCU(block, next);
     ram_list.mru_block = NULL;
     /* Write list before version */
