@@ -84,6 +84,7 @@ const char *migrate_tls_creds(void);
 const char *migrate_tls_hostname(void);
 uint64_t migrate_xbzrle_cache_size(void);
 ZeroPageDetection migrate_zero_page_detection(void);
+const char *migrate_cpr_uri(void);
 
 /* parameters helpers */
 

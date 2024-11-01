@@ -172,6 +172,8 @@ Property migration_properties[] = {
     DEFINE_PROP_ZERO_PAGE_DETECTION("zero-page-detection", MigrationState,
                        parameters.zero_page_detection,
                        ZERO_PAGE_DETECTION_MULTIFD),
+    DEFINE_PROP_STRING("cpr-uri", MigrationState,
+                       parameters.cpr_uri),
 
     /* Migration capabilities */
     DEFINE_PROP_MIG_CAP("x-xbzrle", MIGRATION_CAPABILITY_XBZRLE),
@@ -837,6 +839,13 @@ ZeroPageDetection migrate_zero_page_detection(void)
     return s->parameters.zero_page_detection;
 }
 
+const char *migrate_cpr_uri(void)
+{
+    MigrationState *s = migrate_get_current();
+
+    return s->parameters.cpr_uri;
+}
+
 /* parameters helpers */
 
 AnnounceParameters *migrate_announce_params(void)
@@ -922,6 +931,7 @@ MigrationParameters *qmp_query_migrate_parameters(Error **errp)
     params->zero_page_detection = s->parameters.zero_page_detection;
     params->has_direct_io = true;
     params->direct_io = s->parameters.direct_io;
+    params->cpr_uri = g_strdup(s->parameters.cpr_uri);
 
     return params;
 }
@@ -956,6 +966,7 @@ void migrate_params_init(MigrationParameters *params)
     params->has_mode = true;
     params->has_zero_page_detection = true;
     params->has_direct_io = true;
+    params->cpr_uri = g_strdup("");
 }
 
 /*
@@ -1255,6 +1266,11 @@ static void migrate_params_test_apply(MigrateSetParameters *params,
     if (params->has_direct_io) {
         dest->direct_io = params->direct_io;
     }
+
+    if (params->cpr_uri) {
+        assert(params->cpr_uri->type == QTYPE_QSTRING);
+        dest->cpr_uri = params->cpr_uri->u.s;
+    }
 }
 
 static void migrate_params_apply(MigrateSetParameters *params, Error **errp)
@@ -1387,6 +1403,12 @@ static void migrate_params_apply(MigrateSetParameters *params, Error **errp)
     if (params->has_direct_io) {
         s->parameters.direct_io = params->direct_io;
     }
+
+    if (params->cpr_uri) {
+        g_free(s->parameters.cpr_uri);
+        assert(params->cpr_uri->type == QTYPE_QSTRING);
+        s->parameters.cpr_uri = g_strdup(params->cpr_uri->u.s);
+    }
 }
 
 void qmp_migrate_set_parameters(MigrateSetParameters *params, Error **errp)
@@ -1411,6 +1433,12 @@ void qmp_migrate_set_parameters(MigrateSetParameters *params, Error **errp)
         qobject_unref(params->tls_authz->u.n);
         params->tls_authz->type = QTYPE_QSTRING;
         params->tls_authz->u.s = strdup("");
+    }
+
+    if (params->cpr_uri && params->cpr_uri->type == QTYPE_QNULL) {
+        qobject_unref(params->cpr_uri->u.n);
+        params->cpr_uri->type = QTYPE_QSTRING;
+        params->cpr_uri->u.s = strdup("");
     }
 
     migrate_params_test_apply(params, &tmp);
