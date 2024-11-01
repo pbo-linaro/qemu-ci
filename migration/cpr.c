@@ -116,6 +116,18 @@ QIOChannel *cpr_state_ioc(void)
     return qemu_file_get_ioc(cpr_state_file);
 }
 
+static char *cpr_uri;
+
+void cpr_set_cpr_uri(const char *uri)
+{
+    cpr_uri = g_strdup(uri);
+}
+
+const char *cpr_get_cpr_uri(void)
+{
+    return cpr_uri;
+}
+
 int cpr_state_save(Error **errp)
 {
     int ret;

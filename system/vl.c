@@ -77,6 +77,7 @@
 #include "hw/block/block.h"
 #include "hw/i386/x86.h"
 #include "hw/i386/pc.h"
+#include "migration/cpr.h"
 #include "migration/misc.h"
 #include "migration/snapshot.h"
 #include "sysemu/tpm.h"
@@ -3448,6 +3449,9 @@ void qemu_init(int argc, char **argv)
                 if (!icount_opts) {
                     exit(1);
                 }
+                break;
+            case QEMU_OPTION_cpr_uri:
+                cpr_set_cpr_uri(optarg);
                 break;
             case QEMU_OPTION_incoming:
                 if (!incoming) {

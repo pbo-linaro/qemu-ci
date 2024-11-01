@@ -4922,6 +4922,14 @@ SRST
 
 ERST
 
+DEF("cpr-uri", HAS_ARG, QEMU_OPTION_cpr_uri, \
+    "-cpr-uri unix:socketpath\n",
+    QEMU_ARCH_ALL)
+SRST
+``-cpr-uri unix:socketpath``
+    URI for incoming CPR state, for the cpr-transfer migration mode.
+ERST
+
 DEF("incoming", HAS_ARG, QEMU_OPTION_incoming, \
     "-incoming tcp:[host]:port[,to=maxport][,ipv4=on|off][,ipv6=on|off]\n" \
     "-incoming rdma:host:port[,ipv4=on|off][,ipv6=on|off]\n" \

@@ -15,6 +15,9 @@ void cpr_save_fd(const char *name, int id, int fd);
 void cpr_delete_fd(const char *name, int id);
 int cpr_find_fd(const char *name, int id);
 
+void cpr_set_cpr_uri(const char *uri);
+const char *cpr_get_cpr_uri(void);
+
 int cpr_state_save(Error **errp);
 int cpr_state_load(Error **errp);
 void cpr_state_close(void);
