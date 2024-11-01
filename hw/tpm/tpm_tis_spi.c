@@ -302,7 +302,7 @@ static void tpm_tis_spi_class_init(ObjectClass *klass, void *data)
     device_class_set_props(dc, tpm_tis_spi_properties);
     set_bit(DEVICE_CATEGORY_MISC, dc->categories);
 
-    dc->desc = "PowerNV SPI TPM";
+    dc->desc = "SPI TPM";
 
     tc->model = TPM_MODEL_TPM_TIS;
     tc->request_completed = tpm_tis_spi_request_completed;
