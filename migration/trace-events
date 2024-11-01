@@ -347,6 +347,8 @@ colo_failover_set_state(const char *new_state) "new state %s"
 cpr_save_fd(const char *name, int id, int fd) "%s, id %d, fd %d"
 cpr_delete_fd(const char *name, int id) "%s, id %d"
 cpr_find_fd(const char *name, int id, int fd) "%s, id %d returns %d"
+cpr_state_save(const char *mode, const char *uri) "%s to %s"
+cpr_state_load(const char *mode, const char *uri) "%s from %s"
 
 # block-dirty-bitmap.c
 send_bitmap_header_enter(void) ""

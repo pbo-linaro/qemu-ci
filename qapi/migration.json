@@ -614,9 +614,42 @@
 #     or COLO.
 #
 #     (since 8.2)
+#
+# @cpr-transfer: This mode allows the user to transfer a guest to a
+#     new QEMU instance on the same host with minimal guest pause
+#     time, by preserving guest RAM in place, albeit with new virtual
+#     addresses in new QEMU.
+#
+#     The user starts new QEMU on the same host as old QEMU, with the
+#     the same arguments as old QEMU, plus the -incoming option.  The
+#     user issues the migrate command to old QEMU, which stops the VM,
+#     saves state to the migration channels, and enters the
+#     postmigrate state.  Execution resumes in new QEMU.
+#
+#     This mode requires a second migration channel, specified by the
+#     cpr-uri migration property on the outgoing side, and by the
+#     cpr-uri QEMU command-line option on the incoming side.  The
+#     channel must be a type, such as unix socket, that supports
+#     SCM_RIGHTS.
+#
+#     Memory-backend objects must have the share=on attribute, but
+#     memory-backend-epc and memory-backend-ram are not supported.
+#     The VM must be started with the '-machine anon-alloc=memfd'
+#     option.
+#
+#     The incoming migration channel cannot be a file type, and for
+#     the tcp type, the port cannot be 0 (meaning dynamically choose
+#     a port).
+#
+#     When using -incoming defer, you must issue the migrate command
+#     to old QEMU before issuing any monitor commands to new QEMU.
+#     However, new QEMU does not open and read the migration stream
+#     until you issue the migrate incoming command.
+#
+#     (since 9.2)
 ##
 { 'enum': 'MigMode',
-  'data': [ 'normal', 'cpr-reboot' ] }
+  'data': [ 'normal', 'cpr-reboot', 'cpr-transfer' ] }
 
 ##
 # @ZeroPageDetection:
