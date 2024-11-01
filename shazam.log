@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20241101133917.27634-1-Jonathan.Cameron@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/10] hw/cxl: Check size of input data to dynamic capacity mailbox commands
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 2/10] hw/cxl: Check input includes at least the header in cmd_features_set_feature()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 3/10] hw/cxl: Check input length is large enough in cmd_events_clear_records()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 4/10] hw/cxl: Check enough data in cmd_firmware_update_transfer()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 5/10] hw/cxl: Check the length of data requested fits in get_log()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 6/10] hw/cxl: Avoid accesses beyond the end of cel_log.
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 7/10] hw/cxl: Ensuring enough data to read parameters in cmd_tunnel_management_cmd()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 8/10] hw/cxl: Check that writes do not go beyond end of target attributes
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 9/10] hw/cxl: Ensure there is enough data for the header in cmd_ccls_set_lsa()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+  [PATCH 10/10] hw/cxl: Ensure there is enough data to read the input header in cmd_get_physical_port_state()
+    + Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
+---
+Total patches: 10
+---
+Applying: hw/cxl: Check size of input data to dynamic capacity mailbox commands
+Applying: hw/cxl: Check input includes at least the header in cmd_features_set_feature()
+Applying: hw/cxl: Check input length is large enough in cmd_events_clear_records()
+Applying: hw/cxl: Check enough data in cmd_firmware_update_transfer()
+Applying: hw/cxl: Check the length of data requested fits in get_log()
+Applying: hw/cxl: Avoid accesses beyond the end of cel_log.
+Applying: hw/cxl: Ensuring enough data to read parameters in cmd_tunnel_management_cmd()
+Applying: hw/cxl: Check that writes do not go beyond end of target attributes
+Patch failed at 0008 hw/cxl: Check that writes do not go beyond end of target attributes
+error: patch failed: hw/cxl/cxl-mailbox-utils.c:1314
+error: hw/cxl/cxl-mailbox-utils.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
