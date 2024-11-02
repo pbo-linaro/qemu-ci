@@ -80,13 +80,6 @@
 
 #define PLATFORM_CLK_FREQ_HZ       (400 * 1000 * 1000)
 
-struct boot_info
-{
-    uint32_t dt_base;
-    uint32_t dt_size;
-    uint32_t entry;
-};
-
 static uint32_t *pci_map_create(void *fdt, uint32_t mpic, int first_slot,
                                 int nr_slots, int *len)
 {
@@ -919,7 +912,6 @@ void ppce500_init(MachineState *machine)
     bool kernel_as_payload;
     hwaddr bios_entry = 0;
     target_long payload_size;
-    struct boot_info *boot_info = NULL;
     int dt_size;
     int i;
     unsigned int smp_cpus = machine->smp.cpus;
@@ -974,9 +966,8 @@ void ppce500_init(MachineState *machine)
         /* Register reset handler */
         if (!i) {
             /* Primary CPU */
-            boot_info = g_new0(struct boot_info, 1);
             qemu_register_reset(ppce500_cpu_reset, cpu);
-            env->load_info = boot_info;
+            env->load_info = &pms->boot_info;
         } else {
             /* Secondary CPUs */
             qemu_register_reset(ppce500_cpu_reset_sec, cpu);
@@ -1274,9 +1265,9 @@ void ppce500_init(MachineState *machine)
     }
     assert(dt_size < DTB_MAX_SIZE);
 
-    boot_info->entry = bios_entry;
-    boot_info->dt_base = dt_base;
-    boot_info->dt_size = dt_size;
+    pms->boot_info.entry = bios_entry;
+    pms->boot_info.dt_base = dt_base;
+    pms->boot_info.dt_size = dt_size;
 }
 
 static void e500_ccsr_initfn(Object *obj)
