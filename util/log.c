@@ -486,7 +486,7 @@ const QEMULogItem qemu_log_items[] = {
       "show CPU state before CPU resets" },
     { LOG_UNIMP, "unimp",
       "log unimplemented functionality" },
-    { LOG_GUEST_ERROR, "guest_errors",
+    { LOG_GUEST_ERROR, "guest_error",
       "log when the guest OS does something invalid (eg accessing a\n"
       "non-existent register)" },
     { CPU_LOG_PAGE, "page",
@@ -521,6 +521,10 @@ int qemu_str_to_log_mask(const char *str)
             for (item = qemu_log_items; item->mask != 0; item++) {
                 mask |= item->mask;
             }
+        } else if (g_str_equal(*tmp, "guest_errors")) {
+            warn_report("Log option guest_errors is deprecated. "
+                        "Use guest_error,invalid_mem instead.");
+            mask |= LOG_GUEST_ERROR | LOG_INVALID_MEM;
 #ifdef CONFIG_TRACE_LOG
         } else if (g_str_has_prefix(*tmp, "trace:") && (*tmp)[6] != '\0') {
             trace_enable_events((*tmp) + 6);

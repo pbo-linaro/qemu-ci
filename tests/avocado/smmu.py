@@ -46,7 +46,7 @@ class SMMU(LinuxTest):
         self.vm.add_args("-accel", "kvm")
         self.vm.add_args("-cpu", "host")
         self.vm.add_args("-machine", "iommu=smmuv3")
-        self.vm.add_args("-d", "guest_errors")
+        self.vm.add_args("-d", "guest_error,invalid_mem")
         self.vm.add_args('-bios', os.path.join(BUILD_DIR, 'pc-bios',
                          'edk2-aarch64-code.fd'))
         self.vm.add_args('-device', 'virtio-rng-pci,rng=rng0')

@@ -418,7 +418,7 @@ static void test_host_i2c(const void *data)
 
     qts = qtest_initf("-M %s -smp %d,cores=1,threads=%d -nographic "
                       "-nodefaults -serial mon:stdio -S "
-                      "-d guest_errors",
+                      "-d guest_error,invalid_mem",
                       machine, SMT, SMT);
 
     /* Check the I2C master status registers after POR */

@@ -85,7 +85,7 @@ request completes.  Unexpected accesses must not cause memory corruption or
 leaks in QEMU.
 
 Invalid device register accesses can be reported with
-``qemu_log_mask(LOG_GUEST_ERROR, ...)``.  The ``-d guest_errors`` command-line
+``qemu_log_mask(LOG_GUEST_ERROR, ...)``.  The ``-d guest_error`` command-line
 option enables these log messages.
 
 Live Migration
