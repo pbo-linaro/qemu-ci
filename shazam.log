@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/a3f5c533b761756e90e80cc616e2e9dff3aefa4a.camel@proton.me/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] UI/GTK: full-screen after wait for hiding of tabs and menu_bar
+  ---
+  [31m✗[0m BADSIG: DKIM/proton.me
+---
+Total patches: 1
+---
+Applying: UI/GTK: full-screen after wait for hiding of tabs and menu_bar
+Patch failed at 0001 UI/GTK: full-screen after wait for hiding of tabs and menu_bar
+error: corrupt patch at line 65
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
