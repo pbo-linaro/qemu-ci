@@ -899,7 +899,6 @@ void ppce500_init(MachineState *machine)
     const PPCE500MachineClass *pmc = PPCE500_MACHINE_GET_CLASS(machine);
     MachineClass *mc = MACHINE_CLASS(pmc);
     PCIBus *pci_bus;
-    CPUPPCState *env = NULL;
     uint64_t loadaddr;
     hwaddr kernel_base = -1LL;
     int kernel_size = 0;
@@ -921,7 +920,6 @@ void ppce500_init(MachineState *machine)
     IrqLines *irqs;
     DeviceState *dev, *mpicdev;
     DriveInfo *dinfo;
-    CPUPPCState *firstenv = NULL;
     MemoryRegion *ccsr_addr_space;
     SysBusDevice *s;
     PPCE500CCSRState *ccsr;
@@ -930,6 +928,7 @@ void ppce500_init(MachineState *machine)
     irqs = g_new0(IrqLines, smp_cpus);
     for (i = 0; i < smp_cpus; i++) {
         PowerPCCPU *cpu;
+        CPUPPCState *env;
         CPUState *cs;
 
         cpu = POWERPC_CPU(object_new(machine->cpu_type));
@@ -950,10 +949,6 @@ void ppce500_init(MachineState *machine)
                                  &error_abort);
         qdev_realize_and_unref(DEVICE(cs), NULL, &error_fatal);
 
-        if (!firstenv) {
-            firstenv = env;
-        }
-
         irqs[i].irq[OPENPIC_OUTPUT_INT] =
             qdev_get_gpio_in(DEVICE(cpu), PPCE500_INPUT_INT);
         irqs[i].irq[OPENPIC_OUTPUT_CINT] =
@@ -973,8 +968,6 @@ void ppce500_init(MachineState *machine)
             qemu_register_reset(ppce500_cpu_reset_sec, cpu);
         }
     }
-
-    env = firstenv;
 
     if (!QEMU_IS_ALIGNED(machine->ram_size, RAM_SIZES_ALIGN)) {
         error_report("RAM size must be multiple of %" PRIu64, RAM_SIZES_ALIGN);
