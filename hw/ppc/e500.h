@@ -5,18 +5,23 @@
 #include "hw/platform-bus.h"
 #include "qom/object.h"
 
+struct boot_info {
+    uint32_t dt_base;
+    uint32_t dt_size;
+    uint32_t entry;
+};
+
 struct PPCE500MachineState {
-    /*< private >*/
     MachineState parent_obj;
 
     /* points to instance of TYPE_PLATFORM_BUS_DEVICE if
      * board supports dynamic sysbus devices
      */
     PlatformBusDevice *pbus_dev;
+    struct boot_info boot_info;
 };
 
 struct PPCE500MachineClass {
-    /*< private >*/
     MachineClass parent_class;
 
     /* required -- must at least add toplevel board compatible */
