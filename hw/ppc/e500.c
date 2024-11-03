@@ -20,7 +20,7 @@
 #include "qemu/guest-random.h"
 #include "qapi/error.h"
 #include "e500.h"
-#include "e500-ccsr.h"
+#include "ppce500_ccsr.h"
 #include "net/net.h"
 #include "qemu/config-file.h"
 #include "hw/block/flash.h"
@@ -59,7 +59,6 @@
 #define RAM_SIZES_ALIGN            (64 * MiB)
 
 /* TODO: parameterize */
-#define MPC8544_CCSRBAR_SIZE       0x00100000ULL
 #define MPC8544_MPIC_REGS_OFFSET   0x40000ULL
 #define MPC8544_MSI_REGS_OFFSET   0x41600ULL
 #define MPC8544_SERIAL0_REGS_OFFSET 0x4500ULL
@@ -530,7 +529,7 @@ static int ppce500_load_device_tree(PPCE500MachineState *pms,
     qemu_fdt_setprop_cell(fdt, soc, "#size-cells", 1);
     qemu_fdt_setprop_cells(fdt, soc, "ranges", 0x0,
                            pmc->ccsrbar_base >> 32, pmc->ccsrbar_base,
-                           MPC8544_CCSRBAR_SIZE);
+                           MPC85XX_CCSRBAR_SIZE);
     /* XXX should contain a reasonable value */
     qemu_fdt_setprop_cell(fdt, soc, "bus-frequency", 0);
 
@@ -1256,21 +1255,6 @@ void ppce500_init(MachineState *machine)
     pms->boot_info.dt_size = dt_size;
 }
 
-static void e500_ccsr_initfn(Object *obj)
-{
-    PPCE500CCSRState *ccsr = CCSR(obj);
-    memory_region_init(&ccsr->ccsr_space, obj, "e500-ccsr",
-                       MPC8544_CCSRBAR_SIZE);
-    sysbus_init_mmio(SYS_BUS_DEVICE(ccsr), &ccsr->ccsr_space);
-}
-
-static const TypeInfo e500_ccsr_info = {
-    .name          = TYPE_CCSR,
-    .parent        = TYPE_SYS_BUS_DEVICE,
-    .instance_size = sizeof(PPCE500CCSRState),
-    .instance_init = e500_ccsr_initfn,
-};
-
 static const TypeInfo ppce500_info = {
     .name          = TYPE_PPCE500_MACHINE,
     .parent        = TYPE_MACHINE,
@@ -1281,7 +1265,6 @@ static const TypeInfo ppce500_info = {
 
 static void e500_register_types(void)
 {
-    type_register_static(&e500_ccsr_info);
     type_register_static(&ppce500_info);
 }
 
