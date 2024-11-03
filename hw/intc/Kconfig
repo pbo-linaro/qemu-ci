@@ -16,6 +16,10 @@ config OPENPIC
     bool
     select MSI_NONBROKEN
 
+config OPENPIC_KVM
+    bool
+    depends on OPENPIC && KVM
+
 config APIC
     bool
     select MSI_NONBROKEN

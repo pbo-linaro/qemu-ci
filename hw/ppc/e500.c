@@ -826,7 +826,7 @@ static DeviceState *ppce500_init_mpic_qemu(PPCE500MachineState *pms,
 static DeviceState *ppce500_init_mpic_kvm(const PPCE500MachineClass *pmc,
                                           Error **errp)
 {
-#ifdef CONFIG_KVM
+#ifdef CONFIG_OPENPIC_KVM
     DeviceState *dev;
     CPUState *cs;
 
