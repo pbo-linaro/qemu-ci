@@ -1,0 +1,150 @@
+Grabbing thread from lore.kernel.org/all/cover.1730754238.git.mst@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 40 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 414 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/65] softmmu: Expand comments describing max_bounce_buffer_size
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 2/65] docs: fix vhost-user protocol doc
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 3/65] hw/acpi: Fix ordering of BDF in Generic Initiator PCI Device Handle.
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 4/65] hw/acpi/GI: Fix trivial parameter alignment issue.
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 5/65] hw/acpi: Move AML building code for Generic Initiators to aml_build.c
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 6/65] hw/acpi: Rename build_all_acpi_generic_initiators() to build_acpi_generic_initiator()
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 7/65] hw/pci: Add a busnr property to pci_props and use for acpi/gi
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 8/65] acpi/pci: Move Generic Initiator object handling into acpi/pci.*
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 9/65] hw/pci-bridge: Add acpi_uid property to TYPE_PXB_BUS
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 10/65] hw/i386/acpi: Use TYPE_PXB_BUS property acpi_uid for DSDT
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 11/65] hw/pci-host/gpex-acpi: Use acpi_uid property.
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 12/65] hw/acpi: Generic Port Affinity Structure support
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 13/65] hw/acpi: Make storage of node id uint32_t to reduce fragility
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 14/65] hw/acpi: Generic Initiator - add missing object class property descriptions.
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 15/65] hw/pci-bridge/cxl_root_port: Provide x-speed and x-width properties.
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [16/65]!
+  [32m✓[0m [PATCH 17/65] hw/pcie: Factor out PCI Express link register filling common to EP.
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 18/65] hw/pcie: Provide a utility function for control of EP / SW USP link
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 19/65] hw/mem/cxl-type3: Add properties to control link speed and width
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 20/65] hw/pci-bridge/cxl-upstream: Add properties to control link speed and width
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 21/65] qdev-monitor: add option to report GenericError from find_device_state
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 22/65] vhost-user-blk: split vhost_user_blk_sync_config()
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 23/65] qapi: introduce device-sync-config
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 24/65] acpi/disassemle-aml.sh: fix up after dir reorg
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [25/65]!
+  [32m✓[0m [PATCH 26/65] hw/i386/acpi-build: return a non-var package from _PRT()
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 27/65] tests/acpi: pc: update golden masters for DSDT
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 28/65] amd_iommu: Rename variable mmio to mr_mmio
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [29/65]!
+  ERROR: missing [30/65]!
+  ERROR: missing [31/65]!
+  [32m✓[0m [PATCH 32/65] amd_iommu: Check APIC ID > 255 for XTSup
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 33/65] virtio-pci: fix memory_region_find for VirtIOPCIRegion's MR
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 34/65] virtio/vhost-user: fix qemu abort when hotunplug vhost-user-net device
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [35/65]!
+  [32m✓[0m [PATCH 36/65] hw/cxl: Fix background completion percentage calculation
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [37/65]!
+  ERROR: missing [38/65]!
+  [32m✓[0m [PATCH 39/65] hw/cxl/cxl-mailbox-utils: Fix for device DDR5 ECS control feature tables
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 40/65] hw/cxl: Fix indent of structure member
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [41/65]!
+  [32m✓[0m [PATCH 42/65] vhost-user: fix shared object return values
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [43/65]!
+  ERROR: missing [44/65]!
+  ERROR: missing [45/65]!
+  ERROR: missing [46/65]!
+  ERROR: missing [47/65]!
+  ERROR: missing [48/65]!
+  ERROR: missing [49/65]!
+  ERROR: missing [50/65]!
+  ERROR: missing [51/65]!
+  ERROR: missing [52/65]!
+  [32m✓[0m [PATCH 53/65] hw/cxl: Ensuring enough data to read parameters in cmd_tunnel_management_cmd()
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 54/65] hw/cxl: Check that writes do not go beyond end of target attributes
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [55/65]!
+  ERROR: missing [56/65]!
+  [32m✓[0m [PATCH 57/65] hw/pci: Add parenthesis to PCI_BUILD_BDF macro
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [58/65]!
+  ERROR: missing [59/65]!
+  ERROR: missing [60/65]!
+  [32m✓[0m [PATCH 61/65] tests/qtest/bios-tables-test: Update DSDT golden masters for x86/{pc,q35}
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 62/65] hw/acpi: Update GED with vCPU Hotplug VMSD for migration
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 63/65] intel_iommu: Send IQE event when setting reserved bit in IQT_TAIL
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [64/65]!
+  ERROR: missing [65/65]!
+---
+Total patches: 39
+---
+WARNING: Thread incomplete!
+Applying: softmmu: Expand comments describing max_bounce_buffer_size
+Applying: docs: fix vhost-user protocol doc
+Applying: hw/acpi: Fix ordering of BDF in Generic Initiator PCI Device Handle.
+Applying: hw/acpi/GI: Fix trivial parameter alignment issue.
+Applying: hw/acpi: Move AML building code for Generic Initiators to aml_build.c
+Applying: hw/acpi: Rename build_all_acpi_generic_initiators() to build_acpi_generic_initiator()
+Applying: hw/pci: Add a busnr property to pci_props and use for acpi/gi
+Applying: acpi/pci: Move Generic Initiator object handling into acpi/pci.*
+Applying: hw/pci-bridge: Add acpi_uid property to TYPE_PXB_BUS
+Applying: hw/i386/acpi: Use TYPE_PXB_BUS property acpi_uid for DSDT
+Applying: hw/pci-host/gpex-acpi: Use acpi_uid property.
+Applying: hw/acpi: Generic Port Affinity Structure support
+Applying: hw/acpi: Make storage of node id uint32_t to reduce fragility
+Applying: hw/acpi: Generic Initiator - add missing object class property descriptions.
+Applying: hw/pci-bridge/cxl_root_port: Provide x-speed and x-width properties.
+Applying: hw/pcie: Factor out PCI Express link register filling common to EP.
+Applying: hw/pcie: Provide a utility function for control of EP / SW USP link
+Applying: hw/mem/cxl-type3: Add properties to control link speed and width
+Applying: hw/pci-bridge/cxl-upstream: Add properties to control link speed and width
+Applying: qdev-monitor: add option to report GenericError from find_device_state
+Applying: vhost-user-blk: split vhost_user_blk_sync_config()
+Applying: qapi: introduce device-sync-config
+Applying: acpi/disassemle-aml.sh: fix up after dir reorg
+Applying: hw/i386/acpi-build: return a non-var package from _PRT()
+Applying: tests/acpi: pc: update golden masters for DSDT
+Patch failed at 0025 tests/acpi: pc: update golden masters for DSDT
+error: corrupt binary patch at line 206: -- 
+error: patch failed: tests/qtest/bios-tables-test-allowed-diff.h:1
+error: tests/qtest/bios-tables-test-allowed-diff.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
