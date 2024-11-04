@@ -58,6 +58,20 @@ static bool virt_is_veiointc_enabled(LoongArchVirtMachineState *lvms)
     return true;
 }
 
+static CPUState *virt_get_cpu(MachineState *ms, int index)
+{
+    MachineClass *mc = MACHINE_GET_CLASS(ms);
+    const CPUArchIdList *possible_cpus;
+
+    /* Init CPUs */
+    possible_cpus = mc->possible_cpu_arch_ids(ms);
+    if (index < 0 || index >= possible_cpus->len) {
+        return NULL;
+    }
+
+    return possible_cpus->cpus[index].cpu;
+}
+
 static void virt_get_veiointc(Object *obj, Visitor *v, const char *name,
                               void *opaque, Error **errp)
 {
@@ -365,7 +379,7 @@ static void create_fdt(LoongArchVirtMachineState *lvms)
 static void fdt_add_cpu_nodes(const LoongArchVirtMachineState *lvms)
 {
     int num;
-    const MachineState *ms = MACHINE(lvms);
+    MachineState *ms = MACHINE(lvms);
     int smp_cpus = ms->smp.cpus;
 
     qemu_fdt_add_subnode(ms->fdt, "/cpus");
@@ -375,7 +389,7 @@ static void fdt_add_cpu_nodes(const LoongArchVirtMachineState *lvms)
     /* cpu nodes */
     for (num = smp_cpus - 1; num >= 0; num--) {
         char *nodename = g_strdup_printf("/cpus/cpu@%d", num);
-        LoongArchCPU *cpu = LOONGARCH_CPU(qemu_get_cpu(num));
+        LoongArchCPU *cpu = LOONGARCH_CPU(virt_get_cpu(ms, num));
         CPUState *cs = CPU(cpu);
 
         qemu_fdt_add_subnode(ms->fdt, nodename);
@@ -783,16 +797,42 @@ static void virt_devices_init(DeviceState *pch_pic,
     lvms->platform_bus_dev = create_platform_bus(pch_pic);
 }
 
+static void virt_init_cpu_irq(MachineState *ms, CPUState *cs)
+{
+    LoongArchCPU *cpu = LOONGARCH_CPU(cs);
+    CPULoongArchState *env;
+    LoongArchVirtMachineState *lvms = LOONGARCH_VIRT_MACHINE(ms);
+    int pin;
+
+    if (!lvms->ipi || !lvms->extioi) {
+        return;
+    }
+
+    env = &(cpu->env);
+    env->address_space_iocsr = &lvms->as_iocsr;
+    env->ipistate = lvms->ipi;
+    /* connect ipi irq to cpu irq, logic cpu index used here */
+    qdev_connect_gpio_out(lvms->ipi, cs->cpu_index,
+                              qdev_get_gpio_in(DEVICE(cs), IRQ_IPI));
+
+    /*
+     * connect ext irq to the cpu irq
+     * cpu_pin[9:2] <= intc_pin[7:0]
+     */
+    for (pin = 0; pin < LS3A_INTC_IP; pin++) {
+        qdev_connect_gpio_out(lvms->extioi, cs->cpu_index * LS3A_INTC_IP + pin,
+                              qdev_get_gpio_in(DEVICE(cs), pin + 2));
+    }
+}
+
 static void virt_irq_init(LoongArchVirtMachineState *lvms)
 {
     MachineState *ms = MACHINE(lvms);
-    DeviceState *pch_pic, *pch_msi, *cpudev;
+    DeviceState *pch_pic, *pch_msi;
     DeviceState *ipi, *extioi;
     SysBusDevice *d;
-    LoongArchCPU *lacpu;
-    CPULoongArchState *env;
     CPUState *cpu_state;
-    int cpu, pin, i, start, num;
+    int cpu, i, start, num;
     uint32_t cpuintc_phandle, eiointc_phandle, pch_pic_phandle, pch_msi_phandle;
 
     /*
@@ -853,18 +893,6 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
     /* Add cpu interrupt-controller */
     fdt_add_cpuic_node(lvms, &cpuintc_phandle);
 
-    for (cpu = 0; cpu < ms->smp.cpus; cpu++) {
-        cpu_state = qemu_get_cpu(cpu);
-        cpudev = DEVICE(cpu_state);
-        lacpu = LOONGARCH_CPU(cpu_state);
-        env = &(lacpu->env);
-        env->address_space_iocsr = &lvms->as_iocsr;
-
-        /* connect ipi irq to cpu irq */
-        qdev_connect_gpio_out(ipi, cpu, qdev_get_gpio_in(cpudev, IRQ_IPI));
-        env->ipistate = ipi;
-    }
-
     /* Create EXTIOI device */
     extioi = qdev_new(TYPE_LOONGARCH_EXTIOI);
     qdev_prop_set_uint32(extioi, "num-cpu", ms->smp.cpus);
@@ -879,16 +907,10 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
                     sysbus_mmio_get_region(SYS_BUS_DEVICE(extioi), 1));
     }
 
-    /*
-     * connect ext irq to the cpu irq
-     * cpu_pin[9:2] <= intc_pin[7:0]
-     */
+    /* Connect irq to cpu, including ipi and extioi irqchip */
     for (cpu = 0; cpu < ms->smp.cpus; cpu++) {
-        cpudev = DEVICE(qemu_get_cpu(cpu));
-        for (pin = 0; pin < LS3A_INTC_IP; pin++) {
-            qdev_connect_gpio_out(extioi, (cpu * 8 + pin),
-                                  qdev_get_gpio_in(cpudev, pin + 2));
-        }
+        cpu_state = virt_get_cpu(ms, cpu);
+        virt_init_cpu_irq(ms, cpu_state);
     }
 
     /* Add Extend I/O Interrupt Controller node */
