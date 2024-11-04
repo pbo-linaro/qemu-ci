@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20241104105250.57818-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/14]!
+  ERROR: missing [2/14]!
+  ERROR: missing [3/14]!
+  ERROR: missing [4/14]!
+  ERROR: missing [5/14]!
+  [32m✓[0m [PATCH 6/14] target/mips: Convert Loongson DDIV.G opcodes to decodetree
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 7/14] target/mips: Convert Loongson DIV.G opcodes to decodetree
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/14] target/mips: Convert Loongson [D]DIVU.G opcodes to decodetree
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/14] target/mips: Convert Loongson [D]MOD[U].G opcodes to decodetree
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/14] target/mips: Convert Loongson [D]MULT[U].G opcodes to decodetree
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [11/14]!
+  ERROR: missing [12/14]!
+  ERROR: missing [13/14]!
+  ERROR: missing [14/14]!
+---
+Total patches: 5
+---
+WARNING: Thread incomplete!
+Applying: target/mips: Convert Loongson DDIV.G opcodes to decodetree
+Applying: target/mips: Convert Loongson DIV.G opcodes to decodetree
+Applying: target/mips: Convert Loongson [D]DIVU.G opcodes to decodetree
+Applying: target/mips: Convert Loongson [D]MOD[U].G opcodes to decodetree
+Applying: target/mips: Convert Loongson [D]MULT[U].G opcodes to decodetree
+Patch failed at 0005 target/mips: Convert Loongson [D]MULT[U].G opcodes to decodetree
+error: patch failed: target/mips/tcg/translate.c:3572
+error: target/mips/tcg/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
