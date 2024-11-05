@@ -1,0 +1,56 @@
+Grabbing thread from lore.kernel.org/all/20241105180837.5990-1-farosas@suse.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/22] tests/qtest/migration: Fix indentations
+  [32m✓[0m [PATCH 2/22] tests/qtest/migration: Standardize hook names
+  [32m✓[0m [PATCH 3/22] tests/qtest/migration: Stop calling everything "test"
+  [32m✓[0m [PATCH 4/22] tests/migration: Disambiguate guestperf vs. a-b
+  [32m✓[0m [PATCH 5/22] tests/qtest/migration: Move bootfile code to its own file
+  [32m✓[0m [PATCH 6/22] tests/qtest/migration: Move qmp helpers to a separate file
+  [32m✓[0m [PATCH 7/22] tests/qtest/migration: Rename migration-helpers.c
+  [32m✓[0m [PATCH 8/22] tests/qtest/migration: Move ufd_version_check to utils
+  [32m✓[0m [PATCH 9/22] tests/qtest/migration: Move kvm_dirty_ring_supported to utils
+  [32m✓[0m [PATCH 10/22] tests/qtest/migration: Isolate test initialization
+  [32m✓[0m [PATCH 11/22] tests/qtest/migration: Move common test code
+  [32m✓[0m [PATCH 12/22] tests/qtest/migration: Split TLS tests from migration-test.c
+  [32m✓[0m [PATCH 13/22] tests/qtest/migration: Split compression tests from migration-test.c
+  [32m✓[0m [PATCH 14/22] tests/qtest/migration: Split postcopy tests
+  [32m✓[0m [PATCH 15/22] tests/qtest/migration: Split file tests
+  [32m✓[0m [PATCH 16/22] tests/qtest/migration: Split precopy tests
+  [32m✓[0m [PATCH 17/22] tests/qtest/migration: Split CPR tests
+  [32m✓[0m [PATCH 18/22] tests/qtest/migration: Split validation tests + misc
+  [32m✓[0m [PATCH 19/22] tests/qtest/migration: Add migration-test-smoke
+  [32m✓[0m [PATCH 20/22] tests/qtest/migration: Pick smoke tests
+  [32m✓[0m [PATCH 21/22] tests/qtest: Add support for check-qtest-<subsystem>
+  [32m✓[0m [PATCH 22/22] docs: Add migration tests documentation
+  ---
+  [32m✓[0m Signed: DKIM/suse.de
+---
+Total patches: 22
+---
+ Base: using specified base-commit 11b8920ed2093848f79f93d106afe8a69a61a523
+Applying: tests/qtest/migration: Fix indentations
+Applying: tests/qtest/migration: Standardize hook names
+Applying: tests/qtest/migration: Stop calling everything "test"
+Applying: tests/migration: Disambiguate guestperf vs. a-b
+Applying: tests/qtest/migration: Move bootfile code to its own file
+Applying: tests/qtest/migration: Move qmp helpers to a separate file
+Applying: tests/qtest/migration: Rename migration-helpers.c
+Applying: tests/qtest/migration: Move ufd_version_check to utils
+Applying: tests/qtest/migration: Move kvm_dirty_ring_supported to utils
+Applying: tests/qtest/migration: Isolate test initialization
+Applying: tests/qtest/migration: Move common test code
+Applying: tests/qtest/migration: Split TLS tests from migration-test.c
+Patch failed at 0012 tests/qtest/migration: Split TLS tests from migration-test.c
+error: patch failed: tests/qtest/meson.build:349
+error: tests/qtest/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
