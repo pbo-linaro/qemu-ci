@@ -368,7 +368,7 @@ static Property mb_properties[] = {
     DEFINE_PROP_UINT8("use-non-secure", MicroBlazeCPU, cfg.use_non_secure, 0),
     DEFINE_PROP_BOOL("dcache-writeback", MicroBlazeCPU, cfg.dcache_writeback,
                      false),
-    DEFINE_PROP_BOOL("endianness", MicroBlazeCPU, cfg.endi, false),
+    DEFINE_PROP_BOOL("little-endian", MicroBlazeCPU, cfg.endi, false),
     /* Enables bus exceptions on failed data accesses (load/stores).  */
     DEFINE_PROP_BOOL("dopb-bus-exception", MicroBlazeCPU,
                      cfg.dopb_bus_exception, false),
