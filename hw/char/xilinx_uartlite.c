@@ -172,8 +172,8 @@ static const MemoryRegionOps uart_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
     .valid = {
         .min_access_size = 1,
-        .max_access_size = 4
-    }
+        .max_access_size = 4,
+    },
 };
 
 static Property xilinx_uartlite_properties[] = {

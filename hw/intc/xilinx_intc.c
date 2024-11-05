@@ -146,8 +146,8 @@ static const MemoryRegionOps pic_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
     .valid = {
         .min_access_size = 4,
-        .max_access_size = 4
-    }
+        .max_access_size = 4,
+    },
 };
 
 static void irq_handler(void *opaque, int irq, int level)

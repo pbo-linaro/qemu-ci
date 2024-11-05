@@ -172,8 +172,8 @@ static const MemoryRegionOps eth_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
     .valid = {
         .min_access_size = 4,
-        .max_access_size = 4
-    }
+        .max_access_size = 4,
+    },
 };
 
 static bool eth_can_rx(NetClientState *nc)
