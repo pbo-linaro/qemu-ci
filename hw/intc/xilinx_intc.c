@@ -3,6 +3,9 @@
  *
  * Copyright (c) 2009 Edgar E. Iglesias.
  *
+ * https://docs.amd.com/v/u/en-US/xps_intc
+ * DS572: LogiCORE IP XPS Interrupt Controller (v2.01a)
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -143,12 +146,20 @@ static void pic_write(void *opaque, hwaddr addr,
 static const MemoryRegionOps pic_ops = {
     .read = pic_read,
     .write = pic_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
+    /* The XPS INTC registers are read as big-endian data. */
+    .endianness = DEVICE_BIG_ENDIAN,
     .impl = {
         .min_access_size = 4,
         .max_access_size = 4,
     },
     .valid = {
+        /*
+         * All XPS INTC registers are accessed through the PLB interface.
+         * The base address for these registers is provided by the
+         * configuration parameter, C_BASEADDR. Each register is 32 bits
+         * although some bits may be unused and is accessed on a 4-byte
+         * boundary offset from the base address.
+         */
         .min_access_size = 4,
         .max_access_size = 4,
     },
