@@ -502,7 +502,15 @@ static void hda_audio_setup(HDAAudioStream *st)
     trace_hda_audio_format(st->node->name, st->as.nchannels,
                            fmt2name[st->as.fmt], st->as.freq);
 
-    hda_close_stream(st->state, st);
+    /*
+     * Do not hda_close_stream(st->state, st), AUD_open_() handles the logic for
+     * fixed_settings, and same format. This helps prevent race issues in Spice
+     * server & client code too. (see #2639)
+     */
+    if (use_timer) {
+        timer_free(st->buft);
+        st->buft = NULL;
+    }
     if (st->output) {
         if (use_timer) {
             cb = hda_audio_output_cb;
