@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20241105152433.344974-1-berrange@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] tests: refresh package lists with latest libvirt-ci
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: tests: refresh package lists with latest libvirt-ci
+Patch failed at 0001 tests: refresh package lists with latest libvirt-ci
+error: patch failed: .gitlab-ci.d/cirrus.yml:75
+error: .gitlab-ci.d/cirrus.yml: patch does not apply
+error: patch failed: .gitlab-ci.d/cirrus/freebsd-14.vars:10
+error: .gitlab-ci.d/cirrus/freebsd-14.vars: patch does not apply
+error: .gitlab-ci.d/cirrus/macos-15.vars: does not exist in index
+error: patch failed: tests/lcitool/refresh:229
+error: tests/lcitool/refresh: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
