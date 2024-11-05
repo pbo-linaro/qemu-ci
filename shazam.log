@@ -1,0 +1,70 @@
+Grabbing thread from lore.kernel.org/all/20241105111935.2747034-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 88 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/31] softfloat: Allow 2-operand NaN propagation rule to be set at runtime
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 2/31] tests/fp: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/31] target/arm: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 4/31] target/mips: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [5/31]!
+  [32m✓[0m [PATCH 6/31] target/hppa: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [7/31]!
+  [32m✓[0m [PATCH 8/31] target/ppc: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [9/31]!
+  ERROR: missing [10/31]!
+  ERROR: missing [11/31]!
+  ERROR: missing [12/31]!
+  ERROR: missing [13/31]!
+  [32m✓[0m [PATCH 14/31] target/xtensa: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [15/31]!
+  ERROR: missing [16/31]!
+  [32m✓[0m [PATCH 17/31] target/microblaze: Move setting of float rounding mode to reset
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [18/31]!
+  [32m✓[0m [PATCH 19/31] target/openrisc: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 20/31] target/rx: Explicitly set 2-NaN propagation rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 21/31] softfloat: Remove fallback rule from pickNaN()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 22/31] Revert "target/arm: Fix usage of MMU indexes when EL3 is AArch32"
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [23/31]!
+  ERROR: missing [24/31]!
+  ERROR: missing [25/31]!
+  ERROR: missing [26/31]!
+  ERROR: missing [27/31]!
+  [32m✓[0m [PATCH 28/31] hw/watchdog/wdt_imx2: Remove redundant assignment
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [29/31]!
+  [32m✓[0m [PATCH 30/31] hw/net/npcm_gmac: Change error log to trace event
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [31/31]!
+---
+Total patches: 14
+---
+WARNING: Thread incomplete!
+Applying: softfloat: Allow 2-operand NaN propagation rule to be set at runtime
+Applying: tests/fp: Explicitly set 2-NaN propagation rule
+Applying: target/arm: Explicitly set 2-NaN propagation rule
+Applying: target/mips: Explicitly set 2-NaN propagation rule
+Applying: target/hppa: Explicitly set 2-NaN propagation rule
+Patch failed at 0005 target/hppa: Explicitly set 2-NaN propagation rule
+error: patch failed: fpu/softfloat-specialize.c.inc:403
+error: fpu/softfloat-specialize.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
