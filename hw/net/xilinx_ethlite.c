@@ -3,6 +3,9 @@
  *
  * Copyright (c) 2009 Edgar E. Iglesias.
  *
+ * DS580: https://docs.amd.com/v/u/en-US/xps_ethernetlite
+ * LogiCORE IP XPS Ethernet Lite Media Access Controller
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -25,7 +28,6 @@
 #include "qemu/osdep.h"
 #include "qemu/module.h"
 #include "qom/object.h"
-#include "exec/tswap.h"
 #include "hw/sysbus.h"
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
@@ -65,6 +67,7 @@ struct xlx_ethlite
     NICState *nic;
     NICConf conf;
 
+    bool access_little_endian;
     uint32_t c_tx_pingpong;
     uint32_t c_rx_pingpong;
     unsigned int txbuf;
@@ -103,8 +106,11 @@ eth_read(void *opaque, hwaddr addr, unsigned int size)
             break;
 
         default:
-            r = tswap32(s->regs[addr]);
+            r = s->regs[addr];
             break;
+    }
+    if (s->access_little_endian) {
+        bswap32s(&r);
     }
     return r;
 }
@@ -116,6 +122,10 @@ eth_write(void *opaque, hwaddr addr,
     struct xlx_ethlite *s = opaque;
     unsigned int base = 0;
     uint32_t value = val64;
+
+    if (s->access_little_endian) {
+        bswap32s(&value);
+    }
 
     addr >>= 2;
     switch (addr) 
@@ -161,7 +171,7 @@ eth_write(void *opaque, hwaddr addr,
             break;
 
         default:
-            s->regs[addr] = tswap32(value);
+            s->regs[addr] = value;
             break;
     }
 }
@@ -169,7 +179,7 @@ eth_write(void *opaque, hwaddr addr,
 static const MemoryRegionOps eth_ops = {
     .read = eth_read,
     .write = eth_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
+    .endianness = DEVICE_BIG_ENDIAN,
     .impl = {
         .min_access_size = 4,
         .max_access_size = 4,
@@ -256,6 +266,8 @@ static void xilinx_ethlite_init(Object *obj)
 }
 
 static Property xilinx_ethlite_properties[] = {
+    DEFINE_PROP_BOOL("access-little-endian", struct xlx_ethlite,
+                     access_little_endian, false),
     DEFINE_PROP_UINT32("tx-ping-pong", struct xlx_ethlite, c_tx_pingpong, 1),
     DEFINE_PROP_UINT32("rx-ping-pong", struct xlx_ethlite, c_rx_pingpong, 1),
     DEFINE_NIC_PROPERTIES(struct xlx_ethlite, conf),
