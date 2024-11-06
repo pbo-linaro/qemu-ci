@@ -1,0 +1,61 @@
+Grabbing thread from lore.kernel.org/all/20241106180742.567076-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 2 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/39]!
+  ERROR: missing [2/39]!
+  ERROR: missing [3/39]!
+  ERROR: missing [4/39]!
+  ERROR: missing [5/39]!
+  ERROR: missing [6/39]!
+  ERROR: missing [7/39]!
+  ERROR: missing [8/39]!
+  ERROR: missing [9/39]!
+  ERROR: missing [10/39]!
+  ERROR: missing [11/39]!
+  ERROR: missing [12/39]!
+  ERROR: missing [13/39]!
+  ERROR: missing [14/39]!
+  ERROR: missing [15/39]!
+  ERROR: missing [16/39]!
+  ERROR: missing [17/39]!
+  ERROR: missing [18/39]!
+  ERROR: missing [19/39]!
+  ERROR: missing [20/39]!
+  ERROR: missing [21/39]!
+  ERROR: missing [22/39]!
+  ERROR: missing [23/39]!
+  ERROR: missing [24/39]!
+  ERROR: missing [25/39]!
+  ERROR: missing [26/39]!
+  ERROR: missing [27/39]!
+  ERROR: missing [28/39]!
+  ERROR: missing [29/39]!
+  ERROR: missing [30/39]!
+  ERROR: missing [31/39]!
+  ERROR: missing [32/39]!
+  ERROR: missing [33/39]!
+  ERROR: missing [34/39]!
+  ERROR: missing [35/39]!
+  ERROR: missing [36/39]!
+  [32m✓[0m [PATCH v3 37/39] rust: allow older version of bindgen
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [38/39]!
+  ERROR: missing [39/39]!
+---
+Total patches: 1
+---
+WARNING: Thread incomplete!
+Applying: rust: allow older version of bindgen
+Patch failed at 0001 rust: allow older version of bindgen
+error: patch failed: meson.build:3963
+error: meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
