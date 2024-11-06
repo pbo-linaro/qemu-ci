@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241106170923.2976750-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 31 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/3] plugins: add missing export for qemu_plugin_num_vcpus
+  [32m✓[0m [PATCH v3 2/3] plugins: detect qemu plugin API symbols from header
+  [32m✓[0m [PATCH v3 3/3] plugins: eradicate qemu-plugins.symbols static file
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: plugins: add missing export for qemu_plugin_num_vcpus
+Applying: plugins: detect qemu plugin API symbols from header
+Patch failed at 0002 plugins: detect qemu plugin API symbols from header
+error: patch failed: plugins/meson.build:15
+error: plugins/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
