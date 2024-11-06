@@ -13,6 +13,9 @@ mappings:
   libepoxy:
     mips64el-deb:
 
+  gtk-vnc:
+    mips64el-deb:
+
   mesa-libgbm:
     mips64el-deb:
 
