@@ -3147,7 +3147,7 @@ static int kvm_vm_enable_userspace_msr(KVMState *s)
     return 0;
 }
 
-static void kvm_vm_enable_energy_msrs(KVMState *s)
+static int kvm_vm_enable_energy_msrs(KVMState *s)
 {
     int ret;
 
@@ -3157,7 +3157,7 @@ static void kvm_vm_enable_energy_msrs(KVMState *s)
         if (ret < 0) {
             error_report("Could not install MSR_RAPL_POWER_UNIT handler: %s",
                          strerror(-ret));
-            exit(1);
+            return ret;
         }
 
         ret = kvm_filter_msr(s, MSR_PKG_POWER_LIMIT,
@@ -3165,7 +3165,7 @@ static void kvm_vm_enable_energy_msrs(KVMState *s)
         if (ret < 0) {
             error_report("Could not install MSR_PKG_POWER_LIMIT handler: %s",
                          strerror(-ret));
-            exit(1);
+            return ret;
         }
 
         ret = kvm_filter_msr(s, MSR_PKG_POWER_INFO,
@@ -3173,17 +3173,17 @@ static void kvm_vm_enable_energy_msrs(KVMState *s)
         if (ret < 0) {
             error_report("Could not install MSR_PKG_POWER_INFO handler: %s",
                          strerror(-ret));
-            exit(1);
+            return ret;
         }
         ret = kvm_filter_msr(s, MSR_PKG_ENERGY_STATUS,
                              kvm_rdmsr_pkg_energy_status, NULL);
         if (ret < 0) {
             error_report("Could not install MSR_PKG_ENERGY_STATUS handler: %s",
                          strerror(-ret));
-            exit(1);
+            return ret;
         }
     }
-    return;
+    return 0;
 }
 
 int kvm_arch_init(MachineState *ms, KVMState *s)
@@ -3250,7 +3250,10 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
         return ret;
     }
 
-    kvm_get_supported_feature_msrs(s);
+    ret = kvm_get_supported_feature_msrs(s);
+    if (ret < 0) {
+        return ret;
+    }
 
     uname(&utsname);
     lm_capable_kernel = strcmp(utsname.machine, "x86_64") == 0;
@@ -3286,6 +3289,7 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
         if (ret < 0) {
             error_report("kvm: guest stopping CPU not supported: %s",
                          strerror(-ret));
+            return ret;
         }
     }
 
@@ -3317,12 +3321,15 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
         }
 
         if (s->msr_energy.enable == true) {
-            kvm_vm_enable_energy_msrs(s);
+            ret = kvm_vm_enable_energy_msrs(s);
+            if (ret < 0) {
+                return ret;
+            }
 
             ret = kvm_msr_energy_thread_init(s, ms);
             if (ret < 0) {
                 error_report("kvm : error RAPL feature requirement not met");
-                exit(1);
+                return ret;
             }
         }
     }
