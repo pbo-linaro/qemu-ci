@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241106111837.115820-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 145 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v7 1/3] qdev-monitor: add option to report GenericError from find_device_state
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  ERROR: missing [2/3]!
+  ERROR: missing [3/3]!
+---
+Total patches: 1
+---
+WARNING: Thread incomplete!
+Applying: qdev-monitor: add option to report GenericError from find_device_state
+Patch failed at 0001 qdev-monitor: add option to report GenericError from find_device_state
+error: patch failed: system/qdev-monitor.c:885
+error: system/qdev-monitor.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
