@@ -101,6 +101,7 @@ typedef struct XilinxQSPIPS XilinxQSPIPS;
 struct XlnxZynqMPQSPIPS {
     XilinxQSPIPS parent_obj;
 
+    bool little_endian_model;
     StreamSink *dma;
     int gqspi_irqline;
 

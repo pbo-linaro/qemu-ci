@@ -1251,17 +1251,32 @@ static MemTxResult lqspi_write(void *opaque, hwaddr offset, uint64_t value,
     return MEMTX_ERROR;
 }
 
-static const MemoryRegionOps lqspi_ops = {
-    .read_with_attrs = lqspi_read,
-    .write_with_attrs = lqspi_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
-    .impl = {
-        .min_access_size = 4,
-        .max_access_size = 4,
+static const MemoryRegionOps lqspi_ops[2] = {
+    {
+        .read_with_attrs = lqspi_read,
+        .write_with_attrs = lqspi_write,
+        .endianness = DEVICE_BIG_ENDIAN,
+        .impl = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
+        .valid = {
+            .min_access_size = 1,
+            .max_access_size = 4
+        },
     },
-    .valid = {
-        .min_access_size = 1,
-        .max_access_size = 4
+    {
+        .read_with_attrs = lqspi_read,
+        .write_with_attrs = lqspi_write,
+        .endianness = DEVICE_LITTLE_ENDIAN,
+        .impl = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
+        .valid = {
+            .min_access_size = 1,
+            .max_access_size = 4,
+        },
     }
 };
 
@@ -1325,8 +1340,9 @@ static void xilinx_qspips_realize(DeviceState *dev, Error **errp)
     s->num_txrx_bytes = 4;
 
     xilinx_spips_realize(dev, errp);
-    memory_region_init_io(&s->mmlqspi, OBJECT(s), &lqspi_ops, s, "lqspi",
-                          (1 << LQSPI_ADDRESS_BITS) * 2);
+    memory_region_init_io(&s->mmlqspi, OBJECT(s),
+                          &lqspi_ops[s->little_endian_model],
+                          s, "lqspi", (1 << LQSPI_ADDRESS_BITS) * 2);
     sysbus_init_mmio(sbd, &s->mmlqspi);
 
     q->lqspi_cached_addr = ~0ULL;
@@ -1432,12 +1448,18 @@ static Property xilinx_spips_properties[] = {
     DEFINE_PROP_END_OF_LIST(),
 };
 
+static Property xilinx_qspips_properties[] = {
+    DEFINE_PROP_BOOL("little-endian", XilinxQSPIPS, little_endian_model, true),
+    DEFINE_PROP_END_OF_LIST(),
+};
+
 static void xilinx_qspips_class_init(ObjectClass *klass, void * data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     XilinxSPIPSClass *xsc = XILINX_SPIPS_CLASS(klass);
 
     dc->realize = xilinx_qspips_realize;
+    device_class_set_props(dc, xilinx_qspips_properties);
     xsc->reg_ops = &qspips_ops;
     xsc->reg_size = XLNX_SPIPS_R_MAX * 4;
     xsc->rx_fifo_size = RXFF_A_Q;
