@@ -26,6 +26,7 @@
 #include "hw/ssi/ibex_spi_host.h"
 #include "hw/boards.h"
 #include "qom/object.h"
+#include "hw/riscv/boot.h"
 
 #define TYPE_RISCV_IBEX_SOC "riscv.lowrisc.ibex.soc"
 OBJECT_DECLARE_SIMPLE_TYPE(LowRISCIbexSoCState, RISCV_IBEX_SOC)
@@ -46,6 +47,7 @@ struct LowRISCIbexSoCState {
     IbexUartState uart;
     IbexTimerState timer;
     IbexSPIHostState spi_host[OPENTITAN_NUM_SPI_HOSTS];
+    RISCVBootInfo boot_info;
 
     uint32_t resetvec;
 

@@ -32,6 +32,7 @@
 #include "hw/net/cadence_gem.h"
 #include "hw/sd/cadence_sdhci.h"
 #include "hw/riscv/riscv_hart.h"
+#include "hw/riscv/boot.h"
 
 typedef struct MicrochipPFSoCState {
     /*< private >*/
@@ -56,6 +57,7 @@ typedef struct MicrochipPFSoCState {
     CadenceGEMState gem0;
     CadenceGEMState gem1;
     CadenceSDHCIState sdhci;
+    RISCVBootInfo boot_info;
 } MicrochipPFSoCState;
 
 #define TYPE_MICROCHIP_PFSOC    "microchip.pfsoc"

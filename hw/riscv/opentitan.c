@@ -25,7 +25,6 @@
 #include "qemu/error-report.h"
 #include "hw/boards.h"
 #include "hw/misc/unimp.h"
-#include "hw/riscv/boot.h"
 #include "qemu/units.h"
 #include "sysemu/sysemu.h"
 
@@ -102,8 +101,9 @@ static void opentitan_machine_init(MachineState *machine)
         riscv_load_firmware(machine->firmware, &firmware_load_addr, NULL);
     }
 
+    riscv_boot_info_init(&s->soc.boot_info, &s->soc.cpus);
     if (machine->kernel_filename) {
-        riscv_load_kernel(machine, &s->soc.cpus,
+        riscv_load_kernel(machine, &s->soc.boot_info,
                           memmap[IBEX_DEV_RAM].base,
                           false, NULL);
     }

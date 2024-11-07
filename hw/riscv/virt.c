@@ -34,7 +34,6 @@
 #include "hw/riscv/riscv_hart.h"
 #include "hw/riscv/iommu.h"
 #include "hw/riscv/virt.h"
-#include "hw/riscv/boot.h"
 #include "hw/riscv/numa.h"
 #include "kvm/kvm_riscv.h"
 #include "hw/firmware/smbios.h"
@@ -1414,17 +1413,19 @@ static void virt_machine_done(Notifier *notifier, void *data)
         }
     }
 
-    if (machine->kernel_filename && !kernel_entry) {
-        kernel_start_addr = riscv_calc_kernel_start_addr(&s->soc[0],
-                                                         firmware_end_addr);
+    riscv_boot_info_init(&s->boot_info, &s->soc[0]);
 
-        kernel_entry = riscv_load_kernel(machine, &s->soc[0],
-                                         kernel_start_addr, true, NULL);
+    if (machine->kernel_filename && !kernel_entry) {
+        kernel_start_addr = riscv_calc_kernel_start_addr(&s->boot_info,
+                                                         firmware_end_addr);
+        riscv_load_kernel(machine, &s->boot_info, kernel_start_addr,
+                          true, NULL);
+        kernel_entry = s->boot_info.image_low_addr;
     }
 
     fdt_load_addr = riscv_compute_fdt_addr(memmap[VIRT_DRAM].base,
                                            memmap[VIRT_DRAM].size,
-                                           machine, &s->soc[0]);
+                                           machine, &s->boot_info);
     riscv_load_fdt(fdt_load_addr, machine->fdt);
 
     /* load the reset vector */

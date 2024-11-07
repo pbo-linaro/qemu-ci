@@ -24,6 +24,7 @@
 #include "hw/gpio/sifive_gpio.h"
 #include "hw/misc/sifive_e_aon.h"
 #include "hw/boards.h"
+#include "hw/riscv/boot.h"
 
 #define TYPE_RISCV_E_SOC "riscv.sifive.e.soc"
 #define RISCV_E_SOC(obj) \
@@ -40,6 +41,7 @@ typedef struct SiFiveESoCState {
     SIFIVEGPIOState gpio;
     MemoryRegion xip_mem;
     MemoryRegion mask_rom;
+    RISCVBootInfo boot_info;
 } SiFiveESoCState;
 
 typedef struct SiFiveEState {

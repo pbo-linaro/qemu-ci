@@ -30,6 +30,7 @@
 #include "hw/misc/sifive_u_prci.h"
 #include "hw/ssi/sifive_spi.h"
 #include "hw/timer/sifive_pwm.h"
+#include "hw/riscv/boot.h"
 
 #define TYPE_RISCV_U_SOC "riscv.sifive.u.soc"
 #define RISCV_U_SOC(obj) \
@@ -53,6 +54,7 @@ typedef struct SiFiveUSoCState {
     SiFiveSPIState spi2;
     CadenceGEMState gem;
     SiFivePwmState pwm[2];
+    RISCVBootInfo boot_info;
 
     uint32_t serial;
     char *cpu_type;
