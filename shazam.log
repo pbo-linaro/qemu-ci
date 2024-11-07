@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/SY0P300MB102644C4AC34A3AAD75DC4D5955C2@SY0P300MB1026.AUSP300.PROD.OUTLOOK.COM/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] rust/pl011: Fix range checks for device ID accesses
+  ---
+  [32m✓[0m Signed: DKIM/hotmail.com
+---
+Total patches: 1
+---
+Applying: rust/pl011: Fix range checks for device ID accesses
+Patch failed at 0001 rust/pl011: Fix range checks for device ID accesses
+error: patch failed: rust/hw/char/pl011/src/device.rs:182
+error: rust/hw/char/pl011/src/device.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
