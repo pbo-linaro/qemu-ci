@@ -32,6 +32,9 @@ typedef struct RISCVBootInfo {
     uint64_t image_low_addr;
     uint64_t image_high_addr;
 
+    hwaddr initrd_start;
+    ssize_t initrd_size;
+
     bool is_32bit;
 } RISCVBootInfo;
 
