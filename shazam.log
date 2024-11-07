@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20241107-win32-v1-1-952d508e2546@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] tap-win32: Ignore keys too long
+  ---
+  [32m✓[0m Signed: DKIM/daynix-com.20230601.gappssmtp.com (From: akihiko.odaki@daynix.com)
+---
+Total patches: 1
+---
+ Base: using specified base-commit 7e3b6d8063f245d27eecce5aabe624b5785f2a77
+Applying: tap-win32: Ignore keys too long
+Patch failed at 0001 tap-win32: Ignore keys too long
+error: patch failed: net/tap-win32.c:239
+error: net/tap-win32.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
