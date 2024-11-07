@@ -41,3 +41,8 @@ stm32l4x5_gpio_read(char *gpio, uint64_t addr) "GPIO%s addr: 0x%" PRIx64 " "
 stm32l4x5_gpio_write(char *gpio, uint64_t addr, uint64_t data) "GPIO%s addr: 0x%" PRIx64 " val: 0x%" PRIx64 ""
 stm32l4x5_gpio_update_idr(char *gpio, uint32_t old_idr, uint32_t new_idr) "GPIO%s from: 0x%x to: 0x%x"
 stm32l4x5_gpio_pins(char *gpio, uint16_t disconnected, uint16_t high) "GPIO%s disconnected pins: 0x%x levels: 0x%x"
+
+# pca_i2c_gpio.c
+pca_i2c_event(const char *id, const char *event) "%s: %s"
+pca_i2c_recv(const char *id, uint8_t cmd, uint32_t shift, uint8_t data) "%s cmd: 0x%" PRIx8 "shift: %" PRIi32 " data 0x%" PRIx8
+pca_i2c_send(const char *id, uint8_t cmd, uint32_t shift, uint8_t data) "%s cmd: 0x%" PRIx8 "shift: %" PRIi32 " data 0x%" PRIx8

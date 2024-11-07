@@ -13,6 +13,11 @@ config GPIO_PWR
 config SIFIVE_GPIO
     bool
 
+config PCA_I2C_GPIO
+    bool
+    depends on I2C
+    default y if I2C_DEVICES
+
 config STM32L4X5_GPIO
     bool
 
