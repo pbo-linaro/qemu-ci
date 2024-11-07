@@ -3,6 +3,9 @@
  *
  * Copyright (c) 2009 Edgar E. Iglesias.
  *
+ * DS580: https://docs.amd.com/v/u/en-US/xps_ethernetlite
+ * LogiCORE IP XPS Ethernet Lite Media Access Controller
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -25,7 +28,6 @@
 #include "qemu/osdep.h"
 #include "qemu/module.h"
 #include "qom/object.h"
-#include "exec/tswap.h"
 #include "hw/sysbus.h"
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
@@ -60,6 +62,7 @@ struct xlx_ethlite
 {
     SysBusDevice parent_obj;
 
+    bool little_endian_model;
     MemoryRegion mmio;
     qemu_irq irq;
     NICState *nic;
@@ -103,9 +106,10 @@ eth_read(void *opaque, hwaddr addr, unsigned int size)
             break;
 
         default:
-            r = tswap32(s->regs[addr]);
+            r = s->regs[addr];
             break;
     }
+
     return r;
 }
 
@@ -161,22 +165,37 @@ eth_write(void *opaque, hwaddr addr,
             break;
 
         default:
-            s->regs[addr] = tswap32(value);
+            s->regs[addr] = value;
             break;
     }
 }
 
-static const MemoryRegionOps eth_ops = {
-    .read = eth_read,
-    .write = eth_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
-    .impl = {
-        .min_access_size = 4,
-        .max_access_size = 4,
+static const MemoryRegionOps eth_ops[2] = {
+    {
+        .read = eth_read,
+        .write = eth_write,
+        .endianness = DEVICE_BIG_ENDIAN,
+        .impl = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
+        .valid = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
     },
-    .valid = {
-        .min_access_size = 4,
-        .max_access_size = 4
+    {
+        .read = eth_read,
+        .write = eth_write,
+        .endianness = DEVICE_LITTLE_ENDIAN,
+        .impl = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
+        .valid = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
     }
 };
 
@@ -237,6 +256,10 @@ static void xilinx_ethlite_realize(DeviceState *dev, Error **errp)
 {
     struct xlx_ethlite *s = XILINX_ETHLITE(dev);
 
+    memory_region_init_io(&s->mmio, OBJECT(dev),
+                          &eth_ops[s->little_endian_model], s,
+                          "xlnx.xps-ethernetlite", R_MAX * 4);
+
     qemu_macaddr_default_if_unset(&s->conf.macaddr);
     s->nic = qemu_new_nic(&net_xilinx_ethlite_info, &s->conf,
                           object_get_typename(OBJECT(dev)), dev->id,
@@ -249,13 +272,12 @@ static void xilinx_ethlite_init(Object *obj)
     struct xlx_ethlite *s = XILINX_ETHLITE(obj);
 
     sysbus_init_irq(SYS_BUS_DEVICE(obj), &s->irq);
-
-    memory_region_init_io(&s->mmio, obj, &eth_ops, s,
-                          "xlnx.xps-ethernetlite", R_MAX * 4);
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mmio);
 }
 
 static Property xilinx_ethlite_properties[] = {
+    DEFINE_PROP_BOOL("little-endian", struct xlx_ethlite,
+                     little_endian_model, true),
     DEFINE_PROP_UINT32("tx-ping-pong", struct xlx_ethlite, c_tx_pingpong, 1),
     DEFINE_PROP_UINT32("rx-ping-pong", struct xlx_ethlite, c_rx_pingpong, 1),
     DEFINE_NIC_PROPERTIES(struct xlx_ethlite, conf),
