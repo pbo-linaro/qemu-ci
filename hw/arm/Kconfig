@@ -465,6 +465,7 @@ config NPCM7XX
     bool
     default y
     depends on TCG && ARM
+    imply I2C_DEVICES
     select A9MPCORE
     select ADM1266
     select ADM1272
