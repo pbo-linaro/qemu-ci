@@ -32,6 +32,7 @@
 #include "hw/net/cadence_gem.h"
 #include "hw/sd/cadence_sdhci.h"
 #include "hw/riscv/riscv_hart.h"
+#include "hw/riscv/boot.h"
 
 typedef struct MicrochipPFSoCState {
     /*< private >*/
