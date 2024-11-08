@@ -18,4 +18,8 @@
 
 #define TYPE_VMAPPLE_CFG "vmapple-cfg"
 
+#define TYPE_VMAPPLE_VIRTIO_BLK  "vmapple-virtio-blk"
+#define TYPE_VMAPPLE_VIRTIO_ROOT "vmapple-virtio-root"
+#define TYPE_VMAPPLE_VIRTIO_AUX  "vmapple-virtio-aux"
+
 #endif /* HW_VMAPPLE_VMAPPLE_H */
