@@ -163,6 +163,8 @@ static void xtensa_cpu_realizefn(DeviceState *dev, Error **errp)
     XtensaCPUClass *xcc = XTENSA_CPU_GET_CLASS(dev);
     Error *local_err = NULL;
 
+    qemu_early_init_vcpu(cs);
+
 #ifndef CONFIG_USER_ONLY
     xtensa_irq_init(&XTENSA_CPU(dev)->env);
 #endif

@@ -248,6 +248,8 @@ static void s390_cpu_realizefn(DeviceState *dev, Error **errp)
     S390CPUClass *scc = S390_CPU_GET_CLASS(dev);
     Error *err = NULL;
 
+    qemu_early_init_vcpu(cs);
+
     /* the model has to be realized before qemu_init_vcpu() due to kvm */
     s390_realize_cpu_model(cs, &err);
     if (err) {

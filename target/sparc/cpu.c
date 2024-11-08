@@ -790,6 +790,8 @@ static void sparc_cpu_realizefn(DeviceState *dev, Error **errp)
     Error *local_err = NULL;
     CPUSPARCState *env = cpu_env(cs);
 
+    qemu_early_init_vcpu(cs);
+
 #if defined(CONFIG_USER_ONLY)
     /* We are emulating the kernel, which will trap and emulate float128. */
     env->def.features |= CPU_FEATURE_FLOAT128;

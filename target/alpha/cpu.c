@@ -94,6 +94,8 @@ static void alpha_cpu_realizefn(DeviceState *dev, Error **errp)
     AlphaCPUClass *acc = ALPHA_CPU_GET_CLASS(dev);
     Error *local_err = NULL;
 
+    qemu_early_init_vcpu(cs);
+
 #ifndef CONFIG_USER_ONLY
     /* Use pc-relative instructions in system-mode */
     cs->tcg_cflags |= CF_PCREL;
