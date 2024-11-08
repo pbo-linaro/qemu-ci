@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20241108154317.12129-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 95 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/17]!
+  [32m✓[0m [PATCH v3 2/17] hw/microblaze: Propagate CPU endianness to microblaze_load_kernel()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 3/17] hw/intc/xilinx_intc: Make device endianness configurable
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [4/17]!
+  ERROR: missing [5/17]!
+  ERROR: missing [6/17]!
+  [32m✓[0m [PATCH v3 7/17] hw/char/xilinx_uartlite: Make device endianness configurable
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [8/17]!
+  [32m✓[0m [PATCH v3 9/17] hw/ssi/xilinx_spips: Make device endianness configurable
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 10/17] hw/arm/xlnx-zynqmp: Use &error_abort for programming errors
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [11/17]!
+  ERROR: missing [12/17]!
+  [32m✓[0m [PATCH v3 13/17] target/microblaze: Introduce mo_endian() helper
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [14/17]!
+  [32m✓[0m [PATCH v3 15/17] hw/microblaze: Support various endianness for s3adsp1800 machines
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 16/17] tests/functional: Explicit endianness of microblaze assets
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [17/17]!
+---
+Total patches: 8
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+WARNING: Thread incomplete!
+Applying: hw/microblaze: Propagate CPU endianness to microblaze_load_kernel()
+Applying: hw/intc/xilinx_intc: Make device endianness configurable
+Patch failed at 0002 hw/intc/xilinx_intc: Make device endianness configurable
+error: patch failed: hw/intc/xilinx_intc.c:140
+error: hw/intc/xilinx_intc.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
