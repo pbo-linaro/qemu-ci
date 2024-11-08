@@ -858,6 +858,57 @@ static int get_physical_address_pmp(CPURISCVState *env, int *prot, hwaddr addr,
 }
 
 /*
+ * Return 'true' means no need to do svukte check, or need to do svukte and the
+ * address is valid. Return 'false' means need to do svukte check but address
+ * is invalid.
+ */
+static bool check_svukte_valid(CPURISCVState *env, vaddr addr,
+                               int mode, bool virt)
+{
+    /*
+     * Check hstatus.HUKTE if the effective mode is switched to VU-mode by
+     * executing HLV/HLVX/HSV in U-mode.
+     * For other cases, check senvcfg.UKTE.
+     */
+    bool ukte;
+    if (env->priv == PRV_U && !env->virt_enabled && virt) {
+        ukte = !!(env->hstatus & HSTATUS_HUKTE);
+    } else {
+        ukte = !!(env->senvcfg & SENVCFG_UKTE);
+    }
+
+    if (VM_1_10_SV39 != get_field(env->satp, SATP64_MODE))  {
+        /* Svukte extension depends on Sv39. */
+        return true;
+    }
+
+    /*
+     * Svukte extension is qualified only in U or VU-mode.
+     *
+     * Effective mode can be switched to U or VU-mode by:
+     *   - M-mode + mstatus.MPRV=1 + mstatus.MPP=U-mode.
+     *   - Execute HLV/HLVX/HSV from HS-mode + hstatus.SPVP=0.
+     *   - U-mode.
+     *   - VU-mode.
+     *   - Execute HLV/HLVX/HSV from U-mode + hstatus.HU=1.
+     */
+    if (mode != PRV_U) {
+        return true;
+    }
+
+    if (!ukte) {
+        return true;
+    }
+
+    uint32_t sxl = riscv_cpu_sxl(env);
+    sxl = (sxl == 0) ? MXL_RV32 : sxl;
+    uint32_t sxlen = 32 * sxl;
+    uint64_t high_bit = addr & (1UL << (sxlen - 1));
+
+    return !high_bit;
+}
+
+/*
  * get_physical_address - get the physical address for this virtual address
  *
  * Do a page table walk to obtain the physical address corresponding to a
@@ -894,12 +945,18 @@ static int get_physical_address(CPURISCVState *env, hwaddr *physical,
     MemTxResult res;
     MemTxAttrs attrs = MEMTXATTRS_UNSPECIFIED;
     int mode = mmuidx_priv(mmu_idx);
+    bool virt = mmuidx_2stage(mmu_idx);
     bool use_background = false;
     hwaddr ppn;
     int napot_bits = 0;
     target_ulong napot_mask;
     bool is_sstack_idx = ((mmu_idx & MMU_IDX_SS_WRITE) == MMU_IDX_SS_WRITE);
     bool sstack_page = false;
+
+    if (env_archcpu(env)->cfg.ext_svukte && first_stage &&
+        !check_svukte_valid(env, addr, mode, virt)) {
+        return TRANSLATE_FAIL;
+    }
 
     /*
      * Check if we should use the background registers for the two
