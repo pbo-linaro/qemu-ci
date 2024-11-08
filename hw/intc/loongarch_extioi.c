@@ -10,16 +10,13 @@
 #include "qemu/log.h"
 #include "qapi/error.h"
 #include "hw/irq.h"
-#include "hw/sysbus.h"
 #include "hw/loongarch/virt.h"
-#include "hw/qdev-properties.h"
 #include "exec/address-spaces.h"
 #include "hw/intc/loongarch_extioi.h"
-#include "migration/vmstate.h"
 #include "trace.h"
 
 
-static void extioi_update_irq(LoongArchExtIOI *s, int irq, int level)
+static void extioi_update_irq(LoongArchExtIOICommonState *s, int irq, int level)
 {
     int ipnum, cpu, found, irq_index, irq_mask;
 
@@ -54,7 +51,7 @@ static void extioi_update_irq(LoongArchExtIOI *s, int irq, int level)
 
 static void extioi_setirq(void *opaque, int irq, int level)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
     trace_loongarch_extioi_setirq(irq, level);
     if (level) {
         /*
@@ -72,7 +69,7 @@ static void extioi_setirq(void *opaque, int irq, int level)
 static MemTxResult extioi_readw(void *opaque, hwaddr addr, uint64_t *data,
                                 unsigned size, MemTxAttrs attrs)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
     unsigned long offset = addr & 0xffff;
     uint32_t index, cpu;
 
@@ -111,7 +108,7 @@ static MemTxResult extioi_readw(void *opaque, hwaddr addr, uint64_t *data,
     return MEMTX_OK;
 }
 
-static inline void extioi_enable_irq(LoongArchExtIOI *s, int index,\
+static inline void extioi_enable_irq(LoongArchExtIOICommonState *s, int index,\
                                      uint32_t mask, int level)
 {
     uint32_t val;
@@ -130,8 +127,8 @@ static inline void extioi_enable_irq(LoongArchExtIOI *s, int index,\
     }
 }
 
-static inline void extioi_update_sw_coremap(LoongArchExtIOI *s, int irq,
-                                            uint64_t val, bool notify)
+static inline void extioi_update_sw_coremap(LoongArchExtIOICommonState *s,
+                                            int irq, uint64_t val, bool notify)
 {
     int i, cpu;
 
@@ -167,8 +164,8 @@ static inline void extioi_update_sw_coremap(LoongArchExtIOI *s, int irq,
     }
 }
 
-static inline void extioi_update_sw_ipmap(LoongArchExtIOI *s, int index,
-                                          uint64_t val)
+static inline void extioi_update_sw_ipmap(LoongArchExtIOICommonState *s,
+                                          int index, uint64_t val)
 {
     int i;
     uint8_t ipnum;
@@ -191,7 +188,7 @@ static MemTxResult extioi_writew(void *opaque, hwaddr addr,
                           uint64_t val, unsigned size,
                           MemTxAttrs attrs)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
     int cpu, index, old_data, irq;
     uint32_t offset;
 
@@ -271,7 +268,7 @@ static const MemoryRegionOps extioi_ops = {
 static MemTxResult extioi_virt_readw(void *opaque, hwaddr addr, uint64_t *data,
                                      unsigned size, MemTxAttrs attrs)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
 
     switch (addr) {
     case EXTIOI_VIRT_FEATURES:
@@ -291,7 +288,7 @@ static MemTxResult extioi_virt_writew(void *opaque, hwaddr addr,
                           uint64_t val, unsigned size,
                           MemTxAttrs attrs)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
 
     switch (addr) {
     case EXTIOI_VIRT_FEATURES:
@@ -370,21 +367,21 @@ static void loongarch_extioi_realize(DeviceState *dev, Error **errp)
 
 static void loongarch_extioi_unrealize(DeviceState *dev)
 {
-    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI(dev);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(dev);
 
     g_free(s->cpu);
 }
 
 static void loongarch_extioi_reset(DeviceState *d)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(d);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(d);
 
     s->status = 0;
 }
 
 static int vmstate_extioi_post_load(void *opaque, int version_id)
 {
-    LoongArchExtIOI *s = LOONGARCH_EXTIOI(opaque);
+    LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(opaque);
     int i, start_irq;
 
     for (i = 0; i < (EXTIOI_IRQS / 4); i++) {
