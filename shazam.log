@@ -1,0 +1,73 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-8.2.8-20241109131339@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 50 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1438 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/49] softmmu/physmem.c: Keep transaction attribute in address_space_map()
+  [PATCH 2/49] target/arm: Correct ID_AA64ISAR1_EL1 value for neoverse-v1
+  [PATCH 3/49] tcg: Fix iteration step in 32-bit gvec operation
+  [PATCH 4/49] target/ppc: Fix lxvx/stxvx facility check
+  [PATCH 5/49] block/reqlist: allow adding overlapping requests
+  [PATCH 6/49] target/arm: Avoid target_ulong for physical address lookups
+  [PATCH 7/49] fuzz: disable leak-detection for oss-fuzz builds
+  [PATCH 8/49] testing: bump mips64el cross to bookworm and fix package list
+  [PATCH 9/49] linux-user/flatload: Take mmap_lock in load_flt_binary()
+  [PATCH 10/49] linux-user: Fix parse_elf_properties GNU0_MAGIC check
+  [PATCH 11/49] tcg/ppc: Use TCG_REG_TMP2 for scratch tcg_out_qemu_st
+  [PATCH 12/49] tcg/ppc: Use TCG_REG_TMP2 for scratch index in prepare_host_addr
+  [PATCH 13/49] target/m68k: Always return a temporary from gen_lea_mode
+  [PATCH 14/49] hw/intc/arm_gicv3_cpuif: Add cast to match the documentation
+  [PATCH 15/49] hw/audio/hda: free timer on exit
+  [PATCH 16/49] ui/win32: fix potential use-after-free with dbus shared memory
+  [PATCH 17/49] KVM: Dynamic sized kvm memslots array
+  [PATCH 18/49] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+    + Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com> ([32m✓[0m DKIM/amd.com)
+  [PATCH 19/49] tests: Wait for migration completion on destination QEMU to avoid failures
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+  [PATCH 20/49] tests/qemu-iotests/211.out: Update to expect MapEntry 'compressed' field
+  [PATCH 21/49] raw-format: Fix error message for invalid offset/size
+  [PATCH 22/49] tcg: Reset data_gen_ptr correctly
+  [PATCH 23/49] target/i386: Walk NPT in guest real mode
+  [PATCH 24/49] target/i386: Use probe_access_full_mmu in ptw_translate
+  [PATCH 25/49] linux-user: Emulate /proc/self/maps under mmap_lock
+  [PATCH 26/49] linux-user/ppc: Fix sigmask endianness issue in sigreturn
+  [PATCH 27/49] vfio/migration: Report only stop-copy size in vfio_state_pending_exact()
+  [PATCH 28/49] gitlab: make check-[dco|patch] a little more verbose
+  [PATCH 29/49] dockerfiles: fix default targets for debian-loongarch-cross
+  [PATCH 30/49] Fix calculation of minimum in colo_compare_tcp
+  [PATCH 31/49] net: fix build when libbpf is disabled, but libxdp is enabled
+  [PATCH 32/49] net/tap-win32: Fix gcc 14 format truncation errors
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 33/49] target/arm: Don't assert in regime_is_user() for E10 mmuidx values
+  [PATCH 34/49] target/arm: Fix arithmetic underflow in SETM instruction
+    + Fixes: 0e92818887d ("target/arm: Implement the SET* instructions") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 35/49] target/riscv/csr.c: Fix an access to VXSAT
+  [PATCH 36/49] target/riscv: Correct SXL return value for RV32 in RV64 QEMU
+  [PATCH 37/49] hw/intc: Don't clear pending bits on IRQ lowering
+  [PATCH 38/49] target/riscv: Set vtype.vill on CPU reset
+  [PATCH 39/49] hw/intc/riscv_aplic: Fix in_clrip[x] read emulation
+  [PATCH 40/49] hw/intc/riscv_aplic: Check and update pending when write sourcecfg
+  [PATCH 41/49] target/riscv/kvm: set 'aia_mode' to default in error path
+  [PATCH 42/49] target/riscv/kvm: clarify how 'riscv-aia' default works
+  [PATCH 43/49] target/riscv: Fix vcompress with rvv_ta_all_1s
+  [PATCH 44/49] target/ppc: Set ctx->opcode for decode_insn32()
+  [PATCH 45/49] target/ppc: Fix mtDPDES targeting SMT siblings
+  [PATCH 46/49] target/arm: Fix SVE SDOT/UDOT/USDOT (4-way, indexed)
+  [PATCH 47/49] migration: Ensure vmstate_save() sets errp
+  [PATCH 48/49] hw/nvme: fix handling of over-committed queues
+  [PATCH 49/49] 9pfs: fix crash on 'Treaddir' request
+---
+Total patches: 49
+---
+Applying: softmmu/physmem.c: Keep transaction attribute in address_space_map()
+Patch failed at 0001 softmmu/physmem.c: Keep transaction attribute in address_space_map()
+error: patch failed: system/physmem.c:3146
+error: system/physmem.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
