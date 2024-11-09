@@ -1,0 +1,53 @@
+Grabbing thread from lore.kernel.org/all/20241109000728.206825-1-salil.mehta@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 125 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/3] qtest: allow ACPI DSDT Table changes
+  [PATCH v2 2/3] Fix: CPUs presence logic in _STA for x86 backward compatability
+  [PATCH v2 3/3] tests/qtest/bios-tables-test: Fix DSDT golden masters for x86/{pc, q35}
+---
+Total patches: 3
+---
+Applying: qtest: allow ACPI DSDT Table changes
+Applying: Fix: CPUs presence logic in _STA for x86 backward compatability
+Applying: tests/qtest/bios-tables-test: Fix DSDT golden masters for x86/{pc, q35}
+Patch failed at 0003 tests/qtest/bios-tables-test: Fix DSDT golden masters for x86/{pc, q35}
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT' (f68a32e6068788c3fdfaff139206b725ba2bf1d1), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.acpierst' (0fd79699ebbfb650a5bbe49faecbebf2fc13a86c), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.acpierst: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.acpihmat' (a4dd09e5ef71a47c31be0d9a57e93767f5d15b3c), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.acpihmat: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.bridge' (7ef58152d281c1e2c8da5b15bd30f23e61439d69), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.bridge: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.cphp' (1079ff81c1ab05f0d5991835b3a0b014687924f4), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.cphp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.dimmpxm' (34fe3fcad9dc245eb173ca5a9655d17f15bd42ef), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.dimmpxm: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.hpbridge' (33c7529f5c8a6ec651f979b3cebadb18774a781f), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.hpbridge: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.hpbrroot' (2661170c833e23ae1985d31512a81a29afc858bd), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.hpbrroot: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.ipmikcs' (688faf83cbd7395e1112ba04303d66e11934bf8d), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.ipmikcs: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.memhp' (6ede4361f4b7bf18c496d7ca117310675126bbbf), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.memhp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.nohpet' (9d6040733f57f243056ee8f7601af84dd3cf2fa2), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.nohpet: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.numamem' (aa9986f74bbd9f20ea9c886901a34122700f33b2), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.numamem: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/pc/DSDT.roothp' (86c2ae11dc601008cd4dbbbd34d4e5adcb9236cd), which does not match the current contents.
+error: tests/data/acpi/x86/pc/DSDT.roothp: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/q35/DSDT.cxl' (613a40b957dab99fd97b465bd89f6afac3a5b047), which does not match the current contents.
+error: tests/data/acpi/x86/q35/DSDT.cxl: patch does not apply
+error: the patch applies to 'tests/data/acpi/x86/q35/DSDT.viot' (de0942a13dc65b75e78e66ee8df904b31bf6079a), which does not match the current contents.
+error: tests/data/acpi/x86/q35/DSDT.viot: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
