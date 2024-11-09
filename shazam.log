@@ -1,0 +1,55 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.15-20241109093832@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 557 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/33] softmmu/physmem.c: Keep transaction attribute in address_space_map()
+  [PATCH 2/33] target/ppc: Fix lxvx/stxvx facility check
+  [PATCH 3/33] block/reqlist: allow adding overlapping requests
+  [PATCH 4/33] fuzz: disable leak-detection for oss-fuzz builds
+  [PATCH 5/33] tracetool: avoid invalid escape in Python string
+  [PATCH 6/33] linux-user/flatload: Take mmap_lock in load_flt_binary()
+  [PATCH 7/33] linux-user: Fix parse_elf_properties GNU0_MAGIC check
+  [PATCH 8/33] scsi: fetch unit attention when creating the request
+  [PATCH 9/33] hw/intc/arm_gicv3_cpuif: Add cast to match the documentation
+  [PATCH 10/33] hw/audio/hda: free timer on exit
+  ERROR: missing [11/33]!
+  [PATCH 12/33] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+    + Reviewed-by: Connor Kuehl <ckuehl@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 13/33] tests: Wait for migration completion on destination QEMU to avoid failures
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+  ERROR: missing [14/33]!
+  ERROR: missing [15/33]!
+  ERROR: missing [16/33]!
+  [PATCH 17/33] target/i386: Walk NPT in guest real mode
+  [PATCH 18/33] linux-user/ppc: Fix sigmask endianness issue in sigreturn
+  [PATCH 19/33] gitlab: make check-[dco|patch] a little more verbose
+  ERROR: missing [20/33]!
+  ERROR: missing [21/33]!
+  ERROR: missing [22/33]!
+  ERROR: missing [23/33]!
+  ERROR: missing [24/33]!
+  ERROR: missing [25/33]!
+  ERROR: missing [26/33]!
+  ERROR: missing [27/33]!
+  ERROR: missing [28/33]!
+  ERROR: missing [29/33]!
+  ERROR: missing [30/33]!
+  ERROR: missing [31/33]!
+  ERROR: missing [32/33]!
+  ERROR: missing [33/33]!
+---
+Total patches: 15
+---
+WARNING: Thread incomplete!
+Applying: softmmu/physmem.c: Keep transaction attribute in address_space_map()
+Patch failed at 0001 softmmu/physmem.c: Keep transaction attribute in address_space_map()
+error: softmmu/physmem.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
