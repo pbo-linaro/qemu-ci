@@ -1,0 +1,89 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.1.2-20241109150812@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 59 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1310 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/58] tcg/s390x: fix constraint for 32-bit TSTEQ/TSTNE
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 2/58] KVM: Dynamic sized kvm memslots array
+  [PATCH 3/58] target/i386/tcg: Use DPL-level accesses for interrupts and call gates
+  [PATCH 4/58] accel/kvm: check for KVM_CAP_READONLY_MEM on VM
+    + Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com> ([32m✓[0m DKIM/amd.com)
+  [PATCH 5/58] target/i386: Use only 16 and 32-bit operands for IN/OUT
+  [PATCH 6/58] tests: Wait for migration completion on destination QEMU to avoid failures
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+  [PATCH 7/58] Revert "hw/sh4/r2d: Realize IDE controller before accessing it"
+  [PATCH 8/58] tests/qemu-iotests/211.out: Update to expect MapEntry 'compressed' field
+  [PATCH 9/58] raw-format: Fix error message for invalid offset/size
+  [PATCH 10/58] tcg: Reset data_gen_ptr correctly
+  [PATCH 11/58] target/i386: Walk NPT in guest real mode
+  [PATCH 12/58] target/i386: Use probe_access_full_mmu in ptw_translate
+  [PATCH 13/58] linux-user: Emulate /proc/self/maps under mmap_lock
+  [PATCH 14/58] linux-user/ppc: Fix sigmask endianness issue in sigreturn
+  [PATCH 15/58] linux-user/riscv: Fix definition of RISCV_HWPROBE_EXT_ZVFHMIN
+  [PATCH 16/58] vfio/migration: Report only stop-copy size in vfio_state_pending_exact()
+  [PATCH 17/58] gitlab: make check-[dco|patch] a little more verbose
+  [PATCH 18/58] dockerfiles: fix default targets for debian-loongarch-cross
+  [PATCH 19/58] plugins: fix qemu_plugin_reset
+  [PATCH 20/58] net: Check if nc is NULL in qemu_get_vnet_hdr_len()
+  [PATCH 21/58] Fix calculation of minimum in colo_compare_tcp
+  [PATCH 22/58] net: fix build when libbpf is disabled, but libxdp is enabled
+  [PATCH 23/58] net/tap-win32: Fix gcc 14 format truncation errors
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 24/58] target/arm: Don't assert in regime_is_user() for E10 mmuidx values
+  [PATCH 25/58] hw/sd/omap_mmc: Don't use sd_cmd_type_t
+  [PATCH 26/58] target/arm: Fix arithmetic underflow in SETM instruction
+    + Fixes: 0e92818887d ("target/arm: Implement the SET* instructions") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 27/58] target/arm: Store FPSR cumulative exception bits in env->vfp.fpsr
+  [PATCH 28/58] stubs: avoid duplicate symbols in libqemuutil.a
+  [PATCH 29/58] target/riscv/csr.c: Fix an access to VXSAT
+  [PATCH 30/58] target/riscv: Correct SXL return value for RV32 in RV64 QEMU
+  [PATCH 31/58] hw/intc: Don't clear pending bits on IRQ lowering
+  [PATCH 32/58] target/riscv: Set vtype.vill on CPU reset
+  [PATCH 33/58] hw/intc/riscv_aplic: Check and update pending when write sourcecfg
+  [PATCH 34/58] target/riscv/kvm: set 'aia_mode' to default in error path
+  [PATCH 35/58] target/riscv/kvm: clarify how 'riscv-aia' default works
+  [PATCH 36/58] target/riscv: Fix vcompress with rvv_ta_all_1s
+  [PATCH 37/58] target/ppc: Set ctx->opcode for decode_insn32()
+  [PATCH 38/58] target/ppc: Make divd[u] handler method decodetree compatible
+  [PATCH 39/58] ppc/pnv: Fix LPC serirq routing calculation
+  [PATCH 40/58] ppc/pnv: Fix LPC POWER8 register sanity check
+  [PATCH 41/58] target/ppc: Fix mtDPDES targeting SMT siblings
+  [PATCH 42/58] target/ppc: Fix HFSCR facility checks
+  [PATCH 43/58] ppc/pnv: ADU fix possible buffer overrun with invalid size
+  [PATCH 44/58] hw/ssi/pnv_spi: Match _xfer_buffer_free() with _xfer_buffer_new()
+  [PATCH 45/58] hw/ssi/pnv_spi: Return early in transfer()
+  [PATCH 46/58] hw/ssi/pnv_spi: Fixes Coverity CID 1558831
+  [PATCH 47/58] tests/tcg: Replace -mpower8-vector with -mcpu=power8
+  [PATCH 48/58] hw/sd/sdcard: Fix calculation of size when using eMMC boot partitions
+  [PATCH 49/58] qemu-ga: Fix a SIGSEGV in ga_run_command() helper
+  [PATCH 50/58] hw/acpi: Fix ordering of BDF in Generic Initiator PCI Device Handle.
+  [PATCH 51/58] acpi/disassemle-aml.sh: fix up after dir reorg
+  [PATCH 52/58] Revert "target/arm: Fix usage of MMU indexes when EL3 is AArch32"
+  [PATCH 53/58] target/arm: Add new MMU indexes for AArch32 Secure PL1&0
+  [PATCH 54/58] target/arm: Fix SVE SDOT/UDOT/USDOT (4-way, indexed)
+  [PATCH 55/58] migration: Ensure vmstate_save() sets errp
+  [PATCH 56/58] hw/nvme: fix handling of over-committed queues
+  [PATCH 57/58] 9pfs: fix crash on 'Treaddir' request
+  [PATCH 58/58] Revert "hw/audio/hda: fix memory leak on audio setup"
+---
+Total patches: 58
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Tested-by: Guenter Roeck <linux@roeck-us.net>
+     Msg From: Cédric Le Goater <clg@kaod.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tcg/s390x: fix constraint for 32-bit TSTEQ/TSTNE
+Patch failed at 0001 tcg/s390x: fix constraint for 32-bit TSTEQ/TSTNE
+error: patch failed: tcg/s390x/tcg-target.c.inc:563
+error: tcg/s390x/tcg-target.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
