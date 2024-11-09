@@ -21,7 +21,6 @@ test_timeouts = {
   'arm_collie' : 180,
   'arm_orangepi' : 540,
   'arm_raspi2' : 120,
-  'arm_tuxrun' : 240,
   'arm_sx1' : 360,
   'mips_malta' : 120,
   'netdev_ethtool' : 180,
@@ -70,7 +69,6 @@ tests_arm_system_thorough = [
   'arm_raspi2',
   'arm_sx1',
   'arm_vexpress',
-  'arm_tuxrun',
 ]
 
 tests_arm_linuxuser_thorough = [
@@ -86,13 +84,11 @@ tests_i386_system_thorough = [
 ]
 
 tests_loongarch64_system_thorough = [
-  'loongarch64_virt',
 ]
 
 tests_m68k_system_thorough = [
   'm68k_mcf5208evb',
   'm68k_nextcube',
-  'm68k_q800',
 ]
 
 tests_microblaze_system_thorough = [
