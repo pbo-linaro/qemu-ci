@@ -24,6 +24,7 @@
 #include "qemu/module.h"
 #include "qapi/error.h"
 
+#define TYPE_VMAPPLE_VIRTIO_BLK  "vmapple-virtio-blk"
 OBJECT_DECLARE_TYPE(VMAppleVirtIOBlk, VMAppleVirtIOBlkClass, VMAPPLE_VIRTIO_BLK)
 
 typedef struct VMAppleVirtIOBlkClass {
@@ -41,13 +42,9 @@ typedef struct VMAppleVirtIOBlk {
 /*
  * vmapple-virtio-blk-pci: This extends VirtioPCIProxy.
  */
-#define TYPE_VMAPPLE_VIRTIO_BLK_PCI "vmapple-virtio-blk-pci-base"
 OBJECT_DECLARE_SIMPLE_TYPE(VMAppleVirtIOBlkPCI, VMAPPLE_VIRTIO_BLK_PCI)
 
 #define VIRTIO_BLK_T_APPLE_BARRIER     0x10000
-
-#define VIRTIO_APPLE_TYPE_ROOT 1
-#define VIRTIO_APPLE_TYPE_AUX  2
 
 static bool vmapple_virtio_blk_handle_unknown_request(VirtIOBlockReq *req,
                                                       MultiReqBuffer *mrb,
@@ -109,7 +106,7 @@ static const TypeInfo vmapple_virtio_blk_info = {
 struct VMAppleVirtIOBlkPCI {
     VirtIOPCIProxy parent_obj;
     VMAppleVirtIOBlk vdev;
-    uint32_t apple_type;
+    VMAppleVirtioBlkVariant variant;
 };
 
 
@@ -119,6 +116,8 @@ static Property vmapple_virtio_blk_pci_properties[] = {
                     VIRTIO_PCI_FLAG_USE_IOEVENTFD_BIT, true),
     DEFINE_PROP_UINT32("vectors", VirtIOPCIProxy, nvectors,
                        DEV_NVECTORS_UNSPECIFIED),
+    DEFINE_PROP_VMAPPLE_VIRTIO_BLK_VARIANT("variant", VMAppleVirtIOBlkPCI, variant,
+                                           VM_APPLE_VIRTIO_BLK_VARIANT_UNSPECIFIED),
     DEFINE_PROP_END_OF_LIST(),
 };
 
@@ -127,6 +126,12 @@ static void vmapple_virtio_blk_pci_realize(VirtIOPCIProxy *vpci_dev, Error **err
     VMAppleVirtIOBlkPCI *dev = VMAPPLE_VIRTIO_BLK_PCI(vpci_dev);
     DeviceState *vdev = DEVICE(&dev->vdev);
     VirtIOBlkConf *conf = &dev->vdev.parent_obj.conf;
+
+    if (dev->variant == VM_APPLE_VIRTIO_BLK_VARIANT_UNSPECIFIED) {
+        error_setg(errp, "Device " TYPE_VMAPPLE_VIRTIO_BLK_PCI ": must specify "
+                   "a variant, 'aux' or 'root'");
+        return;
+    }
 
     if (conf->num_queues == VIRTIO_BLK_AUTO_NUM_QUEUES) {
         conf->num_queues = virtio_pci_optimal_num_queues(0);
@@ -143,7 +148,7 @@ static void vmapple_virtio_blk_pci_realize(VirtIOPCIProxy *vpci_dev, Error **err
      */
     virtio_add_feature(&dev->vdev.parent_obj.host_features, VIRTIO_BLK_F_ZONED);
     /* Propagate the apple type down to the virtio-blk device */
-    dev->vdev.apple_type = dev->apple_type;
+    dev->vdev.apple_type = dev->variant;
     /* and spawn the virtio-blk device */
     qdev_realize(vdev, BUS(&vpci_dev->bus), errp);
 
@@ -181,47 +186,16 @@ static void vmapple_virtio_blk_pci_instance_init(Object *obj)
 }
 
 static const VirtioPCIDeviceTypeInfo vmapple_virtio_blk_pci_info = {
-    .base_name     = TYPE_VMAPPLE_VIRTIO_BLK_PCI,
-    .generic_name  = "vmapple-virtio-blk-pci",
+    .generic_name  = TYPE_VMAPPLE_VIRTIO_BLK_PCI,
     .instance_size = sizeof(VMAppleVirtIOBlkPCI),
     .instance_init = vmapple_virtio_blk_pci_instance_init,
     .class_init    = vmapple_virtio_blk_pci_class_init,
-};
-
-static void vmapple_virtio_root_instance_init(Object *obj)
-{
-    VMAppleVirtIOBlkPCI *dev = VMAPPLE_VIRTIO_BLK_PCI(obj);
-
-    dev->apple_type = VIRTIO_APPLE_TYPE_ROOT;
-}
-
-static const TypeInfo vmapple_virtio_root_info = {
-    .name          = TYPE_VMAPPLE_VIRTIO_ROOT,
-    .parent        = "vmapple-virtio-blk-pci",
-    .instance_size = sizeof(VMAppleVirtIOBlkPCI),
-    .instance_init = vmapple_virtio_root_instance_init,
-};
-
-static void vmapple_virtio_aux_instance_init(Object *obj)
-{
-    VMAppleVirtIOBlkPCI *dev = VMAPPLE_VIRTIO_BLK_PCI(obj);
-
-    dev->apple_type = VIRTIO_APPLE_TYPE_AUX;
-}
-
-static const TypeInfo vmapple_virtio_aux_info = {
-    .name          = TYPE_VMAPPLE_VIRTIO_AUX,
-    .parent        = "vmapple-virtio-blk-pci",
-    .instance_size = sizeof(VMAppleVirtIOBlkPCI),
-    .instance_init = vmapple_virtio_aux_instance_init,
 };
 
 static void vmapple_virtio_blk_register_types(void)
 {
     type_register_static(&vmapple_virtio_blk_info);
     virtio_pci_types_register(&vmapple_virtio_blk_pci_info);
-    type_register_static(&vmapple_virtio_root_info);
-    type_register_static(&vmapple_virtio_aux_info);
 }
 
 type_init(vmapple_virtio_blk_register_types)

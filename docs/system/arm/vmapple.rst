@@ -56,8 +56,8 @@ to get better interactive access into the target system:
        -drive file="$DISK",if=pflash,format=raw \
        -drive file="$AUX",if=none,id=aux,format=raw \
        -drive file="$DISK",if=none,id=root,format=raw \
-       -device vmapple-virtio-aux,drive=aux \
-       -device vmapple-virtio-root,drive=root \
+       -device vmapple-virtio-blk-pci,variant=aux,drive=aux \
+       -device vmapple-virtio-blk-pci,variant=root,drive=root \
        -netdev user,id=net0,ipv6=off,hostfwd=tcp::2222-:22,hostfwd=tcp::5901-:5900 \
        -device virtio-net-pci,netdev=net0
 
