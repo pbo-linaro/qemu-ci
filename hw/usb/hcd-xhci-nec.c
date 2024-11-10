@@ -54,6 +54,16 @@ static void nec_xhci_instance_init(Object *obj)
     pci->xhci.flags    = nec->flags;
     pci->xhci.numintrs = nec->intrs;
     pci->xhci.numslots = nec->slots;
+
+    pci->cache_line_size = 0x10;
+    pci->pm_cap_off = 0;
+    pci->pcie_cap_off = 0xa0;
+    pci->msi_cap_off = 0x70;
+    pci->msix_cap_off = 0x90;
+    pci->msix_bar_nr = 0;
+    pci->msix_bar_size = 0;
+    pci->msix_table_off = 0x3000;
+    pci->msix_pba_off = 0x3800;
 }
 
 static void nec_xhci_class_init(ObjectClass *klass, void *data)
