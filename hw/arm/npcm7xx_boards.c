@@ -83,7 +83,7 @@ static void npcm7xx_connect_flash(NPCM7xxFIUState *fiu, int cs_no,
     DeviceState *flash;
     qemu_irq flash_cs;
 
-    flash = qdev_new(flash_type);
+    flash = qdev_new_dynamic(flash_type, &error_fatal);
     if (dinfo) {
         qdev_prop_set_drive(flash, "drive", blk_by_legacy_dinfo(dinfo));
     }

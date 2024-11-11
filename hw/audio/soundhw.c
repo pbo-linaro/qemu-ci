@@ -132,7 +132,7 @@ void soundhw_init(void)
     }
 
     if (c->typename) {
-        DeviceState *dev = qdev_new(c->typename);
+        DeviceState *dev = qdev_new_dynamic(c->typename, &error_fatal);
         qdev_prop_set_string(dev, "audiodev", audiodev_id);
         qdev_realize_and_unref(dev, bus, &error_fatal);
     } else {

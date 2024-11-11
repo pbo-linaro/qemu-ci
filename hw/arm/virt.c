@@ -715,7 +715,7 @@ static void create_its(VirtMachineState *vms)
         return;
     }
 
-    dev = qdev_new(itsclass);
+    dev = qdev_new_dynamic(itsclass, &error_fatal);
 
     object_property_set_link(OBJECT(dev), "parent-gicv3", OBJECT(vms->gic),
                              &error_abort);
@@ -791,7 +791,7 @@ static void create_gic(VirtMachineState *vms, MemoryRegion *mem)
     default:
         g_assert_not_reached();
     }
-    vms->gic = qdev_new(gictype);
+    vms->gic = qdev_new_dynamic(gictype, &error_fatal);
     qdev_prop_set_uint32(vms->gic, "revision", revision);
     qdev_prop_set_uint32(vms->gic, "num-cpu", smp_cpus);
     /* Note that the num-irq property counts both internal and external

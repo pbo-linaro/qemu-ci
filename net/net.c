@@ -1175,7 +1175,7 @@ DeviceState *qemu_create_nic_device(const char *typename, bool match_default,
         return NULL;
     }
 
-    dev = qdev_new(typename);
+    dev = qdev_new_dynamic(typename, &error_fatal);
     qdev_set_nic_properties(dev, nd);
     return dev;
 }
@@ -1225,7 +1225,7 @@ void qemu_create_nic_bus_devices(BusState *bus, const char *parent_type,
             continue;
         }
 
-        dev = qdev_new(model);
+        dev = qdev_new_dynamic(model, &error_fatal);
         qdev_set_nic_properties(dev, nd);
         qdev_realize_and_unref(dev, bus, &error_fatal);
     }

@@ -155,12 +155,12 @@ int isa_register_portio_list(ISADevice *dev,
 
 ISADevice *isa_new(const char *name)
 {
-    return ISA_DEVICE(qdev_new(name));
+    return ISA_DEVICE(qdev_new_dynamic(name, &error_fatal));
 }
 
 ISADevice *isa_try_new(const char *name)
 {
-    return ISA_DEVICE(qdev_try_new(name));
+    return ISA_DEVICE(qdev_try_new_dynamic(name, &error_fatal));
 }
 
 ISADevice *isa_create_simple(ISABus *bus, const char *name)
