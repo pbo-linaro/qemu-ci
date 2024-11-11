@@ -218,7 +218,8 @@ static void zynq_init(MachineState *machine)
     }
 
     for (n = 0; n < smp_cpus; n++) {
-        Object *cpuobj = object_new(machine->cpu_type);
+        Object *cpuobj = object_new_dynamic(machine->cpu_type,
+                                            &error_fatal);
 
         object_property_set_int(cpuobj, "midr", ZYNQ_BOARD_MIDR,
                                 &error_fatal);

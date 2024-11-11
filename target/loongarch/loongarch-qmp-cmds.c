@@ -83,7 +83,10 @@ CpuModelExpansionInfo *qmp_query_cpu_model_expansion(CpuModelExpansionType type,
         return NULL;
     }
 
-    obj = object_new(object_class_get_name(oc));
+    obj = object_new_dynamic(object_class_get_name(oc), errp);
+    if (!obj) {
+        return NULL;
+    }
 
     expansion_info = g_new0(CpuModelExpansionInfo, 1);
     expansion_info->model = g_malloc0(sizeof(*expansion_info->model));

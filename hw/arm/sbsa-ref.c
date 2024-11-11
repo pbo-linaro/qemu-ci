@@ -767,7 +767,8 @@ static void sbsa_ref_init(MachineState *machine)
             break;
         }
 
-        cpuobj = object_new(possible_cpus->cpus[n].type);
+        cpuobj = object_new_dynamic(possible_cpus->cpus[n].type,
+                                    &error_fatal);
         object_property_set_int(cpuobj, "mp-affinity",
                                 possible_cpus->cpus[n].arch_id, NULL);
 

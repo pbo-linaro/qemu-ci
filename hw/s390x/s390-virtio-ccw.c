@@ -55,9 +55,15 @@ static Error *pv_mig_blocker;
 static S390CPU *s390x_new_cpu(const char *typename, uint32_t core_id,
                               Error **errp)
 {
-    S390CPU *cpu = S390_CPU(object_new(typename));
+    Object *cpuobj = object_new_dynamic(typename, errp);
+    S390CPU *cpu = NULL;
     S390CPU *ret = NULL;
 
+    if (!cpuobj) {
+        return NULL;
+    }
+
+    cpu = S390_CPU(cpuobj);
     if (!object_property_set_int(OBJECT(cpu), "core-id", core_id, errp)) {
         goto out;
     }

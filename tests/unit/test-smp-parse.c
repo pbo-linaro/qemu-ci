@@ -1008,7 +1008,7 @@ static void machine_full_topo_class_init(ObjectClass *oc, void *data)
 static void test_generic_valid(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1027,7 +1027,7 @@ static void test_generic_valid(const void *opaque)
 static void test_generic_invalid(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1046,7 +1046,7 @@ static void test_generic_invalid(const void *opaque)
 static void test_with_modules(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1096,7 +1096,7 @@ static void test_with_modules(const void *opaque)
 static void test_with_dies(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1146,7 +1146,7 @@ static void test_with_dies(const void *opaque)
 static void test_with_modules_dies(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1207,7 +1207,7 @@ static void test_with_modules_dies(const void *opaque)
 static void test_with_clusters(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1257,7 +1257,7 @@ static void test_with_clusters(const void *opaque)
 static void test_with_books(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1307,7 +1307,7 @@ static void test_with_books(const void *opaque)
 static void test_with_drawers(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1357,7 +1357,7 @@ static void test_with_drawers(const void *opaque)
 static void test_with_drawers_books(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};
@@ -1418,7 +1418,7 @@ static void test_with_drawers_books(const void *opaque)
 static void test_full_topo(const void *opaque)
 {
     const char *machine_type = opaque;
-    Object *obj = object_new(machine_type);
+    Object *obj = object_new_dynamic(machine_type, &error_abort);
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
     SMPTestData data = {};

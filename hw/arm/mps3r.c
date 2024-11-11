@@ -387,7 +387,8 @@ static void mps3r_common_init(MachineState *machine)
         memory_region_add_subregion_overlap(&mms->cpu_sysmem[i], 0,
                                             &mms->sysmem_alias[i], -1);
 
-        mms->cpu[i] = object_new(machine->cpu_type);
+        mms->cpu[i] = object_new_dynamic(machine->cpu_type,
+                                         &error_fatal);
         object_property_set_link(mms->cpu[i], "memory",
                                  OBJECT(&mms->cpu_sysmem[i]), &error_abort);
         object_property_set_int(mms->cpu[i], "reset-cbar",

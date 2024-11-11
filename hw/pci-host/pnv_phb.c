@@ -131,7 +131,10 @@ static void pnv_phb_realize(DeviceState *dev, Error **errp)
         g_assert_not_reached();
     }
 
-    phb->backend = object_new(phb_typename);
+    phb->backend = object_new_dynamic(phb_typename, errp);
+    if (!phb->backend) {
+        return;
+    }
     object_property_add_child(OBJECT(dev), "phb-backend", phb->backend);
 
     /* Passthrough child device properties to the proxy device */

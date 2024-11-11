@@ -554,7 +554,8 @@ static void exynos4210_realize(DeviceState *socdev, Error **errp)
     int i, n;
 
     for (n = 0; n < EXYNOS4210_NCPUS; n++) {
-        Object *cpuobj = object_new(ARM_CPU_TYPE_NAME("cortex-a9"));
+        Object *cpuobj = object_new_dynamic(ARM_CPU_TYPE_NAME("cortex-a9"),
+                                            &error_fatal);
 
         object_property_add_child(OBJECT(s), "cpu[*]", cpuobj);
         /* By default A9 CPUs have EL3 enabled.  This board does not currently

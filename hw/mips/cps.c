@@ -74,7 +74,8 @@ static void mips_cps_realize(DeviceState *dev, Error **errp)
     }
 
     for (int i = 0; i < s->num_vp; i++) {
-        MIPSCPU *cpu = MIPS_CPU(object_new(s->cpu_type));
+        MIPSCPU *cpu = MIPS_CPU(object_new_dynamic(s->cpu_type,
+                                                   &error_abort));
         CPUMIPSState *env = &cpu->env;
 
         object_property_set_bool(OBJECT(cpu), "big-endian", s->cpu_is_bigendian,
