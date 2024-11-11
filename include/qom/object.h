@@ -606,14 +606,19 @@ struct InterfaceClass
 /**
  * object_new_with_class:
  * @klass: The class to instantiate.
+ * @errp: pointer to be filled with error details on failure
  *
  * This function will initialize a new object using heap allocated memory.
  * The returned object has a reference count of 1, and will be freed when
  * the last reference is dropped.
  *
- * Returns: The newly allocated and instantiated object.
+ * If an instance of @klass is not permitted to be instantiated, an
+ * error will be raised. This can happen if @klass is abstract.
+ *
+ * Returns: The newly allocated and instantiated object, or NULL
+ * on error.
  */
-Object *object_new_with_class(ObjectClass *klass);
+Object *object_new_with_class(ObjectClass *klass, Error **errp);
 
 /**
  * object_new:

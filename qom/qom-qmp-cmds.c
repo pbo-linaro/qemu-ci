@@ -134,14 +134,15 @@ ObjectPropertyInfoList *qmp_device_list_properties(const char *typename,
         return NULL;
     }
 
-    if (!object_class_dynamic_cast(klass, TYPE_DEVICE)
-        || object_class_is_abstract(klass)) {
-        error_setg(errp, QERR_INVALID_PARAMETER_VALUE, "typename",
-                   "a non-abstract device type");
+    if (!object_class_dynamic_cast(klass, TYPE_DEVICE)) {
+        error_setg(errp, "Object '%s' is not a device type", typename);
         return NULL;
     }
 
-    obj = object_new_with_class(klass);
+    obj = object_new_with_class(klass, errp);
+    if (!obj) {
+        return NULL;
+    }
 
     object_property_iter_init(&iter, obj);
     while ((prop = object_property_iter_next(&iter))) {

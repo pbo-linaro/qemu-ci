@@ -43,12 +43,18 @@ void x86_cpu_apic_create(X86CPU *cpu, Error **errp)
 {
     APICCommonState *apic;
     APICCommonClass *apic_class = apic_get_class(errp);
+    Object *apicobj;
 
     if (!apic_class) {
         return;
     }
 
-    cpu->apic_state = DEVICE(object_new_with_class(OBJECT_CLASS(apic_class)));
+    apicobj = object_new_with_class(OBJECT_CLASS(apic_class),
+                                    errp);
+    if (!apicobj) {
+        return;
+    }
+    cpu->apic_state = DEVICE(apicobj);
     object_property_add_child(OBJECT(cpu), "lapic",
                               OBJECT(cpu->apic_state));
     object_unref(OBJECT(cpu->apic_state));

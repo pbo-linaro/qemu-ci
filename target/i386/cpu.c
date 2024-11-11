@@ -5973,7 +5973,7 @@ static GSList *get_sorted_cpu_model_list(void)
 
 static char *x86_cpu_class_get_model_id(X86CPUClass *xc)
 {
-    Object *obj = object_new_with_class(OBJECT_CLASS(xc));
+    Object *obj = object_new_with_class(OBJECT_CLASS(xc), &error_abort);
     char *r = object_property_get_str(obj, "model-id", &error_abort);
     object_unref(obj);
     return r;
@@ -6071,7 +6071,7 @@ static void x86_cpu_class_check_missing_features(X86CPUClass *xcc,
         return;
     }
 
-    xc = X86_CPU(object_new_with_class(OBJECT_CLASS(xcc)));
+    xc = X86_CPU(object_new_with_class(OBJECT_CLASS(xcc), &error_abort));
 
     x86_cpu_expand_features(xc, &err);
     if (err) {

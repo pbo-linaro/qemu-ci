@@ -794,9 +794,9 @@ static Object *object_new_with_type(Type type, Error **errp)
     return obj;
 }
 
-Object *object_new_with_class(ObjectClass *klass)
+Object *object_new_with_class(ObjectClass *klass, Error **errp)
 {
-    return object_new_with_type(klass->type, &error_abort);
+    return object_new_with_type(klass->type, errp);
 }
 
 Object *object_new(const char *typename)

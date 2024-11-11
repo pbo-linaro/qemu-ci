@@ -2117,7 +2117,8 @@ static void qemu_create_machine(QDict *qdict)
     MachineClass *machine_class = select_machine(qdict, &error_fatal);
     object_set_machine_compat_props(machine_class->compat_props);
 
-    current_machine = MACHINE(object_new_with_class(OBJECT_CLASS(machine_class)));
+    current_machine = MACHINE(object_new_with_class(OBJECT_CLASS(machine_class),
+                                                    &error_fatal));
     object_property_add_child(object_get_root(), "machine",
                               OBJECT(current_machine));
     object_property_add_child(container_get(OBJECT(current_machine),
@@ -2327,7 +2328,8 @@ static int do_configure_accelerator(void *opaque, QemuOpts *opts, Error **errp)
         }
         goto bad;
     }
-    accel = ACCEL(object_new_with_class(OBJECT_CLASS(ac)));
+    accel = ACCEL(object_new_with_class(OBJECT_CLASS(ac),
+                                        &error_fatal));
     object_apply_compat_props(OBJECT(accel));
     qemu_opt_foreach(opts, accelerator_set_property,
                      accel,

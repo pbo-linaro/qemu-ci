@@ -155,7 +155,7 @@ DeviceState *qdev_try_new(const char *name)
     if (!oc) {
         return NULL;
     }
-    return DEVICE(object_new_with_class(oc));
+    return DEVICE(object_new_with_class(oc, &error_abort));
 }
 
 static QTAILQ_HEAD(, DeviceListener) device_listeners
