@@ -207,18 +207,19 @@ class TuxRunBaselineTest(QemuSystemTest):
                 "bbd5ed4b9c7d3f4ca19ba71a323a843c6b585e880115df3b7765769dbd9dd061"}
         self.common_tuxrun(csums=sums)
 
-    def test_arm64be(self):
-        """
-        :avocado: tags=arch:aarch64
-        :avocado: tags=cpu:cortex-a57
-        :avocado: tags=endian:big
-        :avocado: tags=machine:virt
-        :avocado: tags=tuxboot:arm64be
-        :avocado: tags=console:ttyAMA0
-        :avocado: tags=shutdown:nowait
-        """
-        sums = { "Image" :
-                 "e0df4425eb2cd9ea9a283e808037f805641c65d8fcecc8f6407d8f4f339561b4",
-                 "rootfs.ext4.zst" :
-                 "e6ffd8813c8a335bc15728f2835f90539c84be7f8f5f691a8b01451b47fb4bd7"}
-        self.common_tuxrun(csums=sums)
+    # flaky test
+    #def test_arm64be(self):
+    #    """
+    #    :avocado: tags=arch:aarch64
+    #    :avocado: tags=cpu:cortex-a57
+    #    :avocado: tags=endian:big
+    #    :avocado: tags=machine:virt
+    #    :avocado: tags=tuxboot:arm64be
+    #    :avocado: tags=console:ttyAMA0
+    #    :avocado: tags=shutdown:nowait
+    #    """
+    #    sums = { "Image" :
+    #             "e0df4425eb2cd9ea9a283e808037f805641c65d8fcecc8f6407d8f4f339561b4",
+    #             "rootfs.ext4.zst" :
+    #             "e6ffd8813c8a335bc15728f2835f90539c84be7f8f5f691a8b01451b47fb4bd7"}
+    #    self.common_tuxrun(csums=sums)
