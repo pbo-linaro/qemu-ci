@@ -149,6 +149,11 @@ DeviceState *qdev_new(const char *name)
     return DEVICE(object_new_dynamic(name, &error_abort));
 }
 
+DeviceState *qdev_new_dynamic(const char *name, Error **errp)
+{
+    return DEVICE(object_new_dynamic(name, errp));
+}
+
 DeviceState *qdev_try_new(const char *name)
 {
     ObjectClass *oc = module_object_class_by_name(name);
@@ -156,6 +161,15 @@ DeviceState *qdev_try_new(const char *name)
         return NULL;
     }
     return DEVICE(object_new_with_class(oc, &error_abort));
+}
+
+DeviceState *qdev_try_new_dynamic(const char *name, Error **errp)
+{
+    ObjectClass *oc = module_object_class_by_name(name);
+    if (!oc) {
+        return NULL;
+    }
+    return DEVICE(object_new_with_class(oc, errp));
 }
 
 static QTAILQ_HEAD(, DeviceListener) device_listeners
