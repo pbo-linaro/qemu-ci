@@ -624,13 +624,40 @@ Object *object_new_with_class(ObjectClass *klass, Error **errp);
  * object_new:
  * @typename: The name of the type of the object to instantiate.
  *
+ * This method should be used where @typename is statically specified
+ * from a const string at build time, where the caller does not expect
+ * failure to be possible.
+ *
  * This function will initialize a new object using heap allocated memory.
  * The returned object has a reference count of 1, and will be freed when
  * the last reference is dropped.
  *
+ * If an instance of @typename is not permitted to be instantiated, an
+ * assert will be raised. This can happen if @typename is abstract.
+ *
  * Returns: The newly allocated and instantiated object.
  */
 Object *object_new(const char *typename);
+
+/**
+ * object_new_dynamic:
+ * @typename: The name of the type of the object to instantiate.
+ * @errp: pointer to be filled with error details on failure
+ *
+ * This method should be used where @typename is dynamically chosen
+ * at runtime, which has the possibility of unexpected choices leading
+ * to failures.
+ *
+ * This function will initialize a new object using heap allocated memory.
+ * The returned object has a reference count of 1, and will be freed when
+ * the last reference is dropped.
+ *
+ * If an instance of @typename is not permitted to be instantiated, an
+ * error will be raised. This can happen if @typename is abstract.
+ *
+ * Returns: The newly allocated and instantiated object.
+ */
+Object *object_new_dynamic(const char *typename, Error **errp);
 
 /**
  * object_new_with_props:
