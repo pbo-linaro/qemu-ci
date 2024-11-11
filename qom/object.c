@@ -799,7 +799,8 @@ Object *object_new_with_class(ObjectClass *klass, Error **errp)
     return object_new_with_type(klass->type, errp);
 }
 
-Object *object_new(const char *typename)
+/* Only to be called via the 'object_new' macro */
+Object *object_new_internal(const char *typename)
 {
     TypeImpl *ti = type_get_or_load_by_name(typename, &error_fatal);
 
