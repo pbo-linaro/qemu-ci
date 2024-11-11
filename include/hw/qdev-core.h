@@ -448,7 +448,17 @@ compat_props_add(GPtrArray *arr,
  *
  * Return: a derived DeviceState object with a reference count of 1.
  */
-DeviceState *qdev_new(const char *name);
+
+/*
+ * NB, qdev_new_internal is just an internal helper, wrapped by
+ * the qdev_new() macro which prevents invokation unless given
+ * a static, const string.
+ *
+ * Code should call qdev_new(), or qdev_new_dynamic(), not
+ * qdev_new_internal().
+ */
+DeviceState *qdev_new_internal(const char *name);
+#define qdev_new(name) qdev_new_internal(name "")
 
 /**
  * qdev_new_dynamic: Create a device on the heap
@@ -487,7 +497,17 @@ DeviceState *qdev_new_dynamic(const char *name, Error **errp);
  * Return: a derived DeviceState object with a reference count of 1 or
  * NULL if type @name does not exist.
  */
-DeviceState *qdev_try_new(const char *name);
+
+/*
+ * NB, qdev_try_new_internal is just an internal helper, wrapped by
+ * the qdev_try_new() macro which prevents invokation unless given
+ * a static, const string.
+ *
+ * Code should call qdev_try_new(), or qdev_try_new_dynamic(), not
+ * qdev_try_new_internal().
+ */
+DeviceState *qdev_try_new_internal(const char *name);
+#define qdev_try_new(name) qdev_try_new_internal(name "")
 
 /**
  * qdev_try_new_dynamic: Try to create a device on the heap
