@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/36974feb6035201d53384557259ec72fe311053b.1731397962.git.u.kleine-koenig@baylibre.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] firmware: Switch back to struct platform_driver::remove()
+  ---
+  [31m✗[0m No key: openpgp/u.kleine-koenig@baylibre.com
+  [32m✓[0m Signed: DKIM/baylibre-com.20230601.gappssmtp.com (From: u.kleine-koenig@baylibre.com)
+---
+Total patches: 1
+---
+ Base: base-commit 6d59cab07b8d74d0f0422b750038123334f6ecc2 not known, ignoring
+Applying: firmware: Switch back to struct platform_driver::remove()
+Patch failed at 0001 firmware: Switch back to struct platform_driver::remove()
+error: drivers/firmware/arm_scmi/driver.c: does not exist in index
+error: drivers/firmware/arm_scpi.c: does not exist in index
+error: drivers/firmware/google/coreboot_table.c: does not exist in index
+error: drivers/firmware/imx/imx-dsp.c: does not exist in index
+error: drivers/firmware/microchip/mpfs-auto-update.c: does not exist in index
+error: drivers/firmware/mtk-adsp-ipc.c: does not exist in index
+error: drivers/firmware/qemu_fw_cfg.c: does not exist in index
+error: drivers/firmware/raspberrypi.c: does not exist in index
+error: drivers/firmware/stratix10-rsu.c: does not exist in index
+error: drivers/firmware/stratix10-svc.c: does not exist in index
+error: drivers/firmware/xilinx/zynqmp.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
