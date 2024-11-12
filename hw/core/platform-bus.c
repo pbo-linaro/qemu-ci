@@ -22,6 +22,7 @@
 #include "qemu/osdep.h"
 #include "hw/platform-bus.h"
 #include "hw/qdev-properties.h"
+#include "hw/vfio/vfio-platform.h"
 #include "qapi/error.h"
 #include "qemu/error-report.h"
 #include "qemu/module.h"
@@ -130,11 +131,29 @@ static void platform_bus_map_mmio(PlatformBusDevice *pbus, SysBusDevice *sbdev,
                                   int n)
 {
     MemoryRegion *sbdev_mr = sysbus_mmio_get_region(sbdev, n);
+    VFIOPlatformDevice *vdev = VFIO_PLATFORM_DEVICE(sbdev);
     uint64_t size = memory_region_size(sbdev_mr);
     uint64_t alignment = (1ULL << (63 - clz64(size + size - 1)));
     uint64_t off;
+    uint64_t mmio_base_off;
     bool found_region = false;
 
+    if (vdev->mmio_base) {
+        if(vdev->mmio_base < pbus->mmio.addr || 
+           vdev->mmio_base >= pbus->mmio.addr + pbus->mmio_size){
+            error_report("Platform Bus: MMIO base 0x%"PRIx64
+                " outside platform bus region [0x%"PRIx64",0x%"PRIx64"]",
+                vdev->mmio_base,
+                pbus->mmio.addr,
+                pbus->mmio.addr + pbus->mmio_size);
+            exit(1);
+        }
+        
+        mmio_base_off = vdev->mmio_base - pbus->mmio.addr;
+    } else {
+        mmio_base_off = 0;
+    }
+    
     if (memory_region_is_mapped(sbdev_mr)) {
         /* Region is already mapped, nothing to do */
         return;
@@ -144,7 +163,7 @@ static void platform_bus_map_mmio(PlatformBusDevice *pbus, SysBusDevice *sbdev,
      * Look for empty space in the MMIO space that is naturally aligned with
      * the target device's memory region
      */
-    for (off = 0; off < pbus->mmio_size; off += alignment) {
+    for (off = mmio_base_off; off < pbus->mmio_size; off += alignment) {
         MemoryRegion *mr = memory_region_find(&pbus->mmio, off, size).mr;
         if (!mr) {
             found_region = true;
@@ -152,6 +171,11 @@ static void platform_bus_map_mmio(PlatformBusDevice *pbus, SysBusDevice *sbdev,
         } else {
             memory_region_unref(mr);
         }
+    }
+
+    if (vdev->mmio_base && vdev->mmio_base != off + pbus->mmio.addr) {
+        warn_report("Platform Bus: Not able to map in mmio base: 0x%"PRIx64, 
+            vdev->mmio_base);
     }
 
     if (!found_region) {
@@ -206,7 +230,7 @@ static void platform_bus_realize(DeviceState *dev, Error **errp)
 
 static Property platform_bus_properties[] = {
     DEFINE_PROP_UINT32("num_irqs", PlatformBusDevice, num_irqs, 0),
-    DEFINE_PROP_UINT32("mmio_size", PlatformBusDevice, mmio_size, 0),
+    DEFINE_PROP_UINT64("mmio_size", PlatformBusDevice, mmio_size, 0),
     DEFINE_PROP_END_OF_LIST()
 };
 

@@ -34,7 +34,7 @@ struct PlatformBusDevice {
     SysBusDevice parent_obj;
 
     /*< public >*/
-    uint32_t mmio_size;
+    uint64_t mmio_size;
     MemoryRegion mmio;
 
     uint32_t num_irqs;

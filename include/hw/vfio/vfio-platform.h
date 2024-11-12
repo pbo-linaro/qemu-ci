@@ -59,6 +59,7 @@ struct VFIOPlatformDevice {
     uint32_t mmap_timeout; /* delay to re-enable mmaps after interrupt */
     QEMUTimer *mmap_timer; /* allows fast-path resume after IRQ hit */
     QemuMutex intp_mutex; /* protect the intp_list IRQ state */
+    uint64_t mmio_base; /* base address to start looking for mmio */
     bool irqfd_allowed; /* debug option to force irqfd on/off */
 };
 typedef struct VFIOPlatformDevice VFIOPlatformDevice;

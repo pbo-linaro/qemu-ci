@@ -640,6 +640,7 @@ static Property vfio_platform_dev_properties[] = {
     DEFINE_PROP_LINK("iommufd", VFIOPlatformDevice, vbasedev.iommufd,
                      TYPE_IOMMUFD_BACKEND, IOMMUFDBackend *),
 #endif
+    DEFINE_PROP_UINT64("mmio-base", VFIOPlatformDevice, mmio_base, 0),
     DEFINE_PROP_END_OF_LIST(),
 };
 
