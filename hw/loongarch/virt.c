@@ -831,8 +831,7 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
     DeviceState *pch_pic, *pch_msi;
     DeviceState *ipi, *extioi;
     SysBusDevice *d;
-    CPUState *cpu_state;
-    int cpu, i, start, num;
+    int i, start, num;
     uint32_t cpuintc_phandle, eiointc_phandle, pch_pic_phandle, pch_msi_phandle;
 
     /*
@@ -909,12 +908,6 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
                     sysbus_mmio_get_region(SYS_BUS_DEVICE(extioi), 1));
     }
 
-    /* Connect irq to cpu, including ipi and extioi irqchip */
-    for (cpu = 0; cpu < ms->smp.cpus; cpu++) {
-        cpu_state = virt_get_cpu(ms, cpu);
-        virt_init_cpu_irq(ms, cpu_state);
-    }
-
     /* Add Extend I/O Interrupt Controller node */
     fdt_add_eiointc_node(lvms, &cpuintc_phandle, &eiointc_phandle);
 
@@ -958,6 +951,44 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
     fdt_add_pch_msi_node(lvms, &eiointc_phandle, &pch_msi_phandle);
 
     virt_devices_init(pch_pic, lvms, &pch_pic_phandle, &pch_msi_phandle);
+}
+
+static void virt_init_cpus(MachineState *machine)
+{
+    int i;
+    MachineClass *mc = MACHINE_GET_CLASS(machine);
+    Object *cpuobj;
+    CPUState *cpu;
+    LoongArchCPU *lacpu;
+    LoongArchVirtMachineState *lvms = LOONGARCH_VIRT_MACHINE(machine);
+
+    /* Init CPUs */
+    mc->possible_cpu_arch_ids(machine);
+    for (i = 0; i < machine->smp.cpus; i++) {
+        cpuobj = object_new(machine->cpu_type);
+        if (cpuobj == NULL) {
+            error_report("Fail to create object with type %s ",
+                         machine->cpu_type);
+            exit(EXIT_FAILURE);
+        }
+
+        cpu = CPU(cpuobj);
+        cpu->cpu_index = i;
+        lacpu = LOONGARCH_CPU(cpuobj);
+        lacpu->phy_id = machine->possible_cpus->cpus[i].arch_id;
+        object_property_set_int(cpuobj, "socket-id",
+                                machine->possible_cpus->cpus[i].props.socket_id,
+                                NULL);
+        object_property_set_int(cpuobj, "core-id",
+                                machine->possible_cpus->cpus[i].props.core_id,
+                                NULL);
+        object_property_set_int(cpuobj, "thread-id",
+                                machine->possible_cpus->cpus[i].props.thread_id,
+                                NULL);
+        qdev_realize_and_unref(DEVICE(cpuobj), NULL, &error_fatal);
+    }
+
+    fdt_add_cpu_nodes(lvms);
 }
 
 static void virt_firmware_init(LoongArchVirtMachineState *lvms)
@@ -1161,15 +1192,10 @@ static void fw_cfg_add_memory(MachineState *ms)
 
 static void virt_init(MachineState *machine)
 {
-    LoongArchCPU *lacpu;
     const char *cpu_model = machine->cpu_type;
     MemoryRegion *address_space_mem = get_system_memory();
     LoongArchVirtMachineState *lvms = LOONGARCH_VIRT_MACHINE(machine);
-    int i;
     hwaddr base, size, ram_size = machine->ram_size;
-    MachineClass *mc = MACHINE_GET_CLASS(machine);
-    CPUState *cpu;
-    Object *cpuobj;
 
     if (!cpu_model) {
         cpu_model = LOONGARCH_CPU_TYPE_NAME("la464");
@@ -1186,32 +1212,6 @@ static void virt_init(MachineState *machine)
                           machine, "iocsr_misc", 0x428);
     memory_region_add_subregion(&lvms->system_iocsr, 0, &lvms->iocsr_mem);
 
-    /* Init CPUs */
-    mc->possible_cpu_arch_ids(machine);
-    for (i = 0; i < machine->smp.cpus; i++) {
-        cpuobj = object_new(machine->cpu_type);
-        if (cpuobj == NULL) {
-            error_report("Fail to create object with type %s ",
-                         machine->cpu_type);
-            exit(EXIT_FAILURE);
-        }
-
-        cpu = CPU(cpuobj);
-        cpu->cpu_index = i;
-        lacpu = LOONGARCH_CPU(cpuobj);
-        lacpu->phy_id = machine->possible_cpus->cpus[i].arch_id;
-        object_property_set_int(cpuobj, "socket-id",
-                                machine->possible_cpus->cpus[i].props.socket_id,
-                                NULL);
-        object_property_set_int(cpuobj, "core-id",
-                                machine->possible_cpus->cpus[i].props.core_id,
-                                NULL);
-        object_property_set_int(cpuobj, "thread-id",
-                                machine->possible_cpus->cpus[i].props.thread_id,
-                                NULL);
-        qdev_realize_and_unref(DEVICE(cpuobj), NULL, &error_fatal);
-    }
-    fdt_add_cpu_nodes(lvms);
     fdt_add_memory_nodes(machine);
     fw_cfg_add_memory(machine);
 
@@ -1269,6 +1269,9 @@ static void virt_init(MachineState *machine)
 
     /* Initialize the IO interrupt subsystem */
     virt_irq_init(lvms);
+
+    /* Init CPUs */
+    virt_init_cpus(machine);
     platform_bus_add_all_fdt_nodes(machine->fdt, "/platic",
                                    VIRT_PLATFORM_BUS_BASEADDRESS,
                                    VIRT_PLATFORM_BUS_SIZE,
@@ -1465,8 +1468,11 @@ static void virt_cpu_plug(HotplugHandler *hotplug_dev,
 {
     CPUArchId *cpu_slot;
     LoongArchCPU *cpu = LOONGARCH_CPU(dev);
+    MachineState *ms = MACHINE(hotplug_dev);
     LoongArchVirtMachineState *lvms = LOONGARCH_VIRT_MACHINE(hotplug_dev);
 
+    /* Connect irq to cpu, including ipi and extioi irqchip */
+    virt_init_cpu_irq(ms, CPU(cpu));
     cpu_slot = virt_find_cpu_slot(MACHINE(lvms), cpu->phy_id);
     cpu_slot->cpu = CPU(dev);
     return;
