@@ -46,6 +46,8 @@
 #define R_RX_CTRL1    (0x1ffc / 4)
 #define R_MAX         (0x2000 / 4)
 
+#define RX_BUFSZ_MAX  0x07e0
+
 #define GIE_GIE    0x80000000
 
 #define CTRL_I     0x8
@@ -195,7 +197,7 @@ static ssize_t eth_rx(NetClientState *nc, const uint8_t *buf, size_t size)
         return -1;
     }
 
-    if (size > (R_MAX - R_RX_BUF0 - rxbase) * 4) {
+    if (size > RX_BUFSZ_MAX) {
         trace_ethlite_pkt_size_too_big(size);
         return -1;
     }
