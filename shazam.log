@@ -1,0 +1,57 @@
+Grabbing thread from lore.kernel.org/all/20241112135911.630586-1-sjg@chromium.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] scripts: Add a script for building and booting QEMU
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 2/18] x86: Expand x86_64 early memory
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 3/18] RFC: x86: qemu: Switch to bochs display
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 4/18] x86: qemu: Enable dhrystone
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 5/18] x86: qemu: Avoid accessing BSS too early
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 6/18] x86: Drop mpspec from the SPL build
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 7/18] x86: Add some log categories
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 8/18] x86: Drop use of CONFIG_REALMODE_DEBUG
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 9/18] x86: Avoid clearing the VESA display
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 10/18] x86: Add 64-bit entries to the GDT
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 11/18] x86: Use defines for the cache flags
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 12/18] x86: spl: Drop duplicate CPU init
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 13/18] x86: Drop the message about features missing in 64-bit
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 14/18] x86: Include stdbool.h in interrupt header
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 15/18] x86: Tidy up the GDT size in start/16.S
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 16/18] x86: Disable paging before changing to long mode
+    [32m✓[0m Signed: DKIM/chromium.org
+  [32m✓[0m [PATCH 17/18] x86: Use the same GDT when jumping to long mode
+    [32m✓[0m Signed: DKIM/chromium.org
+  ERROR: missing [18/18]!
+---
+Total patches: 17
+---
+WARNING: Thread incomplete!
+Applying: scripts: Add a script for building and booting QEMU
+Patch failed at 0001 scripts: Add a script for building and booting QEMU
+error: patch failed: MAINTAINERS:1110
+error: MAINTAINERS: patch does not apply
+error: doc/board/emulation/index.rst: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
