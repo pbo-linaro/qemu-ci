@@ -56,6 +56,7 @@ typedef struct CPUHotplugFeatures {
     bool acpi_1_compatible;
     bool has_legacy_cphp;
     bool fw_unplugs_cpu;
+    bool always_present_cpus;
     const char *smi_path;
 } CPUHotplugFeatures;
 

@@ -452,15 +452,20 @@ void build_cpus_aml(Aml *table, MachineState *machine, CPUHotplugFeatures opts,
 
         method = aml_method(CPU_STS_METHOD, 1, AML_SERIALIZED);
         {
+            /*
+             * For always present CPUs set all bits except of 'enabled'
+             * ACPI 1.0b: chapter '6.3.5 _STA'
+             */
+            uint8_t default_sta = opts.always_present_cpus ? 0xd : 0;
             Aml *idx = aml_arg(0);
-            Aml *sta = aml_local(0);
+            Aml *sta = aml_local(default_sta);
 
             aml_append(method, aml_acquire(ctrl_lock, 0xFFFF));
             aml_append(method, aml_store(idx, cpu_selector));
             aml_append(method, aml_store(zero, sta));
             ifctx = aml_if(aml_equal(is_enabled, one));
             {
-                aml_append(ifctx, aml_store(aml_int(0xF), sta));
+                aml_append(ifctx, aml_or(aml_int(0xF), sta, sta));
             }
             aml_append(method, ifctx);
             aml_append(method, aml_release(ctrl_lock));
