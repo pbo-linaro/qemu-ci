@@ -145,7 +145,6 @@ static void cpu_hotplug_wr(void *opaque, hwaddr addr, uint64_t data,
             dev = DEVICE(cdev->cpu);
             hotplug_ctrl = qdev_get_hotplug_handler(dev);
             hotplug_handler_unplug(hotplug_ctrl, dev, NULL);
-            object_unparent(OBJECT(dev));
             cdev->fw_remove = false;
         } else if (data & 16) {
             if (!cdev->cpu || cdev->cpu == first_cpu) {
@@ -215,7 +214,8 @@ static const MemoryRegionOps cpu_hotplug_ops = {
 };
 
 void cpu_hotplug_hw_init(MemoryRegion *as, Object *owner,
-                         CPUHotplugState *state, hwaddr base_addr)
+                         CPUHotplugState *state, hwaddr base_addr,
+                         bool always_present_cpus)
 {
     MachineState *machine = MACHINE(qdev_get_machine());
     MachineClass *mc = MACHINE_GET_CLASS(machine);
@@ -226,6 +226,7 @@ void cpu_hotplug_hw_init(MemoryRegion *as, Object *owner,
     id_list = mc->possible_cpu_arch_ids(machine);
     state->dev_count = id_list->len;
     state->devs = g_new0(typeof(*state->devs), state->dev_count);
+    state->always_present_cpus = always_present_cpus;
     for (i = 0; i < id_list->len; i++) {
         state->devs[i].cpu =  CPU(id_list->cpus[i].cpu);
         state->devs[i].arch_id = id_list->cpus[i].arch_id;
@@ -286,12 +287,17 @@ void acpi_cpu_unplug_cb(CPUHotplugState *cpu_st,
 {
     AcpiCpuStatus *cdev;
 
+    if (cpu_st->always_present_cpus) {
+        return;
+    }
+
     cdev = get_cpu_status(cpu_st, dev);
     if (!cdev) {
         return;
     }
 
     cdev->cpu = NULL;
+    object_unparent(OBJECT(dev));
 }
 
 static const VMStateDescription vmstate_cpuhp_sts = {

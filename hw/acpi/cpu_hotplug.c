@@ -115,7 +115,7 @@ void acpi_switch_to_modern_cphp(AcpiCpuHotplug *gpe_cpu,
     MemoryRegion *parent = pci_address_space_io(PCI_DEVICE(gpe_cpu->device));
 
     memory_region_del_subregion(parent, &gpe_cpu->io);
-    cpu_hotplug_hw_init(parent, gpe_cpu->device, cpuhp_state, io_port);
+    cpu_hotplug_hw_init(parent, gpe_cpu->device, cpuhp_state, io_port, false);
 }
 
 void build_legacy_cpu_hotplug_aml(Aml *ctx, MachineState *machine,

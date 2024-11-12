@@ -427,7 +427,7 @@ static void acpi_ged_realize(DeviceState *dev, Error **errp)
                                 ACPI_CPU_HOTPLUG_REG_LEN);
             sysbus_init_mmio(sbd, &s->container_cpuhp);
             cpu_hotplug_hw_init(&s->container_cpuhp, OBJECT(dev),
-                                &s->cpuhp_state, 0);
+                                &s->cpuhp_state, 0, false);
             break;
         }
         ged_events--;

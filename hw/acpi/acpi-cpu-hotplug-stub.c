@@ -20,7 +20,8 @@ void legacy_acpi_cpu_hotplug_init(MemoryRegion *parent, Object *owner,
 }
 
 void cpu_hotplug_hw_init(MemoryRegion *as, Object *owner,
-                         CPUHotplugState *state, hwaddr base_addr)
+                         CPUHotplugState *state, hwaddr base_addr,
+                         bool always_present_cpus)
 {
     return;
 }

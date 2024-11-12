@@ -36,6 +36,7 @@ typedef struct CPUHotplugState {
     uint32_t selector;
     uint8_t command;
     uint32_t dev_count;
+    bool always_present_cpus;
     AcpiCpuStatus *devs;
 } CPUHotplugState;
 
@@ -50,7 +51,8 @@ void acpi_cpu_unplug_cb(CPUHotplugState *cpu_st,
                         DeviceState *dev, Error **errp);
 
 void cpu_hotplug_hw_init(MemoryRegion *as, Object *owner,
-                         CPUHotplugState *state, hwaddr base_addr);
+                         CPUHotplugState *state, hwaddr base_addr,
+                         bool always_present_cpus);
 
 typedef struct CPUHotplugFeatures {
     bool acpi_1_compatible;
