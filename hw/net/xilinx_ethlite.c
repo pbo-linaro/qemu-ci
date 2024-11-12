@@ -87,10 +87,16 @@ static inline void eth_pulse_irq(XlnxXpsEthLite *s)
     }
 }
 
-__attribute__((unused))
 static unsigned addr_to_port_index(hwaddr addr)
 {
     return extract64(addr, 11, 1);
+}
+
+static void *txbuf_ptr(XlnxXpsEthLite *s, unsigned port_index)
+{
+    unsigned int rxbase = port_index * (0x800 / 4);
+
+    return &s->regs[rxbase + R_TX_BUF0];
 }
 
 static uint64_t
@@ -125,6 +131,7 @@ eth_write(void *opaque, hwaddr addr,
           uint64_t val64, unsigned int size)
 {
     XlnxXpsEthLite *s = opaque;
+    unsigned int port_index = addr_to_port_index(addr);
     unsigned int base = 0;
     uint32_t value = val64;
 
@@ -138,12 +145,12 @@ eth_write(void *opaque, hwaddr addr,
 
             if ((value & (CTRL_P | CTRL_S)) == CTRL_S) {
                 qemu_send_packet(qemu_get_queue(s->nic),
-                                 (void *) &s->regs[base],
+                                 txbuf_ptr(s, port_index),
                                  s->regs[base + R_TX_LEN0]);
                 if (s->regs[base + R_TX_CTRL0] & CTRL_I)
                     eth_pulse_irq(s);
             } else if ((value & (CTRL_P | CTRL_S)) == (CTRL_P | CTRL_S)) {
-                memcpy(&s->conf.macaddr.a[0], &s->regs[base], 6);
+                memcpy(&s->conf.macaddr.a[0], txbuf_ptr(s, port_index), 6);
                 if (s->regs[base + R_TX_CTRL0] & CTRL_I)
                     eth_pulse_irq(s);
             }
