@@ -24,6 +24,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/module.h"
+#include "qemu/bitops.h"
 #include "qom/object.h"
 #include "qapi/error.h"
 #include "exec/tswap.h"
@@ -84,6 +85,12 @@ static inline void eth_pulse_irq(XlnxXpsEthLite *s)
     if (s->regs[R_TX_GIE0] & GIE_GIE) {
         qemu_irq_pulse(s->irq);
     }
+}
+
+__attribute__((unused))
+static unsigned addr_to_port_index(hwaddr addr)
+{
+    return extract64(addr, 11, 1);
 }
 
 static uint64_t
@@ -190,7 +197,8 @@ static bool eth_can_rx(NetClientState *nc)
 static ssize_t eth_rx(NetClientState *nc, const uint8_t *buf, size_t size)
 {
     XlnxXpsEthLite *s = qemu_get_nic_opaque(nc);
-    unsigned int rxbase = s->port_index * (0x800 / 4);
+    unsigned int port_index = s->port_index;
+    unsigned int rxbase = port_index * (0x800 / 4);
 
     /* DA filter.  */
     if (!(buf[0] & 0x80) && memcmp(&s->conf.macaddr.a[0], buf, 6))
