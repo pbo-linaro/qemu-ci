@@ -39,7 +39,6 @@
 
 #define R_TX_BUF0     0
 #define A_TX_BASE0    0x07f4
-#define R_TX_GIE0     (0x07f8 / 4)
 #define R_TX_CTRL0    (0x07fc / 4)
 #define R_TX_BUF1     (0x0800 / 4)
 #define A_TX_BASE1    0x0ff4
@@ -55,6 +54,7 @@
 
 enum {
     TX_LEN =  0,
+    TX_GIE =  1,
     TX_MAX
 };
 
@@ -140,6 +140,9 @@ static uint64_t port_tx_read(void *opaque, hwaddr addr, unsigned int size)
         case TX_LEN:
             r = s->port[port_index].reg.tx_len;
             break;
+        case TX_GIE:
+            r = s->port[port_index].reg.tx_gie;
+            break;
         default:
             g_assert_not_reached();
     }
@@ -155,6 +158,9 @@ static void port_tx_write(void *opaque, hwaddr addr, uint64_t value,
     switch (addr >> 2) {
         case TX_LEN:
             s->port[port_index].reg.tx_len = value;
+            break;
+        case TX_GIE:
+            s->port[port_index].reg.tx_gie = value;
             break;
         default:
             g_assert_not_reached();
@@ -233,10 +239,6 @@ eth_read(void *opaque, hwaddr addr, unsigned int size)
 
     switch (addr)
     {
-        case R_TX_GIE0:
-            r = s->port[port_index].reg.tx_gie;
-            break;
-
         case R_TX_CTRL1:
         case R_TX_CTRL0:
             r = s->port[port_index].reg.tx_ctrl;
@@ -279,11 +281,6 @@ eth_write(void *opaque, hwaddr addr,
             /* We are fast and get ready pretty much immediately so
                we actually never flip the S nor P bits to one.  */
             s->port[port_index].reg.tx_ctrl = value & ~(CTRL_P | CTRL_S);
-            break;
-
-        /* Keep these native.  */
-        case R_TX_GIE0:
-            s->port[port_index].reg.tx_gie = value;
             break;
 
         default:
