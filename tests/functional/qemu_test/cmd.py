@@ -12,6 +12,7 @@
 # later.  See the COPYING file in the top-level directory.
 
 import logging
+import re
 import os
 import os.path
 import subprocess
@@ -78,6 +79,20 @@ def run_cmd(args):
 def is_readable_executable_file(path):
     return os.path.isfile(path) and os.access(path, os.R_OK | os.X_OK)
 
+def _console_read(vm, expect, expectalt = None):
+    output = ""
+    while True:
+        data = vm.console_socket.recv(1)
+        if not data:
+            break
+        output += data.decode("latin1")
+        if expect in output:
+            break
+        if "\r" in output or "\n" in output:
+            lines = re.split("[\r\n]", output)
+            output = lines.pop()
+    return output
+
 def _console_interaction(test, success_message, failure_message,
                          send_string, keep_sending=False, vm=None):
     assert not keep_sending or send_string
@@ -98,7 +113,7 @@ def _console_interaction(test, success_message, failure_message,
             continue
 
         try:
-            msg = console.readline().decode().strip()
+            msg = _console_read(vm, success_message)
         except UnicodeDecodeError:
             msg = None
         if not msg:
