@@ -208,7 +208,9 @@ static void test_multifd_tcp_zlib(void)
 void migration_test_add_compression_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
-    /* TODO: add smoke tests */
+
+    migration_test_add("/migration/multifd/tcp/plain/zlib",
+                       test_multifd_tcp_zlib);
 }
 
 void migration_test_add_compression(MigrationTestEnv *env)
@@ -239,7 +241,4 @@ void migration_test_add_compression(MigrationTestEnv *env)
         migration_test_add("/migration/precopy/unix/xbzrle",
                            test_precopy_unix_xbzrle);
     }
-
-    migration_test_add("/migration/multifd/tcp/plain/zlib",
-                       test_multifd_tcp_zlib);
 }

@@ -47,7 +47,8 @@ static void test_mode_reboot(void)
 void migration_test_add_cpr_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
-    /* TODO: add smoke tests */
+
+    /* none for now */
 }
 
 void migration_test_add_cpr(MigrationTestEnv *env)
