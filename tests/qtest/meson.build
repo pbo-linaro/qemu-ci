@@ -36,6 +36,11 @@ if enable_modules
   qtests_generic += [ 'modules-test' ]
 endif
 
+qtest_subsystems = {
+  'migration-test-smoke': ['migration'],
+  'migration-test': ['migration'],
+}
+
 qtests_pci = \
   (config_all_devices.has_key('CONFIG_VGA') ? ['display-vga-test'] : []) +                  \
   (config_all_devices.has_key('CONFIG_IVSHMEM_DEVICE') ? ['ivshmem-test'] : [])
@@ -434,6 +439,12 @@ foreach dir : target_dirs
         test: executable(test, src, dependencies: deps)
       }
     endif
+
+    suites = ['qtest', 'qtest-' + target_base]
+    foreach subsys: qtest_subsystems.get(test, [])
+      suites += ['qtest-' + subsys]
+    endforeach
+
     test('qtest-@0@/@1@'.format(target_base, test),
          qtest_executables[test],
          depends: [test_deps, qtest_emulator, emulator_modules],
@@ -442,6 +453,6 @@ foreach dir : target_dirs
          protocol: 'tap',
          timeout: slow_qtests.get(test, 60),
          priority: slow_qtests.get(test, 60),
-         suite: ['qtest', 'qtest-' + target_base])
+         suite: suites)
   endforeach
 endforeach
