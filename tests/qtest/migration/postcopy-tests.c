@@ -79,8 +79,15 @@ static void test_postcopy_preempt_recovery(void)
     test_postcopy_recovery_common(&args);
 }
 
+void migration_test_add_postcopy_smoke(MigrationTestEnv *env)
+{
+    /* TODO: add smoke tests */
+}
+
 void migration_test_add_postcopy(MigrationTestEnv *env)
 {
+    migration_test_add_postcopy_smoke(env);
+
     if (env->has_uffd) {
         migration_test_add("/migration/postcopy/plain", test_postcopy);
         migration_test_add("/migration/postcopy/recovery/plain",

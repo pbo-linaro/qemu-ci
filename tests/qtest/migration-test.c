@@ -26,6 +26,17 @@ int main(int argc, char **argv)
     env = migration_get_env();
     module_call_init(MODULE_INIT_QOM);
 
+    /*
+     * Restrict the full set of tests to KVM hosts only. For tests
+     * that run in all platforms, see migration-test-smoke.c. Ignore
+     * the restriction if -m thorough was passed in the command line.
+     */
+    if (!g_test_thorough() && !env->has_kvm) {
+        g_test_message("Full test suite only runs on KVM hosts "
+                       "(override with -m thorough)");
+        goto out;
+    }
+
     migration_test_add_tls(env);
     migration_test_add_compression(env);
     migration_test_add_postcopy(env);
@@ -34,6 +45,7 @@ int main(int argc, char **argv)
     migration_test_add_cpr(env);
     migration_test_add_misc(env);
 
+out:
     ret = g_test_run();
 
     g_assert_cmpint(ret, ==, 0);

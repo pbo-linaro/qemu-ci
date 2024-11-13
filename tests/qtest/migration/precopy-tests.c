@@ -946,9 +946,15 @@ static void test_dirty_limit(void)
     migrate_end(from, to, true);
 }
 
-void migration_test_add_precopy(MigrationTestEnv *env)
+void migration_test_add_precopy_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
+    /* TODO: add smoke tests */
+}
+
+void migration_test_add_precopy(MigrationTestEnv *env)
+{
+    migration_test_add_precopy_smoke(env);
 
     if (env->is_x86) {
         migration_test_add("/migration/precopy/unix/suspend/live",

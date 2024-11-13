@@ -294,9 +294,15 @@ static void test_multifd_file_mapped_ram_fdset_dio(void)
 }
 #endif /* !_WIN32 */
 
-void migration_test_add_file(MigrationTestEnv *env)
+void migration_test_add_file_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
+    /* TODO: add smoke tests */
+}
+
+void migration_test_add_file(MigrationTestEnv *env)
+{
+    migration_test_add_file_smoke(env);
 
     migration_test_add("/migration/precopy/file",
                        test_precopy_file);

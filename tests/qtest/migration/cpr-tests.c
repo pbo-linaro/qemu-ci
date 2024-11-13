@@ -44,9 +44,15 @@ static void test_mode_reboot(void)
     test_file_common(&args, true);
 }
 
-void migration_test_add_cpr(MigrationTestEnv *env)
+void migration_test_add_cpr_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
+    /* TODO: add smoke tests */
+}
+
+void migration_test_add_cpr(MigrationTestEnv *env)
+{
+    migration_test_add_cpr_smoke(env);
 
     /*
      * Our CI system has problems with shared memory.

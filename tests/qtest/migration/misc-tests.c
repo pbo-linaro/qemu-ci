@@ -250,9 +250,15 @@ static void test_validate_uri_channels_none_set(void)
     do_test_validate_uri_channel(&args);
 }
 
-void migration_test_add_misc(MigrationTestEnv *env)
+void migration_test_add_misc_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
+    /* TODO: add smoke tests */
+}
+
+void migration_test_add_misc(MigrationTestEnv *env)
+{
+    migration_test_add_misc_smoke(env);
 
     migration_test_add("/migration/bad_dest", test_baddest);
 #ifndef _WIN32

@@ -215,14 +215,22 @@ QTestMigrationState *get_src(void);
 
 #ifdef CONFIG_GNUTLS
 void migration_test_add_tls(MigrationTestEnv *env);
+void migration_test_add_tls_smoke(MigrationTestEnv *env);
 #else
 static inline void migration_test_add_tls(MigrationTestEnv *env) {};
+static inline void migration_test_add_tls_smoke(MigrationTestEnv *env) {}
 #endif
 void migration_test_add_compression(MigrationTestEnv *env);
+void migration_test_add_compression_smoke(MigrationTestEnv *env);
 void migration_test_add_postcopy(MigrationTestEnv *env);
+void migration_test_add_postcopy_smoke(MigrationTestEnv *env);
 void migration_test_add_file(MigrationTestEnv *env);
+void migration_test_add_file_smoke(MigrationTestEnv *env);
 void migration_test_add_precopy(MigrationTestEnv *env);
+void migration_test_add_precopy_smoke(MigrationTestEnv *env);
 void migration_test_add_cpr(MigrationTestEnv *env);
+void migration_test_add_cpr_smoke(MigrationTestEnv *env);
 void migration_test_add_misc(MigrationTestEnv *env);
+void migration_test_add_misc_smoke(MigrationTestEnv *env);
 
 #endif /* TEST_FRAMEWORK_H */

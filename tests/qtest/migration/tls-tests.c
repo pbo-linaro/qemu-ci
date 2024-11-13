@@ -722,10 +722,15 @@ static void test_multifd_tcp_tls_x509_reject_anon_client(void)
 }
 #endif /* CONFIG_TASN1 */
 
-void migration_test_add_tls(MigrationTestEnv *env)
+void migration_test_add_tls_smoke(MigrationTestEnv *env)
 {
     tmpfs = env->tmpfs;
+    /* TODO: add smoke tests */
+}
 
+void migration_test_add_tls(MigrationTestEnv *env)
+{
+    migration_test_add_tls_smoke(env);
     migration_test_add("/migration/precopy/unix/tls/psk",
                        test_precopy_unix_tls_psk);
 
