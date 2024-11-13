@@ -333,6 +333,7 @@ tpmemu_files = ['tpm-emu.c', 'tpm-util.c', 'tpm-tests.c']
 migration_files = [files(
   'migration-helpers.c',
   'migration/bootfile.c',
+  'migration/migration-qmp.c',
 )]
 
 if gnutls.found()
