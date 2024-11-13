@@ -96,6 +96,18 @@ QTest cases can be executed with
 
    make check-qtest
 
+Migration
+~~~~~~~~~
+
+Migration tests are part of QTest, but are run independently.  Refer
+to :doc:`migration` for more details.
+
+Migration test cases can be executed with
+
+.. code::
+
+   make check-qtest-migration
+
 Writing portable test cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Both unit tests and qtests can run on POSIX hosts as well as Windows hosts.
