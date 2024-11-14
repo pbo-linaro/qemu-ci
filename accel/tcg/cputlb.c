@@ -791,6 +791,7 @@ void tlb_flush_range_by_mmuidx(CPUState *cpu, vaddr addr,
     TLBFlushRangeData d;
 
     assert_cpu_is_self(cpu);
+    assert(len != 0);
 
     /*
      * If all bits are significant, and len is small,
@@ -829,6 +830,8 @@ void tlb_flush_range_by_mmuidx_all_cpus_synced(CPUState *src_cpu,
 {
     TLBFlushRangeData d, *p;
     CPUState *dst_cpu;
+
+    assert(len != 0);
 
     /*
      * If all bits are significant, and len is small,
