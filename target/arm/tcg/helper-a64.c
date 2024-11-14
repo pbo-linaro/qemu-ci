@@ -1883,14 +1883,14 @@ static bool is_guarded_page(CPUARMState *env, target_ulong addr, uintptr_t ra)
 #ifdef CONFIG_USER_ONLY
     return page_get_flags(addr) & PAGE_BTI;
 #else
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     void *host;
     int mmu_idx = cpu_mmu_index(env_cpu(env), true);
     int flags = probe_access_full(env, addr, 0, MMU_INST_FETCH, mmu_idx,
                                   false, &host, &full, ra);
 
     assert(!(flags & TLB_INVALID_MASK));
-    return full->extra.arm.guarded;
+    return full.extra.arm.guarded;
 #endif
 }
 

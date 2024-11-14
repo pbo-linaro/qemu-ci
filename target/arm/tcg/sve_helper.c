@@ -5357,7 +5357,7 @@ bool sve_probe_page(SVEHostPage *info, bool nofault, CPUARMState *env,
     flags = probe_access_flags(env, addr, 0, access_type, mmu_idx, nofault,
                                &info->host, retaddr);
 #else
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     flags = probe_access_full(env, addr, 0, access_type, mmu_idx, nofault,
                               &info->host, &full, retaddr);
 #endif
@@ -5373,8 +5373,8 @@ bool sve_probe_page(SVEHostPage *info, bool nofault, CPUARMState *env,
     /* Require both ANON and MTE; see allocation_tag_mem(). */
     info->tagged = (flags & PAGE_ANON) && (flags & PAGE_MTE);
 #else
-    info->attrs = full->attrs;
-    info->tagged = full->extra.arm.pte_attrs == 0xf0;
+    info->attrs = full.attrs;
+    info->tagged = full.extra.arm.pte_attrs == 0xf0;
 #endif
 
     /* Ensure that info->host[] is relative to addr, not addr + mem_off. */

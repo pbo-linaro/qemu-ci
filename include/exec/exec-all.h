@@ -365,10 +365,6 @@ int probe_access_flags(CPUArchState *env, vaddr addr, int size,
  * probe_access_full:
  * Like probe_access_flags, except also return into @pfull.
  *
- * The CPUTLBEntryFull structure returned via @pfull is transient
- * and must be consumed or copied immediately, before any further
- * access or changes to TLB @mmu_idx.
- *
  * This function will not fault if @nonfault is set, but will
  * return TLB_INVALID_MASK if the page is not mapped, or is not
  * accessible with @access_type.
@@ -379,7 +375,7 @@ int probe_access_flags(CPUArchState *env, vaddr addr, int size,
 int probe_access_full(CPUArchState *env, vaddr addr, int size,
                       MMUAccessType access_type, int mmu_idx,
                       bool nonfault, void **phost,
-                      CPUTLBEntryFull **pfull, uintptr_t retaddr);
+                      CPUTLBEntryFull *pfull, uintptr_t retaddr);
 
 /**
  * probe_access_full_mmu:

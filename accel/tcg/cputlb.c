@@ -1420,20 +1420,22 @@ static int probe_access_internal(CPUState *cpu, vaddr addr,
 
 int probe_access_full(CPUArchState *env, vaddr addr, int size,
                       MMUAccessType access_type, int mmu_idx,
-                      bool nonfault, void **phost, CPUTLBEntryFull **pfull,
+                      bool nonfault, void **phost, CPUTLBEntryFull *pfull,
                       uintptr_t retaddr)
 {
+    CPUTLBEntryFull *full;
     int flags = probe_access_internal(env_cpu(env), addr, size, access_type,
-                                      mmu_idx, nonfault, phost, pfull, retaddr,
+                                      mmu_idx, nonfault, phost, &full, retaddr,
                                       true);
 
     /* Handle clean RAM pages.  */
     if (unlikely(flags & TLB_NOTDIRTY)) {
         int dirtysize = size == 0 ? 1 : size;
-        notdirty_write(env_cpu(env), addr, dirtysize, *pfull, retaddr);
+        notdirty_write(env_cpu(env), addr, dirtysize, full, retaddr);
         flags &= ~TLB_NOTDIRTY;
     }
 
+    *pfull = *full;
     return flags;
 }
 
