@@ -31,6 +31,8 @@ typedef union CPUTLBEntry {
          * use the corresponding iotlb value.
          */
         uintptr_t addend;
+        /* The defining IntervalTree entry. */
+        struct CPUTLBEntryTree *tree;
     };
     /*
      * Padding to get a power of two size, as well as index

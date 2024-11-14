@@ -490,7 +490,10 @@ static bool tlb_flush_entry_mask_locked(CPUTLBEntry *tlb_entry,
                                         vaddr mask)
 {
     if (tlb_hit_page_mask_anyprot(tlb_entry, page, mask)) {
-        memset(tlb_entry, -1, sizeof(*tlb_entry));
+        tlb_entry->addr_read = -1;
+        tlb_entry->addr_write = -1;
+        tlb_entry->addend = 0;
+        tlb_entry->tree = NULL;
         return true;
     }
     return false;
@@ -1183,6 +1186,7 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
 
     /* Now calculate the new entry */
     node->copy.addend = addend - addr_page;
+    node->copy.tree = node;
 
     if (wp_flags & BP_MEM_READ) {
         read_flags |= TLB_WATCHPOINT;
@@ -1291,7 +1295,6 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
     CPUTLBDescFast *fast = &cpu->neg.tlb.f[i->mmu_idx];
     vaddr addr = i->addr;
     MMUAccessType access_type = i->access_type;
-    CPUTLBEntryFull *full;
     CPUTLBEntryTree *node;
     CPUTLBEntry *entry;
     uint64_t cmp;
@@ -1304,9 +1307,9 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
 
     /* Primary lookup in the fast tlb. */
     entry = tlbfast_entry(fast, addr);
-    full = &desc->fulltlb[tlbfast_index(fast, addr)];
     if (access_type != MMU_INST_FETCH) {
         cmp = tlb_read_idx(entry, access_type);
+        node = entry->tree;
         if (tlb_hit(cmp, addr)) {
             goto found_data;
         }
@@ -1326,7 +1329,6 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
                 qemu_spin_lock(&cpu->neg.tlb.c.lock);
                 copy_tlb_helper_locked(entry, &node->copy);
                 qemu_spin_unlock(&cpu->neg.tlb.c.lock);
-                *full = node->full;
                 goto found_data;
             }
         }
@@ -1347,8 +1349,8 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
     }
 
     entry = tlbfast_entry(fast, addr);
-    full = &desc->fulltlb[tlbfast_index(fast, addr)];
     cmp = tlb_read_idx(entry, access_type);
+    node = entry->tree;
     /*
      * With PAGE_WRITE_INV, we set TLB_INVALID_MASK immediately,
      * to force the next access through tlb_fill_align.  We've just
@@ -1359,19 +1361,18 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
 
  found_data:
     flags &= cmp;
-    flags |= full->slow_flags[access_type];
+    flags |= node->full.slow_flags[access_type];
     o->flags = flags;
-    o->full = *full;
-    o->haddr = (void *)((uintptr_t)addr + entry->addend);
-    goto done;
+    goto found_common;
 
  found_code:
     o->flags = node->copy.addr_read & TLB_EXEC_FLAGS_MASK;
+    goto found_common;
+
+ found_common:
     o->full = node->full;
     o->haddr = (void *)((uintptr_t)addr + node->copy.addend);
-    goto done;
 
- done:
     if (!o->did_tlb_fill) {
         int a_bits = memop_alignment_bits(memop);
 
@@ -1669,7 +1670,6 @@ bool tlb_plugin_lookup(CPUState *cpu, vaddr addr, int mmu_idx,
                        bool is_store, struct qemu_plugin_hwaddr *data)
 {
     CPUTLBEntry *tlbe = tlb_entry(cpu, mmu_idx, addr);
-    uintptr_t index = tlb_index(cpu, mmu_idx, addr);
     MMUAccessType access_type = is_store ? MMU_DATA_STORE : MMU_DATA_LOAD;
     uint64_t tlb_addr = tlb_read_idx(tlbe, access_type);
     CPUTLBEntryFull *full;
@@ -1678,7 +1678,7 @@ bool tlb_plugin_lookup(CPUState *cpu, vaddr addr, int mmu_idx,
         return false;
     }
 
-    full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
+    full = &tlbe->tree->full;
     data->phys_addr = full->phys_addr | (addr & ~TARGET_PAGE_MASK);
 
     /* We must have an iotlb entry for MMIO */
