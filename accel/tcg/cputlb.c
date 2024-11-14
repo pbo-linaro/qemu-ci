@@ -1032,15 +1032,13 @@ static inline void tlb_set_compare(CPUTLBEntryFull *full, CPUTLBEntry *ent,
                                    vaddr address, int flags,
                                    MMUAccessType access_type, bool enable)
 {
-    if (enable) {
-        address |= flags & TLB_FLAGS_MASK;
-        flags &= TLB_SLOW_FLAGS_MASK;
-        if (flags) {
-            address |= TLB_FORCE_SLOW;
-        }
-    } else {
-        address = -1;
-        flags = 0;
+    if (!enable) {
+        address = TLB_INVALID_MASK;
+    }
+    address |= flags & TLB_FLAGS_MASK;
+    flags &= TLB_SLOW_FLAGS_MASK;
+    if (flags) {
+        address |= TLB_FORCE_SLOW;
     }
     ent->addr_idx[access_type] = address;
     full->slow_flags[access_type] = flags;
