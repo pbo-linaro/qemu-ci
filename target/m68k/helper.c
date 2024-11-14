@@ -950,9 +950,10 @@ void m68k_set_irq_level(M68kCPU *cpu, int level, uint8_t vector)
     }
 }
 
-bool m68k_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                       MMUAccessType qemu_access_type, int mmu_idx,
-                       bool probe, uintptr_t retaddr)
+bool m68k_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                             vaddr address, MMUAccessType qemu_access_type,
+                             int mmu_idx, MemOp memop, int size,
+                             bool probe, uintptr_t retaddr)
 {
     CPUM68KState *env = cpu_env(cs);
     hwaddr physical;
@@ -961,12 +962,14 @@ bool m68k_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
     int ret;
     target_ulong page_size;
 
+    memset(out, 0, sizeof(*out));
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
+
     if ((env->mmu.tcr & M68K_TCR_ENABLED) == 0) {
         /* MMU disabled */
-        tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                     address & TARGET_PAGE_MASK,
-                     PAGE_READ | PAGE_WRITE | PAGE_EXEC,
-                     mmu_idx, TARGET_PAGE_SIZE);
+        out->phys_addr = address;
+        out->prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
+        out->lg_page_size = TARGET_PAGE_BITS;
         return true;
     }
 
@@ -985,8 +988,9 @@ bool m68k_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
     ret = get_physical_address(env, &physical, &prot,
                                address, access_type, &page_size);
     if (likely(ret == 0)) {
-        tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                     physical & TARGET_PAGE_MASK, prot, mmu_idx, page_size);
+        out->phys_addr = physical;
+        out->prot = prot;
+        out->lg_page_size = ctz32(page_size);
         return true;
     }
 
