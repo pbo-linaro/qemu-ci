@@ -1384,35 +1384,38 @@ static void io_failed(CPUState *cpu, CPUTLBEntryFull *full, vaddr addr,
     }
 }
 
-/* Return true if ADDR is present in the victim tlb, and has been copied
-   back to the main tlb.  */
-static bool victim_tlb_hit(CPUState *cpu, size_t mmu_idx, size_t index,
-                           MMUAccessType access_type, vaddr addr)
+/*
+ * Return true if ADDR is present in the interval tree,
+ * and has been copied back to the main tlb.
+ */
+static bool tlbtree_hit(CPUState *cpu, int mmu_idx,
+                        MMUAccessType access_type, vaddr addr)
 {
-    size_t vidx;
+    CPUTLBDesc *desc = &cpu->neg.tlb.d[mmu_idx];
+    CPUTLBDescFast *fast = &cpu->neg.tlb.f[mmu_idx];
+    CPUTLBEntryTree *node;
+    size_t index;
 
     assert_cpu_is_self(cpu);
-    for (vidx = 0; vidx < CPU_VTLB_SIZE; ++vidx) {
-        CPUTLBEntry *vtlb = &cpu->neg.tlb.d[mmu_idx].vtable[vidx];
-
-        if (tlb_hit(tlb_read_idx(vtlb, access_type), addr)) {
-            /* Found entry in victim tlb, swap tlb and iotlb.  */
-            CPUTLBEntry tmptlb, *tlb = &cpu->neg.tlb.f[mmu_idx].table[index];
-
-            qemu_spin_lock(&cpu->neg.tlb.c.lock);
-            copy_tlb_helper_locked(&tmptlb, tlb);
-            copy_tlb_helper_locked(tlb, vtlb);
-            copy_tlb_helper_locked(vtlb, &tmptlb);
-            qemu_spin_unlock(&cpu->neg.tlb.c.lock);
-
-            CPUTLBEntryFull *f1 = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
-            CPUTLBEntryFull *f2 = &cpu->neg.tlb.d[mmu_idx].vfulltlb[vidx];
-            CPUTLBEntryFull tmpf;
-            tmpf = *f1; *f1 = *f2; *f2 = tmpf;
-            return true;
-        }
+    node = tlbtree_lookup_addr(desc, addr);
+    if (!node) {
+        /* There is no cached mapping for this page. */
+        return false;
     }
-    return false;
+
+    if (!tlb_hit(tlb_read_idx(&node->copy, access_type), addr)) {
+        /* This access is not permitted. */
+        return false;
+    }
+
+    /* Install the cached entry. */
+    index = tlbfast_index(fast, addr);
+    qemu_spin_lock(&cpu->neg.tlb.c.lock);
+    copy_tlb_helper_locked(&fast->table[index], &node->copy);
+    qemu_spin_unlock(&cpu->neg.tlb.c.lock);
+
+    desc->fulltlb[index] = node->full;
+    return true;
 }
 
 static void notdirty_write(CPUState *cpu, vaddr mem_vaddr, unsigned size,
@@ -1453,7 +1456,7 @@ static int probe_access_internal(CPUState *cpu, vaddr addr,
     CPUTLBEntryFull *full;
 
     if (!tlb_hit(tlb_addr, addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type, addr)) {
+        if (!tlbtree_hit(cpu, mmu_idx, access_type, addr)) {
             if (!tlb_fill_align(cpu, addr, access_type, mmu_idx,
                                 0, fault_size, nonfault, retaddr)) {
                 /* Non-faulting page table read failed.  */
@@ -1733,7 +1736,7 @@ static bool mmu_lookup1(CPUState *cpu, MMULookupPageData *data, MemOp memop,
 
     /* If the TLB entry is for a different page, reload and try again.  */
     if (!tlb_hit(tlb_addr, addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type, addr)) {
+        if (!tlbtree_hit(cpu, mmu_idx, access_type, addr)) {
             tlb_fill_align(cpu, addr, access_type, mmu_idx,
                            memop, data->size, false, ra);
             maybe_resized = true;
@@ -1912,7 +1915,7 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     /* Check TLB entry and enforce page permissions.  */
     flags = TLB_FLAGS_MASK;
     if (!tlb_hit(tlb_addr_write(tlbe), addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, MMU_DATA_STORE, addr)) {
+        if (!tlbtree_hit(cpu, mmu_idx, MMU_DATA_STORE, addr)) {
             tlb_fill_align(cpu, addr, MMU_DATA_STORE, mmu_idx,
                            mop, size, false, retaddr);
             did_tlb_fill = true;
