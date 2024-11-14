@@ -23,6 +23,7 @@
 #include "cpu.h"
 #include "sysemu/xen.h"
 #include "sysemu/tcg.h"
+#include "exec/cputlb.h"
 #include "exec/ramlist.h"
 #include "exec/ramblock.h"
 #include "exec/exec-all.h"
