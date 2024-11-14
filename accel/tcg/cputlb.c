@@ -792,18 +792,14 @@ void tlb_flush_range_by_mmuidx(CPUState *cpu, vaddr addr,
 
     assert_cpu_is_self(cpu);
     assert(len != 0);
+    assert(bits > TARGET_PAGE_BITS && bits <= TARGET_LONG_BITS);
 
     /*
      * If all bits are significant, and len is small,
      * this devolves to tlb_flush_page.
      */
-    if (bits >= TARGET_LONG_BITS && len <= TARGET_PAGE_SIZE) {
+    if (bits == TARGET_LONG_BITS && len <= TARGET_PAGE_SIZE) {
         tlb_flush_page_by_mmuidx(cpu, addr, idxmap);
-        return;
-    }
-    /* If no page bits are significant, this devolves to tlb_flush. */
-    if (bits < TARGET_PAGE_BITS) {
-        tlb_flush_by_mmuidx(cpu, idxmap);
         return;
     }
 
@@ -832,18 +828,14 @@ void tlb_flush_range_by_mmuidx_all_cpus_synced(CPUState *src_cpu,
     CPUState *dst_cpu;
 
     assert(len != 0);
+    assert(bits > TARGET_PAGE_BITS && bits <= TARGET_LONG_BITS);
 
     /*
      * If all bits are significant, and len is small,
      * this devolves to tlb_flush_page.
      */
-    if (bits >= TARGET_LONG_BITS && len <= TARGET_PAGE_SIZE) {
+    if (bits == TARGET_LONG_BITS && len <= TARGET_PAGE_SIZE) {
         tlb_flush_page_by_mmuidx_all_cpus_synced(src_cpu, addr, idxmap);
-        return;
-    }
-    /* If no page bits are significant, this devolves to tlb_flush. */
-    if (bits < TARGET_PAGE_BITS) {
-        tlb_flush_by_mmuidx_all_cpus_synced(src_cpu, idxmap);
         return;
     }
 
