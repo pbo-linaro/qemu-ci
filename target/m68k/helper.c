@@ -1460,7 +1460,6 @@ void HELPER(ptest)(CPUM68KState *env, uint32_t addr, uint32_t is_read)
     hwaddr physical;
     int access_type;
     int prot;
-    int ret;
     target_ulong page_size;
 
     access_type = ACCESS_PTEST;
@@ -1476,14 +1475,7 @@ void HELPER(ptest)(CPUM68KState *env, uint32_t addr, uint32_t is_read)
 
     env->mmu.mmusr = 0;
     env->mmu.ssw = 0;
-    ret = get_physical_address(env, &physical, &prot, addr,
-                               access_type, &page_size);
-    if (ret == 0) {
-        tlb_set_page(env_cpu(env), addr & TARGET_PAGE_MASK,
-                     physical & TARGET_PAGE_MASK,
-                     prot, access_type & ACCESS_SUPER ?
-                     MMU_KERNEL_IDX : MMU_USER_IDX, page_size);
-    }
+    get_physical_address(env, &physical, &prot, addr, access_type, &page_size);
 }
 
 void HELPER(pflush)(CPUM68KState *env, uint32_t addr, uint32_t opmode)
