@@ -1394,9 +1394,8 @@ static bool victim_tlb_hit(CPUState *cpu, size_t mmu_idx, size_t index,
     assert_cpu_is_self(cpu);
     for (vidx = 0; vidx < CPU_VTLB_SIZE; ++vidx) {
         CPUTLBEntry *vtlb = &cpu->neg.tlb.d[mmu_idx].vtable[vidx];
-        uint64_t cmp = tlb_read_idx(vtlb, access_type);
 
-        if (cmp == page) {
+        if (tlb_hit_page(tlb_read_idx(vtlb, access_type), page)) {
             /* Found entry in victim tlb, swap tlb and iotlb.  */
             CPUTLBEntry tmptlb, *tlb = &cpu->neg.tlb.f[mmu_idx].table[index];
 
