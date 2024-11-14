@@ -493,11 +493,6 @@ static bool tlb_flush_entry_mask_locked(CPUTLBEntry *tlb_entry,
     return false;
 }
 
-static inline bool tlb_flush_entry_locked(CPUTLBEntry *tlb_entry, vaddr page)
-{
-    return tlb_flush_entry_mask_locked(tlb_entry, page, -1);
-}
-
 /* Called with tlb_c.lock held */
 static void tlb_flush_vtlb_page_mask_locked(CPUState *cpu, int mmu_idx,
                                             vaddr page,
@@ -520,10 +515,37 @@ static inline void tlb_flush_vtlb_page_locked(CPUState *cpu, int mmu_idx,
     tlb_flush_vtlb_page_mask_locked(cpu, mmu_idx, page, -1);
 }
 
+static void tlbfast_flush_range_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast,
+                                       vaddr addr, vaddr len, vaddr mask)
+{
+    /*
+     * If @mask is smaller than the tlb size, there may be multiple entries
+     * within the TLB; for now, just flush the entire TLB.
+     * Otherwise all addresses that match under @mask hit the same TLB entry.
+     *
+     * If @len is larger than the tlb size, then it will take longer to
+     * test all of the entries in the TLB than it will to flush it all.
+     */
+    if (mask < fast->mask || len > fast->mask) {
+        tlbfast_flush_locked(desc, fast);
+        return;
+    }
+
+    for (vaddr i = 0; i < len; i += TARGET_PAGE_SIZE) {
+        vaddr page = addr + i;
+        CPUTLBEntry *entry = tlbfast_entry(fast, page);
+
+        if (tlb_flush_entry_mask_locked(entry, page, mask)) {
+            desc->n_used_entries--;
+        }
+    }
+}
+
 static void tlb_flush_page_locked(CPUState *cpu, int midx, vaddr page)
 {
-    vaddr lp_addr = cpu->neg.tlb.d[midx].large_page_addr;
-    vaddr lp_mask = cpu->neg.tlb.d[midx].large_page_mask;
+    CPUTLBDesc *desc = &cpu->neg.tlb.d[midx];
+    vaddr lp_addr = desc->large_page_addr;
+    vaddr lp_mask = desc->large_page_mask;
 
     /* Check if we need to flush due to large pages.  */
     if ((page & lp_mask) == lp_addr) {
@@ -532,9 +554,8 @@ static void tlb_flush_page_locked(CPUState *cpu, int midx, vaddr page)
                   midx, lp_addr, lp_mask);
         tlb_flush_one_mmuidx_locked(cpu, midx, get_clock_realtime());
     } else {
-        if (tlb_flush_entry_locked(tlb_entry(cpu, midx, page), page)) {
-            tlb_n_used_entries_dec(cpu, midx);
-        }
+        tlbfast_flush_range_locked(desc, &cpu->neg.tlb.f[midx],
+                                   page, TARGET_PAGE_SIZE, -1);
         tlb_flush_vtlb_page_locked(cpu, midx, page);
     }
 }
@@ -690,24 +711,6 @@ static void tlb_flush_range_locked(CPUState *cpu, int midx,
     vaddr mask = MAKE_64BIT_MASK(0, bits);
 
     /*
-     * If @bits is smaller than the tlb size, there may be multiple entries
-     * within the TLB; otherwise all addresses that match under @mask hit
-     * the same TLB entry.
-     * TODO: Perhaps allow bits to be a few bits less than the size.
-     * For now, just flush the entire TLB.
-     *
-     * If @len is larger than the tlb size, then it will take longer to
-     * test all of the entries in the TLB than it will to flush it all.
-     */
-    if (mask < f->mask || len > f->mask) {
-        tlb_debug("forcing full flush midx %d ("
-                  "%016" VADDR_PRIx "/%016" VADDR_PRIx "+%016" VADDR_PRIx ")\n",
-                  midx, addr, mask, len);
-        tlb_flush_one_mmuidx_locked(cpu, midx, get_clock_realtime());
-        return;
-    }
-
-    /*
      * Check if we need to flush due to large pages.
      * Because large_page_mask contains all 1's from the msb,
      * we only need to test the end of the range.
@@ -720,13 +723,10 @@ static void tlb_flush_range_locked(CPUState *cpu, int midx,
         return;
     }
 
+    tlbfast_flush_range_locked(d, f, addr, len, mask);
+
     for (vaddr i = 0; i < len; i += TARGET_PAGE_SIZE) {
         vaddr page = addr + i;
-        CPUTLBEntry *entry = tlb_entry(cpu, midx, page);
-
-        if (tlb_flush_entry_mask_locked(entry, page, mask)) {
-            tlb_n_used_entries_dec(cpu, midx);
-        }
         tlb_flush_vtlb_page_mask_locked(cpu, midx, page, mask);
     }
 }
