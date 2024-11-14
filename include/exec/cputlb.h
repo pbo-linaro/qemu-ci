@@ -22,15 +22,33 @@
 
 #include "exec/cpu-common.h"
 
-#ifdef CONFIG_TCG
+#if defined(CONFIG_TCG) && !defined(CONFIG_USER_ONLY)
 
-#if !defined(CONFIG_USER_ONLY)
-/* cputlb.c */
+/**
+ * tlb_init - initialize a CPU's TLB
+ * @cpu: CPU whose TLB should be initialized
+ */
+void tlb_init(CPUState *cpu);
+
+/**
+ * tlb_destroy - destroy a CPU's TLB
+ * @cpu: CPU whose TLB should be destroyed
+ */
+void tlb_destroy(CPUState *cpu);
+
 void tlb_protect_code(ram_addr_t ram_addr);
 void tlb_unprotect_code(ram_addr_t ram_addr);
-#endif
 
-#endif /* CONFIG_TCG */
+#else
+
+static inline void tlb_init(CPUState *cpu)
+{
+}
+static inline void tlb_destroy(CPUState *cpu)
+{
+}
+
+#endif /* CONFIG_TCG && !CONFIG_USER_ONLY */
 
 #ifndef CONFIG_USER_ONLY
 
