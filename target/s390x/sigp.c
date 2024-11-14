@@ -15,7 +15,7 @@
 #include "sysemu/hw_accel.h"
 #include "sysemu/runstate.h"
 #include "exec/address-spaces.h"
-#include "exec/exec-all.h"
+#include "exec/cputlb.h"
 #include "sysemu/tcg.h"
 #include "trace.h"
 #include "qapi/qapi-types-machine.h"

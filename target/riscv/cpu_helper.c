@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "internals.h"
 #include "pmu.h"
-#include "exec/exec-all.h"
+#include "exec/cputlb.h"
 #include "exec/page-protection.h"
 #include "instmap.h"
 #include "tcg/tcg-op.h"
