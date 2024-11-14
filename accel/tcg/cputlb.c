@@ -1696,34 +1696,6 @@ typedef struct MMULookupLocals {
 } MMULookupLocals;
 
 /**
- * mmu_lookup1: translate one page
- * @cpu: generic cpu state
- * @data: lookup parameters
- * @memop: memory operation for the access, or 0
- * @mmu_idx: virtual address context
- * @access_type: load/store/code
- * @ra: return address into tcg generated code, or 0
- *
- * Resolve the translation for the one page at @data.addr, filling in
- * the rest of @data with the results.  If the translation fails,
- * tlb_fill_align will longjmp out.
- */
-static void mmu_lookup1(CPUState *cpu, MMULookupPageData *data, MemOp memop,
-                        int mmu_idx, MMUAccessType access_type, uintptr_t ra)
-{
-    TLBLookupInput i = {
-        .addr = data->addr,
-        .ra = ra,
-        .access_type = access_type,
-        .memop_probe = memop,
-        .size = data->size,
-        .mmu_idx = mmu_idx,
-    };
-
-    tlb_lookup_nofail(cpu, &data->o, &i);
-}
-
-/**
  * mmu_watch_or_dirty
  * @cpu: generic cpu state
  * @data: lookup parameters
@@ -1769,26 +1741,36 @@ static void mmu_watch_or_dirty(CPUState *cpu, MMULookupPageData *data,
 static bool mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
                        uintptr_t ra, MMUAccessType type, MMULookupLocals *l)
 {
+    MemOp memop = get_memop(oi);
+    int mmu_idx = get_mmuidx(oi);
+    TLBLookupInput i = {
+        .addr = addr,
+        .ra = ra,
+        .access_type = type,
+        .memop_probe = memop,
+        .size = memop_size(memop),
+        .mmu_idx = mmu_idx,
+    };
     bool crosspage;
     int flags;
 
-    l->memop = get_memop(oi);
-    l->mmu_idx = get_mmuidx(oi);
+    l->memop = memop;
+    l->mmu_idx = mmu_idx;
 
-    tcg_debug_assert(l->mmu_idx < NB_MMU_MODES);
+    tcg_debug_assert(mmu_idx < NB_MMU_MODES);
 
     l->page[0].addr = addr;
-    l->page[0].size = memop_size(l->memop);
-    l->page[1].addr = (addr + l->page[0].size - 1) & TARGET_PAGE_MASK;
+    l->page[0].size = i.size;
+    l->page[1].addr = (addr + i.size - 1) & TARGET_PAGE_MASK;
     l->page[1].size = 0;
     crosspage = (addr ^ l->page[1].addr) & TARGET_PAGE_MASK;
 
     if (likely(!crosspage)) {
-        mmu_lookup1(cpu, &l->page[0], l->memop, l->mmu_idx, type, ra);
+        tlb_lookup_nofail(cpu, &l->page[0].o, &i);
 
         flags = l->page[0].o.flags;
         if (unlikely(flags & (TLB_WATCHPOINT | TLB_NOTDIRTY))) {
-            mmu_watch_or_dirty(cpu, &l->page[0], type, ra);
+            mmu_watch_or_dirty(cpu, &l->page[0], i.access_type, i.ra);
         }
         if (unlikely(flags & TLB_BSWAP)) {
             l->memop ^= MO_BSWAP;
@@ -1796,17 +1778,20 @@ static bool mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     } else {
         /* Finish compute of page crossing. */
         int size0 = l->page[1].addr - addr;
-        l->page[1].size = l->page[0].size - size0;
+        l->page[1].size = i.size - size0;
         l->page[0].size = size0;
 
         /* Lookup both pages, recognizing exceptions from either. */
-        mmu_lookup1(cpu, &l->page[0], l->memop, l->mmu_idx, type, ra);
-        mmu_lookup1(cpu, &l->page[1], 0, l->mmu_idx, type, ra);
+        i.size = size0;
+        tlb_lookup_nofail(cpu, &l->page[0].o, &i);
+        i.addr = l->page[1].addr;
+        i.size = l->page[1].size;
+        tlb_lookup_nofail(cpu, &l->page[1].o, &i);
 
         flags = l->page[0].o.flags | l->page[1].o.flags;
         if (unlikely(flags & (TLB_WATCHPOINT | TLB_NOTDIRTY))) {
-            mmu_watch_or_dirty(cpu, &l->page[0], type, ra);
-            mmu_watch_or_dirty(cpu, &l->page[1], type, ra);
+            mmu_watch_or_dirty(cpu, &l->page[0], i.access_type, i.ra);
+            mmu_watch_or_dirty(cpu, &l->page[1], i.access_type, i.ra);
         }
 
         /*
