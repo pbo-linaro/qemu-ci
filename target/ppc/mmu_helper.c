@@ -1357,18 +1357,29 @@ void helper_check_tlb_flush_global(CPUPPCState *env)
 }
 
 
-bool ppc_cpu_tlb_fill(CPUState *cs, vaddr eaddr, int size,
-                      MMUAccessType access_type, int mmu_idx,
-                      bool probe, uintptr_t retaddr)
+bool ppc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                            vaddr eaddr, MMUAccessType access_type,
+                            int mmu_idx, MemOp memop, int size,
+                            bool probe, uintptr_t retaddr)
 {
     PowerPCCPU *cpu = POWERPC_CPU(cs);
     hwaddr raddr;
     int page_size, prot;
 
+    if (eaddr & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        ppc_cpu_do_unaligned_access(cs, eaddr, access_type, mmu_idx, retaddr);
+    }
+
     if (ppc_xlate(cpu, eaddr, access_type, &raddr,
                   &page_size, &prot, mmu_idx, !probe)) {
-        tlb_set_page(cs, eaddr & TARGET_PAGE_MASK, raddr & TARGET_PAGE_MASK,
-                     prot, mmu_idx, 1UL << page_size);
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = raddr;
+        out->prot = prot;
+        out->lg_page_size = page_size;
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
         return true;
     }
     if (probe) {
