@@ -89,6 +89,13 @@ QEMU_BUILD_BUG_ON(sizeof(vaddr) > sizeof(run_on_cpu_data));
 QEMU_BUILD_BUG_ON(NB_MMU_MODES > 16);
 #define ALL_MMUIDX_BITS ((1 << NB_MMU_MODES) - 1)
 
+/* Extra data required to manage CPUTLBEntryFull within an interval tree. */
+typedef struct CPUTLBEntryTree {
+    IntervalTreeNode itree;
+    CPUTLBEntry copy;
+    CPUTLBEntryFull full;
+} CPUTLBEntryTree;
+
 static inline size_t tlb_n_entries(CPUTLBDescFast *fast)
 {
     return (fast->mask >> CPU_TLB_ENTRY_BITS) + 1;
@@ -305,6 +312,7 @@ static void tlb_mmu_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
     desc->large_page_mask = -1;
     desc->vindex = 0;
     memset(desc->vtable, -1, sizeof(desc->vtable));
+    interval_tree_free_nodes(&desc->iroot, offsetof(CPUTLBEntryTree, itree));
 }
 
 static void tlb_flush_one_mmuidx_locked(CPUState *cpu, int mmu_idx,
@@ -326,6 +334,7 @@ static void tlb_mmu_init(CPUTLBDesc *desc, CPUTLBDescFast *fast, int64_t now)
     fast->mask = (n_entries - 1) << CPU_TLB_ENTRY_BITS;
     fast->table = g_new(CPUTLBEntry, n_entries);
     desc->fulltlb = g_new(CPUTLBEntryFull, n_entries);
+    memset(&desc->iroot, 0, sizeof(desc->iroot));
     tlb_mmu_flush_locked(desc, fast);
 }
 
@@ -365,6 +374,8 @@ void tlb_destroy(CPUState *cpu)
 
         g_free(fast->table);
         g_free(desc->fulltlb);
+        interval_tree_free_nodes(&cpu->neg.tlb.d[i].iroot,
+                                 offsetof(CPUTLBEntryTree, itree));
     }
 }
 

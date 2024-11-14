@@ -35,6 +35,7 @@
 #include "qemu/queue.h"
 #include "qemu/lockcnt.h"
 #include "qemu/thread.h"
+#include "qemu/interval-tree.h"
 #include "qom/object.h"
 
 typedef int (*WriteCoreDumpFunction)(const void *buf, size_t size,
@@ -290,6 +291,8 @@ typedef struct CPUTLBDesc {
     CPUTLBEntry vtable[CPU_VTLB_SIZE];
     CPUTLBEntryFull vfulltlb[CPU_VTLB_SIZE];
     CPUTLBEntryFull *fulltlb;
+    /* All active tlb entries for this address space. */
+    IntervalTreeRoot iroot;
 } CPUTLBDesc;
 
 /*
