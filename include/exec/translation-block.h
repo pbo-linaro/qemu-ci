@@ -8,7 +8,7 @@
 #define EXEC_TRANSLATION_BLOCK_H
 
 #include "qemu/thread.h"
-#include "exec/cpu-common.h"
+#include "exec/ram_addr.h"
 #include "exec/vaddr.h"
 #ifdef CONFIG_USER_ONLY
 #include "qemu/interval-tree.h"
