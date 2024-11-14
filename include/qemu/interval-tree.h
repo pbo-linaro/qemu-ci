@@ -96,4 +96,15 @@ IntervalTreeNode *interval_tree_iter_first(IntervalTreeRoot *root,
 IntervalTreeNode *interval_tree_iter_next(IntervalTreeNode *node,
                                           uint64_t start, uint64_t last);
 
+/**
+ * interval_tree_free_nodes:
+ * @root: root of the tree
+ * @it_offset: offset from outermost type to IntervalTreeNode
+ *
+ * Free, via g_free, all nodes under @root.  IntervalTreeNode may
+ * not be the true type of the nodes allocated; @it_offset gives
+ * the offset from the outermost type to the IntervalTreeNode member.
+ */
+void interval_tree_free_nodes(IntervalTreeRoot *root, size_t it_offset);
+
 #endif /* QEMU_INTERVAL_TREE_H */

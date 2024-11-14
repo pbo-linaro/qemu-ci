@@ -87,23 +87,12 @@ IntervalTreeRoot *read_self_maps(void)
  * @root: an interval tree
  *
  * Free a tree of MapInfo structures.
- * Since we allocated each MapInfo in one chunk, we need not consider the
- * contents and can simply free each RBNode.
  */
-
-static void free_rbnode(RBNode *n)
-{
-    if (n) {
-        free_rbnode(n->rb_left);
-        free_rbnode(n->rb_right);
-        g_free(n);
-    }
-}
 
 void free_self_maps(IntervalTreeRoot *root)
 {
     if (root) {
-        free_rbnode(root->rb_root.rb_node);
+        interval_tree_free_nodes(root, offsetof(MapInfo, itree));
         g_free(root);
     }
 }

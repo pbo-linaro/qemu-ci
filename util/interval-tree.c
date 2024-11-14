@@ -639,6 +639,16 @@ static void rb_erase_augmented_cached(RBNode *node, RBRootLeftCached *root,
     rb_erase_augmented(node, &root->rb_root, augment);
 }
 
+static void rb_node_free(RBNode *rb, size_t rb_offset)
+{
+    if (rb->rb_left) {
+        rb_node_free(rb->rb_left, rb_offset);
+    }
+    if (rb->rb_right) {
+        rb_node_free(rb->rb_right, rb_offset);
+    }
+    g_free((void *)rb - rb_offset);
+}
 
 /*
  * Interval trees.
@@ -867,6 +877,16 @@ IntervalTreeNode *interval_tree_iter_next(IntervalTreeNode *node,
         if (start <= node->last) { /* Cond2 */
             return node;
         }
+    }
+}
+
+void interval_tree_free_nodes(IntervalTreeRoot *root, size_t it_offset)
+{
+    if (root && root->rb_root.rb_node) {
+        rb_node_free(root->rb_root.rb_node,
+                     it_offset + offsetof(IntervalTreeNode, rb));
+        root->rb_root.rb_node = NULL;
+        root->rb_leftmost = NULL;
     }
 }
 
