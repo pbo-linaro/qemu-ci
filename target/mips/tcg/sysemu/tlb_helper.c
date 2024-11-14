@@ -904,14 +904,27 @@ refill:
 }
 #endif
 
-bool mips_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                       MMUAccessType access_type, int mmu_idx,
-                       bool probe, uintptr_t retaddr)
+bool mips_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out, vaddr address,
+                             MMUAccessType access_type, int mmu_idx,
+                             MemOp memop, int size,
+                             bool probe, uintptr_t retaddr)
 {
     CPUMIPSState *env = cpu_env(cs);
     hwaddr physical;
     int prot;
     int ret = TLBRET_BADADDR;
+
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        mips_cpu_do_unaligned_access(cs, address, access_type,
+                                     mmu_idx, retaddr);
+    }
+
+    memset(out, 0, sizeof(*out));
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
+    out->lg_page_size = TARGET_PAGE_BITS;
 
     /* data access */
     /* XXX: put correct access by using cpu_restore_state() correctly */
@@ -930,9 +943,8 @@ bool mips_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
         break;
     }
     if (ret == TLBRET_MATCH) {
-        tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                     physical & TARGET_PAGE_MASK, prot,
-                     mmu_idx, TARGET_PAGE_SIZE);
+        out->phys_addr = physical;
+        out->prot = prot;
         return true;
     }
 #if !defined(TARGET_MIPS64)
@@ -948,9 +960,8 @@ bool mips_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
             ret = get_physical_address(env, &physical, &prot, address,
                                        access_type, mmu_idx);
             if (ret == TLBRET_MATCH) {
-                tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                             physical & TARGET_PAGE_MASK, prot,
-                             mmu_idx, TARGET_PAGE_SIZE);
+                out->phys_addr = physical;
+                out->prot = prot;
                 return true;
             }
         }
