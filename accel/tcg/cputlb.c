@@ -802,6 +802,11 @@ void tlb_flush_range_by_mmuidx(CPUState *cpu, vaddr addr,
         tlb_flush_page_by_mmuidx(cpu, addr, idxmap);
         return;
     }
+    /* If addr+len wraps in len bits, fall back to full flush. */
+    if (bits < TARGET_LONG_BITS && ((addr ^ (addr + len - 1)) >> bits)) {
+        tlb_flush_by_mmuidx(cpu, idxmap);
+        return;
+    }
 
     /* This should already be page aligned */
     d.addr = addr & TARGET_PAGE_MASK;
@@ -836,6 +841,11 @@ void tlb_flush_range_by_mmuidx_all_cpus_synced(CPUState *src_cpu,
      */
     if (bits == TARGET_LONG_BITS && len <= TARGET_PAGE_SIZE) {
         tlb_flush_page_by_mmuidx_all_cpus_synced(src_cpu, addr, idxmap);
+        return;
+    }
+    /* If addr+len wraps in len bits, fall back to full flush. */
+    if (bits < TARGET_LONG_BITS && ((addr ^ (addr + len - 1)) >> bits)) {
+        tlb_flush_by_mmuidx_all_cpus_synced(src_cpu, idxmap);
         return;
     }
 
