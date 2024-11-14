@@ -1037,8 +1037,8 @@ static inline void tlb_set_compare(CPUTLBEntryFull *full, CPUTLBEntry *ent,
  * Called from TCG-generated code, which is under an RCU read-side
  * critical section.
  */
-void tlb_set_page_full(CPUState *cpu, int mmu_idx,
-                       vaddr addr, CPUTLBEntryFull *full)
+static void tlb_set_page_full(CPUState *cpu, int mmu_idx,
+                              vaddr addr, CPUTLBEntryFull *full)
 {
     CPUTLB *tlb = &cpu->neg.tlb;
     CPUTLBDesc *desc = &tlb->d[mmu_idx];
@@ -1187,29 +1187,6 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     copy_tlb_helper_locked(te, &node->copy);
     desc->n_used_entries++;
     qemu_spin_unlock(&tlb->c.lock);
-}
-
-void tlb_set_page_with_attrs(CPUState *cpu, vaddr addr,
-                             hwaddr paddr, MemTxAttrs attrs, int prot,
-                             int mmu_idx, uint64_t size)
-{
-    CPUTLBEntryFull full = {
-        .phys_addr = paddr,
-        .attrs = attrs,
-        .prot = prot,
-        .lg_page_size = ctz64(size)
-    };
-
-    assert(is_power_of_2(size));
-    tlb_set_page_full(cpu, mmu_idx, addr, &full);
-}
-
-void tlb_set_page(CPUState *cpu, vaddr addr,
-                  hwaddr paddr, int prot,
-                  int mmu_idx, uint64_t size)
-{
-    tlb_set_page_with_attrs(cpu, addr, paddr, MEMTXATTRS_UNSPECIFIED,
-                            prot, mmu_idx, size);
 }
 
 /*
