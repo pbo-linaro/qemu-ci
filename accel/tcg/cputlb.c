@@ -354,11 +354,6 @@ static void tlb_mmu_init(CPUTLBDesc *desc, CPUTLBDescFast *fast, int64_t now)
     tlb_mmu_flush_locked(desc, fast);
 }
 
-static inline void tlb_n_used_entries_inc(CPUState *cpu, uintptr_t mmu_idx)
-{
-    cpu->neg.tlb.d[mmu_idx].n_used_entries++;
-}
-
 void tlb_init(CPUState *cpu)
 {
     int64_t now = get_clock_realtime();
@@ -1211,7 +1206,7 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
 
     node->full = *full;
     copy_tlb_helper_locked(te, &node->copy);
-    tlb_n_used_entries_inc(cpu, mmu_idx);
+    desc->n_used_entries++;
     qemu_spin_unlock(&tlb->c.lock);
 }
 
