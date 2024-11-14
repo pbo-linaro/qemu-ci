@@ -1854,14 +1854,13 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
             flags &= ~TLB_INVALID_MASK;
         }
     }
+    full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
 
     /*
      * Let the guest notice RMW on a write-only page.
      * We have just verified that the page is writable.
-     * Subpage lookups may have left TLB_INVALID_MASK set,
-     * but addr_read will only be -1 if PAGE_READ was unset.
      */
-    if (unlikely(tlbe->addr_read == -1)) {
+    if (unlikely(!(full->prot & PAGE_READ))) {
         tlb_fill_align(cpu, addr, MMU_DATA_LOAD, mmu_idx,
                        0, size, false, retaddr);
         /*
@@ -1899,7 +1898,6 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     }
 
     hostaddr = (void *)((uintptr_t)addr + tlbe->addend);
-    full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
 
     if (unlikely(flags & TLB_NOTDIRTY)) {
         notdirty_write(cpu, addr, size, full, retaddr);
