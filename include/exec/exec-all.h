@@ -393,7 +393,7 @@ int probe_access_full(CPUArchState *env, vaddr addr, int size,
  */
 int probe_access_full_mmu(CPUArchState *env, vaddr addr, int size,
                           MMUAccessType access_type, int mmu_idx,
-                          void **phost, CPUTLBEntryFull **pfull);
+                          void **phost, CPUTLBEntryFull *pfull);
 
 #endif /* !CONFIG_USER_ONLY */
 #endif /* CONFIG_TCG */

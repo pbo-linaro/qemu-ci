@@ -436,7 +436,7 @@ do_check_protect_pse36:
      * addresses) using the address with the A20 bit set.
      */
     if (in->ptw_idx == MMU_NESTED_IDX) {
-        CPUTLBEntryFull *full;
+        CPUTLBEntryFull full;
         int flags, nested_page_size;
 
         flags = probe_access_full_mmu(env, paddr, 0, access_type,
@@ -451,7 +451,7 @@ do_check_protect_pse36:
         }
 
         /* Merge stage1 & stage2 protection bits. */
-        prot &= full->prot;
+        prot &= full.prot;
 
         /* Re-verify resulting protection. */
         if ((prot & (1 << access_type)) == 0) {
@@ -459,8 +459,8 @@ do_check_protect_pse36:
         }
 
         /* Merge stage1 & stage2 addresses to final physical address. */
-        nested_page_size = 1 << full->lg_page_size;
-        paddr = (full->phys_addr & ~(nested_page_size - 1))
+        nested_page_size = 1 << full.lg_page_size;
+        paddr = (full.phys_addr & ~(nested_page_size - 1))
               | (paddr & (nested_page_size - 1));
 
         /*
