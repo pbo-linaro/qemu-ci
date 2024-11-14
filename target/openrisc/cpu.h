@@ -22,6 +22,7 @@
 
 #include "cpu-qom.h"
 #include "exec/cpu-defs.h"
+#include "exec/memop.h"
 #include "fpu/softfloat-types.h"
 
 /**
@@ -306,9 +307,10 @@ int print_insn_or1k(bfd_vma addr, disassemble_info *info);
 #ifndef CONFIG_USER_ONLY
 hwaddr openrisc_cpu_get_phys_page_debug(CPUState *cpu, vaddr addr);
 
-bool openrisc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                           MMUAccessType access_type, int mmu_idx,
-                           bool probe, uintptr_t retaddr);
+bool openrisc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                 vaddr addr, MMUAccessType access_type,
+                                 int mmu_idx, MemOp memop, int size,
+                                 bool probe, uintptr_t ra);
 
 extern const VMStateDescription vmstate_openrisc_cpu;
 

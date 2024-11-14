@@ -104,39 +104,42 @@ static void raise_mmu_exception(OpenRISCCPU *cpu, target_ulong address,
     cpu->env.lock_addr = -1;
 }
 
-bool openrisc_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
-                           MMUAccessType access_type, int mmu_idx,
-                           bool probe, uintptr_t retaddr)
+bool openrisc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                 vaddr addr, MMUAccessType access_type,
+                                 int mmu_idx, MemOp memop, int size,
+                                 bool probe, uintptr_t retaddr)
 {
     OpenRISCCPU *cpu = OPENRISC_CPU(cs);
-    int excp = EXCP_DPF;
     int prot;
     hwaddr phys_addr;
+
+    /* TODO: alignment faults not currently handled. */
 
     if (mmu_idx == MMU_NOMMU_IDX) {
         /* The mmu is disabled; lookups never fail.  */
         get_phys_nommu(&phys_addr, &prot, addr);
-        excp = 0;
     } else {
         bool super = mmu_idx == MMU_SUPERVISOR_IDX;
         int need = (access_type == MMU_INST_FETCH ? PAGE_EXEC
                     : access_type == MMU_DATA_STORE ? PAGE_WRITE
                     : PAGE_READ);
-        excp = get_phys_mmu(cpu, &phys_addr, &prot, addr, need, super);
+        int excp = get_phys_mmu(cpu, &phys_addr, &prot, addr, need, super);
+
+        if (unlikely(excp)) {
+            if (probe) {
+                return false;
+            }
+            raise_mmu_exception(cpu, addr, excp);
+            cpu_loop_exit_restore(cs, retaddr);
+        }
     }
 
-    if (likely(excp == 0)) {
-        tlb_set_page(cs, addr & TARGET_PAGE_MASK,
-                     phys_addr & TARGET_PAGE_MASK, prot,
-                     mmu_idx, TARGET_PAGE_SIZE);
-        return true;
-    }
-    if (probe) {
-        return false;
-    }
-
-    raise_mmu_exception(cpu, addr, excp);
-    cpu_loop_exit_restore(cs, retaddr);
+    memset(out, 0, sizeof(*out));
+    out->phys_addr = phys_addr;
+    out->prot = prot;
+    out->lg_page_size = TARGET_PAGE_BITS;
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
+    return true;
 }
 
 hwaddr openrisc_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
