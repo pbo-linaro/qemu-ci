@@ -792,22 +792,32 @@ bool superh_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
     return false;
 }
 
-bool superh_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                         MMUAccessType access_type, int mmu_idx,
-                         bool probe, uintptr_t retaddr)
+bool superh_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                               vaddr address, MMUAccessType access_type,
+                               int mmu_idx, MemOp memop, int size,
+                               bool probe, uintptr_t retaddr)
 {
     CPUSH4State *env = cpu_env(cs);
     int ret;
-
     target_ulong physical;
     int prot;
+
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        superh_cpu_do_unaligned_access(cs, address, access_type,
+                                       mmu_idx, retaddr);
+    }
 
     ret = get_physical_address(env, &physical, &prot, address, access_type);
 
     if (ret == MMU_OK) {
-        address &= TARGET_PAGE_MASK;
-        physical &= TARGET_PAGE_MASK;
-        tlb_set_page(cs, address, physical, prot, mmu_idx, TARGET_PAGE_SIZE);
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = physical;
+        out->prot = prot;
+        out->lg_page_size = TARGET_PAGE_BITS;
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
         return true;
     }
     if (probe) {

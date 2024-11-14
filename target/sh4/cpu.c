@@ -252,7 +252,7 @@ static const TCGCPUOps superh_tcg_ops = {
     .restore_state_to_opc = superh_restore_state_to_opc,
 
 #ifndef CONFIG_USER_ONLY
-    .tlb_fill = superh_cpu_tlb_fill,
+    .tlb_fill_align = superh_cpu_tlb_fill_align,
     .cpu_exec_interrupt = superh_cpu_exec_interrupt,
     .cpu_exec_halt = superh_cpu_has_work,
     .do_interrupt = superh_cpu_do_interrupt,
