@@ -149,13 +149,6 @@ static inline CPUTLBEntry *tlbfast_entry(CPUTLBDescFast *fast, vaddr addr)
     return fast->table + tlbfast_index(fast, addr);
 }
 
-/* Find the TLB index corresponding to the mmu_idx + address pair.  */
-static inline uintptr_t tlb_index(CPUState *cpu, uintptr_t mmu_idx,
-                                  vaddr addr)
-{
-    return tlbfast_index(&cpu->neg.tlb.f[mmu_idx], addr);
-}
-
 /* Find the TLB entry corresponding to the mmu_idx + address pair.  */
 static inline CPUTLBEntry *tlb_entry(CPUState *cpu, uintptr_t mmu_idx,
                                      vaddr addr)
@@ -270,22 +263,20 @@ static void tlb_mmu_resize_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast,
     }
 
     g_free(fast->table);
-    g_free(desc->fulltlb);
 
     tlb_window_reset(desc, now, 0);
     /* desc->n_used_entries is cleared by the caller */
     fast->mask = (new_size - 1) << CPU_TLB_ENTRY_BITS;
     fast->table = g_try_new(CPUTLBEntry, new_size);
-    desc->fulltlb = g_try_new(CPUTLBEntryFull, new_size);
 
     /*
-     * If the allocations fail, try smaller sizes. We just freed some
+     * If the allocation fails, try smaller sizes. We just freed some
      * memory, so going back to half of new_size has a good chance of working.
      * Increased memory pressure elsewhere in the system might cause the
      * allocations to fail though, so we progressively reduce the allocation
      * size, aborting if we cannot even allocate the smallest TLB we support.
      */
-    while (fast->table == NULL || desc->fulltlb == NULL) {
+    while (fast->table == NULL) {
         if (new_size == (1 << CPU_TLB_DYN_MIN_BITS)) {
             error_report("%s: %s", __func__, strerror(errno));
             abort();
@@ -294,9 +285,7 @@ static void tlb_mmu_resize_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast,
         fast->mask = (new_size - 1) << CPU_TLB_ENTRY_BITS;
 
         g_free(fast->table);
-        g_free(desc->fulltlb);
         fast->table = g_try_new(CPUTLBEntry, new_size);
-        desc->fulltlb = g_try_new(CPUTLBEntryFull, new_size);
     }
 }
 
@@ -350,7 +339,6 @@ static void tlb_mmu_init(CPUTLBDesc *desc, CPUTLBDescFast *fast, int64_t now)
     desc->n_used_entries = 0;
     fast->mask = (n_entries - 1) << CPU_TLB_ENTRY_BITS;
     fast->table = g_new(CPUTLBEntry, n_entries);
-    desc->fulltlb = g_new(CPUTLBEntryFull, n_entries);
     memset(&desc->iroot, 0, sizeof(desc->iroot));
     tlb_mmu_flush_locked(desc, fast);
 }
@@ -372,15 +360,9 @@ void tlb_init(CPUState *cpu)
 
 void tlb_destroy(CPUState *cpu)
 {
-    int i;
-
     qemu_spin_destroy(&cpu->neg.tlb.c.lock);
-    for (i = 0; i < NB_MMU_MODES; i++) {
-        CPUTLBDesc *desc = &cpu->neg.tlb.d[i];
-        CPUTLBDescFast *fast = &cpu->neg.tlb.f[i];
-
-        g_free(fast->table);
-        g_free(desc->fulltlb);
+    for (int i = 0; i < NB_MMU_MODES; i++) {
+        g_free(cpu->neg.tlb.f[i].table);
         interval_tree_free_nodes(&cpu->neg.tlb.d[i].iroot,
                                  offsetof(CPUTLBEntryTree, itree));
     }
@@ -1061,7 +1043,7 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     CPUTLB *tlb = &cpu->neg.tlb;
     CPUTLBDesc *desc = &tlb->d[mmu_idx];
     MemoryRegionSection *section;
-    unsigned int index, read_flags, write_flags;
+    unsigned int read_flags, write_flags;
     uintptr_t addend;
     CPUTLBEntry *te;
     CPUTLBEntryTree *node;
@@ -1140,7 +1122,6 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     wp_flags = cpu_watchpoint_address_matches(cpu, addr_page,
                                               TARGET_PAGE_SIZE);
 
-    index = tlb_index(cpu, mmu_idx, addr_page);
     te = tlb_entry(cpu, mmu_idx, addr_page);
 
     /*
@@ -1179,8 +1160,8 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
      * subtract here is that of the page base, and not the same as the
      * vaddr we add back in io_prepare()/get_page_addr_code().
      */
-    desc->fulltlb[index] = *full;
-    full = &desc->fulltlb[index];
+    node->full = *full;
+    full = &node->full;
     full->xlat_section = iotlb - addr_page;
     full->phys_addr = paddr_page;
 
@@ -1203,7 +1184,6 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     tlb_set_compare(full, &node->copy, addr_page, write_flags,
                     MMU_DATA_STORE, prot & PAGE_WRITE);
 
-    node->full = *full;
     copy_tlb_helper_locked(te, &node->copy);
     desc->n_used_entries++;
     qemu_spin_unlock(&tlb->c.lock);
