@@ -139,9 +139,10 @@ static inline uint64_t cpu_mmu_idx_to_asc(int mmu_idx)
     }
 }
 
-bool s390_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                       MMUAccessType access_type, int mmu_idx,
-                       bool probe, uintptr_t retaddr)
+bool s390x_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                              vaddr address, MMUAccessType access_type,
+                              int mmu_idx, MemOp memop, int size,
+                              bool probe, uintptr_t retaddr)
 {
     CPUS390XState *env = cpu_env(cs);
     target_ulong vaddr, raddr;
@@ -150,6 +151,14 @@ bool s390_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
 
     qemu_log_mask(CPU_LOG_MMU, "%s: addr 0x%" VADDR_PRIx " rw %d mmu_idx %d\n",
                   __func__, address, access_type, mmu_idx);
+
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        s390x_cpu_do_unaligned_access(cs, address, access_type,
+                                      mmu_idx, retaddr);
+    }
 
     vaddr = address;
 
@@ -177,8 +186,12 @@ bool s390_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
         qemu_log_mask(CPU_LOG_MMU,
                       "%s: set tlb %" PRIx64 " -> %" PRIx64 " (%x)\n",
                       __func__, (uint64_t)vaddr, (uint64_t)raddr, prot);
-        tlb_set_page(cs, address & TARGET_PAGE_MASK, raddr, prot,
-                     mmu_idx, TARGET_PAGE_SIZE);
+
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = raddr;
+        out->prot = prot;
+        out->lg_page_size = TARGET_PAGE_BITS;
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
         return true;
     }
     if (probe) {

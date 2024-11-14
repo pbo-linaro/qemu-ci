@@ -330,7 +330,7 @@ void cpu_get_tb_cpu_state(CPUS390XState *env, vaddr *pc,
          * Instructions must be at even addresses.
          * This needs to be checked before address translation.
          */
-        env->int_pgm_ilen = 2; /* see s390_cpu_tlb_fill() */
+        env->int_pgm_ilen = 2; /* see s390x_cpu_tlb_fill_align() */
         tcg_s390_program_interrupt(env, PGM_SPECIFICATION, 0);
     }
 
@@ -364,7 +364,7 @@ static const TCGCPUOps s390_tcg_ops = {
     .record_sigsegv = s390_cpu_record_sigsegv,
     .record_sigbus = s390_cpu_record_sigbus,
 #else
-    .tlb_fill = s390_cpu_tlb_fill,
+    .tlb_fill_align = s390x_cpu_tlb_fill_align,
     .cpu_exec_interrupt = s390_cpu_exec_interrupt,
     .cpu_exec_halt = s390_cpu_has_work,
     .do_interrupt = s390_cpu_do_interrupt,
