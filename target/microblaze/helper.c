@@ -36,37 +36,44 @@ static bool mb_cpu_access_is_secure(MicroBlazeCPU *cpu,
     }
 }
 
-bool mb_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                     MMUAccessType access_type, int mmu_idx,
-                     bool probe, uintptr_t retaddr)
+bool mb_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out, vaddr address,
+                           MMUAccessType access_type, int mmu_idx,
+                           MemOp memop, int size,
+                           bool probe, uintptr_t retaddr)
 {
     MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);
     CPUMBState *env = &cpu->env;
     MicroBlazeMMULookup lu;
     unsigned int hit;
-    int prot;
-    MemTxAttrs attrs = {};
 
-    attrs.secure = mb_cpu_access_is_secure(cpu, access_type);
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        mb_cpu_do_unaligned_access(cs, address, access_type, mmu_idx, retaddr);
+    }
+
+    memset(out, 0, sizeof(*out));
+    out->attrs.secure = mb_cpu_access_is_secure(cpu, access_type);
+    out->lg_page_size = TARGET_PAGE_BITS;
 
     if (mmu_idx == MMU_NOMMU_IDX) {
         /* MMU disabled or not available.  */
-        address &= TARGET_PAGE_MASK;
-        prot = PAGE_RWX;
-        tlb_set_page_with_attrs(cs, address, address, attrs, prot, mmu_idx,
-                                TARGET_PAGE_SIZE);
+        out->phys_addr = address;
+        out->prot = PAGE_RWX;
         return true;
     }
 
     hit = mmu_translate(cpu, &lu, address, access_type, mmu_idx);
     if (likely(hit)) {
-        uint32_t vaddr = address & TARGET_PAGE_MASK;
+        uint32_t vaddr = address;
         uint32_t paddr = lu.paddr + vaddr - lu.vaddr;
 
         qemu_log_mask(CPU_LOG_MMU, "MMU map mmu=%d v=%x p=%x prot=%x\n",
                       mmu_idx, vaddr, paddr, lu.prot);
-        tlb_set_page_with_attrs(cs, vaddr, paddr, attrs, lu.prot, mmu_idx,
-                                TARGET_PAGE_SIZE);
+
+        out->phys_addr = paddr;
+        out->prot = lu.prot;
         return true;
     }
 
