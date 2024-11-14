@@ -232,7 +232,7 @@ static const TCGCPUOps xtensa_tcg_ops = {
     .restore_state_to_opc = xtensa_restore_state_to_opc,
 
 #ifndef CONFIG_USER_ONLY
-    .tlb_fill = xtensa_cpu_tlb_fill,
+    .tlb_fill_align = xtensa_cpu_tlb_fill_align,
     .cpu_exec_interrupt = xtensa_cpu_exec_interrupt,
     .cpu_exec_halt = xtensa_cpu_has_work,
     .do_interrupt = xtensa_cpu_do_interrupt,

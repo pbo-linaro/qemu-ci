@@ -261,15 +261,26 @@ void xtensa_cpu_do_unaligned_access(CPUState *cs,
                                   addr);
 }
 
-bool xtensa_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                         MMUAccessType access_type, int mmu_idx,
-                         bool probe, uintptr_t retaddr)
+bool xtensa_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                               vaddr address, MMUAccessType access_type,
+                               int mmu_idx, MemOp memop, int size,
+                               bool probe, uintptr_t retaddr)
 {
     CPUXtensaState *env = cpu_env(cs);
     uint32_t paddr;
     uint32_t page_size;
     unsigned access;
-    int ret = xtensa_get_physical_addr(env, true, address, access_type,
+    int ret;
+
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        xtensa_cpu_do_unaligned_access(cs, address, access_type,
+                                       mmu_idx, retaddr);
+    }
+
+    ret = xtensa_get_physical_addr(env, true, address, access_type,
                                        mmu_idx, &paddr, &page_size, &access);
 
     qemu_log_mask(CPU_LOG_MMU, "%s(%08" VADDR_PRIx
@@ -277,10 +288,11 @@ bool xtensa_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
                   __func__, address, access_type, mmu_idx, paddr, ret);
 
     if (ret == 0) {
-        tlb_set_page(cs,
-                     address & TARGET_PAGE_MASK,
-                     paddr & TARGET_PAGE_MASK,
-                     access, mmu_idx, page_size);
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = paddr;
+        out->prot = access;
+        out->lg_page_size = ctz32(page_size);
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
         return true;
     } else if (probe) {
         return false;

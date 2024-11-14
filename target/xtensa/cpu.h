@@ -31,6 +31,7 @@
 #include "cpu-qom.h"
 #include "qemu/cpu-float.h"
 #include "exec/cpu-defs.h"
+#include "exec/memop.h"
 #include "hw/clock.h"
 #include "xtensa-isa.h"
 
@@ -580,9 +581,10 @@ struct XtensaCPUClass {
 };
 
 #ifndef CONFIG_USER_ONLY
-bool xtensa_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                         MMUAccessType access_type, int mmu_idx,
-                         bool probe, uintptr_t retaddr);
+bool xtensa_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                               vaddr addr, MMUAccessType access_type,
+                               int mmu_idx, MemOp memop, int size,
+                               bool probe, uintptr_t retaddr);
 void xtensa_cpu_do_interrupt(CPUState *cpu);
 bool xtensa_cpu_exec_interrupt(CPUState *cpu, int interrupt_request);
 void xtensa_cpu_do_transaction_failed(CPUState *cs, hwaddr physaddr, vaddr addr,
