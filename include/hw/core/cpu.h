@@ -201,9 +201,6 @@ struct CPUClass {
  */
 #define NB_MMU_MODES 16
 
-/* Use a fully associative victim tlb of 8 entries. */
-#define CPU_VTLB_SIZE 8
-
 /*
  * The full TLB entry, which is not accessed by generated TCG code,
  * so the layout is not as critical as that of CPUTLBEntry. This is
@@ -285,11 +282,6 @@ typedef struct CPUTLBDesc {
     /* maximum number of entries observed in the window */
     size_t window_max_entries;
     size_t n_used_entries;
-    /* The next index to use in the tlb victim table.  */
-    size_t vindex;
-    /* The tlb victim table, in two parts.  */
-    CPUTLBEntry vtable[CPU_VTLB_SIZE];
-    CPUTLBEntryFull vfulltlb[CPU_VTLB_SIZE];
     CPUTLBEntryFull *fulltlb;
     /* All active tlb entries for this address space. */
     IntervalTreeRoot iroot;

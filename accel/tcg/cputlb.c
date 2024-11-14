@@ -328,8 +328,6 @@ static void tlb_mmu_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
     tlbfast_flush_locked(desc, fast);
     desc->large_page_addr = -1;
     desc->large_page_mask = -1;
-    desc->vindex = 0;
-    memset(desc->vtable, -1, sizeof(desc->vtable));
     interval_tree_free_nodes(&desc->iroot, offsetof(CPUTLBEntryTree, itree));
 }
 
@@ -359,11 +357,6 @@ static void tlb_mmu_init(CPUTLBDesc *desc, CPUTLBDescFast *fast, int64_t now)
 static inline void tlb_n_used_entries_inc(CPUState *cpu, uintptr_t mmu_idx)
 {
     cpu->neg.tlb.d[mmu_idx].n_used_entries++;
-}
-
-static inline void tlb_n_used_entries_dec(CPUState *cpu, uintptr_t mmu_idx)
-{
-    cpu->neg.tlb.d[mmu_idx].n_used_entries--;
 }
 
 void tlb_init(CPUState *cpu)
@@ -496,20 +489,6 @@ static bool tlb_hit_page_mask_anyprot(CPUTLBEntry *tlb_entry,
             page == (tlb_entry->addr_code & mask));
 }
 
-static inline bool tlb_hit_page_anyprot(CPUTLBEntry *tlb_entry, vaddr page)
-{
-    return tlb_hit_page_mask_anyprot(tlb_entry, page, -1);
-}
-
-/**
- * tlb_entry_is_empty - return true if the entry is not in use
- * @te: pointer to CPUTLBEntry
- */
-static inline bool tlb_entry_is_empty(const CPUTLBEntry *te)
-{
-    return te->addr_read == -1 && te->addr_write == -1 && te->addr_code == -1;
-}
-
 /* Called with tlb_c.lock held */
 static bool tlb_flush_entry_mask_locked(CPUTLBEntry *tlb_entry,
                                         vaddr page,
@@ -520,28 +499,6 @@ static bool tlb_flush_entry_mask_locked(CPUTLBEntry *tlb_entry,
         return true;
     }
     return false;
-}
-
-/* Called with tlb_c.lock held */
-static void tlb_flush_vtlb_page_mask_locked(CPUState *cpu, int mmu_idx,
-                                            vaddr page,
-                                            vaddr mask)
-{
-    CPUTLBDesc *d = &cpu->neg.tlb.d[mmu_idx];
-    int k;
-
-    assert_cpu_is_self(cpu);
-    for (k = 0; k < CPU_VTLB_SIZE; k++) {
-        if (tlb_flush_entry_mask_locked(&d->vtable[k], page, mask)) {
-            tlb_n_used_entries_dec(cpu, mmu_idx);
-        }
-    }
-}
-
-static inline void tlb_flush_vtlb_page_locked(CPUState *cpu, int mmu_idx,
-                                              vaddr page)
-{
-    tlb_flush_vtlb_page_mask_locked(cpu, mmu_idx, page, -1);
 }
 
 static void tlbfast_flush_range_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast,
@@ -588,7 +545,6 @@ static void tlb_flush_page_locked(CPUState *cpu, int midx, vaddr page)
 
     tlbfast_flush_range_locked(desc, &cpu->neg.tlb.f[midx],
                                page, TARGET_PAGE_SIZE, -1);
-    tlb_flush_vtlb_page_locked(cpu, midx, page);
 
     node = tlbtree_lookup_addr(desc, page);
     if (node) {
@@ -763,11 +719,6 @@ static void tlb_flush_range_locked(CPUState *cpu, int midx,
     }
 
     tlbfast_flush_range_locked(d, f, addr, len, mask);
-
-    for (vaddr i = 0; i < len; i += TARGET_PAGE_SIZE) {
-        vaddr page = addr + i;
-        tlb_flush_vtlb_page_mask_locked(cpu, midx, page, mask);
-    }
 
     addr_mask = addr & mask;
     last_mask = addr_mask + len - 1;
@@ -1017,10 +968,6 @@ void tlb_reset_dirty(CPUState *cpu, ram_addr_t start1, ram_addr_t length)
             tlb_reset_dirty_range_locked(&fast->table[i], start1, length);
         }
 
-        for (size_t i = 0; i < CPU_VTLB_SIZE; i++) {
-            tlb_reset_dirty_range_locked(&desc->vtable[i], start1, length);
-        }
-
         for (CPUTLBEntryTree *t = tlbtree_lookup_range(desc, 0, -1); t;
              t = tlbtree_lookup_range_next(t, 0, -1)) {
             tlb_reset_dirty_range_locked(&t->copy, start1, length);
@@ -1053,10 +1000,6 @@ static void tlb_set_dirty(CPUState *cpu, vaddr addr)
         CPUTLBEntryTree *node;
 
         tlb_set_dirty1_locked(tlb_entry(cpu, mmu_idx, addr), addr);
-
-        for (int k = 0; k < CPU_VTLB_SIZE; k++) {
-            tlb_set_dirty1_locked(&desc->vtable[k], addr);
-        }
 
         node = tlbtree_lookup_addr(desc, addr);
         if (node) {
@@ -1215,23 +1158,6 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
 
     /* Note that the tlb is no longer clean.  */
     tlb->c.dirty |= 1 << mmu_idx;
-
-    /* Make sure there's no cached translation for the new page.  */
-    tlb_flush_vtlb_page_locked(cpu, mmu_idx, addr_page);
-
-    /*
-     * Only evict the old entry to the victim tlb if it's for a
-     * different page; otherwise just overwrite the stale data.
-     */
-    if (!tlb_hit_page_anyprot(te, addr_page) && !tlb_entry_is_empty(te)) {
-        unsigned vidx = desc->vindex++ % CPU_VTLB_SIZE;
-        CPUTLBEntry *tv = &desc->vtable[vidx];
-
-        /* Evict the old entry into the victim tlb.  */
-        copy_tlb_helper_locked(tv, te);
-        desc->vfulltlb[vidx] = desc->fulltlb[index];
-        tlb_n_used_entries_dec(cpu, mmu_idx);
-    }
 
     /* Replace an old IntervalTree entry, or create a new one. */
     node = tlbtree_lookup_addr(desc, addr_page);
