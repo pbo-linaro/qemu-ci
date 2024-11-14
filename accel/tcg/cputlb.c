@@ -1387,7 +1387,7 @@ static void io_failed(CPUState *cpu, CPUTLBEntryFull *full, vaddr addr,
 /* Return true if ADDR is present in the victim tlb, and has been copied
    back to the main tlb.  */
 static bool victim_tlb_hit(CPUState *cpu, size_t mmu_idx, size_t index,
-                           MMUAccessType access_type, vaddr page)
+                           MMUAccessType access_type, vaddr addr)
 {
     size_t vidx;
 
@@ -1395,7 +1395,7 @@ static bool victim_tlb_hit(CPUState *cpu, size_t mmu_idx, size_t index,
     for (vidx = 0; vidx < CPU_VTLB_SIZE; ++vidx) {
         CPUTLBEntry *vtlb = &cpu->neg.tlb.d[mmu_idx].vtable[vidx];
 
-        if (tlb_hit_page(tlb_read_idx(vtlb, access_type), page)) {
+        if (tlb_hit(tlb_read_idx(vtlb, access_type), addr)) {
             /* Found entry in victim tlb, swap tlb and iotlb.  */
             CPUTLBEntry tmptlb, *tlb = &cpu->neg.tlb.f[mmu_idx].table[index];
 
@@ -1448,13 +1448,12 @@ static int probe_access_internal(CPUState *cpu, vaddr addr,
     uintptr_t index = tlb_index(cpu, mmu_idx, addr);
     CPUTLBEntry *entry = tlb_entry(cpu, mmu_idx, addr);
     uint64_t tlb_addr = tlb_read_idx(entry, access_type);
-    vaddr page_addr = addr & TARGET_PAGE_MASK;
     int flags = TLB_FLAGS_MASK & ~TLB_FORCE_SLOW;
     bool force_mmio = check_mem_cbs && cpu_plugin_mem_cbs_enabled(cpu);
     CPUTLBEntryFull *full;
 
-    if (!tlb_hit_page(tlb_addr, page_addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type, page_addr)) {
+    if (!tlb_hit(tlb_addr, addr)) {
+        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type, addr)) {
             if (!tlb_fill_align(cpu, addr, access_type, mmu_idx,
                                 0, fault_size, nonfault, retaddr)) {
                 /* Non-faulting page table read failed.  */
@@ -1734,8 +1733,7 @@ static bool mmu_lookup1(CPUState *cpu, MMULookupPageData *data, MemOp memop,
 
     /* If the TLB entry is for a different page, reload and try again.  */
     if (!tlb_hit(tlb_addr, addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type,
-                            addr & TARGET_PAGE_MASK)) {
+        if (!victim_tlb_hit(cpu, mmu_idx, index, access_type, addr)) {
             tlb_fill_align(cpu, addr, access_type, mmu_idx,
                            memop, data->size, false, ra);
             maybe_resized = true;
@@ -1914,8 +1912,7 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     /* Check TLB entry and enforce page permissions.  */
     flags = TLB_FLAGS_MASK;
     if (!tlb_hit(tlb_addr_write(tlbe), addr)) {
-        if (!victim_tlb_hit(cpu, mmu_idx, index, MMU_DATA_STORE,
-                            addr & TARGET_PAGE_MASK)) {
+        if (!victim_tlb_hit(cpu, mmu_idx, index, MMU_DATA_STORE, addr)) {
             tlb_fill_align(cpu, addr, MMU_DATA_STORE, mmu_idx,
                            mop, size, false, retaddr);
             did_tlb_fill = true;
