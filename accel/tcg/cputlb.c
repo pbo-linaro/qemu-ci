@@ -1652,7 +1652,7 @@ static bool mmu_lookup1(CPUState *cpu, MMULookupPageData *data, MemOp memop,
     uint64_t tlb_addr = tlb_read_idx(entry, access_type);
     bool maybe_resized = false;
     CPUTLBEntryFull *full;
-    int flags;
+    int flags = TLB_FLAGS_MASK & ~TLB_FORCE_SLOW;
 
     /* If the TLB entry is for a different page, reload and try again.  */
     if (!tlb_hit(tlb_addr, addr)) {
@@ -1663,8 +1663,14 @@ static bool mmu_lookup1(CPUState *cpu, MMULookupPageData *data, MemOp memop,
             maybe_resized = true;
             index = tlb_index(cpu, mmu_idx, addr);
             entry = tlb_entry(cpu, mmu_idx, addr);
+            /*
+             * With PAGE_WRITE_INV, we set TLB_INVALID_MASK immediately,
+             * to force the next access through tlb_fill.  We've just
+             * called tlb_fill, so we know that this entry *is* valid.
+             */
+            flags &= ~TLB_INVALID_MASK;
         }
-        tlb_addr = tlb_read_idx(entry, access_type) & ~TLB_INVALID_MASK;
+        tlb_addr = tlb_read_idx(entry, access_type);
     }
 
     full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
@@ -1814,10 +1820,10 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     MemOp mop = get_memop(oi);
     uintptr_t index;
     CPUTLBEntry *tlbe;
-    vaddr tlb_addr;
     void *hostaddr;
     CPUTLBEntryFull *full;
     bool did_tlb_fill = false;
+    int flags;
 
     tcg_debug_assert(mmu_idx < NB_MMU_MODES);
 
@@ -1828,8 +1834,8 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     tlbe = tlb_entry(cpu, mmu_idx, addr);
 
     /* Check TLB entry and enforce page permissions.  */
-    tlb_addr = tlb_addr_write(tlbe);
-    if (!tlb_hit(tlb_addr, addr)) {
+    flags = TLB_FLAGS_MASK;
+    if (!tlb_hit(tlb_addr_write(tlbe), addr)) {
         if (!victim_tlb_hit(cpu, mmu_idx, index, MMU_DATA_STORE,
                             addr & TARGET_PAGE_MASK)) {
             tlb_fill_align(cpu, addr, MMU_DATA_STORE, mmu_idx,
@@ -1837,8 +1843,13 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
             did_tlb_fill = true;
             index = tlb_index(cpu, mmu_idx, addr);
             tlbe = tlb_entry(cpu, mmu_idx, addr);
+            /*
+             * With PAGE_WRITE_INV, we set TLB_INVALID_MASK immediately,
+             * to force the next access through tlb_fill.  We've just
+             * called tlb_fill, so we know that this entry *is* valid.
+             */
+            flags &= ~TLB_INVALID_MASK;
         }
-        tlb_addr = tlb_addr_write(tlbe) & ~TLB_INVALID_MASK;
     }
 
     /*
@@ -1874,11 +1885,11 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
         goto stop_the_world;
     }
 
-    /* Collect tlb flags for read. */
-    tlb_addr |= tlbe->addr_read;
+    /* Collect tlb flags for read and write. */
+    flags &= tlbe->addr_read | tlb_addr_write(tlbe);
 
     /* Notice an IO access or a needs-MMU-lookup access */
-    if (unlikely(tlb_addr & (TLB_MMIO | TLB_DISCARD_WRITE))) {
+    if (unlikely(flags & (TLB_MMIO | TLB_DISCARD_WRITE))) {
         /* There's really nothing that can be done to
            support this apart from stop-the-world.  */
         goto stop_the_world;
@@ -1887,11 +1898,11 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
     hostaddr = (void *)((uintptr_t)addr + tlbe->addend);
     full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
 
-    if (unlikely(tlb_addr & TLB_NOTDIRTY)) {
+    if (unlikely(flags & TLB_NOTDIRTY)) {
         notdirty_write(cpu, addr, size, full, retaddr);
     }
 
-    if (unlikely(tlb_addr & TLB_FORCE_SLOW)) {
+    if (unlikely(flags & TLB_FORCE_SLOW)) {
         int wp_flags = 0;
 
         if (full->slow_flags[MMU_DATA_STORE] & TLB_WATCHPOINT) {
