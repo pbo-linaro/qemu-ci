@@ -284,13 +284,18 @@ static void tlb_mmu_resize_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast,
     }
 }
 
-static void tlb_mmu_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
+static void tlbfast_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
 {
     desc->n_used_entries = 0;
+    memset(fast->table, -1, sizeof_tlb(fast));
+}
+
+static void tlb_mmu_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
+{
+    tlbfast_flush_locked(desc, fast);
     desc->large_page_addr = -1;
     desc->large_page_mask = -1;
     desc->vindex = 0;
-    memset(fast->table, -1, sizeof_tlb(fast));
     memset(desc->vtable, -1, sizeof(desc->vtable));
 }
 
