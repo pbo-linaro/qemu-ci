@@ -474,9 +474,10 @@ void helper_invtlb_page_asid_or_g(CPULoongArchState *env,
     tlb_flush(env_cpu(env));
 }
 
-bool loongarch_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                            MMUAccessType access_type, int mmu_idx,
-                            bool probe, uintptr_t retaddr)
+bool loongarch_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                  vaddr address, MMUAccessType access_type,
+                                  int mmu_idx, MemOp memop, int size,
+                                  bool probe, uintptr_t retaddr)
 {
     CPULoongArchState *env = cpu_env(cs);
     hwaddr physical;
@@ -488,12 +489,16 @@ bool loongarch_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
                                access_type, mmu_idx);
 
     if (ret == TLBRET_MATCH) {
-        tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                     physical & TARGET_PAGE_MASK, prot,
-                     mmu_idx, TARGET_PAGE_SIZE);
         qemu_log_mask(CPU_LOG_MMU,
                       "%s address=%" VADDR_PRIx " physical " HWADDR_FMT_plx
                       " prot %d\n", __func__, address, physical, prot);
+
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = physical;
+        out->prot = prot;
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
+        out->lg_page_size = TARGET_PAGE_BITS;
+
         return true;
     } else {
         qemu_log_mask(CPU_LOG_MMU,

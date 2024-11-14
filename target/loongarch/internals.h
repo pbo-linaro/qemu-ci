@@ -60,9 +60,10 @@ int get_physical_address(CPULoongArchState *env, hwaddr *physical,
 hwaddr loongarch_cpu_get_phys_page_debug(CPUState *cpu, vaddr addr);
 
 #ifdef CONFIG_TCG
-bool loongarch_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                            MMUAccessType access_type, int mmu_idx,
-                            bool probe, uintptr_t retaddr);
+bool loongarch_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                  vaddr addr, MMUAccessType access_type,
+                                  int mmu_idx, MemOp memop, int size,
+                                  bool probe, uintptr_t ra);
 #endif
 #endif /* !CONFIG_USER_ONLY */
 

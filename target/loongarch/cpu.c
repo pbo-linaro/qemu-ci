@@ -798,7 +798,7 @@ static const TCGCPUOps loongarch_tcg_ops = {
     .restore_state_to_opc = loongarch_restore_state_to_opc,
 
 #ifndef CONFIG_USER_ONLY
-    .tlb_fill = loongarch_cpu_tlb_fill,
+    .tlb_fill_align = loongarch_cpu_tlb_fill_align,
     .cpu_exec_interrupt = loongarch_cpu_exec_interrupt,
     .cpu_exec_halt = loongarch_cpu_has_work,
     .do_interrupt = loongarch_cpu_do_interrupt,
