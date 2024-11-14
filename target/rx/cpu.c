@@ -161,16 +161,19 @@ static void rx_cpu_disas_set_info(CPUState *cpu, disassemble_info *info)
     info->print_insn = print_insn_rx;
 }
 
-static bool rx_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
-                            MMUAccessType access_type, int mmu_idx,
-                            bool probe, uintptr_t retaddr)
+static bool rx_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                  vaddr addr, MMUAccessType access_type,
+                                  int mmu_idx, MemOp memop, int size,
+                                  bool probe, uintptr_t retaddr)
 {
-    uint32_t address, physical, prot;
+    /* TODO: alignment faults not currently handled. */
 
     /* Linear mapping */
-    address = physical = addr & TARGET_PAGE_MASK;
-    prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
-    tlb_set_page(cs, address, physical, prot, mmu_idx, TARGET_PAGE_SIZE);
+    memset(out, 0, sizeof(*out));
+    out->phys_addr = addr;
+    out->prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
+    out->lg_page_size = TARGET_PAGE_BITS;
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
     return true;
 }
 
@@ -195,7 +198,7 @@ static const TCGCPUOps rx_tcg_ops = {
     .initialize = rx_translate_init,
     .synchronize_from_tb = rx_cpu_synchronize_from_tb,
     .restore_state_to_opc = rx_restore_state_to_opc,
-    .tlb_fill = rx_cpu_tlb_fill,
+    .tlb_fill_align = rx_cpu_tlb_fill_align,
 
 #ifndef CONFIG_USER_ONLY
     .cpu_exec_interrupt = rx_cpu_exec_interrupt,
