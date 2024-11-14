@@ -568,6 +568,7 @@ static void tlb_flush_page_locked(CPUState *cpu, int midx, vaddr page)
     CPUTLBDesc *desc = &cpu->neg.tlb.d[midx];
     vaddr lp_addr = desc->large_page_addr;
     vaddr lp_mask = desc->large_page_mask;
+    CPUTLBEntryTree *node;
 
     /* Check if we need to flush due to large pages.  */
     if ((page & lp_mask) == lp_addr) {
@@ -575,10 +576,17 @@ static void tlb_flush_page_locked(CPUState *cpu, int midx, vaddr page)
                   VADDR_PRIx "/%016" VADDR_PRIx ")\n",
                   midx, lp_addr, lp_mask);
         tlb_flush_one_mmuidx_locked(cpu, midx, get_clock_realtime());
-    } else {
-        tlbfast_flush_range_locked(desc, &cpu->neg.tlb.f[midx],
-                                   page, TARGET_PAGE_SIZE, -1);
-        tlb_flush_vtlb_page_locked(cpu, midx, page);
+        return;
+    }
+
+    tlbfast_flush_range_locked(desc, &cpu->neg.tlb.f[midx],
+                               page, TARGET_PAGE_SIZE, -1);
+    tlb_flush_vtlb_page_locked(cpu, midx, page);
+
+    node = tlbtree_lookup_addr(desc, page);
+    if (node) {
+        interval_tree_remove(&node->itree, &desc->iroot);
+        g_free(node);
     }
 }
 
