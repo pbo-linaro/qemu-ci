@@ -932,7 +932,7 @@ static const TCGCPUOps sparc_tcg_ops = {
     .restore_state_to_opc = sparc_restore_state_to_opc,
 
 #ifndef CONFIG_USER_ONLY
-    .tlb_fill = sparc_cpu_tlb_fill,
+    .tlb_fill_align = sparc_cpu_tlb_fill_align,
     .cpu_exec_interrupt = sparc_cpu_exec_interrupt,
     .cpu_exec_halt = sparc_cpu_has_work,
     .do_interrupt = sparc_cpu_do_interrupt,

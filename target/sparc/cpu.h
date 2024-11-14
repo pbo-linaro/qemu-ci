@@ -4,6 +4,7 @@
 #include "qemu/bswap.h"
 #include "cpu-qom.h"
 #include "exec/cpu-defs.h"
+#include "exec/memop.h"
 #include "qemu/cpu-float.h"
 
 #if !defined(TARGET_SPARC64)
@@ -596,9 +597,10 @@ G_NORETURN void cpu_raise_exception_ra(CPUSPARCState *, int, uintptr_t);
 void cpu_sparc_set_id(CPUSPARCState *env, unsigned int cpu);
 void sparc_cpu_list(void);
 /* mmu_helper.c */
-bool sparc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                        MMUAccessType access_type, int mmu_idx,
-                        bool probe, uintptr_t retaddr);
+bool sparc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                              vaddr addr, MMUAccessType access_type,
+                              int mmu_idx, MemOp memop, int size,
+                              bool probe, uintptr_t retaddr);
 target_ulong mmu_probe(CPUSPARCState *env, target_ulong address, int mmulev);
 void dump_mmu(CPUSPARCState *env);
 

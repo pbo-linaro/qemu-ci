@@ -203,12 +203,12 @@ static int get_physical_address(CPUSPARCState *env, CPUTLBEntryFull *full,
 }
 
 /* Perform address translation */
-bool sparc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                        MMUAccessType access_type, int mmu_idx,
-                        bool probe, uintptr_t retaddr)
+bool sparc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                              vaddr address, MMUAccessType access_type,
+                              int mmu_idx, MemOp memop, int size,
+                              bool probe, uintptr_t retaddr)
 {
     CPUSPARCState *env = cpu_env(cs);
-    CPUTLBEntryFull full = {};
     target_ulong vaddr;
     int error_code = 0, access_index;
 
@@ -220,16 +220,21 @@ bool sparc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
      */
     assert(!probe);
 
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        sparc_cpu_do_unaligned_access(cs, address, access_type,
+                                      mmu_idx, retaddr);
+    }
+
+    memset(out, 0, sizeof(*out));
     address &= TARGET_PAGE_MASK;
-    error_code = get_physical_address(env, &full, &access_index,
+    error_code = get_physical_address(env, out, &access_index,
                                       address, access_type, mmu_idx);
     vaddr = address;
     if (likely(error_code == 0)) {
         qemu_log_mask(CPU_LOG_MMU,
                       "Translate at %" VADDR_PRIx " -> "
                       HWADDR_FMT_plx ", vaddr " TARGET_FMT_lx "\n",
-                      address, full.phys_addr, vaddr);
-        tlb_set_page_full(cs, mmu_idx, vaddr, &full);
+                      address, out->phys_addr, vaddr);
         return true;
     }
 
@@ -244,8 +249,7 @@ bool sparc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
            permissions. If no mapping is available, redirect accesses to
            neverland. Fake/overridden mappings will be flushed when
            switching to normal mode. */
-        full.prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
-        tlb_set_page_full(cs, mmu_idx, vaddr, &full);
+        out->prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
         return true;
     } else {
         if (access_type == MMU_INST_FETCH) {
@@ -754,22 +758,30 @@ static int get_physical_address(CPUSPARCState *env, CPUTLBEntryFull *full,
 }
 
 /* Perform address translation */
-bool sparc_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                        MMUAccessType access_type, int mmu_idx,
-                        bool probe, uintptr_t retaddr)
+bool sparc_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                              vaddr address, MMUAccessType access_type,
+                              int mmu_idx, MemOp memop, int size,
+                              bool probe, uintptr_t retaddr)
 {
     CPUSPARCState *env = cpu_env(cs);
-    CPUTLBEntryFull full = {};
     int error_code = 0, access_index;
 
+    if (address & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        sparc_cpu_do_unaligned_access(cs, address, access_type,
+                                      mmu_idx, retaddr);
+    }
+
+    memset(out, 0, sizeof(*out));
     address &= TARGET_PAGE_MASK;
-    error_code = get_physical_address(env, &full, &access_index,
+    error_code = get_physical_address(env, out, &access_index,
                                       address, access_type, mmu_idx);
     if (likely(error_code == 0)) {
-        trace_mmu_helper_mmu_fault(address, full.phys_addr, mmu_idx, env->tl,
+        trace_mmu_helper_mmu_fault(address, out->phys_addr, mmu_idx, env->tl,
                                    env->dmmu.mmu_primary_context,
                                    env->dmmu.mmu_secondary_context);
-        tlb_set_page_full(cs, mmu_idx, address, &full);
         return true;
     }
     if (probe) {
