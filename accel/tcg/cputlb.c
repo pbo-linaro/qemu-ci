@@ -1037,8 +1037,8 @@ static inline void tlb_set_compare(CPUTLBEntryFull *full, CPUTLBEntry *ent,
  * Called from TCG-generated code, which is under an RCU read-side
  * critical section.
  */
-static void tlb_set_page_full(CPUState *cpu, int mmu_idx,
-                              vaddr addr, CPUTLBEntryFull *full)
+static CPUTLBEntryTree *tlb_set_page_full(CPUState *cpu, int mmu_idx,
+                                          vaddr addr, CPUTLBEntryFull *full)
 {
     CPUTLB *tlb = &cpu->neg.tlb;
     CPUTLBDesc *desc = &tlb->d[mmu_idx];
@@ -1187,6 +1187,8 @@ static void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     copy_tlb_helper_locked(te, &node->copy);
     desc->n_used_entries++;
     qemu_spin_unlock(&tlb->c.lock);
+
+    return node;
 }
 
 static inline void cpu_unaligned_access(CPUState *cpu, vaddr addr,
@@ -1266,18 +1268,14 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
         tcg_debug_assert(probe);
         return false;
     }
-    tlb_set_page_full(cpu, i->mmu_idx, addr, &o->full);
+    node = tlb_set_page_full(cpu, i->mmu_idx, addr, &o->full);
     o->did_tlb_fill = true;
 
     if (access_type == MMU_INST_FETCH) {
-        node = tlbtree_lookup_addr(desc, addr);
-        tcg_debug_assert(node);
         goto found_code;
     }
 
-    entry = tlbfast_entry(fast, addr);
-    cmp = tlb_read_idx(entry, access_type);
-    node = entry->tree;
+    cmp = tlb_read_idx(&node->copy, access_type);
     /*
      * With PAGE_WRITE_INV, we set TLB_INVALID_MASK immediately,
      * to force the next access through tlb_fill_align.  We've just
