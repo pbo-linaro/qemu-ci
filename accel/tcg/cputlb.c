@@ -1189,27 +1189,6 @@ static void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     qemu_spin_unlock(&tlb->c.lock);
 }
 
-/*
- * Note: tlb_fill_align() can trigger a resize of the TLB.
- * This means that all of the caller's prior references to the TLB table
- * (e.g. CPUTLBEntry pointers) must be discarded and looked up again
- * (e.g. via tlb_entry()).
- */
-static bool tlb_fill_align(CPUState *cpu, vaddr addr, MMUAccessType type,
-                           int mmu_idx, MemOp memop, int size,
-                           bool probe, uintptr_t ra)
-{
-    CPUTLBEntryFull full;
-
-    if (cpu->cc->tcg_ops->tlb_fill_align(cpu, &full, addr, type, mmu_idx,
-                                         memop, size, probe, ra)) {
-        tlb_set_page_full(cpu, mmu_idx, addr, &full);
-        return true;
-    }
-    assert(probe);
-    return false;
-}
-
 static inline void cpu_unaligned_access(CPUState *cpu, vaddr addr,
                                         MMUAccessType access_type,
                                         int mmu_idx, uintptr_t retaddr)
@@ -1281,11 +1260,13 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
     }
 
     /* Finally, query the target hook. */
-    if (!tlb_fill_align(cpu, addr, access_type, i->mmu_idx,
-                        memop, i->size, probe, i->ra)) {
+    if (!cpu->cc->tcg_ops->tlb_fill_align(cpu, &o->full, addr, access_type,
+                                          i->mmu_idx, memop, i->size,
+                                          probe, i->ra)) {
         tcg_debug_assert(probe);
         return false;
     }
+    tlb_set_page_full(cpu, i->mmu_idx, addr, &o->full);
     o->did_tlb_fill = true;
 
     if (access_type == MMU_INST_FETCH) {
@@ -1794,8 +1775,8 @@ static void *atomic_mmu_lookup(CPUState *cpu, vaddr addr, MemOpIdx oi,
      * We have just verified that the page is writable.
      */
     if (unlikely(!(o.full.prot & PAGE_READ))) {
-        tlb_fill_align(cpu, addr, MMU_DATA_LOAD, i.mmu_idx,
-                       0, i.size, false, i.ra);
+        cpu->cc->tcg_ops->tlb_fill_align(cpu, &o.full, addr, MMU_DATA_LOAD,
+                                         i.mmu_idx, 0, i.size, false, i.ra);
         /*
          * Since we don't support reads and writes to different
          * addresses, and we do have the proper page loaded for
