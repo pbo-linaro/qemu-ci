@@ -1222,23 +1222,12 @@ static bool tlb_fill_align(CPUState *cpu, vaddr addr, MMUAccessType type,
                            int mmu_idx, MemOp memop, int size,
                            bool probe, uintptr_t ra)
 {
-    const TCGCPUOps *ops = cpu->cc->tcg_ops;
     CPUTLBEntryFull full;
 
-    if (ops->tlb_fill_align) {
-        if (ops->tlb_fill_align(cpu, &full, addr, type, mmu_idx,
-                                memop, size, probe, ra)) {
-            tlb_set_page_full(cpu, mmu_idx, addr, &full);
-            return true;
-        }
-    } else {
-        /* Legacy behaviour is alignment before paging. */
-        if (addr & ((1u << memop_alignment_bits(memop)) - 1)) {
-            ops->do_unaligned_access(cpu, addr, type, mmu_idx, ra);
-        }
-        if (ops->tlb_fill(cpu, addr, size, type, mmu_idx, probe, ra)) {
-            return true;
-        }
+    if (cpu->cc->tcg_ops->tlb_fill_align(cpu, &full, addr, type, mmu_idx,
+                                         memop, size, probe, ra)) {
+        tlb_set_page_full(cpu, mmu_idx, addr, &full);
+        return true;
     }
     assert(probe);
     return false;

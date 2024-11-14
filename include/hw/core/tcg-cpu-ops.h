@@ -158,16 +158,6 @@ struct TCGCPUOps {
                            MMUAccessType access_type, int mmu_idx,
                            MemOp memop, int size, bool probe, uintptr_t ra);
     /**
-     * @tlb_fill: Handle a softmmu tlb miss
-     *
-     * If the access is valid, call tlb_set_page and return true;
-     * if the access is invalid and probe is true, return false;
-     * otherwise raise an exception and do not return.
-     */
-    bool (*tlb_fill)(CPUState *cpu, vaddr address, int size,
-                     MMUAccessType access_type, int mmu_idx,
-                     bool probe, uintptr_t retaddr);
-    /**
      * @do_transaction_failed: Callback for handling failed memory transactions
      * (ie bus faults or external aborts; not MMU faults)
      */
