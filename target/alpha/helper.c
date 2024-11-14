@@ -294,13 +294,20 @@ hwaddr alpha_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     return (fail >= 0 ? -1 : phys);
 }
 
-bool alpha_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
-                        MMUAccessType access_type, int mmu_idx,
-                        bool probe, uintptr_t retaddr)
+bool alpha_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out, vaddr addr,
+                              MMUAccessType access_type, int mmu_idx,
+                              MemOp memop, int size, bool probe, uintptr_t ra)
 {
     CPUAlphaState *env = cpu_env(cs);
     target_ulong phys;
     int prot, fail;
+
+    if (addr & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        alpha_cpu_do_unaligned_access(cs, addr, access_type, mmu_idx, ra);
+    }
 
     fail = get_physical_address(env, addr, 1 << access_type,
                                 mmu_idx, &phys, &prot);
@@ -314,11 +321,15 @@ bool alpha_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
         env->trap_arg2 = (access_type == MMU_DATA_LOAD ? 0ull :
                           access_type == MMU_DATA_STORE ? 1ull :
                           /* access_type == MMU_INST_FETCH */ -1ull);
-        cpu_loop_exit_restore(cs, retaddr);
+        cpu_loop_exit_restore(cs, ra);
     }
 
-    tlb_set_page(cs, addr & TARGET_PAGE_MASK, phys & TARGET_PAGE_MASK,
-                 prot, mmu_idx, TARGET_PAGE_SIZE);
+    memset(out, 0, sizeof(*out));
+    out->phys_addr = phys;
+    out->prot = prot;
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
+    out->lg_page_size = TARGET_PAGE_BITS;
+
     return true;
 }
 

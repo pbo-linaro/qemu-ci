@@ -449,9 +449,9 @@ void alpha_cpu_record_sigsegv(CPUState *cs, vaddr address,
 void alpha_cpu_record_sigbus(CPUState *cs, vaddr address,
                              MMUAccessType access_type, uintptr_t retaddr);
 #else
-bool alpha_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                        MMUAccessType access_type, int mmu_idx,
-                        bool probe, uintptr_t retaddr);
+bool alpha_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out, vaddr addr,
+                              MMUAccessType access_type, int mmu_idx,
+                              MemOp memop, int size, bool probe, uintptr_t ra);
 G_NORETURN void alpha_cpu_do_unaligned_access(CPUState *cpu, vaddr addr,
                                               MMUAccessType access_type, int mmu_idx,
                                               uintptr_t retaddr);
