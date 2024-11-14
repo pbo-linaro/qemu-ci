@@ -25,6 +25,7 @@
 #include "exec/page-protection.h"
 #ifndef CONFIG_USER_ONLY
 #include "exec/ram_addr.h"
+#include "sysemu/physmem-target.h"
 #endif
 #include "exec/cpu_ldst.h"
 #include "exec/helper-proto.h"

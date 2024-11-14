@@ -28,6 +28,7 @@
 #include "qapi/visitor.h"
 #include "sysemu/hw_accel.h"
 #include "exec/ram_addr.h"
+#include "sysemu/physmem-target.h"
 #include "target/ppc/cpu.h"
 #include "target/ppc/mmu-hash64.h"
 #include "cpu-models.h"

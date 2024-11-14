@@ -12,6 +12,7 @@
 
 #include "hw/remote/memory.h"
 #include "exec/ram_addr.h"
+#include "sysemu/physmem-target.h"
 #include "qapi/error.h"
 
 static void remote_sysmem_reset(void)

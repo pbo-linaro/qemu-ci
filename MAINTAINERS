@@ -3027,6 +3027,7 @@ F: include/exec/memory.h
 F: include/exec/ram_addr.h
 F: include/exec/ramblock.h
 F: include/sysemu/memory_mapping.h
+F: include/sysemu/physmem-target.h
 F: system/dma-helpers.c
 F: system/ioport.c
 F: system/memory.c

@@ -41,6 +41,7 @@
 #endif
 #else
 #include "exec/ram_addr.h"
+#include "sysemu/physmem-target.h"
 #endif
 
 #include "exec/cputlb.h"
