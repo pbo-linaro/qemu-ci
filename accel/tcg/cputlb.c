@@ -305,6 +305,17 @@ static void tlbfast_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
     memset(fast->table, -1, sizeof_tlb(fast));
 }
 
+static CPUTLBEntryTree *tlbtree_lookup_range(CPUTLBDesc *desc, vaddr s, vaddr l)
+{
+    IntervalTreeNode *i = interval_tree_iter_first(&desc->iroot, s, l);
+    return i ? container_of(i, CPUTLBEntryTree, itree) : NULL;
+}
+
+static CPUTLBEntryTree *tlbtree_lookup_addr(CPUTLBDesc *desc, vaddr addr)
+{
+    return tlbtree_lookup_range(desc, addr, addr);
+}
+
 static void tlb_mmu_flush_locked(CPUTLBDesc *desc, CPUTLBDescFast *fast)
 {
     tlbfast_flush_locked(desc, fast);
@@ -1072,7 +1083,8 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     MemoryRegionSection *section;
     unsigned int index, read_flags, write_flags;
     uintptr_t addend;
-    CPUTLBEntry *te, tn;
+    CPUTLBEntry *te;
+    CPUTLBEntryTree *node;
     hwaddr iotlb, xlat, sz, paddr_page;
     vaddr addr_page;
     int asidx, wp_flags, prot;
@@ -1180,6 +1192,15 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
         tlb_n_used_entries_dec(cpu, mmu_idx);
     }
 
+    /* Replace an old IntervalTree entry, or create a new one. */
+    node = tlbtree_lookup_addr(desc, addr_page);
+    if (!node) {
+        node = g_new(CPUTLBEntryTree, 1);
+        node->itree.start = addr_page;
+        node->itree.last = addr_page + TARGET_PAGE_SIZE - 1;
+        interval_tree_insert(&node->itree, &desc->iroot);
+    }
+
     /* refill the tlb */
     /*
      * When memory region is ram, iotlb contains a TARGET_PAGE_BITS
@@ -1201,15 +1222,15 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     full->phys_addr = paddr_page;
 
     /* Now calculate the new entry */
-    tn.addend = addend - addr_page;
+    node->copy.addend = addend - addr_page;
 
-    tlb_set_compare(full, &tn, addr_page, read_flags,
+    tlb_set_compare(full, &node->copy, addr_page, read_flags,
                     MMU_INST_FETCH, prot & PAGE_EXEC);
 
     if (wp_flags & BP_MEM_READ) {
         read_flags |= TLB_WATCHPOINT;
     }
-    tlb_set_compare(full, &tn, addr_page, read_flags,
+    tlb_set_compare(full, &node->copy, addr_page, read_flags,
                     MMU_DATA_LOAD, prot & PAGE_READ);
 
     if (prot & PAGE_WRITE_INV) {
@@ -1218,10 +1239,11 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     if (wp_flags & BP_MEM_WRITE) {
         write_flags |= TLB_WATCHPOINT;
     }
-    tlb_set_compare(full, &tn, addr_page, write_flags,
+    tlb_set_compare(full, &node->copy, addr_page, write_flags,
                     MMU_DATA_STORE, prot & PAGE_WRITE);
 
-    copy_tlb_helper_locked(te, &tn);
+    node->full = *full;
+    copy_tlb_helper_locked(te, &node->copy);
     tlb_n_used_entries_inc(cpu, mmu_idx);
     qemu_spin_unlock(&tlb->c.lock);
 }
