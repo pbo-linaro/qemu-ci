@@ -24,6 +24,7 @@
 #include "exec/helper-proto.h"
 #include "helper_regs.h"
 #include "exec/cpu_ldst.h"
+#include "exec/cputlb.h"
 #include "internal.h"
 #include "qemu/atomic128.h"
 
