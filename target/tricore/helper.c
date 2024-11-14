@@ -64,16 +64,19 @@ static void raise_mmu_exception(CPUTriCoreState *env, target_ulong address,
 {
 }
 
-bool tricore_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                          MMUAccessType rw, int mmu_idx,
-                          bool probe, uintptr_t retaddr)
+bool tricore_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                vaddr address, MMUAccessType access_type,
+                                int mmu_idx, MemOp memop, int size,
+                                bool probe, uintptr_t retaddr)
 {
     CPUTriCoreState *env = cpu_env(cs);
     hwaddr physical;
     int prot;
     int ret = 0;
+    int rw = access_type & 1;
 
-    rw &= 1;
+    /* TODO: alignment faults not currently handled. */
+
     ret = get_physical_address(env, &physical, &prot,
                                address, rw, mmu_idx);
 
@@ -82,9 +85,11 @@ bool tricore_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
                   __func__, address, ret, physical, prot);
 
     if (ret == TLBRET_MATCH) {
-        tlb_set_page(cs, address & TARGET_PAGE_MASK,
-                     physical & TARGET_PAGE_MASK, prot | PAGE_EXEC,
-                     mmu_idx, TARGET_PAGE_SIZE);
+        memset(out, 0, sizeof(*out));
+        out->phys_addr = physical;
+        out->prot = prot | PAGE_EXEC;
+        out->lg_page_size = TARGET_PAGE_BITS;
+        out->attrs = MEMTXATTRS_UNSPECIFIED;
         return true;
     } else {
         assert(ret < 0);

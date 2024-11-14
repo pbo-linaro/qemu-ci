@@ -268,8 +268,9 @@ static inline void cpu_get_tb_cpu_state(CPUTriCoreState *env, vaddr *pc,
 #define CPU_RESOLVING_TYPE TYPE_TRICORE_CPU
 
 /* helpers.c */
-bool tricore_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                          MMUAccessType access_type, int mmu_idx,
-                          bool probe, uintptr_t retaddr);
+bool tricore_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out,
+                                vaddr addr, MMUAccessType access_type,
+                                int mmu_idx, MemOp memop, int size,
+                                bool probe, uintptr_t retaddr);
 
 #endif /* TRICORE_CPU_H */
