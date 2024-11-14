@@ -131,20 +131,28 @@ static inline uint64_t tlb_addr_write(const CPUTLBEntry *entry)
     return tlb_read_idx(entry, MMU_DATA_STORE);
 }
 
+static inline uintptr_t tlbfast_index(CPUTLBDescFast *fast, vaddr addr)
+{
+    return (addr >> TARGET_PAGE_BITS) & (fast->mask >> CPU_TLB_ENTRY_BITS);
+}
+
+static inline CPUTLBEntry *tlbfast_entry(CPUTLBDescFast *fast, vaddr addr)
+{
+    return fast->table + tlbfast_index(fast, addr);
+}
+
 /* Find the TLB index corresponding to the mmu_idx + address pair.  */
 static inline uintptr_t tlb_index(CPUState *cpu, uintptr_t mmu_idx,
                                   vaddr addr)
 {
-    uintptr_t size_mask = cpu->neg.tlb.f[mmu_idx].mask >> CPU_TLB_ENTRY_BITS;
-
-    return (addr >> TARGET_PAGE_BITS) & size_mask;
+    return tlbfast_index(&cpu->neg.tlb.f[mmu_idx], addr);
 }
 
 /* Find the TLB entry corresponding to the mmu_idx + address pair.  */
 static inline CPUTLBEntry *tlb_entry(CPUState *cpu, uintptr_t mmu_idx,
                                      vaddr addr)
 {
-    return &cpu->neg.tlb.f[mmu_idx].table[tlb_index(cpu, mmu_idx, addr)];
+    return tlbfast_entry(&cpu->neg.tlb.f[mmu_idx], addr);
 }
 
 static void tlb_window_reset(CPUTLBDesc *desc, int64_t ns,
