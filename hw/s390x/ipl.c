@@ -416,12 +416,10 @@ static uint64_t s390_ipl_map_iplb_chain(IplParameterBlock *iplb_chain)
     return chain_addr;
 }
 
-void s390_ipl_fmt_loadparm(uint8_t *loadparm, char *str, Error **errp)
+static void s390_sanitize_loadparm(uint8_t *loadparm, char *str, Error **errp)
 {
     int i;
 
-    /* Initialize the loadparm with spaces */
-    memset(loadparm, ' ', LOADPARM_LEN);
     for (i = 0; i < LOADPARM_LEN && str[i]; i++) {
         uint8_t c = qemu_toupper(str[i]); /* mimic HMC */
 
@@ -433,6 +431,13 @@ void s390_ipl_fmt_loadparm(uint8_t *loadparm, char *str, Error **errp)
             return;
         }
     }
+}
+
+void s390_ipl_fmt_loadparm(uint8_t *loadparm, char *str, Error **errp)
+{
+    /* Initialize the loadparm with spaces */
+    memset(loadparm, ' ', LOADPARM_LEN);
+    s390_sanitize_loadparm(loadparm, str, errp);
 }
 
 void s390_ipl_convert_loadparm(char *ascii_lp, uint8_t *ebcdic_lp)
@@ -452,6 +457,7 @@ static bool s390_build_iplb(DeviceState *dev_st, IplParameterBlock *iplb)
     SCSIDevice *sd;
     int devtype;
     uint8_t *lp;
+    g_autofree void *scsi_lp = NULL;
 
     /*
      * Currently allow IPL only from CCW devices.
@@ -463,6 +469,16 @@ static bool s390_build_iplb(DeviceState *dev_st, IplParameterBlock *iplb)
         switch (devtype) {
         case CCW_DEVTYPE_SCSI:
             sd = SCSI_DEVICE(dev_st);
+            scsi_lp = object_property_get_str(OBJECT(sd), "loadparm", NULL);
+            if (scsi_lp && strlen(scsi_lp) > 0) {
+                Error *errp = NULL;
+                s390_sanitize_loadparm(scsi_lp, scsi_lp, &errp);
+                if (errp) {
+                    error_report_err(errp);
+                } else {
+                    lp = scsi_lp;
+                }
+            }
             iplb->len = cpu_to_be32(S390_IPLB_MIN_QEMU_SCSI_LEN);
             iplb->blk0_len =
                 cpu_to_be32(S390_IPLB_MIN_QEMU_SCSI_LEN - S390_IPLB_HEADER_LEN);

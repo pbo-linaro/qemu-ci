@@ -111,6 +111,7 @@ struct SCSIDiskState {
     char *vendor;
     char *product;
     char *device_id;
+    char *loadparm;
     bool tray_open;
     bool tray_locked;
     /*
@@ -3165,6 +3166,7 @@ static const TypeInfo scsi_disk_base_info = {
     DEFINE_PROP_STRING("vendor", SCSIDiskState, vendor),                \
     DEFINE_PROP_STRING("product", SCSIDiskState, product),              \
     DEFINE_PROP_STRING("device_id", SCSIDiskState, device_id),          \
+    DEFINE_PROP_STRING("loadparm", SCSIDiskState, loadparm),            \
     DEFINE_PROP_BOOL("migrate-emulated-scsi-request", SCSIDiskState, migrate_emulated_scsi_request, true)
 
 
