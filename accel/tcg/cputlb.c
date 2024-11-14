@@ -1010,17 +1010,20 @@ void tlb_reset_dirty(CPUState *cpu, ram_addr_t start1, ram_addr_t length)
 
     qemu_spin_lock(&cpu->neg.tlb.c.lock);
     for (mmu_idx = 0; mmu_idx < NB_MMU_MODES; mmu_idx++) {
-        unsigned int i;
-        unsigned int n = tlb_n_entries(&cpu->neg.tlb.f[mmu_idx]);
+        CPUTLBDesc *desc = &cpu->neg.tlb.d[mmu_idx];
+        CPUTLBDescFast *fast = &cpu->neg.tlb.f[mmu_idx];
 
-        for (i = 0; i < n; i++) {
-            tlb_reset_dirty_range_locked(&cpu->neg.tlb.f[mmu_idx].table[i],
-                                         start1, length);
+        for (size_t i = 0, n = tlb_n_entries(fast); i < n; i++) {
+            tlb_reset_dirty_range_locked(&fast->table[i], start1, length);
         }
 
-        for (i = 0; i < CPU_VTLB_SIZE; i++) {
-            tlb_reset_dirty_range_locked(&cpu->neg.tlb.d[mmu_idx].vtable[i],
-                                         start1, length);
+        for (size_t i = 0; i < CPU_VTLB_SIZE; i++) {
+            tlb_reset_dirty_range_locked(&desc->vtable[i], start1, length);
+        }
+
+        for (CPUTLBEntryTree *t = tlbtree_lookup_range(desc, 0, -1); t;
+             t = tlbtree_lookup_range_next(t, 0, -1)) {
+            tlb_reset_dirty_range_locked(&t->copy, start1, length);
         }
     }
     qemu_spin_unlock(&cpu->neg.tlb.c.lock);
