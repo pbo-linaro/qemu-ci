@@ -1049,13 +1049,18 @@ static void tlb_set_dirty(CPUState *cpu, vaddr addr)
     addr &= TARGET_PAGE_MASK;
     qemu_spin_lock(&cpu->neg.tlb.c.lock);
     for (mmu_idx = 0; mmu_idx < NB_MMU_MODES; mmu_idx++) {
-        tlb_set_dirty1_locked(tlb_entry(cpu, mmu_idx, addr), addr);
-    }
+        CPUTLBDesc *desc = &cpu->neg.tlb.d[mmu_idx];
+        CPUTLBEntryTree *node;
 
-    for (mmu_idx = 0; mmu_idx < NB_MMU_MODES; mmu_idx++) {
-        int k;
-        for (k = 0; k < CPU_VTLB_SIZE; k++) {
-            tlb_set_dirty1_locked(&cpu->neg.tlb.d[mmu_idx].vtable[k], addr);
+        tlb_set_dirty1_locked(tlb_entry(cpu, mmu_idx, addr), addr);
+
+        for (int k = 0; k < CPU_VTLB_SIZE; k++) {
+            tlb_set_dirty1_locked(&desc->vtable[k], addr);
+        }
+
+        node = tlbtree_lookup_addr(desc, addr);
+        if (node) {
+            tlb_set_dirty1_locked(&node->copy, addr);
         }
     }
     qemu_spin_unlock(&cpu->neg.tlb.c.lock);
