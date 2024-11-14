@@ -104,11 +104,11 @@ hwaddr avr_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     return addr; /* I assume 1:1 address correspondence */
 }
 
-bool avr_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
-                      MMUAccessType access_type, int mmu_idx,
-                      bool probe, uintptr_t retaddr)
+bool avr_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *out, vaddr address,
+                            MMUAccessType access_type, int mmu_idx,
+                            MemOp memop, int size, bool probe, uintptr_t ra)
 {
-    int prot, page_size = TARGET_PAGE_SIZE;
+    int prot, lg_page_size = TARGET_PAGE_BITS;
     uint32_t paddr;
 
     address &= TARGET_PAGE_MASK;
@@ -141,15 +141,20 @@ bool avr_cpu_tlb_fill(CPUState *cs, vaddr address, int size,
              * to force tlb_fill to be called for the next access.
              */
             if (probe) {
-                page_size = 1;
+                lg_page_size = 0;
             } else {
                 cpu_env(cs)->fullacc = 1;
-                cpu_loop_exit_restore(cs, retaddr);
+                cpu_loop_exit_restore(cs, ra);
             }
         }
     }
 
-    tlb_set_page(cs, address, paddr, prot, mmu_idx, page_size);
+    memset(out, 0, sizeof(*out));
+    out->phys_addr = paddr;
+    out->prot = prot;
+    out->attrs = MEMTXATTRS_UNSPECIFIED;
+    out->lg_page_size = lg_page_size;
+
     return true;
 }
 
