@@ -601,25 +601,29 @@ static bool get_physical_address(CPUX86State *env, vaddr addr,
     return true;
 }
 
-bool x86_cpu_tlb_fill(CPUState *cs, vaddr addr, int size,
-                      MMUAccessType access_type, int mmu_idx,
-                      bool probe, uintptr_t retaddr)
+bool x86_cpu_tlb_fill_align(CPUState *cs, CPUTLBEntryFull *full, vaddr addr,
+                            MMUAccessType access_type, int mmu_idx,
+                            MemOp memop, int size, bool probe,
+                            uintptr_t retaddr)
 {
     CPUX86State *env = cpu_env(cs);
     TranslateResult out;
     TranslateFault err;
 
+    if (addr & ((1 << memop_alignment_bits(memop)) - 1)) {
+        if (probe) {
+            return false;
+        }
+        x86_cpu_do_unaligned_access(cs, addr, access_type, mmu_idx, retaddr);
+    }
+
     if (get_physical_address(env, addr, access_type, mmu_idx, &out, &err,
                              retaddr)) {
-        /*
-         * Even if 4MB pages, we map only one 4KB page in the cache to
-         * avoid filling it too fast.
-         */
-        assert(out.prot & (1 << access_type));
-        tlb_set_page_with_attrs(cs, addr & TARGET_PAGE_MASK,
-                                out.paddr & TARGET_PAGE_MASK,
-                                cpu_get_mem_attrs(env),
-                                out.prot, mmu_idx, out.page_size);
+        memset(full, 0, sizeof(*full));
+        full->phys_addr = out.paddr;
+        full->prot = out.prot;
+        full->lg_page_size = ctz32(out.page_size);
+        full->attrs = cpu_get_mem_attrs(env);
         return true;
     }
 
