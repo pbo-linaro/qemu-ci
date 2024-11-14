@@ -54,7 +54,7 @@ enum device_endian {
 #define DEVICE_HOST_ENDIAN DEVICE_LITTLE_ENDIAN
 #endif
 
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 
 /**
  * cpu_address_space_init:

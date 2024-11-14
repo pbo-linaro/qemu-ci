@@ -13,7 +13,7 @@
 
 #include "qemu/osdep.h"
 #include "qapi/error.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "sysemu/physmem-target.h"
 #include "exec/confidential-guest-support.h"
 #include "hw/boards.h"

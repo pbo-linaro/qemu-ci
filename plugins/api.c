@@ -49,7 +49,7 @@
 #ifndef CONFIG_USER_ONLY
 #include "qapi/error.h"
 #include "migration/blocker.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "sysemu/physmem-target.h"
 #include "qemu/plugin-memory.h"
 #include "hw/boards.h"

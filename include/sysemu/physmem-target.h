@@ -23,7 +23,7 @@
 #include "sysemu/xen.h"
 #include "sysemu/tcg.h"
 #include "exec/cputlb.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "exec/ramlist.h"
 #include "exec/ramblock.h"
 #include "qemu/rcu.h"

@@ -41,7 +41,7 @@
 #include "sysemu/runstate.h"
 #include "sysemu/device_tree.h"
 #include "gdbstub/enums.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "sysemu/physmem-target.h"
 #include "trace.h"
 #include "hw/s390x/s390-pci-inst.h"

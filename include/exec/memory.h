@@ -28,7 +28,7 @@
 #include "qemu/notify.h"
 #include "qom/object.h"
 #include "qemu/rcu.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 
 #define RAM_ADDR_INVALID (~(ram_addr_t)0)
 

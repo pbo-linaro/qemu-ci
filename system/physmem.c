@@ -66,7 +66,7 @@
 #include "sysemu/replay.h"
 
 #include "exec/memory-internal.h"
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "sysemu/physmem-target.h"
 
 #include "qemu/pmem.h"

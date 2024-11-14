@@ -24,7 +24,7 @@
 #include "exec/exec-all.h"
 #include "exec/page-protection.h"
 #ifndef CONFIG_USER_ONLY
-#include "exec/ram_addr.h"
+#include "sysemu/ram_addr.h"
 #include "sysemu/physmem-target.h"
 #endif
 #include "exec/cpu_ldst.h"
