@@ -1364,7 +1364,7 @@ static void notdirty_write(CPUState *cpu, vaddr mem_vaddr, unsigned size,
 static int probe_access_internal(CPUState *cpu, vaddr addr,
                                  int fault_size, MMUAccessType access_type,
                                  int mmu_idx, bool nonfault,
-                                 void **phost, CPUTLBEntryFull **pfull,
+                                 void **phost, CPUTLBEntryFull *pfull,
                                  uintptr_t retaddr, bool check_mem_cbs)
 {
     uintptr_t index = tlb_index(cpu, mmu_idx, addr);
@@ -1379,7 +1379,7 @@ static int probe_access_internal(CPUState *cpu, vaddr addr,
                                 0, fault_size, nonfault, retaddr)) {
                 /* Non-faulting page table read failed.  */
                 *phost = NULL;
-                *pfull = NULL;
+                memset(pfull, 0, sizeof(*pfull));
                 return TLB_INVALID_MASK;
             }
 
@@ -1398,8 +1398,9 @@ static int probe_access_internal(CPUState *cpu, vaddr addr,
     }
     flags &= tlb_addr;
 
-    *pfull = full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
+    full = &cpu->neg.tlb.d[mmu_idx].fulltlb[index];
     flags |= full->slow_flags[access_type];
+    *pfull = *full;
 
     /*
      * Fold all "mmio-like" bits, and required plugin callbacks, to TLB_MMIO.
@@ -1423,19 +1424,17 @@ int probe_access_full(CPUArchState *env, vaddr addr, int size,
                       bool nonfault, void **phost, CPUTLBEntryFull *pfull,
                       uintptr_t retaddr)
 {
-    CPUTLBEntryFull *full;
     int flags = probe_access_internal(env_cpu(env), addr, size, access_type,
-                                      mmu_idx, nonfault, phost, &full, retaddr,
+                                      mmu_idx, nonfault, phost, pfull, retaddr,
                                       true);
 
     /* Handle clean RAM pages.  */
     if (unlikely(flags & TLB_NOTDIRTY)) {
         int dirtysize = size == 0 ? 1 : size;
-        notdirty_write(env_cpu(env), addr, dirtysize, full, retaddr);
+        notdirty_write(env_cpu(env), addr, dirtysize, pfull, retaddr);
         flags &= ~TLB_NOTDIRTY;
     }
 
-    *pfull = *full;
     return flags;
 }
 
@@ -1444,23 +1443,20 @@ int probe_access_full_mmu(CPUArchState *env, vaddr addr, int size,
                           void **phost, CPUTLBEntryFull *pfull)
 {
     void *discard_phost;
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull discard_full;
 
     /* privately handle users that don't need full results */
     phost = phost ? phost : &discard_phost;
+    pfull = pfull ? pfull : &discard_full;
 
     int flags = probe_access_internal(env_cpu(env), addr, size, access_type,
-                                      mmu_idx, true, phost, &full, 0, false);
+                                      mmu_idx, true, phost, pfull, 0, false);
 
     /* Handle clean RAM pages.  */
     if (unlikely(flags & TLB_NOTDIRTY)) {
         int dirtysize = size == 0 ? 1 : size;
-        notdirty_write(env_cpu(env), addr, dirtysize, full, 0);
+        notdirty_write(env_cpu(env), addr, dirtysize, pfull, 0);
         flags &= ~TLB_NOTDIRTY;
-    }
-
-    if (pfull) {
-        *pfull = *full;
     }
 
     return flags;
@@ -1470,7 +1466,7 @@ int probe_access_flags(CPUArchState *env, vaddr addr, int size,
                        MMUAccessType access_type, int mmu_idx,
                        bool nonfault, void **phost, uintptr_t retaddr)
 {
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     int flags;
 
     g_assert(-(addr | TARGET_PAGE_MASK) >= size);
@@ -1482,7 +1478,7 @@ int probe_access_flags(CPUArchState *env, vaddr addr, int size,
     /* Handle clean RAM pages. */
     if (unlikely(flags & TLB_NOTDIRTY)) {
         int dirtysize = size == 0 ? 1 : size;
-        notdirty_write(env_cpu(env), addr, dirtysize, full, retaddr);
+        notdirty_write(env_cpu(env), addr, dirtysize, &full, retaddr);
         flags &= ~TLB_NOTDIRTY;
     }
 
@@ -1492,7 +1488,7 @@ int probe_access_flags(CPUArchState *env, vaddr addr, int size,
 void *probe_access(CPUArchState *env, vaddr addr, int size,
                    MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     void *host;
     int flags;
 
@@ -1513,12 +1509,12 @@ void *probe_access(CPUArchState *env, vaddr addr, int size,
             int wp_access = (access_type == MMU_DATA_STORE
                              ? BP_MEM_WRITE : BP_MEM_READ);
             cpu_check_watchpoint(env_cpu(env), addr, size,
-                                 full->attrs, wp_access, retaddr);
+                                 full.attrs, wp_access, retaddr);
         }
 
         /* Handle clean RAM pages.  */
         if (flags & TLB_NOTDIRTY) {
-            notdirty_write(env_cpu(env), addr, size, full, retaddr);
+            notdirty_write(env_cpu(env), addr, size, &full, retaddr);
         }
     }
 
@@ -1528,7 +1524,7 @@ void *probe_access(CPUArchState *env, vaddr addr, int size,
 void *tlb_vaddr_to_host(CPUArchState *env, abi_ptr addr,
                         MMUAccessType access_type, int mmu_idx)
 {
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     void *host;
     int flags;
 
@@ -1552,7 +1548,7 @@ void *tlb_vaddr_to_host(CPUArchState *env, abi_ptr addr,
 tb_page_addr_t get_page_addr_code_hostp(CPUArchState *env, vaddr addr,
                                         void **hostp)
 {
-    CPUTLBEntryFull *full;
+    CPUTLBEntryFull full;
     void *p;
 
     (void)probe_access_internal(env_cpu(env), addr, 1, MMU_INST_FETCH,
@@ -1562,7 +1558,7 @@ tb_page_addr_t get_page_addr_code_hostp(CPUArchState *env, vaddr addr,
         return -1;
     }
 
-    if (full->lg_page_size < TARGET_PAGE_BITS) {
+    if (full.lg_page_size < TARGET_PAGE_BITS) {
         return -1;
     }
 
