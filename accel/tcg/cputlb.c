@@ -311,6 +311,13 @@ static CPUTLBEntryTree *tlbtree_lookup_range(CPUTLBDesc *desc, vaddr s, vaddr l)
     return i ? container_of(i, CPUTLBEntryTree, itree) : NULL;
 }
 
+static CPUTLBEntryTree *tlbtree_lookup_range_next(CPUTLBEntryTree *prev,
+                                                  vaddr s, vaddr l)
+{
+    IntervalTreeNode *i = interval_tree_iter_next(&prev->itree, s, l);
+    return i ? container_of(i, CPUTLBEntryTree, itree) : NULL;
+}
+
 static CPUTLBEntryTree *tlbtree_lookup_addr(CPUTLBDesc *desc, vaddr addr)
 {
     return tlbtree_lookup_range(desc, addr, addr);
@@ -739,6 +746,8 @@ static void tlb_flush_range_locked(CPUState *cpu, int midx,
     CPUTLBDesc *d = &cpu->neg.tlb.d[midx];
     CPUTLBDescFast *f = &cpu->neg.tlb.f[midx];
     vaddr mask = MAKE_64BIT_MASK(0, bits);
+    CPUTLBEntryTree *node;
+    vaddr addr_mask, last_mask, last_imask;
 
     /*
      * Check if we need to flush due to large pages.
@@ -758,6 +767,22 @@ static void tlb_flush_range_locked(CPUState *cpu, int midx,
     for (vaddr i = 0; i < len; i += TARGET_PAGE_SIZE) {
         vaddr page = addr + i;
         tlb_flush_vtlb_page_mask_locked(cpu, midx, page, mask);
+    }
+
+    addr_mask = addr & mask;
+    last_mask = addr_mask + len - 1;
+    last_imask = last_mask | ~mask;
+    node = tlbtree_lookup_range(d, addr_mask, last_imask);
+    while (node) {
+        CPUTLBEntryTree *next =
+            tlbtree_lookup_range_next(node, addr_mask, last_imask);
+        vaddr page_mask = node->itree.start & mask;
+
+        if (page_mask >= addr_mask && page_mask < last_mask) {
+            interval_tree_remove(&node->itree, &d->iroot);
+            g_free(node);
+        }
+        node = next;
     }
 }
 
