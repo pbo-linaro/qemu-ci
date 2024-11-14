@@ -138,7 +138,7 @@ static const TCGCPUOps riscv_tcg_ops = {
     .restore_state_to_opc = riscv_restore_state_to_opc,
 
 #ifndef CONFIG_USER_ONLY
-    .tlb_fill = riscv_cpu_tlb_fill,
+    .tlb_fill_align = riscv_cpu_tlb_fill_align,
     .cpu_exec_interrupt = riscv_cpu_exec_interrupt,
     .cpu_exec_halt = riscv_cpu_has_work,
     .do_interrupt = riscv_cpu_do_interrupt,
