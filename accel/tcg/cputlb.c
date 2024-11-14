@@ -114,8 +114,9 @@ static inline uint64_t tlb_read_idx(const CPUTLBEntry *entry,
                       MMU_DATA_LOAD * sizeof(uint64_t));
     QEMU_BUILD_BUG_ON(offsetof(CPUTLBEntry, addr_write) !=
                       MMU_DATA_STORE * sizeof(uint64_t));
-    QEMU_BUILD_BUG_ON(offsetof(CPUTLBEntry, addr_code) !=
-                      MMU_INST_FETCH * sizeof(uint64_t));
+
+    tcg_debug_assert(access_type == MMU_DATA_LOAD ||
+                     access_type == MMU_DATA_STORE);
 
 #if TARGET_LONG_BITS == 32
     /* Use qatomic_read, in case of addr_write; only care about low bits. */
@@ -480,8 +481,7 @@ static bool tlb_hit_page_mask_anyprot(CPUTLBEntry *tlb_entry,
     mask &= TARGET_PAGE_MASK | TLB_INVALID_MASK;
 
     return (page == (tlb_entry->addr_read & mask) ||
-            page == (tlb_addr_write(tlb_entry) & mask) ||
-            page == (tlb_entry->addr_code & mask));
+            page == (tlb_addr_write(tlb_entry) & mask));
 }
 
 /* Called with tlb_c.lock held */
@@ -1184,9 +1184,6 @@ void tlb_set_page_full(CPUState *cpu, int mmu_idx,
     /* Now calculate the new entry */
     node->copy.addend = addend - addr_page;
 
-    tlb_set_compare(full, &node->copy, addr_page, read_flags,
-                    MMU_INST_FETCH, prot & PAGE_EXEC);
-
     if (wp_flags & BP_MEM_READ) {
         read_flags |= TLB_WATCHPOINT;
     }
@@ -1308,22 +1305,30 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
     /* Primary lookup in the fast tlb. */
     entry = tlbfast_entry(fast, addr);
     full = &desc->fulltlb[tlbfast_index(fast, addr)];
-    cmp = tlb_read_idx(entry, access_type);
-    if (tlb_hit(cmp, addr)) {
-        goto found;
+    if (access_type != MMU_INST_FETCH) {
+        cmp = tlb_read_idx(entry, access_type);
+        if (tlb_hit(cmp, addr)) {
+            goto found_data;
+        }
     }
 
     /* Secondary lookup in the IntervalTree. */
     node = tlbtree_lookup_addr(desc, addr);
     if (node) {
-        cmp = tlb_read_idx(&node->copy, access_type);
-        if (tlb_hit(cmp, addr)) {
-            /* Install the cached entry. */
-            qemu_spin_lock(&cpu->neg.tlb.c.lock);
-            copy_tlb_helper_locked(entry, &node->copy);
-            qemu_spin_unlock(&cpu->neg.tlb.c.lock);
-            *full = node->full;
-            goto found;
+        if (access_type == MMU_INST_FETCH) {
+            if (node->full.prot & PAGE_EXEC) {
+                goto found_code;
+            }
+        } else {
+            cmp = tlb_read_idx(&node->copy, access_type);
+            if (tlb_hit(cmp, addr)) {
+                /* Install the cached entry. */
+                qemu_spin_lock(&cpu->neg.tlb.c.lock);
+                copy_tlb_helper_locked(entry, &node->copy);
+                qemu_spin_unlock(&cpu->neg.tlb.c.lock);
+                *full = node->full;
+                goto found_data;
+            }
         }
     }
 
@@ -1333,8 +1338,13 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
         tcg_debug_assert(probe);
         return false;
     }
-
     o->did_tlb_fill = true;
+
+    if (access_type == MMU_INST_FETCH) {
+        node = tlbtree_lookup_addr(desc, addr);
+        tcg_debug_assert(node);
+        goto found_code;
+    }
 
     entry = tlbfast_entry(fast, addr);
     full = &desc->fulltlb[tlbfast_index(fast, addr)];
@@ -1345,14 +1355,29 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
      * called tlb_fill_align, so we know that this entry *is* valid.
      */
     flags &= ~TLB_INVALID_MASK;
+    goto found_data;
+
+ found_data:
+    flags &= cmp;
+    flags |= full->slow_flags[access_type];
+    o->flags = flags;
+    o->full = *full;
+    o->haddr = (void *)((uintptr_t)addr + entry->addend);
     goto done;
 
- found:
-    /* Alignment has not been checked by tlb_fill_align. */
-    {
+ found_code:
+    o->flags = node->copy.addr_read & TLB_EXEC_FLAGS_MASK;
+    o->full = node->full;
+    o->haddr = (void *)((uintptr_t)addr + node->copy.addend);
+    goto done;
+
+ done:
+    if (!o->did_tlb_fill) {
         int a_bits = memop_alignment_bits(memop);
 
         /*
+         * Alignment has not been checked by tlb_fill_align.
+         *
          * The TLB_CHECK_ALIGNED check differs from the normal alignment
          * check, in that this is based on the atomicity of the operation.
          * The intended use case is the ARM memory type field of each PTE,
@@ -1366,13 +1391,6 @@ static bool tlb_lookup(CPUState *cpu, TLBLookupOutput *o,
             cpu_unaligned_access(cpu, addr, access_type, i->mmu_idx, i->ra);
         }
     }
-
- done:
-    flags &= cmp;
-    flags |= full->slow_flags[access_type];
-    o->flags = flags;
-    o->full = *full;
-    o->haddr = (void *)((uintptr_t)addr + entry->addend);
     return true;
 }
 

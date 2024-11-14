@@ -26,7 +26,6 @@ typedef union CPUTLBEntry {
     struct {
         uint64_t addr_read;
         uint64_t addr_write;
-        uint64_t addr_code;
         /*
          * Addend to virtual address to get host address.  IO accesses
          * use the corresponding iotlb value.
@@ -35,7 +34,7 @@ typedef union CPUTLBEntry {
     };
     /*
      * Padding to get a power of two size, as well as index
-     * access to addr_{read,write,code}.
+     * access to addr_{read,write}.
      */
     uint64_t addr_idx[(1 << CPU_TLB_ENTRY_BITS) / sizeof(uint64_t)];
 } CPUTLBEntry;
@@ -92,7 +91,7 @@ struct CPUTLBEntryFull {
      * Additional tlb flags for use by the slow path. If non-zero,
      * the corresponding CPUTLBEntry comparator must have TLB_FORCE_SLOW.
      */
-    uint8_t slow_flags[MMU_ACCESS_COUNT];
+    uint8_t slow_flags[2];
 
     /*
      * Allow target-specific additions to this structure.

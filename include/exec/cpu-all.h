@@ -339,6 +339,9 @@ static inline int cpu_mmu_index(CPUState *cs, bool ifetch)
     (TLB_INVALID_MASK | TLB_NOTDIRTY | TLB_MMIO \
     | TLB_FORCE_SLOW | TLB_DISCARD_WRITE)
 
+/* Filter read flags to exec flags. */
+#define TLB_EXEC_FLAGS_MASK  (TLB_MMIO)
+
 /*
  * Flags stored in CPUTLBEntryFull.slow_flags[x].
  * TLB_FORCE_SLOW must be set in CPUTLBEntry.addr_idx[x].
