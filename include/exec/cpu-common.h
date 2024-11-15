@@ -194,19 +194,6 @@ void tcg_cflags_set(CPUState *cpu, uint32_t flags);
 uint32_t curr_cflags(CPUState *cpu);
 
 /**
- * cpu_unwind_state_data:
- * @cpu: the cpu context
- * @host_pc: the host pc within the translation
- * @data: output data
- *
- * Attempt to load the the unwind state for a host pc occurring in
- * translated code.  If @host_pc is not in translated code, the
- * function returns false; otherwise @data is loaded.
- * This is the same unwind info as given to restore_state_to_opc.
- */
-bool cpu_unwind_state_data(CPUState *cpu, uintptr_t host_pc, uint64_t *data);
-
-/**
  * cpu_restore_state:
  * @cpu: the cpu context
  * @host_pc: the host pc within the translation
