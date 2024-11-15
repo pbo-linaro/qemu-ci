@@ -160,8 +160,8 @@ struct CPUClass {
     int64_t (*get_arch_id)(CPUState *cpu);
     bool (*cpu_persistent_status)(CPUState *cpu);
     bool (*cpu_enabled_status)(CPUState *cpu);
-    void (*set_pc)(CPUState *cpu, vaddr value);
-    vaddr (*get_pc)(CPUState *cpu);
+    void (*set_pc)(CPUArchState *env, vaddr value);
+    vaddr (*get_pc)(CPUArchState *env);
     int (*gdb_read_register)(CPUState *cpu, GByteArray *buf, int reg);
     int (*gdb_write_register)(CPUState *cpu, uint8_t *buf, int reg);
     vaddr (*gdb_adjust_breakpoint)(CPUState *cpu, vaddr addr);
@@ -972,7 +972,7 @@ static inline void cpu_set_pc(CPUState *cpu, vaddr addr)
 {
     CPUClass *cc = CPU_GET_CLASS(cpu);
 
-    cc->set_pc(cpu, addr);
+    cc->set_pc(cpu_env(cpu), addr);
 }
 
 /**

@@ -25,19 +25,15 @@
 #include "fpu/softfloat-helpers.h"
 #include "tcg/tcg.h"
 
-static void openrisc_cpu_set_pc(CPUState *cs, vaddr value)
+static void openrisc_cpu_set_pc(CPUOpenRISCState *env, vaddr value)
 {
-    OpenRISCCPU *cpu = OPENRISC_CPU(cs);
-
-    cpu->env.pc = value;
-    cpu->env.dflag = 0;
+    env->pc = value;
+    env->dflag = 0;
 }
 
-static vaddr openrisc_cpu_get_pc(CPUState *cs)
+static vaddr openrisc_cpu_get_pc(CPUOpenRISCState *env)
 {
-    OpenRISCCPU *cpu = OPENRISC_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void openrisc_cpu_synchronize_from_tb(CPUState *cs,

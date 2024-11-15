@@ -7152,18 +7152,14 @@ void ppc_cpu_list(void)
 #endif
 }
 
-static void ppc_cpu_set_pc(CPUState *cs, vaddr value)
+static void ppc_cpu_set_pc(CPUPPCState *env, vaddr value)
 {
-    PowerPCCPU *cpu = POWERPC_CPU(cs);
-
-    cpu->env.nip = value;
+    env->nip = value;
 }
 
-static vaddr ppc_cpu_get_pc(CPUState *cs)
+static vaddr ppc_cpu_get_pc(CPUPPCState *env)
 {
-    PowerPCCPU *cpu = POWERPC_CPU(cs);
-
-    return cpu->env.nip;
+    return env->nip;
 }
 
 #ifdef CONFIG_TCG

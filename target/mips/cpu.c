@@ -120,16 +120,14 @@ void cpu_set_exception_base(int vp_index, target_ulong address)
     vp->env.exception_base = address;
 }
 
-static void mips_cpu_set_pc(CPUState *cs, vaddr value)
+static void mips_cpu_set_pc(CPUMIPSState *env, vaddr value)
 {
-    mips_env_set_pc(cpu_env(cs), value);
+    mips_env_set_pc(env, value);
 }
 
-static vaddr mips_cpu_get_pc(CPUState *cs)
+static vaddr mips_cpu_get_pc(CPUMIPSState *env)
 {
-    MIPSCPU *cpu = MIPS_CPU(cs);
-
-    return cpu->env.active_tc.PC;
+    return env->active_tc.PC;
 }
 
 static bool mips_cpu_has_work(CPUState *cs)

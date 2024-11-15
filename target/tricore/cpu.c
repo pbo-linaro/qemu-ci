@@ -34,14 +34,14 @@ static const gchar *tricore_gdb_arch_name(CPUState *cs)
     return "tricore";
 }
 
-static void tricore_cpu_set_pc(CPUState *cs, vaddr value)
+static void tricore_cpu_set_pc(CPUTriCoreState *env, vaddr value)
 {
-    cpu_env(cs)->PC = value & ~(target_ulong)1;
+    env->PC = value & ~(target_ulong)1;
 }
 
-static vaddr tricore_cpu_get_pc(CPUState *cs)
+static vaddr tricore_cpu_get_pc(CPUTriCoreState *env)
 {
-    return cpu_env(cs)->PC;
+    return env->PC;
 }
 
 static void tricore_cpu_synchronize_from_tb(CPUState *cs,

@@ -27,18 +27,14 @@
 #include "fpu/softfloat.h"
 #include "tcg/debug-assert.h"
 
-static void rx_cpu_set_pc(CPUState *cs, vaddr value)
+static void rx_cpu_set_pc(CPURXState *env, vaddr value)
 {
-    RXCPU *cpu = RX_CPU(cs);
-
-    cpu->env.pc = value;
+    env->pc = value;
 }
 
-static vaddr rx_cpu_get_pc(CPUState *cs)
+static vaddr rx_cpu_get_pc(CPURXState *env)
 {
-    RXCPU *cpu = RX_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void rx_cpu_synchronize_from_tb(CPUState *cs,

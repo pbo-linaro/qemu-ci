@@ -27,18 +27,14 @@
 #include "tcg/debug-assert.h"
 #include "hw/qdev-properties.h"
 
-static void avr_cpu_set_pc(CPUState *cs, vaddr value)
+static void avr_cpu_set_pc(CPUAVRState *env, vaddr value)
 {
-    AVRCPU *cpu = AVR_CPU(cs);
-
-    cpu->env.pc_w = value / 2; /* internally PC points to words */
+    env->pc_w = value / 2; /* internally PC points to words */
 }
 
-static vaddr avr_cpu_get_pc(CPUState *cs)
+static vaddr avr_cpu_get_pc(CPUAVRState *env)
 {
-    AVRCPU *cpu = AVR_CPU(cs);
-
-    return cpu->env.pc_w * 2;
+    return env->pc_w * 2;
 }
 
 static bool avr_cpu_has_work(CPUState *cs)

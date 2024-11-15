@@ -27,15 +27,13 @@
 #include "fpu/softfloat.h"
 
 
-static void alpha_cpu_set_pc(CPUState *cs, vaddr value)
+static void alpha_cpu_set_pc(CPUAlphaState *env, vaddr value)
 {
-    CPUAlphaState *env = cpu_env(cs);
     env->pc = value;
 }
 
-static vaddr alpha_cpu_get_pc(CPUState *cs)
+static vaddr alpha_cpu_get_pc(CPUAlphaState *env)
 {
-    CPUAlphaState *env = cpu_env(cs);
     return env->pc;
 }
 

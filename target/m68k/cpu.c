@@ -24,18 +24,14 @@
 #include "migration/vmstate.h"
 #include "fpu/softfloat.h"
 
-static void m68k_cpu_set_pc(CPUState *cs, vaddr value)
+static void m68k_cpu_set_pc(CPUM68KState *env, vaddr value)
 {
-    M68kCPU *cpu = M68K_CPU(cs);
-
-    cpu->env.pc = value;
+    env->pc = value;
 }
 
-static vaddr m68k_cpu_get_pc(CPUState *cs)
+static vaddr m68k_cpu_get_pc(CPUM68KState *env)
 {
-    M68kCPU *cpu = M68K_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void m68k_restore_state_to_opc(CPUState *cs,

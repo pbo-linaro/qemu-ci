@@ -878,11 +878,8 @@ static void riscv_cpu_dump_state(CPUState *cs, FILE *f, int flags)
     }
 }
 
-static void riscv_cpu_set_pc(CPUState *cs, vaddr value)
+static void riscv_cpu_set_pc(CPURISCVState *env, vaddr value)
 {
-    RISCVCPU *cpu = RISCV_CPU(cs);
-    CPURISCVState *env = &cpu->env;
-
     if (env->xl == MXL_RV32) {
         env->pc = (int32_t)value;
     } else {
@@ -890,11 +887,8 @@ static void riscv_cpu_set_pc(CPUState *cs, vaddr value)
     }
 }
 
-static vaddr riscv_cpu_get_pc(CPUState *cs)
+static vaddr riscv_cpu_get_pc(CPURISCVState *env)
 {
-    RISCVCPU *cpu = RISCV_CPU(cs);
-    CPURISCVState *env = &cpu->env;
-
     /* Match cpu_get_tb_cpu_state. */
     if (env->xl == MXL_RV32) {
         return env->pc & UINT32_MAX;

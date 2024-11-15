@@ -51,11 +51,8 @@
 #include "target/arm/cpu-qom.h"
 #include "target/arm/gtimer.h"
 
-static void arm_cpu_set_pc(CPUState *cs, vaddr value)
+static void arm_cpu_set_pc(CPUARMState *env, vaddr value)
 {
-    ARMCPU *cpu = ARM_CPU(cs);
-    CPUARMState *env = &cpu->env;
-
     if (is_a64(env)) {
         env->pc = value;
         env->thumb = false;
@@ -65,11 +62,8 @@ static void arm_cpu_set_pc(CPUState *cs, vaddr value)
     }
 }
 
-static vaddr arm_cpu_get_pc(CPUState *cs)
+static vaddr arm_cpu_get_pc(CPUARMState *env)
 {
-    ARMCPU *cpu = ARM_CPU(cs);
-    CPUARMState *env = &cpu->env;
-
     if (is_a64(env)) {
         return env->pc;
     } else {

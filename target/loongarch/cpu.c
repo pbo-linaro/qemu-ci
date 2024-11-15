@@ -101,14 +101,14 @@ void G_NORETURN do_raise_exception(CPULoongArchState *env,
     cpu_loop_exit_restore(cs, pc);
 }
 
-static void loongarch_cpu_set_pc(CPUState *cs, vaddr value)
+static void loongarch_cpu_set_pc(CPULoongArchState *env, vaddr value)
 {
-    set_pc(cpu_env(cs), value);
+    set_pc(env, value);
 }
 
-static vaddr loongarch_cpu_get_pc(CPUState *cs)
+static vaddr loongarch_cpu_get_pc(CPULoongArchState *env)
 {
-    return cpu_env(cs)->pc;
+    return env->pc;
 }
 
 #ifndef CONFIG_USER_ONLY

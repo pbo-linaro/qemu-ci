@@ -40,18 +40,14 @@
 #endif
 
 
-static void xtensa_cpu_set_pc(CPUState *cs, vaddr value)
+static void xtensa_cpu_set_pc(CPUXtensaState *env, vaddr value)
 {
-    XtensaCPU *cpu = XTENSA_CPU(cs);
-
-    cpu->env.pc = value;
+    env->pc = value;
 }
 
-static vaddr xtensa_cpu_get_pc(CPUState *cs)
+static vaddr xtensa_cpu_get_pc(CPUXtensaState *env)
 {
-    XtensaCPU *cpu = XTENSA_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void xtensa_restore_state_to_opc(CPUState *cs,

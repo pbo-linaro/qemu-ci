@@ -28,18 +28,14 @@
 #include "fpu/softfloat-helpers.h"
 #include "tcg/tcg.h"
 
-static void superh_cpu_set_pc(CPUState *cs, vaddr value)
+static void superh_cpu_set_pc(CPUSH4State *env, vaddr value)
 {
-    SuperHCPU *cpu = SUPERH_CPU(cs);
-
-    cpu->env.pc = value;
+    env->pc = value;
 }
 
-static vaddr superh_cpu_get_pc(CPUState *cs)
+static vaddr superh_cpu_get_pc(CPUSH4State *env)
 {
-    SuperHCPU *cpu = SUPERH_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void superh_cpu_synchronize_from_tb(CPUState *cs,

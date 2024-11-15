@@ -112,18 +112,14 @@ uint64_t s390_cpu_get_psw_mask(CPUS390XState *env)
     return r;
 }
 
-static void s390_cpu_set_pc(CPUState *cs, vaddr value)
+static void s390_cpu_set_pc(CPUS390XState *env, vaddr value)
 {
-    S390CPU *cpu = S390_CPU(cs);
-
-    cpu->env.psw.addr = value;
+    env->psw.addr = value;
 }
 
-static vaddr s390_cpu_get_pc(CPUState *cs)
+static vaddr s390_cpu_get_pc(CPUS390XState *env)
 {
-    S390CPU *cpu = S390_CPU(cs);
-
-    return cpu->env.psw.addr;
+    return env->psw.addr;
 }
 
 static bool s390_cpu_has_work(CPUState *cs)

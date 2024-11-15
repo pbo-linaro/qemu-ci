@@ -51,7 +51,7 @@ static void generic_loader_reset(void *opaque)
         CPUClass *cc = CPU_GET_CLASS(s->cpu);
         cpu_reset(s->cpu);
         if (cc) {
-            cc->set_pc(s->cpu, s->addr);
+            cc->set_pc(cpu_env(s->cpu), s->addr);
         }
     }
 

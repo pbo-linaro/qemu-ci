@@ -28,21 +28,17 @@
 #include "fpu/softfloat.h"
 #include "tcg/tcg.h"
 
-static void hppa_cpu_set_pc(CPUState *cs, vaddr value)
+static void hppa_cpu_set_pc(CPUHPPAState *env, vaddr value)
 {
-    HPPACPU *cpu = HPPA_CPU(cs);
-
 #ifdef CONFIG_USER_ONLY
     value |= PRIV_USER;
 #endif
-    cpu->env.iaoq_f = value;
-    cpu->env.iaoq_b = value + 4;
+    env->iaoq_f = value;
+    env->iaoq_b = value + 4;
 }
 
-static vaddr hppa_cpu_get_pc(CPUState *cs)
+static vaddr hppa_cpu_get_pc(CPUHPPAState *env)
 {
-    CPUHPPAState *env = cpu_env(cs);
-
     return hppa_form_gva_psw(env->psw, (env->psw & PSW_C ? env->iasq_f : 0),
                              env->iaoq_f & -4);
 }
@@ -59,7 +55,7 @@ void cpu_get_tb_cpu_state(CPUHPPAState *env, vaddr *pc,
      * incomplete virtual address.  This also means that we must separate
      * out current cpu privilege from the low bits of IAOQ_F.
      */
-    *pc = hppa_cpu_get_pc(env_cpu(env));
+    *pc = hppa_cpu_get_pc(env);
     flags |= (env->iaoq_f & 3) << TB_FLAG_PRIV_SHIFT;
 
     /*

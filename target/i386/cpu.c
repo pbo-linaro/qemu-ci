@@ -8251,19 +8251,15 @@ static bool x86_cpu_get_paging_enabled(const CPUState *cs)
 }
 #endif /* !CONFIG_USER_ONLY */
 
-static void x86_cpu_set_pc(CPUState *cs, vaddr value)
+static void x86_cpu_set_pc(CPUX86State *env, vaddr value)
 {
-    X86CPU *cpu = X86_CPU(cs);
-
-    cpu->env.eip = value;
+    env->eip = value;
 }
 
-static vaddr x86_cpu_get_pc(CPUState *cs)
+static vaddr x86_cpu_get_pc(CPUX86State *env)
 {
-    X86CPU *cpu = X86_CPU(cs);
-
     /* Match cpu_get_tb_cpu_state. */
-    return cpu->env.eip + cpu->env.segs[R_CS].base;
+    return env->eip + env->segs[R_CS].base;
 }
 
 int x86_cpu_pending_interrupt(CPUState *cs, int interrupt_request)

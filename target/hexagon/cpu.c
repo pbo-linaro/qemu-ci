@@ -245,14 +245,14 @@ void hexagon_debug(CPUHexagonState *env)
     hexagon_dump(env, stdout, CPU_DUMP_FPU);
 }
 
-static void hexagon_cpu_set_pc(CPUState *cs, vaddr value)
+static void hexagon_cpu_set_pc(CPUHexagonState *env, vaddr value)
 {
-    cpu_env(cs)->gpr[HEX_REG_PC] = value;
+    env->gpr[HEX_REG_PC] = value;
 }
 
-static vaddr hexagon_cpu_get_pc(CPUState *cs)
+static vaddr hexagon_cpu_get_pc(CPUHexagonState *env)
 {
-    return cpu_env(cs)->gpr[HEX_REG_PC];
+    return env->gpr[HEX_REG_PC];
 }
 
 static void hexagon_cpu_synchronize_from_tb(CPUState *cs,

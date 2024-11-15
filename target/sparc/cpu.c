@@ -688,19 +688,15 @@ static void sparc_cpu_dump_state(CPUState *cs, FILE *f, int flags)
     qemu_fprintf(f, "\n");
 }
 
-static void sparc_cpu_set_pc(CPUState *cs, vaddr value)
+static void sparc_cpu_set_pc(CPUSPARCState *env, vaddr value)
 {
-    SPARCCPU *cpu = SPARC_CPU(cs);
-
-    cpu->env.pc = value;
-    cpu->env.npc = value + 4;
+    env->pc = value;
+    env->npc = value + 4;
 }
 
-static vaddr sparc_cpu_get_pc(CPUState *cs)
+static vaddr sparc_cpu_get_pc(CPUSPARCState *env)
 {
-    SPARCCPU *cpu = SPARC_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void sparc_cpu_synchronize_from_tb(CPUState *cs,

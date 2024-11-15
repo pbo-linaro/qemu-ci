@@ -78,20 +78,16 @@ static const struct {
 /* If no specific version gets selected, default to the following.  */
 #define DEFAULT_CPU_VERSION "10.0"
 
-static void mb_cpu_set_pc(CPUState *cs, vaddr value)
+static void mb_cpu_set_pc(CPUMBState *env, vaddr value)
 {
-    MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);
-
-    cpu->env.pc = value;
+    env->pc = value;
     /* Ensure D_FLAG and IMM_FLAG are clear for the new PC */
-    cpu->env.iflags = 0;
+    env->iflags = 0;
 }
 
-static vaddr mb_cpu_get_pc(CPUState *cs)
+static vaddr mb_cpu_get_pc(CPUMBState *env)
 {
-    MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);
-
-    return cpu->env.pc;
+    return env->pc;
 }
 
 static void mb_cpu_synchronize_from_tb(CPUState *cs,
