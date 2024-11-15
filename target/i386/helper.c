@@ -29,6 +29,7 @@
 #endif
 #include "qemu/log.h"
 #ifdef CONFIG_TCG
+#include "exec/translate-all.h"
 #include "tcg/insn-start-words.h"
 #endif
 
@@ -526,7 +527,7 @@ static inline target_ulong get_memio_eip(CPUX86State *env)
     uint64_t data[TARGET_INSN_START_WORDS];
     CPUState *cs = env_cpu(env);
 
-    if (!cpu_unwind_state_data(cs, cs->mem_io_pc, data)) {
+    if (!cpu_unwind_state_data(cs->mem_io_pc, data)) {
         return env->eip;
     }
 

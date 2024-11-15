@@ -23,7 +23,6 @@
 
 /**
  * cpu_unwind_state_data:
- * @cpu: the cpu context
  * @host_pc: the host pc within the translation
  * @data: output data
  *
@@ -32,7 +31,7 @@
  * function returns false; otherwise @data is loaded.
  * This is the same unwind info as given to restore_state_to_opc.
  */
-bool cpu_unwind_state_data(CPUState *cpu, uintptr_t host_pc, uint64_t *data);
+bool cpu_unwind_state_data(uintptr_t host_pc, uint64_t *data);
 
 /* translate-all.c */
 void tb_check_watchpoint(CPUState *cpu, uintptr_t retaddr);
