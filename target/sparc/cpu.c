@@ -709,11 +709,10 @@ static void sparc_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.npc = tb->cs_base;
 }
 
-static void sparc_restore_state_to_opc(CPUState *cs,
+static void sparc_restore_state_to_opc(CPUSPARCState *env,
                                        const TranslationBlock *tb,
                                        const uint64_t *data)
 {
-    CPUSPARCState *env = cpu_env(cs);
     target_ulong pc = data[0];
     target_ulong npc = data[1];
 

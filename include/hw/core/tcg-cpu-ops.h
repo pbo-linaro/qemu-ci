@@ -44,7 +44,7 @@ struct TCGCPUOps {
      * state which are tracked insn-by-insn in the target-specific
      * arguments to start_insn, passed as @data.
      */
-    void (*restore_state_to_opc)(CPUState *cpu, const TranslationBlock *tb,
+    void (*restore_state_to_opc)(CPUArchState *env, const TranslationBlock *tb,
                                  const uint64_t *data);
 
     /** @cpu_exec_enter: Callback for cpu_exec preparation */

@@ -51,11 +51,11 @@ static void tricore_cpu_synchronize_from_tb(CPUState *cs,
     cpu_env(cs)->PC = tb->pc;
 }
 
-static void tricore_restore_state_to_opc(CPUState *cs,
+static void tricore_restore_state_to_opc(CPUTriCoreState *env,
                                          const TranslationBlock *tb,
                                          const uint64_t *data)
 {
-    cpu_env(cs)->PC = data[0];
+    env->PC = data[0];
 }
 
 static void tricore_cpu_reset_hold(Object *obj, ResetType type)

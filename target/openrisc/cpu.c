@@ -45,16 +45,14 @@ static void openrisc_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.pc = tb->pc;
 }
 
-static void openrisc_restore_state_to_opc(CPUState *cs,
+static void openrisc_restore_state_to_opc(CPUOpenRISCState *env,
                                           const TranslationBlock *tb,
                                           const uint64_t *data)
 {
-    OpenRISCCPU *cpu = OPENRISC_CPU(cs);
-
-    cpu->env.pc = data[0];
-    cpu->env.dflag = data[1] & 1;
+    env->pc = data[0];
+    env->dflag = data[1] & 1;
     if (data[1] & 2) {
-        cpu->env.ppc = cpu->env.pc - 4;
+        env->ppc = env->pc - 4;
     }
 }
 

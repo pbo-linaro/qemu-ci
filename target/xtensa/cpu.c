@@ -50,13 +50,11 @@ static vaddr xtensa_cpu_get_pc(CPUXtensaState *env)
     return env->pc;
 }
 
-static void xtensa_restore_state_to_opc(CPUState *cs,
+static void xtensa_restore_state_to_opc(CPUXtensaState *env,
                                         const TranslationBlock *tb,
                                         const uint64_t *data)
 {
-    XtensaCPU *cpu = XTENSA_CPU(cs);
-
-    cpu->env.pc = data[0];
+    env->pc = data[0];
 }
 
 static bool xtensa_cpu_has_work(CPUState *cs)

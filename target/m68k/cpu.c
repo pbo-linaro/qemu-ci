@@ -34,16 +34,15 @@ static vaddr m68k_cpu_get_pc(CPUM68KState *env)
     return env->pc;
 }
 
-static void m68k_restore_state_to_opc(CPUState *cs,
+static void m68k_restore_state_to_opc(CPUM68KState *env,
                                       const TranslationBlock *tb,
                                       const uint64_t *data)
 {
-    M68kCPU *cpu = M68K_CPU(cs);
     int cc_op = data[1];
 
-    cpu->env.pc = data[0];
+    env->pc = data[0];
     if (cc_op != CC_OP_DYNAMIC) {
-        cpu->env.cc_op = cc_op;
+        env->cc_op = cc_op;
     }
 }
 

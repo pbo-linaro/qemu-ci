@@ -61,12 +61,10 @@ static void x86_cpu_synchronize_from_tb(CPUState *cs,
     }
 }
 
-static void x86_restore_state_to_opc(CPUState *cs,
+static void x86_restore_state_to_opc(CPUX86State *env,
                                      const TranslationBlock *tb,
                                      const uint64_t *data)
 {
-    X86CPU *cpu = X86_CPU(cs);
-    CPUX86State *env = &cpu->env;
     int cc_op = data[1];
     uint64_t new_pc;
 

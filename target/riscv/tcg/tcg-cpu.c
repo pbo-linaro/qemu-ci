@@ -108,12 +108,10 @@ static void riscv_cpu_synchronize_from_tb(CPUState *cs,
     }
 }
 
-static void riscv_restore_state_to_opc(CPUState *cs,
+static void riscv_restore_state_to_opc(CPURISCVState *env,
                                        const TranslationBlock *tb,
                                        const uint64_t *data)
 {
-    RISCVCPU *cpu = RISCV_CPU(cs);
-    CPURISCVState *env = &cpu->env;
     RISCVMXL xl = FIELD_EX32(tb->flags, TB_FLAGS, XL);
     target_ulong pc;
 

@@ -7163,13 +7163,11 @@ static vaddr ppc_cpu_get_pc(CPUPPCState *env)
 }
 
 #ifdef CONFIG_TCG
-static void ppc_restore_state_to_opc(CPUState *cs,
+static void ppc_restore_state_to_opc(CPUPPCState *env,
                                      const TranslationBlock *tb,
                                      const uint64_t *data)
 {
-    PowerPCCPU *cpu = POWERPC_CPU(cs);
-
-    cpu->env.nip = data[0];
+    env->nip = data[0];
 }
 #endif /* CONFIG_TCG */
 

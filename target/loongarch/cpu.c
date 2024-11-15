@@ -340,11 +340,11 @@ static void loongarch_cpu_synchronize_from_tb(CPUState *cs,
     set_pc(cpu_env(cs), tb->pc);
 }
 
-static void loongarch_restore_state_to_opc(CPUState *cs,
+static void loongarch_restore_state_to_opc(CPULoongArchState *env,
                                            const TranslationBlock *tb,
                                            const uint64_t *data)
 {
-    set_pc(cpu_env(cs), data[0]);
+    set_pc(env, data[0]);
 }
 #endif /* CONFIG_TCG */
 

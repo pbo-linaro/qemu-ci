@@ -267,11 +267,11 @@ static bool hexagon_cpu_has_work(CPUState *cs)
     return true;
 }
 
-static void hexagon_restore_state_to_opc(CPUState *cs,
+static void hexagon_restore_state_to_opc(CPUHexagonState *env,
                                          const TranslationBlock *tb,
                                          const uint64_t *data)
 {
-    cpu_env(cs)->gpr[HEX_REG_PC] = data[0];
+    env->gpr[HEX_REG_PC] = data[0];
 }
 
 static void hexagon_cpu_reset_hold(Object *obj, ResetType type)

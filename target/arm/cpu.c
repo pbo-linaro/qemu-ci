@@ -90,12 +90,10 @@ void arm_cpu_synchronize_from_tb(CPUState *cs,
     }
 }
 
-void arm_restore_state_to_opc(CPUState *cs,
+void arm_restore_state_to_opc(CPUARMState *env,
                               const TranslationBlock *tb,
                               const uint64_t *data)
 {
-    CPUARMState *env = cpu_env(cs);
-
     if (is_a64(env)) {
         if (tb_cflags(tb) & CF_PCREL) {
             env->pc = (env->pc & TARGET_PAGE_MASK) | data[0];

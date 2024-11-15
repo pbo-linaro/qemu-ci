@@ -55,11 +55,11 @@ static void avr_cpu_synchronize_from_tb(CPUState *cs,
     cpu_env(cs)->pc_w = tb->pc / 2; /* internally PC points to words */
 }
 
-static void avr_restore_state_to_opc(CPUState *cs,
+static void avr_restore_state_to_opc(CPUAVRState *env,
                                      const TranslationBlock *tb,
                                      const uint64_t *data)
 {
-    cpu_env(cs)->pc_w = data[0];
+    env->pc_w = data[0];
 }
 
 static void avr_cpu_reset_hold(Object *obj, ResetType type)

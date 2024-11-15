@@ -218,7 +218,7 @@ void cpu_restore_state_from_tb(CPUState *cpu, TranslationBlock *tb,
         cpu->neg.icount_decr.u16.low += insns_left;
     }
 
-    cpu->cc->tcg_ops->restore_state_to_opc(cpu, tb, data);
+    cpu->cc->tcg_ops->restore_state_to_opc(cpu_env(cpu), tb, data);
 }
 
 bool cpu_restore_state(CPUState *cpu, uintptr_t host_pc)

@@ -47,12 +47,10 @@ static void alpha_cpu_synchronize_from_tb(CPUState *cs,
     }
 }
 
-static void alpha_restore_state_to_opc(CPUState *cs,
+static void alpha_restore_state_to_opc(CPUAlphaState *env,
                                        const TranslationBlock *tb,
                                        const uint64_t *data)
 {
-    CPUAlphaState *env = cpu_env(cs);
-
     if (tb_cflags(tb) & CF_PCREL) {
         env->pc = (env->pc & TARGET_PAGE_MASK) | data[0];
     } else {

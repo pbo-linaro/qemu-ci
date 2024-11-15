@@ -100,14 +100,12 @@ static void mb_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.iflags = tb->flags & IFLAGS_TB_MASK;
 }
 
-static void mb_restore_state_to_opc(CPUState *cs,
+static void mb_restore_state_to_opc(CPUMBState *env,
                                     const TranslationBlock *tb,
                                     const uint64_t *data)
 {
-    MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);
-
-    cpu->env.pc = data[0];
-    cpu->env.iflags = data[1];
+    env->pc = data[0];
+    env->iflags = data[1];
 }
 
 static bool mb_cpu_has_work(CPUState *cs)

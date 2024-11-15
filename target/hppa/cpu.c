@@ -101,12 +101,10 @@ static void hppa_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.psw_xb = tb->flags & (PSW_X | PSW_B);
 }
 
-static void hppa_restore_state_to_opc(CPUState *cs,
+static void hppa_restore_state_to_opc(CPUHPPAState *env,
                                       const TranslationBlock *tb,
                                       const uint64_t *data)
 {
-    CPUHPPAState *env = cpu_env(cs);
-
     env->iaoq_f = (env->iaoq_f & TARGET_PAGE_MASK) | data[0];
     if (data[1] != INT32_MIN) {
         env->iaoq_b = env->iaoq_f + data[1];

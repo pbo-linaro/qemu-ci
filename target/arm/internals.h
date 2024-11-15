@@ -362,7 +362,7 @@ void arm_cpu_register_gdb_commands(ARMCPU *cpu);
 void aarch64_cpu_register_gdb_commands(ARMCPU *cpu, GString *,
                                        GPtrArray *, GPtrArray *);
 
-void arm_restore_state_to_opc(CPUState *cs,
+void arm_restore_state_to_opc(CPUARMState *env,
                               const TranslationBlock *tb,
                               const uint64_t *data);
 

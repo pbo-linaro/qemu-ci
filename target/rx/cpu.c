@@ -46,13 +46,11 @@ static void rx_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.pc = tb->pc;
 }
 
-static void rx_restore_state_to_opc(CPUState *cs,
+static void rx_restore_state_to_opc(CPURXState *env,
                                     const TranslationBlock *tb,
                                     const uint64_t *data)
 {
-    RXCPU *cpu = RX_CPU(cs);
-
-    cpu->env.pc = data[0];
+    env->pc = data[0];
 }
 
 static bool rx_cpu_has_work(CPUState *cs)

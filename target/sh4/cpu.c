@@ -48,14 +48,12 @@ static void superh_cpu_synchronize_from_tb(CPUState *cs,
     cpu->env.flags = tb->flags & TB_FLAG_ENVFLAGS_MASK;
 }
 
-static void superh_restore_state_to_opc(CPUState *cs,
+static void superh_restore_state_to_opc(CPUSH4State *env,
                                         const TranslationBlock *tb,
                                         const uint64_t *data)
 {
-    SuperHCPU *cpu = SUPERH_CPU(cs);
-
-    cpu->env.pc = data[0];
-    cpu->env.flags = data[1];
+    env->pc = data[0];
+    env->flags = data[1];
     /*
      * Theoretically delayed_pc should also be restored. In practice the
      * branch instruction is re-executed after exception, so the delayed
