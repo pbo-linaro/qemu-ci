@@ -13,6 +13,7 @@
 
 #include "qom/object.h"
 #include "qemu/module.h"
+#include "qapi/error.h"
 
 
 #define TYPE_TEST_IF "test-interface"
@@ -67,7 +68,7 @@ static const TypeInfo intermediate_impl_info = {
 
 static void test_interface_impl(const char *type)
 {
-    Object *obj = object_new(type);
+    Object *obj = object_new_dynamic(type, &error_abort);
     TestIf *iobj = TEST_IF(obj);
     TestIfClass *ioc = TEST_IF_GET_CLASS(iobj);
 

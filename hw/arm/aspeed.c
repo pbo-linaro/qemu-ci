@@ -385,7 +385,7 @@ static void aspeed_machine_init(MachineState *machine)
     DriveInfo *emmc0 = NULL;
     bool boot_emmc;
 
-    bmc->soc = ASPEED_SOC(object_new(amc->soc_name));
+    bmc->soc = ASPEED_SOC(object_new_dynamic(amc->soc_name, &error_fatal));
     object_property_add_child(OBJECT(machine), "soc", OBJECT(bmc->soc));
     object_unref(OBJECT(bmc->soc));
     sc = ASPEED_SOC_GET_CLASS(bmc->soc);
@@ -1594,7 +1594,7 @@ static void aspeed_minibmc_machine_init(MachineState *machine)
     sysclk = clock_new(OBJECT(machine), "SYSCLK");
     clock_set_hz(sysclk, SYSCLK_FRQ);
 
-    bmc->soc = ASPEED_SOC(object_new(amc->soc_name));
+    bmc->soc = ASPEED_SOC(object_new_dynamic(amc->soc_name, &error_fatal));
     object_property_add_child(OBJECT(machine), "soc", OBJECT(bmc->soc));
     object_unref(OBJECT(bmc->soc));
     qdev_connect_clock_in(DEVICE(bmc->soc), "sysclk", sysclk);

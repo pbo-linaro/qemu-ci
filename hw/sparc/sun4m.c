@@ -802,7 +802,7 @@ static void cpu_devinit(const char *cpu_type, unsigned int id,
     SPARCCPU *cpu;
     CPUSPARCState *env;
 
-    cpu = SPARC_CPU(object_new(cpu_type));
+    cpu = SPARC_CPU(object_new_dynamic(cpu_type, &error_fatal));
     env = &cpu->env;
 
     qemu_register_reset(sun4m_cpu_reset, cpu);

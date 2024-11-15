@@ -206,7 +206,7 @@ static void calxeda_init(MachineState *machine, enum cxmachines machine_id)
         Object *cpuobj;
         ARMCPU *cpu;
 
-        cpuobj = object_new(machine->cpu_type);
+        cpuobj = object_new_dynamic(machine->cpu_type, &error_abort);
         cpu = ARM_CPU(cpuobj);
 
         object_property_add_child(OBJECT(machine), "cpu[*]", cpuobj);

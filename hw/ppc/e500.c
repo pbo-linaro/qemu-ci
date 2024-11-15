@@ -939,7 +939,7 @@ void ppce500_init(MachineState *machine)
         PowerPCCPU *cpu;
         CPUState *cs;
 
-        cpu = POWERPC_CPU(object_new(machine->cpu_type));
+        cpu = POWERPC_CPU(object_new_dynamic(machine->cpu_type, &error_fatal));
         env = &cpu->env;
         cs = CPU(cpu);
 

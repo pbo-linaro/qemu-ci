@@ -2693,7 +2693,7 @@ static void spapr_init_cpus(SpaprMachineState *spapr)
         }
 
         if (i < boot_cores_nr) {
-            Object *core  = object_new(type);
+            Object *core  = object_new_dynamic(type, &error_fatal);
             int nr_threads = smp_threads;
 
             /* Handle the partially filled core for older machine types */

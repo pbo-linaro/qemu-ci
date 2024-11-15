@@ -146,7 +146,7 @@ bool qdev_set_parent_bus(DeviceState *dev, BusState *bus, Error **errp)
 
 DeviceState *qdev_new(const char *name)
 {
-    return DEVICE(object_new(name));
+    return DEVICE(object_new_dynamic(name, &error_abort));
 }
 
 static QTAILQ_HEAD(, DeviceListener) device_listeners

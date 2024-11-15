@@ -150,7 +150,10 @@ CpuModelExpansionInfo *qmp_query_cpu_model_expansion(CpuModelExpansionType type,
         }
     }
 
-    obj = object_new(object_class_get_name(oc));
+    obj = object_new_dynamic(object_class_get_name(oc), errp);
+    if (!obj) {
+        return NULL;
+    }
 
     if (model->props) {
         Visitor *visitor;

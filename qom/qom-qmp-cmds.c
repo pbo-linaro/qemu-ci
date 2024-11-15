@@ -203,7 +203,10 @@ ObjectPropertyInfoList *qmp_qom_list_properties(const char *typename,
     if (object_class_is_abstract(klass)) {
         object_class_property_iter_init(&iter, klass);
     } else {
-        obj = object_new(typename);
+        obj = object_new_dynamic(typename, errp);
+        if (!obj) {
+            return NULL;
+        }
         object_property_iter_init(&iter, obj);
     }
     while ((prop = object_property_iter_next(&iter))) {

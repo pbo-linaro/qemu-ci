@@ -996,7 +996,11 @@ static Chardev *chardev_new(const char *id, const char *typename,
     assert(g_str_has_prefix(typename, "chardev-"));
     assert(id);
 
-    obj = object_new(typename);
+    obj = object_new_dynamic(typename, errp);
+    if (!obj) {
+        return NULL;
+    }
+
     chr = CHARDEV(obj);
     chr->handover_yank_instance = handover_yank_instance;
     chr->label = g_strdup(id);

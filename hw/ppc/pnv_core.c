@@ -361,7 +361,10 @@ static void pnv_core_realize(DeviceState *dev, Error **errp)
         PowerPCCPU *cpu;
         PnvCPUState *pnv_cpu;
 
-        obj = object_new(typename);
+        obj = object_new_dynamic(typename, &local_err);
+        if (!obj) {
+            goto err;
+        }
         cpu = POWERPC_CPU(obj);
 
         pc->threads[i] = POWERPC_CPU(obj);

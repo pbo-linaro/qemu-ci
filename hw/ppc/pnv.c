@@ -1459,7 +1459,7 @@ static void pnv_chip_power8_instance_init(Object *obj)
         chip8->num_phbs = pcc->num_phbs;
 
         for (i = 0; i < chip8->num_phbs; i++) {
-            Object *phb = object_new(TYPE_PNV_PHB);
+            Object *phb = object_new_dynamic(TYPE_PNV_PHB, &error_fatal);
 
             /*
              * We need the chip to parent the PHB to allow the DT
@@ -2376,7 +2376,7 @@ static void pnv_chip_core_realize(PnvChip *chip, Error **errp)
             continue;
         }
 
-        pnv_core = PNV_CORE(object_new(typename));
+        pnv_core = PNV_CORE(object_new_dynamic(typename, &error_fatal));
 
         snprintf(core_name, sizeof(core_name), "core[%d]", core_hwid);
         object_property_add_child(OBJECT(chip), core_name, OBJECT(pnv_core));

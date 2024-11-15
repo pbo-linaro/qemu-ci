@@ -554,7 +554,7 @@ static void drc_unrealize(DeviceState *d)
 SpaprDrc *spapr_dr_connector_new(Object *owner, const char *type,
                                          uint32_t id)
 {
-    SpaprDrc *drc = SPAPR_DR_CONNECTOR(object_new(type));
+    SpaprDrc *drc = SPAPR_DR_CONNECTOR(object_new_dynamic(type, &error_fatal));
     g_autofree char *prop_name = NULL;
 
     drc->id = id;

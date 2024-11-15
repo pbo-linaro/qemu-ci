@@ -298,7 +298,10 @@ static PowerPCCPU *spapr_create_vcpu(SpaprCpuCore *sc, int i, Error **errp)
     PowerPCCPU *cpu;
     CPUPPCState *env;
 
-    obj = object_new(scc->cpu_type);
+    obj = object_new_dynamic(scc->cpu_type, errp);
+    if (!obj) {
+        return NULL;
+    }
 
     cs = CPU(obj);
     cpu = POWERPC_CPU(obj);

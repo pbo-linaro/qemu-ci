@@ -57,7 +57,7 @@ bool cpu_exists(int64_t id)
 CPUState *cpu_create(const char *typename)
 {
     Error *err = NULL;
-    CPUState *cpu = CPU(object_new(typename));
+    CPUState *cpu = CPU(object_new_dynamic(typename, &error_abort));
     if (!qdev_realize(DEVICE(cpu), NULL, &err)) {
         error_report_err(err);
         object_unref(OBJECT(cpu));

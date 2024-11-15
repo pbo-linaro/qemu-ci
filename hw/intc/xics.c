@@ -377,7 +377,10 @@ Object *icp_create(Object *cpu, const char *type, XICSFabric *xi, Error **errp)
 {
     Object *obj;
 
-    obj = object_new(type);
+    obj = object_new_dynamic(type, errp);
+    if (!obj) {
+        return NULL;
+    }
     object_property_add_child(cpu, type, obj);
     object_unref(obj);
     object_property_set_link(obj, ICP_PROP_XICS, OBJECT(xi), &error_abort);
