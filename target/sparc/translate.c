@@ -101,15 +101,6 @@
 # define MAXTL_MASK                             0
 #endif
 
-/* Dynamic PC, must exit to main loop. */
-#define DYNAMIC_PC         1
-/* Dynamic PC, one of two values according to jump_pc[T2]. */
-#define JUMP_PC            2
-/* Dynamic PC, may lookup next TB. */
-#define DYNAMIC_PC_LOOKUP  3
-
-#define DISAS_EXIT  DISAS_TARGET_0
-
 /* global register indexes */
 static TCGv_ptr cpu_regwptr;
 static TCGv cpu_pc, cpu_npc;
@@ -5879,28 +5870,5 @@ void sparc_tcg_init(void)
         cpu_regs[i] = tcg_global_mem_new(cpu_regwptr,
                                          (i - 8) * sizeof(target_ulong),
                                          gregnames[i]);
-    }
-}
-
-void sparc_restore_state_to_opc(CPUState *cs,
-                                const TranslationBlock *tb,
-                                const uint64_t *data)
-{
-    CPUSPARCState *env = cpu_env(cs);
-    target_ulong pc = data[0];
-    target_ulong npc = data[1];
-
-    env->pc = pc;
-    if (npc == DYNAMIC_PC) {
-        /* dynamic NPC: already stored */
-    } else if (npc & JUMP_PC) {
-        /* jump PC: use 'cond' and the jump targets of the translation */
-        if (env->cond) {
-            env->npc = npc & ~3;
-        } else {
-            env->npc = pc + 4;
-        }
-    } else {
-        env->npc = npc;
     }
 }
