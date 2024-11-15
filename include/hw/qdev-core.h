@@ -435,13 +435,40 @@ compat_props_add(GPtrArray *arr,
  * qdev_new: Create a device on the heap
  * @name: device type to create (we assert() that this type exists)
  *
+ * This method should be used where @name is statically specified
+ * from a const string at build time, where the caller does not expect
+ * failure to be possible.
+ *
  * This only allocates the memory and initializes the device state
  * structure, ready for the caller to set properties if they wish.
  * The device still needs to be realized.
  *
+ * If an instance of @name is not permitted to be instantiated, an
+ * assert will be raised. This can happen if @name is abstract.
+ *
  * Return: a derived DeviceState object with a reference count of 1.
  */
 DeviceState *qdev_new(const char *name);
+
+/**
+ * qdev_new_dynamic: Create a device on the heap
+ * @name: device type to create (we assert() that this type exists)
+ * @errp: pointer to be filled with error details on failure
+ *
+ * This method must be used where @name is dynamically chosen
+ * at runtime, which has the possibility of unexpected choices leading
+ * to failures.
+ *
+ * This only allocates the memory and initializes the device state
+ * structure, ready for the caller to set properties if they wish.
+ * The device still needs to be realized.
+ *
+ * If an instance of @name is not permitted to be instantiated, an
+ * error will be reported. This can happen if @name is abstract.
+ *
+ * Return: a derived DeviceState object with a reference count of 1.
+ */
+DeviceState *qdev_new_dynamic(const char *name, Error **errp);
 
 /**
  * qdev_is_realized() - check if device is realized

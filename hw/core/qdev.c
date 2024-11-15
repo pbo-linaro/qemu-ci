@@ -149,6 +149,11 @@ DeviceState *qdev_new(const char *name)
     return DEVICE(object_new_dynamic(name, &error_abort));
 }
 
+DeviceState *qdev_new_dynamic(const char *name, Error **errp)
+{
+    return DEVICE(object_new_dynamic(name, errp));
+}
+
 static QTAILQ_HEAD(, DeviceListener) device_listeners
     = QTAILQ_HEAD_INITIALIZER(device_listeners);
 
