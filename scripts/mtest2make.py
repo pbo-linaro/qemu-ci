@@ -27,7 +27,9 @@ SPEED = quick
 .speed.slow = $(foreach s,$(sort $(filter-out %-thorough, $1)), --suite $s)
 .speed.thorough = $(foreach s,$(sort $1), --suite $s)
 
+ifndef TIMEOUT_MULTIPLIER
 TIMEOUT_MULTIPLIER = 1
+endif
 .mtestargs = --no-rebuild -t $(TIMEOUT_MULTIPLIER)
 ifneq ($(SPEED), quick)
 .mtestargs += --setup $(SPEED)
