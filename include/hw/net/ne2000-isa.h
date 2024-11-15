@@ -20,17 +20,13 @@
 static inline ISADevice *isa_ne2000_init(ISABus *bus, int base, int irq,
                                          NICInfo *nd)
 {
-    ISADevice *d;
+    ISADevice *d = isa_new(TYPE_ISA_NE2000);
+    DeviceState *dev = DEVICE(d);
 
-    d = isa_try_new(TYPE_ISA_NE2000);
-    if (d) {
-        DeviceState *dev = DEVICE(d);
-
-        qdev_prop_set_uint32(dev, "iobase", base);
-        qdev_prop_set_uint32(dev, "irq",    irq);
-        qdev_set_nic_properties(dev, nd);
-        isa_realize_and_unref(d, bus, &error_fatal);
-    }
+    qdev_prop_set_uint32(dev, "iobase", base);
+    qdev_prop_set_uint32(dev, "irq",    irq);
+    qdev_set_nic_properties(dev, nd);
+    isa_realize_and_unref(d, bus, &error_fatal);
     return d;
 }
 

@@ -444,18 +444,6 @@ compat_props_add(GPtrArray *arr,
 DeviceState *qdev_new(const char *name);
 
 /**
- * qdev_try_new: Try to create a device on the heap
- * @name: device type to create
- *
- * This is like qdev_new(), except it returns %NULL when type @name
- * does not exist, rather than asserting.
- *
- * Return: a derived DeviceState object with a reference count of 1 or
- * NULL if type @name does not exist.
- */
-DeviceState *qdev_try_new(const char *name);
-
-/**
  * qdev_is_realized() - check if device is realized
  * @dev: The device to check.
  *

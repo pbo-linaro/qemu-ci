@@ -596,9 +596,11 @@ static gboolean pc_init_ne2k_isa(ISABus *bus, NICInfo *nd, Error **errp)
                    "maximum number of ISA NE2000 devices exceeded");
         return false;
     }
-    isa_ne2000_init(bus, ne2000_io[nb_ne2k],
-                    ne2000_irq[nb_ne2k], nd);
-    nb_ne2k++;
+    if (module_object_class_by_name(TYPE_ISA_NE2000)) {
+        isa_ne2000_init(bus, ne2000_io[nb_ne2k],
+                        ne2000_irq[nb_ne2k], nd);
+        nb_ne2k++;
+    }
     return true;
 }
 
@@ -1087,7 +1089,7 @@ static void pc_superio_init(ISABus *isa_bus, bool create_fdctrl,
     int i;
     DriveInfo *fd[MAX_FD];
     qemu_irq *a20_line;
-    ISADevice *i8042, *port92, *vmmouse;
+    ISADevice *i8042, *port92, *vmmouse = NULL;
 
     serial_hds_isa_init(isa_bus, 0, MAX_ISA_SERIAL_PORTS);
     parallel_hds_isa_init(isa_bus, MAX_PARALLEL_PORTS);
@@ -1117,9 +1119,9 @@ static void pc_superio_init(ISABus *isa_bus, bool create_fdctrl,
     i8042 = isa_create_simple(isa_bus, TYPE_I8042);
     if (!no_vmport) {
         isa_create_simple(isa_bus, TYPE_VMPORT);
-        vmmouse = isa_try_new("vmmouse");
-    } else {
-        vmmouse = NULL;
+        if (module_object_class_by_name("vmmouse")) {
+            vmmouse = isa_new("vmmouse");
+        }
     }
     if (vmmouse) {
         object_property_set_link(OBJECT(vmmouse), TYPE_I8042, OBJECT(i8042),
@@ -1163,11 +1165,7 @@ void pc_basic_device_init(struct PCMachineState *pcms,
     if (pcms->hpet_enabled) {
         qemu_irq rtc_irq;
 
-        hpet = qdev_try_new(TYPE_HPET);
-        if (!hpet) {
-            error_report("couldn't create HPET device");
-            exit(1);
-        }
+        hpet = qdev_new(TYPE_HPET);
         /*
          * For pc-piix-*, hpet's intcap is always IRQ2. For pc-q35-*,
          * use IRQ16~23, IRQ8 and IRQ2.  If the user has already set

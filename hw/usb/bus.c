@@ -394,7 +394,6 @@ void usb_claim_port(USBDevice *dev, Error **errp)
 {
     USBBus *bus = usb_bus_from_device(dev);
     USBPort *port;
-    USBDevice *hub;
 
     assert(dev->port == NULL);
 
@@ -412,9 +411,8 @@ void usb_claim_port(USBDevice *dev, Error **errp)
     } else {
         if (bus->nfree == 1 && strcmp(object_get_typename(OBJECT(dev)), "usb-hub") != 0) {
             /* Create a new hub and chain it on */
-            hub = usb_try_new("usb-hub");
-            if (hub) {
-                usb_realize_and_unref(hub, bus, NULL);
+            if (module_object_class_by_name("usb-hub")) {
+                usb_realize_and_unref(usb_new("usb-hub"), bus, NULL);
             }
         }
         if (bus->nfree == 0) {
