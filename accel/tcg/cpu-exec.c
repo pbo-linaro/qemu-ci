@@ -433,6 +433,16 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
     return tb->tc.ptr;
 }
 
+/* Return the current PC from CPU, which may be cached in TB. */
+static inline vaddr log_pc(CPUState *cpu, const TranslationBlock *tb)
+{
+    if (tb_cflags(tb) & CF_PCREL) {
+        return cpu->cc->get_pc(cpu);
+    } else {
+        return tb->pc;
+    }
+}
+
 /* Execute a TB, and fix up the CPU state afterwards if necessary */
 /*
  * Disable CFI checks.
