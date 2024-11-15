@@ -948,7 +948,8 @@ GPtrArray *qemu_get_nic_models(const char *device_type)
              * create this property during instance_init, so we have to create
              * a temporary instance here to be able to check it.
              */
-            Object *obj = object_new_with_class(OBJECT_CLASS(dc));
+            Object *obj = object_new_with_class(OBJECT_CLASS(dc),
+                                                &error_abort);
             if (object_property_find(obj, "netdev")) {
                 g_ptr_array_add(nic_models, (gpointer)name);
             }

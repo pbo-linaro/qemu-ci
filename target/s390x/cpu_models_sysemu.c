@@ -69,7 +69,7 @@ static void create_cpu_model_list(ObjectClass *klass, void *opaque)
     if (cpu_list_data->model) {
         Object *obj;
         S390CPU *sc;
-        obj = object_new_with_class(klass);
+        obj = object_new_with_class(klass, &error_abort);
         sc = S390_CPU(obj);
         if (sc->model) {
             info->has_unavailable_features = true;
@@ -116,7 +116,10 @@ static void cpu_model_from_info(S390CPUModel *model, const CpuModelInfo *info,
         error_setg(errp, "The CPU definition '%s' requires KVM", info->name);
         return;
     }
-    obj = object_new_with_class(oc);
+    obj = object_new_with_class(oc, errp);
+    if (!obj) {
+        return;
+    }
     cpu = S390_CPU(obj);
 
     if (!cpu->model) {

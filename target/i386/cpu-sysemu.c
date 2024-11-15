@@ -156,15 +156,20 @@ static X86CPU *x86_cpu_from_model(const char *model, QObject *props,
 {
     X86CPU *xc = NULL;
     X86CPUClass *xcc;
+    Object *xcobj;
     Error *err = NULL;
 
     xcc = X86_CPU_CLASS(cpu_class_by_name(TYPE_X86_CPU, model));
     if (xcc == NULL) {
-        error_setg(&err, "CPU model '%s' not found", model);
-        goto out;
+        error_setg(errp, "CPU model '%s' not found", model);
+        return NULL;
     }
 
-    xc = X86_CPU(object_new_with_class(OBJECT_CLASS(xcc)));
+    xcobj = object_new_with_class(OBJECT_CLASS(xcc), errp);
+    if (!xcobj) {
+        return NULL;
+    }
+    xc = X86_CPU(xcobj);
     if (props) {
         object_apply_props(OBJECT(xc), props, props_arg_name, &err);
         if (err) {
