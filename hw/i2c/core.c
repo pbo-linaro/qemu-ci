@@ -369,7 +369,7 @@ I2CSlave *i2c_slave_new(const char *name, uint8_t addr)
 {
     DeviceState *dev;
 
-    dev = qdev_new(name);
+    dev = qdev_new_dynamic(name, &error_fatal);
     qdev_prop_set_uint8(dev, "address", addr);
     return I2C_SLAVE(dev);
 }

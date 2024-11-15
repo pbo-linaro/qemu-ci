@@ -221,7 +221,7 @@ DeviceState *sysbus_create_varargs(const char *name,
     qemu_irq irq;
     int n;
 
-    dev = qdev_new(name);
+    dev = qdev_new_dynamic(name, &error_fatal);
     s = SYS_BUS_DEVICE(dev);
     sysbus_realize_and_unref(s, &error_fatal);
     if (addr != (hwaddr)-1) {

@@ -2186,7 +2186,7 @@ static PCIDevice *pci_new_internal(int devfn, bool multifunction,
 {
     DeviceState *dev;
 
-    dev = qdev_new(name);
+    dev = qdev_new_dynamic(name, &error_fatal);
     qdev_prop_set_int32(dev, "addr", devfn);
     qdev_prop_set_bit(dev, "multifunction", multifunction);
     return PCI_DEVICE(dev);

@@ -686,7 +686,10 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
     }
 
     /* create device */
-    dev = qdev_new(driver);
+    dev = qdev_new_dynamic(driver, errp);
+    if (!dev) {
+        return NULL;
+    }
 
     /* Check whether the hotplug is allowed by the machine */
     if (phase_check(PHASE_MACHINE_READY)) {

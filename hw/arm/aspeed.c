@@ -320,7 +320,7 @@ void aspeed_board_init_flashes(AspeedSMCState *s, const char *flashtype,
         DriveInfo *dinfo = drive_get(IF_MTD, 0, unit0 + i);
         DeviceState *dev;
 
-        dev = qdev_new(flashtype);
+        dev = qdev_new_dynamic(flashtype, &error_fatal);
         if (dinfo) {
             qdev_prop_set_drive(dev, "drive", blk_by_legacy_dinfo(dinfo));
         }

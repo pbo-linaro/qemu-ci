@@ -1034,6 +1034,7 @@ static void xen_block_device_create(XenBackendInstance *backend,
     XenDevice *xendev = NULL;
     const char *type;
     XenBlockDevice *blockdev;
+    DeviceState *dev;
 
     if (qemu_strtoul(name, NULL, 10, &number)) {
         error_setg(errp, "failed to parse name '%s'", name);
@@ -1075,7 +1076,11 @@ static void xen_block_device_create(XenBackendInstance *backend,
         goto fail;
     }
 
-    xendev = XEN_DEVICE(qdev_new(type));
+    dev = qdev_new_dynamic(type, errp);
+    if (!dev) {
+        goto fail;
+    }
+    xendev = XEN_DEVICE(dev);
     blockdev = XEN_BLOCK_DEVICE(xendev);
 
     if (!object_property_set_str(OBJECT(xendev), "vdev", vdev,

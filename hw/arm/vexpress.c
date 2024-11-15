@@ -239,7 +239,7 @@ static void init_cpus(MachineState *ms, const char *cpu_type,
      * this must happen after the CPUs are created because a15mpcore_priv
      * wires itself up to the CPU's generic_timer gpio out lines.
      */
-    dev = qdev_new(privdev);
+    dev = qdev_new_dynamic(privdev, &error_fatal);
     qdev_prop_set_uint32(dev, "num-cpu", smp_cpus);
     busdev = SYS_BUS_DEVICE(dev);
     sysbus_realize_and_unref(busdev, &error_fatal);

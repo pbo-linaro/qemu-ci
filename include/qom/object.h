@@ -654,7 +654,7 @@ Object *object_new_internal(const char *typename);
  * @typename: The name of the type of the object to instantiate.
  * @errp: pointer to be filled with error details on failure
  *
- * This method should be used where @typename is dynamically chosen
+ * This method must be used where @typename is dynamically chosen
  * at runtime, which has the possibility of unexpected choices leading
  * to failures.
  *
@@ -663,7 +663,7 @@ Object *object_new_internal(const char *typename);
  * the last reference is dropped.
  *
  * If an instance of @typename is not permitted to be instantiated, an
- * error will be raised. This can happen if @typename is abstract.
+ * error will be reported. This can happen if @typename is abstract.
  *
  * Returns: The newly allocated and instantiated object.
  */

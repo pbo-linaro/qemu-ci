@@ -581,7 +581,7 @@ void usb_pcap_data(USBPacket *p, bool setup);
 
 static inline USBDevice *usb_new(const char *name)
 {
-    return USB_DEVICE(qdev_new(name));
+    return USB_DEVICE(qdev_new_dynamic(name, &error_fatal));
 }
 
 static inline bool usb_realize_and_unref(USBDevice *dev, USBBus *bus, Error **errp)
