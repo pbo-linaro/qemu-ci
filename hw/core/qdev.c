@@ -144,7 +144,8 @@ bool qdev_set_parent_bus(DeviceState *dev, BusState *bus, Error **errp)
     return true;
 }
 
-DeviceState *qdev_new(const char *name)
+/* Only to be called via the 'qdev_new' macro */
+DeviceState *qdev_new_internal(const char *name)
 {
     return DEVICE(object_new_dynamic(name, &error_abort));
 }
