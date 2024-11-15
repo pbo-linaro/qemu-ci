@@ -618,6 +618,8 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
     }
     bcontainer = &container->bcontainer;
 
+    vfio_address_space_insert(space, bcontainer);
+
     if (!vfio_cpr_register_container(bcontainer, errp)) {
         goto free_container_exit;
     }
@@ -636,8 +638,6 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
     }
 
     vfio_kvm_device_add_group(group);
-
-    vfio_address_space_insert(space, bcontainer);
 
     group->container = container;
     QLIST_INSERT_HEAD(&container->group_list, group, container_next);
