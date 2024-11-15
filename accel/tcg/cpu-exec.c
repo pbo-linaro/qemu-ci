@@ -1074,11 +1074,15 @@ bool tcg_exec_realizefn(CPUState *cpu, Error **errp)
 
     if (!tcg_target_initialized) {
         /* Check mandatory TCGCPUOps handlers */
+        const TCGCPUOps *tcg_ops = cpu->cc->tcg_ops;
+
+        assert(tcg_ops->restore_state_to_opc);
 #ifndef CONFIG_USER_ONLY
-        assert(cpu->cc->tcg_ops->cpu_exec_halt);
-        assert(cpu->cc->tcg_ops->cpu_exec_interrupt);
+        assert(tcg_ops->cpu_exec_halt);
+        assert(tcg_ops->cpu_exec_interrupt);
 #endif /* !CONFIG_USER_ONLY */
-        cpu->cc->tcg_ops->initialize();
+
+        tcg_ops->initialize();
         tcg_target_initialized = true;
     }
 
