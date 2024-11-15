@@ -375,7 +375,7 @@ hwaddr mb_cpu_get_phys_page_attrs_debug(CPUState *cpu, vaddr addr,
 G_NORETURN void mb_cpu_do_unaligned_access(CPUState *cs, vaddr vaddr,
                                            MMUAccessType access_type,
                                            int mmu_idx, uintptr_t retaddr);
-void mb_cpu_dump_state(CPUState *cpu, FILE *f, int flags);
+void mb_cpu_dump_state(CPUMBState *env, FILE *f, int flags);
 int mb_cpu_gdb_read_register(CPUState *cpu, GByteArray *buf, int reg);
 int mb_cpu_gdb_write_register(CPUState *cpu, uint8_t *buf, int reg);
 int mb_cpu_gdb_read_stack_protect(CPUState *cs, GByteArray *buf, int reg);

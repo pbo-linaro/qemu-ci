@@ -78,9 +78,8 @@ static void fpu_dump_state(CPUMIPSState *env, FILE *f, int flags)
     }
 }
 
-static void mips_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void mips_cpu_dump_state(CPUMIPSState *env, FILE *f, int flags)
 {
-    CPUMIPSState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, "pc=0x" TARGET_FMT_lx " HI=0x" TARGET_FMT_lx

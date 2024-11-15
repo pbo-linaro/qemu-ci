@@ -176,7 +176,7 @@ void hexagon_debug_qreg(CPUHexagonState *env, int regnum)
     print_qreg(stdout, env, regnum, false);
 }
 
-static void hexagon_dump(CPUHexagonState *env, FILE *f, int flags)
+static void hexagon_dump_state(CPUHexagonState *env, FILE *f, int flags)
 {
     HexagonCPU *cpu = env_archcpu(env);
 
@@ -235,14 +235,9 @@ static void hexagon_dump(CPUHexagonState *env, FILE *f, int flags)
     }
 }
 
-static void hexagon_dump_state(CPUState *cs, FILE *f, int flags)
-{
-    hexagon_dump(cpu_env(cs), f, flags);
-}
-
 void hexagon_debug(CPUHexagonState *env)
 {
-    hexagon_dump(env, stdout, CPU_DUMP_FPU);
+    hexagon_dump_state(env, stdout, CPU_DUMP_FPU);
 }
 
 static void hexagon_cpu_set_pc(CPUHexagonState *env, vaddr value)

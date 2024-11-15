@@ -155,9 +155,8 @@ static ObjectClass *avr_cpu_class_by_name(const char *cpu_model)
     return object_class_by_name(cpu_model);
 }
 
-static void avr_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void avr_cpu_dump_state(CPUAVRState *env, FILE *f, int flags)
 {
-    CPUAVRState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, "\n");

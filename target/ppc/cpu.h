@@ -1554,7 +1554,7 @@ static inline bool vhyp_cpu_in_nested(PowerPCCPU *cpu)
 }
 #endif /* CONFIG_USER_ONLY */
 
-void ppc_cpu_dump_state(CPUState *cpu, FILE *f, int flags);
+void ppc_cpu_dump_state(CPUPPCState *env, FILE *f, int flags);
 int ppc_cpu_gdb_read_register(CPUState *cpu, GByteArray *buf, int reg);
 int ppc_cpu_gdb_read_register_apple(CPUState *cpu, GByteArray *buf, int reg);
 int ppc_cpu_gdb_write_register(CPUState *cpu, uint8_t *buf, int reg);

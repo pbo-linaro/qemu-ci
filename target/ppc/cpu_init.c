@@ -7522,18 +7522,17 @@ static void ppc_cpu_register_types(void)
 #endif
 }
 
-void ppc_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void ppc_cpu_dump_state(CPUPPCState *env, FILE *f, int flags)
 {
 #define RGPL  4
 #define RFPL  4
 
-    CPUPPCState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, "NIP " TARGET_FMT_lx "   LR " TARGET_FMT_lx " CTR "
                  TARGET_FMT_lx " XER " TARGET_FMT_lx " CPU#%d\n",
                  env->nip, env->lr, env->ctr, cpu_read_xer(env),
-                 cs->cpu_index);
+                 env_cpu(env)->cpu_index);
     qemu_fprintf(f, "MSR " TARGET_FMT_lx " HID0 " TARGET_FMT_lx "  HF "
                  "%08x iidx %d didx %d\n",
                  env->msr, env->spr[SPR_HID0], env->hflags,

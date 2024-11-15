@@ -98,10 +98,8 @@ void HELPER(rfi)(CPUHPPAState *env)
     if (qemu_loglevel_mask(CPU_LOG_INT)) {
         FILE *logfile = qemu_log_trylock();
         if (logfile) {
-            CPUState *cs = env_cpu(env);
-
-            fprintf(logfile, "RFI: cpu %d\n", cs->cpu_index);
-            hppa_cpu_dump_state(cs, logfile, 0);
+            fprintf(logfile, "RFI: cpu %d\n", env_cpu(env)->cpu_index);
+            hppa_cpu_dump_state(env, logfile, 0);
             qemu_log_unlock(logfile);
         }
     }

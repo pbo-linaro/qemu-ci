@@ -742,9 +742,8 @@ static ObjectClass *loongarch_cpu_class_by_name(const char *cpu_model)
     return oc;
 }
 
-static void loongarch_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void loongarch_cpu_dump_state(CPULoongArchState *env, FILE *f, int flags)
 {
-    CPULoongArchState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, " PC=%016" PRIx64 " ", env->pc);

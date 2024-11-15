@@ -100,7 +100,7 @@ void cpu_hppa_put_psw(CPUHPPAState *env, target_ulong psw)
     env->psw_cb = cb;
 }
 
-void hppa_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void hppa_cpu_dump_state(CPUHPPAState *env, FILE *f, int flags)
 {
 #ifndef CONFIG_USER_ONLY
     static const char cr_name[32][5] = {
@@ -115,7 +115,6 @@ void hppa_cpu_dump_state(CPUState *cs, FILE *f, int flags)
     };
 #endif
 
-    CPUHPPAState *env = cpu_env(cs);
     target_ulong psw = cpu_hppa_get_psw(env);
     target_ulong psw_cb;
     char psw_c[20];

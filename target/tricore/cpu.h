@@ -76,7 +76,7 @@ struct TriCoreCPUClass {
 };
 
 hwaddr tricore_cpu_get_phys_page_debug(CPUState *cpu, vaddr addr);
-void tricore_cpu_dump_state(CPUState *cpu, FILE *f, int flags);
+void tricore_cpu_dump_state(CPUTriCoreState *env, FILE *f, int flags);
 
 FIELD(PCXI, PCPN_13, 24, 8)
 FIELD(PCXI, PCPN_161, 22, 8)

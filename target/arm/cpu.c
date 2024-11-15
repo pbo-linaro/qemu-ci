@@ -1213,10 +1213,9 @@ static void arm_disas_set_info(CPUState *cpu, disassemble_info *info)
 
 #ifdef TARGET_AARCH64
 
-static void aarch64_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void aarch64_cpu_dump_state(CPUARMState *env, FILE *f, int flags)
 {
-    ARMCPU *cpu = ARM_CPU(cs);
-    CPUARMState *env = &cpu->env;
+    ARMCPU *cpu = env_archcpu(env);
     uint32_t psr = pstate_read(env);
     int i, j;
     int el = arm_current_el(env);
@@ -1372,21 +1371,20 @@ static void aarch64_cpu_dump_state(CPUState *cs, FILE *f, int flags)
 
 #else
 
-static inline void aarch64_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static inline void aarch64_cpu_dump_state(CPUARMState *env, FILE *f, int flags)
 {
     g_assert_not_reached();
 }
 
 #endif
 
-static void arm_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void arm_cpu_dump_state(CPUARMState *env, FILE *f, int flags)
 {
-    ARMCPU *cpu = ARM_CPU(cs);
-    CPUARMState *env = &cpu->env;
+    ARMCPU *cpu = env_archcpu(env);
     int i;
 
     if (is_a64(env)) {
-        aarch64_cpu_dump_state(cs, f, flags);
+        aarch64_cpu_dump_state(env, f, flags);
         return;
     }
 

@@ -616,9 +616,8 @@ static void cpu_print_cc(FILE *f, uint32_t cc)
 #define REGS_PER_LINE 8
 #endif
 
-static void sparc_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+static void sparc_cpu_dump_state(CPUSPARCState *env, FILE *f, int flags)
 {
-    CPUSPARCState *env = cpu_env(cs);
     int i, x;
 
     qemu_fprintf(f, "pc: " TARGET_FMT_lx "  npc: " TARGET_FMT_lx "\n", env->pc,

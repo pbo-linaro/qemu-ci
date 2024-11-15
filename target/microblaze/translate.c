@@ -1785,9 +1785,8 @@ void gen_intermediate_code(CPUState *cpu, TranslationBlock *tb, int *max_insns,
     translator_loop(cpu, tb, max_insns, pc, host_pc, &mb_tr_ops, &dc.base);
 }
 
-void mb_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void mb_cpu_dump_state(CPUMBState *env, FILE *f, int flags)
 {
-    CPUMBState *env = cpu_env(cs);
     uint32_t iflags;
     int i;
 

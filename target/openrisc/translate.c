@@ -1654,9 +1654,8 @@ void gen_intermediate_code(CPUState *cs, TranslationBlock *tb, int *max_insns,
                     &openrisc_tr_ops, &ctx.base);
 }
 
-void openrisc_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void openrisc_cpu_dump_state(CPUOpenRISCState *env, FILE *f, int flags)
 {
-    CPUOpenRISCState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, "PC=%08x\n", env->pc);

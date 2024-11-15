@@ -254,7 +254,7 @@ void hppa_cpu_do_interrupt(CPUState *cs)
             } else {
                 fprintf(logfile, "INT: cpu %d unknown %d\n", cs->cpu_index, i);
             }
-            hppa_cpu_dump_state(cs, logfile, 0);
+            hppa_cpu_dump_state(env, logfile, 0);
             qemu_log_unlock(logfile);
         }
     }

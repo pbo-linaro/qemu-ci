@@ -1235,9 +1235,8 @@ void gen_intermediate_code(CPUState *cpu, TranslationBlock *tb, int *max_insns,
                     &xtensa_translator_ops, &dc.base);
 }
 
-void xtensa_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void xtensa_cpu_dump_state(CPUXtensaState *env, FILE *f, int flags)
 {
-    CPUXtensaState *env = cpu_env(cs);
     xtensa_isa isa = env->config->isa;
     int i, j;
 

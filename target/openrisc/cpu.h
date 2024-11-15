@@ -297,7 +297,7 @@ struct ArchCPU {
     CPUOpenRISCState env;
 };
 
-void openrisc_cpu_dump_state(CPUState *cpu, FILE *f, int flags);
+void openrisc_cpu_dump_state(CPUOpenRISCState *env, FILE *f, int flags);
 int openrisc_cpu_gdb_read_register(CPUState *cpu, GByteArray *buf, int reg);
 int openrisc_cpu_gdb_write_register(CPUState *cpu, uint8_t *buf, int reg);
 void openrisc_translate_init(void);

@@ -105,7 +105,7 @@ void cpu_dump_state(CPUState *cpu, FILE *f, int flags)
 
     if (cc->dump_state) {
         cpu_synchronize_state(cpu);
-        cc->dump_state(cpu, f, flags);
+        cc->dump_state(cpu_env(cpu), f, flags);
     }
 }
 

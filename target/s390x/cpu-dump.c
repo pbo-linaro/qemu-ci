@@ -25,9 +25,8 @@
 #include "qemu/qemu-print.h"
 #include "sysemu/tcg.h"
 
-void s390_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void s390_cpu_dump_state(CPUS390XState *env, FILE *f, int flags)
 {
-    CPUS390XState *env = cpu_env(cs);
     int i;
 
     qemu_fprintf(f, "PSW=mask %016" PRIx64 " addr %016" PRIx64,

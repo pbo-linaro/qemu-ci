@@ -341,10 +341,9 @@ void x86_cpu_dump_local_apic_state(CPUState *cs, int flags)
 #define DUMP_CODE_BYTES_TOTAL    50
 #define DUMP_CODE_BYTES_BACKWARD 20
 
-void x86_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void x86_cpu_dump_state(CPUX86State *env, FILE *f, int flags)
 {
-    X86CPU *cpu = X86_CPU(cs);
-    CPUX86State *env = &cpu->env;
+    CPUState *cs = env_cpu(env);
     int eflags, i, nb;
     static const char *seg_name[6] = { "ES", "CS", "SS", "DS", "FS", "GS" };
 

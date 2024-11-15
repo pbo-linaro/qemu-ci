@@ -92,9 +92,8 @@ enum {
     MODE_UU = 3,
 };
 
-void tricore_cpu_dump_state(CPUState *cs, FILE *f, int flags)
+void tricore_cpu_dump_state(CPUTriCoreState *env, FILE *f, int flags)
 {
-    CPUTriCoreState *env = cpu_env(cs);
     uint32_t psw;
     int i;
 
