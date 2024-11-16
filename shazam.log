@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/20241116053918.420404-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] risugen/aarch64: SMULH and UMULH require ra == 31
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: risugen/aarch64: SMULH and UMULH require ra == 31
+Patch failed at 0001 risugen/aarch64: SMULH and UMULH require ra == 31
+error: aarch64.risu: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
