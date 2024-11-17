@@ -391,7 +391,7 @@ static ssize_t vfio_save_block(QEMUFile *f, VFIOMigration *migration)
     qemu_put_be64(f, VFIO_MIG_FLAG_DEV_DATA_STATE);
     qemu_put_be64(f, data_size);
     qemu_put_buffer(f, migration->data_buffer, data_size);
-    bytes_transferred += data_size;
+    qatomic_add(&bytes_transferred, data_size);
 
     trace_vfio_save_block(migration->vbasedev->name, data_size);
 
@@ -1030,12 +1030,12 @@ static int vfio_block_migration(VFIODevice *vbasedev, Error *err, Error **errp)
 
 int64_t vfio_mig_bytes_transferred(void)
 {
-    return bytes_transferred;
+    return qatomic_read(&bytes_transferred);
 }
 
 void vfio_reset_bytes_transferred(void)
 {
-    bytes_transferred = 0;
+    qatomic_set(&bytes_transferred, 0);
 }
 
 /*
