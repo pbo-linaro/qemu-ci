@@ -5,7 +5,7 @@
 use core::ptr::{addr_of, addr_of_mut, NonNull};
 use std::{
     ffi::CStr,
-    os::raw::{c_int, c_uchar, c_uint, c_void},
+    os::raw::{c_int, c_uint, c_void},
 };
 
 use qemu_api::{
@@ -32,6 +32,7 @@ const DATA_BREAK: u32 = 1 << 10;
 /// QEMU sourced constant.
 pub const PL011_FIFO_DEPTH: usize = 16_usize;
 
+/// State enum that represents the values of the peripheral and PCell registers of a PL011 device.
 #[derive(Clone, Copy, Debug)]
 enum DeviceId {
     #[allow(dead_code)]
@@ -39,20 +40,51 @@ enum DeviceId {
     Luminary,
 }
 
-impl std::ops::Index<hwaddr> for DeviceId {
-    type Output = c_uchar;
+macro_rules! pcell_reg_getter {
+    ($($(#[$attrs:meta])* fn $getter_fn:ident -> $value:literal),*$(,)?) => {
+        $($(#[$attrs])* const fn $getter_fn(self) -> u64 { $value })*
+    };
+}
 
-    fn index(&self, idx: hwaddr) -> &Self::Output {
-        match self {
-            Self::Arm => &Self::PL011_ID_ARM[idx as usize],
-            Self::Luminary => &Self::PL011_ID_LUMINARY[idx as usize],
-        }
-    }
+macro_rules! periph_reg_getter {
+    ($($(#[$attrs:meta])* fn $getter_fn:ident -> { Arm => $arm:literal, Luminary => $lum:literal$(,)?}),*$(,)?) => {
+        $(
+            $(#[$attrs])*
+            const fn $getter_fn(self) -> u64 {
+                (match self {
+                    Self::Arm => $arm,
+                    Self::Luminary => $lum,
+                }) as u64
+            }
+        )*
+    };
 }
 
 impl DeviceId {
-    const PL011_ID_ARM: [c_uchar; 8] = [0x11, 0x10, 0x14, 0x00, 0x0d, 0xf0, 0x05, 0xb1];
-    const PL011_ID_LUMINARY: [c_uchar; 8] = [0x11, 0x00, 0x18, 0x01, 0x0d, 0xf0, 0x05, 0xb1];
+    /// Value of `UARTPeriphID0` register, which contains the `PartNumber0` value.
+    const fn uart_periph_id0(self) -> u64 {
+        0x11
+    }
+
+    periph_reg_getter! {
+        /// Value of `UARTPeriphID1` register, which contains the `Designer0` and `PartNumber1` values.
+        fn uart_periph_id1 -> { Arm => 0x10, Luminary => 0x00 },
+        /// Value of `UARTPeriphID2` register, which contains the `Revision` and `Designer1` values.
+        fn uart_periph_id2 -> { Arm => 0x14, Luminary => 0x18 },
+        /// Value of `UARTPeriphID3` register, which contains the `Configuration` value.
+        fn uart_periph_id3 -> { Arm => 0x0, Luminary => 0x1 }
+    }
+
+    pcell_reg_getter! {
+        /// Value of `UARTPCellID0` register.
+        fn uart_pcell_id0 -> 0x0d,
+        /// Value of `UARTPCellID1` register.
+        fn uart_pcell_id1 -> 0xf0,
+        /// Value of `UARTPCellID2` register.
+        fn uart_pcell_id2 -> 0x05,
+        /// Value of `UARTPCellID3` register.
+        fn uart_pcell_id3 -> 0xb1,
+    }
 }
 
 #[repr(C)]
@@ -182,9 +214,14 @@ impl PL011State {
         use RegisterOffset::*;
 
         std::ops::ControlFlow::Break(match RegisterOffset::try_from(offset) {
-            Err(v) if (0x3f8..0x400).contains(&v) => {
-                u64::from(self.device_id[(offset - 0xfe0) >> 2])
-            }
+            Ok(PeriphID0) => self.device_id.uart_periph_id0(),
+            Ok(PeriphID1) => self.device_id.uart_periph_id1(),
+            Ok(PeriphID2) => self.device_id.uart_periph_id2(),
+            Ok(PeriphID3) => self.device_id.uart_periph_id3(),
+            Ok(PCellID0) => self.device_id.uart_pcell_id0(),
+            Ok(PCellID1) => self.device_id.uart_pcell_id1(),
+            Ok(PCellID2) => self.device_id.uart_pcell_id2(),
+            Ok(PCellID3) => self.device_id.uart_pcell_id3(),
             Err(_) => {
                 // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
                 0
@@ -236,8 +273,14 @@ impl PL011State {
         use RegisterOffset::*;
         let value: u32 = value as u32;
         match RegisterOffset::try_from(offset) {
-            Err(_bad_offset) => {
+            Err(_) => {
                 eprintln!("write bad offset {offset} value {value}");
+            }
+            Ok(
+                dev_id @ (PeriphID0 | PeriphID1 | PeriphID2 | PeriphID3 | PCellID0 | PCellID1
+                | PCellID2 | PCellID3 | FR | RIS | MIS),
+            ) => {
+                eprintln!("write bad offset {offset} at RO register {dev_id:?} value {value}");
             }
             Ok(DR) => {
                 // ??? Check if transmitter is enabled.
@@ -256,9 +299,6 @@ impl PL011State {
             }
             Ok(RSR) => {
                 self.receive_status_error_clear = 0.into();
-            }
-            Ok(FR) => {
-                // flag writes are ignored
             }
             Ok(ILPR) => {
                 self.ilpr = value;
@@ -308,8 +348,6 @@ impl PL011State {
                 self.int_enabled = value;
                 self.update();
             }
-            Ok(RIS) => {}
-            Ok(MIS) => {}
             Ok(ICR) => {
                 self.int_level &= !value;
                 self.update();
