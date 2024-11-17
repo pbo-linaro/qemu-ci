@@ -55,17 +55,29 @@
 #define RX_ENABLE 0x1
 #define TX_ENABLE 0x2
 
+/* bits in STAT register */
+#define STAT_TRANSMITTER_DONE 0x200
+
 /* FIFOs length */
 #define BCM2835_AUX_RX_FIFO_LEN 8
-#define BCM2835_AUX_TX_FIOF_LEN 8
+#define BCM2835_AUX_TX_FIFO_LEN 8
+
+#define log_guest_error(fmt, ...) \
+    qemu_log_mask(LOG_GUEST_ERROR, \
+                  "bcm2835_aux:%s:%d: " fmt, \
+                  __func__, \
+                  __LINE__, \
+                  ##__VA_ARGS__ \
+                  )
 
 /* TODO: Add separate functions for RX and TX interrupts */
-static void bcm2835_aux_update(BCM2835AuxState *s)
+static void bcm2835_aux_update_irq(BCM2835AuxState *s)
 {
     /* TODO: this should be a pointer to const data. However, the fifo8 API
      * requires a pointer to non-const data.
      */
     Fifo8 *rx_fifo = &s->rx_fifo;
+    Fifo8 *tx_fifo = &s->tx_fifo;
     /* signal an interrupt if either:
      * 1. rx interrupt is enabled and we have a non-empty rx fifo, or
      * 2. the tx interrupt is enabled (since we instantly drain the tx fifo)
@@ -74,13 +86,19 @@ static void bcm2835_aux_update(BCM2835AuxState *s)
     if ((s->ier & RX_INT) && fifo8_is_empty(rx_fifo) == false) {
         s->iir |= RX_INT;
     }
-    if (s->ier & TX_INT) {
+    if (s->ier & TX_INT && fifo8_is_empty(tx_fifo)) {
         s->iir |= TX_INT;
     }
     qemu_set_irq(s->irq, s->iir != 0);
 }
 
-static bool bcm2835_aux_is_tx_enabled(BCM2835AuxState *s)
+static void bcm2835_aux_update(BCM2835AuxState *s)
+{
+    /* Currently, only IRQ registers are updated */
+    bcm2835_aux_update_irq(s);
+}
+
+static bool bcm2835_aux_is_tx_enabled(const BCM2835AuxState *s)
 {
     return (s->cntl & TX_ENABLE) != 0;
 }
@@ -88,6 +106,70 @@ static bool bcm2835_aux_is_tx_enabled(BCM2835AuxState *s)
 static bool bcm2835_aux_is_rx_enabled(BCM2835AuxState *s)
 {
     return (s->cntl & RX_ENABLE) != 0;
+}
+
+static bool bcm2835_aux_put_tx_fifo(BCM2835AuxState *s, char ch)
+{
+    Fifo8 *tx_fifo = &s->tx_fifo;
+
+    if (fifo8_is_full(tx_fifo)) {
+        log_guest_error("TX buffer overflow");
+
+        return false;
+    }
+
+    fifo8_push(tx_fifo, ch);
+
+    return true;
+}
+
+static gboolean bcm2835_aux_xmit_handler(void *do_not_use, GIOCondition cond,
+                                         void *opaque)
+{
+    BCM2835AuxState *s = opaque;
+    Fifo8 *tx_fifo = &s->tx_fifo;
+
+    if (!fifo8_is_empty(tx_fifo)) {
+        const uint8_t ch = fifo8_pop(&s->tx_fifo);
+        qemu_chr_fe_write(&s->chr, &ch, 1);
+
+        return G_SOURCE_CONTINUE;
+    } else {
+        bcm2835_aux_update(s);
+
+        return G_SOURCE_REMOVE;
+    }
+}
+
+static bool bcm2835_aux_is_tx_busy(const BCM2835AuxState *s)
+{
+    return !(s->stat & STAT_TRANSMITTER_DONE);
+}
+
+static bool bcm2835_aux_can_send(const BCM2835AuxState *s)
+{
+    return bcm2835_aux_is_tx_enabled(s) && !bcm2835_aux_is_tx_busy(s);
+}
+
+static void bcm2835_aux_send(BCM2835AuxState *s)
+{
+    if (bcm2835_aux_can_send(s)) {
+        const uint8_t ch = fifo8_pop(&s->tx_fifo);
+        qemu_chr_fe_write(&s->chr, &ch, 1);
+        qemu_chr_fe_add_watch(&s->chr, G_IO_OUT | G_IO_HUP,
+                              bcm2835_aux_xmit_handler, s);
+    }
+}
+
+static void bcm2835_aux_transmit(BCM2835AuxState *s, uint8_t ch)
+{
+    const bool result = bcm2835_aux_put_tx_fifo(s, ch);
+
+    if (result) {
+        bcm2835_aux_send(s);
+    }
+
+    bcm2835_aux_update(s);
 }
 
 static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
@@ -205,9 +287,7 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
         ch = value;
         /* XXX this blocks entire thread. Rewrite to use
          * qemu_chr_fe_write and background I/O callbacks */
-        if (bcm2835_aux_is_tx_enabled(s)) {
-            qemu_chr_fe_write_all(&s->chr, &ch, 1);
-        }
+        bcm2835_aux_transmit(s, ch);
         break;
 
     case AUX_MU_IER_REG:
@@ -264,7 +344,6 @@ static int bcm2835_aux_can_receive(void *opaque)
 
 static void bcm2835_aux_put_fifo(BCM2835AuxState *s, uint8_t value)
 {
-    BCM2835AuxState *s = opaque;
     Fifo8 *rx_fifo = &s->rx_fifo;
 
     if (fifo8_is_full(rx_fifo) == false) {
@@ -298,10 +377,11 @@ static const VMStateDescription vmstate_bcm2835_aux = {
     .minimum_version_id = 1,
     .fields = (const VMStateField[]) {
         VMSTATE_FIFO8(rx_fifo, BCM2835AuxState),
-        VMSTATE_FIFO8(_tx_fifo, BCM2835AuxState),
+        VMSTATE_FIFO8(tx_fifo, BCM2835AuxState),
         VMSTATE_UINT32(ier, BCM2835AuxState),
         VMSTATE_UINT32(iir, BCM2835AuxState),
         VMSTATE_UINT32(cntl, BCM2835AuxState),
+        VMSTATE_UINT32(stat, BCM2835AuxState),
         VMSTATE_END_OF_LIST()
     }
 };
@@ -310,8 +390,6 @@ static void bcm2835_aux_init(Object *obj)
 {
     SysBusDevice *sbd = SYS_BUS_DEVICE(obj);
     BCM2835AuxState *s = BCM2835_AUX(obj);
-
-    fifo8_create(&s->rx_fifo, BCM2835_AUX_RX_FIFO_LEN);
 
     memory_region_init_io(&s->iomem, OBJECT(s), &bcm2835_aux_ops, s,
                           TYPE_BCM2835_AUX, 0x100);
@@ -322,6 +400,16 @@ static void bcm2835_aux_init(Object *obj)
 static void bcm2835_aux_realize(DeviceState *dev, Error **errp)
 {
     BCM2835AuxState *s = BCM2835_AUX(dev);
+
+    fifo8_create(&s->rx_fifo, BCM2835_AUX_RX_FIFO_LEN);
+    fifo8_create(&s->tx_fifo, BCM2835_AUX_TX_FIFO_LEN);
+    s->ier = 0x0;
+    /* FIFOs enabled and interrupt pending */
+    s->iir = 0xC1;
+    /* Both transmitter and receiver are initially enabled */
+    s->cntl = 0x3;
+    /* Transmitter done and FIFO empty */
+    s->stat = 0x300;
 
     qemu_chr_fe_set_handlers(&s->chr, bcm2835_aux_can_receive,
                              bcm2835_aux_receive, NULL, NULL, s, NULL, true);
