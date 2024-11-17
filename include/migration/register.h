@@ -229,6 +229,23 @@ typedef struct SaveVMHandlers {
      */
     int (*load_state)(QEMUFile *f, void *opaque, int version_id);
 
+    /* This runs outside the BQL. */
+
+    /**
+     * @load_state_buffer
+     *
+     * Load device state buffer provided to qemu_loadvm_load_state_buffer().
+     *
+     * @opaque: data pointer passed to register_savevm_live()
+     * @buf: the data buffer to load
+     * @len: the data length in buffer
+     * @errp: pointer to Error*, to store an error if it happens.
+     *
+     * Returns zero to indicate success and negative for error
+     */
+    int (*load_state_buffer)(void *opaque, char *buf, size_t len,
+                             Error **errp);
+
     /**
      * @load_setup
      *
