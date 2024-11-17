@@ -46,7 +46,7 @@ static void done_cb(void *opaque, int ret)
 static void test_submit(void)
 {
     WorkerTestData data = { .n = 0 };
-    thread_pool_submit(worker_cb, &data);
+    thread_pool_submit_aio(worker_cb, &data, NULL, NULL);
     while (data.n == 0) {
         aio_poll(ctx, true);
     }
