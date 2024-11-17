@@ -348,7 +348,7 @@ retry:
     return true;
 }
 
-int multifd_ram_flush_and_sync(void)
+int multifd_ram_flush(void)
 {
     if (!migrate_multifd()) {
         return 0;
@@ -359,6 +359,22 @@ int multifd_ram_flush_and_sync(void)
             error_report("%s: multifd_send fail", __func__);
             return -1;
         }
+    }
+
+    return 0;
+}
+
+int multifd_ram_flush_and_sync(void)
+{
+    int ret;
+
+    if (!migrate_multifd()) {
+        return 0;
+    }
+
+    ret = multifd_ram_flush();
+    if (ret) {
+        return ret;
     }
 
     return multifd_send_sync_main();

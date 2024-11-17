@@ -376,6 +376,7 @@ static inline uint32_t multifd_ram_page_count(void)
 
 void multifd_ram_save_setup(void);
 void multifd_ram_save_cleanup(void);
+int multifd_ram_flush(void);
 int multifd_ram_flush_and_sync(void);
 void multifd_ram_payload_alloc(MultiFDPages_t *pages);
 void multifd_ram_payload_free(MultiFDPages_t *pages);

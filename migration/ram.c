@@ -3283,7 +3283,15 @@ static int ram_save_complete(QEMUFile *f, void *opaque)
         }
     }
 
-    ret = multifd_ram_flush_and_sync();
+    if (migration_has_device_state_support()) {
+        /*
+         * Can't do the final SYNC here since device state might still
+         * be transferring via multifd channels.
+         */
+        ret = multifd_ram_flush();
+    } else {
+        ret = multifd_ram_flush_and_sync();
+    }
     if (ret < 0) {
         return ret;
     }
