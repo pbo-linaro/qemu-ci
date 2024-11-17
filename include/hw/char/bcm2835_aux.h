@@ -9,14 +9,13 @@
 #ifndef BCM2835_AUX_H
 #define BCM2835_AUX_H
 
-#include "hw/sysbus.h"
 #include "chardev/char-fe.h"
+#include "hw/sysbus.h"
+#include "qemu/fifo8.h"
 #include "qom/object.h"
 
 #define TYPE_BCM2835_AUX "bcm2835-aux"
 OBJECT_DECLARE_SIMPLE_TYPE(BCM2835AuxState, BCM2835_AUX)
-
-#define BCM2835_AUX_RX_FIFO_LEN 8
 
 struct BCM2835AuxState {
     /*< private >*/
@@ -27,8 +26,9 @@ struct BCM2835AuxState {
     CharBackend chr;
     qemu_irq irq;
 
-    uint8_t read_fifo[BCM2835_AUX_RX_FIFO_LEN];
-    uint8_t read_pos, read_count;
+    Fifo8 rx_fifo;
+    /* Unused for now */
+    Fifo8 _tx_fifo;
     uint8_t ier, iir;
 };
 

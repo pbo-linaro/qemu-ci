@@ -47,14 +47,23 @@
 #define RX_INT  0x1
 #define TX_INT  0x2
 
+/* FIFOs length */
+#define BCM2835_AUX_RX_FIFO_LEN 8
+#define BCM2835_AUX_TX_FIOF_LEN 8
+
+/* TODO: Add separate functions for RX and TX interrupts */
 static void bcm2835_aux_update(BCM2835AuxState *s)
 {
+    /* TODO: this should be a pointer to const data. However, the fifo8 API
+     * requires a pointer to non-const data.
+     */
+    Fifo8 *rx_fifo = &s->rx_fifo;
     /* signal an interrupt if either:
      * 1. rx interrupt is enabled and we have a non-empty rx fifo, or
      * 2. the tx interrupt is enabled (since we instantly drain the tx fifo)
      */
     s->iir = 0;
-    if ((s->ier & RX_INT) && s->read_count != 0) {
+    if ((s->ier & RX_INT) && fifo8_is_empty(rx_fifo) == false) {
         s->iir |= RX_INT;
     }
     if (s->ier & TX_INT) {
@@ -66,7 +75,10 @@ static void bcm2835_aux_update(BCM2835AuxState *s)
 static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
 {
     BCM2835AuxState *s = opaque;
-    uint32_t c, res;
+    Fifo8 *rx_fifo = &s->rx_fifo;
+    const bool is_rx_fifo_not_empty = !fifo8_is_empty(rx_fifo);
+    const uint32_t rx_fifo_fill_level = fifo8_num_used(rx_fifo);
+    uint32_t c = 0, res;
 
     switch (offset) {
     case AUX_IRQ:
@@ -77,12 +89,8 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
 
     case AUX_MU_IO_REG:
         /* "DLAB bit set means access baudrate register" is NYI */
-        c = s->read_fifo[s->read_pos];
-        if (s->read_count > 0) {
-            s->read_count--;
-            if (++s->read_pos == BCM2835_AUX_RX_FIFO_LEN) {
-                s->read_pos = 0;
-            }
+        if (is_rx_fifo_not_empty) {
+            c = fifo8_pop(rx_fifo);
         }
         qemu_chr_fe_accept_input(&s->chr);
         bcm2835_aux_update(s);
@@ -98,7 +106,7 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
          * interrupts are active, besides that this cannot occur. At
          * present, we choose to prioritise the rx interrupt, since
          * the tx fifo is always empty. */
-        if (s->read_count != 0) {
+        if (is_rx_fifo_not_empty) {
             res |= 0x4;
         } else {
             res |= 0x2;
@@ -118,7 +126,7 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
 
     case AUX_MU_LSR_REG:
         res = 0x60; /* tx idle, empty */
-        if (s->read_count != 0) {
+        if (is_rx_fifo_not_empty) {
             res |= 0x1;
         }
         return res;
@@ -136,10 +144,10 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
 
     case AUX_MU_STAT_REG:
         res = 0x30e; /* space in the output buffer, empty tx fifo, idle tx/rx */
-        if (s->read_count > 0) {
+        if (is_rx_fifo_not_empty) {
             res |= 0x1; /* data in input buffer */
-            assert(s->read_count <= BCM2835_AUX_RX_FIFO_LEN);
-            res |= ((uint32_t)s->read_count) << 16; /* rx fifo fill level */
+            assert(rx_fifo_fill_level <= BCM2835_AUX_RX_FIFO_LEN);
+            res |= ((uint32_t)rx_fifo_fill_level) << 16; /* rx fifo fill level */
         }
         return res;
 
@@ -158,6 +166,7 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
                               unsigned size)
 {
     BCM2835AuxState *s = opaque;
+    Fifo8 *rx_fifo = &s->rx_fifo;
     unsigned char ch;
 
     switch (offset) {
@@ -185,7 +194,7 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
 
     case AUX_MU_IIR_REG:
         if (value & 0x2) {
-            s->read_count = 0;
+            fifo8_reset(rx_fifo);
         }
         break;
 
@@ -221,24 +230,18 @@ static int bcm2835_aux_can_receive(void *opaque)
 {
     BCM2835AuxState *s = opaque;
 
-    return s->read_count < BCM2835_AUX_RX_FIFO_LEN;
+    return !fifo8_is_full(&s->rx_fifo);
 }
 
 static void bcm2835_aux_put_fifo(void *opaque, uint8_t value)
 {
     BCM2835AuxState *s = opaque;
-    int slot;
+    Fifo8 *rx_fifo = &s->rx_fifo;
 
-    slot = s->read_pos + s->read_count;
-    if (slot >= BCM2835_AUX_RX_FIFO_LEN) {
-        slot -= BCM2835_AUX_RX_FIFO_LEN;
+    if (fifo8_is_full(rx_fifo) == false) {
+        fifo8_push(rx_fifo, value);
+        bcm2835_aux_update(s);
     }
-    s->read_fifo[slot] = value;
-    s->read_count++;
-    if (s->read_count == BCM2835_AUX_RX_FIFO_LEN) {
-        /* buffer full */
-    }
-    bcm2835_aux_update(s);
 }
 
 static void bcm2835_aux_receive(void *opaque, const uint8_t *buf, int size)
@@ -261,10 +264,8 @@ static const VMStateDescription vmstate_bcm2835_aux = {
     .version_id = 1,
     .minimum_version_id = 1,
     .fields = (const VMStateField[]) {
-        VMSTATE_UINT8_ARRAY(read_fifo, BCM2835AuxState,
-                            BCM2835_AUX_RX_FIFO_LEN),
-        VMSTATE_UINT8(read_pos, BCM2835AuxState),
-        VMSTATE_UINT8(read_count, BCM2835AuxState),
+        VMSTATE_FIFO8(rx_fifo, BCM2835AuxState),
+        VMSTATE_FIFO8(_tx_fifo, BCM2835AuxState),
         VMSTATE_UINT8(ier, BCM2835AuxState),
         VMSTATE_UINT8(iir, BCM2835AuxState),
         VMSTATE_END_OF_LIST()
@@ -275,6 +276,8 @@ static void bcm2835_aux_init(Object *obj)
 {
     SysBusDevice *sbd = SYS_BUS_DEVICE(obj);
     BCM2835AuxState *s = BCM2835_AUX(obj);
+
+    fifo8_create(&s->rx_fifo, BCM2835_AUX_RX_FIFO_LEN);
 
     memory_region_init_io(&s->iomem, OBJECT(s), &bcm2835_aux_ops, s,
                           TYPE_BCM2835_AUX, 0x100);
