@@ -29,7 +29,6 @@
 #include "qemu/log.h"
 #include "qemu/module.h"
 
-/* TODO: These constants need to be unsigned */
 #define AUX_IRQ         0x0U
 #define AUX_ENABLES     0x4U
 #define AUX_MU_IO_REG   0x40U
@@ -50,11 +49,8 @@
 
 /* Mask for TX-related bits */
 #define MASK_AUX_MU_STAT_REG_TX 0xF00032AU
-/*
- * Mask for RX-related bits.
- * XXX: It does not include receiver IDLE and receiver overrun for now.
- */
-#define MASK_AUX_MU_STAT_REG_RX 0xF0001U
+/* Mask for RX-related bits */
+#define MASK_AUX_MU_STAT_REG_RX 0xF0015U
 
 /* Mask for TX-related bits */
 #define MASK_AUX_MU_LSR_REG_TX 0x60U
@@ -70,6 +66,7 @@
 
 /* bits in LSR register */
 #define LSR_OVERRUN 0x2U
+#define LSR_OVERRUN_OFFSET 0x1U
 
 /* bits in CNTL register */
 #define CNTL_RX_ENABLE 0x1U
@@ -77,6 +74,8 @@
 
 /* bits in STAT register */
 #define STAT_TRANSMITTER_DONE 0x200U
+#define STAT_OVERRUN 0x10U
+#define STAT_RECEIVER_IDLE 0x4U
 
 /* FIFOs length */
 #define BCM2835_AUX_RX_FIFO_LEN 8U
@@ -90,12 +89,12 @@
                   ##__VA_ARGS__ \
                   )
 
-static void bcm2835_aux_clear_overrun_bits(BCM2835AuxState *s)
+static void bcm2835_aux_clear_overrun_bit(BCM2835AuxState *s)
 {
     s->lsr &= ~LSR_OVERRUN;
 }
 
-static void bcm2835_aux_set_overrun_bits(BCM2835AuxState *s)
+static void bcm2835_aux_set_overrun_bit(BCM2835AuxState *s)
 {
     s->lsr |= LSR_OVERRUN;
 }
@@ -134,10 +133,17 @@ static void bcm2835_aux_rx_stat_update(BCM2835AuxState *s)
 {
     Fifo8 *rx_fifo = &s->rx_fifo;
     const bool rx_symbol_available = !fifo8_is_empty(rx_fifo);
+    const bool rx_overrun = (s->lsr & LSR_OVERRUN) >> LSR_OVERRUN_OFFSET;
     const uint32_t rx_fifo_level = fifo8_num_used(rx_fifo);
 
     s->stat &= ~MASK_AUX_MU_STAT_REG_RX;
+    /*
+     * Receiver overrun bit is set separately in bcm2835_aux_set_overrun_bit
+     * Receiver is always marked as idle.
+     */
     s->stat |= (rx_fifo_level << 16) |
+               (rx_overrun << 4) |
+               STAT_RECEIVER_IDLE |
                (rx_symbol_available << 0);
 }
 
@@ -340,7 +346,7 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
     case AUX_MU_LSR_REG:
         res = s->lsr;
         /* Overrun bit is self-clearing */
-        bcm2835_aux_clear_overrun_bits(s);
+        bcm2835_aux_clear_overrun_bit(s);
         return res;
 
     case AUX_MU_MSR_REG:
@@ -441,7 +447,7 @@ static int bcm2835_aux_can_receive(void *opaque)
     const bool is_rx_enabled = bcm2835_aux_is_rx_enabled(s);
 
     if (is_rx_fifo_full && is_rx_enabled) {
-        bcm2835_aux_set_overrun_bits(s);
+        bcm2835_aux_set_overrun_bit(s);
     }
 
     return !is_rx_fifo_full;
