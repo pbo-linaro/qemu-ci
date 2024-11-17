@@ -66,6 +66,7 @@ typedef struct VFIOMigration {
     VMChangeStateEntry *vm_state;
     NotifierWithReturn migration_state;
     uint32_t device_state;
+    bool load_setup;
     int data_fd;
     void *data_buffer;
     size_t data_buffer_size;
