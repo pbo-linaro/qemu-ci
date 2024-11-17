@@ -212,6 +212,8 @@ typedef struct SaveVMHandlers {
     void (*state_pending_exact)(void *opaque, uint64_t *must_precopy,
                                 uint64_t *can_postcopy);
 
+    /* This runs inside the BQL. */
+
     /**
      * @load_state
      *
@@ -246,6 +248,8 @@ typedef struct SaveVMHandlers {
     int (*load_state_buffer)(void *opaque, char *buf, size_t len,
                              Error **errp);
 
+    /* The following handlers run inside the BQL. */
+
     /**
      * @load_setup
      *
@@ -272,6 +276,9 @@ typedef struct SaveVMHandlers {
      */
     int (*load_cleanup)(void *opaque);
 
+
+    /* This runs outside the BQL. */
+
     /**
      * @resume_prepare
      *
@@ -283,6 +290,8 @@ typedef struct SaveVMHandlers {
      * Returns zero to indicate success and negative for error
      */
     int (*resume_prepare)(MigrationState *s, void *opaque);
+
+    /* The following handlers run inside the BQL. */
 
     /**
      * @switchover_ack_needed
