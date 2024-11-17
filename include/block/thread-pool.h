@@ -38,5 +38,14 @@ BlockAIOCB *thread_pool_submit_aio(ThreadPoolFunc *func, void *arg,
 int coroutine_fn thread_pool_submit_co(ThreadPoolFunc *func, void *arg);
 void thread_pool_update_params(ThreadPoolAio *pool, struct AioContext *ctx);
 
+typedef struct ThreadPool ThreadPool;
+
+ThreadPool *thread_pool_new(void);
+void thread_pool_free(ThreadPool *pool);
+void thread_pool_submit(ThreadPool *pool, ThreadPoolFunc *func,
+                        void *opaque, GDestroyNotify opaque_destroy);
+void thread_pool_wait(ThreadPool *pool);
+bool thread_pool_set_max_threads(ThreadPool *pool, int max_threads);
+bool thread_pool_adjust_max_threads_to_work(ThreadPool *pool);
 
 #endif

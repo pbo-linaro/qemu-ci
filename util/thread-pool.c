@@ -374,3 +374,112 @@ void thread_pool_free_aio(ThreadPoolAio *pool)
     qemu_mutex_destroy(&pool->lock);
     g_free(pool);
 }
+
+struct ThreadPool { /* type safety */
+    GThreadPool *t;
+    size_t unfinished_el_ctr;
+    QemuMutex unfinished_el_ctr_mutex;
+    QemuCond unfinished_el_ctr_zero_cond;
+};
+
+typedef struct {
+    ThreadPoolFunc *func;
+    void *opaque;
+    GDestroyNotify opaque_destroy;
+} ThreadPoolElement;
+
+static void thread_pool_func(gpointer data, gpointer user_data)
+{
+    ThreadPool *pool = user_data;
+    g_autofree ThreadPoolElement *el = data;
+
+    el->func(el->opaque);
+
+    if (el->opaque_destroy) {
+        el->opaque_destroy(el->opaque);
+    }
+
+    QEMU_LOCK_GUARD(&pool->unfinished_el_ctr_mutex);
+
+    assert(pool->unfinished_el_ctr > 0);
+    pool->unfinished_el_ctr--;
+
+    if (pool->unfinished_el_ctr == 0) {
+        qemu_cond_signal(&pool->unfinished_el_ctr_zero_cond);
+    }
+}
+
+ThreadPool *thread_pool_new(void)
+{
+    ThreadPool *pool = g_new(ThreadPool, 1);
+
+    pool->unfinished_el_ctr = 0;
+    qemu_mutex_init(&pool->unfinished_el_ctr_mutex);
+    qemu_cond_init(&pool->unfinished_el_ctr_zero_cond);
+
+    pool->t = g_thread_pool_new(thread_pool_func, pool, 0, TRUE, NULL);
+    /*
+     * g_thread_pool_new() can only return errors if initial thread(s)
+     * creation fails but we ask for 0 initial threads above.
+     */
+    assert(pool->t);
+
+    return pool;
+}
+
+void thread_pool_free(ThreadPool *pool)
+{
+    g_thread_pool_free(pool->t, FALSE, TRUE);
+
+    qemu_cond_destroy(&pool->unfinished_el_ctr_zero_cond);
+    qemu_mutex_destroy(&pool->unfinished_el_ctr_mutex);
+
+    g_free(pool);
+}
+
+void thread_pool_submit(ThreadPool *pool, ThreadPoolFunc *func,
+                        void *opaque, GDestroyNotify opaque_destroy)
+{
+    ThreadPoolElement *el = g_new(ThreadPoolElement, 1);
+
+    el->func = func;
+    el->opaque = opaque;
+    el->opaque_destroy = opaque_destroy;
+
+    WITH_QEMU_LOCK_GUARD(&pool->unfinished_el_ctr_mutex) {
+        pool->unfinished_el_ctr++;
+    }
+
+    /*
+     * Ignore the return value since this function can only return errors
+     * if creation of an additional thread fails but even in this case the
+     * provided work is still getting queued (just for the existing threads).
+     */
+    g_thread_pool_push(pool->t, el, NULL);
+}
+
+void thread_pool_wait(ThreadPool *pool)
+{
+    QEMU_LOCK_GUARD(&pool->unfinished_el_ctr_mutex);
+
+    if (pool->unfinished_el_ctr > 0) {
+        qemu_cond_wait(&pool->unfinished_el_ctr_zero_cond,
+                       &pool->unfinished_el_ctr_mutex);
+        assert(pool->unfinished_el_ctr == 0);
+    }
+}
+
+bool thread_pool_set_max_threads(ThreadPool *pool,
+                                 int max_threads)
+{
+    assert(max_threads > 0);
+
+    return g_thread_pool_set_max_threads(pool->t, max_threads, NULL);
+}
+
+bool thread_pool_adjust_max_threads_to_work(ThreadPool *pool)
+{
+    QEMU_LOCK_GUARD(&pool->unfinished_el_ctr_mutex);
+
+    return thread_pool_set_max_threads(pool, pool->unfinished_el_ctr);
+}
