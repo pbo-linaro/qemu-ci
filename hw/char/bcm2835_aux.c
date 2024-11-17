@@ -29,6 +29,7 @@
 #include "qemu/log.h"
 #include "qemu/module.h"
 
+/* TODO: These constants need to be unsigned */
 #define AUX_IRQ         0x0
 #define AUX_ENABLES     0x4
 #define AUX_MU_IO_REG   0x40
@@ -43,9 +44,16 @@
 #define AUX_MU_STAT_REG 0x64
 #define AUX_MU_BAUD_REG 0x68
 
+/* Register masks */
+#define MASK_AUX_MU_CNTL_REG 0x3
+
 /* bits in IER/IIR registers */
 #define RX_INT  0x1
 #define TX_INT  0x2
+
+/* bits in CNTL register */
+#define RX_ENABLE 0x1
+#define TX_ENABLE 0x2
 
 /* FIFOs length */
 #define BCM2835_AUX_RX_FIFO_LEN 8
@@ -72,13 +80,27 @@ static void bcm2835_aux_update(BCM2835AuxState *s)
     qemu_set_irq(s->irq, s->iir != 0);
 }
 
+static bool bcm2835_aux_is_tx_enabled(BCM2835AuxState *s)
+{
+    return (s->cntl & TX_ENABLE) != 0;
+}
+
+static bool bcm2835_aux_is_rx_enabled(BCM2835AuxState *s)
+{
+    return (s->cntl & RX_ENABLE) != 0;
+}
+
 static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
 {
     BCM2835AuxState *s = opaque;
     Fifo8 *rx_fifo = &s->rx_fifo;
     const bool is_rx_fifo_not_empty = !fifo8_is_empty(rx_fifo);
     const uint32_t rx_fifo_fill_level = fifo8_num_used(rx_fifo);
-    uint32_t c = 0, res;
+    /*
+     * 0xFF trashes terminal output, so device driver bugs can be found quickly
+     * in case the RX_FIFO is read while empty
+     */
+    uint32_t c = 0xFF, res;
 
     switch (offset) {
     case AUX_IRQ:
@@ -140,7 +162,7 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
         return 0;
 
     case AUX_MU_CNTL_REG:
-        return 0x3; /* tx, rx enabled */
+        return s->cntl;
 
     case AUX_MU_STAT_REG:
         res = 0x30e; /* space in the output buffer, empty tx fifo, idle tx/rx */
@@ -183,7 +205,9 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
         ch = value;
         /* XXX this blocks entire thread. Rewrite to use
          * qemu_chr_fe_write and background I/O callbacks */
-        qemu_chr_fe_write_all(&s->chr, &ch, 1);
+        if (bcm2835_aux_is_tx_enabled(s)) {
+            qemu_chr_fe_write_all(&s->chr, &ch, 1);
+        }
         break;
 
     case AUX_MU_IER_REG:
@@ -211,7 +235,12 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
         break;
 
     case AUX_MU_CNTL_REG:
-        qemu_log_mask(LOG_UNIMP, "%s: AUX_MU_CNTL_REG unsupported\n", __func__);
+        if (value & ~MASK_AUX_MU_CNTL_REG) {
+            qemu_log_mask(LOG_UNIMP,
+                          "%s: auto flow control not supported\n",
+                          __func__);
+        }
+        s->cntl = value & MASK_AUX_MU_CNTL_REG;
         break;
 
     case AUX_MU_BAUD_REG:
@@ -233,7 +262,7 @@ static int bcm2835_aux_can_receive(void *opaque)
     return !fifo8_is_full(&s->rx_fifo);
 }
 
-static void bcm2835_aux_put_fifo(void *opaque, uint8_t value)
+static void bcm2835_aux_put_fifo(BCM2835AuxState *s, uint8_t value)
 {
     BCM2835AuxState *s = opaque;
     Fifo8 *rx_fifo = &s->rx_fifo;
@@ -246,7 +275,11 @@ static void bcm2835_aux_put_fifo(void *opaque, uint8_t value)
 
 static void bcm2835_aux_receive(void *opaque, const uint8_t *buf, int size)
 {
-    bcm2835_aux_put_fifo(opaque, *buf);
+    BCM2835AuxState *s = opaque;
+
+    if (bcm2835_aux_is_rx_enabled(s)) {
+        bcm2835_aux_put_fifo(opaque, *buf);
+    }
 }
 
 static const MemoryRegionOps bcm2835_aux_ops = {
@@ -266,8 +299,9 @@ static const VMStateDescription vmstate_bcm2835_aux = {
     .fields = (const VMStateField[]) {
         VMSTATE_FIFO8(rx_fifo, BCM2835AuxState),
         VMSTATE_FIFO8(_tx_fifo, BCM2835AuxState),
-        VMSTATE_UINT8(ier, BCM2835AuxState),
-        VMSTATE_UINT8(iir, BCM2835AuxState),
+        VMSTATE_UINT32(ier, BCM2835AuxState),
+        VMSTATE_UINT32(iir, BCM2835AuxState),
+        VMSTATE_UINT32(cntl, BCM2835AuxState),
         VMSTATE_END_OF_LIST()
     }
 };
