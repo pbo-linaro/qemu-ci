@@ -29,7 +29,7 @@ struct BCM2835AuxState {
     Fifo8 rx_fifo;
     Fifo8 tx_fifo;
     /* Registers */
-    uint32_t ier, iir, cntl, stat;
+    uint32_t ier, iir, lsr, cntl, stat;
 };
 
 #endif

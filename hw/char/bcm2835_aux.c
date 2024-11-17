@@ -45,7 +45,9 @@
 #define AUX_MU_BAUD_REG 0x68U
 
 /* Register masks */
+
 #define MASK_AUX_MU_CNTL_REG 0x3U
+
 /* Mask for TX-related bits */
 #define MASK_AUX_MU_STAT_REG_TX 0xF00032AU
 /*
@@ -53,6 +55,9 @@
  * XXX: It does not include receiver IDLE and receiver overrun for now.
  */
 #define MASK_AUX_MU_STAT_REG_RX 0xF0001U
+
+/* Mask for TX-related bits */
+#define MASK_AUX_MU_LSR_REG_TX 0x60U
 
 /* bits in IER register */
 #define IER_RX_IRQ_ENABLE  0x1U
@@ -62,6 +67,9 @@
 #define IIR_IRQ_NOT_PEND 0x1U
 #define IIR_TX_EMPTY 0x2U
 #define IIR_RX_VALID 0x4U
+
+/* bits in LSR register */
+#define LSR_OVERRUN 0x2U
 
 /* bits in CNTL register */
 #define CNTL_RX_ENABLE 0x1U
@@ -81,6 +89,16 @@
                   __LINE__, \
                   ##__VA_ARGS__ \
                   )
+
+static void bcm2835_aux_clear_overrun_bits(BCM2835AuxState *s)
+{
+    s->lsr &= ~LSR_OVERRUN;
+}
+
+static void bcm2835_aux_set_overrun_bits(BCM2835AuxState *s)
+{
+    s->lsr |= LSR_OVERRUN;
+}
 
 static void bcm2835_aux_update_irq(BCM2835AuxState *s)
 {
@@ -123,9 +141,23 @@ static void bcm2835_aux_rx_stat_update(BCM2835AuxState *s)
                (rx_symbol_available << 0);
 }
 
+static void bcm2835_aux_rx_lsr_update(BCM2835AuxState *s)
+{
+    /*
+     * TODO: this should be a pointer to const data. However, the fifo8 API
+     * requires a pointer to non-const data.
+     */
+    Fifo8 *rx_fifo = &s->rx_fifo;
+    const bool data_ready = !fifo8_is_empty(rx_fifo);
+
+    s->lsr &= ~0x1;
+    s->lsr |= data_ready << 0;
+}
+
 static void bcm2835_aux_rx_update(BCM2835AuxState *s)
 {
     bcm2835_aux_rx_stat_update(s);
+    bcm2835_aux_rx_lsr_update(s);
     bcm2835_aux_rx_iir_update(s);
 }
 
@@ -164,9 +196,24 @@ static void bcm2835_aux_tx_stat_update(BCM2835AuxState *s, bool busy)
                (tx_space_available << 1);
 }
 
+static void bcm2835_aux_tx_lsr_update(BCM2835AuxState *s, bool busy)
+{
+    /*
+     * TODO: This should be a pointer to constant data, but the FIFO API
+     * requires a pointer to mutable data.
+     */
+    Fifo8 *tx_fifo = &s->tx_fifo;
+    const bool is_tx_idle = !busy;
+    const bool is_tx_empty = fifo8_is_empty(tx_fifo);
+
+    s->lsr &= ~MASK_AUX_MU_LSR_REG_TX;
+    s->lsr |= (is_tx_idle << 6) | (is_tx_empty << 5);
+}
+
 static void bcm2835_aux_tx_update(BCM2835AuxState *s, bool busy)
 {
     bcm2835_aux_tx_stat_update(s, busy);
+    bcm2835_aux_tx_lsr_update(s, busy);
     bcm2835_aux_tx_iir_update(s);
 }
 
@@ -291,10 +338,9 @@ static uint64_t bcm2835_aux_read(void *opaque, hwaddr offset, unsigned size)
         return 0;
 
     case AUX_MU_LSR_REG:
-        res = 0x60; /* tx idle, empty */
-        if (is_rx_fifo_not_empty) {
-            res |= 0x1;
-        }
+        res = s->lsr;
+        /* Overrun bit is self-clearing */
+        bcm2835_aux_clear_overrun_bits(s);
         return res;
 
     case AUX_MU_MSR_REG:
@@ -391,8 +437,14 @@ static void bcm2835_aux_write(void *opaque, hwaddr offset, uint64_t value,
 static int bcm2835_aux_can_receive(void *opaque)
 {
     BCM2835AuxState *s = opaque;
+    const bool is_rx_fifo_full = fifo8_is_full(&s->rx_fifo);
+    const bool is_rx_enabled = bcm2835_aux_is_rx_enabled(s);
 
-    return !fifo8_is_full(&s->rx_fifo);
+    if (is_rx_fifo_full && is_rx_enabled) {
+        bcm2835_aux_set_overrun_bits(s);
+    }
+
+    return !is_rx_fifo_full;
 }
 
 static void bcm2835_aux_put_fifo(BCM2835AuxState *s, uint8_t value)
@@ -459,6 +511,8 @@ static void bcm2835_aux_realize(DeviceState *dev, Error **errp)
     s->ier = 0x0;
     /* FIFOs enabled and interrupt pending */
     s->iir = 0xC1;
+    /* Transmitter idle and TX FIFO empty */
+    s->lsr = 0x60;
     /* Both transmitter and receiver are initially enabled */
     s->cntl = 0x3;
     /* Transmitter done and FIFO empty */
