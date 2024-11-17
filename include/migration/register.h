@@ -105,6 +105,29 @@ typedef struct SaveVMHandlers {
      */
     int (*save_live_complete_precopy)(QEMUFile *f, void *opaque);
 
+    /* This runs in a separate thread. */
+
+    /**
+     * @save_live_complete_precopy_thread
+     *
+     * Called at the end of a precopy phase from a separate worker thread
+     * in configurations where multifd device state transfer is supported
+     * in order to perform asynchronous transmission of the remaining data in
+     * parallel with @save_live_complete_precopy handlers.
+     * When postcopy is enabled, devices that support postcopy will skip this
+     * step.
+     *
+     * @idstr: this device section idstr
+     * @instance_id: this device section instance_id
+     * @abort_flag: flag indicating that the migration core wants to abort
+     * the transmission and so the handler should exit ASAP. To be read by
+     * qatomic_read() or similar.
+     * @opaque: data pointer passed to register_savevm_live()
+     *
+     * Returns zero to indicate success and negative for error
+     */
+    SaveLiveCompletePrecopyThreadHandler save_live_complete_precopy_thread;
+
     /* This runs both outside and inside the BQL.  */
 
     /**
