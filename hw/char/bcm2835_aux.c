@@ -30,49 +30,49 @@
 #include "qemu/module.h"
 
 /* TODO: These constants need to be unsigned */
-#define AUX_IRQ         0x0
-#define AUX_ENABLES     0x4
-#define AUX_MU_IO_REG   0x40
-#define AUX_MU_IER_REG  0x44
-#define AUX_MU_IIR_REG  0x48
-#define AUX_MU_LCR_REG  0x4c
-#define AUX_MU_MCR_REG  0x50
-#define AUX_MU_LSR_REG  0x54
-#define AUX_MU_MSR_REG  0x58
-#define AUX_MU_SCRATCH  0x5c
-#define AUX_MU_CNTL_REG 0x60
-#define AUX_MU_STAT_REG 0x64
-#define AUX_MU_BAUD_REG 0x68
+#define AUX_IRQ         0x0U
+#define AUX_ENABLES     0x4U
+#define AUX_MU_IO_REG   0x40U
+#define AUX_MU_IER_REG  0x44U
+#define AUX_MU_IIR_REG  0x48U
+#define AUX_MU_LCR_REG  0x4cU
+#define AUX_MU_MCR_REG  0x50U
+#define AUX_MU_LSR_REG  0x54U
+#define AUX_MU_MSR_REG  0x58U
+#define AUX_MU_SCRATCH  0x5cU
+#define AUX_MU_CNTL_REG 0x60U
+#define AUX_MU_STAT_REG 0x64U
+#define AUX_MU_BAUD_REG 0x68U
 
 /* Register masks */
-#define MASK_AUX_MU_CNTL_REG 0x3
+#define MASK_AUX_MU_CNTL_REG 0x3U
 /* Mask for TX-related bits */
-#define MASK_AUX_MU_STAT_REG_TX 0xF00032A
+#define MASK_AUX_MU_STAT_REG_TX 0xF00032AU
 /*
  * Mask for RX-related bits.
  * XXX: It does not include receiver IDLE and receiver overrun for now.
  */
-#define MASK_AUX_MU_STAT_REG_RX 0xF0001
+#define MASK_AUX_MU_STAT_REG_RX 0xF0001U
 
 /* bits in IER register */
-#define IER_RX_IRQ_ENABLE  0x1
-#define IER_TX_IRQ_ENABLE  0x2
+#define IER_RX_IRQ_ENABLE  0x1U
+#define IER_TX_IRQ_ENABLE  0x2U
 
 /* bits in IIR register */
-#define IIR_IRQ_NOT_PEND 0x1
-#define IIR_TX_EMPTY 0x2
-#define IIR_RX_VALID 0x4
+#define IIR_IRQ_NOT_PEND 0x1U
+#define IIR_TX_EMPTY 0x2U
+#define IIR_RX_VALID 0x4U
 
 /* bits in CNTL register */
-#define CNTL_RX_ENABLE 0x1
-#define CNTL_TX_ENABLE 0x2
+#define CNTL_RX_ENABLE 0x1U
+#define CNTL_TX_ENABLE 0x2U
 
 /* bits in STAT register */
-#define STAT_TRANSMITTER_DONE 0x200
+#define STAT_TRANSMITTER_DONE 0x200U
 
 /* FIFOs length */
-#define BCM2835_AUX_RX_FIFO_LEN 8
-#define BCM2835_AUX_TX_FIFO_LEN 8
+#define BCM2835_AUX_RX_FIFO_LEN 8U
+#define BCM2835_AUX_TX_FIFO_LEN 8U
 
 #define log_guest_error(fmt, ...) \
     qemu_log_mask(LOG_GUEST_ERROR, \
