@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241118204123.3083310-1-alex.bennee@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 39 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] tests/tcg: Stop using exit() in the gdbstub testcases
+  [32m✓[0m [PATCH 2/4] MAINTAINERS: CC rust/ patches to qemu-rust list
+  [32m✓[0m [PATCH 3/4] hw/display: factor out the scanout blob to fb conversion
+  [32m✓[0m [PATCH 4/4] hw/display: check frame buffer can hold blob
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: tests/tcg: Stop using exit() in the gdbstub testcases
+Applying: MAINTAINERS: CC rust/ patches to qemu-rust list
+Applying: hw/display: factor out the scanout blob to fb conversion
+Patch failed at 0003 hw/display: factor out the scanout blob to fb conversion
+error: patch failed: include/hw/virtio/virtio-gpu.h:333
+error: include/hw/virtio/virtio-gpu.h: patch does not apply
+error: patch failed: hw/display/virtio-gpu-virgl.c:805
+error: hw/display/virtio-gpu-virgl.c: patch does not apply
+error: patch failed: hw/display/virtio-gpu.c:721
+error: hw/display/virtio-gpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
