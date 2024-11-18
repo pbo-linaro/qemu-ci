@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20241118173634.473532-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 34 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/12] hw/usb: Use __attribute__((packed)) vs __packed
+  [32m✓[0m [PATCH 2/12] target/s390x: Fix the floating-point multiply-and-add NaN rules
+  [32m✓[0m [PATCH 3/12] tests/tcg/s390x: Add the floating-point multiply-and-add test
+  [32m✓[0m [PATCH 4/12] docs/system/s390x/bootdevices: Update loadparm documentation
+  [32m✓[0m [PATCH 5/12] docs/system/bootindex: Make it clear that s390x can also boot from virtio-net
+  [32m✓[0m [PATCH 6/12] hw/s390x: Restrict "loadparm" property to devices that can be used for booting
+  [32m✓[0m [PATCH 7/12] hw: Add "loadparm" property to scsi disk devices for booting on s390x
+  [32m✓[0m [PATCH 8/12] pc-bios/s390x: Initialize cdrom type to false for each IPL device
+  [32m✓[0m [PATCH 9/12] pc-bios/s390x: Initialize machine loadparm before probing IPL devices
+  [32m✓[0m [PATCH 10/12] pc-bios/s390-ccw: Re-initialize receive queue index before each boot attempt
+  [32m✓[0m [PATCH 11/12] pc-bios: Update the s390 bios images with the recent fixes
+  [32m✓[0m [PATCH 12/12] .gitlab-ci.d: Raise timeout on cross-accel build jobs to 60m
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 12
+---
+Applying: hw/usb: Use __attribute__((packed)) vs __packed
+Applying: target/s390x: Fix the floating-point multiply-and-add NaN rules
+Applying: tests/tcg/s390x: Add the floating-point multiply-and-add test
+Applying: docs/system/s390x/bootdevices: Update loadparm documentation
+Applying: docs/system/bootindex: Make it clear that s390x can also boot from virtio-net
+Applying: hw/s390x: Restrict "loadparm" property to devices that can be used for booting
+Applying: hw: Add "loadparm" property to scsi disk devices for booting on s390x
+Applying: pc-bios/s390x: Initialize cdrom type to false for each IPL device
+Applying: pc-bios/s390x: Initialize machine loadparm before probing IPL devices
+Applying: pc-bios/s390-ccw: Re-initialize receive queue index before each boot attempt
+Applying: pc-bios: Update the s390 bios images with the recent fixes
+Patch failed at 0011 pc-bios: Update the s390 bios images with the recent fixes
+error: corrupt binary patch at line 428: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
