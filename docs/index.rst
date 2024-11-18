@@ -21,3 +21,4 @@ Welcome to QEMU's documentation!
    specs/index
    devel/index
    codebase/index
+   glossary/index
