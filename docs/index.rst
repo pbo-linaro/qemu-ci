@@ -20,5 +20,6 @@ Welcome to QEMU's documentation!
    interop/index
    specs/index
    devel/index
+   how-to/index
    codebase/index
    glossary/index
