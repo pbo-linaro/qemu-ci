@@ -1,0 +1,99 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.0.4-20241118223714@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 171 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/71]!
+  ERROR: missing [2/71]!
+  ERROR: missing [3/71]!
+  ERROR: missing [4/71]!
+  ERROR: missing [5/71]!
+  ERROR: missing [6/71]!
+  ERROR: missing [7/71]!
+  ERROR: missing [8/71]!
+  ERROR: missing [9/71]!
+  ERROR: missing [10/71]!
+  ERROR: missing [11/71]!
+  ERROR: missing [12/71]!
+  ERROR: missing [13/71]!
+  ERROR: missing [14/71]!
+  ERROR: missing [15/71]!
+  ERROR: missing [16/71]!
+  ERROR: missing [17/71]!
+  ERROR: missing [18/71]!
+  ERROR: missing [19/71]!
+  ERROR: missing [20/71]!
+  ERROR: missing [21/71]!
+  ERROR: missing [22/71]!
+  ERROR: missing [23/71]!
+  ERROR: missing [24/71]!
+  ERROR: missing [25/71]!
+  ERROR: missing [26/71]!
+  ERROR: missing [27/71]!
+  ERROR: missing [28/71]!
+  ERROR: missing [29/71]!
+  ERROR: missing [30/71]!
+  ERROR: missing [31/71]!
+  ERROR: missing [32/71]!
+  ERROR: missing [33/71]!
+  ERROR: missing [34/71]!
+  ERROR: missing [35/71]!
+  ERROR: missing [36/71]!
+  ERROR: missing [37/71]!
+  ERROR: missing [38/71]!
+  ERROR: missing [39/71]!
+  ERROR: missing [40/71]!
+  ERROR: missing [41/71]!
+  ERROR: missing [42/71]!
+  ERROR: missing [43/71]!
+  ERROR: missing [44/71]!
+  ERROR: missing [45/71]!
+  ERROR: missing [46/71]!
+  ERROR: missing [47/71]!
+  ERROR: missing [48/71]!
+  ERROR: missing [49/71]!
+  ERROR: missing [50/71]!
+  ERROR: missing [51/71]!
+  ERROR: missing [52/71]!
+  ERROR: missing [53/71]!
+  ERROR: missing [54/71]!
+  ERROR: missing [55/71]!
+  ERROR: missing [56/71]!
+  ERROR: missing [57/71]!
+  [PATCH 58/71] target/i386: Fix legacy page table walk
+    + Tested-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> ([31m✗[0m DKIM/ilande.co.uk)
+  [PATCH 59/71] hw/i386/pc: Don't try to init PCI NICs if there is no PCI bus
+    + Reviewed-by: Bernhard Beschow <shentey@gmail.com> ([31m✗[0m DKIM/gmail.com)
+  [PATCH 60/71] linux-user: Fix setreuid and setregid to use direct syscalls
+  [PATCH 61/71] target/arm: Drop user-only special case in sve_stN_r
+  [PATCH 62/71] accel/tcg: Fix user-only probe_access_internal plugin check
+  [PATCH 63/71] linux-user: Tolerate CONFIG_LSM_MMAP_MIN_ADDR
+  [PATCH 64/71] linux-user/arm: Reduce vdso alignment to 4k
+  [PATCH 65/71] linux-user/arm: Select vdso for be8 and be32 modes
+  [PATCH 66/71] tcg: Allow top bit of SIMD_DATA_BITS to be set in simd_desc()
+  [PATCH 67/71] target/i386: fix hang when using slow path for ptw_setl
+  [PATCH 68/71] contrib/plugins: add compat for g_memdup2
+  [PATCH 69/71] hw/misc/mos6522: Fix bad class definition of the MOS6522 device
+  [PATCH 70/71] hw/audio/hda: fix memory leak on audio setup
+  [PATCH 71/71] usb-hub: Fix handling port power control messages
+---
+Total patches: 14
+---
+WARNING: Thread incomplete!
+Applying: target/i386: Fix legacy page table walk
+Patch failed at 0001 target/i386: Fix legacy page table walk
+error: patch failed: target/i386/cpu.h:339
+error: target/i386/cpu.h: patch does not apply
+error: patch failed: target/i386/tcg/seg_helper.c:30
+error: target/i386/tcg/seg_helper.c: patch does not apply
+error: patch failed: target/i386/tcg/sysemu/excp_helper.c:297
+error: target/i386/tcg/sysemu/excp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
