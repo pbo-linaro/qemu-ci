@@ -13,14 +13,14 @@
 #include "qemu/osdep.h"
 
 #include "libqtest.h"
-#include "qapi/qmp/qdict.h"
+#include "qobject/qdict.h"
 #include "qemu/module.h"
 #include "qemu/option.h"
 #include "qemu/range.h"
 #include "qemu/sockets.h"
 #include "chardev/char.h"
 #include "crypto/tlscredspsk.h"
-#include "qapi/qmp/qlist.h"
+#include "qobject/qlist.h"
 #include "ppc-util.h"
 
 #include "migration-helpers.h"
