@@ -475,9 +475,17 @@ static void device_set_realized(Object *obj, bool value, Error **errp)
 
         if (!obj->parent) {
             gchar *name = g_strdup_printf("device[%d]", unattached_count++);
+            Object *root = qdev_get_machine();
 
-            object_property_add_child(container_get(qdev_get_machine(),
-                                                    "/unattached"),
+            /*
+             * We could have qdev test cases trying to realize() a device
+             * without machine created.  In that case we use the root.
+             */
+            if (!root) {
+                root = object_get_root();
+            }
+
+            object_property_add_child(container_get(root, "/unattached"),
                                       name, obj);
             unattached_parent = true;
             g_free(name);
