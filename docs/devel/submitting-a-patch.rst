@@ -237,6 +237,20 @@ attachments can be used as a last resort on a first-time submission.
 
 .. _if_you_cannot_send_patch_emails:
 
+Use git-publish
+~~~~~~~~~~~~~~~
+
+If you already configured git send-email, you can simply use `git-publish
+<https://github.com/stefanha/git-publish>`__ to send series.
+
+::
+
+    $ git checkout master -b my-feature
+    $ # work on new commits, add your 'Signed-off-by' lines to each
+    $ git publish
+    $ ... more work, rebase on master, ...
+    $ git publish # will send a v2
+
 If you cannot send patch emails
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
