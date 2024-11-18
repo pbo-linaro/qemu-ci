@@ -1,0 +1,87 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-8.2.8-20241118211929@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 153 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/61]!
+  ERROR: missing [2/61]!
+  ERROR: missing [3/61]!
+  ERROR: missing [4/61]!
+  ERROR: missing [5/61]!
+  ERROR: missing [6/61]!
+  ERROR: missing [7/61]!
+  ERROR: missing [8/61]!
+  ERROR: missing [9/61]!
+  ERROR: missing [10/61]!
+  ERROR: missing [11/61]!
+  ERROR: missing [12/61]!
+  ERROR: missing [13/61]!
+  ERROR: missing [14/61]!
+  ERROR: missing [15/61]!
+  ERROR: missing [16/61]!
+  ERROR: missing [17/61]!
+  ERROR: missing [18/61]!
+  ERROR: missing [19/61]!
+  ERROR: missing [20/61]!
+  ERROR: missing [21/61]!
+  ERROR: missing [22/61]!
+  ERROR: missing [23/61]!
+  ERROR: missing [24/61]!
+  ERROR: missing [25/61]!
+  ERROR: missing [26/61]!
+  ERROR: missing [27/61]!
+  ERROR: missing [28/61]!
+  ERROR: missing [29/61]!
+  ERROR: missing [30/61]!
+  ERROR: missing [31/61]!
+  ERROR: missing [32/61]!
+  ERROR: missing [33/61]!
+  ERROR: missing [34/61]!
+  ERROR: missing [35/61]!
+  ERROR: missing [36/61]!
+  ERROR: missing [37/61]!
+  ERROR: missing [38/61]!
+  ERROR: missing [39/61]!
+  ERROR: missing [40/61]!
+  ERROR: missing [41/61]!
+  ERROR: missing [42/61]!
+  ERROR: missing [43/61]!
+  ERROR: missing [44/61]!
+  ERROR: missing [45/61]!
+  ERROR: missing [46/61]!
+  ERROR: missing [47/61]!
+  ERROR: missing [48/61]!
+  [PATCH 49/61] target/i386: Fix legacy page table walk
+    + Tested-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> ([31m✗[0m DKIM/ilande.co.uk)
+  [PATCH 50/61] linux-user: Fix setreuid and setregid to use direct syscalls
+  [PATCH 51/61] target/arm: Drop user-only special case in sve_stN_r
+  [PATCH 52/61] accel/tcg: Fix user-only probe_access_internal plugin check
+  [PATCH 53/61] linux-user: Tolerate CONFIG_LSM_MMAP_MIN_ADDR
+  [PATCH 54/61] linux-user/arm: Reduce vdso alignment to 4k
+  [PATCH 55/61] linux-user/arm: Select vdso for be8 and be32 modes
+  [PATCH 56/61] tcg: Allow top bit of SIMD_DATA_BITS to be set in simd_desc()
+  [PATCH 57/61] target/i386: fix hang when using slow path for ptw_setl
+  [PATCH 58/61] contrib/plugins: add compat for g_memdup2
+  [PATCH 59/61] hw/misc/mos6522: Fix bad class definition of the MOS6522 device
+  [PATCH 60/61] hw/audio/hda: fix memory leak on audio setup
+  [PATCH 61/61] usb-hub: Fix handling port power control messages
+---
+Total patches: 13
+---
+WARNING: Thread incomplete!
+Applying: target/i386: Fix legacy page table walk
+Patch failed at 0001 target/i386: Fix legacy page table walk
+error: patch failed: target/i386/cpu.h:339
+error: target/i386/cpu.h: patch does not apply
+error: patch failed: target/i386/tcg/seg_helper.c:30
+error: target/i386/tcg/seg_helper.c: patch does not apply
+error: patch failed: target/i386/tcg/sysemu/excp_helper.c:297
+error: target/i386/tcg/sysemu/excp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
