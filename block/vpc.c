@@ -321,6 +321,7 @@ static int vpc_open(BlockDriverState *bs, QDict *options, int flags,
      *      'qemu'  :  CHS              QEMU (uses disk geometry)
      *      'qem2'  :  current_size     QEMU (uses current_size)
      *      'win '  :  current_size     Hyper-V
+     *      'wa\0\0':  current_size     Azure
      *      'd2v '  :  current_size     Disk2vhd
      *      'tap\0' :  current_size     XenServer
      *      'CTXS'  :  current_size     XenConverter
@@ -330,6 +331,7 @@ static int vpc_open(BlockDriverState *bs, QDict *options, int flags,
      *  that have CHS geometry of the maximum size.
      */
     use_chs = (!!strncmp(footer->creator_app, "win ", 4) &&
+               !!memcmp(footer->creator_app, "wa\0", 4) &&
                !!strncmp(footer->creator_app, "qem2", 4) &&
                !!strncmp(footer->creator_app, "d2v ", 4) &&
                !!strncmp(footer->creator_app, "CTXS", 4) &&
