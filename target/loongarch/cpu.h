@@ -302,7 +302,7 @@ typedef struct CPUArchState {
     uint64_t gpr[32];
     uint64_t pc;
 
-    fpr_t fpr[32];
+    fpr_t fpr[32] QEMU_ALIGNED(16);
     bool cf[8];
     uint32_t fcsr0;
     lbt_t  lbt;
@@ -487,6 +487,7 @@ static inline void cpu_get_tb_cpu_state(CPULoongArchState *env, vaddr *pc,
 
 #define CPU_RESOLVING_TYPE TYPE_LOONGARCH_CPU
 
+QEMU_BUILD_BUG_ON((offsetof(CPULoongArchState, fpr[0]) & (15)) != 0);
 void loongarch_cpu_post_init(Object *obj);
 
 #endif /* LOONGARCH_CPU_H */
