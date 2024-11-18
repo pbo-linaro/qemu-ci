@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.15-20241118210517@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 73 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/39]!
+  ERROR: missing [2/39]!
+  ERROR: missing [3/39]!
+  ERROR: missing [4/39]!
+  ERROR: missing [5/39]!
+  ERROR: missing [6/39]!
+  ERROR: missing [7/39]!
+  ERROR: missing [8/39]!
+  ERROR: missing [9/39]!
+  ERROR: missing [10/39]!
+  ERROR: missing [11/39]!
+  ERROR: missing [12/39]!
+  ERROR: missing [13/39]!
+  ERROR: missing [14/39]!
+  ERROR: missing [15/39]!
+  ERROR: missing [16/39]!
+  ERROR: missing [17/39]!
+  ERROR: missing [18/39]!
+  ERROR: missing [19/39]!
+  ERROR: missing [20/39]!
+  ERROR: missing [21/39]!
+  ERROR: missing [22/39]!
+  ERROR: missing [23/39]!
+  ERROR: missing [24/39]!
+  ERROR: missing [25/39]!
+  ERROR: missing [26/39]!
+  ERROR: missing [27/39]!
+  ERROR: missing [28/39]!
+  ERROR: missing [29/39]!
+  ERROR: missing [30/39]!
+  ERROR: missing [31/39]!
+  ERROR: missing [32/39]!
+  [PATCH 33/39] target/i386: Fix legacy page table walk
+    + Tested-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk> ([31m✗[0m DKIM/ilande.co.uk)
+  [PATCH 34/39] linux-user: Fix setreuid and setregid to use direct syscalls
+  [PATCH 35/39] target/arm: Drop user-only special case in sve_stN_r
+  [PATCH 36/39] tcg: Allow top bit of SIMD_DATA_BITS to be set in simd_desc()
+  [PATCH 37/39] hw/misc/mos6522: Fix bad class definition of the MOS6522 device
+  [PATCH 38/39] hw/audio/hda: fix memory leak on audio setup
+  [PATCH 39/39] usb-hub: Fix handling port power control messages
+---
+Total patches: 7
+---
+WARNING: Thread incomplete!
+Applying: target/i386: Fix legacy page table walk
+Patch failed at 0001 target/i386: Fix legacy page table walk
+error: patch failed: target/i386/cpu.h:336
+error: target/i386/cpu.h: patch does not apply
+error: patch failed: target/i386/tcg/seg_helper.c:30
+error: target/i386/tcg/seg_helper.c: patch does not apply
+error: patch failed: target/i386/tcg/sysemu/excp_helper.c:296
+error: target/i386/tcg/sysemu/excp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
