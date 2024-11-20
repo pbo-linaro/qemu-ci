@@ -829,6 +829,23 @@ Object *qdev_get_machine(void)
     return dev;
 }
 
+Object *machine_get_container(const char *name)
+{
+    Object *container, *machine;
+
+    /*
+     * NOTE: nobody should call this _before_ machine is created.  If it
+     * happens, it's a programming error.
+     */
+    machine = qdev_get_machine();
+    assert(machine);
+
+    container = object_resolve_path_component(machine, name);
+    assert(object_dynamic_cast(container, TYPE_CONTAINER));
+
+    return container;
+}
+
 char *qdev_get_human_name(DeviceState *dev)
 {
     g_assert(dev != NULL);
