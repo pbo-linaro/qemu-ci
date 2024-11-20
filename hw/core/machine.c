@@ -1193,14 +1193,27 @@ static void machine_class_base_init(ObjectClass *oc, void *data)
     }
 }
 
+const char *machine_containers[] = {
+    "unattached",
+    "peripheral",
+    "peripheral-anon"
+};
+
+static void qemu_create_machine_containers(Object *machine)
+{
+    int i;
+
+    for (i = 0; i < ARRAY_SIZE(machine_containers); i++) {
+        container_create(machine, machine_containers[i]);
+    }
+}
+
 static void machine_initfn(Object *obj)
 {
     MachineState *ms = MACHINE(obj);
     MachineClass *mc = MACHINE_GET_CLASS(obj);
 
-    container_get(obj, "/peripheral");
-    container_get(obj, "/peripheral-anon");
-
+    qemu_create_machine_containers(obj);
     ms->dump_guest_core = true;
     ms->mem_merge = (QEMU_MADV_MERGEABLE != QEMU_MADV_INVALID);
     ms->enable_graphics = true;
