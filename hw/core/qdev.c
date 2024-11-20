@@ -817,7 +817,13 @@ Object *qdev_get_machine(void)
     static Object *dev;
 
     if (dev == NULL) {
-        dev = container_get(object_get_root(), "/machine");
+        /*
+         * NOTE: when the machine is not yet created, this helper will
+         * also keep the cached object untouched and return NULL.  The next
+         * invoke of the helper will try to look for the machine again.
+         * It'll only cache the pointer when it's found the first time.
+         */
+        dev = object_resolve_path_component(object_get_root(), "machine");
     }
 
     return dev;
