@@ -1154,14 +1154,14 @@ DisplayState *init_displaystate(void)
 {
     gchar *name;
     QemuConsole *con;
+    Object *backend = container_create(object_get_root(), "backend");
 
     QTAILQ_FOREACH(con, &consoles, next) {
         /* Hook up into the qom tree here (not in object_new()), once
          * all QemuConsoles are created and the order / numbering
          * doesn't change any more */
         name = g_strdup_printf("console[%d]", con->index);
-        object_property_add_child(container_get(object_get_root(), "/backend"),
-                                  name, OBJECT(con));
+        object_property_add_child(backend, name, OBJECT(con));
         g_free(name);
     }
 
