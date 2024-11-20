@@ -24,6 +24,20 @@ static void container_register_types(void)
     type_register_static(&container_info);
 }
 
+Object *container_create(Object *obj, const char *name)
+{
+    Object *child = object_new(TYPE_CONTAINER);
+
+    object_property_add_child(obj, name, child);
+    /*
+     * Simplify the caller by always drop the refcount directly here, as
+     * containers are normally never destroyed after created anyway.
+     */
+    object_unref(child);
+
+    return child;
+}
+
 Object *container_get(Object *root, const char *path)
 {
     Object *obj, *child;
@@ -37,9 +51,7 @@ Object *container_get(Object *root, const char *path)
     for (i = 1; parts[i] != NULL; i++, obj = child) {
         child = object_resolve_path_component(obj, parts[i]);
         if (!child) {
-            child = object_new(TYPE_CONTAINER);
-            object_property_add_child(obj, parts[i], child);
-            object_unref(child);
+            child = container_create(obj, parts[i]);
         }
     }
 

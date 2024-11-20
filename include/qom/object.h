@@ -2033,6 +2033,18 @@ int object_child_foreach_recursive(Object *obj,
  */
 Object *container_get(Object *root, const char *path);
 
+
+/**
+ * container_create:
+ * @root: root of the object to create the new container
+ * @name: name of the new container
+ *
+ * Create a container object under @root with @name.
+ *
+ * Returns: the newly created container object.
+ */
+Object *container_create(Object *root, const char *name);
+
 /**
  * object_property_help:
  * @name: the name of the property
