@@ -197,6 +197,11 @@ static void ahci_irq_raise(AHCIState *s)
 static void ahci_irq_lower(AHCIState *s)
 {
     DeviceState *dev_state = s->container;
+    /*
+     * NOTE: from some profiling on Linux VM boots, this can trigger quite
+     * frequently (10000+ when seeing the root prompt). It might be good to
+     * consider speeding this path up on the type cast.
+     */
     PCIDevice *pci_dev = (PCIDevice *) object_dynamic_cast(OBJECT(dev_state),
                                                            TYPE_PCI_DEVICE);
 
