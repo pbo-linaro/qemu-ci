@@ -3145,7 +3145,7 @@ static char *scsi_property_get_loadparm(Object *obj, Error **errp)
 static void scsi_property_set_loadparm(Object *obj, const char *value,
                                        Error **errp)
 {
-    void *lp_str;
+    char *lp_str;
 
     if (object_property_get_int(obj, "bootindex", NULL) < 0) {
         error_setg(errp, "'loadparm' is only valid for boot devices");

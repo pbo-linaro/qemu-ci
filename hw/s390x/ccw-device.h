@@ -15,6 +15,7 @@
 #include "hw/qdev-core.h"
 #include "hw/s390x/css.h"
 #include "hw/s390x/css-bridge.h"
+#include "hw/s390x/ipl/qipl.h"
 
 struct CcwDevice {
     DeviceState parent_obj;
@@ -27,7 +28,7 @@ struct CcwDevice {
     /* The actual busid of the virtual subchannel. */
     CssDevId subch_id;
     /* If set, use this loadparm value when device is boot target */
-    uint8_t loadparm[8];
+    char loadparm[LOADPARM_LEN];
 };
 typedef struct CcwDevice CcwDevice;
 
@@ -54,6 +55,6 @@ OBJECT_DECLARE_TYPE(CcwDevice, CCWDeviceClass, CCW_DEVICE)
 extern const PropertyInfo ccw_loadparm;
 
 #define DEFINE_PROP_CCW_LOADPARM(_n, _s, _f) \
-    DEFINE_PROP(_n, _s, _f, ccw_loadparm, typeof(uint8_t[8]))
+    DEFINE_PROP(_n, _s, _f, ccw_loadparm, typeof(char[LOADPARM_LEN]))
 
 #endif

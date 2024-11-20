@@ -416,7 +416,7 @@ static uint64_t s390_ipl_map_iplb_chain(IplParameterBlock *iplb_chain)
     return chain_addr;
 }
 
-void s390_ipl_fmt_loadparm(uint8_t *loadparm, char *str, Error **errp)
+void s390_ipl_fmt_loadparm(char *loadparm, char *str, Error **errp)
 {
     /* Initialize the loadparm with spaces */
     memset(loadparm, ' ', LOADPARM_LEN);
@@ -439,8 +439,8 @@ static bool s390_build_iplb(DeviceState *dev_st, IplParameterBlock *iplb)
     CcwDevice *ccw_dev = NULL;
     SCSIDevice *sd;
     int devtype;
-    uint8_t *lp;
-    g_autofree void *scsi_lp = NULL;
+    char *lp;
+    g_autofree char *scsi_lp = NULL;
 
     /*
      * Currently allow IPL only from CCW devices.

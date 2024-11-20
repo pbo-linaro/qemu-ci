@@ -35,6 +35,7 @@
 #include "hw/pci/pci.h"
 #include "hw/pci/pcie.h"
 #include "hw/i386/x86.h"
+#include "hw/s390x/ipl/qipl.h"
 #include "util/block-helpers.h"
 
 static bool check_prop_still_unset(Object *obj, const char *name,
@@ -58,14 +59,15 @@ static bool check_prop_still_unset(Object *obj, const char *name,
     return false;
 }
 
-bool qdev_prop_sanitize_s390x_loadparm(uint8_t *loadparm, const char *str,
+bool qdev_prop_sanitize_s390x_loadparm(char *loadparm, const char *str,
                                        Error **errp)
 {
     int i, len;
 
     len = strlen(str);
-    if (len > 8) {
-        error_setg(errp, "'loadparm' can only contain up to 8 characters");
+    if (len > LOADPARM_LEN) {
+        error_setg(errp, "'loadparm' can only contain up to %u characters",
+                         LOADPARM_LEN);
         return false;
     }
 
