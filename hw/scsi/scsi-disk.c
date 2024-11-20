@@ -38,6 +38,7 @@
 #include "hw/block/block.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-properties-system.h"
+#include "hw/s390x/ipl/qipl.h"
 #include "sysemu/dma.h"
 #include "sysemu/sysemu.h"
 #include "qemu/cutils.h"
@@ -112,7 +113,7 @@ struct SCSIDiskState {
     char *vendor;
     char *product;
     char *device_id;
-    char *loadparm;     /* only for s390x */
+    char loadparm[LOADPARM_LEN]; /* only for s390x */
     bool tray_open;
     bool tray_locked;
     /*
@@ -3145,19 +3146,12 @@ static char *scsi_property_get_loadparm(Object *obj, Error **errp)
 static void scsi_property_set_loadparm(Object *obj, const char *value,
                                        Error **errp)
 {
-    char *lp_str;
-
     if (object_property_get_int(obj, "bootindex", NULL) < 0) {
         error_setg(errp, "'loadparm' is only valid for boot devices");
         return;
     }
 
-    lp_str = g_malloc0(strlen(value));
-    if (!qdev_prop_sanitize_s390x_loadparm(lp_str, value, errp)) {
-        g_free(lp_str);
-        return;
-    }
-    SCSI_DISK_BASE(obj)->loadparm = lp_str;
+    qdev_prop_sanitize_s390x_loadparm(SCSI_DISK_BASE(obj)->loadparm, value, errp);
 }
 
 static void scsi_property_add_specifics(DeviceClass *dc)
