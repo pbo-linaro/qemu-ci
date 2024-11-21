@@ -666,11 +666,13 @@ static void vhost_commit(MemoryListener *listener)
     dev->mem = g_realloc(dev->mem, regions_size);
     dev->mem->nregions = dev->n_mem_sections;
 
-    if (dev->vhost_ops->vhost_backend_no_private_memslots &&
-        dev->vhost_ops->vhost_backend_no_private_memslots(dev)) {
-        used_shared_memslots = dev->mem->nregions;
-    } else {
-        used_memslots = dev->mem->nregions;
+    if (!dev->listener_removing) {
+        if (dev->vhost_ops->vhost_backend_no_private_memslots &&
+            dev->vhost_ops->vhost_backend_no_private_memslots(dev)) {
+            used_shared_memslots = dev->mem->nregions;
+        } else {
+            used_memslots = dev->mem->nregions;
+        }
     }
 
     for (i = 0; i < dev->n_mem_sections; i++) {
@@ -1668,7 +1670,9 @@ void vhost_dev_cleanup(struct vhost_dev *hdev)
     }
     if (hdev->mem) {
         /* those are only safe after successful init */
+        hdev->listener_removing = true;
         memory_listener_unregister(&hdev->memory_listener);
+        hdev->listener_removing = false;
         QLIST_REMOVE(hdev, entry);
     }
     migrate_del_blocker(&hdev->migration_blocker);

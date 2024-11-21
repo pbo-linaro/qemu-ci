@@ -133,6 +133,7 @@ struct vhost_dev {
     QLIST_HEAD(, vhost_iommu) iommu_list;
     IOMMUNotifier n;
     const VhostDevConfigOps *config_ops;
+    bool listener_removing;
 };
 
 extern const VhostOps kernel_ops;
