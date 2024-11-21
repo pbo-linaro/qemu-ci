@@ -181,14 +181,10 @@ static uint32_t ahci_port_read(AHCIState *s, int port, int offset)
 
 static void ahci_irq_raise(AHCIState *s)
 {
-    DeviceState *dev_state = s->container;
-    PCIDevice *pci_dev = (PCIDevice *) object_dynamic_cast(OBJECT(dev_state),
-                                                           TYPE_PCI_DEVICE);
-
     trace_ahci_irq_raise(s);
 
-    if (pci_dev && msi_enabled(pci_dev)) {
-        msi_notify(pci_dev, 0);
+    if (s->pci_dev && msi_enabled(s->pci_dev)) {
+        msi_notify(s->pci_dev, 0);
     } else {
         qemu_irq_raise(s->irq);
     }
@@ -196,13 +192,9 @@ static void ahci_irq_raise(AHCIState *s)
 
 static void ahci_irq_lower(AHCIState *s)
 {
-    DeviceState *dev_state = s->container;
-    PCIDevice *pci_dev = (PCIDevice *) object_dynamic_cast(OBJECT(dev_state),
-                                                           TYPE_PCI_DEVICE);
-
     trace_ahci_irq_lower(s);
 
-    if (!pci_dev || !msi_enabled(pci_dev)) {
+    if (!s->pci_dev || !msi_enabled(s->pci_dev)) {
         qemu_irq_lower(s->irq);
     }
 }
@@ -1608,7 +1600,8 @@ static const IDEDMAOps ahci_dma_ops = {
 
 void ahci_init(AHCIState *s, DeviceState *qdev)
 {
-    s->container = qdev;
+    s->pci_dev = (PCIDevice *)object_dynamic_cast(OBJECT(qdev), TYPE_PCI_DEVICE);
+
     /* XXX BAR size should be 1k, but that breaks, so bump it to 4k for now */
     memory_region_init_io(&s->mem, OBJECT(qdev), &ahci_mem_ops, s,
                           "ahci", AHCI_MEM_BAR_SIZE);

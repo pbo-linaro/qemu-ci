@@ -37,7 +37,7 @@ typedef struct AHCIControlRegs {
 } AHCIControlRegs;
 
 typedef struct AHCIState {
-    DeviceState *container;
+    PCIDevice *pci_dev;
 
     AHCIDevice *dev;
     AHCIControlRegs control_regs;
