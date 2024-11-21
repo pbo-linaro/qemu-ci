@@ -926,7 +926,9 @@ static void kvm_cpu_synchronize_kick_all(void)
     CPUState *cpu;
 
     CPU_FOREACH(cpu) {
-        run_on_cpu(cpu, do_kvm_cpu_synchronize_kick, RUN_ON_CPU_NULL);
+        if (cpu->vcpu_in_kvm) {
+            run_on_cpu(cpu, do_kvm_cpu_synchronize_kick, RUN_ON_CPU_NULL);
+        }
     }
 }
 
@@ -3131,7 +3133,9 @@ int kvm_cpu_exec(CPUState *cpu)
          */
         smp_rmb();
 
+        cpu->vcpu_in_kvm = true;
         run_ret = kvm_vcpu_ioctl(cpu, KVM_RUN, 0);
+        cpu->vcpu_in_kvm = false;
 
         attrs = kvm_arch_post_run(cpu, run);
 
