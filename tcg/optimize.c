@@ -1620,7 +1620,7 @@ static bool fold_deposit(OptContext *ctx, TCGOp *op)
         op->args[1] = op->args[2];
         op->args[2] = arg_new_constant(ctx, mask);
         ctx->z_mask = mask & arg_info(op->args[1])->z_mask;
-        return false;
+        return fold_and(ctx, op);
     }
 
     /* Inserting zero into a value. */
@@ -1630,7 +1630,7 @@ static bool fold_deposit(OptContext *ctx, TCGOp *op)
         op->opc = and_opc;
         op->args[2] = arg_new_constant(ctx, mask);
         ctx->z_mask = mask & arg_info(op->args[1])->z_mask;
-        return false;
+        return fold_and(ctx, op);
     }
 
     ctx->z_mask = deposit64(arg_info(op->args[1])->z_mask,
