@@ -639,6 +639,9 @@ static CGEventRef handleTapEvent(CGEventTapProxy proxy, CGEventType type, CGEven
     [self setBoundsSize:NSMakeSize(screen.width, screen.height)];
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 - (void) updateUIInfoLocked
 {
     /* Must be called with the BQL, i.e. via updateUIInfo */
@@ -684,6 +687,8 @@ static CGEventRef handleTapEvent(CGEventTapProxy proxy, CGEventType type, CGEven
 
     dpy_set_ui_info(dcl.con, &info, TRUE);
 }
+
+#pragma GCC diagnostic pop
 
 - (void) updateUIInfo
 {
