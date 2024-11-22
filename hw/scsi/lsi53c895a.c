@@ -2365,6 +2365,7 @@ static void lsi_scsi_realize(PCIDevice *dev, Error **errp)
     QTAILQ_INIT(&s->queue);
 
     scsi_bus_init(&s->bus, sizeof(s->bus), d, &lsi_scsi_info);
+    scsi_bus_legacy_handle_cmdline(&s->bus);
 }
 
 static void lsi_scsi_exit(PCIDevice *dev)
@@ -2422,10 +2423,3 @@ static void lsi53c895a_register_types(void)
 }
 
 type_init(lsi53c895a_register_types)
-
-void lsi53c8xx_handle_legacy_cmdline(DeviceState *lsi_dev)
-{
-    LSIState *s = LSI53C895A(lsi_dev);
-
-    scsi_bus_legacy_handle_cmdline(&s->bus);
-}
