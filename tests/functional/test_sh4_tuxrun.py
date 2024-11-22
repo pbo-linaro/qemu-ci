@@ -15,7 +15,7 @@ import os
 import time
 
 from unittest import skipUnless
-from qemu_test import Asset, exec_command_and_wait_for_pattern, exec_command
+from qemu_test import Asset, exec_command_and_wait_for_pattern
 from qemu_test.tuxruntest import TuxRunBaselineTest
 
 class TuxRunSh4Test(TuxRunBaselineTest):
@@ -46,10 +46,8 @@ class TuxRunSh4Test(TuxRunBaselineTest):
                          console_index=1)
         self.vm.launch()
 
-        self.wait_for_console_pattern("Welcome to TuxTest")
-        time.sleep(0.1)
-        exec_command(self, 'root')
-        time.sleep(0.1)
+        self.wait_for_console_pattern("tuxtest login:")
+        exec_command_and_wait_for_pattern(self, 'root', 'root@tuxtest:~#')
         exec_command_and_wait_for_pattern(self, 'halt',
                                           "reboot: System halted")
 
