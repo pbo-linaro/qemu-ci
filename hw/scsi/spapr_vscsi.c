@@ -1218,6 +1218,7 @@ static void spapr_vscsi_realize(SpaprVioDevice *dev, Error **errp)
     dev->crq.SendFunc = vscsi_do_crq;
 
     scsi_bus_init(&s->bus, sizeof(s->bus), DEVICE(dev), &vscsi_scsi_info);
+    scsi_bus_legacy_handle_cmdline(&s->bus);
 
     /* ibmvscsi SCSI bus does not allow hotplug. */
     qbus_set_hotplug_handler(BUS(&s->bus), NULL);
@@ -1227,10 +1228,9 @@ void spapr_vscsi_create(SpaprVioBus *bus)
 {
     DeviceState *dev;
 
-    dev = qdev_new("spapr-vscsi");
+    dev = qdev_new(TYPE_VIO_SPAPR_VSCSI_DEVICE);
 
     qdev_realize_and_unref(dev, &bus->bus, &error_fatal);
-    scsi_bus_legacy_handle_cmdline(&VIO_SPAPR_VSCSI_DEVICE(dev)->bus);
 }
 
 static int spapr_vscsi_devnode(SpaprVioDevice *dev, void *fdt, int node_off)
