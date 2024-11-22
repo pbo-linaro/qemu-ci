@@ -1,3 +1,5 @@
+.. _bypass_iommu:
+
 BYPASS IOMMU PROPERTY
 =====================
 
