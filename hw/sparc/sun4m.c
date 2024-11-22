@@ -338,7 +338,6 @@ static void *sparc32_dma_init(hwaddr dma_base,
     sysbus_mmio_map(SYS_BUS_DEVICE(dma), 0, dma_base);
 
     sysbus_mmio_map(SYS_BUS_DEVICE(esp), 0, esp_base);
-    scsi_bus_legacy_handle_cmdline(&esp->esp.bus);
 
     sysbus_mmio_map(SYS_BUS_DEVICE(lance), 0, le_base);
 

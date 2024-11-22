@@ -347,8 +347,6 @@ static void mips_jazz_init(MachineState *machine,
     sysbus_connect_irq(sysbus, 0, qdev_get_gpio_in(rc4030, 5));
     sysbus_mmio_map(sysbus, 0, 0x80002000);
 
-    scsi_bus_legacy_handle_cmdline(&esp->bus);
-
     /* Floppy */
     for (n = 0; n < MAX_FD; n++) {
         fds[n] = drive_get(IF_FLOPPY, 0, n);

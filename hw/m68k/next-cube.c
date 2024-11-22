@@ -851,8 +851,6 @@ static void next_scsi_init(DeviceState *pcdev)
 
     next_pc->scsi_reset = qdev_get_gpio_in(dev, 0);
     next_pc->scsi_dma = qdev_get_gpio_in(dev, 1);
-
-    scsi_bus_legacy_handle_cmdline(&esp->bus);
 }
 
 static void next_escc_init(DeviceState *pcdev)

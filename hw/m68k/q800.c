@@ -487,8 +487,6 @@ static void q800_machine_init(MachineState *machine)
     memory_region_add_subregion(&m->macio, ESP_PDMA - IO_BASE,
                                 sysbus_mmio_get_region(sysbus, 1));
 
-    scsi_bus_legacy_handle_cmdline(&esp->bus);
-
     /* Apple Sound Chip */
 
     object_initialize_child(OBJECT(machine), "asc", &m->asc, TYPE_ASC);
