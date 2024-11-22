@@ -285,8 +285,16 @@ struct MachineClass {
         no_cdrom:1,
         no_sdcard:1,
         pci_allow_0_address:1,
-        legacy_fw_cfg_order:1;
-    bool is_default;
+        legacy_fw_cfg_order:1,
+        is_default:1,
+        auto_enable_numa_with_memhp:1,
+        auto_enable_numa_with_memdev:1,
+        ignore_boot_device_suffixes:1,
+        smbus_no_migration_support:1,
+        nvdimm_supported:1,
+        numa_mem_supported:1,
+        auto_enable_numa:1,
+        cpu_cluster_has_numa_boundary:1;
     const char *default_machine_opts;
     const char *default_boot_order;
     const char *default_display;
@@ -304,14 +312,6 @@ struct MachineClass {
     int numa_mem_align_shift;
     const char * const *valid_cpu_types;
     strList *allowed_dynamic_sysbus_devices;
-    bool auto_enable_numa_with_memhp;
-    bool auto_enable_numa_with_memdev;
-    bool ignore_boot_device_suffixes;
-    bool smbus_no_migration_support;
-    bool nvdimm_supported;
-    bool numa_mem_supported;
-    bool auto_enable_numa;
-    bool cpu_cluster_has_numa_boundary;
     SMPCompatProps smp_props;
     const char *default_ram_id;
 
