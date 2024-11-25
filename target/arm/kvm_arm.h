@@ -268,6 +268,24 @@ int kvm_arm_rme_vcpu_init(CPUState *cs);
  */
 void kvm_arm_rme_init_guest_ram(hwaddr base, size_t size);
 
+/**
+ * kvm_arm_rme_get_measurement_log
+ *
+ * Obtain the measurement log object if enabled, in order to get its size and
+ * set its base address.
+ *
+ * Returns NULL if measurement log is disabled.
+ */
+Object *kvm_arm_rme_get_measurement_log(void);
+
+/**
+ * kvm_arm_rme_set_ipa_size
+ * @ipa_bits: number of guest physical address bits
+ *
+ * Set the GPA size, not counting the bit reserved for shared address range.
+ */
+void kvm_arm_rme_set_ipa_size(uint8_t ipa_bits);
+
 #else
 
 /*
@@ -295,6 +313,15 @@ static inline bool kvm_arm_mte_supported(void)
 }
 
 static inline void kvm_arm_rme_init_guest_ram(hwaddr base, size_t size)
+{
+}
+
+static inline Object *kvm_arm_rme_get_measurement_log(void)
+{
+    return NULL;
+}
+
+static inline void kvm_arm_rme_set_ipa_size(uint8_t ipa_size)
 {
 }
 
