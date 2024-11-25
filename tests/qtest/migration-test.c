@@ -717,7 +717,6 @@ static int test_migrate_start(QTestState **from, QTestState **to,
     g_autofree gchar *arch_target = NULL;
     /* options for source and target */
     g_autofree gchar *arch_opts = NULL;
-    g_autofree gchar *cmd_source = NULL;
     g_autofree gchar *cmd_target = NULL;
     const gchar *ignore_stderr;
     g_autofree char *shmem_opts = NULL;
@@ -735,10 +734,7 @@ static int test_migrate_start(QTestState **from, QTestState **to,
         }
     }
 
-    dst_state = (QTestMigrationState) { };
-    src_state = (QTestMigrationState) { };
     bootfile_create(tmpfs, args->suspend_me);
-    src_state.suspend_me = args->suspend_me;
 
     if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
         memory_size = "150M";
@@ -817,26 +813,34 @@ static int test_migrate_start(QTestState **from, QTestState **to,
 
     g_test_message("Using machine type: %s", machine);
 
-    cmd_source = g_strdup_printf("-accel kvm%s -accel tcg "
-                                 "-machine %s,%s "
-                                 "-name source,debug-threads=on "
-                                 "-m %s "
-                                 "-serial file:%s/src_serial "
-                                 "%s %s %s %s %s",
-                                 kvm_opts ? kvm_opts : "",
-                                 machine, machine_opts,
-                                 memory_size, tmpfs,
-                                 arch_opts ? arch_opts : "",
-                                 arch_source ? arch_source : "",
-                                 shmem_opts ? shmem_opts : "",
-                                 args->opts_source ? args->opts_source : "",
-                                 ignore_stderr);
     if (!args->only_target) {
+        g_autofree gchar *cmd_source = NULL;
+
+        src_state = (QTestMigrationState) { };
+        src_state.suspend_me = args->suspend_me;
+
+        cmd_source = g_strdup_printf("-accel kvm%s -accel tcg "
+                                     "-machine %s,%s "
+                                     "-name source,debug-threads=on "
+                                     "-m %s "
+                                     "-serial file:%s/src_serial "
+                                     "%s %s %s %s %s",
+                                     kvm_opts ? kvm_opts : "",
+                                     machine, machine_opts,
+                                     memory_size, tmpfs,
+                                     arch_opts ? arch_opts : "",
+                                     arch_source ? arch_source : "",
+                                     shmem_opts ? shmem_opts : "",
+                                     args->opts_source ? args->opts_source : "",
+                                     ignore_stderr);
+
         *from = qtest_init_with_env(QEMU_ENV_SRC, cmd_source);
         qtest_qmp_set_event_callback(*from,
                                      migrate_watch_for_events,
                                      &src_state);
     }
+
+    dst_state = (QTestMigrationState) { };
 
     cmd_target = g_strdup_printf("-accel kvm%s -accel tcg "
                                  "-machine %s,%s "
@@ -870,7 +874,9 @@ static int test_migrate_start(QTestState **from, QTestState **to,
      * Always enable migration events.  Libvirt always uses it, let's try
      * to mimic as closer as that.
      */
-    migrate_set_capability(*from, "events", true);
+    if (!args->only_target) {
+        migrate_set_capability(*from, "events", true);
+    }
     migrate_set_capability(*to, "events", true);
 
     return 0;
