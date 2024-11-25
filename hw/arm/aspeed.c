@@ -1193,6 +1193,7 @@ static void aspeed_machine_class_init_cpus_defaults(MachineClass *mc)
     mc->min_cpus = sc->num_cpus;
     mc->max_cpus = sc->num_cpus;
     mc->valid_cpu_types = sc->valid_cpu_types;
+    mc->no_sdcard = ON_OFF_AUTO_OFF;
 }
 
 static bool aspeed_machine_ast2600_get_boot_from_emmc(Object *obj, Error **errp)
@@ -1232,6 +1233,7 @@ static void aspeed_machine_class_init(ObjectClass *oc, void *data)
     mc->no_floppy = 1;
     mc->no_cdrom = 1;
     mc->no_parallel = 1;
+    mc->no_sdcard = ON_OFF_AUTO_OFF;
     mc->default_ram_id = "ram";
     amc->macs_mask = ASPEED_MAC0_ON;
     amc->uart_default = ASPEED_DEV_UART5;

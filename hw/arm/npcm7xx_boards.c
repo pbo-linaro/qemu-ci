@@ -464,6 +464,7 @@ static void npcm7xx_machine_class_init(ObjectClass *oc, void *data)
     mc->no_floppy = 1;
     mc->no_cdrom = 1;
     mc->no_parallel = 1;
+    mc->no_sdcard = ON_OFF_AUTO_OFF;
     mc->default_ram_id = "ram";
     mc->valid_cpu_types = valid_cpu_types;
 }

@@ -1273,6 +1273,7 @@ static void mps2tz_class_init(ObjectClass *oc, void *data)
     IDAUInterfaceClass *iic = IDAU_INTERFACE_CLASS(oc);
     MPS2TZMachineClass *mmc = MPS2TZ_MACHINE_CLASS(oc);
 
+    mc->no_sdcard = ON_OFF_AUTO_OFF;
     mc->init = mps2tz_common_init;
     mc->reset = mps2_machine_reset;
     iic->check = mps2_tz_idau_check;
