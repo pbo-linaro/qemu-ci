@@ -147,6 +147,9 @@ struct arm_boot_info {
      * Confidential guest boot loads everything into RAM so it can be measured.
      */
     bool confidential;
+    /* measurement log location in guest memory */
+    hwaddr log_start;
+    size_t log_size;
 };
 
 /**
