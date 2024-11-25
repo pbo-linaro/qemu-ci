@@ -2033,6 +2033,25 @@ static bool migrate_prepare(MigrationState *s, bool resume, Error **errp)
         return false;
     }
 
+    /*
+     * The VM might have been target of a previous migration. If it
+     * was in the paused state then nothing will have required the
+     * block layer to be activated. Do it now to ensure this QEMU
+     * instance owns the disk locks.
+     */
+    if (!resume && runstate_check(RUN_STATE_PAUSED)) {
+        Error *local_err = NULL;
+
+        g_assert(bql_locked());
+
+        bdrv_activate_all(&local_err);
+        if (local_err) {
+            error_propagate(errp, local_err);
+            return false;
+        }
+        s->block_inactive = false;
+    }
+
     return true;
 }
 
