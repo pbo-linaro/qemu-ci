@@ -64,6 +64,7 @@ struct GPEXHost {
     int irq_num[GPEX_NUM_IRQS];
 
     bool allow_unmapped_accesses;
+    bool allow_io_addr0_accesses;
 
     struct GPEXConfig gpex_cfg;
 };
