@@ -192,9 +192,8 @@ static void bootfile_create(char *dir, bool suspend_me)
  * we get an 'A' followed by an endless string of 'B's
  * but on the destination we won't have the A (unless we enabled suspend/resume)
  */
-static void wait_for_serial(const char *side)
+static void wait_for_serial(const char *serialpath)
 {
-    g_autofree char *serialpath = g_strdup_printf("%s/%s", tmpfs, side);
     FILE *serialfile = fopen(serialpath, "r");
 
     do {
@@ -216,7 +215,7 @@ static void wait_for_serial(const char *side)
             break;
 
         default:
-            fprintf(stderr, "Unexpected %d on %s serial\n", readvalue, side);
+            fprintf(stderr, "Unexpected %d on %s\n", readvalue, serialpath);
             g_assert_not_reached();
         }
     } while (true);
@@ -818,16 +817,17 @@ static int test_migrate_start(QTestState **from, QTestState **to,
 
         src_state = (QTestMigrationState) { };
         src_state.suspend_me = args->suspend_me;
+        src_state.serial = migrate_get_unique_serial(tmpfs);
 
         cmd_source = g_strdup_printf("-accel kvm%s -accel tcg "
                                      "-machine %s,%s "
                                      "-name source,debug-threads=on "
                                      "-m %s "
-                                     "-serial file:%s/src_serial "
+                                     "-serial file:%s "
                                      "%s %s %s %s %s",
                                      kvm_opts ? kvm_opts : "",
                                      machine, machine_opts,
-                                     memory_size, tmpfs,
+                                     memory_size, src_state.serial,
                                      arch_opts ? arch_opts : "",
                                      arch_source ? arch_source : "",
                                      shmem_opts ? shmem_opts : "",
@@ -841,17 +841,18 @@ static int test_migrate_start(QTestState **from, QTestState **to,
     }
 
     dst_state = (QTestMigrationState) { };
+    dst_state.serial = migrate_get_unique_serial(tmpfs);
 
     cmd_target = g_strdup_printf("-accel kvm%s -accel tcg "
                                  "-machine %s,%s "
                                  "-name target,debug-threads=on "
                                  "-m %s "
-                                 "-serial file:%s/dest_serial "
+                                 "-serial file:%s "
                                  "-incoming %s "
                                  "%s %s %s %s %s",
                                  kvm_opts ? kvm_opts : "",
                                  machine, machine_opts,
-                                 memory_size, tmpfs, uri,
+                                 memory_size, dst_state.serial, uri,
                                  arch_opts ? arch_opts : "",
                                  arch_target ? arch_target : "",
                                  shmem_opts ? shmem_opts : "",
@@ -911,8 +912,10 @@ static void test_migrate_end(QTestState *from, QTestState *to, bool test_dest)
     qtest_quit(to);
 
     cleanup("migsocket");
-    cleanup("src_serial");
-    cleanup("dest_serial");
+    unlink(src_state.serial);
+    g_free(src_state.serial);
+    unlink(dst_state.serial);
+    g_free(dst_state.serial);
     cleanup(FILE_TEST_FILENAME);
 }
 
@@ -1290,7 +1293,7 @@ static int migrate_postcopy_prepare(QTestState **from_ptr,
                              "                'port': '0' } } ] } }");
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
     wait_for_suspend(from, &src_state);
 
     migrate_qmp(from, to, NULL, NULL, "{}");
@@ -1314,7 +1317,7 @@ static void migrate_postcopy_complete(QTestState *from, QTestState *to,
     }
 
     /* Make sure we get at least one "B" on destination */
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
 
     if (uffd_feature_thread_id) {
         read_blocktime(to);
@@ -1719,7 +1722,7 @@ static void test_precopy_common(MigrateCommon *args)
 
     /* Wait for the first serial output from the source */
     if (args->result == MIG_TEST_SUCCEED) {
-        wait_for_serial("src_serial");
+        wait_for_serial(src_state.serial);
         wait_for_suspend(from, &src_state);
     }
 
@@ -1796,7 +1799,7 @@ static void test_precopy_common(MigrateCommon *args)
             qtest_qmp_assert_success(to, "{'execute': 'system_wakeup'}");
         }
 
-        wait_for_serial("dest_serial");
+        wait_for_serial(dst_state.serial);
     }
 
 finish:
@@ -1871,7 +1874,7 @@ static void test_file_common(MigrateCommon *args, bool stop_src)
     }
 
     migrate_ensure_converge(from);
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     if (stop_src) {
         qtest_qmp_assert_success(from, "{ 'execute' : 'stop'}");
@@ -1898,7 +1901,7 @@ static void test_file_common(MigrateCommon *args, bool stop_src)
     }
     wait_for_resume(to, &dst_state);
 
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
 
     if (check_offset) {
         file_check_offset_region();
@@ -2041,7 +2044,7 @@ static void test_ignore_shared(void)
     migrate_set_capability(to, "x-ignore-shared", true);
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     migrate_qmp(from, to, uri, NULL, "{}");
 
@@ -2051,7 +2054,7 @@ static void test_ignore_shared(void)
 
     qtest_qmp_eventwait(to, "RESUME");
 
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
     wait_for_migration_complete(from);
 
     /* Check whether shared RAM has been really skipped */
@@ -2669,7 +2672,7 @@ static void do_test_validate_uuid(MigrateStart *args, bool should_fail)
     migrate_set_capability(from, "validate-uuid", true);
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     migrate_qmp(from, to, uri, NULL, "{}");
 
@@ -2733,7 +2736,7 @@ static void do_test_validate_uri_channel(MigrateCommon *args)
     }
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     /*
      * 'uri' and 'channels' validation is checked even before the migration
@@ -2823,7 +2826,7 @@ static void test_migrate_auto_converge(void)
     migrate_set_capability(from, "pause-before-switchover", true);
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     migrate_qmp(from, to, uri, NULL, "{}");
 
@@ -2885,7 +2888,7 @@ static void test_migrate_auto_converge(void)
 
     qtest_qmp_eventwait(to, "RESUME");
 
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
     wait_for_migration_complete(from);
 
     test_migrate_end(from, to, true);
@@ -3296,7 +3299,7 @@ static void test_multifd_tcp_cancel(void)
     migrate_incoming_qmp(to, "tcp:127.0.0.1:0", "{}");
 
     /* Wait for the first serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 
     migrate_qmp(from, to, NULL, NULL, "{}");
 
@@ -3307,7 +3310,8 @@ static void test_multifd_tcp_cancel(void)
     /* Make sure QEMU process "to" exited */
     qtest_set_expected_status(to, EXIT_FAILURE);
     qtest_wait_qemu(to);
-    qtest_quit(to);
+    unlink(dst_state.serial);
+    g_free(dst_state.serial);
 
     /*
      * Ensure the source QEMU finishes its cancellation process before we
@@ -3345,7 +3349,7 @@ static void test_multifd_tcp_cancel(void)
     wait_for_stop(from, &src_state);
     qtest_qmp_eventwait(to2, "RESUME");
 
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
     wait_for_migration_complete(from);
     test_migrate_end(from, to2, true);
 }
@@ -3488,13 +3492,16 @@ static QTestState *dirtylimit_start_vm(void)
     QTestState *vm = NULL;
     g_autofree gchar *cmd = NULL;
 
+    src_state = (QTestMigrationState) { };
+    src_state.serial = migrate_get_unique_serial(tmpfs);
+
     bootfile_create(tmpfs, false);
     cmd = g_strdup_printf("-accel kvm,dirty-ring-size=4096 "
                           "-name dirtylimit-test,debug-threads=on "
                           "-m 150M -smp 1 "
-                          "-serial file:%s/vm_serial "
+                          "-serial file:%s "
                           "-drive file=%s,format=raw ",
-                          tmpfs, bootpath);
+                          src_state.serial, bootpath);
 
     vm = qtest_init(cmd);
     return vm;
@@ -3503,7 +3510,8 @@ static QTestState *dirtylimit_start_vm(void)
 static void dirtylimit_stop_vm(QTestState *vm)
 {
     qtest_quit(vm);
-    cleanup("vm_serial");
+    unlink(src_state.serial);
+    g_free(src_state.serial);
 }
 
 static void test_vcpu_dirty_limit(void)
@@ -3519,7 +3527,7 @@ static void test_vcpu_dirty_limit(void)
     vm = dirtylimit_start_vm();
 
     /* Wait for the first serial output from the vm*/
-    wait_for_serial("vm_serial");
+    wait_for_serial(src_state.serial);
 
     /* Do dirtyrate measurement with calc time equals 1s */
     calc_dirty_rate(vm, 1);
@@ -3612,7 +3620,7 @@ static void migrate_dirty_limit_wait_showup(QTestState *from,
     migrate_set_capability(from, "pause-before-switchover", true);
 
     /* Wait for the serial output from the source */
-    wait_for_serial("src_serial");
+    wait_for_serial(src_state.serial);
 }
 
 /*
@@ -3751,7 +3759,7 @@ static void test_migrate_dirty_limit(void)
 
     qtest_qmp_eventwait(to, "RESUME");
 
-    wait_for_serial("dest_serial");
+    wait_for_serial(dst_state.serial);
     wait_for_migration_complete(from);
 
     test_migrate_end(from, to, true);

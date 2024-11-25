@@ -20,6 +20,7 @@ typedef struct QTestMigrationState {
     bool resume_seen;
     bool suspend_seen;
     bool suspend_me;
+    char *serial;
 } QTestMigrationState;
 
 bool migrate_watch_for_events(QTestState *who, const char *name,
@@ -64,5 +65,6 @@ static inline bool probe_o_direct_support(const char *tmpfs)
 #endif
 void migration_test_add(const char *path, void (*fn)(void));
 void migration_event_wait(QTestState *s, const char *target);
+char *migrate_get_unique_serial(const char *tmpfs);
 
 #endif /* MIGRATION_HELPERS_H */
