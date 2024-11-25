@@ -1068,6 +1068,19 @@
   'data': { '*cpu-affinity': ['uint16'],
             '*node-affinity': ['uint16'] } }
 
+##
+# @RmeGuestProperties:
+#
+# Properties for rme-guest objects.
+#
+# @personalization-value: Realm personalization value, as a 64-byte
+#     hex string. This optional parameter allows to uniquely identify
+#     the VM instance during attestation. (default: 0)
+#
+# Since: 9.3
+##
+{ 'struct': 'RmeGuestProperties',
+  'data': { '*personalization-value': 'str' } }
 
 ##
 # @ObjectType:
@@ -1121,6 +1134,7 @@
     { 'name': 'pr-manager-helper',
       'if': 'CONFIG_LINUX' },
     'qtest',
+    'rme-guest',
     'rng-builtin',
     'rng-egd',
     { 'name': 'rng-random',
@@ -1195,6 +1209,7 @@
       'pr-manager-helper':          { 'type': 'PrManagerHelperProperties',
                                       'if': 'CONFIG_LINUX' },
       'qtest':                      'QtestProperties',
+      'rme-guest':                  'RmeGuestProperties',
       'rng-builtin':                'RngProperties',
       'rng-egd':                    'RngEgdProperties',
       'rng-random':                 { 'type': 'RngRandomProperties',
