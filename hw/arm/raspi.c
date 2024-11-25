@@ -325,7 +325,7 @@ void raspi_machine_class_common_init(MachineClass *mc,
     mc->no_parallel = 1;
     mc->no_floppy = 1;
     mc->no_cdrom = 1;
-    mc->no_sdcard = ON_OFF_AUTO_OFF;
+    mc->create_default_sdcard_drive = true;
     mc->default_cpus = mc->min_cpus = mc->max_cpus = cores_count(board_rev);
     mc->default_ram_size = board_ram_size(board_rev);
     mc->default_ram_id = "ram";

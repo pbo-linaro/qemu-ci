@@ -607,7 +607,7 @@ static void musca_class_init(ObjectClass *oc, void *data)
     mc->max_cpus = mc->default_cpus;
     mc->valid_cpu_types = valid_cpu_types;
     mc->init = musca_init;
-    mc->no_sdcard = ON_OFF_AUTO_OFF;
+    mc->create_default_sdcard_drive = true;
 }
 
 static void musca_a_class_init(ObjectClass *oc, void *data)

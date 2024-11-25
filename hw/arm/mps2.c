@@ -472,7 +472,7 @@ static void mps2_class_init(ObjectClass *oc, void *data)
     mc->max_cpus = 1;
     mc->default_ram_size = 16 * MiB;
     mc->default_ram_id = "mps.ram";
-    mc->no_sdcard = ON_OFF_AUTO_OFF;
+    mc->create_default_sdcard_drive = true;
 }
 
 static void mps2_an385_class_init(ObjectClass *oc, void *data)

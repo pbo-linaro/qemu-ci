@@ -463,11 +463,11 @@ static void zynq_machine_class_init(ObjectClass *oc, void *data)
     mc->desc = "Xilinx Zynq Platform Baseboard for Cortex-A9";
     mc->init = zynq_init;
     mc->max_cpus = ZYNQ_MAX_CPUS;
-    mc->no_sdcard = ON_OFF_AUTO_ON;
+    mc->create_default_sdcard_drive = false;
     mc->ignore_memory_transaction_failures = true;
     mc->valid_cpu_types = valid_cpu_types;
     mc->default_ram_id = "zynq.ext_ram";
-    mc->no_sdcard = ON_OFF_AUTO_OFF;
+    mc->create_default_sdcard_drive = true;
     prop = object_class_property_add_str(oc, "boot-mode", NULL,
                                          zynq_set_boot_mode);
     object_class_property_set_description(oc, "boot-mode",

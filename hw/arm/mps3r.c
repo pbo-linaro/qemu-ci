@@ -588,7 +588,7 @@ static void mps3r_class_init(ObjectClass *oc, void *data)
     MachineClass *mc = MACHINE_CLASS(oc);
 
     mc->init = mps3r_common_init;
-    mc->no_sdcard = ON_OFF_AUTO_OFF;
+    mc->create_default_sdcard_drive = true;
 }
 
 static void mps3r_an536_class_init(ObjectClass *oc, void *data)

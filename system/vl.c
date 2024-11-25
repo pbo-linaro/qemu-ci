@@ -1350,8 +1350,7 @@ static void qemu_disable_default_devices(void)
     if (!has_defaults || machine_class->no_cdrom) {
         default_cdrom = 0;
     }
-    assert(machine_class->no_sdcard != ON_OFF_AUTO_AUTO);
-    if (!has_defaults || machine_class->no_sdcard == ON_OFF_AUTO_ON) {
+    if (!has_defaults || !machine_class->create_default_sdcard_drive) {
         default_sdcard = 0;
     }
     if (!has_defaults) {
