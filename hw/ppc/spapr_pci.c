@@ -1888,6 +1888,7 @@ static void spapr_phb_realize(DeviceState *dev, Error **errp)
                                 PCI_DEVFN(0, 0), PCI_NUM_PINS,
                                 TYPE_PCI_BUS);
 
+    bus->flags |= PCI_BUS_IO_ADDR0_ALLOWED;
     /*
      * Despite resembling a vanilla PCI bus in most ways, the PAPR
      * para-virtualized PCI bus *does* permit PCI-E extended config
