@@ -1475,6 +1475,7 @@ pcibus_t pci_bar_address(PCIDevice *d,
     MachineClass *mc = MACHINE_GET_CLASS(qdev_get_machine());
     bool allow_0_address = mc->pci_allow_0_address;
 
+    allow_0_address |= pci_bus_allows_io_addr0_access(pci_get_bus(d));
     if (type & PCI_BASE_ADDRESS_SPACE_IO) {
         if (!(cmd & PCI_COMMAND_IO)) {
             return PCI_BAR_UNMAPPED;
