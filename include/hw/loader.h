@@ -355,6 +355,8 @@ ssize_t rom_add_option(const char *file, int32_t bootindex);
 
 typedef struct RomLoaderNotify {
     /* Parameters passed to rom_add_blob() */
+    const char *name;
+    uint8_t *data;
     hwaddr addr;
     size_t len;
     size_t max_len;

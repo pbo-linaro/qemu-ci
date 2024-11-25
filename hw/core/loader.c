@@ -1278,6 +1278,8 @@ static void rom_reset(void *unused)
         trace_loader_write_rom(rom->name, rom->addr, rom->datasize, rom->isrom);
 
         notify = (RomLoaderNotify) {
+            .name = rom->name,
+            .data = rom->data,
             .addr = rom->addr,
             .len = rom->datasize,
             .max_len = rom->romsize,
