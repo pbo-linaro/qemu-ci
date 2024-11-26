@@ -1494,6 +1494,11 @@ void gen_move_high32_tl(TCGv ret, TCGv_i64 arg)
 #endif
 }
 
+void gen_move_high32_i32(TCGv_i32 ret, TCGv_i64 arg)
+{
+    tcg_gen_extrh_i64_i32(ret, arg);
+}
+
 bool check_cp0_enabled(DisasContext *ctx)
 {
     if (unlikely(!(ctx->hflags & MIPS_HFLAG_CP0))) {
