@@ -1198,6 +1198,16 @@ void gen_load_gpr_tl(TCGv t, int reg)
     }
 }
 
+void gen_load_gpr_i32(TCGv_i32 t, int reg)
+{
+    assert(reg >= 0 && reg <= ARRAY_SIZE(cpu_gpr));
+    if (reg == 0) {
+        tcg_gen_movi_i32(t, 0);
+    } else {
+        tcg_gen_trunc_tl_i32(t, cpu_gpr[reg]);
+    }
+}
+
 void gen_store_gpr_tl(TCGv t, int reg)
 {
     assert(reg >= 0 && reg <= ARRAY_SIZE(cpu_gpr));
