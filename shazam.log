@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20241126140003.74871-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 22 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/16]!
+  [32m✓[0m [PATCH v3 2/16] target/mips: Extract generic gen_lx() helper
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [3/16]!
+  ERROR: missing [4/16]!
+  [32m✓[0m [PATCH v3 5/16] target/mips: Have gen_[d]lsa() callers add 1 to shift amount argument
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [6/16]!
+  [32m✓[0m [PATCH v3 7/16] target/mips: Introduce decode tree bindings for MIPS16e ASE
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [8/16]!
+  ERROR: missing [9/16]!
+  ERROR: missing [10/16]!
+  ERROR: missing [11/16]!
+  ERROR: missing [12/16]!
+  ERROR: missing [13/16]!
+  ERROR: missing [14/16]!
+  ERROR: missing [15/16]!
+  ERROR: missing [16/16]!
+---
+Total patches: 3
+---
+WARNING: Thread incomplete!
+Applying: target/mips: Extract generic gen_lx() helper
+Patch failed at 0001 target/mips: Extract generic gen_lx() helper
+error: patch failed: target/mips/tcg/translate.c:11327
+error: target/mips/tcg/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
