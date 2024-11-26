@@ -537,6 +537,9 @@ static void pci_root_bus_internal_init(PCIBus *bus, DeviceState *parent,
     bus->address_space_mem = mem;
     bus->address_space_io = io;
     bus->flags |= PCI_BUS_IS_ROOT;
+    if (machine_refuses_bar_at_addr_0()) {
+        bus->flags |= PCI_BUS_BAR_AT_ADDR0_REFUSED;
+    }
 
     /* host bridge */
     QLIST_INIT(&bus->child);
@@ -1479,7 +1482,7 @@ pcibus_t pci_bar_address(PCIDevice *d,
 {
     pcibus_t new_addr, last_addr;
     uint16_t cmd = pci_get_word(d->config + PCI_COMMAND);
-    bool bar_at_addr_0_refused = machine_refuses_bar_at_addr_0();
+    bool bar_at_addr_0_refused = pci_bus_refuse_bar_at_addr_0(pci_get_bus(d));
 
     if (type & PCI_BASE_ADDRESS_SPACE_IO) {
         if (!(cmd & PCI_COMMAND_IO)) {

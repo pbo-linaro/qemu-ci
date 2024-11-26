@@ -26,6 +26,7 @@ enum PCIBusFlag {
     PCI_BUS_EXTENDED_CONFIG_SPACE                           = 0x0002,
     /* This is a CXL Type BUS */
     PCI_BUS_CXL                                             = 0x0004,
+    PCI_BUS_BAR_AT_ADDR0_REFUSED                            = 0x0008,
 };
 
 #define PCI_NO_PASID UINT32_MAX
@@ -70,6 +71,11 @@ static inline bool pci_bus_is_root(PCIBus *bus)
 static inline bool pci_bus_allows_extended_config_space(PCIBus *bus)
 {
     return !!(bus->flags & PCI_BUS_EXTENDED_CONFIG_SPACE);
+}
+
+static inline bool pci_bus_refuse_bar_at_addr_0(PCIBus *bus)
+{
+    return !!(bus->flags & PCI_BUS_BAR_AT_ADDR0_REFUSED);
 }
 
 #endif /* QEMU_PCI_BUS_H */
