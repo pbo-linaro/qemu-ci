@@ -288,7 +288,8 @@ void pci_root_bus_init(PCIBus *bus, size_t bus_size, DeviceState *parent,
                        bool bar_at_addr_0_refused);
 PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
                          MemoryRegion *mem, MemoryRegion *io,
-                         uint8_t devfn_min, const char *typename);
+                         uint8_t devfn_min, const char *typename,
+                         bool bar_at_addr_0_refused);
 void pci_root_bus_cleanup(PCIBus *bus);
 void pci_bus_irqs(PCIBus *bus, pci_set_irq_fn set_irq,
                   void *irq_opaque, int nirq);

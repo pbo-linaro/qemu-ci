@@ -65,7 +65,7 @@ static void q35_host_realize(DeviceState *dev, Error **errp)
     pci->bus = pci_root_bus_new(DEVICE(s), "pcie.0",
                                 s->mch.pci_address_space,
                                 s->mch.address_space_io,
-                                0, TYPE_PCIE_BUS);
+                                0, TYPE_PCIE_BUS, true);
 
     qdev_realize(DEVICE(&s->mch), BUS(pci->bus), &error_fatal);
 }

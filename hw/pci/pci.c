@@ -571,13 +571,14 @@ void pci_root_bus_init(PCIBus *bus, size_t bus_size, DeviceState *parent,
 
 PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
                          MemoryRegion *mem, MemoryRegion *io,
-                         uint8_t devfn_min, const char *typename)
+                         uint8_t devfn_min, const char *typename,
+                         bool bar_at_addr_0_refused)
 {
     PCIBus *bus;
 
     bus = PCI_BUS(qbus_new(typename, parent, name));
     pci_root_bus_internal_init(bus, parent, mem, io, devfn_min,
-                               true);
+                               bar_at_addr_0_refused);
     return bus;
 }
 
@@ -622,7 +623,7 @@ PCIBus *pci_register_root_bus(DeviceState *parent, const char *name,
 {
     PCIBus *bus;
 
-    bus = pci_root_bus_new(parent, name, mem, io, devfn_min, typename);
+    bus = pci_root_bus_new(parent, name, mem, io, devfn_min, typename, true);
     pci_bus_irqs(bus, set_irq, irq_opaque, nirq);
     pci_bus_map_irqs(bus, map_irq);
     return bus;

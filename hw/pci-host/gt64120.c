@@ -1193,7 +1193,7 @@ static void gt64120_realize(DeviceState *dev, Error **errp)
     phb->bus = pci_root_bus_new(dev, "pci",
                                 &s->pci0_mem,
                                 get_system_io(),
-                                PCI_DEVFN(18, 0), TYPE_PCI_BUS);
+                                PCI_DEVFN(18, 0), TYPE_PCI_BUS, true);
 
     pci_create_simple(phb->bus, PCI_DEVFN(0, 0), "gt64120_pci");
     memory_region_init_io(&phb->conf_mem, OBJECT(phb),

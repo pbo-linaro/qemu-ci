@@ -43,7 +43,7 @@ static void remote_pcihost_realize(DeviceState *dev, Error **errp)
 
     pci->bus = pci_root_bus_new(DEVICE(s), "remote-pci",
                                 s->mr_pci_mem, s->mr_sys_io,
-                                0, TYPE_PCIE_BUS);
+                                0, TYPE_PCIE_BUS, true);
 }
 
 static void remote_pcihost_class_init(ObjectClass *klass, void *data)

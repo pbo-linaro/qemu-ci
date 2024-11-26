@@ -268,7 +268,7 @@ static void i440fx_pcihost_realize(DeviceState *dev, Error **errp)
     memory_region_add_coalescing(&phb->conf_mem, 0, 4);
 
     b = pci_root_bus_new(dev, NULL, s->pci_address_space,
-                         s->io_memory, 0, TYPE_PCI_BUS);
+                         s->io_memory, 0, TYPE_PCI_BUS, true);
     phb->bus = b;
 
     d = pci_create_simple(b, 0, s->pci_type);
