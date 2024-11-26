@@ -901,7 +901,7 @@ static void sbsa_ref_class_init(ObjectClass *oc, void *data)
     mc->block_default_type = IF_IDE;
     mc->no_cdrom = 1;
     mc->default_nic = "e1000e";
-    mc->default_ram_size = 1 * GiB;
+    mc->default_ram_size = 2 * GiB;
     mc->default_ram_id = "sbsa-ref.ram";
     mc->default_cpus = 4;
     mc->smp_props.clusters_supported = true;
