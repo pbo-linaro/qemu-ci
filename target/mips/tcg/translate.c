@@ -1216,6 +1216,14 @@ void gen_store_gpr_tl(TCGv t, int reg)
     }
 }
 
+void gen_store_gpr_i32(TCGv_i32 t, int reg)
+{
+    assert(reg >= 0 && reg <= ARRAY_SIZE(cpu_gpr));
+    if (reg != 0) {
+        tcg_gen_ext_i32_tl(cpu_gpr[reg], t);
+    }
+}
+
 #if defined(TARGET_MIPS64)
 void gen_load_gpr_hi(TCGv_i64 t, int reg)
 {
