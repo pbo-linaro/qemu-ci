@@ -416,6 +416,16 @@ definitions instead of typedefs in headers and function prototypes; this
 avoids problems with duplicated typedefs and reduces the need to include
 headers from other headers.
 
+Bitfields
+---------
+
+C bitfields can be a cause of non-portability issues, especially under windows
+where `MSVC has a different way to layout them than gcc
+<https://gcc.gnu.org/onlinedocs/gcc/x86-Type-Attributes.html>`_.
+For this reason, we disallow usage of bitfields in packed structures.
+For general usage, using bitfields should be proven to add significant benefits
+regarding memory usage or usability.
+
 Reserved namespaces in C and POSIX
 ----------------------------------
 
