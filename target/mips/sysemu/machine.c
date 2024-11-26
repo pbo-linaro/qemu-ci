@@ -88,7 +88,10 @@ static const VMStateField vmstate_tc_fields[] = {
     VMSTATE_UINTTL_ARRAY(HI, TCState, MIPS_DSP_ACC),
     VMSTATE_UINTTL_ARRAY(LO, TCState, MIPS_DSP_ACC),
     VMSTATE_UINTTL_ARRAY(ACX, TCState, MIPS_DSP_ACC),
-    VMSTATE_UINTTL(DSPControl, TCState),
+    VMSTATE_UINT32(DSPControl, TCState),
+#if defined(TARGET_MIPS64)
+    VMSTATE_UNUSED(4),
+#endif /* TARGET_MIPS64 */
     VMSTATE_INT32(CP0_TCStatus, TCState),
     VMSTATE_INT32(CP0_TCBind, TCState),
     VMSTATE_UINTTL(CP0_TCHalt, TCState),

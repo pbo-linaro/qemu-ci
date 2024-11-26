@@ -472,7 +472,7 @@ struct TCState {
     target_ulong HI[MIPS_DSP_ACC];
     target_ulong LO[MIPS_DSP_ACC];
     target_ulong ACX[MIPS_DSP_ACC];
-    target_ulong DSPControl;
+    uint32_t DSPControl;
     int32_t CP0_TCStatus;
 #define CP0TCSt_TCU3    31
 #define CP0TCSt_TCU2    30

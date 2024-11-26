@@ -1483,7 +1483,7 @@ target_ulong helper_mftacx(CPUMIPSState *env, uint32_t sel)
     }
 }
 
-target_ulong helper_mftdsp(CPUMIPSState *env)
+uint32_t helper_mftdsp(CPUMIPSState *env)
 {
     int other_tc = env->CP0_VPEControl & (0xff << CP0VPECo_TargTC);
     CPUMIPSState *other = mips_cpu_map_tc(env, &other_tc);
@@ -1543,7 +1543,7 @@ void helper_mttacx(CPUMIPSState *env, target_ulong arg1, uint32_t sel)
     }
 }
 
-void helper_mttdsp(CPUMIPSState *env, target_ulong arg1)
+void helper_mttdsp(CPUMIPSState *env, uint32_t arg1)
 {
     int other_tc = env->CP0_VPEControl & (0xff << CP0VPECo_TargTC);
     CPUMIPSState *other = mips_cpu_map_tc(env, &other_tc);

@@ -54,7 +54,7 @@ typedef union {
 static inline void set_DSPControl_overflow_flag(uint32_t flag, int position,
                                                 CPUMIPSState *env)
 {
-    env->active_tc.DSPControl |= (target_ulong)flag << position;
+    env->active_tc.DSPControl |= flag << position;
 }
 
 static inline void set_DSPControl_carryflag(bool flag, CPUMIPSState *env)
@@ -76,7 +76,7 @@ static inline void set_DSPControl_24(uint32_t flag, int len, CPUMIPSState *env)
   filter = ~filter;
 
   env->active_tc.DSPControl &= filter;
-  env->active_tc.DSPControl |= (target_ulong)flag << 24;
+  env->active_tc.DSPControl |= flag << 24;
 }
 
 static inline void set_DSPControl_pos(uint32_t pos, CPUMIPSState *env)
@@ -113,7 +113,7 @@ static inline uint32_t get_DSPControl_pos(CPUMIPSState *env)
 static inline void set_DSPControl_efi(uint32_t flag, CPUMIPSState *env)
 {
     env->active_tc.DSPControl &= 0xFFFFBFFF;
-    env->active_tc.DSPControl |= (target_ulong)flag << 14;
+    env->active_tc.DSPControl |= flag << 14;
 }
 
 #define DO_MIPS_SAT_ABS(size)                                          \
@@ -2923,7 +2923,7 @@ target_ulong helper_##name(CPUMIPSState *env, target_ulong rs,  \
     uint32_t pos, size, msb, lsb;                               \
     uint32_t const sizefilter = 0x3F;                           \
     target_ulong temp;                                          \
-    target_ulong dspc;                                          \
+    uint32_t dspc;                                              \
                                                                 \
     dspc = env->active_tc.DSPControl;                           \
                                                                 \
@@ -3063,7 +3063,7 @@ target_ulong helper_##name(target_ulong rs, target_ulong rt,   \
 {                                                              \
     uint32_t rs_t, rt_t;                                       \
     uint32_t cc;                                               \
-    target_ulong dsp;                                          \
+    uint32_t dsp;                                              \
     int i;                                                     \
     target_ulong result = 0;                                   \
                                                                \

@@ -1136,7 +1136,8 @@ static void gen_compute_branch_nm(DisasContext *ctx, uint32_t opc,
         btgt = ctx->base.pc_next + insn_bytes + offset;
         break;
     case OPC_BPOSGE32:
-        tcg_gen_andi_tl(t0, cpu_dspctrl, 0x3F);
+        tcg_gen_extu_i32_tl(t1, cpu_dspctrl);
+        tcg_gen_andi_tl(t0, t1, 0x3F);
         bcond_compute = 1;
         btgt = ctx->base.pc_next + insn_bytes + offset;
         break;
@@ -3009,6 +3010,7 @@ static void gen_pool32a5_nanomips_insn(DisasContext *ctx, int opc,
     TCGv t0 = tcg_temp_new();
     TCGv v1_t = tcg_temp_new();
     TCGv v2_t = tcg_temp_new();
+    TCGv_i32 v1_t32;
 
     gen_load_gpr_tl(v1_t, rs);
     gen_load_gpr_tl(v2_t, rt);
@@ -3056,19 +3058,25 @@ static void gen_pool32a5_nanomips_insn(DisasContext *ctx, int opc,
     case NM_CMPGDU_EQ_QB:
         check_dsp_r2(ctx);
         gen_helper_cmpgu_eq_qb(v1_t, v1_t, v2_t);
-        tcg_gen_deposit_tl(cpu_dspctrl, cpu_dspctrl, v1_t, 24, 4);
+        v1_t32 = tcg_temp_new_i32();
+        tcg_gen_trunc_tl_i32(v1_t32, v1_t);
+        tcg_gen_deposit_i32(cpu_dspctrl, cpu_dspctrl, v1_t32, 24, 4);
         gen_store_gpr_tl(v1_t, ret);
         break;
     case NM_CMPGDU_LT_QB:
         check_dsp_r2(ctx);
         gen_helper_cmpgu_lt_qb(v1_t, v1_t, v2_t);
-        tcg_gen_deposit_tl(cpu_dspctrl, cpu_dspctrl, v1_t, 24, 4);
+        v1_t32 = tcg_temp_new_i32();
+        tcg_gen_trunc_tl_i32(v1_t32, v1_t);
+        tcg_gen_deposit_i32(cpu_dspctrl, cpu_dspctrl, v1_t32, 24, 4);
         gen_store_gpr_tl(v1_t, ret);
         break;
     case NM_CMPGDU_LE_QB:
         check_dsp_r2(ctx);
         gen_helper_cmpgu_le_qb(v1_t, v1_t, v2_t);
-        tcg_gen_deposit_tl(cpu_dspctrl, cpu_dspctrl, v1_t, 24, 4);
+        v1_t32 = tcg_temp_new_i32();
+        tcg_gen_trunc_tl_i32(v1_t32, v1_t);
+        tcg_gen_deposit_i32(cpu_dspctrl, cpu_dspctrl, v1_t32, 24, 4);
         gen_store_gpr_tl(v1_t, ret);
         break;
     case NM_PACKRL_PH:

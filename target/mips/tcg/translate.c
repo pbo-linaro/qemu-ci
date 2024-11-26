@@ -1172,7 +1172,8 @@ TCGv cpu_gpr[32], cpu_PC;
  */
 TCGv_i64 cpu_gpr_hi[32];
 TCGv cpu_HI[MIPS_DSP_ACC], cpu_LO[MIPS_DSP_ACC];
-static TCGv cpu_dspctrl, btarget;
+static TCGv_i32 cpu_dspctrl;
+static TCGv btarget;
 TCGv bcond;
 static TCGv cpu_lladdr, cpu_llval;
 static TCGv_i32 hflags;
@@ -4438,9 +4439,11 @@ static void gen_compute_branch(DisasContext *ctx, uint32_t opc,
     case OPC_BPOSGE32:
 #if defined(TARGET_MIPS64)
     case OPC_BPOSGE64:
-        tcg_gen_andi_tl(t0, cpu_dspctrl, 0x7F);
+        tcg_gen_extu_i32_tl(t1, cpu_dspctrl);
+        tcg_gen_andi_tl(t0, t1, 0x7F);
 #else
-        tcg_gen_andi_tl(t0, cpu_dspctrl, 0x3F);
+        tcg_gen_extu_i32_tl(t1, cpu_dspctrl);
+        tcg_gen_andi_tl(t0, t1, 0x3F);
 #endif
         bcond_compute = 1;
         btgt = ctx->base.pc_next + insn_bytes + offset;
@@ -8225,6 +8228,7 @@ static void gen_mftr(CPUMIPSState *env, DisasContext *ctx, int rt, int rd,
             gen_mfc0(ctx, t0, rt, sel);
         }
     } else {
+        TCGv_i32 t32;
         switch (sel) {
         /* GPR registers. */
         case 0:
@@ -8270,7 +8274,9 @@ static void gen_mftr(CPUMIPSState *env, DisasContext *ctx, int rt, int rd,
                 gen_helper_1e0i(mftacx, t0, 3);
                 break;
             case 16:
-                gen_helper_mftdsp(t0, tcg_env);
+                t32 = tcg_temp_new_i32();
+                gen_helper_mftdsp(t32, tcg_env);
+                tcg_gen_extu_i32_tl(t0, t32);
                 break;
             default:
                 goto die;
@@ -8425,6 +8431,7 @@ static void gen_mttr(CPUMIPSState *env, DisasContext *ctx, int rd, int rt,
             gen_mtc0(ctx, t0, rd, sel);
         }
     } else {
+        TCGv_i32 t32;
         switch (sel) {
         /* GPR registers. */
         case 0:
@@ -8470,7 +8477,9 @@ static void gen_mttr(CPUMIPSState *env, DisasContext *ctx, int rd, int rt,
                 gen_helper_0e1i(mttacx, t0, 3);
                 break;
             case 16:
-                gen_helper_mttdsp(tcg_env, t0);
+                t32 = tcg_temp_new_i32();
+                gen_load_gpr_i32(t32, rt);
+                gen_helper_mttdsp(tcg_env, t32);
                 break;
             default:
                 goto die;
@@ -12516,6 +12525,7 @@ static void gen_mipsdsp_add_cmp_pick(DisasContext *ctx,
     TCGv t1;
     TCGv v1_t;
     TCGv v2_t;
+    TCGv_i32 t32;
 
     if ((ret == 0) && (check_ret == 1)) {
         /* Treat as NOP. */
@@ -12560,25 +12570,31 @@ static void gen_mipsdsp_add_cmp_pick(DisasContext *ctx,
             check_dsp_r2(ctx);
             gen_helper_cmpgu_eq_qb(t1, v1_t, v2_t);
             tcg_gen_mov_tl(cpu_gpr[ret], t1);
-            tcg_gen_andi_tl(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
+            tcg_gen_andi_i32(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
             tcg_gen_shli_tl(t1, t1, 24);
-            tcg_gen_or_tl(cpu_dspctrl, cpu_dspctrl, t1);
+            t32 = tcg_temp_new_i32();
+            tcg_gen_trunc_tl_i32(t32, t1);
+            tcg_gen_or_i32(cpu_dspctrl, cpu_dspctrl, t32);
             break;
         case OPC_CMPGDU_LT_QB:
             check_dsp_r2(ctx);
             gen_helper_cmpgu_lt_qb(t1, v1_t, v2_t);
             tcg_gen_mov_tl(cpu_gpr[ret], t1);
-            tcg_gen_andi_tl(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
+            tcg_gen_andi_i32(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
             tcg_gen_shli_tl(t1, t1, 24);
-            tcg_gen_or_tl(cpu_dspctrl, cpu_dspctrl, t1);
+            t32 = tcg_temp_new_i32();
+            tcg_gen_trunc_tl_i32(t32, t1);
+            tcg_gen_or_i32(cpu_dspctrl, cpu_dspctrl, t32);
             break;
         case OPC_CMPGDU_LE_QB:
             check_dsp_r2(ctx);
             gen_helper_cmpgu_le_qb(t1, v1_t, v2_t);
             tcg_gen_mov_tl(cpu_gpr[ret], t1);
-            tcg_gen_andi_tl(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
+            tcg_gen_andi_i32(cpu_dspctrl, cpu_dspctrl, 0xF0FFFFFF);
             tcg_gen_shli_tl(t1, t1, 24);
-            tcg_gen_or_tl(cpu_dspctrl, cpu_dspctrl, t1);
+            t32 = tcg_temp_new_i32();
+            tcg_gen_trunc_tl_i32(t32, t1);
+            tcg_gen_or_i32(cpu_dspctrl, cpu_dspctrl, t32);
             break;
         case OPC_CMP_EQ_PH:
             check_dsp(ctx);
@@ -15303,7 +15319,7 @@ void mips_tcg_init(void)
                                        offsetof(CPUMIPSState, active_tc.LO[i]),
                                        regnames_LO[i]);
     }
-    cpu_dspctrl = tcg_global_mem_new(tcg_env,
+    cpu_dspctrl = tcg_global_mem_new_i32(tcg_env,
                                      offsetof(CPUMIPSState,
                                               active_tc.DSPControl),
                                      "DSPControl");
