@@ -520,6 +520,13 @@ bool pci_bus_bypass_iommu(PCIBus *bus)
     return host_bridge->bypass_iommu;
 }
 
+static bool machine_refuses_bar_at_addr_0(void)
+{
+    MachineClass *mc = MACHINE_GET_CLASS(qdev_get_machine());
+
+    return !mc->pci_allow_0_address;
+}
+
 static void pci_root_bus_internal_init(PCIBus *bus, DeviceState *parent,
                                        MemoryRegion *mem, MemoryRegion *io,
                                        uint8_t devfn_min)
@@ -1472,8 +1479,7 @@ pcibus_t pci_bar_address(PCIDevice *d,
 {
     pcibus_t new_addr, last_addr;
     uint16_t cmd = pci_get_word(d->config + PCI_COMMAND);
-    MachineClass *mc = MACHINE_GET_CLASS(qdev_get_machine());
-    bool allow_0_address = mc->pci_allow_0_address;
+    bool bar_at_addr_0_refused = machine_refuses_bar_at_addr_0();
 
     if (type & PCI_BASE_ADDRESS_SPACE_IO) {
         if (!(cmd & PCI_COMMAND_IO)) {
@@ -1485,7 +1491,7 @@ pcibus_t pci_bar_address(PCIDevice *d,
          * TODO: make priorities correct and remove this work around.
          */
         if (last_addr <= new_addr || last_addr >= UINT32_MAX ||
-            (!allow_0_address && new_addr == 0)) {
+            (bar_at_addr_0_refused && new_addr == 0)) {
             return PCI_BAR_UNMAPPED;
         }
         return new_addr;
@@ -1506,7 +1512,7 @@ pcibus_t pci_bar_address(PCIDevice *d,
        mappings, we handle specific values as invalid
        mappings. */
     if (last_addr <= new_addr || last_addr == PCI_BAR_UNMAPPED ||
-        (!allow_0_address && new_addr == 0)) {
+        (bar_at_addr_0_refused && new_addr == 0)) {
         return PCI_BAR_UNMAPPED;
     }
 
