@@ -514,8 +514,8 @@ struct TCState {
     float_status msa_fp_status;
 
 #define NUMBER_OF_MXU_REGISTERS 16
-    target_ulong mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
-    target_ulong mxu_cr;
+    uint32_t mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
+    uint32_t mxu_cr;
 #define MXU_CR_LC       31
 #define MXU_CR_RC       30
 #define MXU_CR_BIAS     2

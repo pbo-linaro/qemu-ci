@@ -606,8 +606,8 @@ enum {
 #define MXU_OPTN3_PTN7  7
 
 /* MXU registers */
-static TCGv mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
-static TCGv mxu_CR;
+static TCGv_i32 mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
+static TCGv_i32 mxu_CR;
 
 static const char mxuregnames[NUMBER_OF_MXU_REGISTERS][4] = {
     "XR1",  "XR2",  "XR3",  "XR4",  "XR5",  "XR6",  "XR7",  "XR8",
@@ -617,12 +617,12 @@ static const char mxuregnames[NUMBER_OF_MXU_REGISTERS][4] = {
 void mxu_translate_init(void)
 {
     for (unsigned i = 0; i < NUMBER_OF_MXU_REGISTERS - 1; i++) {
-        mxu_gpr[i] = tcg_global_mem_new(tcg_env,
+        mxu_gpr[i] = tcg_global_mem_new_i32(tcg_env,
                                         offsetof(CPUMIPSState, active_tc.mxu_gpr[i]),
                                         mxuregnames[i]);
     }
 
-    mxu_CR = tcg_global_mem_new(tcg_env,
+    mxu_CR = tcg_global_mem_new_i32(tcg_env,
                                 offsetof(CPUMIPSState, active_tc.mxu_cr),
                                 mxuregnames[NUMBER_OF_MXU_REGISTERS - 1]);
 }
