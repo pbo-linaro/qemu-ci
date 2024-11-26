@@ -21,7 +21,7 @@ static bool trans_CPUCFG(DisasContext *ctx, arg_CPUCFG *a)
     TCGv dest = tcg_temp_new();
     TCGv src1 = tcg_temp_new();
 
-    gen_load_gpr(src1, a->rs);
+    gen_load_gpr_tl(src1, a->rs);
     gen_helper_lcsr_cpucfg(dest, tcg_env, src1);
     gen_store_gpr(dest, a->rd);
 
@@ -36,7 +36,7 @@ static bool gen_rdcsr(DisasContext *ctx, arg_r *a,
     TCGv src1 = tcg_temp_new();
 
     check_cp0_enabled(ctx);
-    gen_load_gpr(src1, a->rs);
+    gen_load_gpr_tl(src1, a->rs);
     func(dest, tcg_env, src1);
     gen_store_gpr(dest, a->rd);
 
@@ -50,8 +50,8 @@ static bool gen_wrcsr(DisasContext *ctx, arg_r *a,
     TCGv addr = tcg_temp_new();
 
     check_cp0_enabled(ctx);
-    gen_load_gpr(addr, a->rs);
-    gen_load_gpr(val, a->rd);
+    gen_load_gpr_tl(addr, a->rs);
+    gen_load_gpr_tl(val, a->rd);
     func(tcg_env, addr, val);
 
     return true;

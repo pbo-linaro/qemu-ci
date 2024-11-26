@@ -24,8 +24,8 @@ bool gen_lsa(DisasContext *ctx, int rd, int rt, int rs, int sa)
     }
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
     tcg_gen_shli_tl(t0, t0, sa + 1);
     tcg_gen_add_tl(cpu_gpr[rd], t0, t1);
     tcg_gen_ext32s_tl(cpu_gpr[rd], cpu_gpr[rd]);
@@ -45,8 +45,8 @@ bool gen_dlsa(DisasContext *ctx, int rd, int rt, int rs, int sa)
     }
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
     tcg_gen_shli_tl(t0, t0, sa + 1);
     tcg_gen_add_tl(cpu_gpr[rd], t0, t1);
     return true;

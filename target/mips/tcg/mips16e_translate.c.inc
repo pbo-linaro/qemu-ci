@@ -132,7 +132,7 @@ static void decr_and_store(DisasContext *ctx, unsigned regidx, TCGv t0)
     TCGv t1 = tcg_temp_new();
 
     gen_op_addr_addi(ctx, t0, t0, -4);
-    gen_load_gpr(t1, regidx);
+    gen_load_gpr_tl(t1, regidx);
     tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                        ctx->default_tcg_memop_mask);
 }
@@ -180,30 +180,30 @@ static void gen_mips16_save(DisasContext *ctx,
     switch (args) {
     case 4:
         gen_base_offset_addr(ctx, t0, 29, 12);
-        gen_load_gpr(t1, 7);
+        gen_load_gpr_tl(t1, 7);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         /* Fall through */
     case 3:
         gen_base_offset_addr(ctx, t0, 29, 8);
-        gen_load_gpr(t1, 6);
+        gen_load_gpr_tl(t1, 6);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         /* Fall through */
     case 2:
         gen_base_offset_addr(ctx, t0, 29, 4);
-        gen_load_gpr(t1, 5);
+        gen_load_gpr_tl(t1, 5);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         /* Fall through */
     case 1:
         gen_base_offset_addr(ctx, t0, 29, 0);
-        gen_load_gpr(t1, 4);
+        gen_load_gpr_tl(t1, 4);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
     }
 
-    gen_load_gpr(t0, 29);
+    gen_load_gpr_tl(t0, 29);
 
     if (do_ra) {
         decr_and_store(ctx, 31, t0);

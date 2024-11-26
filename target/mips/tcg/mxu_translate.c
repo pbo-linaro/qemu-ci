@@ -679,7 +679,7 @@ static void gen_mxu_s32i2m(DisasContext *ctx)
     XRa = extract32(ctx->opcode, 6, 5);
     Rb = extract32(ctx->opcode, 16, 5);
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     if (XRa <= 15) {
         gen_store_mxu_gpr(t0, XRa);
     } else if (XRa == 16) {
@@ -728,7 +728,7 @@ static void gen_mxu_s8ldd(DisasContext *ctx, bool postmodify)
     optn3 = extract32(ctx->opcode, 18, 3);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, (int8_t)s8);
     if (postmodify) {
         gen_store_gpr(t0, Rb);
@@ -813,7 +813,7 @@ static void gen_mxu_s8std(DisasContext *ctx, bool postmodify)
         return;
     }
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, (int8_t)s8);
     if (postmodify) {
         gen_store_gpr(t0, Rb);
@@ -862,7 +862,7 @@ static void gen_mxu_s16ldd(DisasContext *ctx, bool postmodify)
     optn2 = extract32(ctx->opcode,  19, 2);
     Rb    = extract32(ctx->opcode,  21, 5);
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, s10);
     if (postmodify) {
         gen_store_gpr(t0, Rb);
@@ -921,7 +921,7 @@ static void gen_mxu_s16std(DisasContext *ctx, bool postmodify)
         return;
     }
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, s10);
     if (postmodify) {
         gen_store_gpr(t0, Rb);
@@ -968,8 +968,8 @@ static void gen_mxu_s32mul(DisasContext *ctx, bool mulu)
         tcg_gen_movi_tl(t0, 0);
         tcg_gen_movi_tl(t1, 0);
     } else {
-        gen_load_gpr(t0, rs);
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t0, rs);
+        gen_load_gpr_tl(t1, rt);
 
         if (mulu) {
             tcg_gen_mulu2_tl(t0, t1, t0, t1);
@@ -1528,7 +1528,7 @@ static void gen_mxu_s32ldxx(DisasContext *ctx, bool reversed, bool postinc)
     s12 = sextract32(ctx->opcode, 10, 10);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_movi_tl(t1, s12 * 4);
     tcg_gen_add_tl(t0, t0, t1);
 
@@ -1563,7 +1563,7 @@ static void gen_mxu_s32stxx(DisasContext *ctx, bool reversed, bool postinc)
     s12 = sextract32(ctx->opcode, 10, 10);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
+    gen_load_gpr_tl(t0, Rb);
     tcg_gen_movi_tl(t1, s12 * 4);
     tcg_gen_add_tl(t0, t0, t1);
 
@@ -1599,8 +1599,8 @@ static void gen_mxu_s32ldxvx(DisasContext *ctx, bool reversed,
     Rc = extract32(ctx->opcode, 16, 5);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
-    gen_load_gpr(t1, Rc);
+    gen_load_gpr_tl(t0, Rb);
+    gen_load_gpr_tl(t1, Rc);
     tcg_gen_shli_tl(t1, t1, strd2);
     tcg_gen_add_tl(t0, t0, t1);
 
@@ -1637,8 +1637,8 @@ static void gen_mxu_lxx(DisasContext *ctx, uint32_t strd2, MemOp mop)
     Rc = extract32(ctx->opcode, 16, 5);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
-    gen_load_gpr(t1, Rc);
+    gen_load_gpr_tl(t0, Rb);
+    gen_load_gpr_tl(t1, Rc);
     tcg_gen_shli_tl(t1, t1, strd2);
     tcg_gen_add_tl(t0, t0, t1);
 
@@ -1668,8 +1668,8 @@ static void gen_mxu_s32stxvx(DisasContext *ctx, bool reversed,
     Rc = extract32(ctx->opcode, 16, 5);
     Rb = extract32(ctx->opcode, 21, 5);
 
-    gen_load_gpr(t0, Rb);
-    gen_load_gpr(t1, Rc);
+    gen_load_gpr_tl(t0, Rb);
+    gen_load_gpr_tl(t1, Rc);
     tcg_gen_shli_tl(t1, t1, strd2);
     tcg_gen_add_tl(t0, t0, t1);
 
@@ -1906,7 +1906,7 @@ static void gen_mxu_d32sxxv(DisasContext *ctx, bool right, bool arithmetic)
 
     gen_load_mxu_gpr(t0, XRa);
     gen_load_mxu_gpr(t1, XRd);
-    gen_load_gpr(t2, rs);
+    gen_load_gpr_tl(t2, rs);
     tcg_gen_andi_tl(t2, t2, 0x0f);
 
     if (right) {
@@ -1954,7 +1954,7 @@ static void gen_mxu_d32sarl(DisasContext *ctx, bool sarw)
             /* Make SFT4 from rb field */
             tcg_gen_movi_tl(t2, rb >> 1);
         } else {
-            gen_load_gpr(t2, rb);
+            gen_load_gpr_tl(t2, rb);
             tcg_gen_andi_tl(t2, t2, 0x0f);
         }
         gen_load_mxu_gpr(t0, XRb);
@@ -2060,7 +2060,7 @@ static void gen_mxu_q16sxxv(DisasContext *ctx, bool right, bool arithmetic)
 
     gen_load_mxu_gpr(t0, XRa);
     gen_load_mxu_gpr(t2, XRd);
-    gen_load_gpr(t5, rs);
+    gen_load_gpr_tl(t5, rs);
     tcg_gen_andi_tl(t5, t5, 0x0f);
 
 
@@ -3659,7 +3659,7 @@ static void gen_mxu_s32extr(DisasContext *ctx)
 
         gen_load_mxu_gpr(t0, XRd);
         gen_load_mxu_gpr(t1, XRa);
-        gen_load_gpr(t2, rs);
+        gen_load_gpr_tl(t2, rs);
         tcg_gen_andi_tl(t2, t2, 0x1f);
         tcg_gen_subfi_tl(t2, 32, t2);
         tcg_gen_brcondi_tl(TCG_COND_GE, t2, bits5, l_xra_only);
@@ -3709,8 +3709,8 @@ static void gen_mxu_s32extrv(DisasContext *ctx)
     /* {tmp} = {XRa:XRd} >> (64 - rs - rt) */
     gen_load_mxu_gpr(t0, XRd);
     gen_load_mxu_gpr(t1, XRa);
-    gen_load_gpr(t2, rs);
-    gen_load_gpr(t4, rt);
+    gen_load_gpr_tl(t2, rs);
+    gen_load_gpr_tl(t4, rt);
     tcg_gen_brcondi_tl(TCG_COND_EQ, t4, 0, l_zero);
     tcg_gen_andi_tl(t2, t2, 0x1f);
     tcg_gen_subfi_tl(t2, 32, t2);
@@ -4303,7 +4303,7 @@ static void gen_mxu_S32ALN(DisasContext *ctx)
 
         gen_load_mxu_gpr(t0, XRb);
         gen_load_mxu_gpr(t1, XRc);
-        gen_load_gpr(t2, rs);
+        gen_load_gpr_tl(t2, rs);
         tcg_gen_andi_tl(t2, t2, 0x07);
 
         /* do nothing for undefined cases */
@@ -4364,8 +4364,8 @@ static void gen_mxu_s32madd_sub(DisasContext *ctx, bool sub, bool uns)
         TCGv_i64 t2 = tcg_temp_new_i64();
         TCGv_i64 t3 = tcg_temp_new_i64();
 
-        gen_load_gpr(t0, Rb);
-        gen_load_gpr(t1, Rc);
+        gen_load_gpr_tl(t0, Rb);
+        gen_load_gpr_tl(t1, Rc);
 
         if (uns) {
             tcg_gen_extu_tl_i64(t2, t0);

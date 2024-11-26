@@ -536,7 +536,7 @@ static bool trans_CTCMSA(DisasContext *ctx, arg_msa_elm *a)
 
     telm = tcg_temp_new();
 
-    gen_load_gpr(telm, a->ws);
+    gen_load_gpr_tl(telm, a->ws);
     gen_helper_msa_ctcmsa(tcg_env, telm, tcg_constant_i32(a->wd));
 
     return true;

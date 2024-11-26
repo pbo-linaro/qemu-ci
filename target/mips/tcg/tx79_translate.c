@@ -78,14 +78,14 @@ static bool trans_MFLO1(DisasContext *ctx, arg_r *a)
 
 static bool trans_MTHI1(DisasContext *ctx, arg_r *a)
 {
-    gen_load_gpr(cpu_HI[1], a->rs);
+    gen_load_gpr_tl(cpu_HI[1], a->rs);
 
     return true;
 }
 
 static bool trans_MTLO1(DisasContext *ctx, arg_r *a)
 {
-    gen_load_gpr(cpu_LO[1], a->rs);
+    gen_load_gpr_tl(cpu_LO[1], a->rs);
 
     return true;
 }
@@ -128,8 +128,8 @@ static bool trans_parallel_arith(DisasContext *ctx, arg_r *a,
     bx = tcg_temp_new_i64();
 
     /* Lower half */
-    gen_load_gpr(ax, a->rs);
-    gen_load_gpr(bx, a->rt);
+    gen_load_gpr_tl(ax, a->rs);
+    gen_load_gpr_tl(bx, a->rt);
     gen_logic_i64(cpu_gpr[a->rd], ax, bx);
 
     /* Upper half */
@@ -250,8 +250,8 @@ static bool trans_parallel_compare(DisasContext *ctx, arg_r *a,
     t2 = tcg_temp_new_i64();
 
     /* Lower half */
-    gen_load_gpr(ax, a->rs);
-    gen_load_gpr(bx, a->rt);
+    gen_load_gpr_tl(ax, a->rs);
+    gen_load_gpr_tl(bx, a->rt);
     for (int i = 0; i < (64 / wlen); i++) {
         tcg_gen_sextract_i64(t0, ax, wlen * i, wlen);
         tcg_gen_sextract_i64(t1, bx, wlen * i, wlen);
@@ -363,7 +363,7 @@ static bool trans_SQ(DisasContext *ctx, arg_i *a)
     tcg_gen_andi_tl(addr, addr, ~0xf);
 
     /* Lower half */
-    gen_load_gpr(t0, a->rt);
+    gen_load_gpr_tl(t0, a->rt);
     tcg_gen_qemu_st_i64(t0, addr, ctx->mem_idx, mo_endian(ctx) | MO_UQ);
 
     /* Upper half */
@@ -427,8 +427,8 @@ static bool trans_PPACW(DisasContext *ctx, arg_r *a)
     b0 = tcg_temp_new_i64();
     t0 = tcg_temp_new_i64();
 
-    gen_load_gpr(a0, a->rs);
-    gen_load_gpr(b0, a->rt);
+    gen_load_gpr_tl(a0, a->rs);
+    gen_load_gpr_tl(b0, a->rt);
 
     gen_load_gpr_hi(t0, a->rt); /* b1 */
     tcg_gen_deposit_i64(cpu_gpr[a->rd], b0, t0, 32, 32);
@@ -457,8 +457,8 @@ static bool trans_PEXTLx(DisasContext *ctx, arg_r *a, unsigned wlen)
     ax = tcg_temp_new_i64();
     bx = tcg_temp_new_i64();
 
-    gen_load_gpr(ax, a->rs);
-    gen_load_gpr(bx, a->rt);
+    gen_load_gpr_tl(ax, a->rs);
+    gen_load_gpr_tl(bx, a->rt);
 
     /* Lower half */
     for (int i = 0; i < 64 / (2 * wlen); i++) {
@@ -506,8 +506,8 @@ static bool trans_PEXTLW(DisasContext *ctx, arg_r *a)
     ax = tcg_temp_new_i64();
     bx = tcg_temp_new_i64();
 
-    gen_load_gpr(ax, a->rs);
-    gen_load_gpr(bx, a->rt);
+    gen_load_gpr_tl(ax, a->rs);
+    gen_load_gpr_tl(bx, a->rt);
     gen_pextw(cpu_gpr[a->rd], cpu_gpr_hi[a->rd], ax, bx);
     return true;
 }

@@ -1188,7 +1188,7 @@ static const char regnames_LO[][4] = {
 };
 
 /* General purpose registers moves. */
-void gen_load_gpr(TCGv t, int reg)
+void gen_load_gpr_tl(TCGv t, int reg)
 {
     assert(reg >= 0 && reg <= ARRAY_SIZE(cpu_gpr));
     if (reg == 0) {
@@ -1256,7 +1256,7 @@ static inline void gen_store_srsgpr(int from, int to)
         TCGv_i32 t2 = tcg_temp_new_i32();
         TCGv_ptr addr = tcg_temp_new_ptr();
 
-        gen_load_gpr(t0, from);
+        gen_load_gpr_tl(t0, from);
         tcg_gen_ld_i32(t2, tcg_env, offsetof(CPUMIPSState, CP0_SRSCtl));
         tcg_gen_shri_i32(t2, t2, CP0SRSCtl_PSS);
         tcg_gen_andi_i32(t2, t2, 0xf);
@@ -1949,7 +1949,7 @@ void gen_base_offset_addr(DisasContext *ctx, TCGv addr, int base, int offset)
     if (base == 0) {
         tcg_gen_movi_tl(addr, offset);
     } else if (offset == 0) {
-        gen_load_gpr(addr, base);
+        gen_load_gpr_tl(addr, base);
     } else {
         tcg_gen_movi_tl(addr, offset);
         gen_op_addr_add(ctx, addr, cpu_gpr[base], addr);
@@ -2063,13 +2063,13 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         break;
     case OPC_LDL:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         gen_lxl(ctx, t1, t0, mem_idx, mo_endian(ctx) | MO_UQ);
         gen_store_gpr(t1, rt);
         break;
     case OPC_LDR:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         gen_lxr(ctx, t1, t0, mem_idx, mo_endian(ctx) | MO_UQ);
         gen_store_gpr(t1, rt);
         break;
@@ -2129,7 +2129,7 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         /* fall through */
     case OPC_LWL:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         gen_lxl(ctx, t1, t0, mem_idx, mo_endian(ctx) | MO_UL);
         tcg_gen_ext32s_tl(t1, t1);
         gen_store_gpr(t1, rt);
@@ -2139,7 +2139,7 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         /* fall through */
     case OPC_LWR:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         gen_lxr(ctx, t1, t0, mem_idx, mo_endian(ctx) | MO_UL);
         tcg_gen_ext32s_tl(t1, t1);
         gen_store_gpr(t1, rt);
@@ -2164,7 +2164,7 @@ static void gen_st(DisasContext *ctx, uint32_t opc, int rt,
     int mem_idx = ctx->mem_idx;
 
     gen_base_offset_addr(ctx, t0, base, offset);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t1, rt);
     switch (opc) {
 #if defined(TARGET_MIPS64)
     case OPC_SD:
@@ -2233,7 +2233,7 @@ static void gen_st_cond(DisasContext *ctx, int rt, int base, int offset,
     gen_set_label(l1);
     /* generate cmpxchg */
     val = tcg_temp_new();
-    gen_load_gpr(val, rt);
+    gen_load_gpr_tl(val, rt);
     tcg_gen_atomic_cmpxchg_tl(t0, cpu_lladdr, cpu_llval, val,
                               eva ? MIPS_HFLAG_UM : ctx->mem_idx, tcg_mo);
     tcg_gen_setcond_tl(TCG_COND_EQ, t0, t0, cpu_llval);
@@ -2332,7 +2332,7 @@ static void gen_arith_imm(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
+            gen_load_gpr_tl(t1, rs);
             tcg_gen_addi_tl(t0, t1, uimm);
             tcg_gen_ext32s_tl(t0, t0);
 
@@ -2363,7 +2363,7 @@ static void gen_arith_imm(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
+            gen_load_gpr_tl(t1, rs);
             tcg_gen_addi_tl(t0, t1, uimm);
 
             tcg_gen_xori_tl(t1, t1, ~uimm);
@@ -2447,7 +2447,7 @@ static void gen_slt_imm(DisasContext *ctx, uint32_t opc,
         return;
     }
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
+    gen_load_gpr_tl(t0, rs);
     switch (opc) {
     case OPC_SLTI:
         tcg_gen_setcondi_tl(TCG_COND_LT, cpu_gpr[rt], t0, uimm);
@@ -2471,7 +2471,7 @@ static void gen_shift_imm(DisasContext *ctx, uint32_t opc,
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
+    gen_load_gpr_tl(t0, rs);
     switch (opc) {
     case OPC_SLL:
         tcg_gen_shli_tl(t0, t0, uimm);
@@ -2553,8 +2553,8 @@ static void gen_arith(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
-            gen_load_gpr(t2, rt);
+            gen_load_gpr_tl(t1, rs);
+            gen_load_gpr_tl(t2, rt);
             tcg_gen_add_tl(t0, t1, t2);
             tcg_gen_ext32s_tl(t0, t0);
             tcg_gen_xor_tl(t1, t1, t2);
@@ -2586,8 +2586,8 @@ static void gen_arith(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
-            gen_load_gpr(t2, rt);
+            gen_load_gpr_tl(t1, rs);
+            gen_load_gpr_tl(t2, rt);
             tcg_gen_sub_tl(t0, t1, t2);
             tcg_gen_ext32s_tl(t0, t0);
             tcg_gen_xor_tl(t2, t1, t2);
@@ -2624,8 +2624,8 @@ static void gen_arith(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
-            gen_load_gpr(t2, rt);
+            gen_load_gpr_tl(t1, rs);
+            gen_load_gpr_tl(t2, rt);
             tcg_gen_add_tl(t0, t1, t2);
             tcg_gen_xor_tl(t1, t1, t2);
             tcg_gen_xor_tl(t2, t0, t2);
@@ -2655,8 +2655,8 @@ static void gen_arith(DisasContext *ctx, uint32_t opc,
             TCGv t2 = tcg_temp_new();
             TCGLabel *l1 = gen_new_label();
 
-            gen_load_gpr(t1, rs);
-            gen_load_gpr(t2, rt);
+            gen_load_gpr_tl(t1, rs);
+            gen_load_gpr_tl(t2, rt);
             tcg_gen_sub_tl(t0, t1, t2);
             tcg_gen_xor_tl(t2, t1, t2);
             tcg_gen_xor_tl(t1, t0, t1);
@@ -2706,10 +2706,10 @@ static void gen_cond_move(DisasContext *ctx, uint32_t opc,
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rt);
+    gen_load_gpr_tl(t0, rt);
     t1 = tcg_constant_tl(0);
     t2 = tcg_temp_new();
-    gen_load_gpr(t2, rs);
+    gen_load_gpr_tl(t2, rs);
     switch (opc) {
     case OPC_MOVN:
         tcg_gen_movcond_tl(TCG_COND_NE, cpu_gpr[rd], t0, t1, t2, cpu_gpr[rd]);
@@ -2792,8 +2792,8 @@ static void gen_slt(DisasContext *ctx, uint32_t opc,
 
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
     switch (opc) {
     case OPC_SLT:
         tcg_gen_setcond_tl(TCG_COND_LT, cpu_gpr[rd], t0, t1);
@@ -2820,8 +2820,8 @@ static void gen_shift(DisasContext *ctx, uint32_t opc,
 
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
     switch (opc) {
     case OPC_SLLV:
         tcg_gen_andi_tl(t0, t0, 0x1f);
@@ -3018,8 +3018,8 @@ static void gen_r6_muldiv(DisasContext *ctx, int opc, int rd, int rs, int rt)
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     switch (opc) {
     case R6_OPC_DIV:
@@ -3189,8 +3189,8 @@ static void gen_div1_tx79(DisasContext *ctx, uint32_t opc, int rs, int rt)
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     switch (opc) {
     case MMI_OPC_DIV1:
@@ -3240,8 +3240,8 @@ static void gen_muldiv(DisasContext *ctx, uint32_t opc,
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     if (acc != 0) {
         check_dsp(ctx);
@@ -3431,8 +3431,8 @@ static void gen_mul_txx9(DisasContext *ctx, uint32_t opc,
     TCGv t1 = tcg_temp_new();
     int acc = 0;
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     switch (opc) {
     case MMI_OPC_MULT1:
@@ -3528,7 +3528,7 @@ static void gen_cl(DisasContext *ctx, uint32_t opc,
         return;
     }
     t0 = cpu_gpr[rd];
-    gen_load_gpr(t0, rs);
+    gen_load_gpr_tl(t0, rs);
 
     switch (opc) {
     case OPC_CLO:
@@ -3966,11 +3966,11 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
     case OPC_GSSQ:
         t1 = tcg_temp_new();
         gen_base_offset_addr(ctx, t0, rs, lsq_offset);
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_base_offset_addr(ctx, t0, rs, lsq_offset + 8);
-        gen_load_gpr(t1, lsq_rt1);
+        gen_load_gpr_tl(t1, lsq_rt1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         break;
@@ -4190,25 +4190,25 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
 #endif
     case OPC_GSSBX:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, MO_SB);
         break;
     case OPC_GSSHX:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UW |
                            ctx->default_tcg_memop_mask);
         break;
     case OPC_GSSWX:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         break;
 #if defined(TARGET_MIPS64)
     case OPC_GSSDX:
         t1 = tcg_temp_new();
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         break;
@@ -4251,8 +4251,8 @@ static void gen_trap(DisasContext *ctx, uint32_t opc,
     case OPC_TNE:
         /* Compare two registers */
         if (rs != rt) {
-            gen_load_gpr(t0, rs);
-            gen_load_gpr(t1, rt);
+            gen_load_gpr_tl(t0, rs);
+            gen_load_gpr_tl(t1, rt);
             cond = 1;
         }
         break;
@@ -4264,7 +4264,7 @@ static void gen_trap(DisasContext *ctx, uint32_t opc,
     case OPC_TNEI:
         /* Compare register to immediate */
         if (rs != 0 || imm != 0) {
-            gen_load_gpr(t0, rs);
+            gen_load_gpr_tl(t0, rs);
             tcg_gen_movi_tl(t1, (int32_t)imm);
             cond = 1;
         }
@@ -4382,8 +4382,8 @@ static void gen_compute_branch(DisasContext *ctx, uint32_t opc,
     case OPC_BNEL:
         /* Compare two registers */
         if (rs != rt) {
-            gen_load_gpr(t0, rs);
-            gen_load_gpr(t1, rt);
+            gen_load_gpr_tl(t0, rs);
+            gen_load_gpr_tl(t1, rt);
             bcond_compute = 1;
         }
         btgt = ctx->base.pc_next + insn_bytes + offset;
@@ -4402,7 +4402,7 @@ static void gen_compute_branch(DisasContext *ctx, uint32_t opc,
     case OPC_BLTZL:
         /* Compare to zero */
         if (rs != 0) {
-            gen_load_gpr(t0, rs);
+            gen_load_gpr_tl(t0, rs);
             bcond_compute = 1;
         }
         btgt = ctx->base.pc_next + insn_bytes + offset;
@@ -4444,7 +4444,7 @@ static void gen_compute_branch(DisasContext *ctx, uint32_t opc,
             gen_reserved_instruction(ctx);
             goto out;
         }
-        gen_load_gpr(btarget, rs);
+        gen_load_gpr_tl(btarget, rs);
         break;
     default:
         MIPS_INVAL("branch/jump");
@@ -4622,7 +4622,7 @@ static void gen_bitops(DisasContext *ctx, uint32_t opc, int rt,
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
 
-    gen_load_gpr(t1, rs);
+    gen_load_gpr_tl(t1, rs);
     switch (opc) {
     case OPC_EXT:
         if (lsb + msb > 31) {
@@ -4657,7 +4657,7 @@ static void gen_bitops(DisasContext *ctx, uint32_t opc, int rt,
         if (lsb > msb) {
             goto fail;
         }
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         tcg_gen_deposit_tl(t0, t0, t1, lsb, msb - lsb + 1);
         tcg_gen_ext32s_tl(t0, t0);
         break;
@@ -4672,7 +4672,7 @@ static void gen_bitops(DisasContext *ctx, uint32_t opc, int rt,
         if (lsb > msb) {
             goto fail;
         }
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         tcg_gen_deposit_tl(t0, t0, t1, lsb, msb - lsb + 1);
         break;
 #endif
@@ -4695,7 +4695,7 @@ static void gen_bshfl(DisasContext *ctx, uint32_t op2, int rt, int rd)
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rt);
+    gen_load_gpr_tl(t0, rt);
     switch (op2) {
     case OPC_WSBH:
         {
@@ -4763,9 +4763,9 @@ static void gen_align_bits(DisasContext *ctx, int wordsz, int rd, int rs,
     t0 = tcg_temp_new();
     if (bits == 0 || bits == wordsz) {
         if (bits == 0) {
-            gen_load_gpr(t0, rt);
+            gen_load_gpr_tl(t0, rt);
         } else {
-            gen_load_gpr(t0, rs);
+            gen_load_gpr_tl(t0, rs);
         }
         switch (wordsz) {
         case 32:
@@ -4779,8 +4779,8 @@ static void gen_align_bits(DisasContext *ctx, int wordsz, int rd, int rs,
         }
     } else {
         TCGv t1 = tcg_temp_new();
-        gen_load_gpr(t0, rt);
-        gen_load_gpr(t1, rs);
+        gen_load_gpr_tl(t0, rt);
+        gen_load_gpr_tl(t1, rs);
         switch (wordsz) {
         case 32:
             {
@@ -4814,7 +4814,7 @@ static void gen_bitswap(DisasContext *ctx, int opc, int rd, int rt)
         return;
     }
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rt);
+    gen_load_gpr_tl(t0, rt);
     switch (opc) {
     case OPC_BITSWAP:
         gen_helper_bitswap(cpu_gpr[rd], t0);
@@ -8290,7 +8290,7 @@ static void gen_mttr(CPUMIPSState *env, DisasContext *ctx, int rd, int rt,
     int other_tc = env->CP0_VPEControl & (0xff << CP0VPECo_TargTC);
     TCGv t0 = tcg_temp_new();
 
-    gen_load_gpr(t0, rt);
+    gen_load_gpr_tl(t0, rt);
     if ((env->CP0_VPEConf0 & (1 << CP0VPEC0_MVP)) == 0 &&
         ((env->tcs[other_tc].CP0_TCBind & (0xf << CP0TCBd_CurVPE)) !=
          (env->active_tc.CP0_TCBind & (0xf << CP0TCBd_CurVPE)))) {
@@ -8504,7 +8504,7 @@ static void gen_cp0(CPUMIPSState *env, DisasContext *ctx, uint32_t opc,
         {
             TCGv t0 = tcg_temp_new();
 
-            gen_load_gpr(t0, rt);
+            gen_load_gpr_tl(t0, rt);
             gen_mtc0(ctx, t0, rd, ctx->opcode & 0x7);
         }
         opn = "mtc0";
@@ -8524,7 +8524,7 @@ static void gen_cp0(CPUMIPSState *env, DisasContext *ctx, uint32_t opc,
         {
             TCGv t0 = tcg_temp_new();
 
-            gen_load_gpr(t0, rt);
+            gen_load_gpr_tl(t0, rt);
             gen_dmtc0(ctx, t0, rd, ctx->opcode & 0x7);
         }
         opn = "dmtc0";
@@ -8543,7 +8543,7 @@ static void gen_cp0(CPUMIPSState *env, DisasContext *ctx, uint32_t opc,
         check_mvh(ctx);
         {
             TCGv t0 = tcg_temp_new();
-            gen_load_gpr(t0, rt);
+            gen_load_gpr_tl(t0, rt);
             gen_mthc0(ctx, t0, rd, ctx->opcode & 0x7);
         }
         opn = "mthc0";
@@ -9051,7 +9051,7 @@ static void gen_cp1(DisasContext *ctx, uint32_t opc, int rt, int fs)
         gen_store_gpr(t0, rt);
         break;
     case OPC_MTC1:
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         {
             TCGv_i32 fp0 = tcg_temp_new_i32();
 
@@ -9064,7 +9064,7 @@ static void gen_cp1(DisasContext *ctx, uint32_t opc, int rt, int fs)
         gen_store_gpr(t0, rt);
         break;
     case OPC_CTC1:
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         save_cpu_state(ctx, 0);
         gen_helper_0e2i(ctc1, t0, tcg_constant_i32(fs), rt);
         /* Stop translation as we may have changed hflags */
@@ -9076,7 +9076,7 @@ static void gen_cp1(DisasContext *ctx, uint32_t opc, int rt, int fs)
         gen_store_gpr(t0, rt);
         break;
     case OPC_DMTC1:
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         gen_store_fpr64(ctx, t0, fs);
         break;
 #endif
@@ -9090,7 +9090,7 @@ static void gen_cp1(DisasContext *ctx, uint32_t opc, int rt, int fs)
         gen_store_gpr(t0, rt);
         break;
     case OPC_MTHC1:
-        gen_load_gpr(t0, rt);
+        gen_load_gpr_tl(t0, rt);
         {
             TCGv_i32 fp0 = tcg_temp_new_i32();
 
@@ -9126,7 +9126,7 @@ static void gen_movci(DisasContext *ctx, int rd, int rs, int cc, int tf)
     t0 = tcg_temp_new_i32();
     tcg_gen_andi_i32(t0, fpu_fcr31, 1 << get_fp_bit(cc));
     tcg_gen_brcondi_i32(cond, t0, 0, l1);
-    gen_load_gpr(cpu_gpr[rd], rs);
+    gen_load_gpr_tl(cpu_gpr[rd], rs);
     gen_set_label(l1);
 }
 
@@ -10546,9 +10546,9 @@ static void gen_flt3_ldst(DisasContext *ctx, uint32_t opc,
     TCGv t0 = tcg_temp_new();
 
     if (base == 0) {
-        gen_load_gpr(t0, index);
+        gen_load_gpr_tl(t0, index);
     } else if (index == 0) {
-        gen_load_gpr(t0, base);
+        gen_load_gpr_tl(t0, base);
     } else {
         gen_op_addr_add(ctx, t0, cpu_gpr[base], cpu_gpr[index]);
     }
@@ -10628,7 +10628,7 @@ static void gen_flt3_arith(DisasContext *ctx, uint32_t opc,
             TCGLabel *l1 = gen_new_label();
             TCGLabel *l2 = gen_new_label();
 
-            gen_load_gpr(t0, fr);
+            gen_load_gpr_tl(t0, fr);
             tcg_gen_andi_tl(t0, t0, 0x7);
 
             tcg_gen_brcondi_tl(TCG_COND_NE, t0, 0, l1);
@@ -11006,8 +11006,8 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
     /* compact branch */
     case OPC_BOVC: /* OPC_BEQZALC, OPC_BEQC */
     case OPC_BNVC: /* OPC_BNEZALC, OPC_BNEC */
-        gen_load_gpr(t0, rs);
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t0, rs);
+        gen_load_gpr_tl(t1, rt);
         bcond_compute = 1;
         ctx->btarget = addr_add(ctx, ctx->base.pc_next + 4, offset);
         if (rs <= rt && rs == 0) {
@@ -11017,8 +11017,8 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
         break;
     case OPC_BLEZC: /* OPC_BGEZC, OPC_BGEC */
     case OPC_BGTZC: /* OPC_BLTZC, OPC_BLTC */
-        gen_load_gpr(t0, rs);
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t0, rs);
+        gen_load_gpr_tl(t1, rt);
         bcond_compute = 1;
         ctx->btarget = addr_add(ctx, ctx->base.pc_next + 4, offset);
         break;
@@ -11029,8 +11029,8 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
             /* OPC_BGTZALC, OPC_BLTZALC */
             tcg_gen_movi_tl(cpu_gpr[31], ctx->base.pc_next + 4 + m16_lowbit);
         }
-        gen_load_gpr(t0, rs);
-        gen_load_gpr(t1, rt);
+        gen_load_gpr_tl(t0, rs);
+        gen_load_gpr_tl(t1, rt);
         bcond_compute = 1;
         ctx->btarget = addr_add(ctx, ctx->base.pc_next + 4, offset);
         break;
@@ -11042,14 +11042,14 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
     case OPC_BNEZC:
         if (rs != 0) {
             /* OPC_BEQZC, OPC_BNEZC */
-            gen_load_gpr(t0, rs);
+            gen_load_gpr_tl(t0, rs);
             bcond_compute = 1;
             ctx->btarget = addr_add(ctx, ctx->base.pc_next + 4, offset);
         } else {
             /* OPC_JIC, OPC_JIALC */
             TCGv tbase = tcg_temp_new();
 
-            gen_load_gpr(tbase, rt);
+            gen_load_gpr_tl(tbase, rt);
             gen_op_addr_addi(ctx, btarget, tbase, offset);
         }
         break;
@@ -11145,8 +11145,8 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
                 TCGv t4 = tcg_temp_new();
                 TCGv input_overflow = tcg_temp_new();
 
-                gen_load_gpr(t0, rs);
-                gen_load_gpr(t1, rt);
+                gen_load_gpr_tl(t0, rs);
+                gen_load_gpr_tl(t1, rt);
                 tcg_gen_ext32s_tl(t2, t0);
                 tcg_gen_setcond_tl(TCG_COND_NE, input_overflow, t2, t0);
                 tcg_gen_ext32s_tl(t3, t1);
@@ -11248,10 +11248,10 @@ void gen_ldxs(DisasContext *ctx, int base, int index, int rd)
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, base);
+    gen_load_gpr_tl(t0, base);
 
     if (index != 0) {
-        gen_load_gpr(t1, index);
+        gen_load_gpr_tl(t1, index);
         tcg_gen_shli_tl(t1, t1, 2);
         gen_op_addr_add(ctx, t0, t1, t0);
     }
@@ -11334,9 +11334,9 @@ static void gen_mips_lx(DisasContext *ctx, uint32_t opc,
     t0 = tcg_temp_new();
 
     if (base == 0) {
-        gen_load_gpr(t0, offset);
+        gen_load_gpr_tl(t0, offset);
     } else if (offset == 0) {
-        gen_load_gpr(t0, base);
+        gen_load_gpr_tl(t0, base);
     } else {
         gen_op_addr_add(ctx, t0, cpu_gpr[base], cpu_gpr[offset]);
     }
@@ -11377,8 +11377,8 @@ static void gen_mipsdsp_arith(DisasContext *ctx, uint32_t op1, uint32_t op2,
     v1_t = tcg_temp_new();
     v2_t = tcg_temp_new();
 
-    gen_load_gpr(v1_t, v1);
-    gen_load_gpr(v2_t, v2);
+    gen_load_gpr_tl(v1_t, v1);
+    gen_load_gpr_tl(v2_t, v2);
 
     switch (op1) {
     case OPC_ADDUH_QB_DSP:
@@ -11822,8 +11822,8 @@ static void gen_mipsdsp_shift(DisasContext *ctx, uint32_t opc,
     v2_t = tcg_temp_new();
 
     tcg_gen_movi_tl(t0, v1);
-    gen_load_gpr(v1_t, v1);
-    gen_load_gpr(v2_t, v2);
+    gen_load_gpr_tl(v1_t, v1);
+    gen_load_gpr_tl(v2_t, v2);
 
     switch (opc) {
     case OPC_SHLL_QB_DSP:
@@ -12060,8 +12060,8 @@ static void gen_mipsdsp_multiply(DisasContext *ctx, uint32_t op1, uint32_t op2,
     v2_t = tcg_temp_new();
 
     tcg_gen_movi_i32(t0, ret);
-    gen_load_gpr(v1_t, v1);
-    gen_load_gpr(v2_t, v2);
+    gen_load_gpr_tl(v1_t, v1);
+    gen_load_gpr_tl(v2_t, v2);
 
     switch (op1) {
     case OPC_MUL_PH_DSP:
@@ -12359,7 +12359,7 @@ static void gen_mipsdsp_bitinsn(DisasContext *ctx, uint32_t op1, uint32_t op2,
 
     t0 = tcg_temp_new();
     val_t = tcg_temp_new();
-    gen_load_gpr(val_t, val);
+    gen_load_gpr_tl(val_t, val);
 
     switch (op1) {
     case OPC_ABSQ_S_PH_DSP:
@@ -12498,8 +12498,8 @@ static void gen_mipsdsp_add_cmp_pick(DisasContext *ctx,
     v1_t = tcg_temp_new();
     v2_t = tcg_temp_new();
 
-    gen_load_gpr(v1_t, v1);
-    gen_load_gpr(v2_t, v2);
+    gen_load_gpr_tl(v1_t, v1);
+    gen_load_gpr_tl(v2_t, v2);
 
     switch (op1) {
     case OPC_CMPU_EQ_QB_DSP:
@@ -12676,7 +12676,7 @@ static void gen_mipsdsp_append(CPUMIPSState *env, DisasContext *ctx,
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, rs);
+    gen_load_gpr_tl(t0, rs);
 
     switch (op1) {
     case OPC_APPEND_DSP:
@@ -12768,7 +12768,7 @@ static void gen_mipsdsp_accinsn(DisasContext *ctx, uint32_t op1, uint32_t op2,
     t1 = tcg_temp_new();
     v1_t = tcg_temp_new();
 
-    gen_load_gpr(v1_t, v1);
+    gen_load_gpr_tl(v1_t, v1);
 
     switch (op1) {
     case OPC_EXTR_W_DSP:
@@ -13785,8 +13785,8 @@ static void decode_opc_special3_legacy(CPUMIPSState *env, DisasContext *ctx)
                 t0 = tcg_temp_new();
                 t1 = tcg_temp_new();
 
-                gen_load_gpr(t0, rt);
-                gen_load_gpr(t1, rs);
+                gen_load_gpr_tl(t0, rt);
+                gen_load_gpr_tl(t1, rs);
 
                 gen_helper_insv(cpu_gpr[rt], tcg_env, t1, t0);
                 break;
@@ -14045,8 +14045,8 @@ static void decode_opc_special3_legacy(CPUMIPSState *env, DisasContext *ctx)
             t0 = tcg_temp_new();
             t1 = tcg_temp_new();
 
-            gen_load_gpr(t0, rt);
-            gen_load_gpr(t1, rs);
+            gen_load_gpr_tl(t0, rt);
+            gen_load_gpr_tl(t1, rs);
 
             gen_helper_dinsv(cpu_gpr[rt], tcg_env, t1, t0);
             break;
@@ -14272,8 +14272,8 @@ static void decode_opc_special3(CPUMIPSState *env, DisasContext *ctx)
             TCGv t0 = tcg_temp_new();
             TCGv t1 = tcg_temp_new();
 
-            gen_load_gpr(t0, rt);
-            gen_load_gpr(t1, rs);
+            gen_load_gpr_tl(t0, rt);
+            gen_load_gpr_tl(t1, rs);
             gen_helper_fork(t0, t1);
         }
         break;
@@ -14282,7 +14282,7 @@ static void decode_opc_special3(CPUMIPSState *env, DisasContext *ctx)
         {
             TCGv t0 = tcg_temp_new();
 
-            gen_load_gpr(t0, rs);
+            gen_load_gpr_tl(t0, rs);
             gen_helper_yield(t0, tcg_env, t0);
             gen_store_gpr(t0, rd);
         }
@@ -14973,7 +14973,7 @@ static bool decode_opc_legacy(CPUMIPSState *env, DisasContext *ctx)
                 generate_exception(ctx, EXCP_RI);
             } else if (rt != 0) {
                 TCGv t0 = tcg_temp_new();
-                gen_load_gpr(t0, rs);
+                gen_load_gpr_tl(t0, rs);
                 tcg_gen_addi_tl(cpu_gpr[rt], t0, imm << 16);
             }
 #else

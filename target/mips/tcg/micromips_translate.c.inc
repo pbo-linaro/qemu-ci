@@ -861,8 +861,8 @@ static inline void gen_movep(DisasContext *ctx, int enc_dest, int enc_rt,
 
     rd = rd_enc[enc_dest];
     re = re_enc[enc_dest];
-    gen_load_gpr(cpu_gpr[rd], rs_rt_enc[enc_rs]);
-    gen_load_gpr(cpu_gpr[re], rs_rt_enc[enc_rt]);
+    gen_load_gpr_tl(cpu_gpr[rd], rs_rt_enc[enc_rs]);
+    gen_load_gpr_tl(cpu_gpr[re], rs_rt_enc[enc_rt]);
 }
 
 static void gen_pool16c_r6_insn(DisasContext *ctx)
@@ -986,11 +986,11 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         gen_store_gpr(t1, rd + 1);
         break;
     case SWP:
-        gen_load_gpr(t1, rd);
+        gen_load_gpr_tl(t1, rd);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         gen_op_addr_addi(ctx, t0, t0, 4);
-        gen_load_gpr(t1, rd + 1);
+        gen_load_gpr_tl(t1, rd + 1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
         break;
@@ -1009,11 +1009,11 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         gen_store_gpr(t1, rd + 1);
         break;
     case SDP:
-        gen_load_gpr(t1, rd);
+        gen_load_gpr_tl(t1, rd);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_op_addr_addi(ctx, t0, t0, 8);
-        gen_load_gpr(t1, rd + 1);
+        gen_load_gpr_tl(t1, rd + 1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         break;
@@ -1064,7 +1064,7 @@ static void gen_pool32axf(CPUMIPSState *env, DisasContext *ctx, int rt, int rs)
         {
             TCGv t0 = tcg_temp_new();
 
-            gen_load_gpr(t0, rt);
+            gen_load_gpr_tl(t0, rt);
             gen_mtc0(ctx, t0, rs, (ctx->opcode >> 11) & 0x7);
         }
         break;

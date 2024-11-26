@@ -40,8 +40,8 @@ static bool trans_mult_acc(DisasContext *ctx, arg_r *a,
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, a->rs);
-    gen_load_gpr(t1, a->rt);
+    gen_load_gpr_tl(t0, a->rs);
+    gen_load_gpr_tl(t1, a->rt);
 
     gen_helper_mult_acc(t0, tcg_env, t0, t1);
 

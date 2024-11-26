@@ -42,8 +42,8 @@ static bool gen_lext_DIV_G(DisasContext *s, int rd, int rs, int rt,
     l2 = gen_new_label();
     l3 = gen_new_label();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     if (!is_double) {
         tcg_gen_ext32s_tl(t0, t0);
@@ -95,8 +95,8 @@ static bool gen_lext_DIVU_G(DisasContext *s, int rd, int rs, int rt,
     l1 = gen_new_label();
     l2 = gen_new_label();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     if (!is_double) {
         tcg_gen_ext32u_tl(t0, t0);
@@ -143,8 +143,8 @@ static bool gen_lext_MOD_G(DisasContext *s, int rd, int rs, int rt,
     l2 = gen_new_label();
     l3 = gen_new_label();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     if (!is_double) {
         tcg_gen_ext32u_tl(t0, t0);
@@ -192,8 +192,8 @@ static bool gen_lext_MODU_G(DisasContext *s, int rd, int rs, int rt,
     l1 = gen_new_label();
     l2 = gen_new_label();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     if (!is_double) {
         tcg_gen_ext32u_tl(t0, t0);
@@ -235,8 +235,8 @@ static bool gen_lext_MULT_G(DisasContext *s, int rd, int rs, int rt,
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, rs);
-    gen_load_gpr(t1, rt);
+    gen_load_gpr_tl(t0, rs);
+    gen_load_gpr_tl(t1, rt);
 
     tcg_gen_mul_tl(cpu_gpr[rd], t0, t1);
     if (!is_double) {

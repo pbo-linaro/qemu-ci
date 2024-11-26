@@ -26,7 +26,7 @@ static bool trans_BBIT(DisasContext *ctx, arg_BBIT *a)
 
     /* Load needed operands */
     TCGv t0 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
+    gen_load_gpr_tl(t0, a->rs);
 
     p = tcg_constant_tl(1ULL << a->p);
     if (a->set) {
@@ -52,8 +52,8 @@ static bool trans_BADDU(DisasContext *ctx, arg_BADDU *a)
 
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
-    gen_load_gpr(t1, a->rt);
+    gen_load_gpr_tl(t0, a->rs);
+    gen_load_gpr_tl(t1, a->rt);
 
     tcg_gen_add_tl(t0, t0, t1);
     tcg_gen_andi_i64(cpu_gpr[a->rd], t0, 0xff);
@@ -71,8 +71,8 @@ static bool trans_DMUL(DisasContext *ctx, arg_DMUL *a)
 
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
-    gen_load_gpr(t1, a->rt);
+    gen_load_gpr_tl(t0, a->rs);
+    gen_load_gpr_tl(t1, a->rt);
 
     tcg_gen_mul_i64(cpu_gpr[a->rd], t0, t1);
     return true;
@@ -88,7 +88,7 @@ static bool trans_EXTS(DisasContext *ctx, arg_EXTS *a)
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
+    gen_load_gpr_tl(t0, a->rs);
     tcg_gen_sextract_tl(t0, t0, a->p, a->lenm1 + 1);
     gen_store_gpr(t0, a->rt);
     return true;
@@ -104,7 +104,7 @@ static bool trans_CINS(DisasContext *ctx, arg_CINS *a)
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
+    gen_load_gpr_tl(t0, a->rs);
     tcg_gen_deposit_z_tl(t0, t0, a->p, a->lenm1 + 1);
     gen_store_gpr(t0, a->rt);
     return true;
@@ -120,7 +120,7 @@ static bool trans_POP(DisasContext *ctx, arg_POP *a)
     }
 
     t0 = tcg_temp_new();
-    gen_load_gpr(t0, a->rs);
+    gen_load_gpr_tl(t0, a->rs);
     if (!a->dw) {
         tcg_gen_andi_i64(t0, t0, 0xffffffff);
     }
@@ -141,8 +141,8 @@ static bool trans_SEQNE(DisasContext *ctx, arg_SEQNE *a)
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_load_gpr(t0, a->rs);
-    gen_load_gpr(t1, a->rt);
+    gen_load_gpr_tl(t0, a->rs);
+    gen_load_gpr_tl(t1, a->rt);
 
     if (a->ne) {
         tcg_gen_setcond_tl(TCG_COND_NE, cpu_gpr[a->rd], t1, t0);
@@ -163,7 +163,7 @@ static bool trans_SEQNEI(DisasContext *ctx, arg_SEQNEI *a)
 
     t0 = tcg_temp_new();
 
-    gen_load_gpr(t0, a->rs);
+    gen_load_gpr_tl(t0, a->rs);
 
     /* Sign-extend to 64 bit value */
     target_ulong imm = a->imm;
