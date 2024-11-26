@@ -139,6 +139,8 @@ static inline void xenpvh_gpex_init(XenPVHMachineState *s,
 
     object_initialize_child(OBJECT(s), "gpex", &s->pci.gpex,
                             TYPE_GPEX_HOST);
+    object_property_set_bool(OBJECT(s), "refuse-bar-at-addr-0",
+                             true, &error_fatal);
     dev = DEVICE(&s->pci.gpex);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
 

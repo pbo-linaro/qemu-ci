@@ -712,6 +712,8 @@ static void virt_devices_init(DeviceState *pch_pic,
     int i;
 
     gpex_dev = qdev_new(TYPE_GPEX_HOST);
+    object_property_set_bool(OBJECT(gpex_dev), "refuse-bar-at-addr-0",
+                             true, &error_fatal);
     d = SYS_BUS_DEVICE(gpex_dev);
     sysbus_realize_and_unref(d, &error_fatal);
     pci_bus = PCI_HOST_BRIDGE(gpex_dev)->bus;

@@ -62,6 +62,8 @@ static void create_pcie(MachineState *ms, CPUXtensaState *env, int irq_base,
     int i;
 
     dev = qdev_new(TYPE_GPEX_HOST);
+    object_property_set_bool(OBJECT(dev), "refuse-bar-at-addr-0",
+                             true, &error_fatal);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
 
     /* Map only the first size_ecam bytes of ECAM space. */
