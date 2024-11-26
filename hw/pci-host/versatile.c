@@ -407,7 +407,7 @@ static void pci_vpb_realize(DeviceState *dev, Error **errp)
 
     pci_root_bus_init(&s->pci_bus, sizeof(s->pci_bus), dev, "pci",
                       &s->pci_mem_space, &s->pci_io_space,
-                      PCI_DEVFN(11, 0), TYPE_PCI_BUS);
+                      PCI_DEVFN(11, 0), TYPE_PCI_BUS, true);
     h->bus = &s->pci_bus;
 
     object_initialize(&s->pci_dev, sizeof(s->pci_dev), TYPE_VERSATILE_PCI_HOST);

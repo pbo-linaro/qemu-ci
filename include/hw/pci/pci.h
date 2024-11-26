@@ -284,7 +284,8 @@ bool pci_bus_is_express(const PCIBus *bus);
 void pci_root_bus_init(PCIBus *bus, size_t bus_size, DeviceState *parent,
                        const char *name,
                        MemoryRegion *mem, MemoryRegion *io,
-                       uint8_t devfn_min, const char *typename);
+                       uint8_t devfn_min, const char *typename,
+                       bool bar_at_addr_0_refused);
 PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
                          MemoryRegion *mem, MemoryRegion *io,
                          uint8_t devfn_min, const char *typename);

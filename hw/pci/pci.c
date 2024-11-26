@@ -561,11 +561,12 @@ bool pci_bus_is_express(const PCIBus *bus)
 void pci_root_bus_init(PCIBus *bus, size_t bus_size, DeviceState *parent,
                        const char *name,
                        MemoryRegion *mem, MemoryRegion *io,
-                       uint8_t devfn_min, const char *typename)
+                       uint8_t devfn_min, const char *typename,
+                       bool bar_at_addr_0_refused)
 {
     qbus_init(bus, bus_size, typename, parent, name);
     pci_root_bus_internal_init(bus, parent, mem, io, devfn_min,
-                               true);
+                               bar_at_addr_0_refused);
 }
 
 PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
