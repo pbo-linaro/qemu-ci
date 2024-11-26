@@ -376,6 +376,7 @@ void pci_bridge_initfn(PCIDevice *dev, const char *typename)
 
     qbus_init(sec_bus, sizeof(br->sec_bus), typename, DEVICE(dev),
               br->bus_name);
+    sec_bus->flags = parent->flags & ~PCI_BUS_IS_ROOT;
     sec_bus->parent_dev = dev;
     sec_bus->map_irq = br->map_irq ? br->map_irq : pci_swizzle_map_irq_fn;
     sec_bus->address_space_mem = &br->address_space_mem;

@@ -336,6 +336,7 @@ static bool pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
     PXBDev *pxb = PXB_DEV(dev);
     DeviceState *ds, *bds = NULL;
     PCIBus *bus;
+    PCIBus *parent_bus = pci_get_bus(dev);
     const char *dev_name = NULL;
     Error *local_err = NULL;
     MachineState *ms = MACHINE(qdev_get_machine());
@@ -358,12 +359,15 @@ static bool pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
     ds = qdev_new(type == CXL ? TYPE_PXB_CXL_HOST : TYPE_PXB_HOST);
     if (type == PCIE) {
         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_PCIE_BUS);
+        bus->flags = parent_bus->flags & ~PCI_BUS_IS_ROOT;
     } else if (type == CXL) {
         bus = pci_root_bus_new(ds, dev_name, NULL, NULL, 0, TYPE_PXB_CXL_BUS);
+        bus->flags = parent_bus->flags & ~PCI_BUS_IS_ROOT;
         bus->flags |= PCI_BUS_CXL;
         PXB_CXL_DEV(dev)->cxl_host_bridge = PXB_CXL_HOST(ds);
     } else {
         bus = pci_root_bus_new(ds, "pxb-internal", NULL, NULL, 0, TYPE_PXB_BUS);
+        bus->flags = parent_bus->flags & ~PCI_BUS_IS_ROOT;
         bds = qdev_new("pci-bridge");
         bds->id = g_strdup(dev_name);
         qdev_prop_set_uint8(bds, PCI_BRIDGE_DEV_PROP_CHASSIS_NR, pxb->bus_nr);
@@ -371,8 +375,8 @@ static bool pxb_dev_realize_common(PCIDevice *dev, enum BusType type,
     }
 
     bus->parent_dev = dev;
-    bus->address_space_mem = pci_get_bus(dev)->address_space_mem;
-    bus->address_space_io = pci_get_bus(dev)->address_space_io;
+    bus->address_space_mem = parent_bus->address_space_mem;
+    bus->address_space_io = parent_bus->address_space_io;
     bus->map_irq = pxb_map_irq_fn;
 
     PCI_HOST_BRIDGE(ds)->bus = bus;
