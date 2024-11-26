@@ -266,6 +266,19 @@ static void qemu_plugin_vcpu_init__async(CPUState *cpu, run_on_cpu_data unused)
 
     assert(cpu->cpu_index != UNASSIGNED_CPU_INDEX);
     qemu_rec_mutex_lock(&plugin.lock);
+
+    /*
+     * We want to flush tb when a second cpu appear.
+     * When generating plugin code, we optimize cpu_index for num_vcpus == 1.
+     */
+    if (plugin.num_vcpus == 1) {
+        qemu_rec_mutex_unlock(&plugin.lock);
+        start_exclusive();
+        qemu_rec_mutex_lock(&plugin.lock);
+        tb_flush(cpu);
+        end_exclusive();
+    }
+
     plugin.num_vcpus = MAX(plugin.num_vcpus, cpu->cpu_index + 1);
     plugin_cpu_update__locked(&cpu->cpu_index, NULL, NULL);
     success = g_hash_table_insert(plugin.cpu_ht, &cpu->cpu_index,
