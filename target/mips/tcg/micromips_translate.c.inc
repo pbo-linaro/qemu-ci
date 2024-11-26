@@ -980,7 +980,7 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
                            ctx->default_tcg_memop_mask);
         gen_store_gpr_tl(t1, rd);
-        gen_op_addr_addi(ctx, t0, t0, 4);
+        gen_op_addr_addi_tl(ctx, t0, t0, 4);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
                            ctx->default_tcg_memop_mask);
         gen_store_gpr_tl(t1, rd + 1);
@@ -989,7 +989,7 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         gen_load_gpr_tl(t1, rd);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
-        gen_op_addr_addi(ctx, t0, t0, 4);
+        gen_op_addr_addi_tl(ctx, t0, t0, 4);
         gen_load_gpr_tl(t1, rd + 1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                            ctx->default_tcg_memop_mask);
@@ -1003,7 +1003,7 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_store_gpr_tl(t1, rd);
-        gen_op_addr_addi(ctx, t0, t0, 8);
+        gen_op_addr_addi_tl(ctx, t0, t0, 8);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_store_gpr_tl(t1, rd + 1);
@@ -1012,7 +1012,7 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         gen_load_gpr_tl(t1, rd);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_op_addr_addi(ctx, t0, t0, 8);
+        gen_op_addr_addi_tl(ctx, t0, t0, 8);
         gen_load_gpr_tl(t1, rd + 1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);

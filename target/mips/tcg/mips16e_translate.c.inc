@@ -131,7 +131,7 @@ static void decr_and_store(DisasContext *ctx, unsigned regidx, TCGv t0)
 {
     TCGv t1 = tcg_temp_new();
 
-    gen_op_addr_addi(ctx, t0, t0, -4);
+    gen_op_addr_addi_tl(ctx, t0, t0, -4);
     gen_load_gpr_tl(t1, regidx);
     tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UL |
                        ctx->default_tcg_memop_mask);
@@ -283,7 +283,7 @@ static void gen_mips16_save(DisasContext *ctx,
         }
     }
 
-    gen_op_addr_addi(ctx, cpu_gpr[29], cpu_gpr[29], -framesize);
+    gen_op_addr_addi_tl(ctx, cpu_gpr[29], cpu_gpr[29], -framesize);
 }
 
 static void decr_and_load(DisasContext *ctx, unsigned regidx, TCGv t0)
@@ -292,7 +292,7 @@ static void decr_and_load(DisasContext *ctx, unsigned regidx, TCGv t0)
     TCGv t2 = tcg_temp_new();
 
     tcg_gen_movi_tl(t2, -4);
-    gen_op_addr_add(ctx, t0, t0, t2);
+    gen_op_addr_add_tl(ctx, t0, t0, t2);
     tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, MO_TE | MO_SL |
                        ctx->default_tcg_memop_mask);
     gen_store_gpr_tl(t1, regidx);
@@ -306,7 +306,7 @@ static void gen_mips16_restore(DisasContext *ctx,
     int astatic;
     TCGv t0 = tcg_temp_new();
 
-    gen_op_addr_addi(ctx, t0, cpu_gpr[29], -framesize);
+    gen_op_addr_addi_tl(ctx, t0, cpu_gpr[29], -framesize);
 
     if (do_ra) {
         decr_and_load(ctx, 31, t0);
@@ -386,7 +386,7 @@ static void gen_mips16_restore(DisasContext *ctx,
         }
     }
 
-    gen_op_addr_addi(ctx, cpu_gpr[29], cpu_gpr[29], -framesize);
+    gen_op_addr_addi_tl(ctx, cpu_gpr[29], cpu_gpr[29], -framesize);
 }
 
 #if defined(TARGET_MIPS64)

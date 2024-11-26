@@ -1415,7 +1415,7 @@ int get_fp_bit(int cc)
 }
 
 /* Addresses computation */
-void gen_op_addr_add(DisasContext *ctx, TCGv ret, TCGv arg0, TCGv arg1)
+void gen_op_addr_add_tl(DisasContext *ctx, TCGv ret, TCGv arg0, TCGv arg1)
 {
     tcg_gen_add_tl(ret, arg0, arg1);
 
@@ -1426,7 +1426,7 @@ void gen_op_addr_add(DisasContext *ctx, TCGv ret, TCGv arg0, TCGv arg1)
 #endif
 }
 
-void gen_op_addr_addi(DisasContext *ctx, TCGv ret, TCGv base, target_long ofs)
+void gen_op_addr_addi_tl(DisasContext *ctx, TCGv ret, TCGv base, target_long ofs)
 {
     tcg_gen_addi_tl(ret, base, ofs);
 
@@ -1952,7 +1952,7 @@ void gen_base_offset_addr_tl(DisasContext *ctx, TCGv addr, int base, int offset)
         gen_load_gpr_tl(addr, base);
     } else {
         tcg_gen_movi_tl(addr, offset);
-        gen_op_addr_add(ctx, addr, cpu_gpr[base], addr);
+        gen_op_addr_add_tl(ctx, addr, cpu_gpr[base], addr);
     }
 }
 
@@ -2075,14 +2075,14 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         break;
     case OPC_LDPC:
         t1 = tcg_constant_tl(pc_relative_pc(ctx));
-        gen_op_addr_add(ctx, t0, t0, t1);
+        gen_op_addr_add_tl(ctx, t0, t0, t1);
         tcg_gen_qemu_ld_tl(t0, t0, mem_idx, mo_endian(ctx) | MO_UQ);
         gen_store_gpr_tl(t0, rt);
         break;
 #endif
     case OPC_LWPC:
         t1 = tcg_constant_tl(pc_relative_pc(ctx));
-        gen_op_addr_add(ctx, t0, t0, t1);
+        gen_op_addr_add_tl(ctx, t0, t0, t1);
         tcg_gen_qemu_ld_tl(t0, t0, mem_idx, mo_endian(ctx) | MO_SL);
         gen_store_gpr_tl(t0, rt);
         break;
@@ -4135,7 +4135,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
     t0 = tcg_temp_new();
 
     gen_base_offset_addr_tl(ctx, t0, rs, offset);
-    gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
+    gen_op_addr_add_tl(ctx, t0, cpu_gpr[rd], t0);
 
     switch (opc) {
     case OPC_GSLBX:
@@ -4150,7 +4150,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
     case OPC_GSLWX:
         gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
-            gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
+            gen_op_addr_add_tl(ctx, t0, cpu_gpr[rd], t0);
         }
         tcg_gen_qemu_ld_tl(t0, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
                            ctx->default_tcg_memop_mask);
@@ -4160,7 +4160,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
     case OPC_GSLDX:
         gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
-            gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
+            gen_op_addr_add_tl(ctx, t0, cpu_gpr[rd], t0);
         }
         tcg_gen_qemu_ld_tl(t0, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
@@ -4170,7 +4170,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
     case OPC_GSLWXC1:
         gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
-            gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
+            gen_op_addr_add_tl(ctx, t0, cpu_gpr[rd], t0);
         }
         fp0 = tcg_temp_new_i32();
         tcg_gen_qemu_ld_i32(fp0, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
@@ -4181,7 +4181,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
     case OPC_GSLDXC1:
         gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
-            gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
+            gen_op_addr_add_tl(ctx, t0, cpu_gpr[rd], t0);
         }
         tcg_gen_qemu_ld_tl(t0, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
@@ -10550,7 +10550,7 @@ static void gen_flt3_ldst(DisasContext *ctx, uint32_t opc,
     } else if (index == 0) {
         gen_load_gpr_tl(t0, base);
     } else {
-        gen_op_addr_add(ctx, t0, cpu_gpr[base], cpu_gpr[index]);
+        gen_op_addr_add_tl(ctx, t0, cpu_gpr[base], cpu_gpr[index]);
     }
     /*
      * Don't do NOP if destination is zero: we must perform the actual
@@ -11050,7 +11050,7 @@ static void gen_compute_compact_branch(DisasContext *ctx, uint32_t opc,
             TCGv tbase = tcg_temp_new();
 
             gen_load_gpr_tl(tbase, rt);
-            gen_op_addr_addi(ctx, btarget, tbase, offset);
+            gen_op_addr_addi_tl(ctx, btarget, tbase, offset);
         }
         break;
     default:
@@ -11253,7 +11253,7 @@ void gen_ldxs(DisasContext *ctx, int base, int index, int rd)
     if (index != 0) {
         gen_load_gpr_tl(t1, index);
         tcg_gen_shli_tl(t1, t1, 2);
-        gen_op_addr_add(ctx, t0, t1, t0);
+        gen_op_addr_add_tl(ctx, t0, t1, t0);
     }
 
     tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL);
@@ -11338,7 +11338,7 @@ static void gen_mips_lx(DisasContext *ctx, uint32_t opc,
     } else if (offset == 0) {
         gen_load_gpr_tl(t0, base);
     } else {
-        gen_op_addr_add(ctx, t0, cpu_gpr[base], cpu_gpr[offset]);
+        gen_op_addr_add_tl(ctx, t0, cpu_gpr[base], cpu_gpr[offset]);
     }
 
     switch (opc) {

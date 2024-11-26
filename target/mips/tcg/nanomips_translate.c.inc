@@ -1058,7 +1058,7 @@ static void gen_scwp(DisasContext *ctx, uint32_t base, int16_t offset,
 
 static void gen_adjust_sp(DisasContext *ctx, int u)
 {
-    gen_op_addr_addi(ctx, cpu_gpr[29], cpu_gpr[29], u);
+    gen_op_addr_addi_tl(ctx, cpu_gpr[29], cpu_gpr[29], u);
 }
 
 static void gen_save(DisasContext *ctx, uint8_t rt, uint8_t count,
@@ -2398,7 +2398,7 @@ static void gen_compute_nanomips_pbalrsc_branch(DisasContext *ctx, int rs,
 
     /* calculate btarget */
     tcg_gen_shli_tl(t0, t0, 1);
-    gen_op_addr_add(ctx, btarget, tcg_constant_tl(ctx->base.pc_next + 4), t0);
+    gen_op_addr_add_tl(ctx, btarget, tcg_constant_tl(ctx->base.pc_next + 4), t0);
 
     /* branch completion */
     clear_branch_hflags(ctx);
@@ -2453,7 +2453,7 @@ static void gen_compute_compact_branch_nm(DisasContext *ctx, uint32_t opc,
             TCGv tbase = tcg_temp_new();
 
             gen_load_gpr_tl(tbase, rt);
-            gen_op_addr_addi(ctx, btarget, tbase, offset);
+            gen_op_addr_addi_tl(ctx, btarget, tbase, offset);
         }
         break;
     default:
@@ -2617,7 +2617,7 @@ static void gen_p_lsx(DisasContext *ctx, int rd, int rs, int rt)
             return;
         }
     }
-    gen_op_addr_add(ctx, t0, t0, t1);
+    gen_op_addr_add_tl(ctx, t0, t0, t1);
 
     switch (extract32(ctx->opcode, 7, 4)) {
     case NM_LBX:
@@ -3654,7 +3654,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
         case NM_ADDIUGP_W:
             if (rt != 0) {
                 offset = extract32(ctx->opcode, 0, 21);
-                gen_op_addr_addi(ctx, cpu_gpr[rt], cpu_gpr[28], offset);
+                gen_op_addr_addi_tl(ctx, cpu_gpr[rt], cpu_gpr[28], offset);
             }
             break;
         case NM_LWGP:
@@ -3689,7 +3689,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
             case NM_ADDIUGP48:
                 check_nms(ctx);
                 if (rt != 0) {
-                    gen_op_addr_addi(ctx, cpu_gpr[rt], cpu_gpr[28], addr_off);
+                    gen_op_addr_addi_tl(ctx, cpu_gpr[rt], cpu_gpr[28], addr_off);
                 }
                 break;
             case NM_ADDIUPC48:
@@ -3921,7 +3921,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
                 break;
             case NM_ADDIUGP_B:
                 if (rt != 0) {
-                    gen_op_addr_addi(ctx, cpu_gpr[rt], cpu_gpr[28], u);
+                    gen_op_addr_addi_tl(ctx, cpu_gpr[rt], cpu_gpr[28], u);
                 }
                 break;
             case NM_P_GP_LH:
