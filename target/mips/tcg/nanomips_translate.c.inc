@@ -997,7 +997,7 @@ static void gen_llwp(DisasContext *ctx, uint32_t base, int16_t offset,
     TCGv tmp1 = tcg_temp_new();
     TCGv tmp2 = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, taddr, base, offset);
+    gen_base_offset_addr_tl(ctx, taddr, base, offset);
     tcg_gen_qemu_ld_i64(tval, taddr, ctx->mem_idx,
                         mo_endian(ctx) | MO_UQ | MO_ALIGN);
     if (disas_is_bigendian(ctx)) {
@@ -1024,7 +1024,7 @@ static void gen_scwp(DisasContext *ctx, uint32_t base, int16_t offset,
     TCGLabel *lab_fail = gen_new_label();
     TCGLabel *lab_done = gen_new_label();
 
-    gen_base_offset_addr(ctx, taddr, base, offset);
+    gen_base_offset_addr_tl(ctx, taddr, base, offset);
 
     tcg_gen_ld_tl(lladdr, tcg_env, offsetof(CPUMIPSState, lladdr));
     tcg_gen_brcond_tl(TCG_COND_NE, taddr, lladdr, lab_fail);
@@ -1072,7 +1072,7 @@ static void gen_save(DisasContext *ctx, uint8_t rt, uint8_t count,
         bool use_gp = gp && (counter == count - 1);
         int this_rt = use_gp ? 28 : (rt & 0x10) | ((rt + counter) & 0x1f);
         int this_offset = -((counter + 1) << 2);
-        gen_base_offset_addr(ctx, va, 29, this_offset);
+        gen_base_offset_addr_tl(ctx, va, 29, this_offset);
         gen_load_gpr_tl(t0, this_rt);
         tcg_gen_qemu_st_tl(t0, va, ctx->mem_idx,
                           mo_endian(ctx) | MO_UL | ctx->default_tcg_memop_mask);
@@ -1094,7 +1094,7 @@ static void gen_restore(DisasContext *ctx, uint8_t rt, uint8_t count,
         bool use_gp = gp && (counter == count - 1);
         int this_rt = use_gp ? 28 : (rt & 0x10) | ((rt + counter) & 0x1f);
         int this_offset = u - ((counter + 1) << 2);
-        gen_base_offset_addr(ctx, va, 29, this_offset);
+        gen_base_offset_addr_tl(ctx, va, 29, this_offset);
         tcg_gen_qemu_ld_tl(t0, va, ctx->mem_idx,
                           mo_endian(ctx) | MO_SL | ctx->default_tcg_memop_mask);
         tcg_gen_ext32s_tl(t0, t0);
@@ -4100,7 +4100,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
                         TCGv t0 = tcg_temp_new();
                         TCGv t1 = tcg_temp_new();
 
-                        gen_base_offset_addr(ctx, t0, rs, s);
+                        gen_base_offset_addr_tl(ctx, t0, rs, s);
 
                         switch (extract32(ctx->opcode, 11, 4)) {
                         case NM_UALH:
@@ -4286,7 +4286,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
                         int this_rt = ((rt + counter) & 0x1f) | (rt & 0x10);
                         int this_offset = offset + (counter << 2);
 
-                        gen_base_offset_addr(ctx, va, rs, this_offset);
+                        gen_base_offset_addr_tl(ctx, va, rs, this_offset);
 
                         switch (extract32(ctx->opcode, 11, 1)) {
                         case NM_LWM:

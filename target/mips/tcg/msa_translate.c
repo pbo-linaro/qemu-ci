@@ -769,7 +769,7 @@ static bool trans_msa_ldst(DisasContext *ctx, arg_msa_i *a,
 
     taddr = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, taddr, a->ws, a->sa << a->df);
+    gen_base_offset_addr_tl(ctx, taddr, a->ws, a->sa << a->df);
     gen_msa_ldst(tcg_env, tcg_constant_i32(a->wd), taddr);
 
     return true;

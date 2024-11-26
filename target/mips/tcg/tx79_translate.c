@@ -332,7 +332,7 @@ static bool trans_LQ(DisasContext *ctx, arg_i *a)
     t0 = tcg_temp_new_i64();
     addr = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, addr, a->base, a->offset);
+    gen_base_offset_addr_tl(ctx, addr, a->base, a->offset);
     /*
      * Clear least-significant four bits of the effective
      * address, effectively creating an aligned address.
@@ -355,7 +355,7 @@ static bool trans_SQ(DisasContext *ctx, arg_i *a)
     TCGv_i64 t0 = tcg_temp_new_i64();
     TCGv addr = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, addr, a->base, a->offset);
+    gen_base_offset_addr_tl(ctx, addr, a->base, a->offset);
     /*
      * Clear least-significant four bits of the effective
      * address, effectively creating an aligned address.

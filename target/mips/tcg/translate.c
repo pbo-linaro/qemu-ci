@@ -1944,7 +1944,7 @@ OP_LD_ATOMIC(lld, mo_endian(ctx) | MO_UQ);
 #endif
 #undef OP_LD_ATOMIC
 
-void gen_base_offset_addr(DisasContext *ctx, TCGv addr, int base, int offset)
+void gen_base_offset_addr_tl(DisasContext *ctx, TCGv addr, int base, int offset)
 {
     if (base == 0) {
         tcg_gen_movi_tl(addr, offset);
@@ -2042,7 +2042,7 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
     }
 
     t0 = tcg_temp_new();
-    gen_base_offset_addr(ctx, t0, base, offset);
+    gen_base_offset_addr_tl(ctx, t0, base, offset);
 
     switch (opc) {
 #if defined(TARGET_MIPS64)
@@ -2163,7 +2163,7 @@ static void gen_st(DisasContext *ctx, uint32_t opc, int rt,
     TCGv t1 = tcg_temp_new();
     int mem_idx = ctx->mem_idx;
 
-    gen_base_offset_addr(ctx, t0, base, offset);
+    gen_base_offset_addr_tl(ctx, t0, base, offset);
     gen_load_gpr_tl(t1, rt);
     switch (opc) {
 #if defined(TARGET_MIPS64)
@@ -2225,7 +2225,7 @@ static void gen_st_cond(DisasContext *ctx, int rt, int base, int offset,
     t0 = tcg_temp_new();
     addr = tcg_temp_new();
     /* compare the address against that of the preceding LL */
-    gen_base_offset_addr(ctx, addr, base, offset);
+    gen_base_offset_addr_tl(ctx, addr, base, offset);
     tcg_gen_brcond_tl(TCG_COND_EQ, addr, cpu_lladdr, l1);
     gen_store_gpr_tl(tcg_constant_tl(0), rt);
     tcg_gen_br(done);
@@ -2303,7 +2303,7 @@ static void gen_cop1_ldst(DisasContext *ctx, uint32_t op, int rt,
             check_insn(ctx, ISA_MIPS2);
             /* Fallthrough */
         default:
-            gen_base_offset_addr(ctx, t0, rs, imm);
+            gen_base_offset_addr_tl(ctx, t0, rs, imm);
             gen_flt_ldst(ctx, op, rt, t0);
         }
     } else {
@@ -3942,10 +3942,10 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
 #if defined(TARGET_MIPS64)
     case OPC_GSLQ:
         t1 = tcg_temp_new();
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset + 8);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset + 8);
         tcg_gen_qemu_ld_tl(t0, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_store_gpr_tl(t1, rt);
@@ -3954,10 +3954,10 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
     case OPC_GSLQC1:
         check_cp1_enabled(ctx);
         t1 = tcg_temp_new();
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset + 8);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset + 8);
         tcg_gen_qemu_ld_tl(t0, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
         gen_store_fpr64(ctx, t1, rt);
@@ -3965,11 +3965,11 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
         break;
     case OPC_GSSQ:
         t1 = tcg_temp_new();
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset);
         gen_load_gpr_tl(t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset + 8);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset + 8);
         gen_load_gpr_tl(t1, lsq_rt1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
@@ -3977,11 +3977,11 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
     case OPC_GSSQC1:
         check_cp1_enabled(ctx);
         t1 = tcg_temp_new();
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset);
         gen_load_fpr64(ctx, t1, rt);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_base_offset_addr(ctx, t0, rs, lsq_offset + 8);
+        gen_base_offset_addr_tl(ctx, t0, rs, lsq_offset + 8);
         gen_load_fpr64(ctx, t1, lsq_rt1);
         tcg_gen_qemu_st_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
@@ -3991,7 +3991,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
         switch (MASK_LOONGSON_GSSHFLS(ctx->opcode)) {
         case OPC_GSLWLC1:
             check_cp1_enabled(ctx);
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             fp0 = tcg_temp_new_i32();
             gen_load_fpr32(ctx, fp0, rt);
             t1 = tcg_temp_new();
@@ -4002,7 +4002,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
             break;
         case OPC_GSLWRC1:
             check_cp1_enabled(ctx);
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             fp0 = tcg_temp_new_i32();
             gen_load_fpr32(ctx, fp0, rt);
             t1 = tcg_temp_new();
@@ -4014,7 +4014,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
 #if defined(TARGET_MIPS64)
         case OPC_GSLDLC1:
             check_cp1_enabled(ctx);
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             t1 = tcg_temp_new();
             gen_load_fpr64(ctx, t1, rt);
             gen_lxl(ctx, t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ);
@@ -4022,7 +4022,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
             break;
         case OPC_GSLDRC1:
             check_cp1_enabled(ctx);
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             t1 = tcg_temp_new();
             gen_load_fpr64(ctx, t1, rt);
             gen_lxr(ctx, t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ);
@@ -4040,7 +4040,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
         case OPC_GSSWLC1:
             check_cp1_enabled(ctx);
             t1 = tcg_temp_new();
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             fp0 = tcg_temp_new_i32();
             gen_load_fpr32(ctx, fp0, rt);
             tcg_gen_ext_i32_tl(t1, fp0);
@@ -4049,7 +4049,7 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
         case OPC_GSSWRC1:
             check_cp1_enabled(ctx);
             t1 = tcg_temp_new();
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             fp0 = tcg_temp_new_i32();
             gen_load_fpr32(ctx, fp0, rt);
             tcg_gen_ext_i32_tl(t1, fp0);
@@ -4059,14 +4059,14 @@ static void gen_loongson_lswc2(DisasContext *ctx, int rt,
         case OPC_GSSDLC1:
             check_cp1_enabled(ctx);
             t1 = tcg_temp_new();
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             gen_load_fpr64(ctx, t1, rt);
             gen_helper_0e2i(sdl, t1, t0, ctx->mem_idx);
             break;
         case OPC_GSSDRC1:
             check_cp1_enabled(ctx);
             t1 = tcg_temp_new();
-            gen_base_offset_addr(ctx, t0, rs, shf_offset);
+            gen_base_offset_addr_tl(ctx, t0, rs, shf_offset);
             gen_load_fpr64(ctx, t1, rt);
             gen_helper_0e2i(sdr, t1, t0, ctx->mem_idx);
             break;
@@ -4134,7 +4134,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
 
     t0 = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, t0, rs, offset);
+    gen_base_offset_addr_tl(ctx, t0, rs, offset);
     gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
 
     switch (opc) {
@@ -4148,7 +4148,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
         gen_store_gpr_tl(t0, rt);
         break;
     case OPC_GSLWX:
-        gen_base_offset_addr(ctx, t0, rs, offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
             gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
         }
@@ -4158,7 +4158,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
         break;
 #if defined(TARGET_MIPS64)
     case OPC_GSLDX:
-        gen_base_offset_addr(ctx, t0, rs, offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
             gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
         }
@@ -4168,7 +4168,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
         break;
 #endif
     case OPC_GSLWXC1:
-        gen_base_offset_addr(ctx, t0, rs, offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
             gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
         }
@@ -4179,7 +4179,7 @@ static void gen_loongson_lsdc2(DisasContext *ctx, int rt,
         break;
 #if defined(TARGET_MIPS64)
     case OPC_GSLDXC1:
-        gen_base_offset_addr(ctx, t0, rs, offset);
+        gen_base_offset_addr_tl(ctx, t0, rs, offset);
         if (rd) {
             gen_op_addr_add(ctx, t0, cpu_gpr[rd], t0);
         }
@@ -11229,7 +11229,7 @@ static void gen_cache_operation(DisasContext *ctx, uint32_t op, int base,
 {
     TCGv_i32 t0 = tcg_constant_i32(op);
     TCGv t1 = tcg_temp_new();
-    gen_base_offset_addr(ctx, t1, base, offset);
+    gen_base_offset_addr_tl(ctx, t1, base, offset);
     gen_helper_cache(tcg_env, t1, t0);
 }
 

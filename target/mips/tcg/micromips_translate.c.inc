@@ -702,7 +702,7 @@ static void gen_ldst_multiple(DisasContext *ctx, uint32_t opc, int reglist,
 
     t0 = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, t0, base, offset);
+    gen_base_offset_addr_tl(ctx, t0, base, offset);
 
     t1 = tcg_constant_tl(reglist);
     t2 = tcg_constant_i32(ctx->mem_idx);
@@ -969,7 +969,7 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
     t0 = tcg_temp_new();
     t1 = tcg_temp_new();
 
-    gen_base_offset_addr(ctx, t0, base, offset);
+    gen_base_offset_addr_tl(ctx, t0, base, offset);
 
     switch (opc) {
     case LWP:
