@@ -154,6 +154,7 @@ void check_cop1x(DisasContext *ctx);
 
 void gen_base_offset_addr_tl(DisasContext *ctx, TCGv addr, int base, int offset);
 void gen_move_low32_tl(TCGv ret, TCGv_i64 arg);
+void gen_move_low32_i32(TCGv_i32 ret, TCGv_i64 arg);
 void gen_move_high32_tl(TCGv ret, TCGv_i64 arg);
 void gen_load_gpr_tl(TCGv t, int reg);
 void gen_load_gpr_i32(TCGv_i32 t, int reg);

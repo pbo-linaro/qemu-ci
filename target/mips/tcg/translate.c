@@ -1479,6 +1479,11 @@ void gen_move_low32_tl(TCGv ret, TCGv_i64 arg)
 #endif
 }
 
+void gen_move_low32_i32(TCGv_i32 ret, TCGv_i64 arg)
+{
+    tcg_gen_extrl_i64_i32(ret, arg);
+}
+
 /* Sign-extract the high 32-bits to a target_long.  */
 void gen_move_high32_tl(TCGv ret, TCGv_i64 arg)
 {
