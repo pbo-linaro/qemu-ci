@@ -19,7 +19,7 @@ struct PCIBusClass {
     uint16_t (*numa_node)(PCIBus *bus);
 };
 
-enum PCIBusFlags {
+enum PCIBusFlag {
     /* This bus is the root of a PCI domain */
     PCI_BUS_IS_ROOT                                         = 0x0001,
     /* PCIe extended configuration space is accessible on this bus */
@@ -32,7 +32,7 @@ enum PCIBusFlags {
 
 struct PCIBus {
     BusState qbus;
-    enum PCIBusFlags flags;
+    unsigned flags;
     const PCIIOMMUOps *iommu_ops;
     void *iommu_opaque;
     uint8_t devfn_min;
