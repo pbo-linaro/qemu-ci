@@ -529,7 +529,8 @@ static bool machine_refuses_bar_at_addr_0(void)
 
 static void pci_root_bus_internal_init(PCIBus *bus, DeviceState *parent,
                                        MemoryRegion *mem, MemoryRegion *io,
-                                       uint8_t devfn_min)
+                                       uint8_t devfn_min,
+                                       bool bar_at_addr_0_refused)
 {
     assert(PCI_FUNC(devfn_min) == 0);
     bus->devfn_min = devfn_min;
@@ -537,7 +538,7 @@ static void pci_root_bus_internal_init(PCIBus *bus, DeviceState *parent,
     bus->address_space_mem = mem;
     bus->address_space_io = io;
     bus->flags |= PCI_BUS_IS_ROOT;
-    if (machine_refuses_bar_at_addr_0()) {
+    if (bar_at_addr_0_refused && machine_refuses_bar_at_addr_0()) {
         bus->flags |= PCI_BUS_BAR_AT_ADDR0_REFUSED;
     }
 
@@ -563,7 +564,8 @@ void pci_root_bus_init(PCIBus *bus, size_t bus_size, DeviceState *parent,
                        uint8_t devfn_min, const char *typename)
 {
     qbus_init(bus, bus_size, typename, parent, name);
-    pci_root_bus_internal_init(bus, parent, mem, io, devfn_min);
+    pci_root_bus_internal_init(bus, parent, mem, io, devfn_min,
+                               true);
 }
 
 PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
@@ -573,7 +575,8 @@ PCIBus *pci_root_bus_new(DeviceState *parent, const char *name,
     PCIBus *bus;
 
     bus = PCI_BUS(qbus_new(typename, parent, name));
-    pci_root_bus_internal_init(bus, parent, mem, io, devfn_min);
+    pci_root_bus_internal_init(bus, parent, mem, io, devfn_min,
+                               true);
     return bus;
 }
 
