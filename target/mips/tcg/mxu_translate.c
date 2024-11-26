@@ -4385,7 +4385,7 @@ static void gen_mxu_s32madd_sub(DisasContext *ctx, bool sub, bool uns)
         } else {
             tcg_gen_add_i64(t3, t3, t2);
         }
-        gen_move_low32(t1, t3);
+        gen_move_low32_tl(t1, t3);
         gen_move_high32(t0, t3);
 
         tcg_gen_mov_tl(cpu_HI[0], t0);

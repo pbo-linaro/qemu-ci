@@ -1816,7 +1816,7 @@ static void gen_pool32axf_2_nanomips_insn(DisasContext *ctx, uint32_t opc,
                 tcg_gen_mul_i64(t2, t2, t3);
                 tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
                 tcg_gen_add_i64(t2, t2, t3);
-                gen_move_low32(cpu_LO[acc], t2);
+                gen_move_low32_tl(cpu_LO[acc], t2);
                 gen_move_high32(cpu_HI[acc], t2);
             }
             break;
@@ -1871,7 +1871,7 @@ static void gen_pool32axf_2_nanomips_insn(DisasContext *ctx, uint32_t opc,
                 tcg_gen_mul_i64(t2, t2, t3);
                 tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
                 tcg_gen_add_i64(t2, t2, t3);
-                gen_move_low32(cpu_LO[acc], t2);
+                gen_move_low32_tl(cpu_LO[acc], t2);
                 gen_move_high32(cpu_HI[acc], t2);
             }
             break;
@@ -1932,7 +1932,7 @@ static void gen_pool32axf_2_nanomips_insn(DisasContext *ctx, uint32_t opc,
                 tcg_gen_mul_i64(t2, t2, t3);
                 tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
                 tcg_gen_sub_i64(t2, t3, t2);
-                gen_move_low32(cpu_LO[acc], t2);
+                gen_move_low32_tl(cpu_LO[acc], t2);
                 gen_move_high32(cpu_HI[acc], t2);
             }
             break;
@@ -1973,7 +1973,7 @@ static void gen_pool32axf_2_nanomips_insn(DisasContext *ctx, uint32_t opc,
                 tcg_gen_mul_i64(t2, t2, t3);
                 tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
                 tcg_gen_sub_i64(t2, t3, t2);
-                gen_move_low32(cpu_LO[acc], t2);
+                gen_move_low32_tl(cpu_LO[acc], t2);
                 gen_move_high32(cpu_HI[acc], t2);
             }
             break;
