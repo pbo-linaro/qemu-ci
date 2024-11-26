@@ -45,7 +45,7 @@ static bool trans_mult_acc(DisasContext *ctx, arg_r *a,
 
     gen_helper_mult_acc(t0, tcg_env, t0, t1);
 
-    gen_store_gpr(t0, a->rd);
+    gen_store_gpr_tl(t0, a->rd);
     return true;
 }
 

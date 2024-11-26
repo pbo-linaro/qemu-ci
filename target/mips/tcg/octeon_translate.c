@@ -90,7 +90,7 @@ static bool trans_EXTS(DisasContext *ctx, arg_EXTS *a)
     t0 = tcg_temp_new();
     gen_load_gpr_tl(t0, a->rs);
     tcg_gen_sextract_tl(t0, t0, a->p, a->lenm1 + 1);
-    gen_store_gpr(t0, a->rt);
+    gen_store_gpr_tl(t0, a->rt);
     return true;
 }
 
@@ -106,7 +106,7 @@ static bool trans_CINS(DisasContext *ctx, arg_CINS *a)
     t0 = tcg_temp_new();
     gen_load_gpr_tl(t0, a->rs);
     tcg_gen_deposit_z_tl(t0, t0, a->p, a->lenm1 + 1);
-    gen_store_gpr(t0, a->rt);
+    gen_store_gpr_tl(t0, a->rt);
     return true;
 }
 
@@ -125,7 +125,7 @@ static bool trans_POP(DisasContext *ctx, arg_POP *a)
         tcg_gen_andi_i64(t0, t0, 0xffffffff);
     }
     tcg_gen_ctpop_tl(t0, t0);
-    gen_store_gpr(t0, a->rd);
+    gen_store_gpr_tl(t0, a->rd);
     return true;
 }
 

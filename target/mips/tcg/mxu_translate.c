@@ -706,7 +706,7 @@ static void gen_mxu_s32m2i(DisasContext *ctx)
         gen_load_mxu_cr(t0);
     }
 
-    gen_store_gpr(t0, Rb);
+    gen_store_gpr_tl(t0, Rb);
 }
 
 /*
@@ -731,7 +731,7 @@ static void gen_mxu_s8ldd(DisasContext *ctx, bool postmodify)
     gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, (int8_t)s8);
     if (postmodify) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 
     switch (optn3) {
@@ -816,7 +816,7 @@ static void gen_mxu_s8std(DisasContext *ctx, bool postmodify)
     gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, (int8_t)s8);
     if (postmodify) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
     gen_load_mxu_gpr(t1, XRa);
 
@@ -865,7 +865,7 @@ static void gen_mxu_s16ldd(DisasContext *ctx, bool postmodify)
     gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, s10);
     if (postmodify) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 
     switch (optn2) {
@@ -924,7 +924,7 @@ static void gen_mxu_s16std(DisasContext *ctx, bool postmodify)
     gen_load_gpr_tl(t0, Rb);
     tcg_gen_addi_tl(t0, t0, s10);
     if (postmodify) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
     gen_load_mxu_gpr(t1, XRa);
 
@@ -1538,7 +1538,7 @@ static void gen_mxu_s32ldxx(DisasContext *ctx, bool reversed, bool postinc)
     gen_store_mxu_gpr(t1, XRa);
 
     if (postinc) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 }
 
@@ -1573,7 +1573,7 @@ static void gen_mxu_s32stxx(DisasContext *ctx, bool reversed, bool postinc)
                         ctx->default_tcg_memop_mask);
 
     if (postinc) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 }
 
@@ -1610,7 +1610,7 @@ static void gen_mxu_s32ldxvx(DisasContext *ctx, bool reversed,
     gen_store_mxu_gpr(t1, XRa);
 
     if (postinc) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 }
 
@@ -1643,7 +1643,7 @@ static void gen_mxu_lxx(DisasContext *ctx, uint32_t strd2, MemOp mop)
     tcg_gen_add_tl(t0, t0, t1);
 
     tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mop | ctx->default_tcg_memop_mask);
-    gen_store_gpr(t1, Ra);
+    gen_store_gpr_tl(t1, Ra);
 }
 
 /*
@@ -1679,7 +1679,7 @@ static void gen_mxu_s32stxvx(DisasContext *ctx, bool reversed,
                         ctx->default_tcg_memop_mask);
 
     if (postinc) {
-        gen_store_gpr(t0, Rb);
+        gen_store_gpr_tl(t0, Rb);
     }
 }
 

@@ -295,7 +295,7 @@ static void decr_and_load(DisasContext *ctx, unsigned regidx, TCGv t0)
     gen_op_addr_add(ctx, t0, t0, t2);
     tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, MO_TE | MO_SL |
                        ctx->default_tcg_memop_mask);
-    gen_store_gpr(t1, regidx);
+    gen_store_gpr_tl(t1, regidx);
 }
 
 static void gen_mips16_restore(DisasContext *ctx,

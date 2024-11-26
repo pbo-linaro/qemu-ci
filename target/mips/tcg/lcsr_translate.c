@@ -23,7 +23,7 @@ static bool trans_CPUCFG(DisasContext *ctx, arg_CPUCFG *a)
 
     gen_load_gpr_tl(src1, a->rs);
     gen_helper_lcsr_cpucfg(dest, tcg_env, src1);
-    gen_store_gpr(dest, a->rd);
+    gen_store_gpr_tl(dest, a->rd);
 
     return true;
 }
@@ -38,7 +38,7 @@ static bool gen_rdcsr(DisasContext *ctx, arg_r *a,
     check_cp0_enabled(ctx);
     gen_load_gpr_tl(src1, a->rs);
     func(dest, tcg_env, src1);
-    gen_store_gpr(dest, a->rd);
+    gen_store_gpr_tl(dest, a->rd);
 
     return true;
 }

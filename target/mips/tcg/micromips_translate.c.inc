@@ -979,11 +979,11 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         }
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
                            ctx->default_tcg_memop_mask);
-        gen_store_gpr(t1, rd);
+        gen_store_gpr_tl(t1, rd);
         gen_op_addr_addi(ctx, t0, t0, 4);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_SL |
                            ctx->default_tcg_memop_mask);
-        gen_store_gpr(t1, rd + 1);
+        gen_store_gpr_tl(t1, rd + 1);
         break;
     case SWP:
         gen_load_gpr_tl(t1, rd);
@@ -1002,11 +1002,11 @@ static void gen_ldst_pair(DisasContext *ctx, uint32_t opc, int rd,
         }
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_store_gpr(t1, rd);
+        gen_store_gpr_tl(t1, rd);
         gen_op_addr_addi(ctx, t0, t0, 8);
         tcg_gen_qemu_ld_tl(t1, t0, ctx->mem_idx, mo_endian(ctx) | MO_UQ |
                            ctx->default_tcg_memop_mask);
-        gen_store_gpr(t1, rd + 1);
+        gen_store_gpr_tl(t1, rd + 1);
         break;
     case SDP:
         gen_load_gpr_tl(t1, rd);
@@ -1268,7 +1268,7 @@ static void gen_pool32axf(CPUMIPSState *env, DisasContext *ctx, int rt, int rs)
 
                 save_cpu_state(ctx, 1);
                 gen_helper_di(t0, tcg_env);
-                gen_store_gpr(t0, rs);
+                gen_store_gpr_tl(t0, rs);
                 /*
                  * Stop translation as we may have switched the execution
                  * mode.
@@ -1283,7 +1283,7 @@ static void gen_pool32axf(CPUMIPSState *env, DisasContext *ctx, int rt, int rs)
 
                 save_cpu_state(ctx, 1);
                 gen_helper_ei(t0, tcg_env);
-                gen_store_gpr(t0, rs);
+                gen_store_gpr_tl(t0, rs);
                 /*
                  * DISAS_STOP isn't sufficient, we need to ensure we break out
                  * of translated code to check for pending interrupts.

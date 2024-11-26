@@ -553,7 +553,7 @@ static bool trans_CFCMSA(DisasContext *ctx, arg_msa_elm *a)
     telm = tcg_temp_new();
 
     gen_helper_msa_cfcmsa(telm, tcg_env, tcg_constant_i32(a->ws));
-    gen_store_gpr(telm, a->wd);
+    gen_store_gpr_tl(telm, a->wd);
 
     return true;
 }

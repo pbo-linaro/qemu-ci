@@ -64,14 +64,14 @@ bool decode_ext_tx79(DisasContext *ctx, uint32_t insn)
 
 static bool trans_MFHI1(DisasContext *ctx, arg_r *a)
 {
-    gen_store_gpr(cpu_HI[1], a->rd);
+    gen_store_gpr_tl(cpu_HI[1], a->rd);
 
     return true;
 }
 
 static bool trans_MFLO1(DisasContext *ctx, arg_r *a)
 {
-    gen_store_gpr(cpu_LO[1], a->rd);
+    gen_store_gpr_tl(cpu_LO[1], a->rd);
 
     return true;
 }
@@ -341,7 +341,7 @@ static bool trans_LQ(DisasContext *ctx, arg_i *a)
 
     /* Lower half */
     tcg_gen_qemu_ld_i64(t0, addr, ctx->mem_idx, mo_endian(ctx) | MO_UQ);
-    gen_store_gpr(t0, a->rt);
+    gen_store_gpr_tl(t0, a->rt);
 
     /* Upper half */
     tcg_gen_addi_i64(addr, addr, 8);
