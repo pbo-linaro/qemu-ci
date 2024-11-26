@@ -124,7 +124,7 @@ static void pci_unin_main_realize(DeviceState *dev, Error **errp)
                                    s,
                                    &s->pci_mmio,
                                    &s->pci_io,
-                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS);
+                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS, true);
 
     pci_create_simple(h->bus, PCI_DEVFN(11, 0), "uni-north-pci");
 
@@ -174,7 +174,7 @@ static void pci_u3_agp_realize(DeviceState *dev, Error **errp)
                                    s,
                                    &s->pci_mmio,
                                    &s->pci_io,
-                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS);
+                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS, false);
 
     pci_create_simple(h->bus, PCI_DEVFN(11, 0), "u3-agp");
 }
@@ -218,7 +218,7 @@ static void pci_unin_agp_realize(DeviceState *dev, Error **errp)
                                    s,
                                    &s->pci_mmio,
                                    &s->pci_io,
-                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS);
+                                   PCI_DEVFN(11, 0), 4, TYPE_PCI_BUS, false);
 
     pci_create_simple(h->bus, PCI_DEVFN(11, 0), "uni-north-agp");
 }
@@ -251,7 +251,7 @@ static void pci_unin_internal_realize(DeviceState *dev, Error **errp)
                                    s,
                                    &s->pci_mmio,
                                    &s->pci_io,
-                                   PCI_DEVFN(14, 0), 4, TYPE_PCI_BUS);
+                                   PCI_DEVFN(14, 0), 4, TYPE_PCI_BUS, false);
 
     pci_create_simple(h->bus, PCI_DEVFN(14, 0), "uni-north-internal-pci");
 }

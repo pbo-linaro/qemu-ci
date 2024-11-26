@@ -1886,7 +1886,7 @@ static void spapr_phb_realize(DeviceState *dev, Error **errp)
                                 pci_spapr_set_irq, pci_swizzle_map_irq_fn, sphb,
                                 &sphb->memspace, &sphb->iospace,
                                 PCI_DEVFN(0, 0), PCI_NUM_PINS,
-                                TYPE_PCI_BUS);
+                                TYPE_PCI_BUS, true);
 
     /*
      * Despite resembling a vanilla PCI bus in most ways, the PAPR

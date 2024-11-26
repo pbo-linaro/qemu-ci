@@ -310,7 +310,7 @@ PCIBus *pci_register_root_bus(DeviceState *parent, const char *name,
                               void *irq_opaque,
                               MemoryRegion *mem, MemoryRegion *io,
                               uint8_t devfn_min, int nirq,
-                              const char *typename);
+                              const char *typename, bool bar_at_addr_0_refused);
 void pci_unregister_root_bus(PCIBus *bus);
 void pci_bus_set_route_irq_fn(PCIBus *, pci_route_irq_fn);
 PCIINTxRoute pci_device_route_intx_to_irq(PCIDevice *dev, int pin);

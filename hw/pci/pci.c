@@ -619,11 +619,12 @@ PCIBus *pci_register_root_bus(DeviceState *parent, const char *name,
                               void *irq_opaque,
                               MemoryRegion *mem, MemoryRegion *io,
                               uint8_t devfn_min, int nirq,
-                              const char *typename)
+                              const char *typename, bool bar_at_addr_0_refused)
 {
     PCIBus *bus;
 
-    bus = pci_root_bus_new(parent, name, mem, io, devfn_min, typename, true);
+    bus = pci_root_bus_new(parent, name, mem, io, devfn_min, typename,
+                           bar_at_addr_0_refused);
     pci_bus_irqs(bus, set_irq, irq_opaque, nirq);
     pci_bus_map_irqs(bus, map_irq);
     return bus;

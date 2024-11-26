@@ -465,7 +465,8 @@ static void e500_pcihost_realize(DeviceState *dev, Error **errp)
 
     b = pci_register_root_bus(dev, NULL, mpc85xx_pci_set_irq,
                               mpc85xx_pci_map_irq, s, &s->busmem, &s->pio,
-                              PCI_DEVFN(s->first_slot, 0), 4, TYPE_PCI_BUS);
+                              PCI_DEVFN(s->first_slot, 0), 4, TYPE_PCI_BUS,
+                              true);
     h->bus = b;
 
     /* Set up PCI view of memory */

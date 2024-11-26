@@ -1016,7 +1016,7 @@ static void ppc460ex_pcie_realize(DeviceState *dev, Error **errp)
     snprintf(buf, sizeof(buf), "pcie.%d", s->num);
     pci->bus = pci_register_root_bus(DEVICE(s), buf, ppc460ex_set_irq,
                                 pci_swizzle_map_irq_fn, s, &s->busmem,
-                                &s->iomem, 0, 4, TYPE_PCIE_BUS);
+                                &s->iomem, 0, 4, TYPE_PCIE_BUS, true);
     ppc460ex_pcie_register_dcrs(s);
 }
 

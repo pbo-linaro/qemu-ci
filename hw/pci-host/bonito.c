@@ -635,7 +635,7 @@ static void bonito_host_realize(DeviceState *dev, Error **errp)
     phb->bus = pci_register_root_bus(dev, "pci",
                                      pci_bonito_set_irq, pci_bonito_map_irq,
                                      dev, &bs->pci_mem, get_system_io(),
-                                     PCI_DEVFN(5, 0), 32, TYPE_PCI_BUS);
+                                     PCI_DEVFN(5, 0), 32, TYPE_PCI_BUS, true);
 
     for (size_t i = 0; i < 3; i++) {
         char *name = g_strdup_printf("pci.lomem%zu", i);

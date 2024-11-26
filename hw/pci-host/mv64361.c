@@ -92,7 +92,7 @@ static void mv64361_pcihost_realize(DeviceState *dev, Error **errp)
     name = g_strdup_printf("pci.%d", s->index);
     h->bus = pci_register_root_bus(dev, name, mv64361_pcihost_set_irq,
                                    pci_swizzle_map_irq_fn, dev,
-                                   &s->mem, &s->io, 0, 4, TYPE_PCI_BUS);
+                                   &s->mem, &s->io, 0, 4, TYPE_PCI_BUS, true);
     g_free(name);
     pci_create_simple(h->bus, 0, TYPE_MV64361_PCI_BRIDGE);
 }

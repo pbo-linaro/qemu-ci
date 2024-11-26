@@ -834,7 +834,7 @@ static void s390_pcihost_realize(DeviceState *dev, Error **errp)
 
     b = pci_register_root_bus(dev, NULL, s390_pci_set_irq, s390_pci_map_irq,
                               NULL, get_system_memory(), get_system_io(), 0,
-                              64, TYPE_PCI_BUS);
+                              64, TYPE_PCI_BUS, true);
     pci_setup_iommu(b, &s390_iommu_ops, s);
 
     bus = BUS(b);

@@ -473,7 +473,7 @@ static void dino_pcihost_init(Object *obj)
     phb->bus = pci_register_root_bus(DEVICE(s), "pci",
                                      dino_set_irq, dino_pci_map_irq, s,
                                      &s->pci_mem, get_system_io(),
-                                     PCI_DEVFN(0, 0), 32, TYPE_PCI_BUS);
+                                     PCI_DEVFN(0, 0), 32, TYPE_PCI_BUS, true);
 
     /* Set up windows into PCI bus memory.  */
     for (i = 1; i < 31; i++) {

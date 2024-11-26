@@ -454,7 +454,8 @@ static void elroy_pcihost_init(Object *obj)
     phb->bus = pci_register_root_bus(DEVICE(s), "pci",
                                      elroy_set_irq, elroy_pci_map_irq, s,
                                      &s->pci_mmio, &s->pci_io,
-                                     PCI_DEVFN(0, 0), ELROY_IRQS, TYPE_PCI_BUS);
+                                     PCI_DEVFN(0, 0), ELROY_IRQS, TYPE_PCI_BUS,
+                                     true);
 
     sysbus_init_mmio(sbd, &s->this_mem);
 

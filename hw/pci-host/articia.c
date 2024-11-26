@@ -184,7 +184,8 @@ static void articia_realize(DeviceState *dev, Error **errp)
     /* devfn_min is 8 that matches first PCI slot in AmigaOne */
     h->bus = pci_register_root_bus(dev, NULL, articia_pcihost_set_irq,
                                    amigaone_pcihost_bus0_map_irq, dev, &s->mem,
-                                   &s->io, PCI_DEVFN(8, 0), 4, TYPE_PCI_BUS);
+                                   &s->io, PCI_DEVFN(8, 0), 4, TYPE_PCI_BUS,
+                                   true);
     pdev = pci_create_simple_multifunction(h->bus, PCI_DEVFN(0, 0),
                                            TYPE_ARTICIA_PCI_HOST);
     ARTICIA_PCI_HOST(pdev)->as = s;

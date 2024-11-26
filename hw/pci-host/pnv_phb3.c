@@ -1009,7 +1009,7 @@ void pnv_phb3_bus_init(DeviceState *dev, PnvPHB3 *phb)
                                      dev->id ? dev->id : NULL,
                                      pnv_phb3_set_irq, pnv_phb3_map_irq, phb,
                                      &phb->pci_mmio, &phb->pci_io,
-                                     0, 4, TYPE_PNV_PHB3_ROOT_BUS);
+                                     0, 4, TYPE_PNV_PHB3_ROOT_BUS, true);
 
     object_property_set_int(OBJECT(pci->bus), "phb-id", phb->phb_id,
                             &error_abort);

@@ -135,7 +135,7 @@ static void xilinx_pcie_host_realize(DeviceState *dev, Error **errp)
 
     pci->bus = pci_register_root_bus(dev, s->name, xilinx_pcie_set_irq,
                                      pci_swizzle_map_irq_fn, s, &s->mmio,
-                                     &s->io, 0, 4, TYPE_PCIE_BUS);
+                                     &s->io, 0, 4, TYPE_PCIE_BUS, true);
 
     qdev_realize(DEVICE(&s->root), BUS(pci->bus), &error_fatal);
 }

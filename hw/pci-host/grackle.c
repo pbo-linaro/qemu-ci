@@ -58,7 +58,7 @@ static void grackle_realize(DeviceState *dev, Error **errp)
                                      s,
                                      &s->pci_mmio,
                                      &s->pci_io,
-                                     0, 4, TYPE_PCI_BUS);
+                                     0, 4, TYPE_PCI_BUS, true);
 
     pci_create_simple(phb->bus, 0, "grackle");
 }
