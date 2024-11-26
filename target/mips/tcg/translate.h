@@ -154,7 +154,7 @@ void check_cop1x(DisasContext *ctx);
 
 void gen_base_offset_addr(DisasContext *ctx, TCGv addr, int base, int offset);
 void gen_move_low32_tl(TCGv ret, TCGv_i64 arg);
-void gen_move_high32(TCGv ret, TCGv_i64 arg);
+void gen_move_high32_tl(TCGv ret, TCGv_i64 arg);
 void gen_load_gpr_tl(TCGv t, int reg);
 void gen_store_gpr_tl(TCGv t, int reg);
 #if defined(TARGET_MIPS64)

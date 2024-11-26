@@ -1462,7 +1462,7 @@ void gen_move_low32_tl(TCGv ret, TCGv_i64 arg)
 }
 
 /* Sign-extract the high 32-bits to a target_long.  */
-void gen_move_high32(TCGv ret, TCGv_i64 arg)
+void gen_move_high32_tl(TCGv ret, TCGv_i64 arg)
 {
 #if defined(TARGET_MIPS64)
     tcg_gen_sari_i64(ret, arg, 32);
@@ -3342,7 +3342,7 @@ static void gen_muldiv(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_add_i64(t2, t2, t3);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
         }
         break;
     case OPC_MADDU:
@@ -3358,7 +3358,7 @@ static void gen_muldiv(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_add_i64(t2, t2, t3);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
         }
         break;
     case OPC_MSUB:
@@ -3372,7 +3372,7 @@ static void gen_muldiv(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_sub_i64(t2, t3, t2);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
         }
         break;
     case OPC_MSUBU:
@@ -3388,7 +3388,7 @@ static void gen_muldiv(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_sub_i64(t2, t3, t2);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
         }
         break;
     default:
@@ -3483,7 +3483,7 @@ static void gen_mul_txx9(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_add_i64(t2, t2, t3);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
             if (rd) {
                 gen_move_low32_tl(cpu_gpr[rd], t2);
             }
@@ -3505,7 +3505,7 @@ static void gen_mul_txx9(DisasContext *ctx, uint32_t opc,
             tcg_gen_concat_tl_i64(t3, cpu_LO[acc], cpu_HI[acc]);
             tcg_gen_add_i64(t2, t2, t3);
             gen_move_low32_tl(cpu_LO[acc], t2);
-            gen_move_high32(cpu_HI[acc], t2);
+            gen_move_high32_tl(cpu_HI[acc], t2);
             if (rd) {
                 gen_move_low32_tl(cpu_gpr[rd], t2);
             }
