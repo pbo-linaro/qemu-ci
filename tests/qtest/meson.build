@@ -333,6 +333,7 @@ tpmemu_files = ['tpm-emu.c', 'tpm-util.c', 'tpm-tests.c']
 
 migration_files = [files(
   'migration/bootfile.c',
+  'migration/framework.c',
   'migration/migration-qmp.c',
   'migration/migration-util.c',
 )]
