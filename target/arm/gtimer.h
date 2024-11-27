@@ -15,7 +15,9 @@ enum {
     GTIMER_HYP      = 2,
     GTIMER_SEC      = 3,
     GTIMER_HYPVIRT  = 4,
-#define NUM_GTIMERS   5
+    GTIMER_SEC_PEL2 = 5,
+    GTIMER_SEC_VEL2 = 6,
+#define NUM_GTIMERS   7
 };
 
 #endif
