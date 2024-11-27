@@ -337,6 +337,7 @@ migration_files = [files(
   'migration/migration-qmp.c',
   'migration/migration-util.c',
   'migration/compression-tests.c',
+  'migration/postcopy-tests.c',
 )]
 
 migration_tls_files = []
