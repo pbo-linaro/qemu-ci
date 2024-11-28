@@ -22,6 +22,7 @@
 
 #include "block/block_int.h"
 #include "block/qdict.h"
+#include "block/thread-pool.h"
 #include "sysemu/block-backend.h"
 #include "crypto/block.h"
 #include "qapi/opts-visitor.h"
@@ -40,6 +41,7 @@ struct BlockCrypto {
     QCryptoBlock *block;
     bool updating_keys;
     BdrvChild *header;  /* Reference to the detached LUKS header */
+    bool encrypt_in_parallel;
 };
 
 
@@ -460,6 +462,94 @@ static int block_crypto_reopen_prepare(BDRVReopenState *state,
     return 0;
 }
 
+
+typedef struct CryptoAIOData {
+    QCryptoBlock *block;
+    uint64_t offset;
+    uint8_t *buf;
+    size_t len;
+    bool encrypt;
+    Error **errp;
+} CryptoAIOData;
+
+
+static int handle_aiocb_encdec(void *opaque)
+{
+    CryptoAIOData *aiocb = opaque;
+
+    if (aiocb->encrypt) {
+        if (qcrypto_block_encrypt(aiocb->block, aiocb->offset,
+                                  aiocb->buf, aiocb->len, aiocb->errp) < 0) {
+            return -EIO;
+        }
+    } else {
+        if (qcrypto_block_decrypt(aiocb->block, aiocb->offset,
+                                  aiocb->buf, aiocb->len, aiocb->errp) < 0) {
+            return -EIO;
+        }
+    }
+
+    return 0;
+}
+
+
+static int coroutine_fn block_crypto_submit_co(BlockDriverState *bs, uint64_t offset,
+                                               uint8_t *buf, size_t len, bool encrypt,
+                                               Error **errp)
+{
+    BlockCrypto *crypto = bs->opaque;
+    CryptoAIOData acb;
+
+    acb = (CryptoAIOData) {
+        .block = crypto->block,
+        .offset = offset,
+        .buf = buf,
+        .len = len,
+        .encrypt = encrypt,
+        .errp = errp,
+    };
+    return thread_pool_submit_co(handle_aiocb_encdec, &acb);
+}
+
+
+static int coroutine_fn GRAPH_RDLOCK
+block_crypto_encrypt(BlockDriverState *bs, uint64_t offset,
+                     uint8_t *buf, size_t len, Error **errp)
+{
+    BlockCrypto *crypto = bs->opaque;
+    int ret = 0;
+
+    if (crypto->encrypt_in_parallel) {
+        ret = block_crypto_submit_co(bs, offset, buf, len, true, errp);
+    } else {
+        if (qcrypto_block_encrypt(crypto->block, offset, buf, len, errp) < 0) {
+            ret = -EIO;
+        }
+    }
+
+    return ret;
+}
+
+
+static int coroutine_fn GRAPH_RDLOCK
+block_crypto_decrypt(BlockDriverState *bs, uint64_t offset,
+                     uint8_t *buf, size_t len, Error **errp)
+{
+    BlockCrypto *crypto = bs->opaque;
+    int ret = 0;
+
+    if (crypto->encrypt_in_parallel) {
+        ret = block_crypto_submit_co(bs, offset, buf, len, false, errp);
+    } else {
+        if (qcrypto_block_decrypt(crypto->block, offset, buf, len, errp) < 0) {
+            ret = -EIO;
+        }
+    }
+
+    return ret;
+}
+
+
 /*
  * 1 MB bounce buffer gives good performance / memory tradeoff
  * when using cache=none|directsync.
@@ -508,9 +598,10 @@ block_crypto_co_preadv(BlockDriverState *bs, int64_t offset, int64_t bytes,
             goto cleanup;
         }
 
-        if (qcrypto_block_decrypt(crypto->block, offset + bytes_done,
-                                  cipher_data, cur_bytes, NULL) < 0) {
-            ret = -EIO;
+        ret = block_crypto_decrypt(bs, offset + bytes_done,
+                                   cipher_data, cur_bytes, NULL);
+
+        if (ret < 0) {
             goto cleanup;
         }
 
@@ -565,9 +656,9 @@ block_crypto_co_pwritev(BlockDriverState *bs, int64_t offset, int64_t bytes,
 
         qemu_iovec_to_buf(qiov, bytes_done, cipher_data, cur_bytes);
 
-        if (qcrypto_block_encrypt(crypto->block, offset + bytes_done,
-                                  cipher_data, cur_bytes, NULL) < 0) {
-            ret = -EIO;
+        ret = block_crypto_encrypt(bs, offset + bytes_done,
+                                   cipher_data, cur_bytes, NULL);
+        if (ret < 0) {
             goto cleanup;
         }
 
