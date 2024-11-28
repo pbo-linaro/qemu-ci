@@ -208,6 +208,42 @@ typedef enum __attribute__((__packed__)) {
 } Float2NaNPropRule;
 
 /*
+ * 3-input NaN propagation rule, for fused multiply-add. Individual
+ * architectures have different rules for which input NaN is
+ * propagated to the output when there is more than one NaN on the
+ * input.
+ *
+ * If default_nan_mode is enabled then it is valid not to set a NaN
+ * propagation rule, because the softfloat code guarantees not to try
+ * to pick a NaN to propagate in default NaN mode.  When not in
+ * default-NaN mode, it is an error for the target not to set the rule
+ * in float_status if it uses a muladd, and we will assert if we need
+ * to handle an input NaN and no rule was selected.
+ *
+ * For QEMU, the multiply-add operation is A * B + C.
+ *
+ * NB: we don't list all 12 possibilities here or implement them
+ * in pickNaNMulAdd; if your architecture needs one of the missing
+ * combinations you should add it.
+ */
+typedef enum __attribute__((__packed__)) {
+    /* No propagation rule specified */
+    float_3nan_prop_none = 0,
+    /* Prefer SNaN over QNaN, then operand A over B over C */
+    float_3nan_prop_s_abc,
+    /* Prefer SNaN over QNaN, then operand C over A over B */
+    float_3nan_prop_s_cab,
+    /* Prefer SNaN over QNaN, then operand C over B over A */
+    float_3nan_prop_s_cba,
+    /* Prefer A over B over C regardless of SNaN vs QNaN */
+    float_3nan_prop_abc,
+    /* Prefer A over C over B regardless of SNaN vs QNaN */
+    float_3nan_prop_acb,
+    /* Prefer C over B over A regardless of SNaN vs QNaN */
+    float_3nan_prop_cba,
+} Float3NaNPropRule;
+
+/*
  * Rule for result of fused multiply-add 0 * Inf + NaN.
  * This must be a NaN, but implementations differ on whether this
  * is the input NaN or the default NaN.
@@ -241,6 +277,7 @@ typedef struct float_status {
     FloatRoundMode float_rounding_mode;
     FloatX80RoundPrec floatx80_rounding_precision;
     Float2NaNPropRule float_2nan_prop_rule;
+    Float3NaNPropRule float_3nan_prop_rule;
     FloatInfZeroNaNRule float_infzeronan_rule;
     bool tininess_before_rounding;
     /* should denormalised results go to zero and set the inexact flag? */

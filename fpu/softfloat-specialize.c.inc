@@ -475,6 +475,7 @@ static int pickNaN(FloatClass a_cls, FloatClass b_cls,
 static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
                          bool infzero, float_status *status)
 {
+    Float3NaNPropRule rule = status->float_3nan_prop_rule;
     /*
      * We guarantee not to require the target to tell us how to
      * pick a NaN if we're always returning the default NaN.
@@ -500,27 +501,44 @@ static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
         }
     }
 
+    if (rule == float_3nan_prop_none) {
 #if defined(TARGET_ARM)
-
-    /* This looks different from the ARM ARM pseudocode, because the ARM ARM
-     * puts the operands to a fused mac operation (a*b)+c in the order c,a,b.
-     */
-    if (is_snan(c_cls)) {
-        return 2;
-    } else if (is_snan(a_cls)) {
-        return 0;
-    } else if (is_snan(b_cls)) {
-        return 1;
-    } else if (is_qnan(c_cls)) {
-        return 2;
-    } else if (is_qnan(a_cls)) {
-        return 0;
-    } else {
-        return 1;
-    }
+        /*
+         * This looks different from the ARM ARM pseudocode, because the ARM ARM
+         * puts the operands to a fused mac operation (a*b)+c in the order c,a,b
+         */
+        rule = float_3nan_prop_s_cab;
 #elif defined(TARGET_MIPS)
-    if (snan_bit_is_one(status)) {
-        /* Prefer sNaN over qNaN, in the a, b, c order. */
+        if (snan_bit_is_one(status)) {
+            rule = float_3nan_prop_s_abc;
+        } else {
+            rule = float_3nan_prop_s_cab;
+        }
+#elif defined(TARGET_LOONGARCH64)
+        rule = float_3nan_prop_s_cab;
+#elif defined(TARGET_PPC)
+        /*
+         * If fRA is a NaN return it; otherwise if fRB is a NaN return it;
+         * otherwise return fRC. Note that muladd on PPC is (fRA * fRC) + frB
+         */
+        rule = float_3nan_prop_acb;
+#elif defined(TARGET_S390X)
+        rule = float_3nan_prop_s_abc;
+#elif defined(TARGET_SPARC)
+        rule = float_3nan_prop_s_cba;
+#elif defined(TARGET_XTENSA)
+        if (status->use_first_nan) {
+            rule = float_3nan_prop_abc;
+        } else {
+            rule = float_3nan_prop_cba;
+        }
+#else
+        rule = float_3nan_prop_abc;
+#endif
+    }
+
+    switch (rule) {
+    case float_3nan_prop_s_abc:
         if (is_snan(a_cls)) {
             return 0;
         } else if (is_snan(b_cls)) {
@@ -534,8 +552,7 @@ static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
         } else {
             return 2;
         }
-    } else {
-        /* Prefer sNaN over qNaN, in the c, a, b order. */
+    case float_3nan_prop_s_cab:
         if (is_snan(c_cls)) {
             return 2;
         } else if (is_snan(a_cls)) {
@@ -549,68 +566,21 @@ static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
         } else {
             return 1;
         }
-    }
-#elif defined(TARGET_LOONGARCH64)
-    /* Prefer sNaN over qNaN, in the c, a, b order. */
-    if (is_snan(c_cls)) {
-        return 2;
-    } else if (is_snan(a_cls)) {
-        return 0;
-    } else if (is_snan(b_cls)) {
-        return 1;
-    } else if (is_qnan(c_cls)) {
-        return 2;
-    } else if (is_qnan(a_cls)) {
-        return 0;
-    } else {
-        return 1;
-    }
-#elif defined(TARGET_PPC)
-    /* If fRA is a NaN return it; otherwise if fRB is a NaN return it;
-     * otherwise return fRC. Note that muladd on PPC is (fRA * fRC) + frB
-     */
-    if (is_nan(a_cls)) {
-        return 0;
-    } else if (is_nan(c_cls)) {
-        return 2;
-    } else {
-        return 1;
-    }
-#elif defined(TARGET_S390X)
-    if (is_snan(a_cls)) {
-        return 0;
-    } else if (is_snan(b_cls)) {
-        return 1;
-    } else if (is_snan(c_cls)) {
-        return 2;
-    } else if (is_qnan(a_cls)) {
-        return 0;
-    } else if (is_qnan(b_cls)) {
-        return 1;
-    } else {
-        return 2;
-    }
-#elif defined(TARGET_SPARC)
-    /* Prefer SNaN over QNaN, order C, B, A. */
-    if (is_snan(c_cls)) {
-        return 2;
-    } else if (is_snan(b_cls)) {
-        return 1;
-    } else if (is_snan(a_cls)) {
-        return 0;
-    } else if (is_qnan(c_cls)) {
-        return 2;
-    } else if (is_qnan(b_cls)) {
-        return 1;
-    } else {
-        return 0;
-    }
-#elif defined(TARGET_XTENSA)
-    /*
-     * For Xtensa, the (inf,zero,nan) case sets InvalidOp and returns
-     * an input NaN if we have one (ie c).
-     */
-    if (status->use_first_nan) {
+    case float_3nan_prop_s_cba:
+        if (is_snan(c_cls)) {
+            return 2;
+        } else if (is_snan(b_cls)) {
+            return 1;
+        } else if (is_snan(a_cls)) {
+            return 0;
+        } else if (is_qnan(c_cls)) {
+            return 2;
+        } else if (is_qnan(b_cls)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    case float_3nan_prop_abc:
         if (is_nan(a_cls)) {
             return 0;
         } else if (is_nan(b_cls)) {
@@ -618,7 +588,15 @@ static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
         } else {
             return 2;
         }
-    } else {
+    case float_3nan_prop_acb:
+        if (is_nan(a_cls)) {
+            return 0;
+        } else if (is_nan(c_cls)) {
+            return 2;
+        } else {
+            return 1;
+        }
+    case float_3nan_prop_cba:
         if (is_nan(c_cls)) {
             return 2;
         } else if (is_nan(b_cls)) {
@@ -626,19 +604,9 @@ static int pickNaNMulAdd(FloatClass a_cls, FloatClass b_cls, FloatClass c_cls,
         } else {
             return 0;
         }
+    default:
+        g_assert_not_reached();
     }
-#else
-    /* A default implementation: prefer a to b to c.
-     * This is unlikely to actually match any real implementation.
-     */
-    if (is_nan(a_cls)) {
-        return 0;
-    } else if (is_nan(b_cls)) {
-        return 1;
-    } else {
-        return 2;
-    }
-#endif
 }
 
 /*----------------------------------------------------------------------------
