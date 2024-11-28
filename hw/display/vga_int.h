@@ -135,7 +135,6 @@ typedef struct VGACommonState {
     bool full_update_text;
     bool full_update_gfx;
     bool big_endian_fb;
-    bool default_endian_fb;
     bool global_vmstate;
     /* hardware mouse cursor support */
     uint32_t invalidated_y_table[VGA_MAX_HEIGHT / 32];
