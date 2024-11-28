@@ -14,6 +14,15 @@
 #include "hw/loongarch/boot.h"
 
 #define LOONGARCH_MAX_CPUS      256
+/*
+ * LoongArch Reference Manual Vol1, Chapter 7.4.12 CPU Identity
+ *  For CPU architecture, bit0 .. bit8 is valid for CPU id, max cpuid is 512
+ *  However for IPI/Eiointc interrupt controller, max supported cpu id for
+ *  irq routing is 256
+ *
+ *  Here max cpu id is 256 for virt machine
+ */
+#define MAX_PHY_ID              0x100
 
 #define VIRT_FWCFG_BASE         0x1e020000UL
 #define VIRT_BIOS_BASE          0x1c000000UL
