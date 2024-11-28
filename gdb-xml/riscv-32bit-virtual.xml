@@ -8,4 +8,5 @@
 <!DOCTYPE feature SYSTEM "gdb-target.dtd">
 <feature name="org.gnu.gdb.riscv.virtual">
   <reg name="priv" bitsize="32"/>
+  <reg name="virt" bitsize="32"/>
 </feature>

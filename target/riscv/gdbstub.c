@@ -206,14 +206,14 @@ static int riscv_gdb_set_csr(CPUState *cs, uint8_t *mem_buf, int n)
 
 static int riscv_gdb_get_virtual(CPUState *cs, GByteArray *buf, int n)
 {
-    if (n == 0) {
+    if (n >= 0 && n <= 1) {
 #ifdef CONFIG_USER_ONLY
         return gdb_get_regl(buf, 0);
 #else
         RISCVCPU *cpu = RISCV_CPU(cs);
         CPURISCVState *env = &cpu->env;
 
-        return gdb_get_regl(buf, env->priv);
+        return gdb_get_regl(buf, n ? env->virt_enabled : env->priv);
 #endif
     }
     return 0;
@@ -221,14 +221,20 @@ static int riscv_gdb_get_virtual(CPUState *cs, GByteArray *buf, int n)
 
 static int riscv_gdb_set_virtual(CPUState *cs, uint8_t *mem_buf, int n)
 {
-    if (n == 0) {
+    if (n >= 0 && n <= 1) {
 #ifndef CONFIG_USER_ONLY
         RISCVCPU *cpu = RISCV_CPU(cs);
         CPURISCVState *env = &cpu->env;
 
-        env->priv = ldtul_p(mem_buf) & 0x3;
-        if (env->priv == PRV_RESERVED) {
-            env->priv = PRV_S;
+        if (n == 0) {
+            env->priv = ldtul_p(mem_buf) & 0x3;
+            if (env->priv == PRV_RESERVED) {
+                env->priv = PRV_S;
+            }
+        } else {
+            if (env->priv != PRV_M) {
+                env->virt_enabled = ldtul_p(mem_buf) & 0x1;
+            }
         }
 #endif
         return sizeof(target_ulong);
