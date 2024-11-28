@@ -3365,12 +3365,16 @@
 #
 # @header: block device holding a detached LUKS header.  (since 9.0)
 #
+# @encrypt-in-parallel: perform encryption and decryption through
+#   thread pool
+#
 # Since: 2.9
 ##
 { 'struct': 'BlockdevOptionsLUKS',
   'base': 'BlockdevOptionsGenericFormat',
   'data': { '*key-secret': 'str',
-            '*header': 'BlockdevRef'} }
+            '*header': 'BlockdevRef',
+            '*encrypt-in-parallel': 'bool'} }
 
 ##
 # @BlockdevOptionsGenericCOWFormat:

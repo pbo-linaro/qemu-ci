@@ -46,6 +46,7 @@
 #define BLOCK_CRYPTO_OPT_LUKS_STATE "state"
 #define BLOCK_CRYPTO_OPT_LUKS_OLD_SECRET "old-secret"
 #define BLOCK_CRYPTO_OPT_LUKS_NEW_SECRET "new-secret"
+#define BLOCK_CRYPTO_OPT_LUKS_ENCRYPT_IN_PARALLEL "encrypt-in-parallel"
 
 
 #define BLOCK_CRYPTO_OPT_DEF_LUKS_KEY_SECRET(prefix)                    \
@@ -128,6 +129,14 @@
         .type = QEMU_OPT_STRING,                                \
         .help = "New secret to set in the matching keyslots. "  \
                 "Empty string to erase",                        \
+    }
+
+#define BLOCK_CRYPTO_OPT_DEF_LUKS_ENCRYPT_IN_PARALLEL(prefix)     \
+    {                                                             \
+        .name = prefix BLOCK_CRYPTO_OPT_LUKS_ENCRYPT_IN_PARALLEL, \
+        .type = QEMU_OPT_BOOL,                                    \
+        .help = "perform encryption and decryption through "      \
+                "thread pool",                                    \
     }
 
 QCryptoBlockCreateOptions *

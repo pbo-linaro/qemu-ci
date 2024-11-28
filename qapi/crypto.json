@@ -192,10 +192,14 @@
 #     decryption key.  Mandatory except when probing image for
 #     metadata only.
 #
+# @encrypt-in-parallel: perform encryption and decryption through
+#   thread pool
+#
 # Since: 2.6
 ##
 { 'struct': 'QCryptoBlockOptionsLUKS',
-  'data': { '*key-secret': 'str' }}
+  'data': { '*key-secret': 'str',
+            '*encrypt-in-parallel': 'bool' }}
 
 ##
 # @QCryptoBlockCreateOptionsLUKS:

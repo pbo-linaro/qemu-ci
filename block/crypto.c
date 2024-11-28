@@ -212,6 +212,7 @@ static QemuOptsList block_crypto_runtime_opts_luks = {
     .head = QTAILQ_HEAD_INITIALIZER(block_crypto_runtime_opts_luks.head),
     .desc = {
         BLOCK_CRYPTO_OPT_DEF_LUKS_KEY_SECRET(""),
+        BLOCK_CRYPTO_OPT_DEF_LUKS_ENCRYPT_IN_PARALLEL(""),
         { /* end of list */ }
     },
 };
@@ -347,6 +348,13 @@ static int block_crypto_open_generic(QCryptoBlockFormat format,
     }
 
     cryptoopts = qemu_opts_to_qdict(opts, NULL);
+
+    if (!g_strcmp0(qdict_get_try_str(cryptoopts,
+                   BLOCK_CRYPTO_OPT_LUKS_ENCRYPT_IN_PARALLEL), "on") ||
+        qdict_get_try_bool(cryptoopts,
+                           BLOCK_CRYPTO_OPT_LUKS_ENCRYPT_IN_PARALLEL, false)) {
+        crypto->encrypt_in_parallel = true;
+    }
     qdict_put_str(cryptoopts, "format", QCryptoBlockFormat_str(format));
 
     open_opts = block_crypto_open_opts_init(cryptoopts, errp);
