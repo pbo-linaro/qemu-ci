@@ -28,6 +28,8 @@ from qemu.utils import kvm_available, tcg_available
 from .asset import Asset
 from .cmd import run_cmd
 from .config import BUILD_DIR
+from .utils import (archive_extract as utils_archive_extract,
+                    guess_archive_format)
 
 
 class QemuBaseTest(unittest.TestCase):
@@ -38,6 +40,40 @@ class QemuBaseTest(unittest.TestCase):
     workdir = None
     log = None
     logdir = None
+
+    '''
+    @params archive: filename, Asset, or file-like object to extract
+    @params sub_dir: optional sub-directory to extract into
+    @params member: optional member file to limit extraction to
+
+    Extracts @archive into the scratch directory, or a
+    directory beneath named by @sub_dir. All files are
+    extracted unless @member specifies a limit.
+
+    If @member is non-None, returns the fully qualified
+    path to @member
+    '''
+    def archive_extract(self, archive, format=None, sub_dir=None, member=None):
+        if type(archive) == Asset:
+            if format is None:
+                format = guess_archive_format(archive.url)
+            archive = archive.fetch()
+        elif format is None:
+            format = guess_archive_format(archive)
+
+        if member is not None:
+            if os.path.isabs(member):
+                member = os.path.relpath(member, '/')
+
+        if sub_dir is None:
+            utils_archive_extract(archive, self.scratch_file(), format, member)
+        else:
+            utils_archive_extract(archive, self.scratch_file(sub_dir),
+                                  format, member)
+
+        if member is not None:
+            return self.scratch_file(member)
+        return None
 
     def socket_dir(self):
         if self.socketdir is None:
