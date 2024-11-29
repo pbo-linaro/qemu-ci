@@ -14,6 +14,7 @@ import os
 import shutil
 import subprocess
 import tarfile
+import zipfile
 
 from .cmd import run_cmd
 
@@ -38,7 +39,33 @@ def image_pow2ceil_expand(path):
             with open(path, 'ab+') as fd:
                 fd.truncate(size_aligned)
 
-def archive_extract(archive, dest_dir, member=None):
+def archive_extract(archive, dest_dir, format=None, member=None):
+    if format == "tar":
+        tar_extract(archive, dest_dir, member)
+    elif format == "zip":
+        zip_extract(archive, dest_dir, member)
+    elif format == "cpio":
+        if member is not None:
+            raise Exception("Unable to filter cpio extraction")
+        cpio_extract(archive, dest_dir)
+    elif format == "deb":
+        deb_extract(archive, dest_dir, "./" + member)
+    else:
+        raise Exception(f"Unknown archive format {format}")
+
+def guess_archive_format(path):
+    if ".tar." in path or path.endswith("tgz"):
+        return "tar"
+    elif path.endswith(".zip"):
+        return "zip"
+    elif path.endswith(".cpio"):
+        return "cpio"
+    elif path.endswith(".deb") or path.endswith(".udeb"):
+        return "deb"
+    else:
+        raise Exception(f"Unknown archive format for {path}")
+
+def tar_extract(archive, dest_dir, member=None):
     with tarfile.open(archive) as tf:
         if hasattr(tarfile, 'data_filter'):
             tf.extraction_filter = getattr(tarfile, 'data_filter',
@@ -62,7 +89,7 @@ def deb_extract(archive, dest_dir, member=None):
         (stdout, stderr, ret) = run_cmd(['ar', 't', archive])
         file_path = stdout.split()[2]
         run_cmd(['ar', 'x', archive, file_path])
-        archive_extract(file_path, dest_dir, member)
+        archive_extract(file_path, dest_dir, format="tar", member=member)
     finally:
         os.chdir(cwd)
 
