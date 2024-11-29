@@ -115,6 +115,23 @@ def lzma_uncompress(xz_path, output_path):
             os.remove(output_path)
             raise
 
+def uncompress(input_path, output_path, format=None):
+    if format == "xz":
+        lzma_uncompress(input_path, output_path)
+    elif format == "gz":
+        gzip_uncompress(input_path, output_path)
+    else:
+        raise Exception(f"Unknown compression format {format}")
+
+def guess_uncompress_format(path):
+    (name, ext) = os.path.splitext(path)
+    if ext == ".xz":
+        return "xz"
+    elif ext == ".gz":
+        return "gz"
+    else:
+        raise Exception(f"Unknown compression format for {path}")
+
 def cpio_extract(cpio_handle, output_path):
     cwd = os.getcwd()
     os.chdir(output_path)
