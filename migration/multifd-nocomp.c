@@ -14,6 +14,7 @@
 #include "exec/ramblock.h"
 #include "exec/target_page.h"
 #include "file.h"
+#include "migration.h"
 #include "multifd.h"
 #include "options.h"
 #include "qapi/error.h"
@@ -345,7 +346,7 @@ retry:
 
 int multifd_ram_flush_and_sync(void)
 {
-    if (!migrate_multifd()) {
+    if (!migrate_multifd() || migration_in_postcopy()) {
         return 0;
     }
 
