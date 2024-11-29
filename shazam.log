@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/Z0nre-4GLin5yeGX@snoc-pinewood/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/1] hw/nvme: Add OCP SMART / Health Information Extended Log Page
+  ---
+  [32m✓[0m Signed: DKIM/raithlin.onmicrosoft.com (From: sbates@raithlin.com)
+---
+Total patches: 1
+---
+Applying: hw/nvme: Add OCP SMART / Health Information Extended Log Page
+Patch failed at 0001 hw/nvme: Add OCP SMART / Health Information Extended Log Page
+error: patch failed: hw/nvme/ctrl.c:8737
+error: hw/nvme/ctrl.c: patch does not apply
+error: patch failed: hw/nvme/nvme.h:538
+error: hw/nvme/nvme.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
