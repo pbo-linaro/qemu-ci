@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20241129074332.87535-1-clement.mathieu--drif@eviden.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 173 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v1 1/19] memory: Add permissions in IOMMUAccessFlags
+  [32m✓[0m [PATCH v1 2/19] intel_iommu: Declare supported PASID size
+  [32m✓[0m [PATCH v1 3/19] memory: Allow to store the PASID in IOMMUTLBEntry
+  [32m✓[0m [PATCH v1 4/19] intel_iommu: Fill the PASID field when creating an IOMMUTLBEntry
+  [32m✓[0m [PATCH v1 5/19] pcie: Add helper to declare PASID capability for a pcie device
+  [32m✓[0m [PATCH v1 6/19] pcie: Helper functions to check if PASID is enabled
+  [32m✓[0m [PATCH v1 7/19] pcie: Helper function to check if ATS is enabled
+  [32m✓[0m [PATCH v1 8/19] pci: Cache the bus mastering status in the device
+  [32m✓[0m [PATCH v1 9/19] pci: Add IOMMU operations to get memory regions with PASID
+  [32m✓[0m [PATCH v1 10/19] intel_iommu: Implement the get_memory_region_pasid iommu operation
+  [32m✓[0m [PATCH v1 11/19] memory: Store user data pointer in the IOMMU notifiers
+  [32m✓[0m [PATCH v1 12/19] pci: Add a pci-level initialization function for iommu notifiers
+  [32m✓[0m [PATCH v1 13/19] atc: Generic ATC that can be used by PCIe devices that support SVM
+  [32m✓[0m [PATCH v1 14/19] atc: Add unit tests
+  [32m✓[0m [PATCH v1 15/19] memory: Add an API for ATS support
+  [32m✓[0m [PATCH v1 16/19] pci: Add a pci-level API for ATS
+  [32m✓[0m [PATCH v1 17/19] intel_iommu: Set address mask when a translation fails and adjust W permission
+  [32m✓[0m [PATCH v1 18/19] intel_iommu: Return page walk level even when the translation fails
+  [32m✓[0m [PATCH v1 19/19] intel_iommu: Add support for ATS
+  ---
+  [32m✓[0m Signed: DKIM/eviden.com
+---
+Total patches: 19
+---
+Applying: memory: Add permissions in IOMMUAccessFlags
+Applying: intel_iommu: Declare supported PASID size
+Applying: memory: Allow to store the PASID in IOMMUTLBEntry
+Applying: intel_iommu: Fill the PASID field when creating an IOMMUTLBEntry
+Patch failed at 0004 intel_iommu: Fill the PASID field when creating an IOMMUTLBEntry
+error: patch failed: hw/i386/intel_iommu.c:2119
+error: hw/i386/intel_iommu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
