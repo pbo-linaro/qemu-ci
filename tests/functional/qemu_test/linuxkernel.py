@@ -6,8 +6,8 @@
 import os
 
 from .testcase import QemuSystemTest
-from .cmd import run_cmd, wait_for_console_pattern
-from .utils import archive_extract
+from .cmd import wait_for_console_pattern
+from .utils import deb_extract
 
 class LinuxKernelTest(QemuSystemTest):
     KERNEL_COMMON_COMMAND_LINE = 'printk.time=0 '
@@ -37,16 +37,11 @@ class LinuxKernelTest(QemuSystemTest):
         :param path: path within the deb archive of the file to be extracted
         :returns: path of the extracted file
         """
-        cwd = os.getcwd()
-        os.chdir(self.workdir)
-        (stdout, stderr, ret) = run_cmd(['ar', 't', deb_path])
-        file_path = stdout.split()[2]
-        run_cmd(['ar', 'x', deb_path, file_path])
-        archive_extract(file_path, self.workdir)
-        os.chdir(cwd)
+        relpath = os.path.relpath(path, '/')
+        deb_extract(deb_path, self.workdir, member="." + path)
         # Return complete path to extracted file.  Because callers to
         # extract_from_deb() specify 'path' with a leading slash, it is
         # necessary to use 'relative_to()' to turn it into a relative
         # path for joining to the scratch dir
-        return os.path.normpath(self.scratch_file(os.path.relpath(path, '/')))
+        return os.path.normpath(self.scratch_file(relpath))
 

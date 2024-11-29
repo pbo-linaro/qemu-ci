@@ -15,6 +15,8 @@ import shutil
 import subprocess
 import tarfile
 
+from .cmd import run_cmd
+
 """
 Round up to next power of 2
 """
@@ -52,6 +54,17 @@ def zip_extract(archive, dest_dir, member=None):
             zf.extract(member=member, path=dest_dir)
         else:
             zf.extractall(path=dest_dir)
+
+def deb_extract(archive, dest_dir, member=None):
+    cwd = os.getcwd()
+    os.chdir(dest_dir)
+    try:
+        (stdout, stderr, ret) = run_cmd(['ar', 't', archive])
+        file_path = stdout.split()[2]
+        run_cmd(['ar', 'x', archive, file_path])
+        archive_extract(file_path, dest_dir, member)
+    finally:
+        os.chdir(cwd)
 
 def gzip_uncompress(gz_path, output_path):
     if os.path.exists(output_path):
