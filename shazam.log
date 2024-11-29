@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/0d1fb30f-0b45-4797-82da-4c1d2e801499@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] qemu crashes on assertion in cpu_asidx_from_attrs when cpu is in smm mode
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 1
+---
+Applying: qemu crashes on assertion in cpu_asidx_from_attrs when cpu is in smm mode
+Patch failed at 0001 qemu crashes on assertion in cpu_asidx_from_attrs when cpu is in smm mode
+error: patch failed: monitor/hmp-cmds-target.c:116
+error: monitor/hmp-cmds-target.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
