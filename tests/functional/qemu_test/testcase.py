@@ -29,7 +29,8 @@ from .asset import Asset
 from .cmd import run_cmd
 from .config import BUILD_DIR
 from .utils import (archive_extract as utils_archive_extract,
-                    guess_archive_format)
+                    uncompress as utils_uncompress,
+                    guess_archive_format, guess_uncompress_format)
 
 
 class QemuBaseTest(unittest.TestCase):
@@ -40,6 +41,21 @@ class QemuBaseTest(unittest.TestCase):
     workdir = None
     log = None
     logdir = None
+
+    def uncompress(self, input_path, format=None):
+        if type(input_path) == Asset:
+            if format is None:
+                format = guess_uncompress_format(input_path.url)
+            input_path = input_path.fetch()
+        elif format is None:
+            format = guess_uncompress_format(input_path)
+
+        (name, ext) = os.path.splitext(input_path)
+        output_path = self.scratch_file(os.path.basename(name))
+
+        utils_uncompress(input_path, output_path)
+
+        return output_path
 
     '''
     @params archive: filename, Asset, or file-like object to extract
