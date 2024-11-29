@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20241129152506.59390-1-phil@philjordan.eu/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 340 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  ERROR: missing [1/15]!
+  ERROR: missing [2/15]!
+  ERROR: missing [3/15]!
+  ERROR: missing [4/15]!
+  [32m✓[0m [PATCH v12 5/15] MAINTAINERS: Add myself as maintainer for apple-gfx, reviewer for HVF
+    [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+  ERROR: missing [6/15]!
+  ERROR: missing [7/15]!
+  ERROR: missing [8/15]!
+  [32m✓[0m [PATCH v12 9/15] gpex: Allow more than 4 legacy IRQs
+    [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+  [32m✓[0m [PATCH v12 10/15] hw/vmapple/aes: Introduce aes engine
+    [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+  [32m✓[0m [PATCH v12 11/15] hw/vmapple/bdif: Introduce vmapple backdoor interface
+    [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+  ERROR: missing [12/15]!
+  ERROR: missing [13/15]!
+  ERROR: missing [14/15]!
+  [32m✓[0m [PATCH v12 15/15] hw/vmapple/vmapple: Add vmapple machine type
+    [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+---
+Total patches: 5
+---
+WARNING: Thread incomplete!
+Applying: MAINTAINERS: Add myself as maintainer for apple-gfx, reviewer for HVF
+Applying: gpex: Allow more than 4 legacy IRQs
+Applying: hw/vmapple/aes: Introduce aes engine
+Patch failed at 0003 hw/vmapple/aes: Introduce aes engine
+error: hw/vmapple/Kconfig: does not exist in index
+error: hw/vmapple/meson.build: does not exist in index
+error: hw/vmapple/trace-events: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
