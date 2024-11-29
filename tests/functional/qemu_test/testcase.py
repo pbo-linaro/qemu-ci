@@ -53,7 +53,7 @@ class QemuBaseTest(unittest.TestCase):
         (name, ext) = os.path.splitext(input_path)
         output_path = self.scratch_file(os.path.basename(name))
 
-        utils_uncompress(input_path, output_path)
+        utils_uncompress(input_path, output_path, format)
 
         return output_path
 

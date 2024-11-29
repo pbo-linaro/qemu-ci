@@ -13,7 +13,6 @@
 from qemu_test import (QemuSystemTest, Asset, exec_command,
                        exec_command_and_wait_for_pattern,
                        wait_for_console_pattern)
-from qemu_test.utils import lzma_uncompress
 
 
 class S390CPUTopology(QemuSystemTest):
@@ -85,9 +84,7 @@ class S390CPUTopology(QemuSystemTest):
         """
         self.require_accelerator("kvm")
         kernel_path = self.ASSET_F35_KERNEL.fetch()
-        initrd_path_xz = self.ASSET_F35_INITRD.fetch()
-        initrd_path = self.scratch_file('initrd-raw.img')
-        lzma_uncompress(initrd_path_xz, initrd_path)
+        initrd_path = self.uncompress(self.ASSET_F35_INITRD, format="xz")
 
         self.vm.set_console()
         kernel_command_line = self.KERNEL_COMMON_COMMAND_LINE
