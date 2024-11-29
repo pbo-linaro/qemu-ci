@@ -11,7 +11,6 @@ import bz2
 from qemu_test import QemuUserTest, Asset, has_cmd
 from qemu_test import (QemuUserTest, Asset, skipIfMissingCommands,
                        skipUntrustedTest)
-from qemu_test.utils import cpio_extract
 
 
 class LoadBFLT(QemuUserTest):
@@ -28,7 +27,7 @@ class LoadBFLT(QemuUserTest):
         busybox_path = self.scratch_file("bin", "busybox")
 
         with bz2.open(rootfs_path_bz2, 'rb') as cpio_handle:
-            cpio_extract(cpio_handle, self.workdir)
+            self.archive_extract(cpio_handle, format="cpio")
 
         res = self.run_cmd(busybox_path)
         ver = 'BusyBox v1.24.0.git (2015-02-03 22:17:13 CET) multi-call binary.'

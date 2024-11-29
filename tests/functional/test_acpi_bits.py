@@ -37,9 +37,7 @@ import platform
 import re
 import shutil
 import subprocess
-import tarfile
 import tempfile
-import zipfile
 
 from typing import (
     List,
@@ -262,19 +260,12 @@ class AcpiBitsTest(QemuBaseTest): #pylint: disable=too-many-instance-attributes
                                           %(self.BITS_INTERNAL_VER,
                                             self.BITS_COMMIT_HASH))
 
-        bitsLocalArtLoc = self.ASSET_BITS.fetch()
-        self.logger.info("downloaded bits artifacts to %s", bitsLocalArtLoc)
-
         # extract the bits artifact in the temp working directory
-        with zipfile.ZipFile(bitsLocalArtLoc, 'r') as zref:
-            zref.extractall(prebuiltDir)
+        self.archive_extract(self.ASSET_BITS, sub_dir='prebuilt', format='zip')
 
         # extract the bits software in the temp working directory
-        with zipfile.ZipFile(bits_zip_file, 'r') as zref:
-            zref.extractall(self.workdir)
-
-        with tarfile.open(grub_tar_file, 'r', encoding='utf-8') as tarball:
-            tarball.extractall(self.workdir)
+        self.archive_extract(bits_zip_file)
+        self.archive_extract(grub_tar_file)
 
         self.copy_test_scripts()
         self.copy_bits_config()

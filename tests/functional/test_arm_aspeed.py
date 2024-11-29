@@ -15,8 +15,6 @@ from qemu_test import (LinuxKernelTest, Asset,
                        interrupt_interactive_console_until_pattern,
                        skipIfMissingCommands,
 )
-from qemu_test.utils import archive_extract
-from zipfile import ZipFile
 from unittest import skipUnless
 
 class AST1030Machine(LinuxKernelTest):
@@ -29,12 +27,8 @@ class AST1030Machine(LinuxKernelTest):
     def test_ast1030_zephyros_1_04(self):
         self.set_machine('ast1030-evb')
 
-        zip_file = self.ASSET_ZEPHYR_1_04.fetch()
-
-        kernel_name = "ast1030-evb-demo/zephyr.elf"
-        with ZipFile(zip_file, 'r') as zf:
-                     zf.extract(kernel_name, path=self.workdir)
-        kernel_file = self.scratch_file(kernel_name)
+        kernel_file = self.archive_extract(
+            self.ASSET_ZEPHYR_1_04, member="ast1030-evb-demo/zephyr.elf")
 
         self.vm.set_console()
         self.vm.add_args('-kernel', kernel_file, '-nographic')
@@ -51,12 +45,8 @@ class AST1030Machine(LinuxKernelTest):
     def test_ast1030_zephyros_1_07(self):
         self.set_machine('ast1030-evb')
 
-        zip_file = self.ASSET_ZEPHYR_1_07.fetch()
-
-        kernel_name = "ast1030-evb-demo/zephyr.bin"
-        with ZipFile(zip_file, 'r') as zf:
-                     zf.extract(kernel_name, path=self.workdir)
-        kernel_file = self.scratch_file(kernel_name)
+        kernel_file = self.archive_extract(
+            self.ASSET_ZEPHYR_1_07, member="ast1030-evb-demo/zephyr.bin")
 
         self.vm.set_console()
         self.vm.add_args('-kernel', kernel_file, '-nographic')
@@ -270,9 +260,7 @@ class AST2x00Machine(LinuxKernelTest):
     def test_arm_ast2500_evb_sdk(self):
         self.set_machine('ast2500-evb')
 
-        image_path = self.ASSET_SDK_V806_AST2500.fetch()
-
-        archive_extract(image_path, self.workdir)
+        self.archive_extract(self.ASSET_SDK_V806_AST2500)
 
         self.do_test_arm_aspeed_sdk_start(
             self.scratch_file('ast2500-default', 'image-bmc'))
@@ -286,9 +274,7 @@ class AST2x00Machine(LinuxKernelTest):
     def test_arm_ast2600_evb_sdk(self):
         self.set_machine('ast2600-evb')
 
-        image_path = self.ASSET_SDK_V806_AST2600_A2.fetch()
-
-        archive_extract(image_path, self.workdir)
+        self.archive_extract(self.ASSET_SDK_V806_AST2600_A2)
 
         self.vm.add_args('-device',
             'tmp105,bus=aspeed.i2c.bus.5,address=0x4d,id=tmp-test');
