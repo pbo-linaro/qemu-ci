@@ -1578,11 +1578,12 @@
 # The migration channel-type request options.
 #
 # @main: Main outbound migration channel.
+# @cpr: cpr state channel.
 #
 # Since: 8.1
 ##
 { 'enum': 'MigrationChannelType',
-  'data': [ 'main' ] }
+  'data': [ 'main', 'cpr' ] }
 
 ##
 # @MigrationChannel:

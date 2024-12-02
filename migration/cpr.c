@@ -116,6 +116,21 @@ QIOChannel *cpr_state_ioc(void)
     return qemu_file_get_ioc(cpr_state_file);
 }
 
+static MigrationChannel *cpr_channel;
+
+void cpr_set_cpr_channel(MigrationChannel *channel)
+{
+    if (cpr_channel) {
+        qapi_free_MigrationChannel(cpr_channel);
+    }
+    cpr_channel = channel;
+}
+
+MigrationChannel *cpr_get_cpr_channel(void)
+{
+    return cpr_channel;
+}
+
 int cpr_state_save(MigrationChannel *channel, Error **errp)
 {
     int ret;

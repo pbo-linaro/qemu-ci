@@ -77,6 +77,7 @@
 #include "hw/block/block.h"
 #include "hw/i386/x86.h"
 #include "hw/i386/pc.h"
+#include "migration/cpr.h"
 #include "migration/misc.h"
 #include "migration/snapshot.h"
 #include "sysemu/tpm.h"
@@ -1834,6 +1835,11 @@ static void incoming_option_parse(const char *str)
         qobject_unref(obj);
         visit_type_MigrationChannel(v, "channel", &channel, &error_fatal);
         visit_free(v);
+
+        if (channel->channel_type == MIGRATION_CHANNEL_TYPE_CPR) {
+            cpr_set_cpr_channel(channel);
+            return;
+        }
     } else if (!strcmp(str, "defer")) {
         channel = NULL;
     } else {
