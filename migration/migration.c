@@ -105,7 +105,7 @@ static bool migration_object_check(MigrationState *ms, Error **errp);
 static int migration_maybe_pause(MigrationState *s,
                                  int *current_active_state,
                                  int new_state);
-static void migrate_fd_cancel(MigrationState *s);
+static void migrate_fd_cancel(MigrationState *s, MigrationIncomingState *mis);
 static bool close_return_path_on_source(MigrationState *s);
 static void migration_completion_end(MigrationState *s);
 
@@ -317,7 +317,7 @@ void migration_cancel(const Error *error)
     if (migrate_dirty_limit()) {
         qmp_cancel_vcpu_dirty_limit(false, -1, NULL);
     }
-    migrate_fd_cancel(current_migration);
+    migrate_fd_cancel(current_migration, current_incoming);
 }
 
 void migration_shutdown(void)
@@ -1502,7 +1502,7 @@ static void migrate_fd_error(MigrationState *s, const Error *error)
     migrate_set_error(s, error);
 }
 
-static void migrate_fd_cancel(MigrationState *s)
+static void migrate_fd_cancel(MigrationState *s, MigrationIncomingState *mis)
 {
     int old_state ;
 
@@ -1515,6 +1515,12 @@ static void migrate_fd_cancel(MigrationState *s)
         }
     }
 
+    if (mis->state == MIGRATION_STATUS_POSTCOPY_PAUSED) {
+        migrate_set_state(&mis->state, MIGRATION_STATUS_POSTCOPY_PAUSED,
+                          MIGRATION_STATUS_CANCELLING);
+        qemu_sem_post(&mis->postcopy_pause_sem_dst);
+    }
+
     do {
         old_state = s->state;
         if (!migration_is_running()) {
@@ -1523,6 +1529,8 @@ static void migrate_fd_cancel(MigrationState *s)
         /* If the migration is paused, kick it out of the pause */
         if (old_state == MIGRATION_STATUS_PRE_SWITCHOVER) {
             qemu_sem_post(&s->pause_sem);
+        } else if (old_state == MIGRATION_STATUS_POSTCOPY_PAUSED) {
+            qemu_sem_post(&s->postcopy_pause_sem);
         }
         migrate_set_state(&s->state, old_state, MIGRATION_STATUS_CANCELLING);
     } while (s->state != MIGRATION_STATUS_CANCELLING);

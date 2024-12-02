@@ -634,6 +634,7 @@ int postcopy_ram_incoming_cleanup(MigrationIncomingState *mis)
         qatomic_set(&mis->fault_thread_quit, 1);
         postcopy_fault_thread_notify(mis);
         trace_postcopy_ram_incoming_cleanup_join();
+        qemu_sem_post(&mis->postcopy_pause_sem_fault);
         qemu_thread_join(&mis->fault_thread);
 
         if (postcopy_notify(POSTCOPY_NOTIFY_INBOUND_END, &local_err)) {
@@ -991,8 +992,7 @@ static void *postcopy_ram_fault_thread(void *opaque)
 
         /*
          * We're mainly waiting for the kernel to give us a faulting HVA,
-         * however we can be told to quit via userfault_quit_fd which is
-         * an eventfd
+         * however we can be told to quit via userfault_event_fd.
          */
 
         poll_result = poll(pfd, pfd_len, -1 /* Wait forever */);
@@ -1008,6 +1008,11 @@ static void *postcopy_ram_fault_thread(void *opaque)
              * the channel is rebuilt.
              */
             postcopy_pause_fault_thread(mis);
+
+            if (qatomic_read(&mis->fault_thread_quit)) {
+                trace_postcopy_ram_fault_thread_quit();
+                break;
+            }
         }
 
         if (pfd[1].revents) {
@@ -1082,6 +1087,11 @@ retry:
             if (ret) {
                 /* May be network failure, try to wait for recovery */
                 postcopy_pause_fault_thread(mis);
+
+                if (qatomic_read(&mis->fault_thread_quit)) {
+                    trace_postcopy_ram_fault_thread_quit();
+                    break;
+                }
                 goto retry;
             }
         }
