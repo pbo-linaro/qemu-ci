@@ -2164,6 +2164,9 @@ RAMBlock *qemu_ram_alloc_internal(ram_addr_t size, ram_addr_t max_size,
     new_block->flags = ram_flags;
 
     if (!host && !xen_enabled()) {
+        if (!share_flags && current_machine->aux_ram_share) {
+            new_block->flags |= RAM_SHARED;
+        }
         if ((new_block->flags & RAM_SHARED) &&
             !qemu_ram_alloc_shared(new_block, &local_err)) {
             goto err;
