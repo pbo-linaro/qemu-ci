@@ -2004,11 +2004,14 @@ static void *postcopy_ram_listen_thread(void *opaque)
      * want a wrapper for the QEMUFile handle.
      */
     f = mis->from_src_file;
+    if (!f) {
+        /* postcopy pause never got recovered */
+        goto out;
+    }
 
     /* And non-blocking again so we don't block in any cleanup */
     qemu_file_set_blocking(f, false);
 
-    trace_postcopy_ram_listen_thread_exit();
     if (load_res < 0) {
         qemu_file_set_error(f, load_res);
         dirty_bitmap_mig_cancel_incoming();
@@ -2021,10 +2024,6 @@ static void *postcopy_ram_listen_thread(void *opaque)
                          "bitmaps are correctly migrated and valid.",
                          __func__, load_res);
             load_res = 0; /* prevent further exit() */
-        } else {
-            error_report("%s: loadvm failed: %d", __func__, load_res);
-            migrate_set_state(&mis->state, MIGRATION_STATUS_POSTCOPY_ACTIVE,
-                                           MIGRATION_STATUS_FAILED);
         }
     }
     if (load_res >= 0) {
@@ -2034,31 +2033,40 @@ static void *postcopy_ram_listen_thread(void *opaque)
          * state yet; wait for the end of the main thread.
          */
         qemu_event_wait(&mis->main_thread_load_event);
+
+        postcopy_ram_incoming_cleanup(mis);
+
+        migrate_set_state(&mis->state, MIGRATION_STATUS_POSTCOPY_ACTIVE,
+                          MIGRATION_STATUS_COMPLETED);
+
+        /*
+         * If everything has worked fine, then the main thread has waited
+         * for us to start, and we're the last use of the mis.
+         */
+        migration_incoming_state_destroy();
     }
-    postcopy_ram_incoming_cleanup(mis);
+
+out:
+    trace_postcopy_ram_listen_thread_exit();
+    rcu_unregister_thread();
 
     if (load_res < 0) {
-        /*
-         * If something went wrong then we have a bad state so exit;
-         * depending how far we got it might be possible at this point
-         * to leave the guest running and fire MCEs for pages that never
-         * arrived as a desperate recovery step.
-         */
-        rcu_unregister_thread();
-        exit(EXIT_FAILURE);
+        postcopy_ram_incoming_cleanup(mis);
+
+        error_report("%s: loadvm failed: %d", __func__, load_res);
+        migrate_set_state(&mis->state, MIGRATION_STATUS_POSTCOPY_ACTIVE,
+                          MIGRATION_STATUS_FAILED);
+        if (mis->exit_on_error) {
+            /*
+             * If something went wrong then we have a bad state so exit;
+             * depending how far we got it might be possible at this point
+             * to leave the guest running and fire MCEs for pages that never
+             * arrived as a desperate recovery step.
+             */
+            exit(EXIT_FAILURE);
+        }
     }
 
-    migrate_set_state(&mis->state, MIGRATION_STATUS_POSTCOPY_ACTIVE,
-                                   MIGRATION_STATUS_COMPLETED);
-    /*
-     * If everything has worked fine, then the main thread has waited
-     * for us to start, and we're the last use of the mis.
-     * (If something broke then qemu will have to exit anyway since it's
-     * got a bad migration state).
-     */
-    migration_incoming_state_destroy();
-
-    rcu_unregister_thread();
     mis->have_listen_thread = false;
     postcopy_state_set(POSTCOPY_INCOMING_END);
 
@@ -2921,7 +2929,9 @@ out:
             migrate_postcopy_ram() && postcopy_pause_incoming(mis)) {
             /* Reset f to point to the newly created channel */
             f = mis->from_src_file;
-            goto retry;
+            if (f) {
+                goto retry;
+            }
         }
     }
     return ret;
