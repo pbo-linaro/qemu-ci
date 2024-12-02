@@ -123,6 +123,7 @@
 #include "qapi/qapi-visit-block-core.h"
 #include "qapi/qapi-visit-compat.h"
 #include "qapi/qapi-visit-machine.h"
+#include "qapi/qapi-visit-migration.h"
 #include "qapi/qapi-visit-ui.h"
 #include "qapi/qapi-commands-block-core.h"
 #include "qapi/qapi-commands-migration.h"
@@ -159,6 +160,7 @@ typedef struct DeviceOption {
 static const char *cpu_option;
 static const char *mem_path;
 static const char *incoming;
+static MigrationChannelList *incoming_channels;
 static const char *loadvm;
 static const char *accelerators;
 static bool have_custom_ram_size;
@@ -1821,6 +1823,35 @@ static void object_option_add_visitor(Visitor *v)
     QTAILQ_INSERT_TAIL(&object_opts, opt, next);
 }
 
+static void incoming_option_parse(const char *str)
+{
+    MigrationChannel *channel;
+
+    if (str[0] == '{') {
+        QObject *obj = qobject_from_json(str, &error_fatal);
+        Visitor *v = qobject_input_visitor_new(obj);
+
+        qobject_unref(obj);
+        visit_type_MigrationChannel(v, "channel", &channel, &error_fatal);
+        visit_free(v);
+    } else if (!strcmp(str, "defer")) {
+        channel = NULL;
+    } else {
+        migrate_uri_parse(str, &channel, &error_fatal);
+    }
+
+    /* New incoming spec replaces the previous */
+
+    if (incoming_channels) {
+        qapi_free_MigrationChannelList(incoming_channels);
+    }
+    if (channel) {
+        incoming_channels = g_new0(MigrationChannelList, 1);
+        incoming_channels->value = channel;
+    }
+    incoming = str;
+}
+
 static void object_option_parse(const char *str)
 {
     QemuOpts *opts;
@@ -2730,7 +2761,7 @@ void qmp_x_exit_preconfig(Error **errp)
     if (incoming) {
         Error *local_err = NULL;
         if (strcmp(incoming, "defer") != 0) {
-            qmp_migrate_incoming(incoming, false, NULL, true, true,
+            qmp_migrate_incoming(NULL, true, incoming_channels, true, true,
                                  &local_err);
             if (local_err) {
                 error_reportf_err(local_err, "-incoming %s: ", incoming);
@@ -3447,7 +3478,7 @@ void qemu_init(int argc, char **argv)
                 if (!incoming) {
                     runstate_set(RUN_STATE_INMIGRATE);
                 }
-                incoming = optarg;
+                incoming_option_parse(optarg);
                 break;
             case QEMU_OPTION_only_migratable:
                 only_migratable = 1;

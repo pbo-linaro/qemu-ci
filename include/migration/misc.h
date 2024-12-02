@@ -106,4 +106,6 @@ bool migration_incoming_postcopy_advised(void);
 /* True if background snapshot is active */
 bool migration_in_bg_snapshot(void);
 
+bool migrate_uri_parse(const char *uri, MigrationChannel **channel,
+                       Error **errp);
 #endif

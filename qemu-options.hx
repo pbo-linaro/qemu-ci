@@ -4937,10 +4937,17 @@ DEF("incoming", HAS_ARG, QEMU_OPTION_incoming, \
     "-incoming exec:cmdline\n" \
     "                accept incoming migration on given file descriptor\n" \
     "                or from given external command\n" \
+    "-incoming @MigrationChannel\n" \
+    "                accept incoming migration on the channel\n" \
     "-incoming defer\n" \
     "                wait for the URI to be specified via migrate_incoming\n",
     QEMU_ARCH_ALL)
 SRST
+The -incoming option specifies the migration channel for an incoming
+migration.  It may be used multiple times to specify multiple
+migration channel types.  The channel type is specified in @MigrationChannel,
+and is 'main' for all other forms of -incoming.
+
 ``-incoming tcp:[host]:port[,to=maxport][,ipv4=on|off][,ipv6=on|off]``
   \ 
 ``-incoming rdma:host:port[,ipv4=on|off][,ipv6=on|off]``
@@ -4959,6 +4966,16 @@ SRST
 ``-incoming exec:cmdline``
     Accept incoming migration as an output from specified external
     command.
+
+``-incoming @MigrationChannel``
+    Accept incoming migration on the channel.  See the QAPI documentation
+    for the syntax of the @MigrationChannel data element.  For example:
+    ::
+
+        -incoming '{"channel-type": "main",
+                    "addr": { "transport": "socket",
+                              "type": "unix",
+                              "path": "my.sock" }}'
 
 ``-incoming defer``
     Wait for the URI to be specified via migrate\_incoming. The monitor
