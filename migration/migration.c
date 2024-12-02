@@ -943,7 +943,7 @@ static bool migration_should_start_incoming(bool main_channel)
     return true;
 }
 
-void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
+void migration_ioc_process_incoming(QIOChannel *ioc)
 {
     MigrationIncomingState *mis = migration_incoming_get_current();
     Error *local_err = NULL;
@@ -966,10 +966,9 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
          * issue is not possible.
          */
         ret = migration_channel_read_peek(ioc, (void *)&channel_magic,
-                                          sizeof(channel_magic), errp);
-
+                                          sizeof(channel_magic), &local_err);
         if (ret != 0) {
-            return;
+            goto err;
         }
 
         default_channel = (channel_magic == cpu_to_be32(QEMU_VM_FILE_MAGIC));
@@ -977,8 +976,8 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
         default_channel = !mis->from_src_file;
     }
 
-    if (multifd_recv_setup(errp) != 0) {
-        return;
+    if (multifd_recv_setup(&local_err) != 0) {
+        goto err;
     }
 
     if (default_channel) {
@@ -995,17 +994,23 @@ void migration_ioc_process_incoming(QIOChannel *ioc, Error **errp)
             postcopy_preempt_new_channel(mis, f);
         }
         if (local_err) {
-            error_propagate(errp, local_err);
-            return;
+            goto err;
         }
     }
 
-    if (migration_should_start_incoming(default_channel)) {
-        /* If it's a recovery, we're done */
-        if (postcopy_try_recover()) {
-            return;
-        }
+    if (migration_should_start_incoming(default_channel) &&
+        !postcopy_try_recover()) {
         migration_incoming_process();
+    }
+
+    return;
+
+err:
+    error_report_err(local_err);
+    migrate_set_state(&mis->state, MIGRATION_STATUS_SETUP,
+                      MIGRATION_STATUS_FAILED);
+    if (mis->exit_on_error) {
+        exit(EXIT_FAILURE);
     }
 }
 
