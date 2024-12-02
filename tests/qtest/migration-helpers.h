@@ -63,6 +63,8 @@ static inline bool probe_o_direct_support(const char *tmpfs)
 }
 #endif
 void migration_test_add(const char *path, void (*fn)(void));
+void migration_test_add_suffix(const char *path, const char *suffix,
+                               void (*fn)(void *));
 void migration_event_wait(QTestState *s, const char *target);
 
 #endif /* MIGRATION_HELPERS_H */
