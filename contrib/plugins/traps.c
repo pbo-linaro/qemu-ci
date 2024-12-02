@@ -87,7 +87,7 @@ int qemu_plugin_install(qemu_plugin_id_t id, const qemu_info_t *info,
     qemu_plugin_register_vcpu_init_cb(id, vcpu_init);
     qemu_plugin_vcpu_for_each(id, vcpu_init);
 
-    qemu_plugin_register_vcpu_discon_cb(id, QEMU_PLUGIN_DISCON_TRAPS,
+    qemu_plugin_register_vcpu_discon_cb(id, QEMU_PLUGIN_DISCON_ALL,
                                         vcpu_discon);
 
     qemu_plugin_register_atexit_cb(id, plugin_exit, NULL);
