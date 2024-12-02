@@ -47,6 +47,7 @@
 #include "qemu/qemu-print.h"
 #include "qemu/log.h"
 #include "qemu/memalign.h"
+#include "qemu/memfd.h"
 #include "exec/memory.h"
 #include "exec/ioport.h"
 #include "sysemu/dma.h"
@@ -2057,6 +2058,70 @@ RAMBlock *qemu_ram_alloc_from_file(ram_addr_t size, MemoryRegion *mr,
 }
 #endif
 
+static bool qemu_memfd_available(void)
+{
+    static int has_memfd = -1;
+
+    if (has_memfd < 0) {
+        has_memfd = qemu_memfd_check(0);
+    }
+    return has_memfd;
+}
+
+/*
+ * We want anonymous shared memory, similar to MAP_SHARED|MAP_ANON, but
+ * some users want the fd.  Allocate shm explicitly to get an fd.
+ */
+static bool qemu_ram_alloc_shared(RAMBlock *new_block, Error **errp)
+{
+    size_t max_length = new_block->max_length;
+    MemoryRegion *mr = new_block->mr;
+    const char *name = memory_region_name(mr);
+    int fd;
+
+    if (qemu_memfd_available()) {
+        fd = qemu_memfd_create(name, max_length + mr->align, 0, 0, 0, errp);
+        if (fd < 0) {
+            return false;
+        }
+    } else if (!qemu_shm_available()) {
+        /*
+         * Backwards compatibility for Windows.  The user may specify a
+         * memory backend with shared=on, and Windows ignores shared.
+         * Fall back to qemu_anon_ram_alloc.
+         */
+        return true;
+    } else {
+        Error *local_err = NULL;
+
+        fd = qemu_shm_alloc(max_length, &local_err);
+        if (fd < 0) {
+            /*
+             * Backwards compatibility in case the shm mount size is too small.
+             * Previous QEMU versions called qemu_anon_ram_alloc for anonymous
+             * shared memory, which could succeed.
+             */
+            error_prepend(&local_err,
+                          "Retrying using MAP_ANON|MAP_SHARED because: ");
+            warn_report_err(local_err);
+            return true;
+        }
+    }
+
+    new_block->mr->align = QEMU_VMALLOC_ALIGN;
+    new_block->host = file_ram_alloc(new_block, max_length, fd, false, 0, errp);
+
+    if (new_block->host) {
+        qemu_set_cloexec(fd);
+        new_block->fd = fd;
+        trace_qemu_ram_alloc_shared(name, max_length, fd, new_block->host);
+        return true;
+    }
+
+    close(fd);
+    return false;
+}
+
 static
 RAMBlock *qemu_ram_alloc_internal(ram_addr_t size, ram_addr_t max_size,
                                   void (*resized)(const char*,
@@ -2089,13 +2154,23 @@ RAMBlock *qemu_ram_alloc_internal(ram_addr_t size, ram_addr_t max_size,
     new_block->page_size = qemu_real_host_page_size();
     new_block->host = host;
     new_block->flags = ram_flags;
-    ram_block_add(new_block, &local_err);
-    if (local_err) {
-        g_free(new_block);
-        error_propagate(errp, local_err);
-        return NULL;
+
+    if (!host && !xen_enabled()) {
+        if ((new_block->flags & RAM_SHARED) &&
+            !qemu_ram_alloc_shared(new_block, &local_err)) {
+            goto err;
+        }
     }
-    return new_block;
+
+    ram_block_add(new_block, &local_err);
+    if (!local_err) {
+        return new_block;
+    }
+
+err:
+    g_free(new_block);
+    error_propagate(errp, local_err);
+    return NULL;
 }
 
 RAMBlock *qemu_ram_alloc_from_ptr(ram_addr_t size, void *host,
