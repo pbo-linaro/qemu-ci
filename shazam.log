@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241202110609.36775-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/2] rust: add BQL-enforcing Cell variant
+  [32m✓[0m [PATCH v2 2/2] rust: add bindings for interrupt sources
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: rust: add BQL-enforcing Cell variant
+Patch failed at 0001 rust: add BQL-enforcing Cell variant
+error: patch failed: rust/qemu-api/meson.build:13
+error: rust/qemu-api/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/src/lib.rs:8
+error: rust/qemu-api/src/lib.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
