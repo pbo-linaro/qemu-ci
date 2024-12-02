@@ -1729,6 +1729,7 @@ static void test_precopy_common(MigrateCommon *args)
 {
     QTestState *from, *to;
     void *data_hook = NULL;
+    const char *connect_uri;
 
     if (test_migrate_start(&from, &to, args->listen_uri, &args->start)) {
         return;
@@ -1766,11 +1767,16 @@ static void test_precopy_common(MigrateCommon *args)
         goto finish;
     }
 
-    migrate_qmp(from, to, args->connect_uri, args->connect_channels, "{}");
+    /* If has channels, then connect_uri is only used for listen defer */
+    connect_uri = args->connect_channels ? NULL : args->connect_uri;
+    migrate_qmp(from, to, connect_uri, args->connect_channels, "{}");
 
     if (args->start.defer_target_connect) {
         qtest_connect_deferred(to);
         qtest_qmp_handshake(to);
+        if (!strcmp(args->listen_uri, "defer")) {
+            migrate_incoming_qmp(to, args->connect_uri, "{}");
+        }
     }
 
     if (args->result != MIG_TEST_SUCCEED) {
@@ -2414,6 +2420,66 @@ static void test_multifd_file_mapped_ram_fdset_dio(void)
     test_file_common(&args, true);
 }
 #endif /* !_WIN32 */
+
+static void *test_mode_transfer_start(QTestState *from, QTestState *to)
+{
+    migrate_set_parameter_str(from, "mode", "cpr-transfer");
+    return NULL;
+}
+
+/*
+ * cpr-transfer mode cannot use the target monitor prior to starting the
+ * migration, and cannot connect synchronously to the monitor, so defer
+ * the target connection.
+ */
+static void test_mode_transfer_common(bool incoming_defer)
+{
+    g_autofree char *cpr_path = g_strdup_printf("%s/cpr.sock", tmpfs);
+    g_autofree char *mig_path = g_strdup_printf("%s/migsocket", tmpfs);
+    g_autofree char *uri = g_strdup_printf("unix:%s", mig_path);
+
+    const char *opts = "-machine aux-ram-share=on -nodefaults";
+    g_autofree char *opts_target = g_strdup_printf(
+        "-incoming \\{\\\'channel-type\\\':\\\'cpr\\\',"
+        "\\\'addr\\\':\\{\\\'transport\\\':\\\'socket\\\',"
+        "\\\'type\\\':\\\'unix\\\',\\\'path\\\':\\\'%s\\\'\\}\\} %s",
+        cpr_path, opts);
+
+    g_autofree char *channels = g_strdup_printf(
+        "[ { 'channel-type': 'main',"
+        "    'addr': { 'transport': 'socket',"
+        "              'type': 'unix',"
+        "              'path': '%s' } },"
+        "  { 'channel-type': 'cpr',"
+        "    'addr': { 'transport': 'socket',"
+        "              'type': 'unix',"
+        "              'path': '%s' } } ]",
+        mig_path, cpr_path);
+
+    MigrateCommon args = {
+        .start.opts_source = opts,
+        .start.opts_target = opts_target,
+        .start.defer_target_connect = true,
+        .start.memory_backend = "-object memory-backend-memfd,id=pc.ram,size=%s"
+                                " -machine memory-backend=pc.ram",
+        .listen_uri = incoming_defer ? "defer" : uri,
+        .connect_uri = incoming_defer ? uri : NULL,
+        .connect_channels = channels,
+        .start_hook = test_mode_transfer_start,
+    };
+
+    test_precopy_common(&args);
+}
+
+static void test_mode_transfer(void)
+{
+    test_mode_transfer_common(NULL);
+}
+
+static void test_mode_transfer_defer(void)
+{
+    test_mode_transfer_common(true);
+}
 
 static void test_precopy_tcp_plain(void)
 {
@@ -3904,6 +3970,10 @@ int main(int argc, char **argv)
     if (getenv("QEMU_TEST_FLAKY_TESTS")) {
         migration_test_add("/migration/mode/reboot", test_mode_reboot);
     }
+
+    migration_test_add("/migration/mode/transfer", test_mode_transfer);
+    migration_test_add("/migration/mode/transfer/defer",
+                       test_mode_transfer_defer);
 
     migration_test_add("/migration/precopy/file/mapped-ram",
                        test_precopy_file_mapped_ram);
