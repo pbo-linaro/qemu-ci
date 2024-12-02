@@ -22,6 +22,7 @@
 #include "qapi/qmp/qnull.h"
 #include "sysemu/runstate.h"
 #include "migration/colo.h"
+#include "migration/cpr.h"
 #include "migration/misc.h"
 #include "migration.h"
 #include "migration-stats.h"
@@ -745,9 +746,16 @@ uint64_t migrate_max_postcopy_bandwidth(void)
 
 MigMode migrate_mode(void)
 {
-    MigrationState *s = migrate_get_current();
-    MigMode mode = s->parameters.mode;
+    MigMode mode;
 
+    /*
+     * cpr_channel is only set during the early cpr-transfer loading stage,
+     * after which it is cleared.
+     */
+    if (cpr_get_cpr_channel()) {
+        return MIG_MODE_CPR_TRANSFER;
+    }
+    mode = migrate_get_current()->parameters.mode;
     assert(mode >= 0 && mode < MIG_MODE__MAX);
     return mode;
 }

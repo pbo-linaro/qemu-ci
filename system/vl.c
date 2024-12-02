@@ -3711,6 +3711,12 @@ void qemu_init(int argc, char **argv)
 
     qemu_create_machine(machine_opts_dict);
 
+    /*
+     * Load incoming CPR state before any devices are created, because it
+     * contains file descriptors that are needed in device initialization code.
+     */
+    cpr_state_load(&error_fatal);
+
     suspend_mux_open();
 
     qemu_disable_default_devices();
