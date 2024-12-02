@@ -1531,6 +1531,8 @@ static void migrate_fd_cancel(MigrationState *s, MigrationIncomingState *mis)
             qemu_sem_post(&s->pause_sem);
         } else if (old_state == MIGRATION_STATUS_POSTCOPY_PAUSED) {
             qemu_sem_post(&s->postcopy_pause_sem);
+        } else if (old_state == MIGRATION_STATUS_POSTCOPY_RECOVER) {
+            qemu_sem_post(&s->rp_state.rp_sem);
         }
         migrate_set_state(&s->state, old_state, MIGRATION_STATUS_CANCELLING);
     } while (s->state != MIGRATION_STATUS_CANCELLING);
@@ -2148,6 +2150,10 @@ void qmp_migrate_continue(MigrationStatus state, Error **errp)
 
 int migration_rp_wait(MigrationState *s)
 {
+    if (qatomic_read(&s->state) == MIGRATION_STATUS_CANCELLING) {
+        return -1;
+    }
+
     /* If migration has failure already, ignore the wait */
     if (migrate_has_error(s)) {
         return -1;
@@ -2157,6 +2163,10 @@ int migration_rp_wait(MigrationState *s)
 
     /* After wait, double check that there's no failure */
     if (migrate_has_error(s)) {
+        return -1;
+    }
+
+    if (qatomic_read(&s->state) == MIGRATION_STATUS_CANCELLING) {
         return -1;
     }
 
@@ -3023,6 +3033,9 @@ static MigThrError postcopy_pause(MigrationState *s)
                 trace_postcopy_pause_continued();
                 return MIG_THR_ERR_RECOVERED;
             } else {
+                if (s->state == MIGRATION_STATUS_CANCELLING) {
+                    return MIG_THR_ERR_FATAL;
+                }
                 /*
                  * Something wrong happened during the recovery, let's
                  * pause again. Pause is always better than throwing
