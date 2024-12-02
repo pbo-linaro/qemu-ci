@@ -1,0 +1,118 @@
+Grabbing thread from lore.kernel.org/all/20241202131347.498124-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 37 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 51 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/54] fpu: handle raising Invalid for infzero in pick_nan_muladd
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 2/54] fpu: Check for default_nan_mode before calling pickNaNMulAdd
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 3/54] softfloat: Allow runtime choice of inf * 0 + NaN result
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 4/54] tests/fp: Explicitly set inf-zero-nan rule
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 5/54] target/arm: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 6/54] target/s390: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 7/54] target/ppc: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [8/54]!
+  ERROR: missing [9/54]!
+  ERROR: missing [10/54]!
+  [32m✓[0m [PATCH v2 11/54] target/x86: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 12/54] target/loongarch: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 13/54] target/hppa: Set FloatInfZeroNaNRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 14/54] softfloat: Pass have_snan to pickNaNMulAdd
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [15/54]!
+  ERROR: missing [16/54]!
+  [32m✓[0m [PATCH v2 17/54] target/arm: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 18/54] target/loongarch: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [19/54]!
+  [32m✓[0m [PATCH v2 20/54] target/s390x: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 21/54] target/sparc: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 22/54] target/mips: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 23/54] target/xtensa: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 24/54] target/i386: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 25/54] target/hppa: Set Float3NaNPropRule explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 26/54] fpu: Remove use_first_nan field from float_status
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 27/54] target/m68k: Don't pass NULL float_status to floatx80_default_nan()
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [28/54]!
+  ERROR: missing [29/54]!
+  ERROR: missing [30/54]!
+  ERROR: missing [31/54]!
+  ERROR: missing [32/54]!
+  [32m✓[0m [PATCH v2 33/54] target/ppc: Use env->fp_status in helper_compute_fprf functions
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 34/54] fpu: Allow runtime choice of default NaN value
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 35/54] tests/fp: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [36/54]!
+  [32m✓[0m [PATCH v2 37/54] target/i386: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 38/54] target/hppa: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 39/54] target/alpha: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 40/54] target/arm: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 41/54] target/loongarch: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 42/54] target/m68k: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [43/54]!
+  [32m✓[0m [PATCH v2 44/54] target/openrisc: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [45/54]!
+  [32m✓[0m [PATCH v2 46/54] target/sh4: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 47/54] target/rx: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v2 48/54] target/s390x: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [49/54]!
+  ERROR: missing [50/54]!
+  [32m✓[0m [PATCH v2 51/54] target/hexagon: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [52/54]!
+  [32m✓[0m [PATCH v2 53/54] target/tricore: Set default NaN pattern explicitly
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [54/54]!
+---
+Total patches: 36
+---
+WARNING: Thread incomplete!
+Applying: fpu: handle raising Invalid for infzero in pick_nan_muladd
+Applying: fpu: Check for default_nan_mode before calling pickNaNMulAdd
+Applying: softfloat: Allow runtime choice of inf * 0 + NaN result
+Applying: tests/fp: Explicitly set inf-zero-nan rule
+Applying: target/arm: Set FloatInfZeroNaNRule explicitly
+Applying: target/s390: Set FloatInfZeroNaNRule explicitly
+Applying: target/ppc: Set FloatInfZeroNaNRule explicitly
+Applying: target/x86: Set FloatInfZeroNaNRule explicitly
+Patch failed at 0008 target/x86: Set FloatInfZeroNaNRule explicitly
+error: patch failed: fpu/softfloat-specialize.c.inc:490
+error: fpu/softfloat-specialize.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
