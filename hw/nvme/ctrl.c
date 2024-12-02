@@ -8477,7 +8477,10 @@ out:
 static void nvme_init_sriov(NvmeCtrl *n, PCIDevice *pci_dev, uint16_t offset)
 {
     uint16_t vf_dev_id = n->params.use_intel_id ?
-                         PCI_DEVICE_ID_INTEL_NVME : PCI_DEVICE_ID_REDHAT_NVME;
+                         PCI_DEVICE_ID_INTEL_NVME :
+                         (n->params.id_device ?
+                          n->params.id_device : PCI_DEVICE_ID_REDHAT_NVME);
+
     NvmePriCtrlCap *cap = &n->pri_ctrl_cap;
     uint64_t bar_size = nvme_mbar_size(le16_to_cpu(cap->vqfrsm),
                                       le16_to_cpu(cap->vifrsm),
@@ -8550,8 +8553,22 @@ static bool nvme_init_pci(NvmeCtrl *n, PCIDevice *pci_dev, Error **errp)
         pci_config_set_vendor_id(pci_conf, PCI_VENDOR_ID_INTEL);
         pci_config_set_device_id(pci_conf, PCI_DEVICE_ID_INTEL_NVME);
     } else {
-        pci_config_set_vendor_id(pci_conf, PCI_VENDOR_ID_REDHAT);
-        pci_config_set_device_id(pci_conf, PCI_DEVICE_ID_REDHAT_NVME);
+        uint16_t id_vendor = n->params.id_vendor ?
+                             n->params.id_vendor : PCI_VENDOR_ID_REDHAT;
+        pci_config_set_vendor_id(pci_conf, id_vendor);
+
+        uint16_t id_device = n->params.id_device ?
+                             n->params.id_device : PCI_DEVICE_ID_REDHAT_NVME;
+        pci_config_set_device_id(pci_conf, id_device);
+
+        if (n->params.id_subsys_vendor) {
+            pci_set_word(pci_conf + PCI_SUBSYSTEM_VENDOR_ID,
+                                                    n->params.id_subsys_vendor);
+        }
+
+        if (n->params.id_subsys) {
+            pci_set_word(pci_conf + PCI_SUBSYSTEM_ID, n->params.id_subsys);
+        }
     }
 
     pci_config_set_class(pci_conf, PCI_CLASS_STORAGE_EXPRESS);
@@ -8946,6 +8963,11 @@ static Property nvme_props[] = {
     DEFINE_PROP_BOOL("atomic.dn", NvmeCtrl, params.atomic_dn, 0),
     DEFINE_PROP_UINT16("atomic.awun", NvmeCtrl, params.atomic_awun, 0),
     DEFINE_PROP_UINT16("atomic.awupf", NvmeCtrl, params.atomic_awupf, 0),
+    DEFINE_PROP_UINT16("id_vendor", NvmeCtrl, params.id_vendor, 0),
+    DEFINE_PROP_UINT16("id_device", NvmeCtrl, params.id_device, 0),
+    DEFINE_PROP_UINT16("id_subsys_vendor", NvmeCtrl,
+                                                    params.id_subsys_vendor, 0),
+    DEFINE_PROP_UINT16("id_subsys", NvmeCtrl, params.id_subsys, 0),
     DEFINE_PROP_END_OF_LIST(),
 };
 
