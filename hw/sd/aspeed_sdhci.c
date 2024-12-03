@@ -271,12 +271,28 @@ static const TypeInfo aspeed_2600_sdhci_info = {
     .class_init = aspeed_2600_sdhci_class_init,
 };
 
+static void aspeed_2700_sdhci_class_init(ObjectClass *klass, void *data)
+{
+    DeviceClass *dc = DEVICE_CLASS(klass);
+    AspeedSDHCIClass *asc = ASPEED_SDHCI_CLASS(klass);
+
+    dc->desc = "ASPEED 2700 SDHCI Controller";
+    asc->capareg = 0x0000000719f80080;
+}
+
+static const TypeInfo aspeed_2700_sdhci_info = {
+    .name = TYPE_ASPEED_2700_SDHCI,
+    .parent = TYPE_ASPEED_SDHCI,
+    .class_init = aspeed_2700_sdhci_class_init,
+};
+
 static void aspeed_sdhci_register_types(void)
 {
     type_register_static(&aspeed_sdhci_info);
     type_register_static(&aspeed_2400_sdhci_info);
     type_register_static(&aspeed_2500_sdhci_info);
     type_register_static(&aspeed_2600_sdhci_info);
+    type_register_static(&aspeed_2700_sdhci_info);
 }
 
 type_init(aspeed_sdhci_register_types);
