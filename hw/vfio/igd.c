@@ -717,6 +717,23 @@ void vfio_probe_igd_bar4_quirk(VFIOPCIDevice *vdev, int nr)
 
     QLIST_INSERT_HEAD(&vdev->bars[nr].quirks, quirk, next);
 
+    /*
+     * Allow user to override dsm size using x-igd-gms option, in multiples of
+     * 32MiB. This option should only be used when the desired size cannot be
+     * set from DVMT Pre-Allocated option in host BIOS.
+     */
+    if (vdev->igd_gms) {
+        if (gen < 8 && vdev->igd_gms <= 0x10) {
+            gmch &= ~(IGD_GMCH_GEN6_GMS_MASK << IGD_GMCH_GEN6_GMS_SHIFT);
+            gmch |= vdev->igd_gms << IGD_GMCH_GEN6_GMS_SHIFT;
+        } else if (vdev->igd_gms <= 0x40) {
+            gmch &= ~(IGD_GMCH_GEN8_GMS_MASK << IGD_GMCH_GEN8_GMS_SHIFT);
+            gmch |= vdev->igd_gms << IGD_GMCH_GEN8_GMS_SHIFT;
+        } else {
+            error_report("Unsupported IGD GMS value 0x%x", vdev->igd_gms);
+        }
+    }
+
     ggms_size = igd_gtt_memory_size(gen, gmch);
     gms_size = igd_stolen_memory_size(gen, gmch);
 
