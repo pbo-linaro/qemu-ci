@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20241203203949.483774-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] target/arm: Copy entire float_status in is_ebf
+  [32m✓[0m [PATCH 2/11] softfloat: Inline pickNaNMulAdd
+  [32m✓[0m [PATCH 3/11] softfloat: Use goto for default nan case in pick_nan_muladd
+  [32m✓[0m [PATCH 4/11] softfloat: Remove which from parts_pick_nan_muladd
+  [32m✓[0m [PATCH 5/11] softfloat: Pad array size in pick_nan_muladd
+  [32m✓[0m [PATCH 6/11] softfloat: Move propagateFloatx80NaN to softfloat.c
+  [32m✓[0m [PATCH 7/11] softfloat: Use parts_pick_nan in propagateFloatx80NaN
+  [32m✓[0m [PATCH 8/11] softfloat: Inline pickNaN
+  [32m✓[0m [PATCH 9/11] softfloat: Share code between parts_pick_nan cases
+  [32m✓[0m [PATCH 10/11] softfloat: Sink frac_cmp in parts_pick_nan until needed
+  [32m✓[0m [PATCH 11/11] softfloat: Replace WHICH with RET in parts_pick_nan
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 11
+---
+Applying: target/arm: Copy entire float_status in is_ebf
+Applying: softfloat: Inline pickNaNMulAdd
+Patch failed at 0002 softfloat: Inline pickNaNMulAdd
+error: patch failed: fpu/softfloat-parts.c.inc:80
+error: fpu/softfloat-parts.c.inc: patch does not apply
+error: patch failed: fpu/softfloat-specialize.c.inc:448
+error: fpu/softfloat-specialize.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
