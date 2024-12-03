@@ -1,5 +1,5 @@
-#ifndef SYSEMU_NUMA_H
-#define SYSEMU_NUMA_H
+#ifndef SYSTEM_NUMA_H
+#define SYSTEM_NUMA_H
 
 #include "qemu/bitmap.h"
 #include "qapi/qapi-types-machine.h"

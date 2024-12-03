@@ -1,5 +1,5 @@
-#ifndef SYSEMU_H
-#define SYSEMU_H
+#ifndef SYSTEM_H
+#define SYSTEM_H
 /* Misc. things related to the system emulator.  */
 
 #include "qemu/timer.h"

@@ -10,7 +10,7 @@
 #define XEN_MAPCACHE_H
 
 #include "exec/cpu-common.h"
-#include "sysemu/xen.h"
+#include "system/xen.h"
 
 typedef hwaddr (*phys_offset_to_gaddr_t)(hwaddr phys_offset,
                                          ram_addr_t size);

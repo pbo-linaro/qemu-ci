@@ -14,7 +14,7 @@
 #ifndef ACCEL_BLOCKER_H
 #define ACCEL_BLOCKER_H
 
-#include "sysemu/cpus.h"
+#include "system/cpus.h"
 
 void accel_blocker_init(void);
 

@@ -39,8 +39,8 @@
 #define DUMP_LEVEL                  (1)
 #define DISKDUMP_HEADER_BLOCKS      (1)
 
-#include "sysemu/dump-arch.h"
-#include "sysemu/memory_mapping.h"
+#include "system/dump-arch.h"
+#include "system/memory_mapping.h"
 
 typedef struct QEMU_PACKED MakedumpfileHeader {
     char signature[16];     /* = "makedumpfile" */

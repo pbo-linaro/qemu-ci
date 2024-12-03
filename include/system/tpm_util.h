@@ -19,10 +19,10 @@
  * License along with this library; if not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SYSEMU_TPM_UTIL_H
-#define SYSEMU_TPM_UTIL_H
+#ifndef SYSTEM_TPM_UTIL_H
+#define SYSTEM_TPM_UTIL_H
 
-#include "sysemu/tpm.h"
+#include "system/tpm.h"
 #include "qemu/bswap.h"
 
 void tpm_util_write_fatal_error_response(uint8_t *out, uint32_t out_len);
@@ -69,4 +69,4 @@ static inline void tpm_cmd_set_error(void *b, uint32_t error)
 void tpm_util_show_buffer(const unsigned char *buffer,
                           size_t buffer_size, const char *string);
 
-#endif /* SYSEMU_TPM_UTIL_H */
+#endif /* SYSTEM_TPM_UTIL_H */

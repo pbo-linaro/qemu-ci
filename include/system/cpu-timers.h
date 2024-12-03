@@ -7,8 +7,8 @@
  * See the COPYING file in the top-level directory.
  *
  */
-#ifndef SYSEMU_CPU_TIMERS_H
-#define SYSEMU_CPU_TIMERS_H
+#ifndef SYSTEM_CPU_TIMERS_H
+#define SYSTEM_CPU_TIMERS_H
 
 #include "qemu/timer.h"
 
@@ -101,4 +101,4 @@ int64_t cpus_get_virtual_clock(void);
 void cpus_set_virtual_clock(int64_t new_time);
 int64_t cpus_get_elapsed_ticks(void);
 
-#endif /* SYSEMU_CPU_TIMERS_H */
+#endif /* SYSTEM_CPU_TIMERS_H */

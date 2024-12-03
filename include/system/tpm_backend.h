@@ -15,7 +15,7 @@
 
 #include "qom/object.h"
 #include "qemu/option.h"
-#include "sysemu/tpm.h"
+#include "system/tpm.h"
 #include "qapi/error.h"
 
 #ifdef CONFIG_TPM

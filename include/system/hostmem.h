@@ -10,10 +10,10 @@
  * See the COPYING file in the top-level directory.
  */
 
-#ifndef SYSEMU_HOSTMEM_H
-#define SYSEMU_HOSTMEM_H
+#ifndef SYSTEM_HOSTMEM_H
+#define SYSTEM_HOSTMEM_H
 
-#include "sysemu/numa.h"
+#include "system/numa.h"
 #include "qapi/qapi-types-machine.h"
 #include "qom/object.h"
 #include "exec/memory.h"

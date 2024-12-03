@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef SYSEMU_RTC_H
-#define SYSEMU_RTC_H
+#ifndef SYSTEM_RTC_H
+#define SYSTEM_RTC_H
 
 /**
  * qemu_get_timedate: Get the current RTC time

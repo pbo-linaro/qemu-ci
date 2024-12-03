@@ -23,7 +23,7 @@
 #include "qemu/osdep.h"
 #include "hw/irq.h"
 #include "qemu/timer.h"
-#include "sysemu/kvm.h"
+#include "system/kvm.h"
 #include "internal.h"
 
 /* MIPS R4K timer */

@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef QEMU_SYSEMU_KVM_XEN_H
-#define QEMU_SYSEMU_KVM_XEN_H
+#ifndef QEMU_SYSTEM_KVM_XEN_H
+#define QEMU_SYSTEM_KVM_XEN_H
 
 /* The KVM API uses these to indicate "no GPA" or "no GFN" */
 #define INVALID_GPA UINT64_MAX
@@ -41,4 +41,4 @@ uint16_t kvm_xen_get_evtchn_max_pirq(void);
 #define XEN_SPECIAL_PFN(x) ((XEN_SPECIAL_AREA_ADDR >> TARGET_PAGE_BITS) + \
                             XEN_SPECIALPAGE_##x)
 
-#endif /* QEMU_SYSEMU_KVM_XEN_H */
+#endif /* QEMU_SYSTEM_KVM_XEN_H */

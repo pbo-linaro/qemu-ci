@@ -17,7 +17,7 @@
 #include "block/aio.h"
 #include "qemu/thread.h"
 #include "qom/object.h"
-#include "sysemu/event-loop-base.h"
+#include "system/event-loop-base.h"
 
 #define TYPE_IOTHREAD "iothread"
 

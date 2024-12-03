@@ -7,11 +7,11 @@
 
 /* header to be included in non-Xen-specific code */
 
-#ifndef SYSEMU_XEN_H
-#define SYSEMU_XEN_H
+#ifndef SYSTEM_XEN_H
+#define SYSTEM_XEN_H
 
 #ifdef CONFIG_USER_ONLY
-#error Cannot include sysemu/xen.h from user emulation
+#error Cannot include system/xen.h from user emulation
 #endif
 
 #include "exec/cpu-common.h"

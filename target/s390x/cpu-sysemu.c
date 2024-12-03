@@ -26,17 +26,17 @@
 #include "cpu.h"
 #include "s390x-internal.h"
 #include "kvm/kvm_s390x.h"
-#include "sysemu/kvm.h"
-#include "sysemu/reset.h"
+#include "system/kvm.h"
+#include "system/reset.h"
 #include "qemu/timer.h"
 #include "trace.h"
 #include "qapi/qapi-visit-run-state.h"
-#include "sysemu/hw_accel.h"
+#include "system/hw_accel.h"
 
 #include "target/s390x/kvm/pv.h"
 #include "hw/boards.h"
-#include "sysemu/sysemu.h"
-#include "sysemu/tcg.h"
+#include "system/system.h"
+#include "system/tcg.h"
 #include "hw/core/sysemu-cpu-ops.h"
 
 /* S390CPUClass::load_normal() */

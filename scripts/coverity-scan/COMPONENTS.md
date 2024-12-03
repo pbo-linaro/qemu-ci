@@ -76,7 +76,7 @@ chardev
   ~ .*/qemu((/include)?/chardev/.*)
 
 crypto
-  ~ .*/qemu((/include)?/crypto/.*|/hw/.*/.*crypto.*|(/include/sysemu|/backends)/cryptodev.*|/host/include/.*/host/crypto/.*)
+  ~ .*/qemu((/include)?/crypto/.*|/hw/.*/.*crypto.*|(/include/system|/backends)/cryptodev.*|/host/include/.*/host/crypto/.*)
 
 disas
   ~ .*/qemu((/include)?/disas.*)

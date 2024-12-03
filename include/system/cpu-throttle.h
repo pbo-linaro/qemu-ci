@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>
  */
 
-#ifndef SYSEMU_CPU_THROTTLE_H
-#define SYSEMU_CPU_THROTTLE_H
+#ifndef SYSTEM_CPU_THROTTLE_H
+#define SYSTEM_CPU_THROTTLE_H
 
 #include "qemu/timer.h"
 
@@ -79,4 +79,4 @@ void cpu_throttle_dirty_sync_timer_tick(void *opaque);
  */
 void cpu_throttle_dirty_sync_timer(bool enable);
 
-#endif /* SYSEMU_CPU_THROTTLE_H */
+#endif /* SYSTEM_CPU_THROTTLE_H */

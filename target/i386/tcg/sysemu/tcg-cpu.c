@@ -21,7 +21,7 @@
 #include "cpu.h"
 #include "tcg/helper-tcg.h"
 
-#include "sysemu/sysemu.h"
+#include "system/system.h"
 #include "qemu/units.h"
 #include "exec/address-spaces.h"
 

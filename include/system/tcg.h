@@ -7,8 +7,8 @@
 
 /* header to be included in non-TCG-specific code */
 
-#ifndef SYSEMU_TCG_H
-#define SYSEMU_TCG_H
+#ifndef SYSTEM_TCG_H
+#define SYSTEM_TCG_H
 
 #ifdef CONFIG_TCG
 extern bool tcg_allowed;

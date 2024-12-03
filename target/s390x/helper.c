@@ -25,8 +25,8 @@
 #include "qemu/timer.h"
 #include "hw/s390x/ioinst.h"
 #include "target/s390x/kvm/pv.h"
-#include "sysemu/hw_accel.h"
-#include "sysemu/runstate.h"
+#include "system/hw_accel.h"
+#include "system/runstate.h"
 
 void s390x_tod_timer(void *opaque)
 {

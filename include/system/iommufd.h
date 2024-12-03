@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#ifndef SYSEMU_IOMMUFD_H
-#define SYSEMU_IOMMUFD_H
+#ifndef SYSTEM_IOMMUFD_H
+#define SYSTEM_IOMMUFD_H
 
 #include "qom/object.h"
 #include "exec/hwaddr.h"
 #include "exec/cpu-common.h"
-#include "sysemu/host_iommu_device.h"
+#include "system/host_iommu_device.h"
 
 #define TYPE_IOMMUFD_BACKEND "iommufd"
 OBJECT_DECLARE_TYPE(IOMMUFDBackend, IOMMUFDBackendClass, IOMMUFD_BACKEND)

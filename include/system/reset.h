@@ -24,8 +24,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef QEMU_SYSEMU_RESET_H
-#define QEMU_SYSEMU_RESET_H
+#ifndef QEMU_SYSTEM_RESET_H
+#define QEMU_SYSTEM_RESET_H
 
 #include "hw/resettable.h"
 #include "qapi/qapi-events-run-state.h"

@@ -25,19 +25,19 @@
 #include "cpu.h"
 #include "s390x-internal.h"
 #include "kvm/kvm_s390x.h"
-#include "sysemu/kvm.h"
+#include "system/kvm.h"
 #include "qemu/module.h"
 #include "trace.h"
 #include "qapi/qapi-types-machine.h"
-#include "sysemu/hw_accel.h"
+#include "system/hw_accel.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-properties-system.h"
 #include "hw/resettable.h"
 #include "fpu/softfloat-helpers.h"
 #include "disas/capstone.h"
-#include "sysemu/tcg.h"
+#include "system/tcg.h"
 #ifndef CONFIG_USER_ONLY
-#include "sysemu/reset.h"
+#include "system/reset.h"
 #endif
 #include "hw/s390x/cpu-topology.h"
 

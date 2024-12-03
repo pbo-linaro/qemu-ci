@@ -28,7 +28,7 @@
 #include "hw/virtio/vhost-backend.h"
 #include "chardev/char.h"
 
-#include "sysemu/cryptodev.h"
+#include "system/cryptodev.h"
 
 
 typedef struct CryptoDevBackendVhostOptions {

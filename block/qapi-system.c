@@ -36,8 +36,8 @@
 #include "qapi/error.h"
 #include "qapi/qapi-commands-block.h"
 #include "qapi/qmp/qdict.h"
-#include "sysemu/block-backend.h"
-#include "sysemu/blockdev.h"
+#include "system/block-backend.h"
+#include "system/blockdev.h"
 
 static BlockBackend *qmp_get_blk(const char *blk_name, const char *qdev_id,
                                  Error **errp)

@@ -12,10 +12,10 @@
 #define QEMU_HW_ACCEL_H
 
 #include "hw/core/cpu.h"
-#include "sysemu/kvm.h"
-#include "sysemu/hvf.h"
-#include "sysemu/whpx.h"
-#include "sysemu/nvmm.h"
+#include "system/kvm.h"
+#include "system/hvf.h"
+#include "system/whpx.h"
+#include "system/nvmm.h"
 
 void cpu_synchronize_state(CPUState *cpu);
 void cpu_synchronize_post_reset(CPUState *cpu);

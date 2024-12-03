@@ -1,5 +1,5 @@
-#ifndef SYSEMU_RUNSTATE_H
-#define SYSEMU_RUNSTATE_H
+#ifndef SYSTEM_RUNSTATE_H
+#define SYSTEM_RUNSTATE_H
 
 #include "qapi/qapi-types-run-state.h"
 #include "qemu/notify.h"

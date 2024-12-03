@@ -8,8 +8,8 @@
  * See the COPYING file in the top-level directory.
  *
  */
-#ifndef SYSEMU_REPLAY_H
-#define SYSEMU_REPLAY_H
+#ifndef SYSTEM_REPLAY_H
+#define SYSTEM_REPLAY_H
 
 #ifdef CONFIG_USER_ONLY
 #error Cannot include this header from user emulation
