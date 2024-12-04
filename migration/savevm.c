@@ -2120,7 +2120,6 @@ static int loadvm_postcopy_handle_listen(MigrationIncomingState *mis)
 
 static void loadvm_postcopy_handle_run_bh(void *opaque)
 {
-    Error *local_err = NULL;
     MigrationIncomingState *mis = opaque;
 
     trace_vmstate_downtime_checkpoint("dst-postcopy-bh-enter");
@@ -2141,12 +2140,11 @@ static void loadvm_postcopy_handle_run_bh(void *opaque)
     if (autostart) {
         /* Make sure all file formats throw away their mutable metadata.
          * If we get an error here, just don't restart the VM yet. */
-        bdrv_activate_all(&local_err);
+        bool success = migration_block_activate(migrate_get_current());
+
         trace_vmstate_downtime_checkpoint("dst-postcopy-bh-cache-invalidated");
-        if (local_err) {
-            error_report_err(local_err);
-            local_err = NULL;
-        } else {
+
+        if (success) {
             vm_start();
         }
     } else {
