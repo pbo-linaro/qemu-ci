@@ -701,6 +701,12 @@ migration_incoming_state_setup(MigrationIncomingState *mis, Error **errp)
         return false;
     }
 
+    /*
+     * Newly setup QEMU, prepared for incoming migration.  Mark the block
+     * active state to reflect that the src currently owns the disks.
+     */
+    migrate_get_current()->block_active = false;
+
     migrate_set_state(&mis->state, current, MIGRATION_STATUS_SETUP);
     return true;
 }
@@ -779,7 +785,6 @@ static void qemu_start_incoming_migration(const char *uri, bool has_channels,
 
 static void process_incoming_migration_bh(void *opaque)
 {
-    Error *local_err = NULL;
     MigrationIncomingState *mis = opaque;
 
     trace_vmstate_downtime_checkpoint("dst-precopy-bh-enter");
@@ -810,11 +815,7 @@ static void process_incoming_migration_bh(void *opaque)
              * Make sure all file formats throw away their mutable
              * metadata.  If error, don't restart the VM yet.
              */
-            bdrv_activate_all(&local_err);
-            if (local_err) {
-                error_report_err(local_err);
-                local_err = NULL;
-            } else {
+            if (migration_block_activate(migrate_get_current())) {
                 vm_start();
             }
         } else {

@@ -380,8 +380,21 @@ struct MigrationState {
      *   switchover phase).  When that happens, we need to be able to
      *   recover the block drive status by re-activating them.
      *
+     * - Currently bdrv_inactivate_all() is not safe to be invoked on top
+     *   of invalidated drives (even if bdrv_activate_all() is actually
+     *   safe to be called any time!).  It means remembering this could
+     *   help migration to make sure it won't invalidate twice in a row,
+     *   crashing QEMU.  It can happen when we migrate a PAUSED VM from
+     *   host1 to host2, then migrate again to host3 without starting it.
+     *   TODO: a cleaner solution is to allow safe invoke of
+     *   bdrv_inactivate_all() at anytime, like bdrv_activate_all().
+     *
      * For freshly started QEMU, block_active is initialized to TRUE
      * reflecting the scenario where QEMU owns block device ownerships.
+     *
+     * For incoming QEMU taking a migration stream, block_active is set to
+     * FALSE reflecting that the incoming side doesn't own the block
+     * devices, not until switchover happens.
      */
     bool block_active;
 
