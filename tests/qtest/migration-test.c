@@ -883,13 +883,29 @@ static int test_migrate_start(QTestState **from, QTestState **to,
     return 0;
 }
 
+static void migrate_cleanup(QTestState *from, QTestState *to)
+{
+    if (from) {
+        qtest_quit(from);
+        unlink(src_state.serial);
+        g_free(src_state.serial);
+    }
+
+    if (to) {
+        qtest_quit(to);
+        unlink(dst_state.serial);
+        g_free(dst_state.serial);
+    }
+
+    cleanup("migsocket");
+    cleanup(FILE_TEST_FILENAME);
+}
+
 static void test_migrate_end(QTestState *from, QTestState *to, bool test_dest)
 {
     unsigned char dest_byte_a, dest_byte_b, dest_byte_c, dest_byte_d;
 
-    qtest_quit(from);
-
-    if (test_dest) {
+    if (to && test_dest) {
         qtest_memread(to, start_address, &dest_byte_a, 1);
 
         /* Destination still running, wait for a byte to change */
@@ -909,14 +925,7 @@ static void test_migrate_end(QTestState *from, QTestState *to, bool test_dest)
         check_guests_ram(to);
     }
 
-    qtest_quit(to);
-
-    cleanup("migsocket");
-    unlink(src_state.serial);
-    g_free(src_state.serial);
-    unlink(dst_state.serial);
-    g_free(dst_state.serial);
-    cleanup(FILE_TEST_FILENAME);
+    migrate_cleanup(from, to);
 }
 
 #ifdef CONFIG_GNUTLS
@@ -3309,9 +3318,7 @@ static void test_multifd_tcp_cancel(void)
 
     /* Make sure QEMU process "to" exited */
     qtest_set_expected_status(to, EXIT_FAILURE);
-    qtest_wait_qemu(to);
-    unlink(dst_state.serial);
-    g_free(dst_state.serial);
+    migrate_cleanup(NULL, to);
 
     /*
      * Ensure the source QEMU finishes its cancellation process before we
