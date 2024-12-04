@@ -785,6 +785,21 @@ static hwaddr pc_max_used_gpa(PCMachineState *pcms, uint64_t pci_hole64_size)
     return pc_above_4g_end(pcms) - 1;
 }
 
+static int pc_update_hmem_memory(RAMBlock *rb, void *opaque)
+{
+    X86MachineState *x86ms = opaque;
+    ram_addr_t offset;
+    ram_addr_t length;
+
+    if (qemu_ram_is_hmem(rb)) {
+        offset = qemu_ram_get_offset(rb) + (0x100000000ULL - x86ms->below_4g_mem_size);
+        length = qemu_ram_get_used_length(rb);
+        e820_add_entry(offset, length, E820_SOFT_RESERVED);
+    }
+
+    return 0;
+}
+
 /*
  * AMD systems with an IOMMU have an additional hole close to the
  * 1Tb, which are special GPAs that cannot be DMA mapped. Depending
@@ -895,6 +910,7 @@ void pc_memory_init(PCMachineState *pcms,
         e820_add_entry(x86ms->above_4g_mem_start, x86ms->above_4g_mem_size,
                        E820_RAM);
     }
+    qemu_ram_foreach_block(pc_update_hmem_memory, x86ms);
 
     if (pcms->sgx_epc.size != 0) {
         e820_add_entry(pcms->sgx_epc.base, pcms->sgx_epc.size, E820_RESERVED);

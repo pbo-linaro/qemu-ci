@@ -669,6 +669,9 @@
 #     in host persistent memory that can be accessed using the SNIA
 #     NVM programming model (e.g. Intel NVDIMM).
 #
+# @hmem: specifies whether the backing file specified by @mem-path is
+#     in host heterogeneous memory.
+#
 # @readonly: if true, the backing file is opened read-only; if false,
 #     it is opened read-write.  (default: false)
 #
@@ -696,6 +699,7 @@
             '*discard-data': 'bool',
             'mem-path': 'str',
             '*pmem': { 'type': 'bool', 'if': 'CONFIG_LIBPMEM' },
+            '*hmem': 'bool',
             '*readonly': 'bool',
             '*rom': 'OnOffAuto' } }
 

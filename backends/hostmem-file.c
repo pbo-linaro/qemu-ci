@@ -32,6 +32,7 @@ struct HostMemoryBackendFile {
     uint64_t offset;
     bool discard_data;
     bool is_pmem;
+    bool is_hmem;
     bool readonly;
     OnOffAuto rom;
 };
@@ -88,6 +89,7 @@ file_backend_memory_alloc(HostMemoryBackend *backend, Error **errp)
     ram_flags |= backend->reserve ? 0 : RAM_NORESERVE;
     ram_flags |= backend->guest_memfd ? RAM_GUEST_MEMFD : 0;
     ram_flags |= fb->is_pmem ? RAM_PMEM : 0;
+    ram_flags |= fb->is_hmem ? RAM_HMEM : 0;
     ram_flags |= RAM_NAMED_FILE;
     return memory_region_init_ram_from_file(&backend->mr, OBJECT(backend), name,
                                             backend->size, fb->align, ram_flags,
@@ -256,6 +258,25 @@ static void file_memory_backend_set_rom(Object *obj, Visitor *v,
     visit_type_OnOffAuto(v, name, &fb->rom, errp);
 }
 
+static bool file_memory_backend_get_hmem(Object *o, Error **errp)
+{
+    return MEMORY_BACKEND_FILE(o)->is_hmem;
+}
+
+static void file_memory_backend_set_hmem(Object *o, bool value, Error **errp)
+{
+    HostMemoryBackend *backend = MEMORY_BACKEND(o);
+    HostMemoryBackendFile *fb = MEMORY_BACKEND_FILE(o);
+
+    if (host_memory_backend_mr_inited(backend)) {
+        error_setg(errp, "cannot change property 'hmem' of %s.",
+                   object_get_typename(o));
+        return;
+    }
+
+    fb->is_hmem = value;
+}
+
 static void file_backend_unparent(Object *obj)
 {
     HostMemoryBackend *backend = MEMORY_BACKEND(obj);
@@ -295,6 +316,8 @@ file_backend_class_init(ObjectClass *oc, void *data)
     object_class_property_add_bool(oc, "pmem",
         file_memory_backend_get_pmem, file_memory_backend_set_pmem);
 #endif
+    object_class_property_add_bool(oc, "hmem",
+        file_memory_backend_get_hmem, file_memory_backend_set_hmem);
     object_class_property_add_bool(oc, "readonly",
         file_memory_backend_get_readonly,
         file_memory_backend_set_readonly);

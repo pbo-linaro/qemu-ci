@@ -1584,6 +1584,11 @@ bool qemu_ram_is_noreserve(RAMBlock *rb)
     return rb->flags & RAM_NORESERVE;
 }
 
+bool qemu_ram_is_hmem(RAMBlock *rb)
+{
+    return rb->flags & RAM_HMEM;
+}
+
 /* Note: Only set at the start of postcopy */
 bool qemu_ram_is_uf_zeroable(RAMBlock *rb)
 {
@@ -1951,7 +1956,7 @@ RAMBlock *qemu_ram_alloc_from_fd(ram_addr_t size, MemoryRegion *mr,
     int64_t file_size, file_align;
 
     /* Just support these ram flags by now. */
-    assert((ram_flags & ~(RAM_SHARED | RAM_PMEM | RAM_NORESERVE |
+    assert((ram_flags & ~(RAM_SHARED | RAM_PMEM | RAM_HMEM | RAM_NORESERVE |
                           RAM_PROTECTED | RAM_NAMED_FILE | RAM_READONLY |
                           RAM_READONLY_FD | RAM_GUEST_MEMFD)) == 0);
 
