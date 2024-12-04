@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20241204084837.517299-1-whendrik@google.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 28 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/8] i386: Add Intel RDT device and State to config.
+  [32m✓[0m [PATCH v3 2/8] i386: Add init and realize funciontality for RDT device.
+  [32m✓[0m [PATCH v3 3/8] i386: Add RDT functionality
+  [32m✓[0m [PATCH v3 4/8] i386: Add RDT device interface through MSRs
+  [32m✓[0m [PATCH v3 5/8] i386: Add CPUID enumeration for RDT
+  [32m✓[0m [PATCH v3 6/8] i386: Add RDT feature flags.
+  [32m✓[0m [PATCH v3 7/8] i386/cpu: Adjust CPUID level for RDT features
+  [32m✓[0m [PATCH v3 8/8] i386/cpu: Adjust level for RDT on full_cpuid_auto_level
+  ---
+  [32m✓[0m Signed: DKIM/google.com
+---
+Total patches: 8
+---
+Applying: i386: Add Intel RDT device and State to config.
+Applying: i386: Add init and realize funciontality for RDT device.
+Applying: i386: Add RDT functionality
+Applying: i386: Add RDT device interface through MSRs
+Applying: i386: Add CPUID enumeration for RDT
+Patch failed at 0005 i386: Add CPUID enumeration for RDT
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:146: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:184: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: patch failed: target/i386/cpu.h:673
+error: target/i386/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
