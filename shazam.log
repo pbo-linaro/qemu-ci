@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20241204202602.58083-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/20] exec/tswap: Rename target_words_bigendian -> qemu_binary_is_bigendian
+  [32m✓[0m [PATCH 2/20] hw/core/cpu: Introduce CPUClass::datapath_is_big_endian() handler
+  [32m✓[0m [PATCH 3/20] target/arm: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 4/20] target/ppc: Register CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 5/20] target/rx: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 6/20] target/sparc: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 7/20] target/riscv: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 8/20] target/sh4: Expose CPUSH4State::little_endian property
+  [32m✓[0m [PATCH 9/20] target/sh4: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 10/20] target/microblaze: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 11/20] target/mips: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 12/20] target/xtensa: Implement xtensa_isa_is_big_endian()
+  [32m✓[0m [PATCH 13/20] target/xtensa: Implement CPUClass::datapath_is_big_endian
+  [32m✓[0m [PATCH 14/20] target: Implement CPUClass::datapath_is_big_endian (little-endian)
+  [32m✓[0m [PATCH 15/20] target: Implement CPUClass::datapath_is_big_endian (big-endian)
+  [32m✓[0m [PATCH 16/20] hw/core/cpu: Expose cpu_datapath_is_big_endian() method
+  [32m✓[0m [PATCH 17/20] disas: Use cpu_datapath_is_big_endian()
+  [32m✓[0m [PATCH 18/20] hw/core/generic-loader: Use cpu_datapath_is_big_endian()
+  [32m✓[0m [PATCH RFC 19/20] hw/virtio: Use cpu_datapath_is_big_endian()
+  [32m✓[0m [PATCH 20/20] hw/core/cpu: Remove cpu_virtio_is_big_endian()
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 20
+---
+Applying: exec/tswap: Rename target_words_bigendian -> qemu_binary_is_bigendian
+Patch failed at 0001 exec/tswap: Rename target_words_bigendian -> qemu_binary_is_bigendian
+error: patch failed: hw/display/vga.c:2116
+error: hw/display/vga.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
