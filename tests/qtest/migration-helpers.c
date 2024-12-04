@@ -528,3 +528,11 @@ void migration_event_wait(QTestState *s, const char *target)
         qobject_unref(response);
     } while (!found);
 }
+
+char *migrate_get_unique_serial(const char *tmpfs)
+{
+    static int i;
+
+    assert(i < INT_MAX);
+    return g_strdup_printf("%s/serial_%d", tmpfs, i++);
+}
