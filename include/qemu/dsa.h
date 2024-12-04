@@ -16,6 +16,7 @@
 #define QEMU_DSA_H
 
 #include "qapi/error.h"
+#include "exec/cpu-common.h"
 #include "qemu/thread.h"
 #include "qemu/queue.h"
 
@@ -70,9 +71,10 @@ typedef struct QemuDsaBatchTask {
     QemuDsaTaskStatus status;
     int batch_size;
     bool *results;
+    /* Address of each pages in pages */
+    ram_addr_t *addr;
     QSIMPLEQ_ENTRY(QemuDsaBatchTask) entry;
 } QemuDsaBatchTask;
-
 
 /**
  * @brief Initializes DSA devices.
@@ -105,7 +107,25 @@ void qemu_dsa_cleanup(void);
  */
 bool qemu_dsa_is_running(void);
 
+/**
+ * @brief Initializes a buffer zero DSA batch task.
+ *
+ * @param batch_size The number of zero page checking tasks in the batch.
+ * @return A pointer to the zero page checking tasks initialized.
+ */
+QemuDsaBatchTask *
+buffer_zero_batch_task_init(int batch_size);
+
+/**
+ * @brief Performs the proper cleanup on a DSA batch task.
+ *
+ * @param task A pointer to the batch task to cleanup.
+ */
+void buffer_zero_batch_task_destroy(QemuDsaBatchTask *task);
+
 #else
+
+typedef struct QemuDsaBatchTask {} QemuDsaBatchTask;
 
 static inline bool qemu_dsa_is_running(void)
 {
@@ -123,6 +143,20 @@ static inline void qemu_dsa_start(void) {}
 static inline void qemu_dsa_stop(void) {}
 
 static inline void qemu_dsa_cleanup(void) {}
+
+static inline QemuDsaBatchTask *buffer_zero_batch_task_init(int batch_size)
+{
+    return NULL;
+}
+
+static inline void buffer_zero_batch_task_destroy(QemuDsaBatchTask *task) {}
+
+static inline int
+buffer_is_zero_dsa_batch_sync(QemuDsaBatchTask *batch_task,
+                              const void **buf, size_t count, size_t len)
+{
+    return -1;
+}
 
 #endif
 
