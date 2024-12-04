@@ -3852,6 +3852,8 @@ subdir('chardev')
 subdir('fsdev')
 subdir('dump')
 
+common_ss.add(files('sanitizer.c'))
+
 if have_block
   block_ss.add(files(
     'block.c',
