@@ -1819,6 +1819,104 @@ finish:
     test_migrate_end(from, to, args->result == MIG_TEST_SUCCEED);
 }
 
+static void migrate_dst_becomes_src(QTestState **from, QTestState **to,
+                                    QTestMigrationState *src_state,
+                                    QTestMigrationState *dst_state)
+{
+    *from = *to;
+
+    *src_state = (QTestMigrationState) { };
+    src_state->serial = dst_state->serial;
+    qtest_qmp_set_event_callback(*from, migrate_watch_for_events, src_state);
+
+    src_state->stop_seen = dst_state->stop_seen;
+}
+
+static void test_precopy_ping_pong_common(MigrateCommon *args, int n,
+                                          bool late_block_activate)
+{
+    QTestState *from, *to;
+    bool keep_paused = false;
+
+    g_assert(!args->live);
+
+    g_test_message("Migrating back and forth %d times", n);
+
+    for (int i = 0; i < n; i++) {
+        g_test_message("%s (%d/%d)", i % 2 ? "pong" : "ping", i + 1, n);
+
+        if (test_migrate_start(&from, &to, args->listen_uri, &args->start)) {
+            return;
+        }
+
+        if (late_block_activate) {
+            migrate_set_capability(from, "late-block-activate", true);
+            migrate_set_capability(to, "late-block-activate", true);
+
+            /*
+             * The late-block-activate capability expects that the
+             * management layer will issue a qmp_continue command on
+             * the destination once the migration finishes. In order
+             * to test the capability properly, make sure the test is
+             * not issuing spurious continue commands.
+             */
+            keep_paused = true;
+        }
+
+        if (!src_state.stop_seen) {
+            wait_for_serial(src_state.serial);
+        }
+
+        /* because of !args->live */
+        qtest_qmp_assert_success(from, "{ 'execute' : 'stop'}");
+        wait_for_stop(from, &src_state);
+
+        migrate_ensure_converge(from);
+        migrate_qmp(from, to, args->connect_uri, args->connect_channels, "{}");
+
+        wait_for_migration_complete(from);
+        wait_for_migration_complete(to);
+
+        /* note check_guests_ram() requires a stopped guest */
+        check_guests_ram(to);
+
+        if (keep_paused) {
+            /*
+             * Nothing issued continue on the destination, reflect
+             * that the guest is paused in the dst_state.
+             */
+            dst_state.stop_seen = true;
+        } else {
+            qtest_qmp_assert_success(to, "{ 'execute' : 'cont'}");
+            wait_for_serial(dst_state.serial);
+            dst_state.stop_seen = false;
+        }
+
+        /*
+         * Last iteration, let the guest run to make sure there's no
+         * memory corruption. The test_migrate_end() below will check
+         * the memory one last time.
+         */
+        if (i == n - 1) {
+            qtest_qmp_assert_success(to, "{ 'execute' : 'cont'}");
+            wait_for_serial(dst_state.serial);
+            dst_state.stop_seen = false;
+            break;
+        }
+
+        /*
+         * Prepare for migrating back: clear the original source and
+         * switch source & destination.
+         */
+        migrate_cleanup(from, NULL);
+        migrate_dst_becomes_src(&from, &to, &src_state, &dst_state);
+
+        args->start.only_target = true;
+    }
+
+    test_migrate_end(from, to, true);
+}
+
 static void file_dirty_offset_region(void)
 {
     g_autofree char *path = g_strdup_printf("%s/%s", tmpfs, FILE_TEST_FILENAME);
@@ -3772,6 +3870,24 @@ static void test_migrate_dirty_limit(void)
     test_migrate_end(from, to, true);
 }
 
+static void test_precopy_ping_pong(void)
+{
+    MigrateCommon args = {
+        .listen_uri = "tcp:127.0.0.1:0",
+    };
+
+    test_precopy_ping_pong_common(&args, 2, false);
+}
+
+static void test_precopy_ping_pong_late_block(void)
+{
+    MigrateCommon args = {
+        .listen_uri = "tcp:127.0.0.1:0",
+    };
+
+    test_precopy_ping_pong_common(&args, 2, true);
+}
+
 static bool kvm_dirty_ring_supported(void)
 {
 #if defined(__linux__) && defined(HOST_X86_64)
@@ -4054,6 +4170,11 @@ int main(int argc, char **argv)
                                test_vcpu_dirty_limit);
         }
     }
+
+    migration_test_add("/migration/precopy/ping-pong/plain",
+                       test_precopy_ping_pong);
+    migration_test_add("/migration/precopy/ping-pong/late-block-activate",
+                       test_precopy_ping_pong_late_block);
 
     ret = g_test_run();
 
