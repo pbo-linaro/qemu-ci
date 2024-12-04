@@ -23,6 +23,7 @@
 #include "qemu/bswap.h"
 #include "qemu/error-report.h"
 #include "qemu/rcu.h"
+#include <cpuid.h>
 
 #pragma GCC push_options
 #pragma GCC target("enqcmd")
@@ -685,6 +686,36 @@ static void dsa_completion_thread_stop(void *opaque)
     qemu_thread_join(&thread_context->thread);
 
     qemu_sem_destroy(&thread_context->sem_init_done);
+}
+
+/**
+ * @brief Check if DSA is supported.
+ *
+ * @return True if DSA is supported, otherwise false.
+ */
+bool qemu_dsa_is_supported(void)
+{
+    /*
+     * movdir64b is indicated by bit 28 of ecx in CPUID leaf 7, subleaf 0.
+     * enqcmd is indicated by bit 29 of ecx in CPUID leaf 7, subleaf 0.
+     * Doc: https://cdrdv2-public.intel.com/819680/architecture-instruction-\
+     *      set-extensions-programming-reference.pdf
+     */
+    uint32_t eax, ebx, ecx, edx;
+    bool movedirb_enabled;
+    bool enqcmd_enabled;
+
+    __get_cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+    movedirb_enabled = (ecx >> 28) & 0x1;
+    if (!movedirb_enabled) {
+        return false;
+    }
+    enqcmd_enabled = (ecx >> 29) & 0x1;
+    if (!enqcmd_enabled) {
+        return false;
+    }
+
+    return true;
 }
 
 /**

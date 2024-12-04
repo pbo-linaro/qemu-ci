@@ -101,6 +101,13 @@ void qemu_dsa_stop(void);
 void qemu_dsa_cleanup(void);
 
 /**
+ * @brief Check if DSA is supported.
+ *
+ * @return True if DSA is supported, otherwise false.
+ */
+bool qemu_dsa_is_supported(void);
+
+/**
  * @brief Check if DSA is running.
  *
  * @return True if DSA is running, otherwise false.
@@ -140,6 +147,12 @@ buffer_is_zero_dsa_batch_sync(QemuDsaBatchTask *batch_task,
 #else
 
 typedef struct QemuDsaBatchTask {} QemuDsaBatchTask;
+
+static inline bool qemu_dsa_is_supported(void)
+{
+    return false;
+}
+
 
 static inline bool qemu_dsa_is_running(void)
 {
