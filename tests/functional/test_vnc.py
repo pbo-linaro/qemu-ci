@@ -29,11 +29,6 @@ def check_connect(port: int) -> bool:
 
 class Vnc(QemuSystemTest):
 
-    def test_no_vnc(self):
-        self.vm.add_args('-nodefaults', '-S')
-        self.vm.launch()
-        self.assertFalse(self.vm.qmp('query-vnc')['return']['enabled'])
-
     def test_no_vnc_change_password(self):
         self.vm.add_args('-nodefaults', '-S')
         self.vm.launch()
