@@ -46,8 +46,8 @@ class Vnc(QemuSystemTest):
         self.assertEqual(set_password_response['error']['desc'],
                          'Could not set password')
 
-    def test_change_password_requires_a_password(self):
-        self.vm.add_args('-nodefaults', '-S', '-vnc', ':0')
+    def do_test_change_password_requires_a_password(self, port):
+        self.vm.add_args('-nodefaults', '-S', '-vnc', f':{port - 5900}')
         self.vm.launch()
         self.assertTrue(self.vm.qmp('query-vnc')['return']['enabled'])
         set_password_response = self.vm.qmp('change-vnc-password',
@@ -58,12 +58,23 @@ class Vnc(QemuSystemTest):
         self.assertEqual(set_password_response['error']['desc'],
                          'Could not set password')
 
-    def test_change_password(self):
-        self.vm.add_args('-nodefaults', '-S', '-vnc', ':0,password=on')
+    def test_change_password_requires_a_password(self):
+        with Ports() as ports:
+            port = ports.find_free_port()
+            self.do_test_change_password_requires_a_password(port)
+
+    def do_test_change_password(self, port):
+        self.vm.add_args('-nodefaults', '-S',
+                         '-vnc', f':{port - 5900},password=on')
         self.vm.launch()
         self.assertTrue(self.vm.qmp('query-vnc')['return']['enabled'])
         self.vm.cmd('change-vnc-password',
                     password='new_password')
+
+    def test_change_password(self):
+        with Ports() as ports:
+            port = ports.find_free_port()
+            self.do_test_change_password(port)
 
     def do_test_change_listen(self, a, b, c):
         self.assertFalse(check_connect(a))
