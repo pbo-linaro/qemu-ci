@@ -160,13 +160,9 @@ static void aspeed_sdhci_realize(DeviceState *dev, Error **errp)
     sysbus_init_mmio(sbd, &sdhci->iomem);
 
     for (int i = 0; i < sdhci->num_slots; ++i) {
-        Object *sdhci_slot = OBJECT(&sdhci->slots[i]);
         SysBusDevice *sbd_slot = SYS_BUS_DEVICE(&sdhci->slots[i]);
 
-        if (!object_property_set_int(sdhci_slot, "sd-spec-version", 2, errp)) {
-            return;
-        }
-
+        sdhci->slots[i].sd_spec_version = 2;
         sdhci->slots[i].capareg = asc->capareg;
 
         if (!sysbus_realize(sbd_slot, errp)) {
