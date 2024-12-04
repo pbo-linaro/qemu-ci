@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/cover.1733327276.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 28 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/5] acpi/ghes: Prepare to support multiple sources on ghes
+  [32m✓[0m [PATCH v3 2/5] acpi/ghes: add a firmware file with HEST address
+  [32m✓[0m [PATCH v3 3/5] acpi/ghes: Use HEST table offsets when preparing GHES records
+  [32m✓[0m [PATCH v3 4/5] acpi/generic_event_device: Update GHES migration to cover hest addr
+  [32m✓[0m [PATCH v3 5/5] acpi/generic_event_device: add logic to detect if HEST addr is available
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 5
+---
+Applying: acpi/ghes: Prepare to support multiple sources on ghes
+Patch failed at 0001 acpi/ghes: Prepare to support multiple sources on ghes
+error: patch failed: hw/acpi/ghes.c:206
+error: hw/acpi/ghes.c: patch does not apply
+error: patch failed: hw/arm/virt-acpi-build.c:944
+error: hw/arm/virt-acpi-build.c: patch does not apply
+error: patch failed: include/hw/acpi/ghes.h:57
+error: include/hw/acpi/ghes.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
