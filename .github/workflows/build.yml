@@ -1,0 +1,326 @@
+on: push
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checkapply:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      # to debug container live from GitHub
+      # - uses: mxschmitt/action-tmate@v3
+      - run: bash -c '[ ! -f shazam.log ] || { cat shazam.log; exit 1; }'
+
+  checkpatch-ignore-signoff:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: git fetch -a origin --unshallow || true
+      - run: git remote add upstream -f https://gitlab.com/qemu-project/qemu
+      - run: ./scripts/checkpatch.pl --no-signoff $(git merge-base upstream/master HEAD)..HEAD
+
+  checkpatch-with-signoff:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: git fetch -a origin --unshallow || true
+      - run: git remote add upstream -f https://gitlab.com/qemu-project/qemu
+      - run: ./scripts/checkpatch.pl $(git merge-base upstream/master HEAD)..HEAD
+
+  # use docker-run to not rebuild images
+  # images are built daily and pushed on pbolinaro/qemu-ci:*
+  build-cross:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [alpine,centos9,debian,debian-all-test-cross,debian-amd64-cross,debian-arm64-cross,debian-armhf-cross,debian-hexagon-cross,debian-i686-cross,debian-legacy-test-cross,debian-loongarch-cross,debian-mips64el-cross,debian-mipsel-cross,debian-ppc64el-cross,debian-riscv64-cross,debian-s390x-cross,debian-tricore-cross,fedora,fedora-rust-nightly,opensuse-leap,ubuntu2204]
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install meson
+      - run: make docker-run J=$(nproc) RUNC=podman TEST=test-build IMAGE=docker.io/pbolinaro/qemu-ci:${{matrix.container}}
+
+  build:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure && ninja -C build install'
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          ./build/qemu-system-x86_64 -nographic -plugin ./build/contrib/plugins/libstoptrigger,icount=1000000 -plugin ./build/tests/tcg/plugins/libinsn -d plugin
+
+  build-cross-mingw64:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:fedora-win64-cross
+          bash -cx './configure $QEMU_CONFIGURE_OPTS && ninja -C build install'
+
+  build-windows:
+    needs: checkapply
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        sys: [UCRT64, CLANG64, MINGW64]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{matrix.sys}}
+      - run: pacman -S --noconfirm curl git
+      - uses: actions/checkout@v4
+      - run: >
+            pacman -S --noconfirm
+            base-devel binutils bison diffutils flex git grep make sed
+            ${MINGW_PACKAGE_PREFIX}-toolchain
+            ${MINGW_PACKAGE_PREFIX}-glib2
+            ${MINGW_PACKAGE_PREFIX}-gtk3
+            ${MINGW_PACKAGE_PREFIX}-libnfs
+            ${MINGW_PACKAGE_PREFIX}-libssh
+            ${MINGW_PACKAGE_PREFIX}-ninja
+            ${MINGW_PACKAGE_PREFIX}-pixman
+            ${MINGW_PACKAGE_PREFIX}-pkgconf
+            ${MINGW_PACKAGE_PREFIX}-python
+            ${MINGW_PACKAGE_PREFIX}-SDL2
+            ${MINGW_PACKAGE_PREFIX}-zstd
+      - run: ./configure && ninja -C build
+      - run: ./build/qemu-system-x86_64 -nographic -plugin ./build/contrib/plugins/libstoptrigger,icount=1000000 -plugin ./build/tests/tcg/plugins/libinsn -d plugin
+
+  build-macos-x86_64:
+    needs: checkapply
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install --quiet $(brew deps --include-build qemu) || true
+      # on macos, werror is not on by default
+      - run: ./configure --enable-werror && ninja -C build
+      - run: ./build/qemu-system-x86_64 -nographic -plugin ./build/contrib/plugins/libstoptrigger,icount=1000000 -plugin ./build/tests/tcg/plugins/libinsn -d plugin
+
+  build-macos-aarch64:
+    needs: checkapply
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install --quiet $(brew deps --include-build qemu) || true
+      # on macos, werror is not on by default
+      - run: ./configure --enable-werror && ninja -C build
+      - run: ./build/qemu-system-x86_64 -nographic -plugin ./build/contrib/plugins/libstoptrigger,icount=1000000 -plugin ./build/tests/tcg/plugins/libinsn -d plugin
+
+  build-misc:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --disable-user --disable-system --enable-docs --enable-tools && ninja -C build install'
+
+  build-32bits:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-i686-cross
+          bash -cx './configure $QEMU_CONFIGURE_OPTS && ninja -C build install'
+
+  build-big-endian:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-s390x-cross
+          bash -cx './configure $QEMU_CONFIGURE_OPTS && ninja -C build install'
+
+  build-debug:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --enable-debug --enable-asan --enable-ubsan && ninja -C build install'
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          ./build/qemu-system-x86_64 -nographic -plugin ./build/contrib/plugins/libstoptrigger,icount=1000000 -plugin ./build/tests/tcg/plugins/libinsn -d plugin
+
+  build-static:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --disable-system --disable-tools --disable-guest-agent --disable-docs --static && ninja -C build install'
+
+  build-tsan:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --enable-tsan && ninja -C build install'
+
+  build-clang:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --cxx=clang++ --cc=clang --host-cc=clang && ninja -C build install'
+
+  build-clang-latest:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx 'LLVM_VERSION=19 && apt update && apt install -y lsb-release wget software-properties-common gnupg && wget https://apt.llvm.org/llvm.sh && bash llvm.sh ${LLVM_VERSION} && ./configure --cxx=clang++-${LLVM_VERSION} --cc=clang-${LLVM_VERSION} --host-cc=clang-${LLVM_VERSION} && ninja -C build install'
+
+  build-rust:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:fedora-rust-nightly
+          bash -cx './configure $QEMU_CONFIGURE_OPTS --enable-rust && ninja -C build install'
+
+  build-disable-tcg:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --disable-tcg && ninja -C build install'
+
+  build-disable-kvm:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --disable-kvm && ninja -C build install'
+
+  build-disable-tcg-kvm-for-xen:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --disable-tcg --disable-kvm && ninja -C build install'
+
+  build-minimal:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian
+          bash -cx './configure --without-default-features --without-default-devices --disable-kvm --disable-tcg && ninja -C build install'
+
+  check-tcg:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-all-test-cross
+          bash -cx './configure $QEMU_CONFIGURE_OPTS --enable-debug-tcg --enable-debug-graph-lock --enable-debug-mutex --enable-asan --enable-ubsan && ninja -C build'
+      - run: >
+          podman run --init --privileged --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-all-test-cross
+          bash -cx "env ASAN_OPTIONS=detect_leaks=0 make -k check-tcg V=1"
+
+  # run all meson tests, including functional. Run -j1 to avoid sporadic issues.
+  # block tests are not ran because they don't support sanitizers:
+  # https://gitlab.com/qemu-project/qemu/-/blob/master/tests/qemu-iotests/meson.build
+  check:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      # we use image with download cache filled. Solves servers flakiness.
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx './configure --enable-debug-tcg --enable-debug-graph-lock --enable-debug-mutex --enable-asan --enable-ubsan && ninja -C build'
+      - run: sudo chown $USER:$USER /dev/kvm
+      - run: >
+          podman run --init --privileged --rm -it -v /dev/kvm:/dev/kvm -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx "env ASAN_OPTIONS=detect_leaks=0 make -k check SPEED=thorough TIMEOUT_MULTIPLIER=5 V=1"
+
+  # iotests do not support sanitizers, so we run them in their own job
+  check-block:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      # we use image with download cache filled. Solves servers flakiness.
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx './configure --enable-debug-tcg --enable-debug-graph-lock --enable-debug-mutex && ninja -C build'
+      - run: sudo chown $USER:$USER /dev/kvm
+      - run: >
+          podman run --init --privileged --rm -it -v /dev/kvm:/dev/kvm -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx "./build/pyvenv/bin/meson test -C build --suite block --suite block-slow --suite block-thorough -j 1 --timeout-multiplier 5 --verbose"
+
+  check-avocado:
+    needs: checkapply
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      # add more time for all tests
+      - run: sed -i -e 's/timeout = .*/timeout = 3600/' $(find tests/avocado/ -type f)
+      # we use image with download cache filled. Solves servers flakiness.
+      - run: >
+          podman run --init --rm -it -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx './configure --enable-debug-tcg --enable-debug-graph-lock --enable-debug-mutex --enable-asan --enable-ubsan && ninja -C build'
+      - run: sudo chown $USER:$USER /dev/kvm
+      - run: >
+          podman run --init --privileged --rm -it -v /dev/kvm:/dev/kvm -v $(pwd):$(pwd) -w $(pwd)
+          docker.io/pbolinaro/qemu-ci:debian-precache-tests
+          bash -cx "env ASAN_OPTIONS=detect_leaks=0 make -k check-avocado V=1"
