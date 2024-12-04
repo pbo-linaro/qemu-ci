@@ -370,8 +370,20 @@ struct MigrationState {
     /* Flag set once the migration thread is running (and needs joining) */
     bool migration_thread_running;
 
-    /* Flag set once the migration thread called bdrv_inactivate_all */
-    bool block_inactive;
+    /*
+     * Migration-only cache to remember the block layer activation status.
+     * Protected by BQL.
+     *
+     * We need this because..
+     *
+     * - Migration can fail after block devices are invalidated (during
+     *   switchover phase).  When that happens, we need to be able to
+     *   recover the block drive status by re-activating them.
+     *
+     * For freshly started QEMU, block_active is initialized to TRUE
+     * reflecting the scenario where QEMU owns block device ownerships.
+     */
+    bool block_active;
 
     /* Migration is waiting for guest to unplug device */
     QemuSemaphore wait_unplug_sem;
@@ -555,5 +567,9 @@ void migration_bitmap_sync_precopy(bool last_stage);
 
 /* migration/block-dirty-bitmap.c */
 void dirty_bitmap_mig_init(void);
+
+/* Wrapper for block active/inactive operations */
+bool migration_block_activate(MigrationState *s);
+bool migration_block_inactivate(MigrationState *s);
 
 #endif

@@ -1549,17 +1549,14 @@ int qemu_savevm_state_complete_precopy_non_iterable(QEMUFile *f,
     if (inactivate_disks) {
         /* Inactivate before sending QEMU_VM_EOF so that the
          * bdrv_activate_all() on the other end won't fail. */
-        ret = bdrv_inactivate_all();
-        if (ret) {
-            error_setg(&local_err, "%s: bdrv_inactivate_all() failed (%d)",
-                       __func__, ret);
+        if (!migration_block_inactivate(ms)) {
+            error_setg(&local_err, "%s: bdrv_inactivate_all() failed",
+                       __func__);
             migrate_set_error(ms, local_err);
             error_report_err(local_err);
-            qemu_file_set_error(f, ret);
+            qemu_file_set_error(f, -EFAULT);
             return ret;
         }
-        /* Remember that we did this */
-        s->block_inactive = true;
     }
     if (!in_postcopy) {
         /* Postcopy stream will still be going */
