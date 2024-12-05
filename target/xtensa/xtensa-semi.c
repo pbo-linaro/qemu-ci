@@ -328,10 +328,17 @@ void HELPER(simcall)(CPUXtensaState *env)
             struct timeval tv = {0};
 
             if (target_tv) {
+                bool cpu_big_endian = xtensa_isa_is_big_endian(env->config->isa);
+                bool swap_needed = HOST_BIG_ENDIAN != cpu_big_endian;
+
                 cpu_memory_rw_debug(cs, target_tv,
                         (uint8_t *)target_tvv, sizeof(target_tvv), 0);
-                tv.tv_sec = (int32_t)tswap32(target_tvv[0]);
-                tv.tv_usec = (int32_t)tswap32(target_tvv[1]);
+                if (swap_needed) {
+                    bswap32s(&target_tvv[0]);
+                    bswap32s(&target_tvv[1]);
+                }
+                tv.tv_sec = (int32_t)target_tvv[0];
+                tv.tv_usec = (int32_t)target_tvv[1];
             }
             if (fd < 3 && sim_console) {
                 if ((fd == 1 || fd == 2) && rq == SELECT_ONE_WRITE) {
@@ -381,6 +388,8 @@ void HELPER(simcall)(CPUXtensaState *env)
             int argc = semihosting_get_argc();
             int str_offset = (argc + 1) * sizeof(uint32_t);
             int i;
+            bool cpu_big_endian = xtensa_isa_is_big_endian(env->config->isa);
+            bool swap_needed = HOST_BIG_ENDIAN != cpu_big_endian;
             uint32_t argptr;
 
             for (i = 0; i < argc; ++i) {
@@ -388,6 +397,9 @@ void HELPER(simcall)(CPUXtensaState *env)
                 int str_size = strlen(str) + 1;
 
                 argptr = tswap32(regs[3] + str_offset);
+                if (swap_needed) {
+                    bswap32s(&argptr);
+                }
 
                 cpu_memory_rw_debug(cs,
                                     regs[3] + i * sizeof(uint32_t),
