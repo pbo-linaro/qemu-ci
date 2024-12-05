@@ -91,6 +91,21 @@ static const VMStateDescription vmstate_ich9_ahci = {
     },
 };
 
+static void pci_ich9_ahci_update_irq(void *opaque, int irq_num, int level)
+{
+    PCIDevice *pci_dev = opaque;
+
+    assert(irq_num == 0);
+
+    if (msi_enabled(pci_dev)) {
+        if (level) {
+            msi_notify(pci_dev, 0);
+        }
+    } else {
+        pci_set_irq(pci_dev, level);
+    }
+}
+
 static void pci_ich9_reset(DeviceState *dev)
 {
     AHCIPCIState *d = ICH9_AHCI(dev);
@@ -125,7 +140,7 @@ static void pci_ich9_ahci_realize(PCIDevice *dev, Error **errp)
     /* XXX Software should program this register */
     dev->config[0x90]   = 1 << 6; /* Address Map Register - AHCI mode */
 
-    d->ahci.irq = pci_allocate_irq(dev);
+    d->ahci.irq = qemu_allocate_irq(pci_ich9_ahci_update_irq, d, 0);
 
     pci_register_bar(dev, ICH9_IDP_BAR, PCI_BASE_ADDRESS_SPACE_IO,
                      &d->ahci.idp);
