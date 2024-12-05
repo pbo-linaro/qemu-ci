@@ -33,6 +33,9 @@ bool vhost_svq_valid_features(uint64_t features, Error **errp)
          ++b) {
         switch (b) {
         case VIRTIO_F_ANY_LAYOUT:
+        case VIRTIO_F_RING_PACKED:
+        case VIRTIO_F_RING_RESET:
+        case VIRTIO_RING_F_INDIRECT_DESC:
         case VIRTIO_RING_F_EVENT_IDX:
             continue;
 
@@ -178,7 +181,78 @@ static void vhost_svq_add_split(VhostShadowVirtqueue *svq,
     /* Update the avail index after write the descriptor */
     smp_wmb();
     avail->idx = cpu_to_le16(svq->shadow_avail_idx);
+}
 
+/**
+ * Write descriptors to SVQ packed vring
+ *
+ * @svq: The shadow virtqueue
+ * @out_sg: The iovec to the guest
+ * @out_num: Outgoing iovec length
+ * @in_sg: The iovec from the guest
+ * @in_num: Incoming iovec length
+ * @sgs: Cache for hwaddr
+ * @head: Saves current free_head
+ */
+static void vhost_svq_add_packed(VhostShadowVirtqueue *svq,
+                                const struct iovec *out_sg, size_t out_num,
+                                const struct iovec *in_sg, size_t in_num,
+                                hwaddr *sgs, unsigned *head)
+{
+    uint16_t id, curr, i, head_flags = 0;
+    size_t num = out_num + in_num;
+    unsigned n;
+
+    struct vring_packed_desc *descs = svq->vring_packed.vring.desc;
+
+    *head = svq->vring_packed.next_avail_idx;
+    i = *head;
+    id = svq->free_head;
+    curr = id;
+
+    /* Write descriptors to SVQ packed vring */
+    for (n = 0; n < num; n++) {
+        uint16_t flags = cpu_to_le16(svq->vring_packed.avail_used_flags |
+                                     (n < out_num ? 0 : VRING_DESC_F_WRITE) |
+                                     (n + 1 == num ? 0 : VRING_DESC_F_NEXT));
+        if (i == *head) {
+            head_flags = flags;
+        } else {
+            descs[i].flags = flags;
+        }
+
+        descs[i].addr = cpu_to_le64(sgs[n]);
+        descs[i].id = id;
+        if (n < out_num) {
+            descs[i].len = cpu_to_le32(out_sg[n].iov_len);
+        } else {
+            descs[i].len = cpu_to_le32(in_sg[n - out_num].iov_len);
+        }
+
+        curr = cpu_to_le16(svq->desc_next[curr]);
+
+        if (++i >= svq->vring_packed.vring.num) {
+            i = 0;
+            svq->vring_packed.avail_used_flags ^=
+                    1 << VRING_PACKED_DESC_F_AVAIL |
+                    1 << VRING_PACKED_DESC_F_USED;
+        }
+    }
+
+    if (i <= *head) {
+        svq->vring_packed.avail_wrap_counter ^= 1;
+    }
+
+    svq->vring_packed.next_avail_idx = i;
+    svq->free_head = curr;
+
+    /*
+     * A driver MUST NOT make the first descriptor in the list
+     * available before all subsequent descriptors comprising
+     * the list are made available.
+     */
+    smp_wmb();
+    svq->vring_packed.vring.desc[*head].flags = head_flags;
 }
 
 static void vhost_svq_kick(VhostShadowVirtqueue *svq)
@@ -240,8 +314,13 @@ int vhost_svq_add(VhostShadowVirtqueue *svq, const struct iovec *out_sg,
         return -EINVAL;
     }
 
-    vhost_svq_add_split(svq, out_sg, out_num, in_sg,
-                        in_num, sgs, &qemu_head);
+    if (virtio_vdev_has_feature(svq->vdev, VIRTIO_F_RING_PACKED)) {
+        vhost_svq_add_packed(svq, out_sg, out_num, in_sg,
+                             in_num, sgs, &qemu_head);
+    } else {
+        vhost_svq_add_split(svq, out_sg, out_num, in_sg,
+                            in_num, sgs, &qemu_head);
+    }
 
     svq->num_free -= ndescs;
     svq->desc_state[qemu_head].elem = elem;
