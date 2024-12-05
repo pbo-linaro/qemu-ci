@@ -314,7 +314,7 @@ int vhost_svq_add(VhostShadowVirtqueue *svq, const struct iovec *out_sg,
         return -EINVAL;
     }
 
-    if (virtio_vdev_has_feature(svq->vdev, VIRTIO_F_RING_PACKED)) {
+    if (svq->is_packed) {
         vhost_svq_add_packed(svq, out_sg, out_num, in_sg,
                              in_num, sgs, &qemu_head);
     } else {
@@ -661,19 +661,33 @@ void vhost_svq_get_vring_addr(const VhostShadowVirtqueue *svq,
     addr->used_user_addr = (uint64_t)(uintptr_t)svq->vring.used;
 }
 
-size_t vhost_svq_driver_area_size(const VhostShadowVirtqueue *svq)
+size_t vhost_svq_descriptor_area_size(const VhostShadowVirtqueue *svq)
 {
     size_t desc_size = sizeof(vring_desc_t) * svq->vring.num;
-    size_t avail_size = offsetof(vring_avail_t, ring[svq->vring.num]) +
-                                                              sizeof(uint16_t);
+    return ROUND_UP(desc_size, qemu_real_host_page_size());
+}
 
-    return ROUND_UP(desc_size + avail_size, qemu_real_host_page_size());
+size_t vhost_svq_driver_area_size(const VhostShadowVirtqueue *svq)
+{
+    size_t avail_size;
+    if (svq->is_packed) {
+        avail_size = sizeof(uint32_t);
+    } else {
+        avail_size = offsetof(vring_avail_t, ring[svq->vring.num]) +
+                                                             sizeof(uint16_t);
+    }
+    return ROUND_UP(avail_size, qemu_real_host_page_size());
 }
 
 size_t vhost_svq_device_area_size(const VhostShadowVirtqueue *svq)
 {
-    size_t used_size = offsetof(vring_used_t, ring[svq->vring.num]) +
-                                                              sizeof(uint16_t);
+    size_t used_size;
+    if (svq->is_packed) {
+        used_size = sizeof(uint32_t);
+    } else {
+        used_size = offsetof(vring_used_t, ring[svq->vring.num]) +
+                                                           sizeof(uint16_t);
+    }
     return ROUND_UP(used_size, qemu_real_host_page_size());
 }
 
@@ -718,8 +732,6 @@ void vhost_svq_set_svq_kick_fd(VhostShadowVirtqueue *svq, int svq_kick_fd)
 void vhost_svq_start(VhostShadowVirtqueue *svq, VirtIODevice *vdev,
                      VirtQueue *vq, VhostIOVATree *iova_tree)
 {
-    size_t desc_size;
-
     event_notifier_set_handler(&svq->hdev_call, vhost_svq_handle_call);
     svq->next_guest_avail_elem = NULL;
     svq->shadow_avail_idx = 0;
@@ -728,20 +740,22 @@ void vhost_svq_start(VhostShadowVirtqueue *svq, VirtIODevice *vdev,
     svq->vdev = vdev;
     svq->vq = vq;
     svq->iova_tree = iova_tree;
+    svq->is_packed = virtio_vdev_has_feature(svq->vdev, VIRTIO_F_RING_PACKED);
 
     svq->vring.num = virtio_queue_get_num(vdev, virtio_get_queue_index(vq));
     svq->num_free = svq->vring.num;
-    svq->vring.desc = mmap(NULL, vhost_svq_driver_area_size(svq),
+    svq->vring.desc = mmap(NULL, vhost_svq_descriptor_area_size(svq),
                            PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,
                            -1, 0);
-    desc_size = sizeof(vring_desc_t) * svq->vring.num;
-    svq->vring.avail = (void *)((char *)svq->vring.desc + desc_size);
+    svq->vring.avail = mmap(NULL, vhost_svq_driver_area_size(svq),
+                            PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,
+                            -1, 0);
     svq->vring.used = mmap(NULL, vhost_svq_device_area_size(svq),
                            PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,
                            -1, 0);
-    svq->desc_state = g_new0(SVQDescState, svq->vring.num);
-    svq->desc_next = g_new0(uint16_t, svq->vring.num);
-    for (unsigned i = 0; i < svq->vring.num - 1; i++) {
+    svq->desc_state = g_new0(SVQDescState, svq->num_free);
+    svq->desc_next = g_new0(uint16_t, svq->num_free);
+    for (unsigned i = 0; i < svq->num_free - 1; i++) {
         svq->desc_next[i] = cpu_to_le16(i + 1);
     }
 }
@@ -781,7 +795,8 @@ void vhost_svq_stop(VhostShadowVirtqueue *svq)
     svq->vq = NULL;
     g_free(svq->desc_next);
     g_free(svq->desc_state);
-    munmap(svq->vring.desc, vhost_svq_driver_area_size(svq));
+    munmap(svq->vring.desc, vhost_svq_descriptor_area_size(svq));
+    munmap(svq->vring.avail, vhost_svq_driver_area_size(svq));
     munmap(svq->vring.used, vhost_svq_device_area_size(svq));
     event_notifier_set_handler(&svq->hdev_call, NULL);
 }
