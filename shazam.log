@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20241205133003.184581-1-dbarboza@ventanamicro.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] hw/riscv/riscv-iommu.h: add missing headers
+  [32m✓[0m [PATCH 2/11] hw/riscv/riscv-iommu-bits.h: HPM bits
+  [32m✓[0m [PATCH 3/11] hw/riscv/riscv-iommu: add riscv-iommu-hpm file
+  [32m✓[0m [PATCH 4/11] hw/riscv/riscv-iommu: add riscv_iommu_hpm_incr_ctr()
+  [32m✓[0m [PATCH 5/11] hw/riscv/riscv-iommu: instantiate hpm_timer
+  [32m✓[0m [PATCH 6/11] hw/riscv/riscv-iommu: add IOCOUNTINH mmio writes
+  [32m✓[0m [PATCH 7/11] hw/riscv/riscv-iommu: add IOHPMCYCLES mmio write
+  [32m✓[0m [PATCH 8/11] hw/riscv/riscv-iommu: add hpm events mmio write
+  [32m✓[0m [PATCH 9/11] hw/riscv/riscv-iommu.c: add RISCV_IOMMU_CAP_HPM cap
+  [32m✓[0m [PATCH 10/11] hw/riscv: add IOMMU HPM trace events
+  [32m✓[0m [PATCH 11/11] docs/specs/riscv-iommu.rst: add HPM support info
+  ---
+  [32m✓[0m Signed: DKIM/ventanamicro.com
+---
+Total patches: 11
+---
+Applying: hw/riscv/riscv-iommu.h: add missing headers
+Patch failed at 0001 hw/riscv/riscv-iommu.h: add missing headers
+error: patch failed: hw/riscv/riscv-iommu.h:20
+error: hw/riscv/riscv-iommu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
