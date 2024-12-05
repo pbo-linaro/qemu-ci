@@ -2390,6 +2390,17 @@ static inline void cpu_x86_load_seg_cache_sipi(X86CPU *cpu,
     cs->halted = 0;
 }
 
+static inline uint64_t cpu_x86_get_msr_core_thread_count(X86CPU *cpu)
+{
+    CPUState *cs = CPU(cpu);
+    uint64_t val;
+
+    val = cs->nr_threads * cs->nr_cores;  /* thread count, bits 15..0 */
+    val |= ((uint32_t)cs->nr_cores << 16); /* core count, bits 31..16 */
+
+    return val;
+}
+
 int cpu_x86_get_descr_debug(CPUX86State *env, unsigned int selector,
                             target_ulong *base, unsigned int *limit,
                             unsigned int *flags);
