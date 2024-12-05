@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241205-b4-ctr_upstream_v3-v5-0-60b993aa567d@rivosinc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 63 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/7] target/riscv: Remove obsolete sfence.vm instruction
+  [32m✓[0m [PATCH v5 2/7] target/riscv: Add Control Transfer Records CSR definitions.
+  [32m✓[0m [PATCH v5 3/7] target/riscv: Add support for Control Transfer Records extension CSRs.
+  [32m✓[0m [PATCH v5 4/7] target/riscv: Add support to record CTR entries.
+  [32m✓[0m [PATCH v5 5/7] target/riscv: Add CTR sctrclr instruction.
+  [32m✓[0m [PATCH v5 6/7] target/riscv: Add support to access ctrsource, ctrtarget, ctrdata regs.
+  [32m✓[0m [PATCH v5 7/7] target/riscv: machine: Add Control Transfer Record state description
+  ---
+  [32m✓[0m Signed: DKIM/rivosinc-com.20230601.gappssmtp.com (From: rkanwal@rivosinc.com)
+---
+Total patches: 7
+---
+ Base: base-commit 685c44c5d40b6796e4a88c0335f7ae01cb7a2121 not known, ignoring
+Applying: target/riscv: Remove obsolete sfence.vm instruction
+Applying: target/riscv: Add Control Transfer Records CSR definitions.
+Applying: target/riscv: Add support for Control Transfer Records extension CSRs.
+Patch failed at 0003 target/riscv: Add support for Control Transfer Records extension CSRs.
+error: patch failed: target/riscv/csr.c:649
+error: target/riscv/csr.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
