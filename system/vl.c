@@ -350,6 +350,10 @@ static QemuOptsList qemu_overcommit_opts = {
             .type = QEMU_OPT_BOOL,
         },
         {
+            .name = "mem-lock-onfault",
+            .type = QEMU_OPT_BOOL,
+        },
+        {
             .name = "cpu-pm",
             .type = QEMU_OPT_BOOL,
         },
@@ -792,8 +796,8 @@ static QemuOptsList qemu_run_with_opts = {
 
 static void realtime_init(void)
 {
-    if (enable_mlock) {
-        if (os_mlock(false) < 0) {
+    if (enable_mlock || enable_mlock_onfault) {
+        if (os_mlock(enable_mlock_onfault) < 0) {
             error_report("locking memory failed");
             exit(1);
         }
@@ -3540,7 +3544,17 @@ void qemu_init(int argc, char **argv)
                 if (!opts) {
                     exit(1);
                 }
+
                 enable_mlock = qemu_opt_get_bool(opts, "mem-lock", enable_mlock);
+                enable_mlock_onfault = qemu_opt_get_bool(opts,
+                                                         "mem-lock-onfault",
+                                                         enable_mlock_onfault);
+                if (enable_mlock && enable_mlock_onfault) {
+                    error_report("mem-lock and mem-lock-onfault are mutually"
+                                 "exclusive");
+                    exit(1);
+                }
+
                 enable_cpu_pm = qemu_opt_get_bool(opts, "cpu-pm", enable_cpu_pm);
                 break;
             case QEMU_OPTION_compat:
