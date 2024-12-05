@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20241205060714.256270-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/13] bql: check that the BQL is not dropped within marked sections
+  [32m✓[0m [PATCH RFC 2/13] rust: cell: add BQL-enforcing RefCell variant
+  [32m✓[0m [PATCH RFC 3/13] rust/cell: add get_mut() method for BqlCell
+  [32m✓[0m [PATCH RFC 4/13] rust: add bindings for gpio_{in|out} initialization
+  [32m✓[0m [PATCH RFC 5/13] rust: add a bit operation binding for deposit64
+  [32m✓[0m [PATCH RFC 6/13] rust: add bindings for memattrs
+  [32m✓[0m [PATCH RFC 7/13] rust: add bindings for timer
+  [32m✓[0m [PATCH RFC 8/13] rust/qdev: add the macro to define bit property
+  [32m✓[0m [PATCH RFC 9/13] i386/fw_cfg: move hpet_cfg definition to hpet.c
+  [32m✓[0m [PATCH RFC 10/13] rust/timer/hpet: define hpet_fw_cfg
+  [32m✓[0m [PATCH RFC 11/13] rust/timer/hpet: add basic HPET timer & state
+  [32m✓[0m [PATCH RFC 12/13] rust/timer/hpet: add qdev APIs support
+  [32m✓[0m [PATCH RFC 13/13] i386: enable rust hpet for pc when rust is enabled
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 13
+---
+Applying: bql: check that the BQL is not dropped within marked sections
+Applying: rust: cell: add BQL-enforcing RefCell variant
+Patch failed at 0002 rust: cell: add BQL-enforcing RefCell variant
+error: patch failed: rust/qemu-api/Cargo.toml:20
+error: rust/qemu-api/Cargo.toml: patch does not apply
+error: rust/qemu-api/src/cell.rs: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
