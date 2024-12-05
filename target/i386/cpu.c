@@ -6503,7 +6503,7 @@ void cpu_x86_cpuid(CPUX86State *env, uint32_t index, uint32_t count,
 
     topo_info.dies_per_pkg = env->nr_dies;
     topo_info.modules_per_die = env->nr_modules;
-    topo_info.cores_per_module = cs->nr_cores / env->nr_dies / env->nr_modules;
+    topo_info.cores_per_module = env->nr_cores;
     topo_info.threads_per_core = cs->nr_threads;
 
     cores_per_pkg = topo_info.cores_per_module * topo_info.modules_per_die *

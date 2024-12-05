@@ -271,6 +271,8 @@ void x86_cpu_pre_plug(HotplugHandler *hotplug_dev,
 
     init_topo_info(&topo_info, x86ms);
 
+    env->nr_cores = ms->smp.cores;
+
     if (ms->smp.modules > 1) {
         env->nr_modules = ms->smp.modules;
         set_bit(CPU_TOPOLOGY_LEVEL_MODULE, env->avail_cpu_topo);

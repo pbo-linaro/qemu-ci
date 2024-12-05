@@ -2051,6 +2051,9 @@ typedef struct CPUArchState {
     /* Number of modules within one die. */
     unsigned nr_modules;
 
+    /* Number of cores within one module. */
+    unsigned nr_cores;
+
     /* Bitmap of available CPU topology levels for this CPU. */
     DECLARE_BITMAP(avail_cpu_topo, CPU_TOPOLOGY_LEVEL__MAX);
 } CPUX86State;
@@ -2393,10 +2396,12 @@ static inline void cpu_x86_load_seg_cache_sipi(X86CPU *cpu,
 static inline uint64_t cpu_x86_get_msr_core_thread_count(X86CPU *cpu)
 {
     CPUState *cs = CPU(cpu);
+    CPUX86State *env = &cpu->env;
     uint64_t val;
+    uint64_t cores_per_package = env->nr_cores * env->nr_modules * env->nr_dies;
 
-    val = cs->nr_threads * cs->nr_cores;  /* thread count, bits 15..0 */
-    val |= ((uint32_t)cs->nr_cores << 16); /* core count, bits 31..16 */
+    val = cs->nr_threads * cores_per_package;  /* thread count, bits 15..0 */
+    val |= (cores_per_package << 16); /* core count, bits 31..16 */
 
     return val;
 }
