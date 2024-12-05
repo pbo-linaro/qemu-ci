@@ -829,6 +829,7 @@ const char *xtensa_funcUnit_name(xtensa_isa isa, xtensa_funcUnit fun);
 
 int xtensa_funcUnit_num_copies(xtensa_isa isa, xtensa_funcUnit fun);
 
+bool xtensa_isa_is_big_endian(xtensa_isa isa);
 
 #ifdef __cplusplus
 }

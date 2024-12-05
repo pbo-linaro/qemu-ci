@@ -1741,3 +1741,10 @@ int xtensa_funcUnit_num_copies(xtensa_isa isa, xtensa_funcUnit fun)
     CHECK_FUNCUNIT(intisa, fun, XTENSA_UNDEFINED);
     return intisa->funcUnits[fun].num_copies;
 }
+
+bool xtensa_isa_is_big_endian(xtensa_isa isa)
+{
+    xtensa_isa_internal *intisa = (xtensa_isa_internal *)isa;
+
+    return intisa->is_big_endian;
+}
