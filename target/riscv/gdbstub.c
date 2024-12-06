@@ -213,7 +213,10 @@ static int riscv_gdb_get_virtual(CPUState *cs, GByteArray *buf, int n)
         RISCVCPU *cpu = RISCV_CPU(cs);
         CPURISCVState *env = &cpu->env;
 
-        return gdb_get_regl(buf, env->priv);
+        /* Per RiscV debug spec v1.0.0 rc3 */
+        target_ulong vbit = (env->virt_enabled) ? BIT(2) : 0;
+
+        return gdb_get_regl(buf, env->priv | vbit);
 #endif
     }
     return 0;
@@ -230,6 +233,8 @@ static int riscv_gdb_set_virtual(CPUState *cs, uint8_t *mem_buf, int n)
         if (env->priv == PRV_RESERVED) {
             env->priv = PRV_S;
         }
+        env->virt_enabled = (env->priv == PRV_M) ? 0 :
+                            ((ldtul_p(mem_buf) & BIT(2)) >> 2);
 #endif
         return sizeof(target_ulong);
     }
