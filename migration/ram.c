@@ -3036,6 +3036,33 @@ static int ram_save_setup(QEMUFile *f, void *opaque, Error **errp)
         migration_ops->ram_save_target_page = ram_save_target_page_legacy;
     }
 
+    /*
+     * This operation is unfortunate..
+     *
+     * For legacy QEMUs using per-section sync
+     * =======================================
+     *
+     * This must exist because the EOS below requires the SYNC messages
+     * per-channel to work.
+     *
+     * For modern QEMUs using per-round sync
+     * =====================================
+     *
+     * Logically this sync is not needed (because we know there's nothing
+     * in the multifd queue yet!).  However as a side effect, this makes
+     * sure the dest side won't receive any data before it properly reaches
+     * ram_load_precopy().
+     *
+     * Without this sync, src QEMU can send data too soon so that dest may
+     * not have been ready to receive it (e.g., rb->receivedmap may be
+     * uninitialized, for example).
+     *
+     * Logically "wait for recv setup ready" shouldn't need to involve src
+     * QEMU at all, however to be compatible with old QEMUs, let's stick
+     * with this.  Fortunately the overhead is low to sync during setup
+     * because the VM is running, so at least it's not accounted as part of
+     * downtime.
+     */
     bql_unlock();
     ret = multifd_ram_flush_and_sync(f);
     bql_lock();
