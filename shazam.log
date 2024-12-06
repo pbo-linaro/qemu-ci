@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20241206031952.78776-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] target/arm: Use float_status in helper_fcvtx_f64_to_f32
+  [32m✓[0m [PATCH 2/2] target/arm: Use float_status in helper_vfp_fcvt{ds,sd}
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 2
+---
+Applying: target/arm: Use float_status in helper_fcvtx_f64_to_f32
+Patch failed at 0001 target/arm: Use float_status in helper_fcvtx_f64_to_f32
+error: patch failed: target/arm/tcg/helper-a64.h:44
+error: target/arm/tcg/helper-a64.h: patch does not apply
+error: patch failed: target/arm/tcg/helper-a64.c:384
+error: target/arm/tcg/helper-a64.c: patch does not apply
+error: patch failed: target/arm/tcg/translate-a64.c:9102
+error: target/arm/tcg/translate-a64.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
