@@ -57,7 +57,7 @@ struct hpet_fw_config
 
 #define HPET_MSI_SUPPORT        0
 
-OBJECT_DECLARE_SIMPLE_TYPE(HPETState, HPET)
+OBJECT_DECLARE_TYPE(HPETState, HPETClass, HPET)
 
 struct HPETState;
 typedef struct HPETTimer {  /* timers */
@@ -101,7 +101,11 @@ struct HPETState {
     uint8_t  hpet_id;           /* instance id */
 };
 
-static struct hpet_fw_config hpet_cfg = {.count = UINT8_MAX};
+struct HPETClass {
+    SysBusDeviceClass parent_class;
+
+    struct hpet_fw_config fw_cfg;
+};
 
 static uint32_t hpet_in_legacy_mode(HPETState *s)
 {
@@ -279,6 +283,7 @@ static bool hpet_validate_num_timers(void *opaque, int version_id)
 static int hpet_post_load(void *opaque, int version_id)
 {
     HPETState *s = opaque;
+    HPETClass *hc = HPET_GET_CLASS(s);
     int i;
 
     for (i = 0; i < s->num_timers; i++) {
@@ -295,7 +300,7 @@ static int hpet_post_load(void *opaque, int version_id)
     /* Push number of timers into capability returned via HPET_ID */
     s->capability &= ~HPET_ID_NUM_TIM_MASK;
     s->capability |= (s->num_timers - 1) << HPET_ID_NUM_TIM_SHIFT;
-    hpet_cfg.hpet[s->hpet_id].event_timer_block_id = (uint32_t)s->capability;
+    hc->fw_cfg.hpet[s->hpet_id].event_timer_block_id = (uint32_t)s->capability;
 
     /* Derive HPET_MSI_SUPPORT from the capability of the first timer. */
     s->flags &= ~(1 << HPET_MSI_SUPPORT);
@@ -660,6 +665,7 @@ static const MemoryRegionOps hpet_ram_ops = {
 static void hpet_reset(DeviceState *d)
 {
     HPETState *s = HPET(d);
+    HPETClass *hc = HPET_GET_CLASS(d);
     SysBusDevice *sbd = SYS_BUS_DEVICE(d);
     int i;
 
@@ -682,8 +688,8 @@ static void hpet_reset(DeviceState *d)
     s->hpet_counter = 0ULL;
     s->hpet_offset = 0ULL;
     s->config = 0ULL;
-    hpet_cfg.hpet[s->hpet_id].event_timer_block_id = (uint32_t)s->capability;
-    hpet_cfg.hpet[s->hpet_id].address = sbd->mmio[0].addr;
+    hc->fw_cfg.hpet[s->hpet_id].event_timer_block_id = (uint32_t)s->capability;
+    hc->fw_cfg.hpet[s->hpet_id].address = sbd->mmio[0].addr;
 
     /* to document that the RTC lowers its output on reset as well */
     s->rtc_irq_level = 0;
@@ -719,23 +725,24 @@ static void hpet_realize(DeviceState *dev, Error **errp)
 {
     SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
     HPETState *s = HPET(dev);
+    HPETClass *hc = HPET_GET_CLASS(dev);
     int i;
     HPETTimer *timer;
 
     if (!s->intcap) {
         warn_report("Hpet's intcap not initialized");
     }
-    if (hpet_cfg.count == UINT8_MAX) {
+    if (hc->fw_cfg.count == UINT8_MAX) {
         /* first instance */
-        hpet_cfg.count = 0;
+        hc->fw_cfg.count = 0;
     }
 
-    if (hpet_cfg.count == 8) {
+    if (hc->fw_cfg.count == 8) {
         error_setg(errp, "Only 8 instances of HPET is allowed");
         return;
     }
 
-    s->hpet_id = hpet_cfg.count++;
+    s->hpet_id = hc->fw_cfg.count++;
 
     for (i = 0; i < HPET_NUM_IRQ_ROUTES; i++) {
         sysbus_init_irq(sbd, &s->irqs[i]);
@@ -773,11 +780,14 @@ static Property hpet_device_properties[] = {
 static void hpet_device_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    HPETClass *hc = HPET_CLASS(klass);
 
     dc->realize = hpet_realize;
     device_class_set_legacy_reset(dc, hpet_reset);
     dc->vmsd = &vmstate_hpet;
     device_class_set_props(dc, hpet_device_properties);
+
+    hc->fw_cfg.count = UINT8_MAX;
 }
 
 static const TypeInfo hpet_device_info = {
@@ -797,7 +807,9 @@ type_init(hpet_register_types)
 
 bool hpet_add_fw_cfg_bytes(FWCfgState *fw_cfg, Error **errp)
 {
-    fw_cfg_add_bytes(fw_cfg, FW_CFG_HPET, &hpet_cfg, sizeof(hpet_cfg));
+    HPETClass *hc = HPET_GET_CLASS(hpet_find());
+
+    fw_cfg_add_bytes(fw_cfg, FW_CFG_HPET, &hc->fw_cfg, sizeof(hc->fw_cfg));
 
     return true;
 }
