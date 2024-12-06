@@ -33,6 +33,31 @@
 #include "exec/cpu-common.h"
 #include "io/channel.h"
 
+/*
+ * RAM_SAVE_FLAG_ZERO used to be named RAM_SAVE_FLAG_COMPRESS, it
+ * worked for pages that were filled with the same char.  We switched
+ * it to only search for the zero value.  And to avoid confusion with
+ * RAM_SAVE_FLAG_COMPRESS_PAGE just rename it.
+ *
+ * RAM_SAVE_FLAG_FULL was obsoleted in 2009.
+ *
+ * RAM_SAVE_FLAG_COMPRESS_PAGE (0x100) was removed in QEMU 9.1.
+ */
+#define RAM_SAVE_FLAG_FULL     0x01
+#define RAM_SAVE_FLAG_ZERO     0x02
+#define RAM_SAVE_FLAG_MEM_SIZE 0x04
+#define RAM_SAVE_FLAG_PAGE     0x08
+#define RAM_SAVE_FLAG_EOS      0x10
+#define RAM_SAVE_FLAG_CONTINUE 0x20
+#define RAM_SAVE_FLAG_XBZRLE   0x40
+/*
+ * ONLY USED IN RDMA: Whenever this is found in the data stream, the flags
+ * will be passed to rdma functions in the incoming-migration side.
+ */
+#define RAM_SAVE_FLAG_HOOK     0x80
+#define RAM_SAVE_FLAG_MULTIFD_FLUSH    0x200
+/* We can't use any flag that is bigger than 0x200 */
+
 extern XBZRLECacheStats xbzrle_counters;
 
 /* Should be holding either ram_list.mutex, or the RCU lock. */
