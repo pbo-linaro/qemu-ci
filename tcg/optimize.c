@@ -834,6 +834,9 @@ static int do_constant_folding_cond1(OptContext *ctx, TCGOp *op, TCGArg dest,
                              ? INDEX_op_and_i32 : INDEX_op_and_i64);
         TCGOp *op2 = tcg_op_insert_before(ctx->tcg, op, and_opc, 3);
         TCGArg tmp = arg_new_temp(ctx);
+        /* Set z_mask for the follwing `fold_setcond_zmask` call. */
+        arg_info(tmp)->z_mask = (ctx->type == TCG_TYPE_I32
+                                      ? UINT32_MAX : UINT64_MAX);
 
         op2->args[0] = tmp;
         op2->args[1] = *p1;
