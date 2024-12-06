@@ -881,6 +881,9 @@ _set_idreg(MAP, SYS_ ## REG ## _EL1, regval);                 \
 #define FIELD_EX64_IDREG(MAP, REG, FIELD)                     \
 FIELD_EX64(_get_idreg(MAP, SYS_ ## REG ## _EL1), REG, FIELD)  \
 
+#define FIELD_SEX64_IDREG(MAP, REG, FIELD)                     \
+FIELD_SEX64(_get_idreg(MAP, SYS_ ## REG ## _EL1), REG, FIELD)  \
+
 #define FIELD_EX32_IDREG(MAP, REG, FIELD)                     \
 FIELD_EX32(_get_idreg(MAP, SYS_ ## REG ## _EL1), REG, FIELD)  \
 
@@ -1094,10 +1097,6 @@ struct ArchCPU {
         uint32_t dbgdidr;
         uint32_t dbgdevid;
         uint32_t dbgdevid1;
-        uint64_t id_aa64mmfr0;
-        uint64_t id_aa64mmfr1;
-        uint64_t id_aa64mmfr2;
-        uint64_t id_aa64mmfr3;
         uint64_t id_aa64dfr0;
         uint64_t id_aa64dfr1;
         uint64_t id_aa64smfr0;
