@@ -36,6 +36,7 @@
 #include "hw/rtc/mc146818rtc_regs.h"
 #include "migration/vmstate.h"
 #include "hw/timer/i8254.h"
+#include "hw/i386/fw_cfg.h"
 #include "exec/address-spaces.h"
 #include "qom/object.h"
 #include "trace.h"
@@ -85,6 +86,8 @@ struct HPETState {
     uint64_t hpet_counter;      /* main counter */
     uint8_t  hpet_id;           /* instance id */
 };
+
+struct hpet_fw_config hpet_cfg = {.count = UINT8_MAX};
 
 static uint32_t hpet_in_legacy_mode(HPETState *s)
 {
@@ -777,3 +780,10 @@ static void hpet_register_types(void)
 }
 
 type_init(hpet_register_types)
+
+bool hpet_add_fw_cfg_bytes(FWCfgState *fw_cfg, Error **errp)
+{
+    fw_cfg_add_bytes(fw_cfg, FW_CFG_HPET, &hpet_cfg, sizeof(hpet_cfg));
+
+    return true;
+}

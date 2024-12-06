@@ -85,4 +85,6 @@ static inline bool hpet_find(void)
     return object_resolve_path_type("", TYPE_HPET, NULL);
 }
 
+bool hpet_add_fw_cfg_bytes(FWCfgState *fw_cfg, Error **errp);
+
 #endif
