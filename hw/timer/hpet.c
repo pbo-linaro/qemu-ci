@@ -41,6 +41,20 @@
 #include "qom/object.h"
 #include "trace.h"
 
+struct hpet_fw_entry
+{
+    uint32_t event_timer_block_id;
+    uint64_t address;
+    uint16_t min_tick;
+    uint8_t page_prot;
+} QEMU_PACKED;
+
+struct hpet_fw_config
+{
+    uint8_t count;
+    struct hpet_fw_entry hpet[8];
+} QEMU_PACKED;
+
 #define HPET_MSI_SUPPORT        0
 
 OBJECT_DECLARE_SIMPLE_TYPE(HPETState, HPET)
@@ -87,7 +101,7 @@ struct HPETState {
     uint8_t  hpet_id;           /* instance id */
 };
 
-struct hpet_fw_config hpet_cfg = {.count = UINT8_MAX};
+static struct hpet_fw_config hpet_cfg = {.count = UINT8_MAX};
 
 static uint32_t hpet_in_legacy_mode(HPETState *s)
 {

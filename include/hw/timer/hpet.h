@@ -60,22 +60,6 @@
 #define HPET_TN_INT_ROUTE_CAP_SHIFT 32
 #define HPET_TN_CFG_BITS_READONLY_OR_RESERVED 0xffff80b1U
 
-struct hpet_fw_entry
-{
-    uint32_t event_timer_block_id;
-    uint64_t address;
-    uint16_t min_tick;
-    uint8_t page_prot;
-} QEMU_PACKED;
-
-struct hpet_fw_config
-{
-    uint8_t count;
-    struct hpet_fw_entry hpet[8];
-} QEMU_PACKED;
-
-extern struct hpet_fw_config hpet_cfg;
-
 #define TYPE_HPET "hpet"
 
 #define HPET_INTCAP "hpet-intcap"
