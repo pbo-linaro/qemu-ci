@@ -1,0 +1,67 @@
+Grabbing thread from lore.kernel.org/all/cover.1733504943.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 320 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/31] acpi/ghes: get rid of ACPI_HEST_SRC_ID_RESERVED
+  [32m✓[0m [PATCH 2/31] acpi/ghes: simplify acpi_ghes_record_errors() code
+  [32m✓[0m [PATCH 3/31] acpi/ghes: simplify the per-arch caller to build HEST table
+  [32m✓[0m [PATCH 4/31] acpi/ghes: better handle source_id and notification
+  [32m✓[0m [PATCH 5/31] acpi/ghes: Fix acpi_ghes_record_errors() argument
+  [32m✓[0m [PATCH 6/31] acpi/ghes: Remove a duplicated out of bounds check
+  [32m✓[0m [PATCH 7/31] acpi/ghes: Change the type for source_id
+  [32m✓[0m [PATCH 8/31] acpi/ghes: don't check if physical_address is not zero
+  [32m✓[0m [PATCH 9/31] acpi/ghes: make the GHES record generation more generic
+  [32m✓[0m [PATCH 10/31] acpi/ghes: better name GHES memory error function
+  [32m✓[0m [PATCH 11/31] acpi/ghes: don't crash QEMU if ghes GED is not found
+  [32m✓[0m [PATCH 12/31] acpi/ghes: rename etc/hardware_error file macros
+  [32m✓[0m [PATCH 13/31] acpi/ghes: better name the offset of the hardware error firmware
+  [32m✓[0m [PATCH 14/31] acpi/ghes: Prepare to support multiple sources on ghes
+  [32m✓[0m [PATCH 15/31] acpi/ghes: add a firmware file with HEST address
+  [32m✓[0m [PATCH 16/31] acpi/ghes: Use HEST table offsets when preparing GHES records
+  [32m✓[0m [PATCH 17/31] acpi/generic_event_device: Update GHES migration to cover hest addr
+  [32m✓[0m [PATCH 18/31] acpi/generic_event_device: add logic to detect if HEST addr is available
+  [32m✓[0m [PATCH 19/31] acpi/ghes: add a notifier to notify when error data is ready
+  [32m✓[0m [PATCH 20/31] acpi/generic_event_device: add an APEI error device
+  [32m✓[0m [PATCH 21/31] arm/virt: Wire up a GED error device for ACPI / GHES
+  [32m✓[0m [PATCH 22/31] qapi/acpi-hest: add an interface to do generic CPER error injection
+  [32m✓[0m [PATCH 23/31] scripts/ghes_inject: add a script to generate GHES error inject
+  [32m✓[0m [PATCH 24/31] target/arm: add an experimental mpidr arm cpu property object
+  [32m✓[0m [PATCH 25/31] scripts/arm_processor_error.py: retrieve mpidr if not filled
+  [32m✓[0m [PATCH 26/31] acpi/ghes: move offset calculus to a separate function
+  [32m✓[0m [PATCH 27/31] DEBUG
+  [32m✓[0m [PATCH 28/31] acpi/ghes: Change ghes fill logic to work with only one source
+  [32m✓[0m [PATCH 29/31] HACK: use GPIO as source ID for virt-9.1 machines
+  [32m✓[0m [PATCH 30/31] docs: acpi_hest_ghes: fix documentation for CPER size
+    + Acked-by: Igor Mammedov <imammedo@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 31/31] FIXME: acpi/ghes: properly set data record size
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 31
+---
+Applying: acpi/ghes: get rid of ACPI_HEST_SRC_ID_RESERVED
+Applying: acpi/ghes: simplify acpi_ghes_record_errors() code
+Applying: acpi/ghes: simplify the per-arch caller to build HEST table
+Applying: acpi/ghes: better handle source_id and notification
+Applying: acpi/ghes: Fix acpi_ghes_record_errors() argument
+Applying: acpi/ghes: Remove a duplicated out of bounds check
+Applying: acpi/ghes: Change the type for source_id
+Applying: acpi/ghes: don't check if physical_address is not zero
+Applying: acpi/ghes: make the GHES record generation more generic
+Applying: acpi/ghes: better name GHES memory error function
+Applying: acpi/ghes: don't crash QEMU if ghes GED is not found
+Applying: acpi/ghes: rename etc/hardware_error file macros
+Applying: acpi/ghes: better name the offset of the hardware error firmware
+Applying: acpi/ghes: Prepare to support multiple sources on ghes
+Patch failed at 0014 acpi/ghes: Prepare to support multiple sources on ghes
+error: patch failed: hw/acpi/ghes.c:410
+error: hw/acpi/ghes.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
