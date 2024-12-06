@@ -209,6 +209,7 @@ tests_x86_64_system_quick = [
 
 tests_x86_64_system_thorough = [
   'acpi_bits',
+  'intel_iommu',
   'x86_64_tuxrun',
   'linux_initrd',
   'multiprocess',
