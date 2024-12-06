@@ -1,0 +1,19 @@
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  push_upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git fetch -a origin --unshallow || true
+      - run: git config user.name "GitHub Actions Bot"
+      - run: git config user.email "<bot@github.com>"
+      - run: git checkout ci
+      - run: git remote add upstream -f https://gitlab.com/qemu-project/qemu
+      - run: git rebase upstream/master
+      - run: git push -f --set-upstream origin "ci:upstream"
