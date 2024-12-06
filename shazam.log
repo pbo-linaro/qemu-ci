@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/CAEekfLYJqvMDf5A_Yj%3DN6jMGQ4oj3rC%2Bfv3xcCCfSBy8TDaY-Q@mail.gmail.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Subject: [PATCH] loader: Add register setting support via cli
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: Subject: [PATCH] loader: Add register setting support via cli
+Patch failed at 0001 Subject: [PATCH] loader: Add register setting support via cli
+error: corrupt patch at line 39
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
