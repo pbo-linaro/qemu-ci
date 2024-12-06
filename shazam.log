@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20241206031224.78525-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] target/arm: Introduce fpst alias for helper.h
+  [32m✓[0m [PATCH 2/9] target/arm: Convert vfp_helper.c to fpst alias
+  [32m✓[0m [PATCH 3/9] target/arm: Convert helper-a64.c to fpst alias
+  [32m✓[0m [PATCH 4/9] target/arm: Convert vec_helper.c to fpst alias
+  [32m✓[0m [PATCH 5/9] target/arm: Convert neon_helper.c to fpst alias
+  [32m✓[0m [PATCH 6/9] target/arm: Convert sve_helper.c to fpst alias
+  [32m✓[0m [PATCH 7/9] target/arm: Convert sme_helper.c to fpst alias
+  [32m✓[0m [PATCH 8/9] target/arm: Convert vec_helper.c to use env alias
+  [32m✓[0m [PATCH 9/9] target/arm: Convert neon_helper.c to use env alias
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: target/arm: Introduce fpst alias for helper.h
+Applying: target/arm: Convert vfp_helper.c to fpst alias
+Patch failed at 0002 target/arm: Convert vfp_helper.c to fpst alias
+error: patch failed: target/arm/helper.h:113
+error: target/arm/helper.h: patch does not apply
+error: patch failed: target/arm/vfp_helper.c:314
+error: target/arm/vfp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
