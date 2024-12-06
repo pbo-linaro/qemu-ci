@@ -64,7 +64,7 @@
 
 #define HPET_INTCAP "hpet-intcap"
 
-static inline bool hpet_find(void)
+static inline Object *hpet_find(void)
 {
     return object_resolve_path_type("", TYPE_HPET, NULL);
 }
