@@ -248,6 +248,18 @@ static bool kvm_arm_pauth_supported(void)
             kvm_check_extension(kvm_state, KVM_CAP_ARM_PTRAUTH_GENERIC));
 }
 
+/* read a 32b sysreg value and store it in the idregs */
+static int get_host_cpu_reg32(int fd, ARMHostCPUFeatures *ahcf, ARMSysReg sr)
+{
+    int index = KVM_ARM_FEATURE_ID_RANGE_IDX(sr.op0, sr.op1, sr.crn, sr.crm, sr.op2);
+    uint64_t *reg = &ahcf->isar.idregs.regs[index];
+    int ret;
+
+    ret = read_sys_reg32(fd, (uint32_t *)reg,
+                         ARM64_SYS_REG(sr.op0, sr.op1, sr.crn, sr.crm, sr.op2));
+    return ret;
+}
+
 /* read a 64b sysreg value and store it in the idregs */
 static int get_host_cpu_reg64(int fd, ARMHostCPUFeatures *ahcf, ARMSysReg sr)
 {
@@ -259,6 +271,7 @@ static int get_host_cpu_reg64(int fd, ARMHostCPUFeatures *ahcf, ARMSysReg sr)
                          ARM64_SYS_REG(sr.op0, sr.op1, sr.crn, sr.crm, sr.op2));
     return ret;
 }
+
 
 static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
 {
@@ -374,22 +387,15 @@ static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
                               ARM64_SYS_REG(3, 0, 0, 1, 6));
         err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_mmfr3,
                               ARM64_SYS_REG(3, 0, 0, 1, 7));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar0,
-                              ARM64_SYS_REG(3, 0, 0, 2, 0));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar1,
-                              ARM64_SYS_REG(3, 0, 0, 2, 1));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar2,
-                              ARM64_SYS_REG(3, 0, 0, 2, 2));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar3,
-                              ARM64_SYS_REG(3, 0, 0, 2, 3));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar4,
-                              ARM64_SYS_REG(3, 0, 0, 2, 4));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar5,
-                              ARM64_SYS_REG(3, 0, 0, 2, 5));
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR0_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR1_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR2_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR3_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR4_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR5_EL1);
+        err |= get_host_cpu_reg32(fd, ahcf, SYS_ID_ISAR6_EL1);
         err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_mmfr4,
                               ARM64_SYS_REG(3, 0, 0, 2, 6));
-        err |= read_sys_reg32(fdarray[2], &ahcf->isar.id_isar6,
-                              ARM64_SYS_REG(3, 0, 0, 2, 7));
 
         err |= read_sys_reg32(fdarray[2], &ahcf->isar.mvfr0,
                               ARM64_SYS_REG(3, 0, 0, 3, 0));
