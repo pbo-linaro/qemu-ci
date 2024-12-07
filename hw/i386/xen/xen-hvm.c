@@ -604,6 +604,12 @@ static bool xen_check_stubdomain(struct xs_handle *xsh)
     return is_stubdom;
 }
 
+int xen_p2pdma_distance(uint32_t bus, uint32_t slot, uint32_t func,
+			uint32_t c_bus, uint32_t c_slot, uint32_t c_func)
+{
+	return xc_physdev_p2pdma_distance(xen_xc, bus, slot, func, c_bus, c_slot, c_func);
+}
+
 void xen_hvm_init_pc(PCMachineState *pcms, MemoryRegion **ram_memory)
 {
     MachineState *ms = MACHINE(pcms);

@@ -95,6 +95,7 @@ enum virtio_gpu_ctrl_type {
 	VIRTIO_GPU_CMD_SUBMIT_3D,
 	VIRTIO_GPU_CMD_RESOURCE_MAP_BLOB,
 	VIRTIO_GPU_CMD_RESOURCE_UNMAP_BLOB,
+	VIRTIO_GPU_CMD_P2PDMA_DISTANCE,
 
 	/* cursor commands */
 	VIRTIO_GPU_CMD_UPDATE_CURSOR = 0x0300,
@@ -108,6 +109,7 @@ enum virtio_gpu_ctrl_type {
 	VIRTIO_GPU_RESP_OK_EDID,
 	VIRTIO_GPU_RESP_OK_RESOURCE_UUID,
 	VIRTIO_GPU_RESP_OK_MAP_INFO,
+	VIRTIO_GPU_RESP_OK_P2PDMA_DISTANCE,
 
 	/* error responses */
 	VIRTIO_GPU_RESP_ERR_UNSPEC = 0x1200,
@@ -427,6 +429,23 @@ struct virtio_gpu_set_scanout_blob {
 	uint32_t padding;
 	uint32_t strides[4];
 	uint32_t offsets[4];
+};
+
+/* VIRTIO_GPU_CMD_P2PDMA_DISTANCE */
+struct virtio_gpu_device_p2pdma_distance {
+	struct virtio_gpu_ctrl_hdr hdr;
+	__le32 provider_bus;
+	__le32 provider_slot;
+	__le32 provider_func;
+	__le32 client_bus;
+	__le32 client_slot;
+	__le32 client_func;
+};
+
+/* VIRTIO_GPU_RESP_DISTANCE */
+struct virtio_gpu_resp_distance {
+	struct virtio_gpu_ctrl_hdr hdr;
+	__le32 distance;
 };
 
 /* VIRTIO_GPU_CMD_RESOURCE_MAP_BLOB */

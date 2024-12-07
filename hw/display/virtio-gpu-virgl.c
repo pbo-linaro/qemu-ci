@@ -16,6 +16,12 @@
 #include "qemu/iov.h"
 #include "trace.h"
 #include "hw/virtio/virtio.h"
+#include "hw/pci/pci.h"
+#include "hw/pci/pci_bus.h"
+#include "hw/virtio/virtio-pci.h"
+#include "hw/virtio/virtio-bus.h"
+#include "hw/xen/xen.h"
+
 #include "hw/virtio/virtio-gpu.h"
 #include "hw/virtio/virtio-gpu-bswap.h"
 #include "hw/virtio/virtio-gpu-pixman.h"
@@ -186,6 +192,44 @@ virtio_gpu_virgl_unmap_resource_blob(VirtIOGPU *g,
     }
 
     return 0;
+}
+
+static void virgl_cmd_p2pdma_distance(VirtIOGPU *g,
+				      struct virtio_gpu_ctrl_command *cmd)
+{
+    struct virtio_gpu_device_p2pdma_distance cmd_p;
+    struct virtio_gpu_resp_distance resp;
+    PCIDevice *client = NULL, *provider = NULL;
+    int ret;
+
+    VIRTIO_GPU_FILL_CMD(cmd_p);
+    virtio_gpu_p2pdma_distance_bswap(&cmd_p);
+
+    ret = pci_qdev_get_device(cmd_p.provider_bus, cmd_p.provider_slot, cmd_p.provider_func, &provider);
+
+    if (ret) {
+	    qemu_log_mask(LOG_GUEST_ERROR, "%s: virgl get physical device error: %s\n",
+			  __func__, strerror(-ret));
+        cmd->error = VIRTIO_GPU_RESP_ERR_INVALID_PARAMETER;
+        return;
+    }
+
+    ret = pci_qdev_get_device(cmd_p.client_bus, cmd_p.client_slot, cmd_p.client_func, &client);
+    if (ret) {
+	    qemu_log_mask(LOG_GUEST_ERROR, "%s: virgl get physical device error: %s\n",
+			  __func__, strerror(-ret));
+        cmd->error = VIRTIO_GPU_RESP_ERR_INVALID_PARAMETER;
+        return;
+    }
+
+    int distance = xen_p2pdma_distance(provider->hostaddr.bus, provider->hostaddr.slot,
+				       provider->hostaddr.function,client->hostaddr.bus,
+				       client->hostaddr.slot, client->hostaddr.function);
+
+    memset(&resp, 0, sizeof(resp));
+    resp.hdr.type = VIRTIO_GPU_RESP_OK_P2PDMA_DISTANCE;
+    resp.distance = distance;
+    virtio_gpu_ctrl_response(g, cmd, &resp.hdr, sizeof(resp));
 }
 #endif
 
@@ -892,6 +936,9 @@ void virtio_gpu_virgl_process_cmd(VirtIOGPU *g,
     case VIRTIO_GPU_CMD_SUBMIT_3D:
         virgl_cmd_submit_3d(g, cmd);
         break;
+    case VIRTIO_GPU_CMD_P2PDMA_DISTANCE:
+	virgl_cmd_p2pdma_distance(g, cmd);
+	break;
     case VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D:
         virgl_cmd_transfer_to_host_2d(g, cmd);
         break;

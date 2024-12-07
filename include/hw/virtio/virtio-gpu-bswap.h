@@ -79,6 +79,18 @@ virtio_gpu_map_blob_bswap(struct virtio_gpu_resource_map_blob *mblob)
 }
 
 static inline void
+virtio_gpu_p2pdma_distance_bswap(struct virtio_gpu_device_p2pdma_distance *p2p_dist)
+{
+    virtio_gpu_ctrl_hdr_bswap(&p2p_dist->hdr);
+    le32_to_cpus(&p2p_dist->provider_bus);
+    le32_to_cpus(&p2p_dist->provider_slot);
+    le32_to_cpus(&p2p_dist->provider_func);
+    le32_to_cpus(&p2p_dist->client_bus);
+    le32_to_cpus(&p2p_dist->client_bus);
+    le32_to_cpus(&p2p_dist->client_bus);
+}
+
+static inline void
 virtio_gpu_unmap_blob_bswap(struct virtio_gpu_resource_unmap_blob *ublob)
 {
     virtio_gpu_ctrl_hdr_bswap(&ublob->hdr);

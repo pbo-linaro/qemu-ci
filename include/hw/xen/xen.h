@@ -48,4 +48,7 @@ qemu_irq *xen_interrupt_controller_init(void);
 
 void xen_register_framebuffer(struct MemoryRegion *mr);
 
+int xen_p2pdma_distance(uint32_t bus, uint32_t slot, uint32_t func,
+			uint32_t c_bus, uint32_t c_slot, uint32_t c_func);
+
 #endif /* QEMU_HW_XEN_H */
