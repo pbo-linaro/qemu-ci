@@ -2617,6 +2617,28 @@ static int pci_qdev_find_recursive(PCIBus *bus,
     return -EINVAL;
 }
 
+int pci_qdev_get_device(uint32_t virt_bus, uint32_t virt_slot, uint32_t virt_func,
+			PCIDevice **pci_dev)
+{
+    PCIHostState *host_bridge;
+    PCIDevice *d;
+    int devfn;
+    int rc = -ENODEV;
+
+    QLIST_FOREACH(host_bridge, &pci_host_bridges, next) {
+        for(devfn = 0; devfn < ARRAY_SIZE(host_bridge->bus->devices); devfn++) {
+	    d = host_bridge->bus->devices[devfn];
+	    if (d && d->devfn == PCI_DEVFN(virt_slot, virt_func) &&
+		pci_bus_num(pci_get_bus(d)) == virt_bus) {
+		*pci_dev = d;
+		rc = 0;
+		break;
+	    }
+	}
+    }
+    return rc;
+}
+
 int pci_qdev_find_device(const char *id, PCIDevice **pdev)
 {
     PCIHostState *host_bridge;
