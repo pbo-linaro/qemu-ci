@@ -6120,6 +6120,9 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb, uint64_t pc_start)
     }
 #endif
 
+    /* Do not reuse any EBB that may be allocated within the TB. */
+    memset(s->free_temps, 0, sizeof(s->free_temps));
+
     tcg_optimize(s);
 
     reachable_code_pass(s);
