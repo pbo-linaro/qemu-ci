@@ -56,6 +56,7 @@ typedef struct PCIReqIDCache PCIReqIDCache;
 
 struct PCIDevice {
     DeviceState qdev;
+    PCIHostDeviceAddress hostaddr;
     bool partially_hotplugged;
     bool has_power;
 

@@ -233,7 +233,6 @@ typedef struct XenPTMSIX {
 struct XenPCIPassthroughState {
     PCIDevice dev;
 
-    PCIHostDeviceAddress hostaddr;
     bool is_virtfn;
     bool permissive;
     bool permissive_warned;

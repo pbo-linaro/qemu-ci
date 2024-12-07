@@ -26,6 +26,7 @@
 #include "hw/virtio/virtio-gpu-bswap.h"
 #include "hw/virtio/virtio-gpu-pixman.h"
 #include "hw/virtio/virtio-bus.h"
+#include "hw/virtio/virtio-pci.h"
 #include "hw/qdev-properties.h"
 #include "qemu/log.h"
 #include "qemu/memfd.h"
@@ -1471,6 +1472,8 @@ void virtio_gpu_device_realize(DeviceState *qdev, Error **errp)
 {
     VirtIODevice *vdev = VIRTIO_DEVICE(qdev);
     VirtIOGPU *g = VIRTIO_GPU(qdev);
+    BusState *qbus = BUS(qdev_get_parent_bus(qdev));
+    VirtIOPCIProxy *proxy = VIRTIO_PCI(qbus->parent);
 
     if (virtio_gpu_blob_enabled(g->parent_obj.conf)) {
         if (!virtio_gpu_rutabaga_enabled(g->parent_obj.conf) &&
@@ -1521,6 +1524,8 @@ void virtio_gpu_device_realize(DeviceState *qdev, Error **errp)
     QTAILQ_INIT(&g->reslist);
     QTAILQ_INIT(&g->cmdq);
     QTAILQ_INIT(&g->fenceq);
+
+    proxy->pci_dev.hostaddr = g->parent_obj.conf.hostaddr;
 }
 
 static void virtio_gpu_device_unrealize(DeviceState *qdev)
@@ -1682,6 +1687,7 @@ static Property virtio_gpu_properties[] = {
                     VIRTIO_GPU_FLAG_BLOB_ENABLED, false),
     DEFINE_PROP_SIZE("hostmem", VirtIOGPU, parent_obj.conf.hostmem, 0),
     DEFINE_PROP_UINT8("x-scanout-vmstate-version", VirtIOGPU, scanout_vmstate_version, 2),
+    DEFINE_PROP_PCI_HOST_DEVADDR("hostaddr", VirtIOGPU, parent_obj.conf.hostaddr),
     DEFINE_PROP_END_OF_LIST(),
 };
 

@@ -777,9 +777,9 @@ static void xen_pt_realize(PCIDevice *d, Error **errp)
 
     /* register real device */
     XEN_PT_LOG(d, "Assigning real physical device %02x:%02x.%d"
-               " to devfn 0x%x\n",
+               " to devfn 0x%x, %02x:%02x.%d\n",
                s->hostaddr.bus, s->hostaddr.slot, s->hostaddr.function,
-               s->dev.devfn);
+               s->dev.devfn, pci_bus_num(pci_get_bus(&s->dev)), PCI_SLOT(s->dev.devfn), PCI_FUNC(s->dev.devfn));
 
     s->is_virtfn = s->real_device.is_virtfn;
     if (s->is_virtfn) {
@@ -932,7 +932,7 @@ static void xen_pt_unregister_device(PCIDevice *d)
 }
 
 static Property xen_pci_passthrough_properties[] = {
-    DEFINE_PROP_PCI_HOST_DEVADDR("hostaddr", XenPCIPassthroughState, hostaddr),
+    DEFINE_PROP_PCI_HOST_DEVADDR("hostaddr", XenPCIPassthroughState, dev.hostaddr),
     DEFINE_PROP_BOOL("permissive", XenPCIPassthroughState, permissive, false),
     DEFINE_PROP_END_OF_LIST(),
 };
@@ -963,8 +963,8 @@ static void xen_igd_clear_slot(DeviceState *qdev, Error **errp)
     PCIBus *pci_bus = pci_get_bus(pci_dev);
 
     xen_host_pci_device_get(&s->real_device,
-                            s->hostaddr.domain, s->hostaddr.bus,
-                            s->hostaddr.slot, s->hostaddr.function,
+                            s->dev.hostaddr.domain, s->dev.hostaddr.bus,
+                            s->dev.hostaddr.slot, s->dev.hostaddr.function,
                             errp);
     if (*errp) {
         error_append_hint(errp, "Failed to \"open\" the real pci device");

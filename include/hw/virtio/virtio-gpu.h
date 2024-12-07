@@ -24,6 +24,7 @@
 #include "standard-headers/linux/virtio_gpu.h"
 #include "standard-headers/linux/virtio_ids.h"
 #include "qom/object.h"
+#include "hw/pci/pci.h"
 
 #define TYPE_VIRTIO_GPU_BASE "virtio-gpu-base"
 OBJECT_DECLARE_TYPE(VirtIOGPUBase, VirtIOGPUBaseClass,
@@ -125,6 +126,7 @@ struct virtio_gpu_base_conf {
     uint32_t xres;
     uint32_t yres;
     uint64_t hostmem;
+    PCIHostDeviceAddress hostaddr;
 };
 
 struct virtio_gpu_ctrl_command {
