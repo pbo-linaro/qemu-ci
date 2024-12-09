@@ -1,0 +1,51 @@
+Grabbing thread from lore.kernel.org/all/20241209123717.99077-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 67 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/26] bql: check that the BQL is not dropped within marked sections
+  [32m✓[0m [PATCH 2/26] rust: cell: add BQL-enforcing Cell variant
+  [32m✓[0m [PATCH 3/26] rust: cell: add BQL-enforcing RefCell variant
+  [32m✓[0m [PATCH 4/26] rust: define prelude
+  [32m✓[0m [PATCH 5/26] rust: add bindings for interrupt sources
+  [32m✓[0m [PATCH 6/26] rust: add a bit operation module
+  [32m✓[0m [PATCH 7/26] rust: qom: add default definitions for ObjectImpl
+  [32m✓[0m [PATCH 8/26] rust: qom: rename Class trait to ClassInitImpl
+  [32m✓[0m [PATCH 9/26] rust: qom: convert type_info! macro to an associated const
+  [32m✓[0m [PATCH 10/26] rust: qom: move ClassInitImpl to the instance side
+  [32m✓[0m [PATCH 11/26] rust: qdev: move device_class_init! body to generic function, ClassInitImpl implementation to macro
+  [32m✓[0m [PATCH 12/26] rust: qdev: move bridge for realize and reset functions out of pl011
+  [32m✓[0m [PATCH 13/26] rust: qom: automatically use Drop trait to implement instance_finalize
+  [32m✓[0m [PATCH 14/26] rust: qom: move bridge for TypeInfo functions out of pl011
+  [32m✓[0m [PATCH 15/26] rust: qom: split ObjectType from ObjectImpl trait
+  [32m✓[0m [PATCH 16/26] rust: qom: change the parent type to an associated type
+  [32m✓[0m [PATCH 17/26] rust: qom: put class_init together from multiple ClassInitImpl<>
+  [32m✓[0m [PATCH 18/26] rust: qom: add possibility of overriding unparent
+  [32m✓[0m [PATCH 19/26] rust: rename qemu-api modules to follow C code a bit more
+  [32m✓[0m [PATCH 20/26] rust: re-export C types from qemu-api submodules
+  [32m✓[0m [PATCH 21/26] rust: tests: allow writing more than one test
+  [32m✓[0m [PATCH 22/26] rust: qom: add casting functionality
+  [32m✓[0m [PATCH 23/26] rust: qom: add initial subset of methods on Object
+  [32m✓[0m [PATCH 24/26] rust: qom: move device_id to PL011 class side
+  [32m✓[0m [PATCH 25/26] rust: qemu-api: add a module to wrap functions and zero-sized closures
+  [32m✓[0m [PATCH 26/26] rust: callbacks: allow passing optional callbacks as ()
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 26
+---
+Applying: bql: check that the BQL is not dropped within marked sections
+Applying: rust: cell: add BQL-enforcing Cell variant
+Patch failed at 0002 rust: cell: add BQL-enforcing Cell variant
+error: patch failed: rust/qemu-api/meson.build:13
+error: rust/qemu-api/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/src/lib.rs:8
+error: rust/qemu-api/src/lib.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
