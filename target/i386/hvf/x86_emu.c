@@ -44,6 +44,7 @@
 #include "x86_flags.h"
 #include "vmcs.h"
 #include "vmx.h"
+#include "trace.h"
 
 void hvf_handle_io(CPUState *cs, uint16_t port, void *data,
                    int direction, int size, uint32_t count);
@@ -895,6 +896,89 @@ static void exec_wrmsr(CPUX86State *env, struct x86_decode *decode)
 {
     simulate_wrmsr(env);
     env->eip += decode->len;
+}
+
+static bool mmio_load_instruction_fastpath(x86_decode *decode, CPUX86State *env,
+                                           int *load_dest_reg)
+{
+    if (decode->cmd == X86_DECODE_CMD_MOV && decode->operand_size == 4
+        && decode->opcode_len == 1) {
+        if (decode->opcode[0] == 0x8b) {
+            g_assert(decode->op[0].type == X86_VAR_REG);
+            g_assert(decode->op[1].type == X86_VAR_RM);
+
+            *load_dest_reg = decode->op[0].reg | (decode->rex.r ? R_R8 : 0);
+            return true;
+        } else if (decode->opcode[0] == 0xa1) {
+            *load_dest_reg = R_EAX;
+            return true;
+        }
+    }
+
+    trace_hvf_x86_emu_mmio_load_instruction_fastpath(
+        decode->cmd, decode->operand_size, decode->opcode_len,
+        decode->opcode[0], decode->opcode[1], decode->opcode[2]);
+
+    return false;
+}
+
+static bool mmio_store_instruction_fastpath(x86_decode *decode, CPUX86State *env,
+                                            uint64_t *store_val)
+{
+    if (decode->cmd == X86_DECODE_CMD_MOV && decode->operand_size == 4 &&
+        decode->opcode_len == 1) {
+        if (decode->opcode[0] == 0x89) { /* mov DWORD PTR [reg0+off],reg1 */
+            g_assert(decode->op[1].type == X86_VAR_REG);
+            g_assert(decode->op[0].type == X86_VAR_RM);
+
+            *store_val = RRX(env, decode->op[1].reg | (decode->rex.r ? R_R8 : 0));
+            return true;
+        } else if (decode->opcode[0] == 0xc7) { /* mov DWORD PTR [reg0+off],imm*/
+            g_assert(decode->op[0].type == X86_VAR_RM);
+            g_assert(decode->op[1].type == X86_VAR_IMMEDIATE);
+            *store_val = decode->op[1].val;
+            return true;
+        } else if (decode->opcode[0] == 0xa3) { /* movabs ds:immaddr,eax */
+            *store_val = RRX(env, R_EAX);
+            return true;
+        }
+    }
+
+    trace_hvf_x86_emu_mmio_store_instruction_fastpath(
+        decode->cmd, decode->operand_size, decode->opcode_len,
+        decode->opcode[0], decode->opcode[1], decode->opcode[2]);
+    return false;
+}
+
+
+bool simulate_fast_path_apic_mmio(bool is_load, uint32_t apic_register_idx,
+                                  CPUX86State *env, x86_decode* decode)
+{
+    uint64_t value;
+    int load_dest_reg;
+    int res;
+
+    if (is_load) {
+        if (!mmio_load_instruction_fastpath(decode, env, &load_dest_reg)) {
+            return false;
+        }
+        res = apic_register_read(apic_register_idx, &value);
+        if (res == 0) {
+            RRX(env, load_dest_reg) = value;
+        }
+    } else {
+        if (!mmio_store_instruction_fastpath(decode, env, &value)) {
+            return false;
+        }
+        res = apic_register_write(apic_register_idx, value);
+    }
+
+    if (res != 0) {
+        trace_hvf_x86_fast_path_apic_mmio_failed(
+            is_load ? "load from" : "store to", apic_register_idx, value, res);
+        raise_exception(env, EXCP0D_GPF, 0);
+    }
+    return true;
 }
 
 /*

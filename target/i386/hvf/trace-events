@@ -1,0 +1,9 @@
+# See docs/devel/tracing.rst for syntax documentation.
+
+# hvf.c
+hvf_x86_vcpu_exec_apic_access_slowpath(const char *access_type, uint32_t apic_register_idx, uint32_t ins_len, uint8_t ins_byte_0, uint8_t ins_byte_1, uint8_t ins_byte_2, uint8_t ins_byte_3, uint8_t ins_byte_4, uint8_t ins_byte_5) "xAPIC %s register 0x%" PRIx32" taking slow path; instruction length: %" PRIu32 ", bytes: %02x %02x %02x %02x  %02x %02x ..."
+
+# x86_emu.c
+hvf_x86_emu_mmio_load_instruction_fastpath(int cmd, int operand_size, int opcode_len, uint8_t opcode_byte_0, uint8_t opcode_byte_1, uint8_t opcode_byte_2) "slow path apic load: cmd = %d, operand_size = %u, opcode_len = %u, opcode = [ %02x %02x %02x ... ]"
+hvf_x86_emu_mmio_store_instruction_fastpath(int cmd, int operand_size, int opcode_len, uint8_t opcode_byte_0, uint8_t opcode_byte_1, uint8_t opcode_byte_2) "slow path apic store: cmd = %d, operand_size = %u, opcode_len = %u, opcode = [ %02x %02x %02x ... ]"
+hvf_x86_fast_path_apic_mmio_failed(const char *access_type, uint32_t apic_register_idx, uint64_t value, int result) "xAPIC %s register 0x%"PRIx32", value 0x%"PRIx64" returned error %d from APIC"

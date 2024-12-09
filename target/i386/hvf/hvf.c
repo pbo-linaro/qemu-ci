@@ -75,6 +75,7 @@
 #include "qemu/main-loop.h"
 #include "qemu/accel.h"
 #include "target/i386/cpu.h"
+#include "trace.h"
 
 static Error *invtsc_mig_blocker;
 
@@ -666,8 +667,21 @@ int hvf_vcpu_exec(CPUState *cpu)
             store_regs(cpu);
             break;
         }
-        case EXIT_REASON_APIC_ACCESS: { /* TODO */
-            exec_instruction(env, &decode);
+        case EXIT_REASON_APIC_ACCESS: {
+            bool is_load = (exit_qual & 0x1000) == 0;
+            uint32_t apic_register_idx = (exit_qual & 0xff0) >> 4;
+
+            if (simulate_fast_path_apic_mmio(is_load, apic_register_idx,
+                                             env, &decode)) {
+                env->eip += ins_len;
+            } else {
+                trace_hvf_x86_vcpu_exec_apic_access_slowpath(
+                    is_load ? "load from" : "store to", apic_register_idx,
+                    ins_len, decode.prefetch_buf[0], decode.prefetch_buf[1],
+                    decode.prefetch_buf[2], decode.prefetch_buf[3],
+                    decode.prefetch_buf[4], decode.prefetch_buf[5]);
+                exec_instruction(env, &decode);
+            }
             store_regs(cpu);
             break;
         }

@@ -3606,6 +3606,7 @@ if have_system or have_user
     'target/arm/hvf',
     'target/hppa',
     'target/i386',
+    'target/i386/hvf',
     'target/i386/kvm',
     'target/loongarch',
     'target/mips/tcg',

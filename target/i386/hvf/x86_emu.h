@@ -31,6 +31,8 @@ void store_regs(CPUState *cpu);
 
 void simulate_rdmsr(CPUX86State *env);
 void simulate_wrmsr(CPUX86State *env);
+bool simulate_fast_path_apic_mmio(bool is_load, uint32_t apic_register_idx,
+                                  CPUX86State *env, x86_decode* decode);
 
 target_ulong read_reg(CPUX86State *env, int reg, int size);
 void write_reg(CPUX86State *env, int reg, target_ulong val, int size);
