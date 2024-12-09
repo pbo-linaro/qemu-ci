@@ -442,6 +442,11 @@ static void *hvf_cpu_thread_fn(void *arg)
     cpu_thread_signal_created(cpu);
     qemu_guest_random_seed_thread_part2(cpu->random_seed);
 
+    if (!cpu_can_run(cpu)) {
+        qemu_wait_io_event(cpu);
+    }
+    hvf_vcpu_before_first_run(cpu);
+
     do {
         if (cpu_can_run(cpu)) {
             r = hvf_vcpu_exec(cpu);
