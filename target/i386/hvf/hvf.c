@@ -341,6 +341,17 @@ int hvf_arch_init_vcpu(CPUState *cpu)
 
 void hvf_vcpu_before_first_run(CPUState *cpu)
 {
+    X86CPU *x86_cpu = X86_CPU(cpu);
+    hv_vcpuid_t vcpu = cpu->accel->fd;
+    uint64_t apic_base;
+    hv_return_t apicbase_result;
+
+    if (cpu_is_apic_enabled(x86_cpu->apic_state)
+        && !is_x2apic_mode(x86_cpu->apic_state)) {
+        apic_base = MSR_IA32_APICBASE_BASE & cpu_get_apic_base(x86_cpu->apic_state);
+        apicbase_result = hv_vmx_vcpu_set_apic_address(vcpu, apic_base);
+        assert_hvf_ok(apicbase_result);
+    }
 }
 
 static void hvf_store_events(CPUState *cpu, uint32_t ins_len, uint64_t idtvec_info)

@@ -797,10 +797,28 @@ void simulate_wrmsr(CPUX86State *env)
         break;
     case MSR_IA32_APICBASE: {
         int r;
+        hv_return_t res;
 
         r = cpu_set_apic_base(cpu->apic_state, data);
         if (r < 0) {
             raise_exception(env, EXCP0D_GPF, 0);
+        } else {
+            uint64_t pbc = rvmcs(cs->accel->fd, VMCS_SEC_PROC_BASED_CTLS);
+            uint64_t new_pbc;
+            if (cpu_is_apic_enabled(cpu->apic_state)
+                && !is_x2apic_mode(cpu->apic_state)) {
+                res = hv_vmx_vcpu_set_apic_address(cs->accel->fd,
+                                                   data & MSR_IA32_APICBASE_BASE);
+                assert_hvf_ok(res);
+
+                new_pbc = pbc | VMCS_PRI_PROC_BASED2_CTLS_APIC_ACCESSES;
+            } else {
+                new_pbc = pbc & ~VMCS_PRI_PROC_BASED2_CTLS_APIC_ACCESSES;
+            }
+            if (new_pbc != pbc) {
+                wvmcs(cs->accel->fd, VMCS_SEC_PROC_BASED_CTLS,
+                    cap2ctrl(hvf_state->hvf_caps->vmx_cap_procbased2, new_pbc));
+            }
         }
 
         break;
