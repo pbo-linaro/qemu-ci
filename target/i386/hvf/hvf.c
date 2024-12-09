@@ -444,6 +444,7 @@ int hvf_vcpu_exec(CPUState *cpu)
     CPUX86State *env = &x86_cpu->env;
     int ret = 0;
     uint64_t rip = 0;
+    struct x86_decode decode;
 
     if (hvf_process_events(cpu)) {
         return EXCP_HLT;
@@ -480,6 +481,11 @@ int hvf_vcpu_exec(CPUState *cpu)
         hvf_store_events(cpu, ins_len, idtvec_info);
         rip = rreg(cpu->accel->fd, HV_X86_RIP);
         env->eflags = rreg(cpu->accel->fd, HV_X86_RFLAGS);
+
+        if (exit_reason == EXIT_REASON_APIC_ACCESS) {
+            load_regs(cpu);
+            decode_instruction(env, &decode, ins_len);
+        }
 
         bql_lock();
 
@@ -519,8 +525,6 @@ int hvf_vcpu_exec(CPUState *cpu)
             slot = hvf_find_overlap_slot(gpa, 1);
             /* mmio */
             if (ept_emulation_fault(slot, gpa, exit_qual)) {
-                struct x86_decode decode;
-
                 load_regs(cpu);
                 decode_instruction(env, &decode, ins_len);
                 exec_instruction(env, &decode);
@@ -559,7 +563,6 @@ int hvf_vcpu_exec(CPUState *cpu)
                 macvm_set_rip(cpu, rip + ins_len);
                 break;
             }
-            struct x86_decode decode;
 
             load_regs(cpu);
             decode_instruction(env, &decode, ins_len);
@@ -664,10 +667,6 @@ int hvf_vcpu_exec(CPUState *cpu)
             break;
         }
         case EXIT_REASON_APIC_ACCESS: { /* TODO */
-            struct x86_decode decode;
-
-            load_regs(cpu);
-            decode_instruction(env, &decode, ins_len);
             exec_instruction(env, &decode);
             store_regs(cpu);
             break;
