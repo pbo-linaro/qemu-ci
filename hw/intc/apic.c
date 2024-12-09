@@ -309,6 +309,11 @@ bool is_x2apic_mode(DeviceState *dev)
 
 static int apic_set_base_check(APICCommonState *s, uint64_t val)
 {
+    /* Refuse to set reserved bits */
+    if (val & MSR_IA32_APICBASE_RESERVED) {
+        return -1;
+    }
+
     /* Enable x2apic when x2apic is not supported by CPU */
     if (!cpu_has_x2apic_feature(&s->cpu->env) &&
         val & MSR_IA32_APICBASE_EXTD) {
