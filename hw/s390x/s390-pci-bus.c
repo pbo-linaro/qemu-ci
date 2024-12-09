@@ -18,6 +18,7 @@
 #include "hw/s390x/s390-pci-inst.h"
 #include "hw/s390x/s390-pci-kvm.h"
 #include "hw/s390x/s390-pci-vfio.h"
+#include "hw/boards.h"
 #include "hw/pci/pci_bus.h"
 #include "hw/qdev-properties.h"
 #include "hw/pci/pci_bridge.h"
@@ -720,6 +721,27 @@ void s390_pci_iommu_enable(S390PCIIOMMU *iommu)
                              TYPE_S390_IOMMU_MEMORY_REGION, OBJECT(&iommu->mr),
                              name, iommu->pal + 1);
     iommu->enabled = true;
+    iommu->direct_map = false;
+    memory_region_add_subregion(&iommu->mr, 0, MEMORY_REGION(&iommu->iommu_mr));
+    g_free(name);
+}
+
+void s390_pci_iommu_dm_enable(S390PCIIOMMU *iommu)
+{
+    MachineState *ms = MACHINE(qdev_get_machine());
+
+    /*
+     * For direct-mapping we must map the entire guest address space.  Because
+     * the mappings are contiguous we are not restricted to individual 4K
+     * mappings via vfio, so let's not worry about the DMA limit when
+     * calculating the range.
+     */
+    char *name = g_strdup_printf("iommu-s390-%04x", iommu->pbdev->uid);
+    memory_region_init_iommu(&iommu->iommu_mr, sizeof(iommu->iommu_mr),
+                             TYPE_S390_IOMMU_MEMORY_REGION, OBJECT(&iommu->mr),
+                             name, iommu->pba + ms->ram_size);
+    iommu->enabled = true;
+    iommu->direct_map = true;
     memory_region_add_subregion(&iommu->mr, 0, MEMORY_REGION(&iommu->iommu_mr));
     g_free(name);
 }
@@ -727,6 +749,7 @@ void s390_pci_iommu_enable(S390PCIIOMMU *iommu)
 void s390_pci_iommu_disable(S390PCIIOMMU *iommu)
 {
     iommu->enabled = false;
+    iommu->direct_map = false;
     g_hash_table_remove_all(iommu->iotlb);
     memory_region_del_subregion(&iommu->mr, MEMORY_REGION(&iommu->iommu_mr));
     object_unparent(OBJECT(&iommu->iommu_mr));

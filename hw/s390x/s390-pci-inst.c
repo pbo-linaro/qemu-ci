@@ -16,6 +16,7 @@
 #include "exec/memory.h"
 #include "qemu/error-report.h"
 #include "sysemu/hw_accel.h"
+#include "hw/boards.h"
 #include "hw/pci/pci_device.h"
 #include "hw/s390x/s390-pci-inst.h"
 #include "hw/s390x/s390-pci-bus.h"
@@ -990,6 +991,33 @@ int pci_dereg_irqs(S390PCIBusDevice *pbdev)
     return 0;
 }
 
+static void s390_pci_setup_stage2_map(S390PCIIOMMU *iommu)
+{
+    MachineState *ms = MACHINE(qdev_get_machine());
+    uint64_t remain = ms->ram_size, start = iommu->pba, mask, size, curr = 0;
+    uint64_t end = start + remain - 1;
+    IOMMUTLBEvent event = {
+        .type = IOMMU_NOTIFIER_MAP,
+        .entry = {
+            .target_as = &address_space_memory,
+            .translated_addr = 0,
+            .perm = IOMMU_RW,
+        },
+    };
+
+    while (remain >= TARGET_PAGE_SIZE) {
+        mask = dma_aligned_pow2_mask(start, end, 64);
+        size = mask + 1;
+        event.entry.iova = start;
+        event.entry.addr_mask = mask;
+        event.entry.translated_addr = curr;
+        memory_region_notify_iommu(&iommu->iommu_mr, 0, event);
+        start += size;
+        curr += size;
+        remain -= size;
+    }
+}
+
 static int reg_ioat(CPUS390XState *env, S390PCIBusDevice *pbdev, ZpciFib fib,
                     uintptr_t ra)
 {
@@ -1008,7 +1036,7 @@ static int reg_ioat(CPUS390XState *env, S390PCIBusDevice *pbdev, ZpciFib fib,
     }
 
     /* currently we only support designation type 1 with translation */
-    if (!(dt == ZPCI_IOTA_RTTO && t)) {
+    if (t && !(dt == ZPCI_IOTA_RTTO)) {
         error_report("unsupported ioat dt %d t %d", dt, t);
         s390_program_interrupt(env, PGM_OPERAND, ra);
         return -EINVAL;
@@ -1018,13 +1046,23 @@ static int reg_ioat(CPUS390XState *env, S390PCIBusDevice *pbdev, ZpciFib fib,
     iommu->pal = pal;
     iommu->g_iota = g_iota;
 
-    s390_pci_iommu_enable(iommu);
+    if (t) {
+        s390_pci_iommu_enable(iommu);
+    } else {
+        s390_pci_iommu_dm_enable(iommu);
+        /* If not translating, map everything now */
+        s390_pci_setup_stage2_map(iommu);
+    }
 
     return 0;
 }
 
 void pci_dereg_ioat(S390PCIIOMMU *iommu)
 {
+    MachineState *ms = MACHINE(qdev_get_machine());
+    if (iommu->direct_map) {
+        s390_pci_batch_unmap(iommu, iommu->pba, ms->ram_size);
+    }
     s390_pci_iommu_disable(iommu);
     iommu->pba = 0;
     iommu->pal = 0;
