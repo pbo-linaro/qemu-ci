@@ -224,7 +224,9 @@ static void s390_pci_read_group(S390PCIBusDevice *pbdev,
 
         resgrp = &pbdev->pci_group->zpci_group;
         if (cap->flags & VFIO_DEVICE_INFO_ZPCI_FLAG_REFRESH) {
-            resgrp->fr = 1;
+            resgrp->fr = (CLP_RSP_QPCIG_MASK_RTR | CLP_RSP_QPCIG_MASK_REFRESH);
+        } else {
+            resgrp->fr = CLP_RSP_QPCIG_MASK_RTR;
         }
         resgrp->dasm = cap->dasm;
         resgrp->msia = cap->msi_addr;
