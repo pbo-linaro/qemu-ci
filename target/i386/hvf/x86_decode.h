@@ -297,11 +297,14 @@ typedef struct x86_decode {
     bool is_fpu;
     uint32_t flags_mask;
 
+    uint8_t prefetch_buf[16];
+    uint16_t prefetch_len;
 } x86_decode;
 
 uint64_t sign(uint64_t val, int size);
 
-uint32_t decode_instruction(CPUX86State *env, struct x86_decode *decode);
+uint32_t decode_instruction(CPUX86State *env, x86_decode *decode,
+                            uint32_t ins_len);
 
 target_ulong get_reg_ref(CPUX86State *env, int reg, int rex_present,
                          int is_extended, int size);

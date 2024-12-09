@@ -522,7 +522,7 @@ int hvf_vcpu_exec(CPUState *cpu)
                 struct x86_decode decode;
 
                 load_regs(cpu);
-                decode_instruction(env, &decode);
+                decode_instruction(env, &decode, ins_len);
                 exec_instruction(env, &decode);
                 store_regs(cpu);
                 break;
@@ -562,7 +562,7 @@ int hvf_vcpu_exec(CPUState *cpu)
             struct x86_decode decode;
 
             load_regs(cpu);
-            decode_instruction(env, &decode);
+            decode_instruction(env, &decode, ins_len);
             assert(ins_len == decode.len);
             exec_instruction(env, &decode);
             store_regs(cpu);
@@ -667,7 +667,7 @@ int hvf_vcpu_exec(CPUState *cpu)
             struct x86_decode decode;
 
             load_regs(cpu);
-            decode_instruction(env, &decode);
+            decode_instruction(env, &decode, ins_len);
             exec_instruction(env, &decode);
             store_regs(cpu);
             break;

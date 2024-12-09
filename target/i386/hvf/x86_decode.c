@@ -73,8 +73,13 @@ static inline uint64_t decode_bytes(CPUX86State *env, struct x86_decode *decode,
         VM_PANIC_EX("%s invalid size %d\n", __func__, size);
         break;
     }
-    target_ulong va  = linear_rip(env_cpu(env), env->eip) + decode->len;
-    vmx_read_mem(env_cpu(env), &val, va, size);
+
+    if (decode->len + size < decode->prefetch_len) {
+        memcpy(&val, decode->prefetch_buf + decode->len, size);
+    } else {
+        target_ulong va  = linear_rip(env_cpu(env), env->eip) + decode->len;
+        vmx_read_mem(env_cpu(env), &val, va, size);
+    }
     decode->len += size;
     
     return val;
@@ -2099,9 +2104,16 @@ static void decode_opcodes(CPUX86State *env, struct x86_decode *decode)
     }
 }
 
-uint32_t decode_instruction(CPUX86State *env, struct x86_decode *decode)
+uint32_t decode_instruction(CPUX86State *env, x86_decode *decode,
+                            uint32_t ins_len)
 {
     memset(decode, 0, sizeof(*decode));
+
+    target_ulong va = linear_rip(env_cpu(env), env->eip);
+    uint32_t prefetch_len = MIN(ins_len, sizeof(sizeof(decode->prefetch_buf)));
+    vmx_read_mem(env_cpu(env), decode->prefetch_buf, va, prefetch_len);
+    decode->prefetch_len = prefetch_len;
+
     decode_prefix(env, decode);
     set_addressing_size(env, decode);
     set_operand_size(env, decode);
