@@ -20,6 +20,7 @@
 #include "hw/irq.h"
 #include "hw/arm/sharpsl.h"
 #include "hw/sysbus.h"
+#include "exec/address-spaces.h"
 #include "migration/vmstate.h"
 #include "qemu/module.h"
 #include "qemu/log.h"
@@ -303,6 +304,6 @@ static struct QEMU_PACKED sl_param_info {
 
 void sl_bootparam_write(hwaddr ptr)
 {
-    cpu_physical_memory_write(ptr, &zaurus_bootparam,
-                              sizeof(struct sl_param_info));
+    address_space_write(&address_space_memory, ptr, MEMTXATTRS_UNSPECIFIED,
+                        &zaurus_bootparam, sizeof(struct sl_param_info));
 }

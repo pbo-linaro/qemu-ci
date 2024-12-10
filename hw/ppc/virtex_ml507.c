@@ -25,6 +25,7 @@
 #include "qemu/osdep.h"
 #include "qemu/datadir.h"
 #include "qemu/units.h"
+#include "exec/address-spaces.h"
 #include "exec/page-protection.h"
 #include "cpu.h"
 #include "hw/sysbus.h"
@@ -173,7 +174,8 @@ static int xilinx_load_device_tree(MachineState *machine,
                                 machine->kernel_cmdline);
     if (r < 0)
         fprintf(stderr, "couldn't set /chosen/bootargs\n");
-    cpu_physical_memory_write(addr, fdt, fdt_size);
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        fdt, fdt_size);
 
     /* Set machine->fdt for 'dumpdtb' QMP/HMP command */
     machine->fdt = fdt;

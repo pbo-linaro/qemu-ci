@@ -21,6 +21,7 @@
 #include "sysemu/hw_accel.h"
 #include "kvm/kvm_i386.h"
 #include "migration/vmstate.h"
+#include "exec/address-spaces.h"
 #include "hw/sysbus.h"
 #include "hw/i386/kvm/clock.h"
 #include "hw/qdev-properties.h"
@@ -83,7 +84,8 @@ static uint64_t kvmclock_current_nsec(KVMClockState *s)
     }
 
     kvmclock_struct_pa = env->system_time_msr & ~1ULL;
-    cpu_physical_memory_read(kvmclock_struct_pa, &time, sizeof(time));
+    address_space_read(&address_space_memory, kvmclock_struct_pa,
+                       MEMTXATTRS_UNSPECIFIED, &time, sizeof(time));
 
     assert(time.tsc_timestamp <= migration_tsc);
     delta = migration_tsc - time.tsc_timestamp;

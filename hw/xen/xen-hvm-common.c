@@ -1,6 +1,7 @@
 #include "qemu/osdep.h"
 #include "qemu/units.h"
 #include "qapi/error.h"
+#include "exec/address-spaces.h"
 #include "exec/target_page.h"
 #include "trace.h"
 
@@ -272,8 +273,10 @@ static void do_outp(uint32_t addr,
  * memory, as part of the implementation of an ioreq.
  *
  * Equivalent to
- *   cpu_physical_memory_rw(addr + (req->df ? -1 : +1) * req->size * i,
- *                          val, req->size, 0/1)
+ *   address_space_rw(&address_space_memory,
+ *                    addr + (req->df ? -1 : +1) * req->size * i,
+ *                    MEMTXATTRS_UNSPECIFIED, val, req->size, 0/1)
+ *
  * except without the integer overflow problems.
  */
 static void rw_phys_req_item(hwaddr addr,
@@ -288,7 +291,8 @@ static void rw_phys_req_item(hwaddr addr,
     } else {
         addr += offset;
     }
-    cpu_physical_memory_rw(addr, val, req->size, rw);
+    address_space_rw(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED, val,
+                     req->size, rw);
 }
 
 static inline void read_phys_req_item(hwaddr addr,

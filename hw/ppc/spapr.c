@@ -46,6 +46,7 @@
 #include "sysemu/device_tree.h"
 #include "sysemu/cpus.h"
 #include "sysemu/hw_accel.h"
+#include "exec/address-spaces.h"
 #include "kvm_ppc.h"
 #include "migration/misc.h"
 #include "migration/qemu-file-types.h"
@@ -1758,7 +1759,8 @@ static void spapr_machine_reset(MachineState *machine, ResetType type)
 
         spapr_cpu_set_entry_state(first_ppc_cpu, SPAPR_ENTRY_POINT,
                                   0, fdt_addr, 0);
-        cpu_physical_memory_write(fdt_addr, fdt, fdt_totalsize(fdt));
+        address_space_write(&address_space_memory, fdt_addr,
+                            MEMTXATTRS_UNSPECIFIED, fdt, fdt_totalsize(fdt));
     }
     qemu_fdt_dumpdtb(fdt, fdt_totalsize(fdt));
 

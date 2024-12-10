@@ -29,6 +29,7 @@
 #include "sysemu/kvm.h"
 #include "trace.h"
 #include "hw/i386/apic-msidef.h"
+#include "exec/address-spaces.h"
 #include "qapi/error.h"
 #include "qom/object.h"
 
@@ -105,8 +106,9 @@ static void apic_sync_vapic(APICCommonState *s, int sync_type)
         return;
     }
     if (sync_type & SYNC_FROM_VAPIC) {
-        cpu_physical_memory_read(s->vapic_paddr, &vapic_state,
-                                 sizeof(vapic_state));
+        address_space_read(&address_space_memory, s->vapic_paddr,
+                           MEMTXATTRS_UNSPECIFIED, &vapic_state,
+                           sizeof(vapic_state));
         s->tpr = vapic_state.tpr;
     }
     if (sync_type & (SYNC_TO_VAPIC | SYNC_ISR_IRR_TO_VAPIC)) {

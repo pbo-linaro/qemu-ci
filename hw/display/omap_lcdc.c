@@ -23,6 +23,7 @@
 #include "hw/arm/omap.h"
 #include "framebuffer.h"
 #include "ui/pixel_ops.h"
+#include "exec/address-spaces.h"
 
 struct omap_lcd_panel_s {
     MemoryRegion *sysmem;
@@ -216,9 +217,9 @@ static void omap_update_display(void *opaque)
 
     frame_offset = 0;
     if (omap_lcd->plm != 2) {
-        cpu_physical_memory_read(
-                omap_lcd->dma->phys_framebuffer[omap_lcd->dma->current_frame],
-                omap_lcd->palette, 0x200);
+        address_space_read(&address_space_memory,
+                           omap_lcd->dma->phys_framebuffer[omap_lcd->dma->current_frame],
+                           MEMTXATTRS_UNSPECIFIED, omap_lcd->palette, 0x200);
         switch (omap_lcd->palette[0] >> 12 & 7) {
         case 3 ... 7:
             frame_offset += 0x200;
@@ -368,9 +369,9 @@ static void omap_lcd_update(struct omap_lcd_panel_s *s) {
     s->dma->phys_framebuffer[1] = s->dma->src_f2_top;
 
     if (s->plm != 2 && !s->palette_done) {
-        cpu_physical_memory_read(
-                            s->dma->phys_framebuffer[s->dma->current_frame],
-                            s->palette, 0x200);
+        address_space_read(&address_space_memory,
+                           s->dma->phys_framebuffer[s->dma->current_frame],
+                           MEMTXATTRS_UNSPECIFIED, s->palette, 0x200);
         s->palette_done = 1;
         omap_lcd_interrupts(s);
     }

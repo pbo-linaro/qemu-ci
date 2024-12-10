@@ -27,6 +27,7 @@
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
 #include "hw/sysbus.h"
+#include "exec/address-spaces.h"
 #include "migration/vmstate.h"
 #include "sysemu/dma.h"
 #include "hw/dma/sifive_pdma.h"
@@ -120,16 +121,20 @@ static void sifive_pdma_run(SiFivePDMAState *s, int ch)
     s->chan[ch].exec_src = src;
 
     for (n = 0; n < bytes / size; n++) {
-        cpu_physical_memory_read(s->chan[ch].exec_src, buf, size);
-        cpu_physical_memory_write(s->chan[ch].exec_dst, buf, size);
+        address_space_read(&address_space_memory, s->chan[ch].exec_src,
+                           MEMTXATTRS_UNSPECIFIED, buf, size);
+        address_space_write(&address_space_memory, s->chan[ch].exec_dst,
+                            MEMTXATTRS_UNSPECIFIED, buf, size);
         s->chan[ch].exec_src += size;
         s->chan[ch].exec_dst += size;
         s->chan[ch].exec_bytes -= size;
     }
 
     if (remainder) {
-        cpu_physical_memory_read(s->chan[ch].exec_src, buf, remainder);
-        cpu_physical_memory_write(s->chan[ch].exec_dst, buf, remainder);
+        address_space_read(&address_space_memory, s->chan[ch].exec_src,
+                           MEMTXATTRS_UNSPECIFIED, buf, remainder);
+        address_space_write(&address_space_memory, s->chan[ch].exec_dst,
+                            MEMTXATTRS_UNSPECIFIED, buf, remainder);
         s->chan[ch].exec_src += remainder;
         s->chan[ch].exec_dst += remainder;
         s->chan[ch].exec_bytes -= remainder;

@@ -15,6 +15,7 @@
 #include "qemu/cutils.h"
 #include "elf.h"
 #include "qemu/bswap.h"
+#include "exec/address-spaces.h"
 #include "exec/memory.h"
 #include "exec/target_page.h"
 #include "monitor/monitor.h"
@@ -1889,7 +1890,8 @@ static void dump_init(DumpState *s, int fd, bool has_format,
             warn_report("guest note format is unsupported: %" PRIu16, guest_format);
         } else {
             s->guest_note = g_malloc(size + 1); /* +1 for adding \0 */
-            cpu_physical_memory_read(addr, s->guest_note, size);
+            address_space_read(&address_space_memory, addr,
+                               MEMTXATTRS_UNSPECIFIED, s->guest_note, size);
 
             get_note_sizes(s, s->guest_note, NULL, &name_size, &desc_size);
             s->guest_note_size = ELF_NOTE_SIZE(note_head_size, name_size,

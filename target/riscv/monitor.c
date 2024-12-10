@@ -19,6 +19,7 @@
  */
 
 #include "qemu/osdep.h"
+#include "exec/address-spaces.h"
 #include "cpu.h"
 #include "cpu_bits.h"
 #include "monitor/monitor.h"
@@ -100,7 +101,8 @@ static void walk_pte(Monitor *mon, hwaddr base, target_ulong start,
 
     for (idx = 0; idx < (1UL << ptidxbits); idx++) {
         pte_addr = base + idx * ptesize;
-        cpu_physical_memory_read(pte_addr, &pte, ptesize);
+        address_space_read(&address_space_memory, pte_addr,
+                           MEMTXATTRS_UNSPECIFIED, &pte, ptesize);
 
         paddr = (hwaddr)(pte >> PTE_PPN_SHIFT) << PGSHIFT;
         attr = pte & 0xff;

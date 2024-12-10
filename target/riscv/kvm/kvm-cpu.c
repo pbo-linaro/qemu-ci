@@ -1478,9 +1478,11 @@ static void kvm_riscv_handle_sbi_dbcn(CPUState *cs, struct kvm_run *run)
                 exit(1);
             }
 
-            cpu_physical_memory_write(addr, buf, ret);
+            address_space_write(&address_space_memory, addr,
+                                MEMTXATTRS_UNSPECIFIED, buf, ret);
         } else {
-            cpu_physical_memory_read(addr, buf, num_bytes);
+            address_space_read(&address_space_memory, addr,
+                               MEMTXATTRS_UNSPECIFIED, buf, num_bytes);
 
             ret = qemu_chr_fe_write_all(serial_hd(0)->be, buf, num_bytes);
             if (ret < 0) {

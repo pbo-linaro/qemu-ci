@@ -23,6 +23,7 @@
 #include "hw/arm/omap.h"
 #include "hw/irq.h"
 #include "hw/arm/soc_dma.h"
+#include "exec/address-spaces.h"
 
 struct omap_dma_channel_s {
     /* transfer data */
@@ -379,13 +380,17 @@ static void omap_dma_transfer_generic(struct soc_dma_ch_s *dma)
     do {
         /* Transfer a single element */
         /* FIXME: check the endianness */
-        if (!ch->constant_fill)
-            cpu_physical_memory_read(a->src, value, ch->data_type);
-        else
+        if (!ch->constant_fill) {
+            address_space_read(&address_space_memory, a->src,
+                               MEMTXATTRS_UNSPECIFIED, value, ch->data_type);
+        } else {
             *(uint32_t *) value = ch->color;
+        }
 
-        if (!ch->transparent_copy || *(uint32_t *) value != ch->color)
-            cpu_physical_memory_write(a->dest, value, ch->data_type);
+        if (!ch->transparent_copy || *(uint32_t *) value != ch->color) {
+            address_space_write(&address_space_memory, a->dest,
+                                MEMTXATTRS_UNSPECIFIED, value, ch->data_type);
+        }
 
         a->src += a->elem_delta[0];
         a->dest += a->elem_delta[1];

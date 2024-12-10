@@ -19,6 +19,7 @@
 #include "qemu/units.h"
 #include "qemu/guest-random.h"
 #include "qapi/error.h"
+#include "exec/address-spaces.h"
 #include "e500.h"
 #include "e500-ccsr.h"
 #include "net/net.h"
@@ -659,7 +660,8 @@ static int ppce500_load_device_tree(PPCE500MachineState *pms,
 done:
     if (!dry_run) {
         qemu_fdt_dumpdtb(fdt, fdt_size);
-        cpu_physical_memory_write(addr, fdt, fdt_size);
+        address_space_write(&address_space_memory, addr,
+                            MEMTXATTRS_UNSPECIFIED, fdt, fdt_size);
 
         /* Set machine->fdt for 'dumpdtb' QMP/HMP command */
         g_free(machine->fdt);

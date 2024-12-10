@@ -14,6 +14,7 @@
 #include "qapi/error.h"
 #include "qapi/qmp/qnull.h"
 #include "qemu/cutils.h"
+#include "exec/address-spaces.h"
 #include "hw/ppc/spapr_drc.h"
 #include "qom/object.h"
 #include "migration/vmstate.h"
@@ -1140,8 +1141,10 @@ out:
 static void configure_connector_st(target_ulong addr, target_ulong offset,
                                    const void *buf, size_t len)
 {
-    cpu_physical_memory_write(ppc64_phys_to_real(addr + offset),
-                              buf, MIN(len, CC_WA_LEN - offset));
+    address_space_write(&address_space_memory,
+                        ppc64_phys_to_real(addr + offset),
+                        MEMTXATTRS_UNSPECIFIED, buf,
+                        MIN(len, CC_WA_LEN - offset));
 }
 
 static void rtas_ibm_configure_connector(PowerPCCPU *cpu,

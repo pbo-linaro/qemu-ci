@@ -15,6 +15,7 @@
 #include "qemu/osdep.h"
 #include "qemu/datadir.h"
 #include "qapi/error.h"
+#include "exec/address-spaces.h"
 #include "sysemu/reset.h"
 #include "sysemu/runstate.h"
 #include "sysemu/tcg.h"
@@ -412,7 +413,8 @@ static uint64_t s390_ipl_map_iplb_chain(IplParameterBlock *iplb_chain)
     uint64_t len = sizeof(IplParameterBlock) * count;
     uint64_t chain_addr = find_iplb_chain_addr(ipl->bios_start_addr, count);
 
-    cpu_physical_memory_write(chain_addr, iplb_chain, len);
+    address_space_write(&address_space_memory, chain_addr,
+                        MEMTXATTRS_UNSPECIFIED, iplb_chain, len);
     return chain_addr;
 }
 
@@ -694,8 +696,8 @@ int s390_ipl_prepare_pv_header(Error **errp)
     void *hdr = g_malloc(ipib_pv->pv_header_len);
     int rc;
 
-    cpu_physical_memory_read(ipib_pv->pv_header_addr, hdr,
-                             ipib_pv->pv_header_len);
+    address_space_read(&address_space_memory, ipib_pv->pv_header_addr,
+                       MEMTXATTRS_UNSPECIFIED, hdr, ipib_pv->pv_header_len);
     rc = s390_pv_set_sec_parms((uintptr_t)hdr, ipib_pv->pv_header_len, errp);
     g_free(hdr);
     return rc;

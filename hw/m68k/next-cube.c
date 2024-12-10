@@ -28,6 +28,7 @@
 #include "ui/console.h"
 #include "target/m68k/cpu.h"
 #include "migration/vmstate.h"
+#include "exec/address-spaces.h"
 
 /* #define DEBUG_NEXT */
 #ifdef DEBUG_NEXT
@@ -784,7 +785,8 @@ static void nextdma_write(void *opaque, uint8_t *buf, int size, int type)
         base_addr = next_state->dma[type].next_initbuf;
     }
 
-    cpu_physical_memory_write(base_addr, buf, size);
+    address_space_write(&address_space_memory, base_addr,
+                        MEMTXATTRS_UNSPECIFIED, buf, size);
 
     next_state->dma[type].next_initbuf = 0;
 

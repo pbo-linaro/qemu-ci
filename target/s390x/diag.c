@@ -14,6 +14,7 @@
 
 #include "qemu/osdep.h"
 #include "cpu.h"
+#include "exec/address-spaces.h"
 #include "s390x-internal.h"
 #include "hw/watchdog/wdt_diag288.h"
 #include "sysemu/cpus.h"
@@ -115,7 +116,9 @@ void handle_diag_308(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
         }
         iplb = g_new0(IplParameterBlock, 1);
         if (!s390_is_pv()) {
-            cpu_physical_memory_read(addr, iplb, sizeof(iplb->len));
+            address_space_read(&address_space_memory, addr,
+                               MEMTXATTRS_UNSPECIFIED, iplb,
+                               sizeof(iplb->len));
         } else {
             s390_cpu_pv_mem_read(cpu, 0, iplb, sizeof(iplb->len));
         }
@@ -126,7 +129,9 @@ void handle_diag_308(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
         }
 
         if (!s390_is_pv()) {
-            cpu_physical_memory_read(addr, iplb, be32_to_cpu(iplb->len));
+            address_space_read(&address_space_memory, addr,
+                               MEMTXATTRS_UNSPECIFIED, iplb,
+                               be32_to_cpu(iplb->len));
         } else {
             s390_cpu_pv_mem_read(cpu, 0, iplb, be32_to_cpu(iplb->len));
         }
@@ -165,7 +170,9 @@ out:
         }
 
         if (!s390_is_pv()) {
-            cpu_physical_memory_write(addr, iplb, be32_to_cpu(iplb->len));
+            address_space_write(&address_space_memory, addr,
+                                MEMTXATTRS_UNSPECIFIED, iplb,
+                                be32_to_cpu(iplb->len));
         } else {
             s390_cpu_pv_mem_write(cpu, 0, iplb, be32_to_cpu(iplb->len));
         }

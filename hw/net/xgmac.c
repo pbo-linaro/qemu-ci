@@ -28,6 +28,7 @@
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
 #include "hw/sysbus.h"
+#include "exec/address-spaces.h"
 #include "migration/vmstate.h"
 #include "qemu/module.h"
 #include "net/net.h"
@@ -184,7 +185,8 @@ static void xgmac_read_desc(XgmacState *s, struct desc *d, int rx)
 {
     uint32_t addr = rx ? s->regs[DMA_CUR_RX_DESC_ADDR] :
         s->regs[DMA_CUR_TX_DESC_ADDR];
-    cpu_physical_memory_read(addr, d, sizeof(*d));
+    address_space_read(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED, d,
+                       sizeof(*d));
 }
 
 static void xgmac_write_desc(XgmacState *s, struct desc *d, int rx)
@@ -199,7 +201,8 @@ static void xgmac_write_desc(XgmacState *s, struct desc *d, int rx)
     } else {
         s->regs[reg] += sizeof(*d);
     }
-    cpu_physical_memory_write(addr, d, sizeof(*d));
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        d, sizeof(*d));
 }
 
 static void xgmac_enet_send(XgmacState *s)
@@ -247,7 +250,8 @@ static void xgmac_enet_send(XgmacState *s)
             break;
         }
 
-        cpu_physical_memory_read(bd.buffer1_addr, ptr, len);
+        address_space_read(&address_space_memory, bd.buffer1_addr,
+                           MEMTXATTRS_UNSPECIFIED, ptr, len);
         ptr += len;
         frame_size += len;
         if (bd.ctl_stat & 0x20000000) {
@@ -359,7 +363,8 @@ static ssize_t eth_rx(NetClientState *nc, const uint8_t *buf, size_t size)
         goto out;
     }
 
-    cpu_physical_memory_write(bd.buffer1_addr, buf, size);
+    address_space_write(&address_space_memory, bd.buffer1_addr,
+                        MEMTXATTRS_UNSPECIFIED, buf, size);
 
     /* Add in the 4 bytes for crc (the real hw returns length incl crc) */
     size += 4;

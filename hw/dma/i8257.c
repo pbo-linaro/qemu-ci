@@ -26,6 +26,7 @@
 #include "hw/isa/isa.h"
 #include "hw/qdev-properties.h"
 #include "migration/vmstate.h"
+#include "exec/address-spaces.h"
 #include "hw/dma/i8257.h"
 #include "qapi/error.h"
 #include "qemu/main-loop.h"
@@ -413,15 +414,17 @@ static int i8257_dma_read_memory(IsaDma *obj, int nchan, void *buf, int pos,
         int i;
         uint8_t *p = buf;
 
-        cpu_physical_memory_read (addr - pos - len, buf, len);
+        address_space_read(&address_space_memory, addr - pos - len,
+                           MEMTXATTRS_UNSPECIFIED, buf, len);
         /* What about 16bit transfers? */
         for (i = 0; i < len >> 1; i++) {
             uint8_t b = p[len - i - 1];
             p[i] = b;
         }
+    } else {
+        address_space_read(&address_space_memory, addr + pos,
+                           MEMTXATTRS_UNSPECIFIED, buf, len);
     }
-    else
-        cpu_physical_memory_read (addr + pos, buf, len);
 
     return len;
 }
@@ -441,15 +444,17 @@ static int i8257_dma_write_memory(IsaDma *obj, int nchan, void *buf, int pos,
         int i;
         uint8_t *p = buf;
 
-        cpu_physical_memory_write (addr - pos - len, buf, len);
+        address_space_write(&address_space_memory, addr - pos - len,
+                            MEMTXATTRS_UNSPECIFIED, buf, len);
         /* What about 16bit transfers? */
         for (i = 0; i < len; i++) {
             uint8_t b = p[len - i - 1];
             p[i] = b;
         }
+    } else {
+        address_space_write(&address_space_memory, addr + pos,
+                            MEMTXATTRS_UNSPECIFIED, buf, len);
     }
-    else
-        cpu_physical_memory_write (addr + pos, buf, len);
 
     return len;
 }

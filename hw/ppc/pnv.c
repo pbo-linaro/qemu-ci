@@ -40,6 +40,7 @@
 #include "qapi/visitor.h"
 #include "hw/intc/intc.h"
 #include "hw/ipmi/ipmi.h"
+#include "exec/address-spaces.h"
 #include "target/ppc/mmu-hash64.h"
 #include "hw/pci/msi.h"
 #include "hw/pci-host/pnv_phb.h"
@@ -745,7 +746,8 @@ static void pnv_reset(MachineState *machine, ResetType type)
     }
 
     qemu_fdt_dumpdtb(fdt, fdt_totalsize(fdt));
-    cpu_physical_memory_write(PNV_FDT_ADDR, fdt, fdt_totalsize(fdt));
+    address_space_write(&address_space_memory, PNV_FDT_ADDR,
+                        MEMTXATTRS_UNSPECIFIED, fdt, fdt_totalsize(fdt));
 
     /* Update machine->fdt with latest fdt */
     if (machine->fdt != fdt) {

@@ -28,6 +28,7 @@
 #include "qemu/osdep.h"
 #include "qemu/log.h"
 #include "qemu/error-report.h"
+#include "exec/address-spaces.h"
 #include "sysemu/sysemu.h"
 #include "sysemu/device_tree.h"
 #include "sysemu/cpus.h"
@@ -260,7 +261,8 @@ static inline int sysparm_st(target_ulong addr, target_ulong len,
         return RTAS_OUT_SYSPARM_PARAM_ERROR;
     }
     stw_be_phys(&address_space_memory, phys, vallen);
-    cpu_physical_memory_write(phys + 2, val, MIN(len - 2, vallen));
+    address_space_write(&address_space_memory, phys + 2,
+                        MEMTXATTRS_UNSPECIFIED, val, MIN(len - 2, vallen));
     return RTAS_OUT_SUCCESS;
 }
 
@@ -350,7 +352,8 @@ static void rtas_ibm_os_term(PowerPCCPU *cpu,
     target_ulong msgaddr = rtas_ld(args, 0);
     char msg[512];
 
-    cpu_physical_memory_read(msgaddr, msg, sizeof(msg) - 1);
+    address_space_read(&address_space_memory, msgaddr, MEMTXATTRS_UNSPECIFIED,
+                       msg, sizeof(msg) - 1);
     msg[sizeof(msg) - 1] = 0;
 
     error_report("OS terminated: %s", msg);

@@ -16,6 +16,7 @@
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
 #include "hw/audio/wm8750.h"
+#include "exec/address-spaces.h"
 #include "audio/audio.h"
 #include "qapi/error.h"
 #include "qemu/module.h"
@@ -86,7 +87,8 @@ static void mv88w8618_audio_callback(void *opaque, int free_out, int free_in)
     if (block_size > 4096) {
         return;
     }
-    cpu_physical_memory_read(s->target_buffer + s->play_pos, buf, block_size);
+    address_space_read(&address_space_memory, s->target_buffer + s->play_pos,
+                       MEMTXATTRS_UNSPECIFIED, buf, block_size);
     mem_buffer = buf;
     if (s->playback_mode & MP_AUDIO_16BIT_SAMPLE) {
         if (s->playback_mode & MP_AUDIO_MONO) {

@@ -33,6 +33,7 @@
 #include "sysemu/cpus.h"
 #include "sysemu/accel-blocker.h"
 #include "qemu/bswap.h"
+#include "exec/address-spaces.h"
 #include "exec/memory.h"
 #include "exec/ram_addr.h"
 #include "qemu/event_notifier.h"
@@ -2839,7 +2840,9 @@ void kvm_flush_coalesced_mmio_buffer(void)
                                     MEMTXATTRS_UNSPECIFIED, ent->data,
                                     ent->len);
             } else {
-                cpu_physical_memory_write(ent->phys_addr, ent->data, ent->len);
+                address_space_write(&address_space_memory, ent->phys_addr,
+                                    MEMTXATTRS_UNSPECIFIED, ent->data,
+                                    ent->len);
             }
             smp_wmb();
             ring->first = (ring->first + 1) % KVM_COALESCED_MMIO_MAX;

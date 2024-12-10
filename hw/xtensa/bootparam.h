@@ -1,6 +1,7 @@
 #ifndef HW_XTENSA_BOOTPARAM_H
 #define HW_XTENSA_BOOTPARAM_H
 
+#include "exec/address-spaces.h"
 #include "exec/cpu-common.h"
 
 #define BP_TAG_COMMAND_LINE     0x1001  /* command line (0-terminated string)*/
@@ -40,9 +41,11 @@ static inline ram_addr_t put_tag(ram_addr_t addr, uint16_t tag,
         .size = tswap16((size + 3) & ~3),
     };
 
-    cpu_physical_memory_write(addr, &bp_tag, sizeof(bp_tag));
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        &bp_tag, sizeof(bp_tag));
     addr += sizeof(bp_tag);
-    cpu_physical_memory_write(addr, data, size);
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        data, size);
     addr += (size + 3) & ~3;
 
     return addr;

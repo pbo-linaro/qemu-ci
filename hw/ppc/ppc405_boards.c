@@ -26,6 +26,7 @@
 #include "qemu/units.h"
 #include "qapi/error.h"
 #include "qemu/datadir.h"
+#include "exec/address-spaces.h"
 #include "cpu.h"
 #include "hw/ppc/ppc.h"
 #include "hw/qdev-properties.h"
@@ -258,7 +259,9 @@ static void boot_from_kernel(MachineState *machine, PowerPCCPU *cpu)
     if (machine->kernel_cmdline) {
         len = strlen(machine->kernel_cmdline);
         bdloc -= ((len + 255) & ~255);
-        cpu_physical_memory_write(bdloc, machine->kernel_cmdline, len + 1);
+        address_space_write(&address_space_memory, bdloc,
+                            MEMTXATTRS_UNSPECIFIED, machine->kernel_cmdline,
+                            len + 1);
         boot_info.cmdline_base = bdloc;
         boot_info.cmdline_size = bdloc + len;
     }

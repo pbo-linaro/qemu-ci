@@ -782,13 +782,15 @@ static CCW1 copy_ccw_from_guest(hwaddr addr, bool fmt1)
     CCW1 ret;
 
     if (fmt1) {
-        cpu_physical_memory_read(addr, &tmp1, sizeof(tmp1));
+        address_space_read(&address_space_memory, addr,
+                           MEMTXATTRS_UNSPECIFIED, &tmp1, sizeof(tmp1));
         ret.cmd_code = tmp1.cmd_code;
         ret.flags = tmp1.flags;
         ret.count = be16_to_cpu(tmp1.count);
         ret.cda = be32_to_cpu(tmp1.cda);
     } else {
-        cpu_physical_memory_read(addr, &tmp0, sizeof(tmp0));
+        address_space_read(&address_space_memory, addr,
+                           MEMTXATTRS_UNSPECIFIED, &tmp0, sizeof(tmp0));
         if ((tmp0.cmd_code & 0x0f) == CCW_CMD_TIC) {
             ret.cmd_code = CCW_CMD_TIC;
             ret.flags = 0;

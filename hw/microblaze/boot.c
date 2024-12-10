@@ -37,6 +37,7 @@
 #include "hw/loader.h"
 #include "elf.h"
 #include "qemu/cutils.h"
+#include "exec/address-spaces.h"
 
 #include "boot.h"
 
@@ -104,7 +105,8 @@ static int microblaze_load_dtb(hwaddr addr,
                               initrd_end);
     }
 
-    cpu_physical_memory_write(addr, fdt, fdt_size);
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        fdt, fdt_size);
     g_free(fdt);
     return fdt_size;
 }

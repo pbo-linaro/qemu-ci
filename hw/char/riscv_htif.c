@@ -211,12 +211,16 @@ static void htif_handle_tohost_write(HTIFState *s, uint64_t val_written)
                 return;
             } else {
                 uint64_t syscall[8];
-                cpu_physical_memory_read(payload, syscall, sizeof(syscall));
+                address_space_read(&address_space_memory, payload,
+                                   MEMTXATTRS_UNSPECIFIED, syscall,
+                                   sizeof(syscall));
                 if (tswap64(syscall[0]) == PK_SYS_WRITE &&
                     tswap64(syscall[1]) == HTIF_DEV_CONSOLE &&
                     tswap64(syscall[3]) == HTIF_CONSOLE_CMD_PUTC) {
                     uint8_t ch;
-                    cpu_physical_memory_read(tswap64(syscall[2]), &ch, 1);
+                    address_space_read(&address_space_memory,
+                                       tswap64(syscall[2]),
+                                       MEMTXATTRS_UNSPECIFIED, &ch, 1);
                     /*
                      * XXX this blocks entire thread. Rewrite to use
                      * qemu_chr_fe_write and background I/O callbacks

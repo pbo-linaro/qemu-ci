@@ -29,6 +29,7 @@
 #include "qapi/error.h"
 #include "sysemu/device_tree.h"
 #include "sysemu/runstate.h"
+#include "exec/address-spaces.h"
 
 #include "hw/ppc/fdt.h"
 #include "hw/ppc/spapr.h"
@@ -854,11 +855,13 @@ static void spapr_mce_dispatch_elog(SpaprMachineState *spapr, PowerPCCPU *cpu,
 
     stq_be_phys(&address_space_memory, rtas_addr + RTAS_ERROR_LOG_OFFSET,
                 env->gpr[3]);
-    cpu_physical_memory_write(rtas_addr + RTAS_ERROR_LOG_OFFSET +
-                              sizeof(env->gpr[3]), &log, sizeof(log));
-    cpu_physical_memory_write(rtas_addr + RTAS_ERROR_LOG_OFFSET +
-                              sizeof(env->gpr[3]) + sizeof(log), ext_elog,
-                              sizeof(*ext_elog));
+    address_space_write(&address_space_memory,
+                        rtas_addr + RTAS_ERROR_LOG_OFFSET + sizeof(env->gpr[3]),
+                        MEMTXATTRS_UNSPECIFIED, &log, sizeof(log));
+    address_space_write(&address_space_memory,
+                        rtas_addr + RTAS_ERROR_LOG_OFFSET
+                                  + sizeof(env->gpr[3]) + sizeof(log),
+                        MEMTXATTRS_UNSPECIFIED, ext_elog, sizeof(*ext_elog));
     g_free(ext_elog);
 
     env->gpr[3] = rtas_addr + RTAS_ERROR_LOG_OFFSET;
@@ -963,9 +966,11 @@ static void check_exception(PowerPCCPU *cpu, SpaprMachineState *spapr,
 
     header.summary = cpu_to_be32(event->summary);
     header.extended_length = cpu_to_be32(event->extended_length);
-    cpu_physical_memory_write(buf, &header, sizeof(header));
-    cpu_physical_memory_write(buf + sizeof(header), event->extended_log,
-                              event->extended_length);
+    address_space_write(&address_space_memory, buf, MEMTXATTRS_UNSPECIFIED,
+                        &header, sizeof(header));
+    address_space_write(&address_space_memory, buf + sizeof(header),
+                        MEMTXATTRS_UNSPECIFIED, event->extended_log,
+                        event->extended_length);
     rtas_st(rets, 0, RTAS_OUT_SUCCESS);
     g_free(event->extended_log);
     g_free(event);

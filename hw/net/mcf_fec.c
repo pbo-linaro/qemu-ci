@@ -16,6 +16,7 @@
 #include "hw/net/mii.h"
 #include "hw/qdev-properties.h"
 #include "hw/sysbus.h"
+#include "exec/address-spaces.h"
 #include <zlib.h> /* for crc32 */
 
 //#define DEBUG_FEC 1
@@ -174,7 +175,8 @@ typedef struct {
 
 static void mcf_fec_read_bd(mcf_fec_bd *bd, uint32_t addr)
 {
-    cpu_physical_memory_read(addr, bd, sizeof(*bd));
+    address_space_read(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                       bd, sizeof(*bd));
     be16_to_cpus(&bd->flags);
     be16_to_cpus(&bd->length);
     be32_to_cpus(&bd->data);
@@ -186,7 +188,8 @@ static void mcf_fec_write_bd(mcf_fec_bd *bd, uint32_t addr)
     tmp.flags = cpu_to_be16(bd->flags);
     tmp.length = cpu_to_be16(bd->length);
     tmp.data = cpu_to_be32(bd->data);
-    cpu_physical_memory_write(addr, &tmp, sizeof(tmp));
+    address_space_write(&address_space_memory, addr, MEMTXATTRS_UNSPECIFIED,
+                        &tmp, sizeof(tmp));
 }
 
 static void mcf_fec_update(mcf_fec_state *s)
@@ -259,7 +262,8 @@ static void mcf_fec_do_tx(mcf_fec_state *s)
             len = FEC_MAX_FRAME_SIZE - frame_size;
             s->eir |= FEC_INT_BABT;
         }
-        cpu_physical_memory_read(bd.data, ptr, len);
+        address_space_read(&address_space_memory, bd.data,
+                           MEMTXATTRS_UNSPECIFIED, ptr, len);
         ptr += len;
         frame_size += len;
         if (bd.flags & FEC_BD_L) {
@@ -595,10 +599,12 @@ static ssize_t mcf_fec_receive(NetClientState *nc, const uint8_t *buf, size_t si
         if (size < 4)
             buf_len += size - 4;
         buf_addr = bd.data;
-        cpu_physical_memory_write(buf_addr, buf, buf_len);
+        address_space_write(&address_space_memory, buf_addr,
+                            MEMTXATTRS_UNSPECIFIED, buf, buf_len);
         buf += buf_len;
         if (size < 4) {
-            cpu_physical_memory_write(buf_addr + buf_len, crc_ptr, 4 - size);
+            address_space_write(&address_space_memory, buf_addr + buf_len,
+                                MEMTXATTRS_UNSPECIFIED, crc_ptr, 4 - size);
             crc_ptr += 4 - size;
         }
         bd.flags &= ~FEC_BD_E;

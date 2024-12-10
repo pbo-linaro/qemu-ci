@@ -13,6 +13,7 @@
 #include "qemu/osdep.h"
 #include "qapi/error.h"
 #include "qemu/error-report.h"
+#include "exec/address-spaces.h"
 #include "sysemu/reset.h"
 #include "hw/ppc/spapr.h"
 #include "hw/qdev-properties.h"
@@ -68,7 +69,8 @@ static ssize_t tpm_execute(SpaprTpmProxy *tpm_proxy, target_ulong *args)
         }
     }
 
-    cpu_physical_memory_read(data_in, buf_in, data_in_size);
+    address_space_read(&address_space_memory, data_in, MEMTXATTRS_UNSPECIFIED,
+                       buf_in, data_in_size);
 
     do {
         ret = write(tpm_proxy->host_fd, buf_in, data_in_size);
@@ -93,7 +95,8 @@ static ssize_t tpm_execute(SpaprTpmProxy *tpm_proxy, target_ulong *args)
         return H_RESOURCE;
     }
 
-    cpu_physical_memory_write(data_out, buf_out, ret);
+    address_space_write(&address_space_memory, data_out,
+                        MEMTXATTRS_UNSPECIFIED, buf_out, ret);
     args[0] = ret;
 
     return H_SUCCESS;

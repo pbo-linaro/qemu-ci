@@ -1,6 +1,7 @@
 #include "qemu/osdep.h"
 #include "qemu/cutils.h"
 #include "qapi/error.h"
+#include "exec/address-spaces.h"
 #include "sysemu/hw_accel.h"
 #include "sysemu/runstate.h"
 #include "sysemu/tcg.h"
@@ -1360,9 +1361,11 @@ static target_ulong h_client_architecture_support(PowerPCCPU *cpu,
         spapr->fdt_size = fdt_totalsize(spapr->fdt_blob);
         spapr->fdt_initial_size = spapr->fdt_size;
 
-        cpu_physical_memory_write(fdt_buf, &hdr, sizeof(hdr));
-        cpu_physical_memory_write(fdt_buf + sizeof(hdr), spapr->fdt_blob,
-                                  spapr->fdt_size);
+        address_space_write(&address_space_memory, fdt_buf,
+                            MEMTXATTRS_UNSPECIFIED, &hdr, sizeof(hdr));
+        address_space_write(&address_space_memory, fdt_buf + sizeof(hdr),
+                            MEMTXATTRS_UNSPECIFIED, spapr->fdt_blob,
+                            spapr->fdt_size);
         trace_spapr_cas_continue(spapr->fdt_size + sizeof(hdr));
     }
 
@@ -1466,7 +1469,8 @@ static target_ulong h_update_dt(PowerPCCPU *cpu, SpaprMachineState *spapr,
     SpaprMachineClass *smc = SPAPR_MACHINE_GET_CLASS(spapr);
     void *fdt;
 
-    cpu_physical_memory_read(dt, &hdr, sizeof(hdr));
+    address_space_read(&address_space_memory, dt, MEMTXATTRS_UNSPECIFIED,
+                       &hdr, sizeof(hdr));
     cb = fdt32_to_cpu(hdr.totalsize);
 
     if (!smc->update_dt_enabled) {
@@ -1481,7 +1485,8 @@ static target_ulong h_update_dt(PowerPCCPU *cpu, SpaprMachineState *spapr,
     }
 
     fdt = g_malloc0(cb);
-    cpu_physical_memory_read(dt, fdt, cb);
+    address_space_read(&address_space_memory, dt, MEMTXATTRS_UNSPECIFIED, fdt,
+                       cb);
 
     /* Check the fdt consistency */
     if (fdt_check_full(fdt, cb)) {

@@ -86,7 +86,8 @@ static int kvm_gva_rw(CPUState *cs, uint64_t gva, void *_buf, size_t sz,
             len = sz;
         }
 
-        cpu_physical_memory_rw(gpa, buf, len, is_write);
+        address_space_rw(&address_space_memory, gpa, MEMTXATTRS_UNSPECIFIED,
+                         buf, len, is_write);
 
         buf += len;
         sz -= len;

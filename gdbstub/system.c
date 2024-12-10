@@ -14,6 +14,7 @@
 #include "qapi/error.h"
 #include "qemu/error-report.h"
 #include "qemu/cutils.h"
+#include "exec/address-spaces.h"
 #include "exec/gdbstub.h"
 #include "gdbstub/syscalls.h"
 #include "gdbstub/commands.h"
@@ -454,9 +455,11 @@ int gdb_target_memory_rw_debug(CPUState *cpu, hwaddr addr,
 
     if (phy_memory_mode) {
         if (is_write) {
-            cpu_physical_memory_write(addr, buf, len);
+            address_space_write(&address_space_memory, addr,
+                                MEMTXATTRS_UNSPECIFIED, buf, len);
         } else {
-            cpu_physical_memory_read(addr, buf, len);
+            address_space_read(&address_space_memory, addr,
+                               MEMTXATTRS_UNSPECIFIED, buf, len);
         }
         return 0;
     }

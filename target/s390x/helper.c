@@ -20,6 +20,7 @@
 
 #include "qemu/osdep.h"
 #include "cpu.h"
+#include "exec/address-spaces.h"
 #include "s390x-internal.h"
 #include "gdbstub/helpers.h"
 #include "qemu/timer.h"
@@ -213,7 +214,9 @@ int s390_store_status(S390CPU *cpu, hwaddr addr, bool store_arch)
     }
 
     if (store_arch) {
-        cpu_physical_memory_write(offsetof(LowCore, ar_access_id), &ar_id, 1);
+        address_space_write(&address_space_memory,
+                            offsetof(LowCore, ar_access_id),
+                            MEMTXATTRS_UNSPECIFIED, &ar_id, 1);
     }
     for (i = 0; i < 16; ++i) {
         sa->fprs[i] = cpu_to_be64(*get_freg(&cpu->env, i));
