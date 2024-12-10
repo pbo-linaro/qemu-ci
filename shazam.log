@@ -1,0 +1,108 @@
+Grabbing thread from lore.kernel.org/all/20241210000527.9541-1-kowal@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 25 messages in the thread
+WARNING: duplicate messages found at index 6
+   Subject 1: ppc/xive2: Process group backlog when pushing an OS context
+   Subject 2: ppc/xive2: Process group backlog when updating the CPPR
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 5
+   Subject 1: ppc/xive2: Add undelivered group interrupt to backlog
+   Subject 2: ppc/xive2: Process group backlog when pushing an OS context
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 10
+   Subject 1: ppc/xive2: Support crowd-matching when looking for target
+   Subject 2: ppc/xive2: Check crowd backlog when scanning group backlog
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 11
+   Subject 1: pnv/xive: Only support crowd size of 0, 2, 4 and 16
+   Subject 2: ppc/xive2: Check crowd backlog when scanning group backlog
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 7
+   Subject 1: ppc/xive2: Process group backlog when updating the CPPR
+   Subject 2: ppc/xive2: Process group backlog when updating the CPPR
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 3
+   Subject 1: ppc/xive2: Support group-matching when looking for target
+   Subject 2: ppc/xive2: Add grouping level to notification
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: ppc/xive: Rename ipb_to_pipr() to xive_ipb_to_pipr()
+   Subject 2: ppc/xive2: Add grouping level to notification
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 12
+   Subject 1: pnv/xive: Support ESB Escalation
+   Subject 2: ppc/xive2: Check crowd backlog when scanning group backlog
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 9
+   Subject 1: ppc/xive2: Add support for MMIO operations on the NVPG/NVC BAR
+   Subject 2: ppc/xive2: Support crowd-matching when looking for target
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 4
+   Subject 1: ppc/xive2: Support group-matching when looking for target
+   Subject 2: ppc/xive2: Add grouping level to notification
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 8
+   Subject 1: qtest/xive: Add group-interrupt test
+   Subject 2: ppc/xive2: Process group backlog when updating the CPPR
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 29 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/14] ppc/xive2: Update NVP save/restore for group attributes
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 2/14] ppc/xive: Rename ipb_to_pipr() to xive_ipb_to_pipr()
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 2/14] ppc/xive2: Add grouping level to notification
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 4/14] ppc/xive2: Support group-matching when looking for target
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 3/14] ppc/xive2: Add grouping level to notification
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 5/14] ppc/xive2: Process group backlog when pushing an OS context
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 7/14] ppc/xive2: Process group backlog when updating the CPPR
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 8/14] qtest/xive: Add group-interrupt test
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 6/14] ppc/xive2: Process group backlog when updating the CPPR
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 9/14] ppc/xive2: Support crowd-matching when looking for target
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 11/14] pnv/xive: Only support crowd size of 0, 2, 4 and 16
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 12/14] pnv/xive: Support ESB Escalation
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 10/14] ppc/xive2: Check crowd backlog when scanning group backlog
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  [32m✓[0m [PATCH v2 14/14] qtest/xive: Add test of pool interrupts
+    [32m✓[0m Signed: DKIM/ibm.com (From: kowal@linux.ibm.com)
+  ERROR: missing [15/14]!
+  ERROR: missing [16/14]!
+  ERROR: missing [17/14]!
+  ERROR: missing [18/14]!
+  ERROR: missing [19/14]!
+  ERROR: missing [20/14]!
+  ERROR: missing [21/14]!
+  ERROR: missing [22/14]!
+  ERROR: missing [23/14]!
+  ERROR: missing [24/14]!
+  ERROR: missing [25/14]!
+---
+Total patches: 14
+---
+WARNING: Thread incomplete!
+Applying: ppc/xive2: Update NVP save/restore for group attributes
+Applying: ppc/xive: Rename ipb_to_pipr() to xive_ipb_to_pipr()
+Applying: ppc/xive2: Add grouping level to notification
+Patch failed at 0003 ppc/xive2: Add grouping level to notification
+error: patch failed: include/hw/ppc/xive.h:510
+error: include/hw/ppc/xive.h: patch does not apply
+error: patch failed: hw/intc/xive.c:27
+error: hw/intc/xive.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
