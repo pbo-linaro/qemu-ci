@@ -1,0 +1,148 @@
+Grabbing thread from lore.kernel.org/all/20241210152401.1823648-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 43 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/46] tcg/optimize: Split out finish_bb, finish_ebb
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 2/46] tcg/optimize: Copy mask writeback to fold_masks
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/46] tcg/optimize: Add fold_masks_zsa, fold_masks_zs, fold_masks_z
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [4/46]!
+  [32m✓[0m [PATCH 5/46] tcg/optimize: Use finish_folding in fold_addsub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/46] tcg/optimize: Use fold_masks_zsa in fold_and
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 7/46] tcg/optimize: Use fold_masks_zsa in fold_andc
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/46] tcg/optimize: Use fold_masks_zs in fold_bswap
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/46] tcg/optimize: Use fold_masks_z in fold_count_zeros
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/46] tcg/optimize: Use fold_masks_z in fold_ctpop
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/46] tcg/optimize: Use fold_and and fold_masks_z in fold_deposit
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 12/46] tcg/optimize: Use finish_folding in fold_divide
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 13/46] tcg/optimize: Use finish_folding in fold_dup, fold_dup2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 14/46] tcg/optimize: Use fold_masks_zs in fold_eqv
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 15/46] tcg/optimize: Use fold_masks_zsa in fold_extract
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 16/46] tcg/optimize: Use finish_folding in fold_extract2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 17/46] tcg/optimize: Use fold_masks_zsa in fold_exts
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 18/46] tcg/optimize: Use fold_masks_zsa in fold_extu
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 19/46] tcg/optimize: Use fold_masks_zs in fold_movcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 20/46] tcg/optimize: Use finish_folding in fold_mul*
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 21/46] tcg/optimize: Use fold_masks_zs in fold_nand
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 22/46] tcg/optimize: Use fold_masks_z in fold_neg_no_const
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 23/46] tcg/optimize: Use fold_masks_zs in fold_nor
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 24/46] tcg/optimize: Use fold_masks_zs in fold_not
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 25/46] tcg/optimize: Use fold_masks_zs in fold_or
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 26/46] tcg/optimize: Use fold_masks_zs in fold_orc
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 27/46] tcg/optimize: Use fold_masks_zs in fold_qemu_ld
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 28/46] tcg/optimize: Return true from fold_qemu_st, fold_tcg_st
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 29/46] tcg/optimize: Use finish_folding in fold_remainder
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 30/46] tcg/optimize: Distinguish simplification in fold_setcond_zmask
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 31/46] tcg/optimize: Use fold_masks_z in fold_setcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 32/46] tcg/optimize: Use fold_masks_zs in fold_negsetcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 33/46] tcg/optimize: Use fold_masks_z in fold_setcond2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 34/46] tcg/optimize: Use finish_folding in fold_cmp_vec
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 35/46] tcg/optimize: Use finish_folding in fold_cmpsel_vec
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 36/46] tcg/optimize: Use fold_masks_zsa in fold_sextract
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 37/46] tcg/optimize: Use fold_masks_zs in fold_shift
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 38/46] tcg/optimize: Use finish_folding in fold_sub, fold_sub_vec
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 39/46] tcg/optimize: Use fold_masks_zs in fold_tcg_ld
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [40/46]!
+  ERROR: missing [41/46]!
+  [32m✓[0m [PATCH 42/46] tcg/optimize: Use finish_folding in fold_bitsel_vec
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [43/46]!
+  [32m✓[0m [PATCH 44/46] tcg/optimize: Remove [zsa]_mask from OptContext
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 45/46] tcg/optimize: Move fold_bitsel_vec into alphabetic sort
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 46/46] tcg/optimize: Move fold_cmp_vec, fold_cmpsel_vec into alphabetic sort
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 42
+---
+WARNING: Thread incomplete!
+Applying: tcg/optimize: Split out finish_bb, finish_ebb
+Applying: tcg/optimize: Copy mask writeback to fold_masks
+Applying: tcg/optimize: Add fold_masks_zsa, fold_masks_zs, fold_masks_z
+Applying: tcg/optimize: Use finish_folding in fold_addsub2
+Applying: tcg/optimize: Use fold_masks_zsa in fold_and
+Applying: tcg/optimize: Use fold_masks_zsa in fold_andc
+Applying: tcg/optimize: Use fold_masks_zs in fold_bswap
+Applying: tcg/optimize: Use fold_masks_z in fold_count_zeros
+Applying: tcg/optimize: Use fold_masks_z in fold_ctpop
+Applying: tcg/optimize: Use fold_and and fold_masks_z in fold_deposit
+Applying: tcg/optimize: Use finish_folding in fold_divide
+Applying: tcg/optimize: Use finish_folding in fold_dup, fold_dup2
+Applying: tcg/optimize: Use fold_masks_zs in fold_eqv
+Applying: tcg/optimize: Use fold_masks_zsa in fold_extract
+Applying: tcg/optimize: Use finish_folding in fold_extract2
+Applying: tcg/optimize: Use fold_masks_zsa in fold_exts
+Applying: tcg/optimize: Use fold_masks_zsa in fold_extu
+Applying: tcg/optimize: Use fold_masks_zs in fold_movcond
+Applying: tcg/optimize: Use finish_folding in fold_mul*
+Applying: tcg/optimize: Use fold_masks_zs in fold_nand
+Applying: tcg/optimize: Use fold_masks_z in fold_neg_no_const
+Applying: tcg/optimize: Use fold_masks_zs in fold_nor
+Applying: tcg/optimize: Use fold_masks_zs in fold_not
+Applying: tcg/optimize: Use fold_masks_zs in fold_or
+Applying: tcg/optimize: Use fold_masks_zs in fold_orc
+Applying: tcg/optimize: Use fold_masks_zs in fold_qemu_ld
+Applying: tcg/optimize: Return true from fold_qemu_st, fold_tcg_st
+Applying: tcg/optimize: Use finish_folding in fold_remainder
+Applying: tcg/optimize: Distinguish simplification in fold_setcond_zmask
+Applying: tcg/optimize: Use fold_masks_z in fold_setcond
+Applying: tcg/optimize: Use fold_masks_zs in fold_negsetcond
+Applying: tcg/optimize: Use fold_masks_z in fold_setcond2
+Applying: tcg/optimize: Use finish_folding in fold_cmp_vec
+Applying: tcg/optimize: Use finish_folding in fold_cmpsel_vec
+Applying: tcg/optimize: Use fold_masks_zsa in fold_sextract
+Applying: tcg/optimize: Use fold_masks_zs in fold_shift
+Applying: tcg/optimize: Use finish_folding in fold_sub, fold_sub_vec
+Applying: tcg/optimize: Use fold_masks_zs in fold_tcg_ld
+Applying: tcg/optimize: Use finish_folding in fold_bitsel_vec
+Applying: tcg/optimize: Remove [zsa]_mask from OptContext
+Patch failed at 0040 tcg/optimize: Remove [zsa]_mask from OptContext
+error: patch failed: tcg/optimize.c:987
+error: tcg/optimize.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
