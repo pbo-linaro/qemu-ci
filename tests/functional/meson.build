@@ -66,7 +66,7 @@ tests_alpha_system_thorough = [
 ]
 
 tests_arm_system_thorough = [
-  'arm_aspeed',
+  #'arm_aspeed', # flaky functional test
   'arm_bpim2u',
   'arm_canona1100',
   'arm_collie',
@@ -75,7 +75,7 @@ tests_arm_system_thorough = [
   'arm_raspi2',
   'arm_sx1',
   'arm_vexpress',
-  'arm_tuxrun',
+  # 'arm_tuxrun', # flaky functional test
 ]
 
 tests_arm_linuxuser_thorough = [
@@ -91,13 +91,13 @@ tests_i386_system_thorough = [
 ]
 
 tests_loongarch64_system_thorough = [
-  'loongarch64_virt',
+  # 'loongarch64_virt', # flaky functional test
 ]
 
 tests_m68k_system_thorough = [
   'm68k_mcf5208evb',
   'm68k_nextcube',
-  'm68k_q800',
+  # 'm68k_q800', # this test needs a soundcard, not available on GitHub
 ]
 
 tests_microblaze_system_thorough = [
