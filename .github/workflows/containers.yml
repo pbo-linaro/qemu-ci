@@ -1,0 +1,41 @@
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build_container:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # cd tests/docker/dockerfiles/
+        # ls *docker | sed -e 's/.docker//' | tr '\n' ','
+        # remove: debian-bootstrap,debian-toolchain
+        container: [alpine,centos9,debian-all-test-cross,debian-amd64-cross,debian-arm64-cross,debian-armhf-cross,debian,debian-hexagon-cross,debian-i686-cross,debian-legacy-test-cross,debian-loongarch-cross,debian-mips64el-cross,debian-mipsel-cross,debian-ppc64el-cross,debian-riscv64-cross,debian-s390x-cross,debian-tricore-cross,debian-xtensa-cross,fedora,fedora-rust-nightly,fedora-win64-cross,opensuse-leap,python,ubuntu2204]
+    steps:
+      - uses: actions/checkout@v4
+      - run: make docker-image-${{matrix.container}} RUNC=podman V=1
+      - run: podman tag qemu/${{matrix.container}} docker.io/qemupatches/ci:${{matrix.container}}
+      - run: podman login -u qemupatches -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - run: podman push docker.io/qemupatches/ci:${{matrix.container}}
+
+  build_container_debian-precache-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      # we clean up runner first, to get more disk space
+      - run: docker system prune -af && sudo rm -rf /opt/*
+      - uses: actions/checkout@v4
+      - run: make docker-image-debian RUNC=podman V=1
+      # fill download cache for functional and check-avocado
+      # running check-avocado without any qemu binary will only download data
+      # in /root/avocado
+      - run: >
+          podman run -it -v $(pwd):$(pwd) -w $(pwd) qemu/debian
+          ./precache_tests.sh
+      # commit result as a new image. Cache will be in /root/.cache and /root/avocado
+      - run: podman commit "$(podman ps -aq)" docker.io/qemupatches/ci:debian-precache-tests
+      - run: podman login -u qemupatches -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - run: podman push docker.io/qemupatches/ci:debian-precache-tests
