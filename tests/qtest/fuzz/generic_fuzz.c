@@ -20,6 +20,7 @@
 #include "tests/qtest/libqos/pci-pc.h"
 #include "fuzz.h"
 #include "string.h"
+#include "exec/address-spaces.h"
 #include "exec/memory.h"
 #include "exec/ramblock.h"
 #include "hw/qdev-core.h"
@@ -239,7 +240,7 @@ void fuzz_dma_read_cb(size_t addr, size_t len, MemoryRegion *mr)
     MemoryRegion *mr1;
     while (len > 0) {
         l = len;
-        mr1 = address_space_translate(first_cpu->as,
+        mr1 = address_space_translate(&address_space_memory,
                                       addr, &addr1, &l, true,
                                       MEMTXATTRS_UNSPECIFIED);
 

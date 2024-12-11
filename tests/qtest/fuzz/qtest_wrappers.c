@@ -13,6 +13,7 @@
 
 #include "qemu/osdep.h"
 #include "hw/core/cpu.h"
+#include "exec/address-spaces.h"
 #include "exec/ioport.h"
 
 #include "fuzz.h"
@@ -107,8 +108,8 @@ uint8_t __wrap_qtest_readb(QTestState *s, uint64_t addr)
 {
     uint8_t value;
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 1);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, &value, 1);
         return value;
     } else {
         return __real_qtest_readb(s, addr);
@@ -119,8 +120,8 @@ uint16_t __wrap_qtest_readw(QTestState *s, uint64_t addr)
 {
     uint16_t value;
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 2);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, &value, 2);
         return value;
     } else {
         return __real_qtest_readw(s, addr);
@@ -131,8 +132,8 @@ uint32_t __wrap_qtest_readl(QTestState *s, uint64_t addr)
 {
     uint32_t value;
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 4);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, &value, 4);
         return value;
     } else {
         return __real_qtest_readl(s, addr);
@@ -143,8 +144,8 @@ uint64_t __wrap_qtest_readq(QTestState *s, uint64_t addr)
 {
     uint64_t value;
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 8);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, &value, 8);
         return value;
     } else {
         return __real_qtest_readq(s, addr);
@@ -154,8 +155,8 @@ uint64_t __wrap_qtest_readq(QTestState *s, uint64_t addr)
 void __wrap_qtest_writeb(QTestState *s, uint64_t addr, uint8_t value)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 1);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, &value, 1);
     } else {
         __real_qtest_writeb(s, addr, value);
     }
@@ -164,8 +165,8 @@ void __wrap_qtest_writeb(QTestState *s, uint64_t addr, uint8_t value)
 void __wrap_qtest_writew(QTestState *s, uint64_t addr, uint16_t value)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 2);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, &value, 2);
     } else {
         __real_qtest_writew(s, addr, value);
     }
@@ -174,8 +175,8 @@ void __wrap_qtest_writew(QTestState *s, uint64_t addr, uint16_t value)
 void __wrap_qtest_writel(QTestState *s, uint64_t addr, uint32_t value)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 4);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, &value, 4);
     } else {
         __real_qtest_writel(s, addr, value);
     }
@@ -184,8 +185,8 @@ void __wrap_qtest_writel(QTestState *s, uint64_t addr, uint32_t value)
 void __wrap_qtest_writeq(QTestState *s, uint64_t addr, uint64_t value)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            &value, 8);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, &value, 8);
     } else {
         __real_qtest_writeq(s, addr, value);
     }
@@ -194,8 +195,8 @@ void __wrap_qtest_writeq(QTestState *s, uint64_t addr, uint64_t value)
 void __wrap_qtest_memread(QTestState *s, uint64_t addr, void *data, size_t size)
 {
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED, data,
-                           size);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, data, size);
     } else {
         __real_qtest_memread(s, addr, data, size);
     }
@@ -204,8 +205,8 @@ void __wrap_qtest_memread(QTestState *s, uint64_t addr, void *data, size_t size)
 void __wrap_qtest_bufread(QTestState *s, uint64_t addr, void *data, size_t size)
 {
     if (!serialize) {
-        address_space_read(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED, data,
-                           size);
+        (void)address_space_read(&address_space_memory, addr,
+                                 MEMTXATTRS_UNSPECIFIED, data, size);
     } else {
         __real_qtest_bufread(s, addr, data, size);
     }
@@ -215,8 +216,8 @@ void __wrap_qtest_memwrite(QTestState *s, uint64_t addr, const void *data,
                            size_t size)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            data, size);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, data, size);
     } else {
         __real_qtest_memwrite(s, addr, data, size);
     }
@@ -226,8 +227,8 @@ void __wrap_qtest_bufwrite(QTestState *s, uint64_t addr,
                     const void *data, size_t size)
 {
     if (!serialize) {
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            data, size);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, data, size);
     } else {
         __real_qtest_bufwrite(s, addr, data, size);
     }
@@ -239,8 +240,8 @@ void __wrap_qtest_memset(QTestState *s, uint64_t addr,
     if (!serialize) {
         data = malloc(size);
         memset(data, patt, size);
-        address_space_write(first_cpu->as, addr, MEMTXATTRS_UNSPECIFIED,
-                            data, size);
+        (void)address_space_write(&address_space_memory, addr,
+                                  MEMTXATTRS_UNSPECIFIED, data, size);
     } else {
         __real_qtest_memset(s, addr, patt, size);
     }
