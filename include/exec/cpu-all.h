@@ -22,7 +22,6 @@
 #include "exec/page-protection.h"
 #include "exec/cpu-common.h"
 #include "exec/memory.h"
-#include "exec/tswap.h"
 #include "hw/core/cpu.h"
 
 /* some important defines:
