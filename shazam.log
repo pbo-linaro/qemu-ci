@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20241211144440.2700268-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/6] target/arm: Implement fine-grained-trap handling for FEAT_XS
+  [32m✓[0m [PATCH v2 2/6] target/arm: Add ARM_CP_ADD_TLBI_NXS type flag for NXS insns
+  [32m✓[0m [PATCH v2 3/6] target/arm: Add ARM_CP_ADD_TLBI_NXS type flag to TLBI insns
+  [32m✓[0m [PATCH v2 4/6] target/arm: Add decodetree entry for DSB nXS variant
+  [32m✓[0m [PATCH v2 5/6] target/arm: Enable FEAT_XS for the max cpu
+  [32m✓[0m [PATCH v2 6/6] tests/tcg/aarch64: add system test for FEAT_XS
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 6
+---
+Applying: target/arm: Implement fine-grained-trap handling for FEAT_XS
+Applying: target/arm: Add ARM_CP_ADD_TLBI_NXS type flag for NXS insns
+Applying: target/arm: Add ARM_CP_ADD_TLBI_NXS type flag to TLBI insns
+Patch failed at 0003 target/arm: Add ARM_CP_ADD_TLBI_NXS type flag to TLBI insns
+error: target/arm/tcg/tlb-insns.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
