@@ -90,6 +90,7 @@
 #include "hw/ppc/spapr_numa.h"
 
 #include <libfdt.h>
+#include "exec/tswap.h"
 
 /* SLOF memory layout:
  *
