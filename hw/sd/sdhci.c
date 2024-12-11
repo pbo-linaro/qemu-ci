@@ -590,7 +590,6 @@ static void sdhci_write_dataport(SDHCIState *s, uint32_t value, unsigned size)
 /* Multi block SDMA transfer */
 static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
 {
-    bool page_aligned = false;
     unsigned int begin;
     const uint16_t block_size = s->blksize & BLOCK_SIZE_MASK;
     uint32_t boundary_chk = 1 << (((s->blksize & ~BLOCK_SIZE_MASK) >> 12) + 12);
@@ -601,15 +600,6 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
         return;
     }
 
-    /*
-     * XXX: Some sd/mmc drivers (for example, u-boot-slp) do not account for
-     * possible stop at page boundary if initial address is not page aligned,
-     * allow them to work properly
-     */
-    if ((s->sdmasysad % boundary_chk) == 0) {
-        page_aligned = true;
-    }
-
     s->prnsts |= SDHC_DATA_INHIBIT | SDHC_DAT_LINE_ACTIVE;
     if (s->trnmod & SDHC_TRNS_READ) {
         s->prnsts |= SDHC_DOING_READ;
@@ -618,7 +608,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
                 sdbus_read_data(&s->sdbus, s->fifo_buffer, block_size);
             }
             begin = s->data_count;
-            if (((boundary_count + begin) < block_size) && page_aligned) {
+            if (((boundary_count + begin) < block_size)) {
                 s->data_count = boundary_count + begin;
                 boundary_count = 0;
              } else {
@@ -634,7 +624,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
             if (s->data_count == block_size) {
                 s->data_count = 0;
             }
-            if (page_aligned && boundary_count == 0) {
+            if (boundary_count == 0) {
                 break;
             }
         }
@@ -642,7 +632,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
         s->prnsts |= SDHC_DOING_WRITE;
         while (s->blkcnt) {
             begin = s->data_count;
-            if (((boundary_count + begin) < block_size) && page_aligned) {
+            if (((boundary_count + begin) < block_size)) {
                 s->data_count = boundary_count + begin;
                 boundary_count = 0;
              } else {
@@ -659,7 +649,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
                     s->blkcnt--;
                 }
             }
-            if (page_aligned && boundary_count == 0) {
+            if (boundary_count == 0) {
                 break;
             }
         }
