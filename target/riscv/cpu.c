@@ -2697,6 +2697,11 @@ static Property riscv_cpu_properties[] = {
      * it with -x and default to 'false'.
      */
     DEFINE_PROP_BOOL("x-misa-w", RISCVCPU, cfg.misa_w, false),
+    /*
+     * when set, misaligned accesses will generate a trap.
+     */
+    DEFINE_PROP_BOOL("trap-misaligned-access", RISCVCPU,
+                     cfg.trap_misaligned_access, false),
     DEFINE_PROP_END_OF_LIST(),
 };
 
