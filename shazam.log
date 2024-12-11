@@ -1,0 +1,58 @@
+Grabbing thread from lore.kernel.org/all/20241211172648.2893097-1-berrange@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/31] tests/functional: remove many unused imports
+  [32m✓[0m [PATCH v2 2/31] tests/functional: resolve str(Asset) to cache file path
+  [32m✓[0m [PATCH v2 3/31] tests/functional: remove duplicated 'which' function impl
+  [32m✓[0m [PATCH v2 4/31] tests/functional: simplify 'which' implementation
+  [32m✓[0m [PATCH v2 5/31] tests/functional: drop 'tesseract_available' helper
+  [32m✓[0m [PATCH v2 6/31] tests/functional: introduce some helpful decorators
+  [32m✓[0m [PATCH v2 7/31] tests/functional: switch to new test skip decorators
+  [32m✓[0m [PATCH v2 8/31] tests/functional: drop 'has_cmd' and 'has_cmds' helpers
+  [32m✓[0m [PATCH v2 9/31] tests/functional: add helpers for building file paths
+  [32m✓[0m [PATCH v2 10/31] tests/functional: switch over to using self.log_file(...)
+  [32m✓[0m [PATCH v2 11/31] tests/functional: switch over to using self.build_file(...)
+  [32m✓[0m [PATCH v2 12/31] tests/functional: switch over to using self.data_file(...)
+  [32m✓[0m [PATCH v2 13/31] tests/functional: switch over to using self.scratch_file()
+  [32m✓[0m [PATCH v2 14/31] tests/functional: switch over to using self.socket_dir(...)
+  [32m✓[0m [PATCH v2 15/31] tests/functional: remove redundant 'rmtree' call
+  [32m✓[0m [PATCH v2 16/31] tests/functional: move archive handling into new archive.py file
+  [32m✓[0m [PATCH v2 17/31] tests/functional: move uncompress handling into new uncompress.py file
+  [32m✓[0m [PATCH v2 18/31] tests/functional: add common zip_extract helper
+  [32m✓[0m [PATCH v2 19/31] tests/functional: add common deb_extract helper
+  [32m✓[0m [PATCH v2 20/31] tests/functional: let cpio_extract accept filenames
+  [32m✓[0m [PATCH v2 21/31] tests/functional: add a generalized archive_extract
+  [32m✓[0m [PATCH v2 22/31] tests/functional: add 'archive_extract' to QemuBaseTest
+  [32m✓[0m [PATCH v2 23/31] tests/functional: convert tests to new archive_extract helper
+  [32m✓[0m [PATCH v2 24/31] tests/functional: add a generalized uncompress helper
+  [32m✓[0m [PATCH v2 25/31] tests/functional: add 'uncompress' to QemuBaseTest
+  [32m✓[0m [PATCH v2 26/31] tests/functional: convert tests to new uncompress helper
+  [32m✓[0m [PATCH v2 27/31] tests/functional: drop back compat imports from utils.py
+  [32m✓[0m [PATCH v2 28/31] tests/functional: replace 'run_cmd' with subprocess helpers
+  [32m✓[0m [PATCH v2 29/31] tests/functional: remove now unused 'run_cmd' helper
+  [32m✓[0m [PATCH v2 30/31] tests/functional: skip tests if assets are not available
+  [32m✓[0m [PATCH v2 31/31] tests/functional: ignore errors when caching assets, except for 404
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 31
+---
+Applying: tests/functional: remove many unused imports
+Patch failed at 0001 tests/functional: remove many unused imports
+error: patch failed: tests/functional/test_acpi_bits.py:31
+error: tests/functional/test_acpi_bits.py: patch does not apply
+error: tests/functional/test_arm_aspeed.py: does not exist in index
+error: tests/functional/test_arm_cubieboard.py: does not exist in index
+error: tests/functional/test_arm_smdkc210.py: does not exist in index
+error: patch failed: tests/functional/test_microblaze_s3adsp1800.py:7
+error: tests/functional/test_microblaze_s3adsp1800.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
