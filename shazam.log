@@ -1,0 +1,72 @@
+Grabbing thread from lore.kernel.org/all/20241211063058.1222038-1-clg@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 160 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/24] arm: Remove tacoma-bmc machine
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 2/24] hw/sd/aspeed_sdhci: Fix coding style
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 3/24] hw/arm/aspeed: Fix coding style
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 4/24] hw:sdhci: Introduce a new "capareg" class member to set the different Capability Registers
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 5/24] hw/sd/aspeed_sdhci: Add AST2700 Support
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 6/24] aspeed/soc: Support SDHCI for AST2700
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 7/24] aspeed/soc: Support eMMC for AST2700
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 8/24] tests/functional: Introduce a specific test for ast1030 SoC
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [9/24]!
+  [32m✓[0m [PATCH 10/24] tests/functional: Introduce a specific test for romulus-bmc machine
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 11/24] tests/functional: Introduce a specific test for ast2500 SoC
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 12/24] tests/functional: Introduce a specific test for ast2600 SoC
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [13/24]!
+  [32m✓[0m [PATCH 14/24] tests/functional: Move debian boot test from avocado
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 15/24] test/qtest/aspeed_smc-test: Move testcases to test_palmetto_bmc function
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [16/24]!
+  [32m✓[0m [PATCH 17/24] test/qtest/aspeed_smc-test: Support to test all CE pins
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 18/24] test/qtest/aspeed_smc-test: Introducing a "page_addr" data field
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 19/24] test/qtest/aspeed_smc-test: Support to test AST2500
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [20/24]!
+  [32m✓[0m [PATCH 21/24] test/qtest/aspeed_smc-test: Support to test AST1030
+    [32m✓[0m Signed: DKIM/redhat.com
+  ERROR: missing [22/24]!
+  ERROR: missing [23/24]!
+  ERROR: missing [24/24]!
+---
+Total patches: 17
+---
+WARNING: Thread incomplete!
+Applying: arm: Remove tacoma-bmc machine
+Applying: hw/sd/aspeed_sdhci: Fix coding style
+Applying: hw/arm/aspeed: Fix coding style
+Applying: hw:sdhci: Introduce a new "capareg" class member to set the different Capability Registers
+Applying: hw/sd/aspeed_sdhci: Add AST2700 Support
+Applying: aspeed/soc: Support SDHCI for AST2700
+Applying: aspeed/soc: Support eMMC for AST2700
+Applying: tests/functional: Introduce a specific test for ast1030 SoC
+Applying: tests/functional: Introduce a specific test for romulus-bmc machine
+Patch failed at 0009 tests/functional: Introduce a specific test for romulus-bmc machine
+error: patch failed: tests/functional/meson.build:19
+error: tests/functional/meson.build: patch does not apply
+error: patch failed: tests/functional/test_arm_aspeed.py:21
+error: tests/functional/test_arm_aspeed.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
