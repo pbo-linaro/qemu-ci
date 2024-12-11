@@ -28,6 +28,7 @@
 #include "qemu/units.h"
 #include "sysemu/sysemu.h"
 #include "target/arm/cpu-qom.h"
+#include "exec/tswap.h"
 
 /*
  * This covers the whole MMIO space. We'll use this to catch any MMIO accesses
