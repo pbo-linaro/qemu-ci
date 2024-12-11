@@ -46,9 +46,30 @@ def get_jmpbuf_regs(jmpbuf):
         'r15': jmpbuf[JB_R15],
         'rip': glibc_ptr_demangle(jmpbuf[JB_PC], pointer_guard) }
 
-def bt_jmpbuf(jmpbuf):
-    '''Backtrace a jmpbuf'''
-    regs = get_jmpbuf_regs(jmpbuf)
+def symbol_lookup(addr):
+    # Example: "__clone3 + 44 in section .text of /lib64/libc.so.6"
+    result = gdb.execute(f"info symbol {hex(addr)}", to_string=True).strip()
+    return result.split(" in ")[0]
+
+def dump_backtrace(regs):
+    '''
+    Backtrace dump with raw registers, mimic GDB command 'bt'.
+    '''
+    # Here only rbp and rip that matter..
+    rbp = regs['rbp']
+    rip = regs['rip']
+    i = 0
+
+    while rbp:
+        print(f"#{i}\t{symbol_lookup(rip)}")
+        rip = gdb.parse_and_eval(f"*(uint64_t *)(uint64_t)({hex(rbp)} + 8)")
+        rbp = gdb.parse_and_eval(f"*(uint64_t *)(uint64_t)({hex(rbp)})")
+        i += 1
+
+def dump_backtrace_live(regs):
+    '''
+    Backtrace dump with gdb's 'bt' command, only usable in a live session.
+    '''
     old = dict()
 
     # remember current stack frame and select the topmost
@@ -68,6 +89,17 @@ def bt_jmpbuf(jmpbuf):
         gdb.execute('set $%s = %s' % (i, old[i]))
 
     selected_frame.select()
+
+def bt_jmpbuf(jmpbuf):
+    '''Backtrace a jmpbuf'''
+    regs = get_jmpbuf_regs(jmpbuf)
+    try:
+        # This reuses gdb's "bt" command, which can be slightly prettier
+        # but only works with live sessions.
+        dump_backtrace_live(regs)
+    except:
+        # If above doesn't work, fallback to poor man's unwind
+        dump_backtrace(regs)
 
 def co_cast(co):
     return co.cast(gdb.lookup_type('CoroutineUContext').pointer())
@@ -101,10 +133,14 @@ class CoroutineBt(gdb.Command):
 
         gdb.execute("bt")
 
-        if gdb.parse_and_eval("qemu_in_coroutine()") == False:
-            return
-
-        co_ptr = gdb.parse_and_eval("qemu_coroutine_self()")
+        try:
+            # This only works with a live session
+            co_ptr = gdb.parse_and_eval("qemu_coroutine_self()")
+            if co_ptr == False:
+                return
+        except:
+            # Fallback to use hard-coded ucontext vars if it's coredump
+            co_ptr = gdb.parse_and_eval("co_tls_current")
 
         while True:
             co = co_cast(co_ptr)
