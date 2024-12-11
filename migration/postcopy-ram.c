@@ -651,8 +651,8 @@ int postcopy_ram_incoming_cleanup(MigrationIncomingState *mis)
         mis->have_fault_thread = false;
     }
 
-    if (enable_mlock) {
-        if (os_mlock(false) < 0) {
+    if (enable_mlock || enable_mlock_onfault) {
+        if (os_mlock(enable_mlock_onfault) < 0) {
             error_report("mlock: %s", strerror(errno));
             /*
              * It doesn't feel right to fail at this point, we have a valid

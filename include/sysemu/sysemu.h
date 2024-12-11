@@ -44,6 +44,7 @@ extern const char *keyboard_layout;
 extern int old_param;
 extern uint8_t *boot_splash_filedata;
 extern bool enable_mlock;
+extern bool enable_mlock_onfault;
 extern bool enable_cpu_pm;
 extern QEMUClockType rtc_clock;
 
