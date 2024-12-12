@@ -2,9 +2,12 @@ specific_ss.add(when: 'CONFIG_SYSTEM_ONLY', if_true: [files(
   'arch_init.c',
   'ioport.c',
   'memory.c',
-  'physmem.c',
   'watchpoint.c',
 )])
+
+specific_ss.add(when: 'CONFIG_SYSTEM_ONLY', if_true: [files(
+  'physmem.c',
+), libpmem, libdaxctl])
 
 system_ss.add(files(
   'balloon.c',
@@ -23,7 +26,7 @@ system_ss.add(files(
   'runstate-hmp-cmds.c',
   'runstate.c',
   'tpm-hmp-cmds.c',
-), libpmem, libdaxctl)
+))
 
 system_ss.add(files(
   'vl.c',
