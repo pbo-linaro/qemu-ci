@@ -260,6 +260,22 @@ static uint64_t msix_pba_mmio_read(void *opaque, hwaddr addr,
 static void msix_pba_mmio_write(void *opaque, hwaddr addr,
                                 uint64_t val, unsigned size)
 {
+    PCIDevice *dev = opaque;
+    unsigned vector_start = addr * 8;
+    unsigned vector_end = MIN(addr + size * 8, dev->msix_entries_nr);
+    unsigned i;
+
+    for (i = vector_start; i < vector_end; i++) {
+        if ((val >> i) & 1) {
+            if (!msix_is_pending(dev, i)) {
+                msix_notify(dev, i);
+            }
+        } else {
+            if (msix_is_pending(dev, i)) {
+                msix_clr_pending(dev, i);
+            }
+        }
+    }
 }
 
 static const MemoryRegionOps msix_pba_mmio_ops = {

@@ -361,9 +361,23 @@ bool qpci_msix_pending(QPCIDevice *dev, uint16_t entry)
 
     g_assert(dev->msix_enabled);
     pba_entry = qpci_io_readl(dev, dev->msix_pba_bar, dev->msix_pba_off + off);
-    qpci_io_writel(dev, dev->msix_pba_bar, dev->msix_pba_off + off,
-                   pba_entry & ~(1 << bit_n));
-    return (pba_entry & (1 << bit_n)) != 0;
+    return pba_entry & (1 << bit_n);
+}
+
+bool qpci_msix_test_clear_pending(QPCIDevice *dev, uint16_t entry)
+{
+    uint32_t pba_entry;
+    uint8_t bit_n = entry % 32;
+    uint64_t  off = (entry / 32) * PCI_MSIX_ENTRY_SIZE / 4;
+
+    g_assert(dev->msix_enabled);
+    pba_entry = qpci_io_readl(dev, dev->msix_pba_bar, dev->msix_pba_off + off);
+    if (pba_entry & (1 << bit_n)) {
+        qpci_io_writel(dev, dev->msix_pba_bar, dev->msix_pba_off + off,
+                       pba_entry & ~(1 << bit_n));
+        return true;
+    }
+    return false;
 }
 
 bool qpci_msix_masked(QPCIDevice *dev, uint16_t entry)
