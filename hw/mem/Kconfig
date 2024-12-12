@@ -16,3 +16,8 @@ config CXL_MEM_DEVICE
     bool
     default y if CXL
     select MEM_DEVICE
+
+config CXL_ACCEL_DEVICE
+    bool
+    default y if CXL
+    select MEM_DEVICE
