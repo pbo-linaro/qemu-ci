@@ -67,8 +67,10 @@ static void igb_send_verify(QE1000E *d, int *test_sockets, QGuestAllocator *allo
     /* Put descriptor to the ring */
     e1000e_tx_ring_push(d, &descr);
 
-    /* Wait for TX WB interrupt */
+    /* Wait for TX WB interrupt (this clears the MSIX PBA) */
     e1000e_wait_isr(d, E1000E_TX0_MSG_ID);
+    /* Read EICR which clears it ready for next interrupt, assert TXQ0 cause */
+    g_assert(e1000e_macreg_read(d, E1000_EICR) & (1 << E1000E_TX0_MSG_ID));
 
     /* Check DD bit */
     g_assert_cmphex(le32_to_cpu(descr.wb.status) & E1000_TXD_STAT_DD, ==,
@@ -118,8 +120,10 @@ static void igb_receive_verify(QE1000E *d, int *test_sockets, QGuestAllocator *a
     /* Put descriptor to the ring */
     e1000e_rx_ring_push(d, &descr);
 
-    /* Wait for TX WB interrupt */
+    /* Wait for TX WB interrupt (this clears the MSIX PBA) */
     e1000e_wait_isr(d, E1000E_RX0_MSG_ID);
+    /* Read EICR which clears it ready for next interrupt, assert RXQ0 cause */
+    g_assert(e1000e_macreg_read(d, E1000_EICR) & (1 << E1000E_RX0_MSG_ID));
 
     /* Check DD bit */
     g_assert_cmphex(le32_to_cpu(descr.wb.upper.status_error) &

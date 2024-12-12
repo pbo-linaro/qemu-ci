@@ -83,7 +83,7 @@ void e1000e_wait_isr(QE1000E *d, uint16_t msg_id)
     guint64 end_time = g_get_monotonic_time() + 5 * G_TIME_SPAN_SECOND;
 
     do {
-        if (qpci_msix_pending(&d_pci->pci_dev, msg_id)) {
+        if (qpci_msix_test_clear_pending(&d_pci->pci_dev, msg_id)) {
             return;
         }
         qtest_clock_step(d_pci->pci_dev.bus->qts, 10000);
