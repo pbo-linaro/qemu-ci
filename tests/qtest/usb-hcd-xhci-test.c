@@ -326,7 +326,8 @@ static void set_link_trb(XHCIQState *s, uint64_t ring, uint32_t c,
 static void submit_cr_trb(XHCIQState *s, XHCITRB *trb)
 {
     XHCITRB t;
-    uint64_t cr_addr = s->command_ring + s->cr_trb_idx * sizeof(*trb);
+    uint64_t cr_addr = s->command_ring +
+                       s->cr_trb_idx * sizeof(*trb);
 
     trb->control |= s->cr_trb_c; /* C */
 
@@ -345,9 +346,35 @@ static void submit_cr_trb(XHCIQState *s, XHCITRB *trb)
     xhci_db_writel(s, 0, 0); /* doorbell 0 */
 }
 
+static void submit_tr_trb(XHCIQState *s, int slot, XHCITRB *trb)
+{
+    XHCITRB t;
+    uint64_t tr_addr = s->slots[slot].transfer_ring +
+                       s->slots[slot].tr_trb_idx * sizeof(*trb);
+
+    trb->control |= s->slots[slot].tr_trb_c; /* C */
+
+    t.parameter = cpu_to_le64(trb->parameter);
+    t.status = cpu_to_le32(trb->status);
+    t.control = cpu_to_le32(trb->control);
+
+    qtest_memwrite(s->parent->qts, tr_addr, &t, sizeof(t));
+    s->slots[slot].tr_trb_idx++;
+    /* Last entry contains the link, so wrap back */
+    if (s->slots[slot].tr_trb_idx == s->slots[slot].tr_trb_entries - 1) {
+        set_link_trb(s, s->slots[slot].transfer_ring,
+                        s->slots[slot].tr_trb_c,
+                        s->slots[slot].tr_trb_entries);
+        s->slots[slot].tr_trb_idx = 0;
+        s->slots[slot].tr_trb_c ^= 1;
+    }
+    xhci_db_writel(s, slot, 1); /* doorbell slot, EP0 target */
+}
+
 /*
  * This test brings up an endpoint and runs some noops through its command
- * ring and gets responses back on the event ring.
+ * ring and gets responses back on the event ring, then brings up a device
+ * context and runs some noops through its transfer ring.
  *
  * This could be librified in future (like AHCI0 to have a way to bring up
  * an endpoint to test device protocols.
@@ -500,6 +527,16 @@ static void pci_xhci_stress_rings(void)
     wait_event_trb(s, &trb);
 
     /* XXX: Could check EP state is running */
+
+    /* Wrap the transfer ring a few times */
+    for (i = 0; i < 100; i++) {
+        /* Issue a transfer ring slot 0 noop */
+        memset(&trb, 0, sizeof(trb));
+        trb.control |= TR_NOOP << TRB_TYPE_SHIFT;
+        trb.control |= TRB_TR_IOC;
+        submit_tr_trb(s, slotid, &trb);
+        wait_event_trb(s, &trb);
+    }
 
     /* Shut it down */
     qpci_msix_disable(s->dev);
