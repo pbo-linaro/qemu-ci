@@ -65,154 +65,6 @@
 # error Increase XHCI_LEN_REGS
 #endif
 
-/* bit definitions */
-#define USBCMD_RS       (1<<0)
-#define USBCMD_HCRST    (1<<1)
-#define USBCMD_INTE     (1<<2)
-#define USBCMD_HSEE     (1<<3)
-#define USBCMD_LHCRST   (1<<7)
-#define USBCMD_CSS      (1<<8)
-#define USBCMD_CRS      (1<<9)
-#define USBCMD_EWE      (1<<10)
-#define USBCMD_EU3S     (1<<11)
-
-#define USBSTS_HCH      (1<<0)
-#define USBSTS_HSE      (1<<2)
-#define USBSTS_EINT     (1<<3)
-#define USBSTS_PCD      (1<<4)
-#define USBSTS_SSS      (1<<8)
-#define USBSTS_RSS      (1<<9)
-#define USBSTS_SRE      (1<<10)
-#define USBSTS_CNR      (1<<11)
-#define USBSTS_HCE      (1<<12)
-
-
-#define PORTSC_CCS          (1<<0)
-#define PORTSC_PED          (1<<1)
-#define PORTSC_OCA          (1<<3)
-#define PORTSC_PR           (1<<4)
-#define PORTSC_PLS_SHIFT        5
-#define PORTSC_PLS_MASK     0xf
-#define PORTSC_PP           (1<<9)
-#define PORTSC_SPEED_SHIFT      10
-#define PORTSC_SPEED_MASK   0xf
-#define PORTSC_SPEED_FULL   (1<<10)
-#define PORTSC_SPEED_LOW    (2<<10)
-#define PORTSC_SPEED_HIGH   (3<<10)
-#define PORTSC_SPEED_SUPER  (4<<10)
-#define PORTSC_PIC_SHIFT        14
-#define PORTSC_PIC_MASK     0x3
-#define PORTSC_LWS          (1<<16)
-#define PORTSC_CSC          (1<<17)
-#define PORTSC_PEC          (1<<18)
-#define PORTSC_WRC          (1<<19)
-#define PORTSC_OCC          (1<<20)
-#define PORTSC_PRC          (1<<21)
-#define PORTSC_PLC          (1<<22)
-#define PORTSC_CEC          (1<<23)
-#define PORTSC_CAS          (1<<24)
-#define PORTSC_WCE          (1<<25)
-#define PORTSC_WDE          (1<<26)
-#define PORTSC_WOE          (1<<27)
-#define PORTSC_DR           (1<<30)
-#define PORTSC_WPR          (1<<31)
-
-#define CRCR_RCS        (1<<0)
-#define CRCR_CS         (1<<1)
-#define CRCR_CA         (1<<2)
-#define CRCR_CRR        (1<<3)
-
-#define IMAN_IP         (1<<0)
-#define IMAN_IE         (1<<1)
-
-#define ERDP_EHB        (1<<3)
-
-#define TRB_SIZE 16
-typedef struct XHCITRB {
-    uint64_t parameter;
-    uint32_t status;
-    uint32_t control;
-    dma_addr_t addr;
-    bool ccs;
-} XHCITRB;
-
-enum {
-    PLS_U0              =  0,
-    PLS_U1              =  1,
-    PLS_U2              =  2,
-    PLS_U3              =  3,
-    PLS_DISABLED        =  4,
-    PLS_RX_DETECT       =  5,
-    PLS_INACTIVE        =  6,
-    PLS_POLLING         =  7,
-    PLS_RECOVERY        =  8,
-    PLS_HOT_RESET       =  9,
-    PLS_COMPILANCE_MODE = 10,
-    PLS_TEST_MODE       = 11,
-    PLS_RESUME          = 15,
-};
-
-#define CR_LINK TR_LINK
-
-#define TRB_C               (1<<0)
-#define TRB_TYPE_SHIFT          10
-#define TRB_TYPE_MASK       0x3f
-#define TRB_TYPE(t)         (((t).control >> TRB_TYPE_SHIFT) & TRB_TYPE_MASK)
-
-#define TRB_EV_ED           (1<<2)
-
-#define TRB_TR_ENT          (1<<1)
-#define TRB_TR_ISP          (1<<2)
-#define TRB_TR_NS           (1<<3)
-#define TRB_TR_CH           (1<<4)
-#define TRB_TR_IOC          (1<<5)
-#define TRB_TR_IDT          (1<<6)
-#define TRB_TR_TBC_SHIFT        7
-#define TRB_TR_TBC_MASK     0x3
-#define TRB_TR_BEI          (1<<9)
-#define TRB_TR_TLBPC_SHIFT      16
-#define TRB_TR_TLBPC_MASK   0xf
-#define TRB_TR_FRAMEID_SHIFT    20
-#define TRB_TR_FRAMEID_MASK 0x7ff
-#define TRB_TR_SIA          (1<<31)
-
-#define TRB_TR_DIR          (1<<16)
-
-#define TRB_CR_SLOTID_SHIFT     24
-#define TRB_CR_SLOTID_MASK  0xff
-#define TRB_CR_EPID_SHIFT       16
-#define TRB_CR_EPID_MASK    0x1f
-
-#define TRB_CR_BSR          (1<<9)
-#define TRB_CR_DC           (1<<9)
-
-#define TRB_LK_TC           (1<<1)
-
-#define TRB_INTR_SHIFT          22
-#define TRB_INTR_MASK       0x3ff
-#define TRB_INTR(t)         (((t).status >> TRB_INTR_SHIFT) & TRB_INTR_MASK)
-
-#define EP_TYPE_MASK        0x7
-#define EP_TYPE_SHIFT           3
-
-#define EP_STATE_MASK       0x7
-#define EP_DISABLED         (0<<0)
-#define EP_RUNNING          (1<<0)
-#define EP_HALTED           (2<<0)
-#define EP_STOPPED          (3<<0)
-#define EP_ERROR            (4<<0)
-
-#define SLOT_STATE_MASK     0x1f
-#define SLOT_STATE_SHIFT        27
-#define SLOT_STATE(s)       (((s)>>SLOT_STATE_SHIFT)&SLOT_STATE_MASK)
-#define SLOT_ENABLED        0
-#define SLOT_DEFAULT        1
-#define SLOT_ADDRESSED      2
-#define SLOT_CONFIGURED     3
-
-#define SLOT_CONTEXT_ENTRIES_MASK 0x1f
-#define SLOT_CONTEXT_ENTRIES_SHIFT 27
-
 #define get_field(data, field)                  \
     (((data) >> field##_SHIFT) & field##_MASK)
 
@@ -222,17 +74,6 @@ enum {
         val_ |= ((newval) & field##_MASK) << field##_SHIFT;     \
         *data = val_;                                           \
     } while (0)
-
-typedef enum EPType {
-    ET_INVALID = 0,
-    ET_ISO_OUT,
-    ET_BULK_OUT,
-    ET_INTR_OUT,
-    ET_CONTROL,
-    ET_ISO_IN,
-    ET_BULK_IN,
-    ET_INTR_IN,
-} EPType;
 
 typedef struct XHCITransfer {
     XHCIEPContext *epctx;
@@ -2736,56 +2577,55 @@ static uint64_t xhci_cap_read(void *ptr, hwaddr reg, unsigned size)
     uint32_t ret;
 
     switch (reg) {
-    case 0x00: /* HCIVERSION, CAPLENGTH */
+    case XHCI_HCCAP_CAPLENGTH: /* Covers HCIVERSION and CAPLENGTH */
         ret = 0x01000000 | LEN_CAP;
         break;
-    case 0x04: /* HCSPARAMS 1 */
+    case XHCI_HCCAP_HCSPARAMS1:
         ret = ((xhci->numports_2+xhci->numports_3)<<24)
             | (xhci->numintrs<<8) | xhci->numslots;
         break;
-    case 0x08: /* HCSPARAMS 2 */
+    case XHCI_HCCAP_HCSPARAMS2:
         ret = 0x0000000f;
         break;
-    case 0x0c: /* HCSPARAMS 3 */
+    case XHCI_HCCAP_HCSPARAMS3:
         ret = 0x00000000;
         break;
-    case 0x10: /* HCCPARAMS */
-        if (sizeof(dma_addr_t) == 4) {
-            ret = 0x00080000 | (xhci->max_pstreams_mask << 12);
-        } else {
-            ret = 0x00080001 | (xhci->max_pstreams_mask << 12);
+    case XHCI_HCCAP_HCCPARAMS1:
+        ret = (XHCI_HCCAP_EXTCAP_START >> 2) | (xhci->max_pstreams_mask << 12);
+        if (sizeof(dma_addr_t) == 8) {
+            ret |= 0x00000001; /* AC64 */
         }
         break;
-    case 0x14: /* DBOFF */
+    case XHCI_HCCAP_DBOFF:
         ret = OFF_DOORBELL;
         break;
-    case 0x18: /* RTSOFF */
+    case XHCI_HCCAP_RTSOFF:
         ret = OFF_RUNTIME;
         break;
 
     /* extended capabilities */
-    case 0x20: /* Supported Protocol:00 */
+    case XHCI_HCCAP_EXTCAP_START + 0x00: /* Supported Protocol:00 */
         ret = 0x02000402; /* USB 2.0 */
         break;
-    case 0x24: /* Supported Protocol:04 */
+    case XHCI_HCCAP_EXTCAP_START + 0x04: /* Supported Protocol:04 */
         ret = 0x20425355; /* "USB " */
         break;
-    case 0x28: /* Supported Protocol:08 */
+    case XHCI_HCCAP_EXTCAP_START + 0x08: /* Supported Protocol:08 */
         ret = (xhci->numports_2 << 8) | (xhci->numports_3 + 1);
         break;
-    case 0x2c: /* Supported Protocol:0c */
+    case XHCI_HCCAP_EXTCAP_START + 0x0c: /* Supported Protocol:0c */
         ret = 0x00000000; /* reserved */
         break;
-    case 0x30: /* Supported Protocol:00 */
+    case XHCI_HCCAP_EXTCAP_START + 0x10: /* Supported Protocol:00 */
         ret = 0x03000002; /* USB 3.0 */
         break;
-    case 0x34: /* Supported Protocol:04 */
+    case XHCI_HCCAP_EXTCAP_START + 0x14: /* Supported Protocol:04 */
         ret = 0x20425355; /* "USB " */
         break;
-    case 0x38: /* Supported Protocol:08 */
+    case XHCI_HCCAP_EXTCAP_START + 0x18: /* Supported Protocol:08 */
         ret = (xhci->numports_3 << 8) | 1;
         break;
-    case 0x3c: /* Supported Protocol:0c */
+    case XHCI_HCCAP_EXTCAP_START + 0x1c: /* Supported Protocol:0c */
         ret = 0x00000000; /* reserved */
         break;
     default:
@@ -2803,14 +2643,13 @@ static uint64_t xhci_port_read(void *ptr, hwaddr reg, unsigned size)
     uint32_t ret;
 
     switch (reg) {
-    case 0x00: /* PORTSC */
+    case XHCI_PORT_PORTSC:
         ret = port->portsc;
         break;
-    case 0x04: /* PORTPMSC */
-    case 0x08: /* PORTLI */
+    case XHCI_PORT_PORTPMSC:
+    case XHCI_PORT_PORTLI:
         ret = 0;
         break;
-    case 0x0c: /* reserved */
     default:
         trace_usb_xhci_unimplemented("port read", reg);
         ret = 0;
@@ -2829,7 +2668,7 @@ static void xhci_port_write(void *ptr, hwaddr reg,
     trace_usb_xhci_port_write(port->portnr, reg, val);
 
     switch (reg) {
-    case 0x00: /* PORTSC */
+    case XHCI_PORT_PORTSC:
         /* write-1-to-start bits */
         if (val & PORTSC_WPR) {
             xhci_port_reset(port, true);
@@ -2880,8 +2719,6 @@ static void xhci_port_write(void *ptr, hwaddr reg,
             xhci_port_notify(port, notify);
         }
         break;
-    case 0x04: /* PORTPMSC */
-    case 0x08: /* PORTLI */
     default:
         trace_usb_xhci_unimplemented("port write", reg);
     }
@@ -2893,31 +2730,31 @@ static uint64_t xhci_oper_read(void *ptr, hwaddr reg, unsigned size)
     uint32_t ret;
 
     switch (reg) {
-    case 0x00: /* USBCMD */
+    case XHCI_OPER_USBCMD:
         ret = xhci->usbcmd;
         break;
-    case 0x04: /* USBSTS */
+    case XHCI_OPER_USBSTS:
         ret = xhci->usbsts;
         break;
-    case 0x08: /* PAGESIZE */
+    case XHCI_OPER_PAGESIZE:
         ret = 1; /* 4KiB */
         break;
-    case 0x14: /* DNCTRL */
+    case XHCI_OPER_DNCTRL:
         ret = xhci->dnctrl;
         break;
-    case 0x18: /* CRCR low */
+    case XHCI_OPER_CRCR_LO:
         ret = xhci->crcr_low & ~0xe;
         break;
-    case 0x1c: /* CRCR high */
+    case XHCI_OPER_CRCR_HI:
         ret = xhci->crcr_high;
         break;
-    case 0x30: /* DCBAAP low */
+    case XHCI_OPER_DCBAAP_LO:
         ret = xhci->dcbaap_low;
         break;
-    case 0x34: /* DCBAAP high */
+    case XHCI_OPER_DCBAAP_HI:
         ret = xhci->dcbaap_high;
         break;
-    case 0x38: /* CONFIG */
+    case XHCI_OPER_CONFIG:
         ret = xhci->config;
         break;
     default:
@@ -2937,7 +2774,7 @@ static void xhci_oper_write(void *ptr, hwaddr reg,
     trace_usb_xhci_oper_write(reg, val);
 
     switch (reg) {
-    case 0x00: /* USBCMD */
+    case XHCI_OPER_USBCMD:
         if ((val & USBCMD_RS) && !(xhci->usbcmd & USBCMD_RS)) {
             xhci_run(xhci);
         } else if (!(val & USBCMD_RS) && (xhci->usbcmd & USBCMD_RS)) {
@@ -2959,19 +2796,19 @@ static void xhci_oper_write(void *ptr, hwaddr reg,
         xhci_intr_update(xhci, 0);
         break;
 
-    case 0x04: /* USBSTS */
+    case XHCI_OPER_USBSTS:
         /* these bits are write-1-to-clear */
         xhci->usbsts &= ~(val & (USBSTS_HSE|USBSTS_EINT|USBSTS_PCD|USBSTS_SRE));
         xhci_intr_update(xhci, 0);
         break;
 
-    case 0x14: /* DNCTRL */
+    case XHCI_OPER_DNCTRL:
         xhci->dnctrl = val & 0xffff;
         break;
-    case 0x18: /* CRCR low */
+    case XHCI_OPER_CRCR_LO:
         xhci->crcr_low = (val & 0xffffffcf) | (xhci->crcr_low & CRCR_CRR);
         break;
-    case 0x1c: /* CRCR high */
+    case XHCI_OPER_CRCR_HI:
         xhci->crcr_high = val;
         if (xhci->crcr_low & (CRCR_CA|CRCR_CS) && (xhci->crcr_low & CRCR_CRR)) {
             XHCIEvent event = {ER_COMMAND_COMPLETE, CC_COMMAND_RING_STOPPED};
@@ -2984,13 +2821,13 @@ static void xhci_oper_write(void *ptr, hwaddr reg,
         }
         xhci->crcr_low &= ~(CRCR_CA | CRCR_CS);
         break;
-    case 0x30: /* DCBAAP low */
+    case XHCI_OPER_DCBAAP_LO:
         xhci->dcbaap_low = val & 0xffffffc0;
         break;
-    case 0x34: /* DCBAAP high */
+    case XHCI_OPER_DCBAAP_HI:
         xhci->dcbaap_high = val;
         break;
-    case 0x38: /* CONFIG */
+    case XHCI_OPER_CONFIG:
         xhci->config = val & 0xff;
         break;
     default:
@@ -3004,9 +2841,9 @@ static uint64_t xhci_runtime_read(void *ptr, hwaddr reg,
     XHCIState *xhci = ptr;
     uint32_t ret = 0;
 
-    if (reg < 0x20) {
+    if (reg < XHCI_OPER_IR0) {
         switch (reg) {
-        case 0x00: /* MFINDEX */
+        case XHCI_OPER_MFINDEX:
             ret = xhci_mfindex_get(xhci) & 0x3fff;
             break;
         default:
@@ -3014,28 +2851,28 @@ static uint64_t xhci_runtime_read(void *ptr, hwaddr reg,
             break;
         }
     } else {
-        int v = (reg - 0x20) / 0x20;
+        int v = (reg - XHCI_OPER_IR0) / XHCI_OPER_IR_SZ;
         XHCIInterrupter *intr = &xhci->intr[v];
-        switch (reg & 0x1f) {
-        case 0x00: /* IMAN */
+        switch (reg & (XHCI_OPER_IR_SZ - 1)) {
+        case XHCI_INTR_IMAN:
             ret = intr->iman;
             break;
-        case 0x04: /* IMOD */
+        case XHCI_INTR_IMOD:
             ret = intr->imod;
             break;
-        case 0x08: /* ERSTSZ */
+        case XHCI_INTR_ERSTSZ:
             ret = intr->erstsz;
             break;
-        case 0x10: /* ERSTBA low */
+        case XHCI_INTR_ERSTBA_LO:
             ret = intr->erstba_low;
             break;
-        case 0x14: /* ERSTBA high */
+        case XHCI_INTR_ERSTBA_HI:
             ret = intr->erstba_high;
             break;
-        case 0x18: /* ERDP low */
+        case XHCI_INTR_ERDP_LO:
             ret = intr->erdp_low;
             break;
-        case 0x1c: /* ERDP high */
+        case XHCI_INTR_ERDP_HI:
             ret = intr->erdp_high;
             break;
         }
@@ -3054,15 +2891,15 @@ static void xhci_runtime_write(void *ptr, hwaddr reg,
 
     trace_usb_xhci_runtime_write(reg, val);
 
-    if (reg < 0x20) {
+    if (reg < XHCI_OPER_IR0) {
         trace_usb_xhci_unimplemented("runtime write", reg);
         return;
     }
-    v = (reg - 0x20) / 0x20;
+    v = (reg - XHCI_OPER_IR0) / XHCI_OPER_IR_SZ;
     intr = &xhci->intr[v];
 
-    switch (reg & 0x1f) {
-    case 0x00: /* IMAN */
+    switch (reg & (XHCI_OPER_IR_SZ - 1)) {
+    case XHCI_INTR_IMAN:
         if (val & IMAN_IP) {
             intr->iman &= ~IMAN_IP;
         }
@@ -3070,13 +2907,13 @@ static void xhci_runtime_write(void *ptr, hwaddr reg,
         intr->iman |= val & IMAN_IE;
         xhci_intr_update(xhci, v);
         break;
-    case 0x04: /* IMOD */
+    case XHCI_INTR_IMOD:
         intr->imod = val;
         break;
-    case 0x08: /* ERSTSZ */
+    case XHCI_INTR_ERSTSZ:
         intr->erstsz = val & 0xffff;
         break;
-    case 0x10: /* ERSTBA low */
+    case XHCI_INTR_ERSTBA_LO:
         if (xhci->nec_quirks) {
             /* NEC driver bug: it doesn't align this to 64 bytes */
             intr->erstba_low = val & 0xfffffff0;
@@ -3084,11 +2921,11 @@ static void xhci_runtime_write(void *ptr, hwaddr reg,
             intr->erstba_low = val & 0xffffffc0;
         }
         break;
-    case 0x14: /* ERSTBA high */
+    case XHCI_INTR_ERSTBA_HI:
         intr->erstba_high = val;
         xhci_er_reset(xhci, v);
         break;
-    case 0x18: /* ERDP low */
+    case XHCI_INTR_ERDP_LO:
         if (val & ERDP_EHB) {
             intr->erdp_low &= ~ERDP_EHB;
         }
@@ -3103,7 +2940,7 @@ static void xhci_runtime_write(void *ptr, hwaddr reg,
             }
         }
         break;
-    case 0x1c: /* ERDP high */
+    case XHCI_INTR_ERDP_HI:
         intr->erdp_high = val;
         break;
     default:
