@@ -19,6 +19,7 @@
 #include "hw/isa/isa.h"
 #include "hw/qdev-properties.h"
 #include "qom/object.h"
+#include "target/i386/cpu.h"
 
 /* Max counts for allocation masks or CBMs. In other words, the size of
  * respective MSRs.
@@ -83,8 +84,36 @@ static void rdt_init(Object *obj)
 {
 }
 
+static void rdt_realize(DeviceState *dev, Error **errp)
+{
+    CPUState *cs = first_cpu;
+    RDTState *rdtDev = RDT(dev);
+
+    rdtDev->rdtInstances = g_malloc(sizeof(RDTStatePerCore) * cs->nr_cores);
+    CPU_FOREACH(cs) {
+        RDTStatePerCore *rdt = &rdtDev->rdtInstances[cs->cpu_index];
+        X86CPU *cpu = X86_CPU(cs);
+
+        rdt->rdtstate = rdtDev;
+        cpu->rdt = rdt;
+
+        rdt->monitors = g_malloc(sizeof(RDTMonitor) * rdtDev->rmids);
+        rdt->rdtstate->allocations = g_malloc(sizeof(RDTAllocation) * rdtDev->rmids);
+    }
+}
+
 static void rdt_finalize(Object *obj)
 {
+    CPUState *cs;
+    RDTState *rdt = RDT(obj);
+
+    CPU_FOREACH(cs) {
+        RDTStatePerCore *rdtInstance = &rdt->rdtInstances[cs->cpu_index];
+        g_free(rdtInstance->monitors);
+        g_free(rdtInstance->rdtstate->allocations);
+    }
+
+    g_free(rdt->rdtInstances);
 }
 
 static void rdt_class_init(ObjectClass *klass, void *data)
@@ -94,6 +123,7 @@ static void rdt_class_init(ObjectClass *klass, void *data)
     dc->hotpluggable = false;
     dc->desc = "RDT";
     dc->user_creatable = true;
+    dc->realize = rdt_realize;
 
     device_class_set_props(dc, rdt_properties);
 }
