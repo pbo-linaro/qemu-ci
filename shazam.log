@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20241212085207.1439501-1-npiggin@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/2] hw/usb/hcd-xhci-pci: Make PCI device more configurable
+  [32m✓[0m [PATCH v2 2/2] hw/usb/hcd-xhci-pci: Add TI TUSB73X0 XHCI controller model
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 2
+---
+Applying: hw/usb/hcd-xhci-pci: Make PCI device more configurable
+Patch failed at 0001 hw/usb/hcd-xhci-pci: Make PCI device more configurable
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: hw/usb/hcd-xhci-nec.c:52
+error: hw/usb/hcd-xhci-nec.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
