@@ -1180,6 +1180,18 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
                     sdhci_sdma_transfer_single_block(s);
                 }
             }
+        } else if (TRANSFERRING_DATA(s->prnsts)) {
+            s->sdmasysad = (s->sdmasysad & mask) | value;
+            MASKED_WRITE(s->sdmasysad, mask, value);
+            /* restarts the SDMA transfer if the most upper byte is written */
+            if ((s->sdmasysad & 0xFF000000) && s->blkcnt &&
+                SDHC_DMA_TYPE(s->hostctl1) == SDHC_CTRL_SDMA) {
+                if (s->trnmod & SDHC_TRNS_MULTI) {
+                    sdhci_sdma_transfer_multi_blocks(s);
+                } else {
+                    sdhci_sdma_transfer_single_block(s);
+                }
+            }
         }
         break;
     case SDHC_BLKSIZE:
