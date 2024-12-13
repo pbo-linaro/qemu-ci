@@ -12,6 +12,7 @@ from typing import (
     Iterable,
     List,
     NamedTuple,
+    Optional,
     Tuple,
     cast,
 )
@@ -21,7 +22,12 @@ from docutils.parsers.rst import directives
 
 from compat import nested_parse
 from sphinx import addnodes
-from sphinx.domains import Domain, ObjType
+from sphinx.domains import (
+    Domain,
+    Index,
+    IndexEntry,
+    ObjType,
+)
 from sphinx.locale import _, __
 from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective
@@ -52,9 +58,10 @@ class QAPIModule(SphinxDirective):
     a pass-through for the content body. Named section titles are
     allowed in the content body.
 
-    Use this directive to associate subsequent definitions with the
-    module they are defined in for purposes of search and QAPI index
-    organization.
+    Use this directive to create entries for the QAPI module in the
+    global index and the qapi index; as well as to associate subsequent
+    definitions with the module they are defined in for purposes of
+    search and QAPI index organization.
 
     :arg: The name of the module.
     :opt no-index: Don't add cross-reference targets or index entries.
@@ -133,6 +140,60 @@ class QAPIModule(SphinxDirective):
         return ret
 
 
+class QAPIIndex(Index):
+    """
+    Index subclass to provide the QAPI definition index.
+    """
+
+    name = "index"
+    localname = _("QAPI Index")
+    shortname = _("QAPI Index")
+
+    def generate(
+        self,
+        docnames: Optional[Iterable[str]] = None,
+    ) -> Tuple[List[Tuple[str, List[IndexEntry]]], bool]:
+        assert isinstance(self.domain, QAPIDomain)
+        content: Dict[str, List[IndexEntry]] = {}
+        collapse = False
+
+        # list of all object (name, ObjectEntry) pairs, sorted by name
+        # (ignoring the module)
+        objects = sorted(
+            self.domain.objects.items(),
+            key=lambda x: x[0].split(".")[-1].lower(),
+        )
+
+        for objname, obj in objects:
+            if docnames and obj.docname not in docnames:
+                continue
+
+            # Strip the module name out:
+            objname = objname.split(".")[-1]
+
+            # Add an alphabetical entry:
+            entries = content.setdefault(objname[0].upper(), [])
+            entries.append(
+                IndexEntry(
+                    objname, 0, obj.docname, obj.node_id, obj.objtype, "", ""
+                )
+            )
+
+            # Add a categorical entry:
+            category = obj.objtype.title() + "s"
+            entries = content.setdefault(category, [])
+            entries.append(
+                IndexEntry(objname, 0, obj.docname, obj.node_id, "", "", "")
+            )
+
+        # alphabetically sort categories; type names first, ABC entries last.
+        sorted_content = sorted(
+            content.items(),
+            key=lambda x: (len(x[0]) == 1, x[0]),
+        )
+        return sorted_content, collapse
+
+
 class QAPIDomain(Domain):
     """QAPI language domain."""
 
@@ -160,7 +221,10 @@ class QAPIDomain(Domain):
         "objects": {},  # fullname -> ObjectEntry
     }
 
-    indices = []
+    # Index pages to generate; each entry is an Index class.
+    indices = [
+        QAPIIndex,
+    ]
 
     @property
     def objects(self) -> Dict[str, ObjectEntry]:
