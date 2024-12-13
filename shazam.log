@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/5f9b0c53f1644922ba85522046e92f4c@asus.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] hw/arm/aspeed: fix connect_serial_hds_to_uarts
+    + Fixes: d2b3eaefb4d7 ("aspeed: Refactor UART init for multi-SoC machines")
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com>
+  ---
+  [31m✗[0m BADSIG: DKIM/asus.com
+---
+Total patches: 1
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Cédric Le Goater <clg@redhat.com>
+     Msg From: kenneth_jia--- via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/arm/aspeed: fix connect_serial_hds_to_uarts
+Patch failed at 0001 hw/arm/aspeed: fix connect_serial_hds_to_uarts
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: corrupt patch at line 21
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
