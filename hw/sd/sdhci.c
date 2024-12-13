@@ -618,7 +618,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
                 sdbus_read_data(&s->sdbus, s->fifo_buffer, block_size);
             }
             begin = s->data_count;
-            if (((boundary_count + begin) < block_size) && page_aligned) {
+            if (((boundary_count + begin) < block_size) && !page_aligned) {
                 s->data_count = boundary_count + begin;
                 boundary_count = 0;
              } else {
@@ -634,7 +634,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
             if (s->data_count == block_size) {
                 s->data_count = 0;
             }
-            if (page_aligned && boundary_count == 0) {
+            if (boundary_count == 0) {
                 break;
             }
         }
@@ -642,7 +642,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
         s->prnsts |= SDHC_DOING_WRITE;
         while (s->blkcnt) {
             begin = s->data_count;
-            if (((boundary_count + begin) < block_size) && page_aligned) {
+            if (((boundary_count + begin) < block_size) && !page_aligned) {
                 s->data_count = boundary_count + begin;
                 boundary_count = 0;
              } else {
@@ -659,7 +659,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
                     s->blkcnt--;
                 }
             }
-            if (page_aligned && boundary_count == 0) {
+            if (boundary_count == 0) {
                 break;
             }
         }
