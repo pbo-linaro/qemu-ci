@@ -1,0 +1,77 @@
+Grabbing thread from lore.kernel.org/all/20241212185341.2857-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 43 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 78 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] exec: Introduce 'user/guest-host.h' header
+  [32m✓[0m [PATCH 2/18] linux-user/aarch64: Include missing 'user/abitypes.h' header
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 3/18] include: Include missing 'qemu/clang-tsa.h' header
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/18] accel/tcg: Declare mmap_[un]lock() in 'exec/page-protection.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 5/18] accel/tcg: Use tb_page_addr_t type in page_unprotect()
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/18] accel/tcg: Move page_[un]protect() to 'user/page-protection.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/18] system: Remove unnecessary 'exec/translate-all.h' include
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 8/18] accel/tcg: Move 'exec/translate-all.h' -> 'tb-internal.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/18] accel/tcg: Un-inline log_pc()
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 10/18] accel/tcg: Move TranslationBlock declarations to 'tb-internal.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/18] accel/tcg: Move user-related declarations out of 'exec/cpu-all.h' (1/4)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 12/18] accel/tcg: Move user-related declarations out of 'exec/cpu-all.h' (2/4)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 13/18] accel/tcg: Move user-related declarations out of 'exec/cpu-all.h' (3/4)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 14/18] accel/tcg: Move user-related declarations out of 'exec/cpu-all.h' (4/4)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 15/18] user: Forward declare target_cpu_copy_regs structure
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 16/18] user: Move 'linux-user/cpu_loop-common.h' -> 'user/cpu_loop.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 17/18] user: Declare cpu_loop() once in 'user/cpu_loop.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 18/18] user: Move various declarations out of 'exec/exec-all.h'
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: exec: Introduce 'user/guest-host.h' header
+Applying: linux-user/aarch64: Include missing 'user/abitypes.h' header
+Applying: include: Include missing 'qemu/clang-tsa.h' header
+Patch failed at 0003 include: Include missing 'qemu/clang-tsa.h' header
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: tests/unit/test-bdrv-drain.c:28
+error: tests/unit/test-bdrv-drain.c: patch does not apply
+error: patch failed: tests/unit/test-block-iothread.c:29
+error: tests/unit/test-block-iothread.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
