@@ -133,6 +133,13 @@ typedef enum {
     CXL_MBOX_MAX = 0x20
 } CXLRetCode;
 
+enum {
+    CXL_MSIX_PCIE_DOE = 0,
+    CXL_MSIX_EVENT_START = 2,
+    CXL_MSIX_MBOX = CXL_MSIX_EVENT_START + CXL_EVENT_TYPE_MAX,
+    CXL_MSIX_MAX
+};
+
 typedef struct CXLCCI CXLCCI;
 typedef struct cxl_device_state CXLDeviceState;
 struct cxl_cmd;
