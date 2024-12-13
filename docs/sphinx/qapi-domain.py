@@ -21,18 +21,17 @@ from typing import (
 
 from docutils import nodes
 from docutils.parsers.rst import directives
-from docutils.statemachine import StringList
 
 from collapse import CollapseNode
 from compat import (
     Field,
     GroupedField,
+    ParserFix,
     TypedField,
     keyword_node,
     nested_parse,
     space_node,
 )
-import sphinx
 from sphinx import addnodes
 from sphinx.addnodes import desc_signature, pending_xref
 from sphinx.directives import ObjectDescription
@@ -170,7 +169,7 @@ def since_validator(param: str) -> str:
 Signature = str
 
 
-class QAPIObject(ObjectDescription[Signature]):
+class QAPIObject(ParserFix, ObjectDescription[Signature]):
     """
     Description of a generic QAPI object.
 
@@ -436,30 +435,13 @@ class QAPIObject(ObjectDescription[Signature]):
             )
             logger.warning(msg, location=field)
 
-    def before_content(self) -> None:
-        # Work around a sphinx bug and parse the content ourselves.
-        self._temp_content = self.content
-        self._temp_offset = self.content_offset
-        self._temp_node = None
-
-        if (5, 3, 0) <= sphinx.version_info[:3] < (6, 2, 0):
-            self._temp_node = addnodes.desc_content()
-            self.state.nested_parse(
-                self.content, self.content_offset, self._temp_node
-            )
-            # Sphinx will try to parse the content block itself,
-            # Give it nothingness to parse instead.
-            self.content = StringList()
-            self.content_offset = 0
-
     def transform_content(self, contentnode: addnodes.desc_content) -> None:
-        self.content_node = contentnode
+        # This hook runs after before_content and the nested parse, but
+        # before the DocFieldTransformer is executed.
+        super().transform_content(contentnode)
 
-        # Sphinx workaround: Inject our parsed content and restore state.
-        if self._temp_node:
-            contentnode += self._temp_node.children
-            self.content = self._temp_content
-            self.content_offset = self._temp_offset
+        # Bookmark this content_node for later use in after_content().
+        self.content_node = contentnode
 
         self._add_infopips(contentnode)
         self._merge_adjoining_field_lists(contentnode)
