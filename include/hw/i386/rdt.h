@@ -25,6 +25,10 @@ typedef struct RDTStatePerCore RDTStatePerCore;
 typedef struct RDTMonitor RDTMonitor;
 typedef struct RDTAllocation RDTAllocation;
 
+uint32_t rdt_get_cpuid_10_1_edx_cos_max(void);
+uint32_t rdt_get_cpuid_10_2_edx_cos_max(void);
+uint32_t rdt_get_cpuid_10_3_edx_cos_max(void);
+
 bool rdt_associate_rmid_cos(uint64_t msr_ia32_pqr_assoc);
 
 void rdt_write_msr_l3_mask(uint32_t pos, uint32_t val);
