@@ -2213,6 +2213,9 @@ struct ArchCPU {
     struct MemoryRegion *cpu_as_root, *cpu_as_mem, *smram;
     Notifier machine_done;
 
+    /* Help the RDT MSRs find the RDT device */
+    struct RDTStatePerCore *rdt;
+
     struct kvm_msrs *kvm_msr_buf;
 
     int32_t node_id; /* NUMA node this CPU belongs to */
