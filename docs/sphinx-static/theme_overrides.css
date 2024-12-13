@@ -296,3 +296,13 @@ dl.field-list > dt {
 dl.field-list > dd:not(:last-child) {
     padding-bottom: 1em;
 }
+
+dl.field-list > dd > details {
+    border-left: solid 5px #bcc6d2;
+}
+
+dl.field-list > dd > details > summary {
+    background-color: #eaedf1;
+    color: black;
+    padding-left: 0.75em;
+}

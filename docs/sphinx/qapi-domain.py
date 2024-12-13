@@ -23,6 +23,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import StringList
 
+from collapse import CollapseNode
 from compat import keyword_node, nested_parse, space_node
 import sphinx
 from sphinx import addnodes
@@ -466,10 +467,7 @@ class QAPIObject(ObjectDescription[Signature]):
         allowed_fields = set(self.env.app.config.qapi_allowed_fields)
 
         field_label = name.astext()
-        if (
-            re.match(r"\[\S+ = \S+\]", field_label)
-            or field_label in allowed_fields
-        ):
+        if field_label == ":BRANCH:" or field_label in allowed_fields:
             # okie-dokey. branch entry or known good allowed name.
             return
 
@@ -528,6 +526,8 @@ class QAPIObject(ObjectDescription[Signature]):
             self.content_offset = 0
 
     def transform_content(self, contentnode: addnodes.desc_content) -> None:
+        self.content_node = contentnode
+
         # Sphinx workaround: Inject our parsed content and restore state.
         if self._temp_node:
             contentnode += self._temp_node.children
@@ -546,6 +546,66 @@ class QAPIObject(ObjectDescription[Signature]):
                 for field in child.children:
                     assert isinstance(field, nodes.field)
                     self._validate_field(field)
+
+    def after_content(self) -> None:
+        # Now that the DocFieldTransformer has been invoked in
+        # ObjectDescription.run, we can take our branch entries and
+        # extract their contents and inject them into the preceding
+        # field list body.
+
+        # For example:
+        #
+        # Arguments: * lorem
+        #            * ipsum
+        # :BRANCH:   <branch stuff here>
+        #
+        # will be transformed into:
+        #
+        # Arguments: * lorem
+        #            * ipsum
+        #            <branch stuff here>
+
+        branch_content: List[nodes.Node] = []
+        insertion_field: Optional[nodes.field] = None
+
+        def _inject(
+            field: Optional[nodes.field], content: List[nodes.Node]
+        ) -> None:
+            if not (field or content):
+                return
+            if not field:
+                print(
+                    "ERROR: qapi:branch directive used without a preceding "
+                    "Members/Arguments field; there's nowhere to inject the "
+                    "branch members into!"
+                )
+                return
+            _, body = _unpack_field(field)
+            body += content
+
+        for child in self.content_node:
+            if isinstance(child, nodes.field_list):
+                delete_queue: List[nodes.field] = []
+                for field in child.children:
+                    assert isinstance(field, nodes.field)
+                    name, body = _unpack_field(field)
+                    if name.astext() == ":BRANCH:":
+                        branch_content.extend(body.children)
+                        delete_queue.append(field)
+                    elif not branch_content:
+                        insertion_field = field
+                    else:
+                        # Field is not a branch and branch_content is not empty;
+                        # we should do the insertion here and now.
+                        _inject(insertion_field, branch_content)
+                        insertion_field = None
+                        branch_content = []
+
+                # Delete any branches encountered thus far.
+                for field in delete_queue:
+                    child.remove(field)
+
+        _inject(insertion_field, branch_content)
 
     def _toc_entry_name(self, sig_node: desc_signature) -> str:
         # This controls the name in the TOC and on the sidebar.
@@ -770,14 +830,27 @@ class QAPIModule(SphinxDirective):
 
 class Branch(SphinxDirective):
     """
-    Nested directive which only serves to introduce temporary
-    metadata but return its parsed content nodes unaltered otherwise.
+    A nested directive to document union Branches.
 
-    Technically, you can put whatever you want in here, but doing so may
-    prevent proper merging of adjacent field lists.
+    This directive should contain at most one type of semantic/grouped
+    field list type, either "memb" or "arg".
     """
 
-    doc_field_types: List[Field] = []
+    # The :BRANCH: name is a placeholder. You can probably get a
+    # legitimate field list with this name if you try hard
+    # enough, but it should be difficult to do by accident.
+    doc_field_types: List[Field] = [
+        # :arg type name: descr
+        # :memb type name: descr
+        QAPITypedField(
+            "branch-arg-or-memb",
+            label=":BRANCH:",
+            names=("arg", "memb"),
+            typerolename="type",
+            can_collapse=False,
+        ),
+    ]
+
     has_content = True
     required_arguments = 2
     optional_arguments = 0
@@ -799,29 +872,59 @@ class Branch(SphinxDirective):
         discrim = self.arguments[0].strip()
         value = self.arguments[1].strip()
 
-        # The label name is dynamically generated per-instance instead
-        # of per-class to incorporate the branch conditions as a label
-        # name.
-        self.doc_field_types = [
-            # :arg type name: descr
-            # :memb type name: descr
-            QAPITypedField(
-                "branch-arg-or-memb",
-                label=f"[{discrim} = {value}]",
-                # In a branch, we don't actually use the name of the
-                # field name to generate the label; so allow either-or.
-                names=("arg", "memb"),
-                typerolename="type",
-            ),
-        ]
-
-        content_node: addnodes.desc_content = addnodes.desc_content()
+        content_node = addnodes.desc_content()
         nested_parse(self, content_node)
         # DocFieldTransformer usually expects ObjectDescription, but... quack!
         transformer = DocFieldTransformer(quack(ObjectDescription, self))
         transformer.transform_all(content_node)
 
-        return content_node.children
+        if not content_node.children:
+            # Empty branch - it happens. Squelch it.
+            return []
+
+        # Now, we're gonna do some surgery.
+        #
+        # We're going to find any field lists that contain members/args
+        # and extract the transformed content from that field list,
+        # while deleting the field list itself - to avoid having nested
+        # field lists for branches.
+
+        replacements = []
+        for child in content_node:
+            if isinstance(child, nodes.field_list):
+                if len(child.children) != 1:
+                    # We're only interested in field lists with one field;
+                    # since these are the semantically grouped/formatted bits.
+                    continue
+
+                field = child.children[0]
+                assert isinstance(field, nodes.field)
+                field_name, field_body = _unpack_field(field)
+
+                if field_name.astext() == ":BRANCH:":
+                    replacements.append((child, field_body))
+
+        # Delete grouped field lists, replacing them with just their content;
+        # after field transformation, this should be a list.
+        for child, field_body in replacements:
+            child.replace_self(field_body.children)
+
+        # Wrap the entire contents up in a collapsible node
+        collapse_node = CollapseNode(
+            "", f"When {discrim} is {value}: ...", *content_node.children
+        )
+
+        # Then wrap it all back up in a new field list.
+        new_content = nodes.field_list(
+            "",
+            nodes.field(
+                "",
+                nodes.field_name("", ":BRANCH:"),
+                nodes.field_body("", collapse_node),
+            ),
+        )
+
+        return [new_content]
 
 
 class QAPIIndex(Index):
