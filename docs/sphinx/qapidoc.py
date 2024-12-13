@@ -127,6 +127,15 @@ class Transmogrifier:
 
     # Transmogrification helpers
 
+    def visit_paragraph(self, section: QAPIDoc.Section) -> None:
+        # Squelch empty paragraphs.
+        if not section.text:
+            return
+
+        self.ensure_blank_line()
+        self.add_lines(section.text, section.info)
+        self.ensure_blank_line()
+
     def preamble(self, ent: QAPISchemaEntity) -> None:
         """
         Generate option lines for qapi entity directives.
