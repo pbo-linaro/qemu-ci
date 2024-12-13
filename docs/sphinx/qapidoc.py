@@ -278,6 +278,29 @@ class Transmogrifier:
 
         self.ensure_blank_line()
 
+    def visit_sections(self, ent: QAPISchemaEntity) -> None:
+        sections = ent.doc.all_sections if ent.doc else []
+
+        # Add sections *in the order they are documented*:
+        for section in sections:
+            if section.tag == QAPIDoc.Tag.UNTAGGED:
+                self.visit_paragraph(section)
+            elif section.tag == QAPIDoc.Tag.MEMBER:
+                self.visit_member(section)
+            elif section.tag == QAPIDoc.Tag.FEATURE:
+                self.visit_feature(section)
+            elif section.tag in (QAPIDoc.Tag.SINCE, QAPIDoc.Tag.TODO):
+                # Since is handled in preamble, TODO is skipped intentionally.
+                pass
+            elif section.tag == QAPIDoc.Tag.RETURNS:
+                self.visit_returns(section)
+            elif section.tag == QAPIDoc.Tag.ERRORS:
+                self.visit_errors(section)
+            else:
+                assert False
+
+        self.ensure_blank_line()
+
     # Transmogrification core methods
 
     def visit_module(self, path: str) -> None:
