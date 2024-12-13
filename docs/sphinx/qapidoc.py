@@ -38,7 +38,7 @@ from docutils.statemachine import StringList, ViewList
 from qapi.error import QAPIError, QAPISemError
 from qapi.gen import QAPISchemaVisitor
 from qapi.parser import QAPIDoc
-from qapi.schema import QAPISchema
+from qapi.schema import QAPISchema, QAPISchemaEntity
 from qapi.source import QAPISourceInfo
 
 from sphinx import addnodes
@@ -124,6 +124,37 @@ class Transmogrifier:
             # New blank line is credited to one-after the current last line.
             # +2: correct for zero/one index, then increment by one.
             self.add_line_raw("", fname, line + 2)
+
+    # Transmogrification helpers
+
+    def preamble(self, ent: QAPISchemaEntity) -> None:
+        """
+        Generate option lines for qapi entity directives.
+        """
+        if ent.doc and ent.doc.since:
+            assert ent.doc.since.tag == QAPIDoc.Tag.SINCE
+            # Generated from the entity's docblock; info location is exact.
+            self.add_line(f":since: {ent.doc.since.text}", ent.doc.since.info)
+
+        if ent.ifcond.is_present():
+            doc = ent.ifcond.docgen()
+            # Generated from entity definition; info location is approximate.
+            self.add_line(f":ifcond: {doc}", ent.info)
+
+        # Hoist special features such as :deprecated: and :unstable:
+        # into the options block for the entity. If, in the future, new
+        # special features are added, qapi-domain will chirp about
+        # unrecognized options and fail.
+        for feat in ent.features:
+            if feat.is_special():
+                # We don't expect special features to have an ifcond property.
+                # (Hello, intrepid developer in the future who changed that!)
+                # ((With luck, you are not me.))
+                assert not feat.ifcond.is_present()
+                # Generated from entity def; info location is approximate.
+                self.add_line(f":{feat.name}:", feat.info)
+
+        self.ensure_blank_line()
 
     # Transmogrification core methods
 
