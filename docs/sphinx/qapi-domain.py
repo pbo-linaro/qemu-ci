@@ -1060,6 +1060,16 @@ class QAPIDomain(Domain):
         multiple_matches = len(matches) > 1
 
         if not matches:
+            if target not in (
+                "string",
+                "number",
+                "int",
+                "boolean",
+                "null",
+                "value",
+                "q_empty",
+            ):
+                print(f"!QXREF: {type=} {target=}")
             return None
         elif multiple_matches:
             logger.warning(
