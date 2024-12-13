@@ -74,6 +74,16 @@ def dedent(text: str) -> str:
 
 
 class Transmogrifier:
+    # Field names used for different entity types:
+    field_types = {
+        "enum": "value",
+        "struct": "memb",
+        "union": "memb",
+        "event": "memb",
+        "command": "arg",
+        "alternate": "choice",
+    }
+
     def __init__(self, schema):
         self._curr_ent = None
         self._result = StringList()
@@ -83,6 +93,10 @@ class Transmogrifier:
     def entity(self) -> QAPISchemaEntity:
         assert self._curr_ent is not None
         return self._curr_ent
+
+    @property
+    def member_field_type(self) -> str:
+        return self.field_types[self.entity.meta]
 
     # General-purpose rST generation functions
 
@@ -193,6 +207,19 @@ class Transmogrifier:
         self.ensure_blank_line()
         self.add_lines(section.text, section.info)
         self.ensure_blank_line()
+
+    def visit_member(self, section: QAPIDoc.ArgSection) -> None:
+        # TODO: ifcond for members
+        # TODO?: features for members (documented at entity-level,
+        # but sometimes defined per-member. Should we add such
+        # information to member descriptions when we can?)
+        assert section.text
+        self.generate_field(
+            self.member_field_type,
+            section.member,
+            section.text,
+            section.info,
+        )
 
     def visit_feature(self, section: QAPIDoc.ArgSection) -> None:
         # FIXME - ifcond for features is not handled at all yet!
