@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241212172209.533779-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] rust: pl011: fix declaration of LineControl bits
+  [32m✓[0m [PATCH 2/7] rust: pl011: match break logic of C version
+  [32m✓[0m [PATCH 3/7] rust: pl011: always use reset() method on registers
+  [32m✓[0m [PATCH 4/7] rust: pl011: fix break errors and definition of Data struct
+  [32m✓[0m [PATCH 5/7] rust: pl011: extend registers to 32 bits
+  [32m✓[0m [PATCH 6/7] rust: pl011: fix migration stream
+  [32m✓[0m [PATCH 7/7] rust: pl011: simplify handling of the FIFO enabled bit in LCR
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 7
+---
+Applying: rust: pl011: fix declaration of LineControl bits
+Applying: rust: pl011: match break logic of C version
+Applying: rust: pl011: always use reset() method on registers
+Applying: rust: pl011: fix break errors and definition of Data struct
+Applying: rust: pl011: extend registers to 32 bits
+Patch failed at 0005 rust: pl011: extend registers to 32 bits
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: rust/hw/char/pl011/src/device.rs:190
+error: rust/hw/char/pl011/src/device.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
