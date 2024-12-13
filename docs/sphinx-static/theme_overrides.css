@@ -306,3 +306,9 @@ dl.field-list > dd > details > summary {
     color: black;
     padding-left: 0.75em;
 }
+
+/* missing field xrefs */
+.rst-content *:not(a) > code.xref {
+    font-weight: 400;
+    color: #333333;
+}
