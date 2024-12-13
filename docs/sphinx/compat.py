@@ -2,10 +2,25 @@
 Sphinx cross-version compatibility goop
 """
 
-from docutils.nodes import Element
+from typing import Callable
 
+from docutils.nodes import Element, Node, Text
+
+import sphinx
+from sphinx import addnodes
 from sphinx.util.docutils import SphinxDirective, switch_source_input
 from sphinx.util.nodes import nested_parse_with_titles
+
+
+space_node: Callable[[str], Node]
+keyword_node: Callable[[str, str], Node]
+
+if sphinx.version_info[:3] >= (4, 0, 0):
+    space_node = addnodes.desc_sig_space
+    keyword_node = addnodes.desc_sig_keyword
+else:
+    space_node = Text
+    keyword_node = addnodes.desc_annotation
 
 
 def nested_parse(directive: SphinxDirective, content_node: Element) -> None:
