@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/dbb6dbf1-1ceb-48c0-8174-ee5dea7533dc@linaro.org/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] contrib/plugins does not build on 32-bit host
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: contrib/plugins does not build on 32-bit host
+Patch failed at 0001 contrib/plugins does not build on 32-bit host
+error: corrupt patch at line 49
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
