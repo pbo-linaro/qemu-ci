@@ -47,11 +47,12 @@ from sphinx.util.nodes import make_id, make_refnode
 
 if TYPE_CHECKING:
     from docutils.nodes import Element, Node
+    from docutils.parsers.rst.states import Inliner
 
     from sphinx.application import Sphinx
     from sphinx.builders import Builder
     from sphinx.environment import BuildEnvironment
-    from sphinx.util.typing import OptionSpec
+    from sphinx.util.typing import OptionSpec, TextlikeNode
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,110 @@ class ObjectEntry(NamedTuple):
     node_id: str
     objtype: str
     aliased: bool
+
+
+class QAPIXrefMixin:
+    def make_xref(
+        self,
+        rolename: str,
+        domain: str,
+        target: str,
+        innernode: type[TextlikeNode] = nodes.literal,
+        contnode: Optional[Node] = None,
+        env: Optional[BuildEnvironment] = None,
+        inliner: Optional[Inliner] = None,
+        location: Optional[Node] = None,
+    ) -> Node:
+        # make_xref apparently has a mode of operation where the inliner
+        # class argument is passed to the role object
+        # (e.g. QAPIXRefRole) to construct the final result; passing
+        # inliner = location = None forces it into its legacy mode where
+        # it returns a pending_xref node instead.
+        # (This is how the built-in Python domain behaves.)
+        result = super().make_xref(  # type: ignore[misc]
+            rolename,
+            domain,
+            target,
+            innernode=innernode,
+            contnode=contnode,
+            env=env,
+            inliner=None,
+            location=None,
+        )
+        if isinstance(result, pending_xref):
+            assert env is not None
+            # Add domain-specific context information to the pending reference.
+            result["refspecific"] = True
+            result["qapi:module"] = env.ref_context.get("qapi:module")
+
+        assert isinstance(result, nodes.Node)
+        return result
+
+    def make_xrefs(
+        self,
+        rolename: str,
+        domain: str,
+        target: str,
+        innernode: type[TextlikeNode] = nodes.literal,
+        contnode: Optional[Node] = None,
+        env: Optional[BuildEnvironment] = None,
+        inliner: Optional[Inliner] = None,
+        location: Optional[Node] = None,
+    ) -> list[Node]:
+        # Note: this function is called on up to three fields of text:
+        # (1) The field name argument (e.g. member/arg name)
+        # (2) The field name type (e.g. member/arg type)
+        # (3) The field *body* text, for Fields that do not take arguments.
+
+        list_type = False
+        optional = False
+
+        # If the rolename is qapi:type, we know we are processing a type
+        # and not an arg/memb name or field body text.
+        if rolename == "type":
+            # force the innernode class to be a literal.
+            innernode = nodes.literal
+
+            # Type names that end with "?" are considered Optional
+            # arguments and should be documented as such, but it's not
+            # part of the xref itself.
+            if target.endswith("?"):
+                optional = True
+                target = target[:-1]
+
+            # Type names wrapped in brackets denote lists. strip the
+            # brackets and remember to add them back later.
+            if target.startswith("[") and target.endswith("]"):
+                list_type = True
+                target = target[1:-1]
+
+            # When processing Fields with bodyrolename="type", contnode
+            # will be present, which indicates that the body has already
+            # been parsed into nodes.  We don't want that, actually:
+            # we'll re-create our own nodes for it.
+            contnode = None
+
+        results = []
+        result = self.make_xref(
+            rolename,
+            domain,
+            target,
+            innernode,
+            contnode,
+            env,
+            inliner,
+            location,
+        )
+        results.append(result)
+
+        if list_type:
+            results.insert(0, nodes.literal("[", "["))
+            results.append(nodes.literal("]", "]"))
+        if optional:
+            results.append(nodes.Text(", "))
+            results.append(nodes.emphasis("?", "optional"))
+
+        return results
 
 
 class QAPIXRefRole(XRefRole):
@@ -104,6 +209,18 @@ class QAPIXRefRole(XRefRole):
             target = target[1:]
             refnode["refspecific"] = True
         return title, target
+
+
+class QAPIGroupedField(QAPIXrefMixin, GroupedField):
+    pass
+
+
+class QAPITypedField(QAPIXrefMixin, TypedField):
+    pass
+
+
+class QAPIField(QAPIXrefMixin, Field):
+    pass
 
 
 def since_validator(param: str) -> str:
@@ -432,10 +549,11 @@ class QAPICommand(QAPIObject):
     doc_field_types.extend(
         [
             # :arg TypeName ArgName: descr
-            TypedField(
+            QAPITypedField(
                 "argument",
                 label=_("Arguments"),
                 names=("arg",),
+                typerolename="type",
                 can_collapse=False,
             ),
             # :error: descr
@@ -446,14 +564,15 @@ class QAPICommand(QAPIObject):
                 has_arg=False,
             ),
             # :returns TypeName: descr
-            GroupedField(
+            QAPIGroupedField(
                 "returnvalue",
                 label=_("Returns"),
+                rolename="type",
                 names=("return", "returns"),
                 can_collapse=True,
             ),
             # :returns-nodesc: TypeName
-            Field(
+            QAPIField(
                 "returnvalue",
                 label=_("Returns"),
                 names=("returns-nodesc",),
@@ -488,10 +607,11 @@ class QAPIAlternate(QAPIObject):
     doc_field_types.extend(
         [
             # :choice type name: descr
-            TypedField(
+            QAPITypedField(
                 "choice",
                 label=_("Choices"),
                 names=("choice",),
+                typerolename="type",
                 can_collapse=False,
             ),
         ]
@@ -505,10 +625,11 @@ class QAPIObjectWithMembers(QAPIObject):
     doc_field_types.extend(
         [
             # :member type name: descr
-            TypedField(
+            QAPITypedField(
                 "member",
                 label=_("Members"),
                 names=("memb",),
+                typerolename="type",
                 can_collapse=False,
             ),
         ]
@@ -660,12 +781,13 @@ class Branch(SphinxDirective):
         self.doc_field_types = [
             # :arg type name: descr
             # :memb type name: descr
-            TypedField(
+            QAPITypedField(
                 "branch-arg-or-memb",
                 label=f"[{discrim} = {value}]",
                 # In a branch, we don't actually use the name of the
                 # field name to generate the label; so allow either-or.
                 names=("arg", "memb"),
+                typerolename="type",
             ),
         ]
 
