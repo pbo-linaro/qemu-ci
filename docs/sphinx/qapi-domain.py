@@ -34,7 +34,7 @@ from sphinx.domains import (
 from sphinx.locale import _, __
 from sphinx.roles import XRefRole
 from sphinx.util import logging
-from sphinx.util.docfields import TypedField
+from sphinx.util.docfields import GroupedField, TypedField
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.nodes import make_id, make_refnode
 
@@ -121,6 +121,16 @@ class QAPIObject(ObjectDescription[Signature]):
             "since": since_validator,
         }
     )
+
+    doc_field_types = [
+        # :feat name: descr
+        GroupedField(
+            "feature",
+            label=_("Features"),
+            names=("feat",),
+            can_collapse=False,
+        ),
+    ]
 
     def get_signature_prefix(self, sig: str) -> List[nodes.Node]:
         """Returns a prefix to put before the object name in the signature."""
