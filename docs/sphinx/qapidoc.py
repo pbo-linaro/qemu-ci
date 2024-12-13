@@ -24,6 +24,7 @@ The Sphinx documentation on writing extensions is at:
 https://www.sphinx-doc.org/en/master/development/index.html
 """
 
+from contextlib import contextmanager
 import os
 import re
 import sys
@@ -32,11 +33,12 @@ from typing import List
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
-from docutils.statemachine import ViewList
+from docutils.statemachine import StringList, ViewList
 from qapi.error import QAPIError, QAPISemError
 from qapi.gen import QAPISchemaVisitor
 from qapi.parser import QAPIDoc
 from qapi.schema import QAPISchema
+from qapi.source import QAPISourceInfo
 
 from sphinx import addnodes
 from sphinx.directives.code import CodeBlock
@@ -59,6 +61,68 @@ def dedent(text: str) -> str:
 
     # Descr started on same line. Dedent line 2+.
     return lines[0] + textwrap.dedent("".join(lines[1:]))
+
+
+class Transmogrifier:
+    def __init__(self, schema):
+        self._result = StringList()
+        self.indent = 0
+
+    # General-purpose rST generation functions
+
+    def get_indent(self) -> str:
+        return "   " * self.indent
+
+    @contextmanager
+    def indented(self):
+        self.indent += 1
+        try:
+            yield
+        finally:
+            self.indent -= 1
+
+    def add_line_raw(self, line: str, source: str, *lineno: int) -> None:
+        """Append one line of generated reST to the output."""
+
+        # NB: Sphinx uses zero-indexed lines; subtract one.
+        lineno = tuple((n - 1 for n in lineno))
+
+        if line.strip():
+            # not a blank line
+            self._result.append(
+                self.get_indent() + line.rstrip("\n"), source, *lineno
+            )
+        else:
+            self._result.append("", source, *lineno)
+
+    def add_line(self, content: str, info: QAPISourceInfo) -> None:
+        # NB: We *require* an info object; this works out OK because we
+        # don't document built-in objects that don't have
+        # one. Everything else should.
+        assert info
+        self.add_line_raw(content, info.fname, info.line)
+
+    def add_lines(
+        self,
+        content: str,
+        info: QAPISourceInfo,
+    ) -> None:
+        assert info
+        lines = content.splitlines(True)
+        for i, line in enumerate(lines):
+            self.add_line_raw(line, info.fname, info.line + i)
+
+    def ensure_blank_line(self) -> None:
+        # Empty document -- no blank line required.
+        if not self._result:
+            return
+
+        # Last line isn't blank, add one.
+        if self._result[-1].strip():  # pylint: disable=no-member
+            fname, line = self._result.info(-1)
+            # New blank line is credited to one-after the current last line.
+            # +2: correct for zero/one index, then increment by one.
+            self.add_line_raw("", fname, line + 2)
 
 
 # Disable black auto-formatter until re-enabled:
