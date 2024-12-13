@@ -26,7 +26,9 @@ from collapse import CollapseNode
 from compat import (
     Field,
     GroupedField,
+    ObjectDesc,
     ParserFix,
+    Signature,
     TypedField,
     keyword_node,
     nested_parse,
@@ -164,12 +166,7 @@ def since_validator(param: str) -> str:
     return param
 
 
-# Alias for the return of handle_signature(), which is used in several places.
-# (In the Python domain, this is Tuple[str, str] instead.)
-Signature = str
-
-
-class QAPIObject(ParserFix, ObjectDescription[Signature]):
+class QAPIObject(ParserFix, ObjectDesc):
     """
     Description of a generic QAPI object.
 

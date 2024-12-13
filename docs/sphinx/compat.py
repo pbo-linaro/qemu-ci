@@ -33,15 +33,22 @@ MAKE_XREF_WORKAROUND = sphinx.version_info[:3] < (4, 1, 0)
 SOURCE_LOCATION_FIX = (5, 3, 0) <= sphinx.version_info[:3] < (6, 2, 0)
 
 
+# Alias for the return of QAPIObject.handle_signature(), which is used
+# in several places. (In the Python domain, this type is Tuple[str,
+# str] instead.)
+Signature = str
+
 space_node: Callable[[str], Node]
 keyword_node: Callable[[str, str], Node]
 
 if sphinx.version_info[:3] >= (4, 0, 0):
     space_node = addnodes.desc_sig_space
     keyword_node = addnodes.desc_sig_keyword
+    ObjectDesc = ObjectDescription[Signature]
 else:
     space_node = Text
     keyword_node = addnodes.desc_annotation
+    ObjectDesc = ObjectDescription
 
 
 def nested_parse(directive: SphinxDirective, content_node: Element) -> None:
