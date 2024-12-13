@@ -1,0 +1,276 @@
+Grabbing thread from lore.kernel.org/all/20241213190750.2513964-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 83 messages in the thread
+WARNING: duplicate messages found at index 63
+   Subject 1: hw/ufs: Constify all Property
+   Subject 2: hw/ufs: Constify all Property
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: tcg/riscv: Fix StoreStore barrier generation
+   Subject 2: target/avr: Constify all Property
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 4
+   Subject 1: target/i386: Constify all Property
+   Subject 2: target/sparc: Use memcpy() and remove memcpy32()
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 64
+   Subject 1: hw/usb: Constify all Property
+   Subject 2: hw/ufs: Constify all Property
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: target/arm: Constify all Property
+   Subject 2: tcg: Reset free_temps before tcg_optimize
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 65
+   Subject 1: hw/vfio: Constify all Property
+   Subject 2: hw/ufs: Constify all Property
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 3
+   Subject 1: target/hexagon: Constify all Property
+   Subject 2: target/avr: Constify all Property
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 12 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/71] target/arm: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 1/4] tcg: Reset free_temps before tcg_optimize
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/71] target/hexagon: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Brian Cain <brian.cain@oss.qualcomm.com> ([32m✓[0m DKIM/qualcomm.com)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/71] target/avr: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/4] target/sparc: Use memcpy() and remove memcpy32()
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/71] target/mips: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/71] target/ppc: Remove empty property list
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 8/71] target/riscv: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/71] target/s390x: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 10/71] target/sparc: Constify all Property and PropertyInfo
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/71] cpu-target: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 12/71] hw/9pfs: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 13/71] hw/acpi: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 14/71] hw/adc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 15/71] hw/arm: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 16/71] hw/audio: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 17/71] hw/avr: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 18/71] hw/block/xen-block: Unexport PropertyInfo
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 19/71] hw/block: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 20/71] hw/char: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 21/71] hw/core: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 22/71] hw/cpu: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 23/71] hw/cxl: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 24/71] hw/display: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 25/71] hw/dma: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 26/71] hw/gpio: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 27/71] hw/hyperv: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 28/71] hw/i2c: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Acked-by: Corey Minyard <cminyard@mvista.com> ([32m✓[0m DKIM/mvista.com)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 29/71] hw/i386: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 30/71] hw/ide: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 31/71] hw/input: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 32/71] hw/intc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 33/71] hw/ipack: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 34/71] hw/ipmi: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Acked-by: Corey Minyard <cminyard@mvista.com> ([32m✓[0m DKIM/minyard-net.20230601.gappssmtp.com)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 35/71] hw/isa: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 36/71] hw/m68k: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Thomas Huth <huth@tuxfamily.org>
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 37/71] hw/mem: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 38/71] hw/mips: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 39/71] hw/misc/xlnx-versal-trng: Constify trng_props
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 40/71] hw/misc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 41/71] hw/net: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 42/71] hw/nubus: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 43/71] hw/nvme: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 44/71] hw/nvram: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 45/71] hw/pci-bridge: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 46/71] hw/pci-host/astro: Remove empty Property list
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 47/71] hw/pci-host: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 48/71] hw/pci: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 49/71] hw/ppc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 50/71] hw/remote: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 51/71] hw/riscv: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 52/71] hw/rtc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 53/71] hw/rx: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 54/71] hw/s390x: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 55/71] hw/scsi: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 56/71] hw/sd: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 57/71] hw/sparc: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 58/71] hw/sparc64: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 59/71] hw/ssi: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 60/71] hw/timer: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 61/71] hw/tpm: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 62/71] hw/tricore: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 63/71] hw/ufs: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 64/71] hw/usb: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 65/71] hw/vfio: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 63/71] hw/ufs: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 67/71] hw/watchdog: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 68/71] hw/xen: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 69/71] hw/xen: Use DEFINE_PROP_END_OF_LIST in xen_sysdev_properties
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 70/71] tests/unit: Constify all Property
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 71/71] docs: Constify all Property in examples
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ERROR: missing [72/71]!
+  ERROR: missing [73/71]!
+  ERROR: missing [74/71]!
+  ERROR: missing [75/71]!
+  ERROR: missing [76/71]!
+  ERROR: missing [77/71]!
+  ERROR: missing [78/71]!
+---
+Total patches: 71
+---
+WARNING: Thread incomplete!
+Applying: target/arm: Constify all Property
+Applying: tcg: Reset free_temps before tcg_optimize
+Patch failed at 0002 tcg: Reset free_temps before tcg_optimize
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: include/tcg/tcg-temp-internal.h:42
+error: include/tcg/tcg-temp-internal.h: patch does not apply
+error: patch failed: accel/tcg/plugin-gen.c:275
+error: accel/tcg/plugin-gen.c: patch does not apply
+error: patch failed: tcg/tcg.c:1489
+error: tcg/tcg.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
