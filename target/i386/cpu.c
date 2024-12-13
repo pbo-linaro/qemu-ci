@@ -41,6 +41,7 @@
 #include "hw/boards.h"
 #include "hw/i386/sgx-epc.h"
 #endif
+#include "hw/i386/rdt.h"
 
 #include "disas/capstone.h"
 #include "cpu-internal.h"
@@ -6725,6 +6726,76 @@ void cpu_x86_cpuid(CPUX86State *env, uint32_t index, uint32_t count,
         assert(!(*eax & ~0x1f));
         *ebx &= 0xffff; /* The count doesn't need to be reliable. */
         break;
+#ifndef CONFIG_USER_ONLY
+    case 0xF:
+        /* Shared Resource Monitoring Enumeration Leaf */
+        *eax = 0;
+        *ebx = 0;
+        *ecx = 0;
+        *edx = 0;
+        if (!(env->features[FEAT_7_0_EBX] & CPUID_7_0_EBX_PQM))
+            break;
+        if (!(cpu->rdt)) {
+            warn_report("Intel RDT features enabled in commandline, "
+                        "but rdt device not used");
+            break;
+        }
+        /* Non-zero count is ResId */
+        switch (count) {
+            /* Monitoring Resource Type Enumeration */
+        case 0:
+            *edx = env->features[FEAT_RDT_F_0_EDX];
+            *ebx = rdt_max_rmid(cpu->rdt);
+            break;
+        case 1:
+            *ebx = 1;
+            *ecx = rdt_max_rmid(cpu->rdt);
+            *edx = rdt_cpuid_F_1_edx_l3_total_bw_enabled() |
+                    rdt_cpuid_F_1_edx_l3_local_bw_enabled() |
+                   rdt_cpuid_F_1_edx_l3_occupancy_enabled();
+            break;
+        }
+        break;
+    case 0x10:
+        /* Shared Resource Director Technology Allocation Enumeration Leaf */
+        *eax = 0;
+        *ebx = 0;
+        *ecx = 0;
+        *edx = 0;
+        if (!(env->features[FEAT_7_0_EBX] & CPUID_7_0_EBX_PQE))
+            break;
+        if (!(cpu->rdt)) {
+            warn_report("Intel RDT features enabled in commandline, "
+                        "but rdt device not used");
+            break;
+        }
+        /* Non-zero count is ResId */
+        switch (count) {
+            /* Cache Allocation Technology Available Resource Types */
+        case 0:
+            *ebx |= rdt_cpuid_10_0_ebx_l3_cat_enabled();
+            *ebx |= rdt_cpuid_10_0_ebx_l2_cat_enabled();
+            *ebx |= rdt_cpuid_10_0_ebx_l2_mba_enabled();
+            break;
+        case 1:
+            *eax = rdt_get_cpuid_10_1_eax_cbm_length();
+            *ebx = rdt_cpuid_10_1_ebx_cbm_enabled();
+            *ecx |= rdt_cpuid_10_1_ecx_cdp_enabled();
+            *edx =  rdt_get_cpuid_10_1_edx_cos_max();
+            break;
+        case 2:
+            *eax = rdt_get_cpuid_10_2_eax_cbm_length();
+            *ebx = rdt_cpuid_10_2_ebx_cbm_enabled();
+            *edx =  rdt_get_cpuid_10_2_edx_cos_max();
+            break;
+        case 3:
+            *eax = rdt_get_cpuid_10_3_eax_thrtl_max();
+            *ecx = rdt_cpuid_10_3_eax_linear_response_enabled();
+            *edx = rdt_get_cpuid_10_3_edx_cos_max();
+            break;
+        }
+        break;
+#endif
     case 0x1C:
         if (cpu->enable_pmu && (env->features[FEAT_7_0_EDX] & CPUID_7_0_EDX_ARCH_LBR)) {
             x86_cpu_get_supported_cpuid(0x1C, 0, eax, ebx, ecx, edx);
