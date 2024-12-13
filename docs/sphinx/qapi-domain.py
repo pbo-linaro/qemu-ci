@@ -4,6 +4,7 @@ QAPI domain extension.
 
 from __future__ import annotations
 
+import re
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -83,6 +84,18 @@ class QAPIXRefRole(XRefRole):
         return title, target
 
 
+def since_validator(param: str) -> str:
+    """
+    Validate the `:since: X.Y` option field.
+    """
+    match = re.match(r"[0-9]+\.[0-9]+", param)
+    if not match:
+        raise ValueError(
+            f":since: requires a version number in X.Y format; not {param!r}"
+        )
+    return param
+
+
 # Alias for the return of handle_signature(), which is used in several places.
 # (In the Python domain, this is Tuple[str, str] instead.)
 Signature = str
@@ -103,6 +116,8 @@ class QAPIObject(ObjectDescription[Signature]):
         {
             # Borrowed from the Python domain:
             "module": directives.unchanged,  # Override contextual module name
+            # These are QAPI originals:
+            "since": since_validator,
         }
     )
 
@@ -114,9 +129,19 @@ class QAPIObject(ObjectDescription[Signature]):
             space_node(" "),
         ]
 
-    def get_signature_suffix(self, sig: str) -> list[nodes.Node]:
+    def get_signature_suffix(self, sig: str) -> List[nodes.Node]:
         """Returns a suffix to put after the object name in the signature."""
-        return []
+        ret: List[nodes.Node] = []
+
+        if "since" in self.options:
+            ret += [
+                space_node(" "),
+                addnodes.desc_sig_element(
+                    "", f"(Since: {self.options['since']})"
+                ),
+            ]
+
+        return ret
 
     def handle_signature(self, sig: str, signode: desc_signature) -> Signature:
         """
