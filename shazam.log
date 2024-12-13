@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241213160619.66509-1-phil@philjordan.eu/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 14 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/6] hw/usb/hcd-xhci-pci: Use modulo to select MSI vector as per spec
+  [32m✓[0m [PATCH v2 2/6] hw/usb/hcd-xhci-pci: Move msi/msix properties from NEC to superclass
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 3/6] hw/usb/hcd-xhci-pci: Use event ring 0 if mapping unsupported
+  [32m✓[0m [PATCH v2 4/6] hw/usb/hcd-xhci-pci: Adds property for disabling mapping in IRQ mode
+  [32m✓[0m [PATCH v2 5/6] hw/usb/hcd-xhci-pci: Indentation fix
+  [32m✓[0m [PATCH v2 6/6] hw/vmapple: XHCI controller's interrupt mapping workaround for macOS
+  ---
+  [32m✓[0m Signed: DKIM/philjordan-eu.20230601.gappssmtp.com (From: phil@philjordan.eu)
+---
+Total patches: 6
+---
+Applying: hw/usb/hcd-xhci-pci: Use modulo to select MSI vector as per spec
+Applying: hw/usb/hcd-xhci-pci: Move msi/msix properties from NEC to superclass
+Applying: hw/usb/hcd-xhci-pci: Use event ring 0 if mapping unsupported
+Applying: hw/usb/hcd-xhci-pci: Adds property for disabling mapping in IRQ mode
+Applying: hw/usb/hcd-xhci-pci: Indentation fix
+Applying: hw/vmapple: XHCI controller's interrupt mapping workaround for macOS
+Patch failed at 0006 hw/vmapple: XHCI controller's interrupt mapping workaround for macOS
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: hw/vmapple/vmapple.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
