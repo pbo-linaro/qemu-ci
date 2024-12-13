@@ -275,6 +275,14 @@ class QAPICommand(QAPIObject):
                 names=("return", "returns"),
                 can_collapse=True,
             ),
+            # :returns-nodesc: TypeName
+            Field(
+                "returnvalue",
+                label=_("Returns"),
+                names=("returns-nodesc",),
+                bodyrolename="type",
+                has_arg=False,
+            ),
         ]
     )
 
