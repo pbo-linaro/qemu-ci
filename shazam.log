@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20241212155719.524637-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] kvm: consistently return 0/-errno from kvm_convert_memory
+    + Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com> ([32m✓[0m DKIM/intel.com)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: kvm: consistently return 0/-errno from kvm_convert_memory
+Patch failed at 0001 kvm: consistently return 0/-errno from kvm_convert_memory
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: patch failed: accel/kvm/kvm-all.c:2998
+error: accel/kvm/kvm-all.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
