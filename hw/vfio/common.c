@@ -184,16 +184,22 @@ static bool vfio_devices_all_device_dirty_tracking_started(
     return true;
 }
 
-static bool vfio_devices_all_dirty_tracking(VFIOContainerBase *bcontainer)
+static bool
+vfio_devices_all_dirty_tracking_started(const VFIOContainerBase *bcontainer)
 {
-    VFIODevice *vbasedev;
-
     if (!migration_is_running()) {
         return false;
     }
 
-    if (!(vfio_devices_all_device_dirty_tracking_started(bcontainer) ||
-          bcontainer->dirty_pages_started)) {
+    return vfio_devices_all_device_dirty_tracking_started(bcontainer) ||
+           bcontainer->dirty_pages_started;
+}
+
+static bool vfio_devices_all_dirty_tracking(VFIOContainerBase *bcontainer)
+{
+    VFIODevice *vbasedev;
+
+    if (!vfio_devices_all_dirty_tracking_started(bcontainer)) {
         return false;
     }
 
@@ -231,12 +237,7 @@ bool vfio_devices_all_device_dirty_tracking(const VFIOContainerBase *bcontainer)
 
 bool vfio_dma_unmap_dirty_sync_needed(const VFIOContainerBase *bcontainer)
 {
-    if (!migration_is_running()) {
-        return false;
-    }
-
-    return vfio_devices_all_device_dirty_tracking_started(bcontainer) ||
-           bcontainer->dirty_pages_started;
+    return vfio_devices_all_dirty_tracking_started(bcontainer);
 }
 
 static bool vfio_listener_skipped_section(MemoryRegionSection *section)
