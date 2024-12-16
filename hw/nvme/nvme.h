@@ -584,6 +584,10 @@ typedef struct NvmeCtrl {
     bool        dbbuf_enabled;
 
     struct {
+        uint32_t acs[256];
+    } cse;
+
+    struct {
         MemoryRegion mem;
         uint8_t      *buf;
         bool         cmse;
