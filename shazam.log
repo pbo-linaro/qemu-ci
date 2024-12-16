@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/99ec7cb0-1ed9-4761-8aff-e109862939c6@sit.fraunhofer.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] gdbstub: implement reset in system mode
+  ---
+  [32m✓[0m Signed: DKIM/fraunhofer.onmicrosoft.com (From: david.malaschonok@sit.fraunhofer.de)
+  [31m✗[0m BADSIG: DKIM/sit.fraunhofer.de
+---
+Total patches: 1
+---
+Applying: gdbstub: implement reset in system mode
+Patch failed at 0001 gdbstub: implement reset in system mode
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:75: trailing whitespace.
+    // By default, the RSP reset command does not trigger a response. 
+error: corrupt patch at line 76
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
