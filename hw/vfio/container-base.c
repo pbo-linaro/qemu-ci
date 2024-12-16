@@ -64,13 +64,19 @@ int vfio_container_set_dirty_page_tracking(VFIOContainerBase *bcontainer,
                                            bool start, Error **errp)
 {
     VFIOIOMMUClass *vioc = VFIO_IOMMU_GET_CLASS(bcontainer);
+    int ret;
 
     if (!bcontainer->dirty_pages_supported) {
         return 0;
     }
 
     g_assert(vioc->set_dirty_page_tracking);
-    return vioc->set_dirty_page_tracking(bcontainer, start, errp);
+    ret = vioc->set_dirty_page_tracking(bcontainer, start, errp);
+    if (!ret) {
+        bcontainer->dirty_pages_started = start;
+    }
+
+    return ret;
 }
 
 int vfio_container_query_dirty_bitmap(const VFIOContainerBase *bcontainer,
