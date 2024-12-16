@@ -229,34 +229,14 @@ bool vfio_devices_all_device_dirty_tracking(const VFIOContainerBase *bcontainer)
     return true;
 }
 
-/*
- * Check if all VFIO devices are running and migration is active, which is
- * essentially equivalent to the migration being in pre-copy phase.
- */
-bool
-vfio_devices_all_running_and_mig_active(const VFIOContainerBase *bcontainer)
+bool vfio_dma_unmap_dirty_sync_needed(const VFIOContainerBase *bcontainer)
 {
-    VFIODevice *vbasedev;
-
-    if (!migration_is_active()) {
+    if (!migration_is_running()) {
         return false;
     }
 
-    QLIST_FOREACH(vbasedev, &bcontainer->device_list, container_next) {
-        VFIOMigration *migration = vbasedev->migration;
-
-        if (!migration) {
-            return false;
-        }
-
-        if (vfio_device_state_is_running(vbasedev) ||
-            vfio_device_state_is_precopy(vbasedev)) {
-            continue;
-        } else {
-            return false;
-        }
-    }
-    return true;
+    return vfio_devices_all_device_dirty_tracking_started(bcontainer) ||
+           bcontainer->dirty_pages_started;
 }
 
 static bool vfio_listener_skipped_section(MemoryRegionSection *section)
