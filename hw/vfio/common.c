@@ -184,8 +184,8 @@ static bool vfio_devices_all_device_dirty_tracking_started(
     return true;
 }
 
-static bool
-vfio_devices_all_dirty_tracking_started(const VFIOContainerBase *bcontainer)
+bool vfio_devices_all_dirty_tracking_started(
+    const VFIOContainerBase *bcontainer)
 {
     if (!migration_is_running()) {
         return false;
@@ -233,11 +233,6 @@ bool vfio_devices_all_device_dirty_tracking(const VFIOContainerBase *bcontainer)
     }
 
     return true;
-}
-
-bool vfio_dma_unmap_dirty_sync_needed(const VFIOContainerBase *bcontainer)
-{
-    return vfio_devices_all_dirty_tracking_started(bcontainer);
 }
 
 static bool vfio_listener_skipped_section(MemoryRegionSection *section)
