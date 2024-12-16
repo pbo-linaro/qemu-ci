@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20241216035109.3486070-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 113 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/24] migration: Constify migration_properties
+  [32m✓[0m [PATCH 2/24] hw/ide: Constify sysbus_ahci_properties
+  [32m✓[0m [PATCH 3/24] target/ppc: Remove empty property list
+  [32m✓[0m [PATCH 4/24] target/s390x: Use s390x_cpu_properties for system mode only
+  [32m✓[0m [PATCH 5/24] hw/pci-host/astro: Remove empty Property list
+  [32m✓[0m [PATCH 6/24] hw/ppc: Only register spapr_nvdimm_properties if CONFIG_LIBPMEM
+  [32m✓[0m [PATCH 7/24] hw/tricore: Remove empty Property lists
+  [32m✓[0m [PATCH 8/24] hw/s390x: Remove empty Property lists
+  [32m✓[0m [PATCH 9/24] hw/xen: Remove empty Property lists
+  [32m✓[0m [PATCH 10/24] hw/sparc: Remove empty Property lists
+  [32m✓[0m [PATCH 11/24] hw/virtio: Remove empty Property lists
+  [32m✓[0m [PATCH 12/24] include/hw/qdev-core: Detect most empty Property lists at compile time
+  [32m✓[0m [PATCH 13/24] hw/core: Introduce device_class_set_props_n
+  [32m✓[0m [PATCH 14/24] migration: Use device_class_set_props_n
+  [32m✓[0m [PATCH 15/24] hw/scsi/megasas: Use device_class_set_props_n
+  [32m✓[0m [PATCH 16/24] hw/arm/armsse: Use device_class_set_props_n
+  [32m✓[0m [PATCH 17/24] rust/qemu-api: Use device_class_set_props_n
+  [32m✓[0m [PATCH 18/24] hw/core: Replace device_class_set_props with a macro
+  [32m✓[0m [PATCH 19/24] target/riscv: Do not abuse DEFINE_PROP_END_OF_LIST
+  [32m✓[0m [PATCH 20/24] include/hw/qdev-properties: Remove DEFINE_PROP_END_OF_LIST
+  [32m✓[0m [PATCH 21/24] include/hw/qdev-properties: Shrink struct Property
+  [32m✓[0m [PATCH 22/24] hw/core/qdev-properties: Constify Property argument to object_field_prop_ptr
+  [32m✓[0m [PATCH 23/24] hw/core/qdev-properties: Constify Property argument to PropertyInfo.print
+  [32m✓[0m [PATCH 24/24] Constify all opaque Property pointers
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 24
+---
+Applying: migration: Constify migration_properties
+Applying: hw/ide: Constify sysbus_ahci_properties
+Applying: target/ppc: Remove empty property list
+Applying: target/s390x: Use s390x_cpu_properties for system mode only
+Patch failed at 0004 target/s390x: Use s390x_cpu_properties for system mode only
+error: patch failed: target/s390x/cpu.c:309
+error: target/s390x/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
