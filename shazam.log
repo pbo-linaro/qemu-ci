@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20241216214030.59393-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] accel/tcg: Restrict curr_cflags() declaration to 'internal-common.h'
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: accel/tcg: Restrict curr_cflags() declaration to 'internal-common.h'
+Patch failed at 0001 accel/tcg: Restrict curr_cflags() declaration to 'internal-common.h'
+error: patch failed: accel/tcg/watchpoint.c:27
+error: accel/tcg/watchpoint.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
