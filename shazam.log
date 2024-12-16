@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20241216175414.1953-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 17 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v4 1/7] i386/cpu: add IsDefined flag to smp-cache property
+  [PATCH v4 2/7] target/arm/tcg: increase cache level for cpu=max
+  [PATCH v4 3/7] arm/virt.c: add cache hierarchy to device tree
+  [PATCH v4 4/7] bios-tables-test: prepare to change ARM ACPI virt PPTT
+  [PATCH v4 5/7] hw/acpi/aml-build.c: add cache hierarchy to pptt table
+  [PATCH v4 6/7] tests/qtest/bios-table-test: testing new ARM ACPI PPTT topology
+  [PATCH v4 7/7] Update the ACPI tables according to the acpi aml_build change, also empty bios-tables-test-allowed-diff.h.
+---
+Total patches: 7
+---
+Applying: i386/cpu: add IsDefined flag to smp-cache property
+Applying: target/arm/tcg: increase cache level for cpu=max
+Applying: arm/virt.c: add cache hierarchy to device tree
+Applying: bios-tables-test: prepare to change ARM ACPI virt PPTT
+Applying: hw/acpi/aml-build.c: add cache hierarchy to pptt table
+Patch failed at 0005 hw/acpi/aml-build.c: add cache hierarchy to pptt table
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:390: trailing whitespace.
+            } 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:484: trailing whitespace.
+                if (machine_get_cache_topo_level(ms, 
+warning: 2 lines add whitespace errors.
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:215: trailing whitespace.
+                } 
+error: patch failed: hw/acpi/aml-build.c:2052
+error: hw/acpi/aml-build.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
