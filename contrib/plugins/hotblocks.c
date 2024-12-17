@@ -34,6 +34,7 @@ static guint64 limit = 20;
  */
 typedef struct {
     uint64_t start_addr;
+    uint64_t hash;
     struct qemu_plugin_scoreboard *exec_count;
     int trans_count;
     unsigned long insns;
@@ -91,7 +92,7 @@ static void plugin_exit(qemu_plugin_id_t id, void *p)
 
 static void plugin_init(void)
 {
-    hotblocks = g_hash_table_new(NULL, g_direct_equal);
+    hotblocks = g_hash_table_new(g_int64_hash, g_int64_equal);
 }
 
 static void vcpu_tb_exec(unsigned int cpu_index, void *udata)
@@ -114,16 +115,17 @@ static void vcpu_tb_trans(qemu_plugin_id_t id, struct qemu_plugin_tb *tb)
     uint64_t hash = pc ^ insns;
 
     g_mutex_lock(&lock);
-    cnt = (ExecCount *) g_hash_table_lookup(hotblocks, (gconstpointer) hash);
+    cnt = (ExecCount *) g_hash_table_lookup(hotblocks, &hash);
     if (cnt) {
         cnt->trans_count++;
     } else {
         cnt = g_new0(ExecCount, 1);
         cnt->start_addr = pc;
+        cnt->hash = hash;
         cnt->trans_count = 1;
         cnt->insns = insns;
         cnt->exec_count = qemu_plugin_scoreboard_new(sizeof(uint64_t));
-        g_hash_table_insert(hotblocks, (gpointer) hash, (gpointer) cnt);
+        g_hash_table_insert(hotblocks, &cnt->hash, cnt);
     }
 
     g_mutex_unlock(&lock);
