@@ -283,13 +283,13 @@ uint64_t qemu_plugin_insn_vaddr(const struct qemu_plugin_insn *insn)
     return insn->vaddr;
 }
 
-void *qemu_plugin_insn_haddr(const struct qemu_plugin_insn *insn)
+uint64_t qemu_plugin_insn_haddr(const struct qemu_plugin_insn *insn)
 {
     const DisasContextBase *db = tcg_ctx->plugin_db;
     vaddr page0_last = db->pc_first | ~TARGET_PAGE_MASK;
 
     if (db->fake_insn) {
-        return NULL;
+        return 0;
     }
 
     /*
@@ -300,14 +300,14 @@ void *qemu_plugin_insn_haddr(const struct qemu_plugin_insn *insn)
      */
     if (insn->vaddr <= page0_last) {
         if (db->host_addr[0] == NULL) {
-            return NULL;
+            return 0;
         }
-        return db->host_addr[0] + insn->vaddr - db->pc_first;
+        return (uintptr_t) (db->host_addr[0] + insn->vaddr - db->pc_first);
     } else {
         if (db->host_addr[1] == NULL) {
-            return NULL;
+            return 0;
         }
-        return db->host_addr[1] + insn->vaddr - (page0_last + 1);
+        return (uintptr_t) (db->host_addr[1] + insn->vaddr - (page0_last + 1));
     }
 }
 

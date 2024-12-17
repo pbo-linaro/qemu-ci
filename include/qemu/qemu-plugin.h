@@ -537,7 +537,7 @@ uint64_t qemu_plugin_insn_vaddr(const struct qemu_plugin_insn *insn);
  * Returns: hardware (physical) target address of instruction
  */
 QEMU_PLUGIN_API
-void *qemu_plugin_insn_haddr(const struct qemu_plugin_insn *insn);
+uint64_t qemu_plugin_insn_haddr(const struct qemu_plugin_insn *insn);
 
 /**
  * typedef qemu_plugin_meminfo_t - opaque memory transaction handle
