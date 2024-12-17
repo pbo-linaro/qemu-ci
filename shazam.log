@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20241217121550.141072-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/2] tests/functional: Add a helper function for retrieving the hostfwd port
+  [32m✓[0m [PATCH v3 2/2] tests/functional: Convert the intel_iommu avocado test
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: tests/functional: Add a helper function for retrieving the hostfwd port
+Patch failed at 0001 tests/functional: Add a helper function for retrieving the hostfwd port
+error: patch failed: tests/functional/qemu_test/utils.py:10
+error: tests/functional/qemu_test/utils.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
