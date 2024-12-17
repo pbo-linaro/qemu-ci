@@ -1,0 +1,63 @@
+Grabbing thread from lore.kernel.org/all/20241217174855.24971-1-farosas@suse.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 92 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/17] migration/multifd: Fix compile error caused by page_size usage
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 2/17] migration/multifd: Further remove the SYNC on complete
+    [32m✓[0m Signed: DKIM/suse.de
+  ERROR: missing [3/17]!
+  [32m✓[0m [PATCH 4/17] migration/ram: Move RAM_SAVE_FLAG* into ram.h
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 5/17] migration/multifd: Unify RAM_SAVE_FLAG_MULTIFD_FLUSH messages
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 6/17] migration/multifd: Remove sync processing on postcopy
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 7/17] migration/multifd: Cleanup src flushes on condition check
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 8/17] migration/multifd: Document the reason to sync for save_setup()
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 9/17] migration/multifd: Fix compat with QEMU < 9.0
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 10/17] s390x: Fix CSS migration
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 11/17] migration: Add helper to get target runstate
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 12/17] qmp/cont: Only activate disks if migration completed
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 13/17] migration/block: Make late-block-active the default
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 14/17] migration/block: Apply late-block-active behavior to postcopy
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 15/17] migration/block: Fix possible race with block_inactive
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 16/17] migration/block: Rewrite disk activation
+    [32m✓[0m Signed: DKIM/suse.de
+  [32m✓[0m [PATCH 17/17] tests/qtest/migration: Fix compile errors when CONFIG_UADK is set
+    [32m✓[0m Signed: DKIM/suse.de
+    + Reviewed-by: Peter Xu <peterx@redhat.com> ([32m✓[0m DKIM/redhat.com)
+---
+Total patches: 16
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Signed-off-by: Peter Xu <peterx@redhat.com>
+     Msg From: Fabiano Rosas <farosas@suse.de>
+NOTE: Rerun with -S to apply them anyway
+---
+WARNING: Thread incomplete!
+Applying: migration/multifd: Fix compile error caused by page_size usage
+Applying: migration/multifd: Further remove the SYNC on complete
+Applying: migration/ram: Move RAM_SAVE_FLAG* into ram.h
+Applying: migration/multifd: Unify RAM_SAVE_FLAG_MULTIFD_FLUSH messages
+Patch failed at 0004 migration/multifd: Unify RAM_SAVE_FLAG_MULTIFD_FLUSH messages
+error: patch failed: migration/multifd-nocomp.c:343
+error: migration/multifd-nocomp.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
