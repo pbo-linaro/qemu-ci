@@ -22,8 +22,12 @@
 #include "migration/bootfile.h"
 #include "migration/migration-util.h"
 
-/* for uffd_version_check() */
-#if defined(__linux__) && defined(__NR_userfaultfd) && defined(CONFIG_EVENTFD)
+#if defined(__linux__)
+#include <sys/syscall.h>
+#endif
+
+/* for ufd_version_check() */
+#if defined(__NR_userfaultfd) && defined(CONFIG_EVENTFD)
 #include <sys/eventfd.h>
 #include "qemu/userfaultfd.h"
 #endif
@@ -297,7 +301,7 @@ bool probe_o_direct_support(const char *tmpfs)
 }
 #endif
 
-#if defined(__linux__) && defined(__NR_userfaultfd) && defined(CONFIG_EVENTFD)
+#if defined(__NR_userfaultfd) && defined(CONFIG_EVENTFD)
 bool ufd_version_check(bool *uffd_feature_thread_id)
 {
     struct uffdio_api api_struct;
@@ -333,7 +337,7 @@ bool ufd_version_check(bool *uffd_feature_thread_id)
 #else
 bool ufd_version_check(bool *uffd_feature_thread_id)
 {
-    g_test_message("Skipping test: Userfault not available (builtdtime)");
+    g_test_message("Skipping test: Userfault not available (buildtime)");
     return false;
 }
 #endif
