@@ -1,0 +1,58 @@
+Grabbing thread from lore.kernel.org/all/20241217171937.3899947-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 46 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/19] target/arm: remove redundant code
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [2/19]!
+  ERROR: missing [3/19]!
+  [32m✓[0m [PATCH 4/19] target/arm: Convert vec_helper.c to fpst alias
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 5/19] target/arm: Convert neon_helper.c to fpst alias
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [6/19]!
+  [32m✓[0m [PATCH 7/19] target/arm: Convert sme_helper.c to fpst alias
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/19] target/arm: Convert vec_helper.c to use env alias
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/19] target/arm: Convert neon_helper.c to use env alias
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/19] target/arm: Use float_status in helper_fcvtx_f64_to_f32
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/19] target/arm: Use float_status in helper_vfp_fcvt{ds,sd}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 12/19] target/arm: Implement fine-grained-trap handling for FEAT_XS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 13/19] target/arm: Add ARM_CP_ADD_TLBI_NXS type flag for NXS insns
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [14/19]!
+  ERROR: missing [15/19]!
+  [32m✓[0m [PATCH 16/19] target/arm: Enable FEAT_XS for the max cpu
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [17/19]!
+  [32m✓[0m [PATCH 18/19] hw/intc/arm_gicv3_its: Zero initialize local DTEntry etc structs
+    [32m✓[0m Signed: DKIM/linaro.org
+  ERROR: missing [19/19]!
+---
+Total patches: 12
+---
+WARNING: Thread incomplete!
+Applying: target/arm: remove redundant code
+Applying: target/arm: Convert vec_helper.c to fpst alias
+Applying: target/arm: Convert neon_helper.c to fpst alias
+Applying: target/arm: Convert sme_helper.c to fpst alias
+Applying: target/arm: Convert vec_helper.c to use env alias
+Patch failed at 0005 target/arm: Convert vec_helper.c to use env alias
+error: patch failed: target/arm/helper.h:859
+error: target/arm/helper.h: patch does not apply
+error: patch failed: target/arm/tcg/helper-a64.h:29
+error: target/arm/tcg/helper-a64.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
