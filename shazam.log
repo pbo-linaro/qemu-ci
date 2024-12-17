@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241217142855.3805068-1-armbru@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] qdev: Delete unused qdev_prop_enum
+  [32m✓[0m [PATCH 2/6] qdev: Change qdev_prop_pci_devfn member @name from "int32" to "str"
+  [32m✓[0m [PATCH 3/6] qdev: Rename PropertyInfo member @name to @type
+  [32m✓[0m [PATCH 4/6] qdev: Change values of PropertyInfo member @type to be QAPI types
+  [32m✓[0m [PATCH 5/6] qdev: Improve PropertyInfo member @description for enum properties
+  [32m✓[0m [PATCH 6/6] qdev: Improve a few more PropertyInfo @description members
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 6
+---
+Applying: qdev: Delete unused qdev_prop_enum
+Applying: qdev: Change qdev_prop_pci_devfn member @name from "int32" to "str"
+Applying: qdev: Rename PropertyInfo member @name to @type
+Patch failed at 0003 qdev: Rename PropertyInfo member @name to @type
+error: patch failed: hw/block/xen-block.c:660
+error: hw/block/xen-block.c: patch does not apply
+error: patch failed: target/sparc/cpu.c:869
+error: target/sparc/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
