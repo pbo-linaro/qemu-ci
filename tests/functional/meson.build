@@ -67,6 +67,10 @@ tests_aarch64_system_thorough = [
   'multiprocess',
 ]
 
+tests_alpha_system_quick = [
+  'migration',
+]
+
 tests_alpha_system_thorough = [
   'alpha_clipper',
 ]
@@ -162,6 +166,10 @@ tests_ppc_system_thorough = [
   'ppc_virtex_ml507',
 ]
 
+tests_ppc64_system_quick = [
+  'migration',
+]
+
 tests_ppc64_system_thorough = [
   'ppc64_e500',
   'ppc64_hv',
@@ -171,6 +179,7 @@ tests_ppc64_system_thorough = [
 ]
 
 tests_riscv32_system_quick = [
+  'migration',
   'riscv_opensbi',
 ]
 
@@ -179,6 +188,7 @@ tests_riscv32_system_thorough = [
 ]
 
 tests_riscv64_system_quick = [
+  'migration',
   'riscv_opensbi',
 ]
 
@@ -205,8 +215,16 @@ tests_sh4eb_system_thorough = [
   'sh4eb_r2d',
 ]
 
+tests_sparc_system_quick = [
+  'migration',
+]
+
 tests_sparc_system_thorough = [
   'sparc_sun4m',
+]
+
+tests_sparc64_system_quick = [
+  'migration',
 ]
 
 tests_sparc64_system_thorough = [
@@ -217,6 +235,7 @@ tests_sparc64_system_thorough = [
 tests_x86_64_system_quick = [
   'cpu_queries',
   'mem_addr_space',
+  'migration',
   'pc_cpu_hotplug_props',
   'virtio_version',
   'x86_cpu_model_versions',
