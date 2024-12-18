@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20241218155913.72288-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] system: Move 'exec/confidential-guest-support.h' to system/
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 2/2] target/i386/sev: Reduce system specific declarations
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 2
+---
+Applying: system: Move 'exec/confidential-guest-support.h' to system/
+Patch failed at 0001 system: Move 'exec/confidential-guest-support.h' to system/
+error: patch failed: hw/ppc/pef.c:14
+error: hw/ppc/pef.c: patch does not apply
+error: patch failed: system/vl.c:107
+error: system/vl.c: patch does not apply
+error: patch failed: target/s390x/kvm/pv.c:19
+error: target/s390x/kvm/pv.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
