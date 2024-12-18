@@ -1406,7 +1406,11 @@ static uint64_t *hpte_get(SpaprMachineState *s, unsigned index)
     return &table[2 * index];
 }
 
-#define HPTE_VALID(_hpte)  (tswap64(*((uint64_t *)(_hpte))) & HPTE64_V_VALID)
+static bool hpte_is_valid(SpaprMachineState *s, unsigned index)
+{
+    return ldq_be_p(hpte_get(s, index)) & HPTE64_V_VALID;
+}
+
 #define HPTE_DIRTY(_hpte)  (tswap64(*((uint64_t *)(_hpte))) & HPTE64_V_HPTE_DIRTY)
 #define CLEAN_HPTE(_hpte)  ((*(uint64_t *)(_hpte)) &= tswap64(~HPTE64_V_HPTE_DIRTY))
 #define DIRTY_HPTE(_hpte)  ((*(uint64_t *)(_hpte)) |= tswap64(HPTE64_V_HPTE_DIRTY))
@@ -2204,7 +2208,7 @@ static void htab_save_first_pass(QEMUFile *f, SpaprMachineState *spapr,
 
         /* Consume invalid HPTEs */
         while ((index < htabslots)
-               && !HPTE_VALID(hpte_get(spapr->htab, index))) {
+               && !hpte_is_valid(spapr->htab, index)) {
             CLEAN_HPTE(hpte_get(spapr->htab, index));
             index++;
         }
@@ -2212,7 +2216,7 @@ static void htab_save_first_pass(QEMUFile *f, SpaprMachineState *spapr,
         /* Consume valid HPTEs */
         chunkstart = index;
         while ((index < htabslots) && (index - chunkstart < USHRT_MAX)
-               && HPTE_VALID(hpte_get(spapr->htab, index))) {
+               && hpte_is_valid(spapr->htab, index)) {
             CLEAN_HPTE(hpte_get(spapr->htab, index));
             index++;
         }
@@ -2262,7 +2266,7 @@ static int htab_save_later_pass(QEMUFile *f, SpaprMachineState *spapr,
         /* Consume valid dirty HPTEs */
         while ((index < htabslots) && (index - chunkstart < USHRT_MAX)
                && HPTE_DIRTY(hpte_get(spapr->htab, index))
-               && HPTE_VALID(hpte_get(spapr->htab, index))) {
+               && hpte_is_valid(spapr->htab, index)) {
             CLEAN_HPTE(hpte_get(spapr->htab, index));
             index++;
             examined++;
@@ -2272,7 +2276,7 @@ static int htab_save_later_pass(QEMUFile *f, SpaprMachineState *spapr,
         /* Consume invalid dirty HPTEs */
         while ((index < htabslots) && (index - invalidstart < USHRT_MAX)
                && HPTE_DIRTY(hpte_get(spapr->htab, index))
-               && !HPTE_VALID(hpte_get(spapr->htab, index))) {
+               && !hpte_is_valid(spapr->htab, index)) {
             CLEAN_HPTE(hpte_get(spapr->htab, index));
             index++;
             examined++;
