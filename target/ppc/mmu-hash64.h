@@ -3,6 +3,8 @@
 
 #ifndef CONFIG_USER_ONLY
 
+#include "target/ppc/cpu-qom.h"
+
 #ifdef TARGET_PPC64
 void dump_slb(PowerPCCPU *cpu);
 int ppc_store_slb(PowerPCCPU *cpu, target_ulong slot,
