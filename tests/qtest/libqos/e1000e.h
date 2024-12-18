@@ -25,6 +25,9 @@
 #define E1000E_RX0_MSG_ID           (0)
 #define E1000E_TX0_MSG_ID           (1)
 
+#define E1000E_RX0_MSIX_DATA        (0x12345678)
+#define E1000E_TX0_MSIX_DATA        (0xabcdef00)
+
 #define E1000E_ADDRESS { 0x52, 0x54, 0x00, 0x12, 0x34, 0x56 }
 
 typedef struct QE1000E QE1000E;
@@ -40,6 +43,10 @@ struct QE1000E_PCI {
     QPCIDevice pci_dev;
     QPCIBar mac_regs;
     QE1000E e1000e;
+    uint64_t msix_rx0_addr;
+    uint64_t msix_tx0_addr;
+    bool msix_found_rx0_pending;
+    bool msix_found_tx0_pending;
 };
 
 static inline void e1000e_macreg_write(QE1000E *d, uint32_t reg, uint32_t val)
@@ -57,5 +64,6 @@ static inline uint32_t e1000e_macreg_read(QE1000E *d, uint32_t reg)
 void e1000e_wait_isr(QE1000E *d, uint16_t msg_id);
 void e1000e_tx_ring_push(QE1000E *d, void *descr);
 void e1000e_rx_ring_push(QE1000E *d, void *descr);
+void e1000e_pci_msix_enable_rxtxq_vectors(QE1000E *d, QGuestAllocator *alloc);
 
 #endif

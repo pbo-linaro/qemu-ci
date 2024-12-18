@@ -185,6 +185,8 @@ static void test_e1000e_multiple_transfers(void *obj, void *data,
         return;
     }
 
+    /* Triggering msix interrupts multiple times so must enable vectors */
+    e1000e_pci_msix_enable_rxtxq_vectors(d, alloc);
     for (i = 0; i < iterations; i++) {
         e1000e_send_verify(d, data, alloc);
         e1000e_receive_verify(d, data, alloc);
