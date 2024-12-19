@@ -79,6 +79,11 @@ described with -smp are supported by the target machine.
 
 Use ``-run-with user=..`` instead.
 
+``-device vmcoreinfo`` (since 10.0)
+'''''''''''''''''''''''''''''''''''
+
+Use ``-object vmcore-info`` instead.
+
 
 User-mode emulator command line arguments
 -----------------------------------------
