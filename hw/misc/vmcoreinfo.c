@@ -12,11 +12,11 @@
 
 #include "qemu/osdep.h"
 #include "qapi/error.h"
-#include "qemu/module.h"
 #include "sysemu/reset.h"
 #include "hw/nvram/fw_cfg.h"
 #include "migration/vmstate.h"
 #include "hw/misc/vmcoreinfo.h"
+#include "qom/object_interfaces.h"
 
 static const VMStateDescription vmstate_vmcoreinfo = {
     .name = "vmcoreinfo",
@@ -31,6 +31,11 @@ static const VMStateDescription vmstate_vmcoreinfo = {
         VMSTATE_END_OF_LIST()
     },
 };
+
+static char *vmcoreinfo_get_vmstate_id(VMStateIf *vmif)
+{
+    return g_strdup(TYPE_VMCOREINFO);
+}
 
 static void fw_cfg_vmci_write(void *opaque, off_t offset, size_t len)
 {
@@ -88,6 +93,32 @@ static void vmcoreinfo_device_realize(DeviceState *dev, Error **errp)
     vmcoreinfo_realize(VMCOREINFO_DEVICE(dev), errp);
 }
 
+static bool vmcoreinfo_can_be_deleted(UserCreatable *uc)
+{
+    return false;
+}
+
+static void vmcoreinfo_complete(UserCreatable *uc, Error **errp)
+{
+    if (vmstate_register_any(VMSTATE_IF(uc), &vmstate_vmcoreinfo, uc) < 0) {
+        error_setg(errp, "%s: Failed to register vmstate", TYPE_VMCOREINFO);
+    }
+
+    vmcoreinfo_realize(VMCOREINFO(uc), errp);
+}
+
+static void vmcoreinfo_class_init(ObjectClass *oc, void *data)
+{
+    UserCreatableClass *ucc = USER_CREATABLE_CLASS(oc);
+    VMStateIfClass *vc = VMSTATE_IF_CLASS(oc);
+    ResettableClass *rc = RESETTABLE_CLASS(oc);
+
+    ucc->complete = vmcoreinfo_complete;
+    ucc->can_be_deleted = vmcoreinfo_can_be_deleted;
+    vc->get_id = vmcoreinfo_get_vmstate_id;
+    rc->phases.hold = vmcoreinfo_reset_hold;
+}
+
 static void vmcoreinfo_device_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
@@ -106,6 +137,18 @@ static const TypeInfo vmcoreinfo_types[] = {
         .parent         = TYPE_DEVICE,
         .instance_size  = sizeof(VMCoreInfoState),
         .class_init     = vmcoreinfo_device_class_init,
+    },
+    {
+        .name           = TYPE_VMCOREINFO,
+        .parent         = TYPE_OBJECT,
+        .instance_size  = sizeof(VMCoreInfoState),
+        .class_init     = vmcoreinfo_class_init,
+        .interfaces = (InterfaceInfo[]) {
+            { TYPE_RESETTABLE_INTERFACE },
+            { TYPE_USER_CREATABLE },
+            { TYPE_VMSTATE_IF },
+            { }
+        }
     }
 };
 
@@ -116,6 +159,9 @@ VMCoreInfoState *vmcoreinfo_find(void)
     Object *obj;
 
     obj = object_resolve_path_type("", TYPE_VMCOREINFO_DEVICE, NULL);
+    if (!obj) {
+        obj = object_resolve_path_type("", TYPE_VMCOREINFO, NULL);
+    }
 
     return obj ? (VMCoreInfoState *)obj : NULL;
 }
