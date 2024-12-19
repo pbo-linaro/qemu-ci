@@ -37,7 +37,7 @@ static void vmcoreinfo_reset(void *opaque)
 
 static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
 {
-    VMCoreInfoState *s = VMCOREINFO(dev);
+    VMCoreInfoState *s = VMCOREINFO_DEVICE(dev);
     FWCfgState *fw_cfg = fw_cfg_find();
     /* for gdb script dump-guest-memory.py */
     static VMCoreInfoState * volatile vmcoreinfo_state G_GNUC_UNUSED;
@@ -48,13 +48,13 @@ static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
      */
     if (!vmcoreinfo_find()) {
         error_setg(errp, "at most one %s instance is permitted",
-                   VMCOREINFO_DEVICE);
+                   TYPE_VMCOREINFO_DEVICE);
         return;
     }
 
     if (!fw_cfg || !fw_cfg->dma_enabled) {
         error_setg(errp, "%s device requires fw_cfg with DMA",
-                   VMCOREINFO_DEVICE);
+                   TYPE_VMCOREINFO_DEVICE);
         return;
     }
 
@@ -96,7 +96,7 @@ static void vmcoreinfo_device_class_init(ObjectClass *klass, void *data)
 
 static const TypeInfo vmcoreinfo_types[] = {
     {
-        .name           = VMCOREINFO_DEVICE,
+        .name           = TYPE_VMCOREINFO_DEVICE,
         .parent         = TYPE_DEVICE,
         .instance_size  = sizeof(VMCoreInfoState),
         .class_init     = vmcoreinfo_device_class_init,
