@@ -15,9 +15,17 @@ to have the same behaviour as that of previous QEMU releases, so
 that VM migration will work between QEMU versions. For instance the
 ``virt-5.0`` machine type will behave like the ``virt`` machine from
 the QEMU 5.0 release, and migration should work between ``virt-5.0``
-of the 5.0 release and ``virt-5.0`` of the 5.1 release. Migration
-is not guaranteed to work between different QEMU releases for
-the non-versioned ``virt`` machine type.
+of the 5.0 release and ``virt-5.0`` of the 5.1 release.
+
+When saving a VM using the ``virt`` model, the snapshot is automatically set to
+target the latest ``virt`` versioned model. When loading the VM with a more
+recent QEMU version, you'll need to set machine model to match the version of
+your snapshot. When loading it, QEMU will return an error with the expected
+``virt`` version you should set, so you don't need to record it.
+
+VM migration is not guaranteed when using ``-cpu max``, as features supported
+may change between QEMU versions. To ensure your VM can be migrated, it is
+recommended to use another cpu model instead.
 
 Supported devices
 """""""""""""""""
