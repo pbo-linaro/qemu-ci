@@ -18,6 +18,20 @@
 #include "migration/vmstate.h"
 #include "hw/misc/vmcoreinfo.h"
 
+static const VMStateDescription vmstate_vmcoreinfo = {
+    .name = "vmcoreinfo",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .fields = (const VMStateField[]) {
+        VMSTATE_BOOL(has_vmcoreinfo, VMCoreInfoState),
+        VMSTATE_UINT16(vmcoreinfo.host_format, VMCoreInfoState),
+        VMSTATE_UINT16(vmcoreinfo.guest_format, VMCoreInfoState),
+        VMSTATE_UINT32(vmcoreinfo.size, VMCoreInfoState),
+        VMSTATE_UINT64(vmcoreinfo.paddr, VMCoreInfoState),
+        VMSTATE_END_OF_LIST()
+    },
+};
+
 static void fw_cfg_vmci_write(void *opaque, off_t offset, size_t len)
 {
     VMCoreInfoState *s = opaque;
@@ -69,20 +83,6 @@ static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
     qemu_register_resettable(OBJECT(s));
     vmcoreinfo_state = s;
 }
-
-static const VMStateDescription vmstate_vmcoreinfo = {
-    .name = "vmcoreinfo",
-    .version_id = 1,
-    .minimum_version_id = 1,
-    .fields = (const VMStateField[]) {
-        VMSTATE_BOOL(has_vmcoreinfo, VMCoreInfoState),
-        VMSTATE_UINT16(vmcoreinfo.host_format, VMCoreInfoState),
-        VMSTATE_UINT16(vmcoreinfo.guest_format, VMCoreInfoState),
-        VMSTATE_UINT32(vmcoreinfo.size, VMCoreInfoState),
-        VMSTATE_UINT64(vmcoreinfo.paddr, VMCoreInfoState),
-        VMSTATE_END_OF_LIST()
-    },
-};
 
 static void vmcoreinfo_device_class_init(ObjectClass *klass, void *data)
 {
