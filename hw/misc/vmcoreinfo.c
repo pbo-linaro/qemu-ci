@@ -42,11 +42,12 @@ static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
     /* for gdb script dump-guest-memory.py */
     static VMCoreInfoState * volatile vmcoreinfo_state G_GNUC_UNUSED;
 
-    /* Given that this function is executing, there is at least one VMCOREINFO
-     * device. Check if there are several.
+    /*
+     * Given that this function is executing, there is at least one
+     * VMCOREINFO instance. Check if there are several.
      */
     if (!vmcoreinfo_find()) {
-        error_setg(errp, "at most one %s device is permitted",
+        error_setg(errp, "at most one %s instance is permitted",
                    VMCOREINFO_DEVICE);
         return;
     }
@@ -103,3 +104,12 @@ static const TypeInfo vmcoreinfo_types[] = {
 };
 
 DEFINE_TYPES(vmcoreinfo_types)
+
+VMCoreInfoState *vmcoreinfo_find(void)
+{
+    Object *obj;
+
+    obj = object_resolve_path_type("", TYPE_VMCOREINFO_DEVICE, NULL);
+
+    return obj ? (VMCoreInfoState *)obj : NULL;
+}

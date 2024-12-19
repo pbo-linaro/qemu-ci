@@ -30,12 +30,11 @@ struct VMCoreInfoState {
     FWCfgVMCoreInfo vmcoreinfo;
 };
 
-/* returns NULL unless there is exactly one device */
-static inline VMCoreInfoState *vmcoreinfo_find(void)
-{
-    Object *o = object_resolve_path_type("", VMCOREINFO_DEVICE, NULL);
-
-    return o ? VMCOREINFO(o) : NULL;
-}
+/**
+ * vmcoreinfo_find:
+ *
+ * Returns NULL unless there is exactly one instance.
+ */
+VMCoreInfoState *vmcoreinfo_find(void);
 
 #endif
