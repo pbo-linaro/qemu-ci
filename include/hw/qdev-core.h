@@ -943,6 +943,14 @@ char *qdev_get_own_fw_dev_path_from_handler(BusState *bus, DeviceState *dev);
  */
 void device_class_set_props(DeviceClass *dc, const Property *props);
 
+/* Validate at least one Property, plus the terminator. */
+#define device_class_set_props(DC, PROPS) \
+    do {                                                                \
+        QEMU_BUILD_BUG_ON(sizeof(PROPS) != sizeof(const Property *) &&  \
+                          sizeof(PROPS) < 2 * sizeof(Property));        \
+        (device_class_set_props)(DC, PROPS);                            \
+    } while (0)
+
 /**
  * device_class_set_parent_realize() - set up for chaining realize fns
  * @dc: The device class
