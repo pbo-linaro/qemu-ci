@@ -49,9 +49,8 @@ static void vmcoreinfo_reset_hold(Object *obj, ResetType type)
     s->vmcoreinfo.host_format = cpu_to_le16(FW_CFG_VMCOREINFO_FORMAT_ELF);
 }
 
-static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
+static void vmcoreinfo_realize(VMCoreInfoState *s, Error **errp)
 {
-    VMCoreInfoState *s = VMCOREINFO_DEVICE(dev);
     FWCfgState *fw_cfg = fw_cfg_find();
     /* for gdb script dump-guest-memory.py */
     static VMCoreInfoState * volatile vmcoreinfo_state G_GNUC_UNUSED;
@@ -84,13 +83,18 @@ static void vmcoreinfo_realize(DeviceState *dev, Error **errp)
     vmcoreinfo_state = s;
 }
 
+static void vmcoreinfo_device_realize(DeviceState *dev, Error **errp)
+{
+    vmcoreinfo_realize(VMCOREINFO_DEVICE(dev), errp);
+}
+
 static void vmcoreinfo_device_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     ResettableClass *rc = RESETTABLE_CLASS(klass);
 
     dc->vmsd = &vmstate_vmcoreinfo;
-    dc->realize = vmcoreinfo_realize;
+    dc->realize = vmcoreinfo_device_realize;
     dc->hotpluggable = false;
     set_bit(DEVICE_CATEGORY_MISC, dc->categories);
     rc->phases.hold = vmcoreinfo_reset_hold;
