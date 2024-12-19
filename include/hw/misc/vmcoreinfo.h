@@ -12,7 +12,6 @@
 #ifndef VMCOREINFO_H
 #define VMCOREINFO_H
 
-#include "hw/qdev-core.h"
 #include "standard-headers/linux/qemu_fw_cfg.h"
 #include "qom/object.h"
 
@@ -26,7 +25,7 @@ DECLARE_INSTANCE_CHECKER(VMCoreInfoState, VMCOREINFO_DEVICE,
 typedef struct fw_cfg_vmcoreinfo FWCfgVMCoreInfo;
 
 struct VMCoreInfoState {
-    DeviceState parent_obj;
+    Object parent_obj;
 
     bool has_vmcoreinfo;
     FWCfgVMCoreInfo vmcoreinfo;

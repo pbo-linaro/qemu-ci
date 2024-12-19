@@ -54,8 +54,9 @@ static void vmcoreinfo_reset_hold(Object *obj, ResetType type)
     s->vmcoreinfo.host_format = cpu_to_le16(FW_CFG_VMCOREINFO_FORMAT_ELF);
 }
 
-static void vmcoreinfo_realize(VMCoreInfoState *s, Error **errp)
+static void vmcoreinfo_complete(UserCreatable *uc, Error **errp)
 {
+    VMCoreInfoState *s = VMCOREINFO(uc);
     FWCfgState *fw_cfg = fw_cfg_find();
     /* for gdb script dump-guest-memory.py */
     static VMCoreInfoState * volatile vmcoreinfo_state G_GNUC_UNUSED;
@@ -76,6 +77,10 @@ static void vmcoreinfo_realize(VMCoreInfoState *s, Error **errp)
         return;
     }
 
+    if (vmstate_register_any(VMSTATE_IF(s), &vmstate_vmcoreinfo, s) < 0) {
+        error_setg(errp, "%s: Failed to register vmstate", TYPE_VMCOREINFO);
+    }
+
     fw_cfg_add_file_callback(fw_cfg, FW_CFG_VMCOREINFO_FILENAME,
                              NULL, fw_cfg_vmci_write, s,
                              &s->vmcoreinfo, sizeof(s->vmcoreinfo), false);
@@ -88,23 +93,9 @@ static void vmcoreinfo_realize(VMCoreInfoState *s, Error **errp)
     vmcoreinfo_state = s;
 }
 
-static void vmcoreinfo_device_realize(DeviceState *dev, Error **errp)
-{
-    vmcoreinfo_realize(VMCOREINFO_DEVICE(dev), errp);
-}
-
 static bool vmcoreinfo_can_be_deleted(UserCreatable *uc)
 {
     return false;
-}
-
-static void vmcoreinfo_complete(UserCreatable *uc, Error **errp)
-{
-    if (vmstate_register_any(VMSTATE_IF(uc), &vmstate_vmcoreinfo, uc) < 0) {
-        error_setg(errp, "%s: Failed to register vmstate", TYPE_VMCOREINFO);
-    }
-
-    vmcoreinfo_realize(VMCOREINFO(uc), errp);
 }
 
 static void vmcoreinfo_class_init(ObjectClass *oc, void *data)
@@ -119,25 +110,7 @@ static void vmcoreinfo_class_init(ObjectClass *oc, void *data)
     rc->phases.hold = vmcoreinfo_reset_hold;
 }
 
-static void vmcoreinfo_device_class_init(ObjectClass *klass, void *data)
-{
-    DeviceClass *dc = DEVICE_CLASS(klass);
-    ResettableClass *rc = RESETTABLE_CLASS(klass);
-
-    dc->vmsd = &vmstate_vmcoreinfo;
-    dc->realize = vmcoreinfo_device_realize;
-    dc->hotpluggable = false;
-    set_bit(DEVICE_CATEGORY_MISC, dc->categories);
-    rc->phases.hold = vmcoreinfo_reset_hold;
-}
-
 static const TypeInfo vmcoreinfo_types[] = {
-    {
-        .name           = TYPE_VMCOREINFO_DEVICE,
-        .parent         = TYPE_DEVICE,
-        .instance_size  = sizeof(VMCoreInfoState),
-        .class_init     = vmcoreinfo_device_class_init,
-    },
     {
         .name           = TYPE_VMCOREINFO,
         .parent         = TYPE_OBJECT,
@@ -158,10 +131,7 @@ VMCoreInfoState *vmcoreinfo_find(void)
 {
     Object *obj;
 
-    obj = object_resolve_path_type("", TYPE_VMCOREINFO_DEVICE, NULL);
-    if (!obj) {
-        obj = object_resolve_path_type("", TYPE_VMCOREINFO, NULL);
-    }
+    obj = object_resolve_path_type("", TYPE_VMCOREINFO, NULL);
 
     return obj ? (VMCoreInfoState *)obj : NULL;
 }
