@@ -115,7 +115,7 @@ static void *worker_thread(void *opaque)
         smp_wmb();
         req->state = THREAD_DONE;
 
-        qemu_bh_schedule(pool->completion_bh);
+        qemu_bh_schedule_event(pool->completion_bh, QEMU_CLOCK_REALTIME);
         qemu_mutex_lock(&pool->lock);
     }
 
@@ -167,7 +167,7 @@ static void spawn_thread(ThreadPool *pool)
      * inherit the correct affinity instead of the vcpu affinity.
      */
     if (!pool->pending_threads) {
-        qemu_bh_schedule(pool->new_thread_bh);
+        qemu_bh_schedule_event(pool->new_thread_bh, QEMU_CLOCK_REALTIME);
     }
 }
 
@@ -195,7 +195,7 @@ restart:
             /* Schedule ourselves in case elem->common.cb() calls aio_poll() to
              * wait for another request that completed at the same time.
              */
-            qemu_bh_schedule(pool->completion_bh);
+            qemu_bh_schedule_event(pool->completion_bh, QEMU_CLOCK_REALTIME);
 
             elem->common.cb(elem->common.opaque, elem->ret);
 
@@ -225,7 +225,7 @@ static void thread_pool_cancel(BlockAIOCB *acb)
     QEMU_LOCK_GUARD(&pool->lock);
     if (elem->state == THREAD_QUEUED) {
         QTAILQ_REMOVE(&pool->request_list, elem, reqs);
-        qemu_bh_schedule(pool->completion_bh);
+        qemu_bh_schedule_event(pool->completion_bh, QEMU_CLOCK_REALTIME);
 
         elem->state = THREAD_DONE;
         elem->ret = -ECANCELED;
