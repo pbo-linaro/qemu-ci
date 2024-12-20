@@ -286,17 +286,30 @@ void aio_context_unref(AioContext *ctx);
  * @name: A human-readable identifier for debugging purposes.
  */
 void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb, void *opaque,
-                                  const char *name);
+                                  const char *name, QEMUClockType clock_type);
+
+/**
+ * aio_bh_schedule_oneshot_event: Allocate a new bottom half structure that
+ * will run only once and as soon as possible.
+ *
+ * A convenience wrapper for aio_bh_schedule_oneshot_full() that uses cb as the
+ * name string.
+ */
+#define aio_bh_schedule_oneshot_event(ctx, cb, opaque, clock_type) \
+    aio_bh_schedule_oneshot_full((ctx), (cb), (opaque), (stringify(cb)), \
+                                 clock_type)
 
 /**
  * aio_bh_schedule_oneshot: Allocate a new bottom half structure that will run
  * only once and as soon as possible.
  *
- * A convenience wrapper for aio_bh_schedule_oneshot_full() that uses cb as the
- * name string.
+ * A legacy wrapper for aio_bh_schedule_oneshot_event() that uses realtime
+ * as the clock type. Callers should specify the clock time in order to be
+ * compatible with record/replay.
  */
 #define aio_bh_schedule_oneshot(ctx, cb, opaque) \
-    aio_bh_schedule_oneshot_full((ctx), (cb), (opaque), (stringify(cb)))
+    aio_bh_schedule_oneshot_full((ctx), (cb), (opaque), (stringify(cb)), \
+                                 QEMU_CLOCK_REALTIME)
 
 /**
  * aio_bh_new_full: Allocate a new bottom half structure.
@@ -377,6 +390,20 @@ void aio_bh_call(QEMUBH *bh);
  * be called concurrently
  */
 int aio_bh_poll(AioContext *ctx);
+
+/**
+ * qemu_bh_schedule_event: Schedule a bottom half.
+ *
+ * Scheduling a bottom half interrupts the main loop and causes the
+ * execution of the callback that was passed to qemu_bh_new.
+ *
+ * Bottom halves that are scheduled from a bottom half handler are instantly
+ * invoked.  This can create an infinite loop if a bottom half handler
+ * schedules itself.
+ *
+ * @bh: The bottom half to be scheduled.
+ */
+void qemu_bh_schedule_event(QEMUBH *bh, QEMUClockType clock_type);
 
 /**
  * qemu_bh_schedule: Schedule a bottom half.

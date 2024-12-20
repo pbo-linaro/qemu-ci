@@ -36,6 +36,7 @@
 #include "qemu/coroutine_int.h"
 #include "qemu/coroutine-tls.h"
 #include "sysemu/cpu-timers.h"
+#include "sysemu/replay.h"
 #include "trace.h"
 
 /***********************************************************/
@@ -126,8 +127,8 @@ static QEMUBH *aio_bh_dequeue(BHList *head, unsigned *flags)
     return bh;
 }
 
-void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb,
-                                  void *opaque, const char *name)
+static void do_aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb,
+                                            void *opaque, const char *name)
 {
     QEMUBH *bh;
     bh = g_new(QEMUBH, 1);
@@ -138,6 +139,24 @@ void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb,
         .name = name,
     };
     aio_bh_enqueue(bh, BH_SCHEDULED | BH_ONESHOT);
+}
+
+void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb,
+                                  void *opaque, const char *name,
+                                  QEMUClockType clock_type)
+{
+    switch (clock_type) {
+    case QEMU_CLOCK_VIRTUAL:
+    case QEMU_CLOCK_VIRTUAL_RT:
+        if (replay_mode != REPLAY_MODE_NONE) {
+            /* Record/replay must intercept bh events */
+            replay_bh_oneshot_event(ctx, cb, opaque);
+            break;
+        }
+        /* fallthrough */
+    default:
+        do_aio_bh_schedule_oneshot_full(ctx, cb, opaque, name);
+    }
 }
 
 QEMUBH *aio_bh_new_full(AioContext *ctx, QEMUBHFunc *cb, void *opaque,
@@ -224,6 +243,22 @@ int aio_bh_poll(AioContext *ctx)
     }
 
     return ret;
+}
+
+void qemu_bh_schedule_event(QEMUBH *bh, QEMUClockType clock_type)
+{
+    switch (clock_type) {
+    case QEMU_CLOCK_VIRTUAL:
+    case QEMU_CLOCK_VIRTUAL_RT:
+        if (replay_mode != REPLAY_MODE_NONE) {
+            /* Record/replay must intercept bh events */
+            replay_bh_schedule_event(bh);
+            break;
+        }
+        /* fallthrough */
+    default:
+        aio_bh_enqueue(bh, BH_SCHEDULED);
+    }
 }
 
 void qemu_bh_schedule_idle(QEMUBH *bh)

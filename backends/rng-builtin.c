@@ -38,7 +38,7 @@ static void rng_builtin_request_entropy(RngBackend *b, RngRequest *req)
 {
     RngBuiltin *s = RNG_BUILTIN(b);
 
-    replay_bh_schedule_event(s->bh);
+    qemu_bh_schedule_event(s->bh, QEMU_CLOCK_VIRTUAL);
 }
 
 static void rng_builtin_init(Object *obj)

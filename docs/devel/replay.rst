@@ -171,9 +171,10 @@ Bottom halves
 -------------
 
 Bottom half callbacks, that affect the guest state, should be invoked through
-``replay_bh_schedule_event`` or ``replay_bh_schedule_oneshot_event`` functions.
-Their invocations are saved in record mode and synchronized with the existing
-log in replay mode.
+``qemu_bh_schedule_event`` or ``aio_bh_schedule_oneshot_event`` functions
+the with the appropriate clock type (e.g., QEMU_CLOCK_VIRTUAL. Their
+invocations are saved in record mode and synchronized with the existing log in
+replay mode.
 
 Disk I/O events are completely deterministic in our model, because
 in both record and replay modes we start virtual machine from the same

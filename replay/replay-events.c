@@ -131,7 +131,7 @@ void replay_bh_schedule_event(QEMUBH *bh)
     }
 }
 
-void replay_bh_schedule_oneshot_event(AioContext *ctx,
+void replay_bh_oneshot_event(AioContext *ctx,
     QEMUBHFunc *cb, void *opaque)
 {
     if (events_enabled) {

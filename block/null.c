@@ -183,8 +183,8 @@ static inline BlockAIOCB *null_aio_common(BlockDriverState *bs,
         timer_mod_ns(&acb->timer,
                      qemu_clock_get_ns(QEMU_CLOCK_REALTIME) + s->latency_ns);
     } else {
-        replay_bh_schedule_oneshot_event(bdrv_get_aio_context(bs),
-                                         null_bh_cb, acb);
+        aio_bh_schedule_oneshot_event(bdrv_get_aio_context(bs),
+                                      null_bh_cb, acb, QEMU_CLOCK_VIRTUAL);
     }
     return &acb->common;
 }

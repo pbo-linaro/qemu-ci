@@ -285,8 +285,9 @@ iscsi_co_generic_cb(struct iscsi_context *iscsi, int status,
     }
 
     if (iTask->co) {
-        replay_bh_schedule_oneshot_event(iTask->iscsilun->aio_context,
-                                         iscsi_co_generic_bh_cb, iTask);
+        aio_bh_schedule_oneshot_event(iTask->iscsilun->aio_context,
+                                      iscsi_co_generic_bh_cb, iTask,
+                                      QEMU_CLOCK_VIRTUAL);
     } else {
         iTask->complete = 1;
     }

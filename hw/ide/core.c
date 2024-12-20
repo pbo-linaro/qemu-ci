@@ -516,7 +516,7 @@ static void ide_issue_trim_cb(void *opaque, int ret)
 done:
     iocb->aiocb = NULL;
     if (iocb->bh) {
-        replay_bh_schedule_event(iocb->bh);
+        qemu_bh_schedule_event(iocb->bh, QEMU_CLOCK_VIRTUAL);
     }
 }
 
@@ -2368,8 +2368,9 @@ void ide_ctrl_write(void *opaque, uint32_t addr, uint32_t val)
             s = &bus->ifs[i];
             s->status |= BUSY_STAT;
         }
-        replay_bh_schedule_oneshot_event(qemu_get_aio_context(),
-                                         ide_bus_perform_srst, bus);
+        aio_bh_schedule_oneshot_event(qemu_get_aio_context(),
+                                      ide_bus_perform_srst, bus,
+                                      QEMU_CLOCK_VIRTUAL);
     }
 
     bus->cmd = val;

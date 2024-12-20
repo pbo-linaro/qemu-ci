@@ -30,7 +30,7 @@ void replay_bh_schedule_event(QEMUBH *bh)
     qemu_bh_schedule(bh);
 }
 
-void replay_bh_schedule_oneshot_event(AioContext *ctx,
+void replay_bh_oneshot_event(AioContext *ctx,
      QEMUBHFunc *cb, void *opaque)
 {
     aio_bh_schedule_oneshot(ctx, cb, opaque);
