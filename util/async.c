@@ -261,6 +261,11 @@ void qemu_bh_schedule_event(QEMUBH *bh, QEMUClockType clock_type)
     }
 }
 
+void qemu_bh_schedule_event_noreplay(QEMUBH *bh)
+{
+    aio_bh_enqueue(bh, BH_SCHEDULED);
+}
+
 void qemu_bh_schedule_idle(QEMUBH *bh)
 {
     aio_bh_enqueue(bh, BH_SCHEDULED | BH_IDLE);

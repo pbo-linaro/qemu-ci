@@ -154,11 +154,8 @@ void replay_add_input_sync_event(void)
 
 void replay_block_event(QEMUBH *bh, uint64_t id)
 {
-    if (events_enabled) {
-        replay_add_event(REPLAY_ASYNC_EVENT_BLOCK, bh, NULL, id);
-    } else {
-        qemu_bh_schedule(bh);
-    }
+    g_assert(events_enabled);
+    replay_add_event(REPLAY_ASYNC_EVENT_BLOCK, bh, NULL, id);
 }
 
 static void replay_save_event(Event *event)

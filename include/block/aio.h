@@ -406,6 +406,15 @@ int aio_bh_poll(AioContext *ctx);
 void qemu_bh_schedule_event(QEMUBH *bh, QEMUClockType clock_type);
 
 /**
+ * qemu_bh_schedule_event_noreplay: Schedule a bottom half avoiding replay.
+ *
+ * This function is not to be used outside record-replay code.
+ *
+ * @bh: The bottom half to be scheduled.
+ */
+void qemu_bh_schedule_event_noreplay(QEMUBH *bh);
+
+/**
  * qemu_bh_schedule: Schedule a bottom half.
  *
  * Scheduling a bottom half interrupts the main loop and causes the

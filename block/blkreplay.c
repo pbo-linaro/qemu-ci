@@ -67,7 +67,15 @@ static void block_request_create(uint64_t reqid, BlockDriverState *bs,
         .co = co,
         .bh = aio_bh_new(bdrv_get_aio_context(bs), blkreplay_bh_cb, req),
     };
-    replay_block_event(req->bh, reqid);
+    if (replay_events_enabled()) {
+        replay_block_event(req->bh, reqid);
+    } else {
+        /*
+         * block can be used before replay is initialized. Work around
+         * that here.
+         */
+        qemu_bh_schedule_event_noreplay(req->bh);
+    }
 }
 
 static int coroutine_fn GRAPH_RDLOCK

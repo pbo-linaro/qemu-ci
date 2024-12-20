@@ -7144,7 +7144,9 @@ void bdrv_schedule_unref(BlockDriverState *bs)
     if (!bs) {
         return;
     }
-    aio_bh_schedule_oneshot(qemu_get_aio_context(), bdrv_schedule_unref_bh, bs);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(),
+                                  bdrv_schedule_unref_bh, bs,
+                                  QEMU_CLOCK_REALTIME);
 }
 
 struct BdrvOpBlocker {
