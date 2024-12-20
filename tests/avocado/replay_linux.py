@@ -121,7 +121,7 @@ class ReplayLinux(LinuxTest):
         except subprocess.CalledProcessError:
             self.fail('replay-dump.py failed')
 
-@skipUnless(os.getenv('AVOCADO_TIMEOUT_EXPECTED'), 'Test might timeout')
+@skipUnless(os.getenv('SPEED') == 'slow', 'runtime limited')
 class ReplayLinuxX8664(ReplayLinux):
     """
     :avocado: tags=arch:x86_64
@@ -142,7 +142,7 @@ class ReplayLinuxX8664(ReplayLinux):
         """
         self.run_rr(shift=3)
 
-@skipUnless(os.getenv('AVOCADO_TIMEOUT_EXPECTED'), 'Test might timeout')
+@skipUnless(os.getenv('SPEED') == 'slow', 'runtime limited')
 class ReplayLinuxX8664Virtio(ReplayLinux):
     """
     :avocado: tags=arch:x86_64
@@ -168,7 +168,7 @@ class ReplayLinuxX8664Virtio(ReplayLinux):
         """
         self.run_rr(shift=3)
 
-@skipUnless(os.getenv('AVOCADO_TIMEOUT_EXPECTED'), 'Test might timeout')
+@skipUnless(os.getenv('SPEED') == 'slow', 'runtime limited')
 class ReplayLinuxAarch64(ReplayLinux):
     """
     :avocado: tags=accel:tcg
