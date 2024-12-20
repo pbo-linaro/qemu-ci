@@ -2780,7 +2780,7 @@ static void ide_restart_cb(void *opaque, bool running, RunState state)
 
     if (!bus->bh) {
         bus->bh = qemu_bh_new(ide_restart_bh, bus);
-        qemu_bh_schedule(bus->bh);
+        qemu_bh_schedule_event(bus->bh, QEMU_CLOCK_VIRTUAL);
     }
 }
 
