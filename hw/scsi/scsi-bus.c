@@ -166,9 +166,17 @@ static void scsi_device_for_each_req_async(SCSIDevice *s,
 
     /* Paired with blk_dec_in_flight() in scsi_device_for_each_req_async_bh() */
     blk_inc_in_flight(s->conf.blk);
-    aio_bh_schedule_oneshot(blk_get_aio_context(s->conf.blk),
-                            scsi_device_for_each_req_async_bh,
-                            data);
+
+    /*
+     * This is called by device reset and does not affect the observable state
+     * of the target (because it is being reset), and by scsi_dma_restart_cb
+     * to restart DMA on vmstate change which also should not affect the state
+     * of the target (XXX is this really true?), so QEMU_CLOCK_REALTIME should
+     * be used to avoid record-replay of the bh event.
+     */
+    aio_bh_schedule_oneshot_event(blk_get_aio_context(s->conf.blk),
+                                  scsi_device_for_each_req_async_bh,
+                                  data, QEMU_CLOCK_REALTIME);
 }
 
 static void scsi_device_realize(SCSIDevice *s, Error **errp)
