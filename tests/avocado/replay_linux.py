@@ -11,6 +11,7 @@
 import os
 import logging
 import time
+import subprocess
 
 from avocado import skipUnless
 from avocado_qemu import BUILD_DIR
