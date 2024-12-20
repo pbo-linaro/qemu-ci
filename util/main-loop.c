@@ -148,7 +148,7 @@ void qemu_notify_event(void)
     if (!qemu_aio_context) {
         return;
     }
-    qemu_bh_schedule(qemu_notify_bh);
+    qemu_bh_schedule_event(qemu_notify_bh, QEMU_CLOCK_REALTIME);
 }
 
 static GArray *gpollfds;
