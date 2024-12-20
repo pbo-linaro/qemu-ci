@@ -3433,7 +3433,7 @@ static void *migration_thread(void *opaque)
 {
     MigrationState *s = opaque;
     MigrationThread *thread = NULL;
-    int64_t setup_start = qemu_clock_get_ms(QEMU_CLOCK_HOST);
+    int64_t setup_start = qemu_clock_get_ms(QEMU_CLOCK_REALTIME);
     MigThrError thr_error;
     bool urgent = false;
     Error *local_err = NULL;
@@ -3504,7 +3504,7 @@ static void *migration_thread(void *opaque)
         goto out;
     }
 
-    s->setup_time = qemu_clock_get_ms(QEMU_CLOCK_HOST) - setup_start;
+    s->setup_time = qemu_clock_get_ms(QEMU_CLOCK_REALTIME) - setup_start;
 
     trace_migration_thread_setup_complete();
 
@@ -3584,7 +3584,7 @@ static void *bg_migration_thread(void *opaque)
 
     migration_rate_set(RATE_LIMIT_DISABLED);
 
-    setup_start = qemu_clock_get_ms(QEMU_CLOCK_HOST);
+    setup_start = qemu_clock_get_ms(QEMU_CLOCK_REALTIME);
     /*
      * We want to save vmstate for the moment when migration has been
      * initiated but also we want to save RAM content while VM is running.
@@ -3629,7 +3629,7 @@ static void *bg_migration_thread(void *opaque)
         goto fail_setup;
     }
 
-    s->setup_time = qemu_clock_get_ms(QEMU_CLOCK_HOST) - setup_start;
+    s->setup_time = qemu_clock_get_ms(QEMU_CLOCK_REALTIME) - setup_start;
 
     trace_migration_thread_setup_complete();
 
