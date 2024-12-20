@@ -977,7 +977,7 @@ static void finish_ebb(OptContext *ctx)
     remove_mem_copy_all(ctx);
 }
 
-static void finish_folding(OptContext *ctx, TCGOp *op)
+static bool finish_folding(OptContext *ctx, TCGOp *op)
 {
     const TCGOpDef *def = &tcg_op_defs[op->opc];
     int i, nb_oargs;
@@ -995,6 +995,7 @@ static void finish_folding(OptContext *ctx, TCGOp *op)
             ts_info(ts)->s_mask = ctx->s_mask;
         }
     }
+    return true;
 }
 
 /*
@@ -1221,7 +1222,7 @@ static bool fold_add(OptContext *ctx, TCGOp *op)
         fold_xi_to_x(ctx, op, 0)) {
         return true;
     }
-    return false;
+    return finish_folding(ctx, op);
 }
 
 /* We cannot as yet do_constant_folding with vectors. */
@@ -1231,7 +1232,7 @@ static bool fold_add_vec(OptContext *ctx, TCGOp *op)
         fold_xi_to_x(ctx, op, 0)) {
         return true;
     }
-    return false;
+    return finish_folding(ctx, op);
 }
 
 static bool fold_addsub2(OptContext *ctx, TCGOp *op, bool add)
@@ -1298,7 +1299,7 @@ static bool fold_addsub2(OptContext *ctx, TCGOp *op, bool add)
         op->args[4] = arg_new_constant(ctx, bl);
         op->args[5] = arg_new_constant(ctx, bh);
     }
-    return false;
+    return finish_folding(ctx, op);
 }
 
 static bool fold_add2(OptContext *ctx, TCGOp *op)
