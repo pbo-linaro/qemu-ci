@@ -2403,8 +2403,8 @@ static bool fold_negsetcond(OptContext *ctx, TCGOp *op)
         fold_setcond_tst_pow2(ctx, op, true);
     }
 
-    /* Value is {0,-1} so all bits are repetitions of the sign. */
-    return fold_masks_s(ctx, op, -1);
+    /* Value is {0,-1} so all bits above lsb are repetitions of the lsb. */
+    return fold_masks_s(ctx, op, ~1);
 }
 
 static bool fold_setcond2(OptContext *ctx, TCGOp *op)
