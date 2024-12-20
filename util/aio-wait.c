@@ -51,7 +51,8 @@ void aio_wait_kick(void)
     smp_mb();
 
     if (qatomic_read(&global_aio_wait.num_waiters)) {
-        aio_bh_schedule_oneshot(qemu_get_aio_context(), dummy_bh_cb, NULL);
+        aio_bh_schedule_oneshot_event(qemu_get_aio_context(), dummy_bh_cb,
+                                      NULL, QEMU_CLOCK_REALTIME);
     }
 }
 
