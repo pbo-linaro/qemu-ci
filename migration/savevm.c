@@ -3441,8 +3441,9 @@ static int coroutine_fn snapshot_save_job_run(Job *job, Error **errp)
     SnapshotJob *s = container_of(job, SnapshotJob, common);
     s->errp = errp;
     s->co = qemu_coroutine_self();
-    aio_bh_schedule_oneshot(qemu_get_aio_context(),
-                            snapshot_save_job_bh, job);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(),
+                                  snapshot_save_job_bh, job,
+                                  QEMU_CLOCK_REALTIME);
     qemu_coroutine_yield();
     return s->ret ? 0 : -1;
 }
@@ -3452,8 +3453,9 @@ static int coroutine_fn snapshot_load_job_run(Job *job, Error **errp)
     SnapshotJob *s = container_of(job, SnapshotJob, common);
     s->errp = errp;
     s->co = qemu_coroutine_self();
-    aio_bh_schedule_oneshot(qemu_get_aio_context(),
-                            snapshot_load_job_bh, job);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(),
+                                  snapshot_load_job_bh, job,
+                                  QEMU_CLOCK_REALTIME);
     qemu_coroutine_yield();
     return s->ret ? 0 : -1;
 }
@@ -3463,8 +3465,9 @@ static int coroutine_fn snapshot_delete_job_run(Job *job, Error **errp)
     SnapshotJob *s = container_of(job, SnapshotJob, common);
     s->errp = errp;
     s->co = qemu_coroutine_self();
-    aio_bh_schedule_oneshot(qemu_get_aio_context(),
-                            snapshot_delete_job_bh, job);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(),
+                                  snapshot_delete_job_bh, job,
+                                  QEMU_CLOCK_REALTIME);
     qemu_coroutine_yield();
     return s->ret ? 0 : -1;
 }
