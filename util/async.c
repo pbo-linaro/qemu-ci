@@ -58,6 +58,9 @@ enum {
 
     /* Schedule periodically when the event loop is idle */
     BH_IDLE      = (1 << 4),
+
+    /* BH being handled by replay machinery */
+    BH_REPLAY    = (1 << 4),
 };
 
 struct QEMUBH {
@@ -145,6 +148,17 @@ void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb,
                                   void *opaque, const char *name,
                                   QEMUClockType clock_type)
 {
+    if (clock_type == QEMU_CLOCK_MAX) {
+        /*
+         * aio_bh_schedule_oneshot() uses QEMU_CLOCK_MAX to say it does not
+         * know about clock context to use. It will not work in record/replay.
+         * Callers should be converted to aio_bh_schedule_oneshot_event()
+         * then this can be removed when the old API goes away.
+         */
+        g_assert(replay_mode == REPLAY_MODE_NONE);
+        clock_type = QEMU_CLOCK_REALTIME;
+    }
+
     switch (clock_type) {
     case QEMU_CLOCK_VIRTUAL:
     case QEMU_CLOCK_VIRTUAL_RT:
@@ -178,6 +192,12 @@ void aio_bh_call(QEMUBH *bh)
 {
     bool last_engaged_in_io = false;
 
+    if (bh->flags & BH_REPLAY) {
+        g_assert(!(bh->flags & BH_SCHEDULED));
+        g_assert(!(bh->flags & BH_DELETED));
+        g_assert(!(bh->flags & BH_PENDING));
+        bh->flags &= ~BH_REPLAY;
+    }
     /* Make a copy of the guard-pointer as cb may free the bh */
     MemReentrancyGuard *reentrancy_guard = bh->reentrancy_guard;
     if (reentrancy_guard) {
@@ -252,6 +272,7 @@ void qemu_bh_schedule_event(QEMUBH *bh, QEMUClockType clock_type)
     case QEMU_CLOCK_VIRTUAL_RT:
         if (replay_mode != REPLAY_MODE_NONE) {
             /* Record/replay must intercept bh events */
+            qatomic_fetch_or(&bh->flags, BH_REPLAY);
             replay_bh_schedule_event(bh);
             break;
         }
@@ -268,11 +289,15 @@ void qemu_bh_schedule_event_noreplay(QEMUBH *bh)
 
 void qemu_bh_schedule_idle(QEMUBH *bh)
 {
+    /* No mechanism for scheduling idle replay-scheduled bh at the moment */
+    g_assert(replay_mode == REPLAY_MODE_NONE);
     aio_bh_enqueue(bh, BH_SCHEDULED | BH_IDLE);
 }
 
 void qemu_bh_schedule(QEMUBH *bh)
 {
+    /* Callers should be converted to use qemu_bh_schedule_event */
+    g_assert(replay_mode == REPLAY_MODE_NONE);
     aio_bh_enqueue(bh, BH_SCHEDULED);
 }
 
@@ -280,6 +305,8 @@ void qemu_bh_schedule(QEMUBH *bh)
  */
 void qemu_bh_cancel(QEMUBH *bh)
 {
+    /* No mechanism for canceling replay-scheduled bh at the moment */
+    g_assert(!(bh->flags & BH_REPLAY));
     qatomic_and(&bh->flags, ~BH_SCHEDULED);
 }
 
@@ -288,6 +315,8 @@ void qemu_bh_cancel(QEMUBH *bh)
  */
 void qemu_bh_delete(QEMUBH *bh)
 {
+    /* No mechanism for deleting replay-scheduled bh at the moment */
+    g_assert(!(bh->flags & BH_REPLAY));
     aio_bh_enqueue(bh, BH_DELETED);
 }
 

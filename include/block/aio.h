@@ -309,7 +309,7 @@ void aio_bh_schedule_oneshot_full(AioContext *ctx, QEMUBHFunc *cb, void *opaque,
  */
 #define aio_bh_schedule_oneshot(ctx, cb, opaque) \
     aio_bh_schedule_oneshot_full((ctx), (cb), (opaque), (stringify(cb)), \
-                                 QEMU_CLOCK_REALTIME)
+                                 QEMU_CLOCK_MAX)
 
 /**
  * aio_bh_new_full: Allocate a new bottom half structure.
