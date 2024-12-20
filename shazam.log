@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241220024617.1968556-1-npiggin@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] tests/functional: Don't fail the whole test if a pre-cache fetch fails
+  [32m✓[0m [PATCH 2/4] tests/functional/test_ppc64_hv: Simplify console handling
+  [32m✓[0m [PATCH 3/4] tests/functional/test_ppc64_hv: Update repo management
+  [32m✓[0m [PATCH 4/4] tests/functional/test_ppc64_hv: Update to Alpine 3.21.0
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 4
+---
+Applying: tests/functional: Don't fail the whole test if a pre-cache fetch fails
+Patch failed at 0001 tests/functional: Don't fail the whole test if a pre-cache fetch fails
+error: patch failed: tests/functional/qemu_test/asset.py:102
+error: tests/functional/qemu_test/asset.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
