@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20241220142955.652636-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 11 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/12] rust: qom: add ParentField
+  [32m✓[0m [PATCH 2/12] rust: add a utility module for compile-time type checks
+  [32m✓[0m [PATCH 3/12] rust: macros: check that the first field of a #[derive(Object)] struct is a ParentField
+  [32m✓[0m [PATCH 4/12] rust: macros: check that #[derive(Object)] requires #[repr(C)]
+  [32m✓[0m [PATCH 5/12] rust: qom: automatically use Drop trait to implement instance_finalize
+  [32m✓[0m [PATCH 6/12] rust: qom: move device_id to PL011 class side
+  [32m✓[0m [PATCH 7/12] rust: pl011: only leave embedded object initialization in instance_init
+  [32m✓[0m [PATCH 8/12] rust: qom: make INSTANCE_POST_INIT take a shared reference
+  [32m✓[0m [PATCH 9/12] rust: qdev: expose inherited methods to subclasses of SysBusDevice
+  [32m✓[0m [PATCH 10/12] rust: qemu-api-macros: extend error reporting facility to parse errors
+  [32m✓[0m [PATCH 11/12] rust: qemu-api-macros: add automatic TryFrom/TryInto derivation
+  [32m✓[0m [PATCH 12/12] rust: hide warnings for subprojects
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 12
+---
+Applying: rust: qom: add ParentField
+Patch failed at 0001 rust: qom: add ParentField
+error: patch failed: rust/hw/char/pl011/src/device.rs:14
+error: rust/hw/char/pl011/src/device.rs: patch does not apply
+error: rust/qemu-api/src/qom.rs: does not exist in index
+error: patch failed: rust/qemu-api/tests/tests.rs:15
+error: rust/qemu-api/tests/tests.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
