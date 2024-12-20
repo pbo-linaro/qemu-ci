@@ -28,6 +28,7 @@
 #include "qemu/atomic.h"
 #include "qemu/main-loop.h"
 #include "qemu/module.h"
+#include "qemu/lockable.h"
 #include "hw/qdev-properties.h"
 #include "sysemu/runstate.h"
 #include "migration/vmstate.h"
@@ -298,10 +299,12 @@ void qxl_spice_reset_cursor(PCIQXLDevice *qxl)
     qemu_mutex_lock(&qxl->track_lock);
     qxl->guest_cursor = 0;
     qemu_mutex_unlock(&qxl->track_lock);
-    if (qxl->ssd.cursor) {
-        cursor_unref(qxl->ssd.cursor);
+    WITH_QEMU_LOCK_GUARD(&qxl->ssd.lock) {
+        if (qxl->ssd.cursor) {
+            cursor_unref(qxl->ssd.cursor);
+        }
+        qxl->ssd.cursor = cursor_builtin_hidden();
     }
-    qxl->ssd.cursor = cursor_builtin_hidden();
 }
 
 static uint32_t qxl_crc32(const uint8_t *p, unsigned len)
