@@ -1827,6 +1827,7 @@ static bool fold_exts(OptContext *ctx, TCGOp *op)
         g_assert_not_reached();
     }
     s_mask |= sign << 1;
+    s_mask = smask_from_smask(s_mask);
 
     if (!type_change && fold_affected_mask(ctx, op, s_mask & ~s_mask_old)) {
         return true;
@@ -2534,8 +2535,13 @@ static bool fold_sextract(OptContext *ctx, TCGOp *op)
     }
 
     s_mask_old = t1->s_mask;
+    /*
+     * Use the sign mask from the input, force the repetitons from
+     * the sign extension operation, and canonicalize the result.
+     */
     s_mask = sextract64(s_mask_old, pos, len);
     s_mask |= MAKE_64BIT_MASK(len, 64 - len);
+    s_mask = smask_from_smask(s_mask);
 
     if (pos == 0 && fold_affected_mask(ctx, op, s_mask & ~s_mask_old)) {
         return true;
