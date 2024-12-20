@@ -254,8 +254,9 @@ QDict *coroutine_mixed_fn qmp_dispatch(const QmpCommandList *cmds, QObject *requ
             .errp       = &err,
             .co         = qemu_coroutine_self(),
         };
-        aio_bh_schedule_oneshot(iohandler_get_aio_context(), do_qmp_dispatch_bh,
-                                &data);
+        aio_bh_schedule_oneshot_event(iohandler_get_aio_context(),
+                                      do_qmp_dispatch_bh, &data,
+                                      QEMU_CLOCK_REALTIME);
         qemu_coroutine_yield();
     }
     qobject_unref(args);
