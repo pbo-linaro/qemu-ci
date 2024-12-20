@@ -583,7 +583,8 @@ void monitor_resume(Monitor *mon)
             ctx = qemu_get_aio_context();
         }
 
-        aio_bh_schedule_oneshot(ctx, monitor_accept_input, mon);
+        aio_bh_schedule_oneshot_event(ctx, monitor_accept_input, mon,
+                                      QEMU_CLOCK_REALTIME);
     }
 
     trace_monitor_suspend(mon, -1);

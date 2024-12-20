@@ -541,8 +541,9 @@ void monitor_init_qmp(Chardev *chr, bool pretty, Error **errp)
          * since chardev might be running in the monitor I/O
          * thread.  Schedule a bottom half.
          */
-        aio_bh_schedule_oneshot(iothread_get_aio_context(mon_iothread),
-                                monitor_qmp_setup_handlers_bh, mon);
+        aio_bh_schedule_oneshot_event(iothread_get_aio_context(mon_iothread),
+                                      monitor_qmp_setup_handlers_bh, mon,
+                                      QEMU_CLOCK_REALTIME);
         /* The bottom half will add @mon to @mon_list */
     } else {
         qemu_chr_fe_set_handlers(&mon->common.chr, monitor_can_read,
