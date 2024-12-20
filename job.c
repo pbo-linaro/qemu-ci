@@ -1109,7 +1109,8 @@ static void coroutine_fn job_co_entry(void *opaque)
         job->deferred_to_main_loop = true;
         job->busy = true;
     }
-    aio_bh_schedule_oneshot(qemu_get_aio_context(), job_exit, job);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(), job_exit, job,
+                                  QEMU_CLOCK_REALTIME);
 }
 
 void job_start(Job *job)

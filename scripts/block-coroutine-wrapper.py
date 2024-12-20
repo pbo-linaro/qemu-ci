@@ -292,7 +292,8 @@ static void {name}_bh(void *opaque)
     }};
     assert(qemu_in_coroutine());
 
-    aio_bh_schedule_oneshot(qemu_get_aio_context(), {name}_bh, &s);
+    aio_bh_schedule_oneshot_event(qemu_get_aio_context(), {name}_bh, &s,
+                                  QEMU_CLOCK_REALTIME);
     qemu_coroutine_yield();
 
     {func.ret}

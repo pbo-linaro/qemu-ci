@@ -683,7 +683,7 @@ void aio_co_schedule(AioContext *ctx, Coroutine *co)
 
     QSLIST_INSERT_HEAD_ATOMIC(&ctx->scheduled_coroutines,
                               co, co_scheduled_next);
-    qemu_bh_schedule(ctx->co_schedule_bh);
+    qemu_bh_schedule_event(ctx->co_schedule_bh, QEMU_CLOCK_REALTIME);
 
     aio_context_unref(ctx);
 }
