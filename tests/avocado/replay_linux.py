@@ -57,6 +57,8 @@ class ReplayLinux(LinuxTest):
 
     def vm_add_cdrom(self, vm, path, id, device):
         vm.add_args('-drive', 'file=%s,id=disk%s,if=none,media=cdrom' % (path, id))
+        vm.add_args('-device',
+            '%s,drive=disk%s' % (device, id))
 
     def launch_and_wait(self, record, args, shift):
         self.require_netdev('user')
