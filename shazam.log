@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20241220015441.317236-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 42 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 266 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/39] hw/riscv/riscv-iommu.c: Correct the validness check of iova
+  [32m✓[0m [PATCH v2 2/39] hw/intc/riscv_aplic: Fix APLIC in_clrip and clripnum write emulation
+  [32m✓[0m [PATCH v2 3/39] hw/riscv/riscv-iommu.c: add riscv_iommu_instance_init()
+  [32m✓[0m [PATCH v2 4/39] hw/riscv/riscv-iommu: parametrize CAP.IGS
+  [32m✓[0m [PATCH v2 5/39] hw/riscv: add riscv-iommu-sys platform device
+  [32m✓[0m [PATCH v2 6/39] hw/riscv/virt: Add IOMMU as platform device if the option is set
+  [32m✓[0m [PATCH v2 7/39] hw/riscv/virt.c, riscv-iommu-sys.c: add MSIx support
+  [32m✓[0m [PATCH v2 8/39] hw/riscv/riscv-iommu: implement reset protocol
+  [32m✓[0m [PATCH v2 9/39] docs/specs: add riscv-iommu-sys information
+  [32m✓[0m [PATCH v2 10/39] target/riscv: Add Tenstorrent Ascalon CPU
+  [32m✓[0m [PATCH v2 11/39] hw/intc/riscv_aplic: rename is_kvm_aia()
+  [32m✓[0m [PATCH v2 12/39] hw/riscv/virt.c: reduce virt_use_kvm_aia() usage
+  [32m✓[0m [PATCH v2 13/39] hw/riscv/virt.c: rename helper to virt_use_kvm_aia_aplic_imsic()
+  [32m✓[0m [PATCH v2 14/39] target/riscv/kvm: consider irqchip_split() in aia_create()
+  [32m✓[0m [PATCH v2 15/39] hw/riscv/virt.c, riscv_aplic.c: add 'emulated_aplic' helpers
+  [32m✓[0m [PATCH v2 16/39] hw/intc/riscv_aplic: add kvm_msicfgaddr for split mode aplic-imsic
+  [32m✓[0m [PATCH v2 17/39] target/riscv/kvm: remove irqchip_split() restriction
+  [32m✓[0m [PATCH v2 18/39] docs: update riscv/virt.rst with kernel-irqchip=split support
+  [32m✓[0m [PATCH v2 19/39] hw/riscv: Add Microblaze V generic board
+  [32m✓[0m [PATCH v2 20/39] qtest: allow SPCR acpi table changes
+  [32m✓[0m [PATCH v2 21/39] hw/acpi: Upgrade ACPI SPCR table to support SPCR table revision 4 format
+  [32m✓[0m [PATCH v2 22/39] tests/qtest/bios-tables-test: Update virt SPCR golden reference for RISC-V
+  [32m✓[0m [PATCH v2 23/39] MAINTAINERS: Cover RISC-V HTIF interface
+  [32m✓[0m [PATCH v2 24/39] hw/char/riscv_htif: Explicit little-endian implementation
+  [32m✓[0m [PATCH v2 25/39] hw/char/riscv_htif: Clarify MemoryRegionOps expect 32-bit accesses
+  [32m✓[0m [PATCH v2 26/39] hw/riscv: Support to load DTB after 3GB memory on 64-bit system.
+  [32m✓[0m [PATCH v2 27/39] hw/riscv: Add a new struct RISCVBootInfo
+  [32m✓[0m [PATCH v2 28/39] hw/riscv: Add the checking if DTB overlaps to kernel or initrd
+  [32m✓[0m [PATCH v2 29/39] target/riscv: Add svukte extension capability variable
+  [32m✓[0m [PATCH v2 30/39] target/riscv: Support senvcfg[UKTE] bit when svukte extension is enabled
+  [32m✓[0m [PATCH v2 31/39] target/riscv: Support hstatus[HUKTE] bit when svukte extension is enabled
+  [32m✓[0m [PATCH v2 32/39] target/riscv: Check memory access to meet svukte rule
+  [32m✓[0m [PATCH v2 33/39] target/riscv: Expose svukte ISA extension
+  [32m✓[0m [PATCH v2 34/39] target/riscv: Check svukte is not enabled in RV32
+  [32m✓[0m [PATCH v2 35/39] target/riscv: Include missing headers in 'vector_internals.h'
+  [32m✓[0m [PATCH v2 36/39] target/riscv: Include missing headers in 'internals.h'
+  [32m✓[0m [PATCH v2 37/39] target/riscv/tcg: hide warn for named feats when disabling via priv_ver
+  [32m✓[0m [PATCH v2 38/39] target/riscv: add ssstateen
+  [32m✓[0m [PATCH v2 39/39] target/riscv: add support for RV64 Xiangshan Nanhu CPU
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 39
+---
+Applying: hw/riscv/riscv-iommu.c: Correct the validness check of iova
+Applying: hw/intc/riscv_aplic: Fix APLIC in_clrip and clripnum write emulation
+Applying: hw/riscv/riscv-iommu.c: add riscv_iommu_instance_init()
+Applying: hw/riscv/riscv-iommu: parametrize CAP.IGS
+Applying: hw/riscv: add riscv-iommu-sys platform device
+Applying: hw/riscv/virt: Add IOMMU as platform device if the option is set
+Applying: hw/riscv/virt.c, riscv-iommu-sys.c: add MSIx support
+Applying: hw/riscv/riscv-iommu: implement reset protocol
+Applying: docs/specs: add riscv-iommu-sys information
+Applying: target/riscv: Add Tenstorrent Ascalon CPU
+Applying: hw/intc/riscv_aplic: rename is_kvm_aia()
+Applying: hw/riscv/virt.c: reduce virt_use_kvm_aia() usage
+Applying: hw/riscv/virt.c: rename helper to virt_use_kvm_aia_aplic_imsic()
+Applying: target/riscv/kvm: consider irqchip_split() in aia_create()
+Applying: hw/riscv/virt.c, riscv_aplic.c: add 'emulated_aplic' helpers
+Applying: hw/intc/riscv_aplic: add kvm_msicfgaddr for split mode aplic-imsic
+Applying: target/riscv/kvm: remove irqchip_split() restriction
+Applying: docs: update riscv/virt.rst with kernel-irqchip=split support
+Applying: hw/riscv: Add Microblaze V generic board
+Applying: qtest: allow SPCR acpi table changes
+Applying: hw/acpi: Upgrade ACPI SPCR table to support SPCR table revision 4 format
+Applying: tests/qtest/bios-tables-test: Update virt SPCR golden reference for RISC-V
+Patch failed at 0022 tests/qtest/bios-tables-test: Update virt SPCR golden reference for RISC-V
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/SPCR' without full index line
+error: tests/data/acpi/riscv64/virt/SPCR: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
