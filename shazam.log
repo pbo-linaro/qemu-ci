@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20241221173655.455599-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] accel/tcg: Move gen_intermediate_code to TCGCPUOps.translate_core
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: accel/tcg: Move gen_intermediate_code to TCGCPUOps.translate_core
+Patch failed at 0001 accel/tcg: Move gen_intermediate_code to TCGCPUOps.translate_core
+error: patch failed: target/loongarch/internals.h:17
+error: target/loongarch/internals.h: patch does not apply
+error: patch failed: target/mips/cpu.c:552
+error: target/mips/cpu.c: patch does not apply
+error: patch failed: target/sparc/cpu.h:610
+error: target/sparc/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
