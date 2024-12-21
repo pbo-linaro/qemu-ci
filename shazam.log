@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20241221192209.3979595-1-david@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 75 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/15] virtio-mem: unplug memory only during system resets, not device resets
+  [32m✓[0m [PATCH v2 2/15] s390x/s390-virtio-ccw: don't crash on weird RAM sizes
+  [32m✓[0m [PATCH v2 3/15] s390x/s390-virtio-hcall: remove hypercall registration mechanism
+  [32m✓[0m [PATCH v2 4/15] s390x/s390-virtio-hcall: prepare for more diag500 hypercalls
+  [32m✓[0m [PATCH v2 5/15] s390x: rename s390-virtio-hcall* to s390-hypercall*
+  [32m✓[0m [PATCH v2 6/15] s390x/s390-virtio-ccw: move setting the maximum guest size from sclp to machine code
+  [32m✓[0m [PATCH v2 7/15] s390x: introduce s390_get_memory_limit()
+  [32m✓[0m [PATCH v2 8/15] s390x/s390-hypercall: introduce DIAG500 STORAGE_LIMIT
+  [32m✓[0m [PATCH v2 9/15] s390x/s390-stattrib-kvm: prepare for memory devices and sparse memory layouts
+  [32m✓[0m [PATCH v2 10/15] s390x/s390-skeys: prepare for memory devices
+  [32m✓[0m [PATCH v2 11/15] s390x/s390-virtio-ccw: prepare for memory devices
+  [32m✓[0m [PATCH v2 12/15] s390x/pv: prepare for memory devices
+  [32m✓[0m [PATCH v2 13/15] s390x: remember the maximum page size
+  [32m✓[0m [PATCH v2 14/15] s390x/virtio-ccw: add support for virtio based memory devices
+  [32m✓[0m [PATCH v2 15/15] s390x: virtio-mem support
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 15
+---
+Applying: virtio-mem: unplug memory only during system resets, not device resets
+Applying: s390x/s390-virtio-ccw: don't crash on weird RAM sizes
+Applying: s390x/s390-virtio-hcall: remove hypercall registration mechanism
+Patch failed at 0003 s390x/s390-virtio-hcall: remove hypercall registration mechanism
+error: patch failed: hw/s390x/s390-virtio-ccw.c:16
+error: hw/s390x/s390-virtio-ccw.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
