@@ -3079,11 +3079,9 @@ void tcg_optimize(TCGContext *s)
             done = true;
             break;
         default:
+            done = finish_folding(&ctx, op);
             break;
         }
-
-        if (!done) {
-            finish_folding(&ctx, op);
-        }
+        tcg_debug_assert(done);
     }
 }
