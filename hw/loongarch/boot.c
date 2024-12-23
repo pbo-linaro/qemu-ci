@@ -171,6 +171,43 @@ static uint64_t cpu_loongarch_virt_to_phys(void *opaque, uint64_t addr)
     return addr & MAKE_64BIT_MASK(0, TARGET_PHYS_ADDR_SPACE_BITS);
 }
 
+static int64_t get_linux_image_info(struct loongarch_boot_info *info,
+                                    uint64_t *kernel_entry,
+                                    uint64_t *kernel_low,
+                                    uint64_t *kernel_high)
+{
+    int fd;
+    struct loongarch_linux_hdr hdr;
+    int64_t kernel_size = -1;
+
+    fd = open(info->kernel_filename, O_RDONLY | O_BINARY);
+    if (fd < 0) {
+        return -1;
+    }
+
+    if (read(fd, &hdr, sizeof(hdr)) != sizeof(hdr)) {
+        close(fd);
+        return -1;
+    }
+
+    if ((le32_to_cpu(hdr.mz_magic) & 0xffff) != MZ_MAGIC ||
+        le32_to_cpu(hdr.linux_pe_magic) != LINUX_PE_MAGIC) {
+        close(fd);
+        return -1;
+    }
+
+    *kernel_entry = le64_to_cpu(hdr.kernel_entry);
+    /* Early kernel versions may have those fields in virtual address */
+    *kernel_entry &= MAKE_64BIT_MASK(0, TARGET_PHYS_ADDR_SPACE_BITS);
+    *kernel_low = le64_to_cpu(hdr.load_offset);
+    *kernel_low &= MAKE_64BIT_MASK(0, TARGET_PHYS_ADDR_SPACE_BITS);
+    kernel_size = le64_to_cpu(hdr.kernel_size);
+    *kernel_high = *kernel_low + kernel_size;
+
+    close(fd);
+    return kernel_size;
+}
+
 static int64_t load_kernel_info(struct loongarch_boot_info *info)
 {
     uint64_t kernel_entry, kernel_low, kernel_high;
@@ -181,6 +218,14 @@ static int64_t load_kernel_info(struct loongarch_boot_info *info)
                            &kernel_entry, &kernel_low,
                            &kernel_high, NULL, 0,
                            EM_LOONGARCH, 1, 0);
+    if (kernel_size < 0) {
+        kernel_size = get_linux_image_info(info, &kernel_entry,
+                                           &kernel_low, &kernel_high);
+        if (kernel_size >= 0) {
+            kernel_size = load_image_targphys(info->kernel_filename,
+                                              kernel_low, kernel_size);
+        }
+    }
 
     if (kernel_size < 0) {
         error_report("could not load kernel '%s': %s",
