@@ -77,6 +77,7 @@ struct QTestState
     int qmp_fd;
     int sock;
     int qmpsock;
+    bool qmp_ready;
     pid_t qemu_pid;  /* our child QEMU process */
     int wstatus;
 #ifdef _WIN32
@@ -552,14 +553,23 @@ void qtest_connect(QTestState *s)
 
 QTestState *qtest_init_without_qmp_handshake(const char *extra_args)
 {
-    return qtest_init_internal(qtest_qemu_binary(NULL), extra_args, true);
+    QTestState *s = qtest_init_internal(qtest_qemu_binary(NULL), extra_args,
+                                        true);
+
+    /* Not really ready, but callers need it to test handshakes */
+    s->qmp_ready = true;
+    return s;
 }
 
 void qtest_qmp_handshake(QTestState *s)
 {
+    g_autoptr(QDict) greeting = NULL;
+
+    /* Set ready first because functions called below assert it */
+    s->qmp_ready = true;
+
     /* Read the QMP greeting and then do the handshake */
-    QDict *greeting = qtest_qmp_receive(s);
-    qobject_unref(greeting);
+    greeting = qtest_qmp_receive(s);
     qobject_unref(qtest_qmp(s, "{ 'execute': 'qmp_capabilities' }"));
 }
 
@@ -786,6 +796,7 @@ QDict *qtest_qmp_receive(QTestState *s)
 
 QDict *qtest_qmp_receive_dict(QTestState *s)
 {
+    g_assert(s->qmp_ready);
     return qmp_fd_receive(s->qmp_fd);
 }
 
@@ -813,12 +824,14 @@ int qtest_socket_server(const char *socket_path)
 void qtest_qmp_vsend_fds(QTestState *s, int *fds, size_t fds_num,
                          const char *fmt, va_list ap)
 {
+    g_assert(s->qmp_ready);
     qmp_fd_vsend_fds(s->qmp_fd, fds, fds_num, fmt, ap);
 }
 #endif
 
 void qtest_qmp_vsend(QTestState *s, const char *fmt, va_list ap)
 {
+    g_assert(s->qmp_ready);
     qmp_fd_vsend(s->qmp_fd, fmt, ap);
 }
 
@@ -879,6 +892,7 @@ void qtest_qmp_send_raw(QTestState *s, const char *fmt, ...)
 {
     va_list ap;
 
+    g_assert(s->qmp_ready);
     va_start(ap, fmt);
     qmp_fd_vsend_raw(s->qmp_fd, fmt, ap);
     va_end(ap);
