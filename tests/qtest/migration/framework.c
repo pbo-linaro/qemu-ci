@@ -411,6 +411,7 @@ void migrate_end(QTestState *from, QTestState *to, bool test_dest)
     qtest_quit(to);
 
     cleanup("migsocket");
+    cleanup("cpr.sock");
     cleanup("src_serial");
     cleanup("dest_serial");
     cleanup(FILE_TEST_FILENAME);
@@ -692,7 +693,10 @@ void test_precopy_common(MigrateCommon *args)
 {
     QTestState *from, *to;
     void *data_hook = NULL;
+    QObject *in_channels = NULL;
     QObject *out_channels = NULL;
+
+    g_assert(!args->cpr_channel || args->connect_channels);
 
     if (migrate_start(&from, &to, args->listen_uri, &args->start)) {
         return;
@@ -725,8 +729,20 @@ void test_precopy_common(MigrateCommon *args)
         }
     }
 
+    /*
+     * The cpr channel must be included in outgoing channels, but not in
+     * migrate-incoming channels.
+     */
     if (args->connect_channels) {
+        in_channels = qobject_from_json(args->connect_channels, &error_abort);
         out_channels = qobject_from_json(args->connect_channels, &error_abort);
+
+        if (args->cpr_channel) {
+            QList *channels_list = qobject_to(QList, out_channels);
+            QObject *obj = migrate_str_to_channel(args->cpr_channel);
+
+            qlist_append(channels_list, obj);
+        }
     }
 
     if (args->result == MIG_TEST_QMP_ERROR) {
@@ -739,6 +755,9 @@ void test_precopy_common(MigrateCommon *args)
     if (args->start.defer_target_connect) {
         qtest_connect(to);
         qtest_qmp_handshake(to);
+        if (!strcmp(args->listen_uri, "defer")) {
+            migrate_incoming_qmp(to, args->connect_uri, in_channels, "{}");
+        }
     }
 
     if (args->result != MIG_TEST_SUCCEED) {
