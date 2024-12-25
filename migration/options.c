@@ -817,6 +817,19 @@ const strList *migrate_accel_path(void)
     return s->parameters.accel_path;
 }
 
+void migrate_dsa_accel_path(strList **dsa_accel_path)
+{
+    MigrationState *s = migrate_get_current();
+    strList *accel_path = s->parameters.accel_path;
+    strList **tail = dsa_accel_path;
+    while (accel_path) {
+        if (strncmp(accel_path->value, "dsa:", 4) == 0) {
+            QAPI_LIST_APPEND(tail, &accel_path->value[4]);
+        }
+        accel_path = accel_path->next;
+    }
+}
+
 const char *migrate_tls_hostname(void)
 {
     MigrationState *s = migrate_get_current();

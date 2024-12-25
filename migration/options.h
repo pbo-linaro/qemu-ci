@@ -86,6 +86,7 @@ const char *migrate_tls_hostname(void);
 uint64_t migrate_xbzrle_cache_size(void);
 ZeroPageDetection migrate_zero_page_detection(void);
 const strList *migrate_accel_path(void);
+void migrate_dsa_accel_path(strList **dsa_accel_path);
 
 /* parameters helpers */
 

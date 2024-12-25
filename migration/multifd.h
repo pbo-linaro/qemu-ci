@@ -15,6 +15,7 @@
 
 #include "exec/target_page.h"
 #include "ram.h"
+#include "qemu/dsa.h"
 
 typedef struct MultiFDRecvData MultiFDRecvData;
 typedef struct MultiFDSendData MultiFDSendData;
@@ -154,6 +155,9 @@ typedef struct {
     bool pending_job;
     bool pending_sync;
     MultiFDSendData *data;
+
+    /* Zero page checking batch task */
+    QemuDsaBatchTask *dsa_batch_task;
 
     /* thread local variables. No locking required */
 
@@ -313,6 +317,8 @@ void multifd_send_fill_packet(MultiFDSendParams *p);
 bool multifd_send_prepare_common(MultiFDSendParams *p);
 void multifd_send_zero_page_detect(MultiFDSendParams *p);
 void multifd_recv_zero_page_process(MultiFDRecvParams *p);
+int multifd_dsa_setup(MigrationState *s, Error *local_err);
+void multifd_dsa_cleanup(void);
 
 static inline void multifd_send_prepare_header(MultiFDSendParams *p)
 {
