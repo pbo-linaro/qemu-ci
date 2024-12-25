@@ -13,6 +13,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/error-report.h"
+#include "qemu/dsa.h"
 #include "exec/target_page.h"
 #include "qapi/clone-visitor.h"
 #include "qapi/error.h"
@@ -809,6 +810,13 @@ const char *migrate_tls_creds(void)
     return s->parameters.tls_creds;
 }
 
+const strList *migrate_accel_path(void)
+{
+    MigrationState *s = migrate_get_current();
+
+    return s->parameters.accel_path;
+}
+
 const char *migrate_tls_hostname(void)
 {
     MigrationState *s = migrate_get_current();
@@ -922,6 +930,8 @@ MigrationParameters *qmp_query_migrate_parameters(Error **errp)
     params->zero_page_detection = s->parameters.zero_page_detection;
     params->has_direct_io = true;
     params->direct_io = s->parameters.direct_io;
+    params->has_accel_path = true;
+    params->accel_path = QAPI_CLONE(strList, s->parameters.accel_path);
 
     return params;
 }
@@ -930,6 +940,7 @@ void migrate_params_init(MigrationParameters *params)
 {
     params->tls_hostname = g_strdup("");
     params->tls_creds = g_strdup("");
+    params->accel_path = NULL;
 
     /* Set has_* up only for parameter checks */
     params->has_throttle_trigger_threshold = true;
@@ -1142,6 +1153,14 @@ bool migrate_params_check(MigrationParameters *params, Error **errp)
         return false;
     }
 
+    if (params->has_zero_page_detection &&
+        params->zero_page_detection == ZERO_PAGE_DETECTION_DSA_ACCEL) {
+        if (!qemu_dsa_is_supported()) {
+            error_setg(errp, "DSA acceleration is not supported.");
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -1254,6 +1273,11 @@ static void migrate_params_test_apply(MigrateSetParameters *params,
 
     if (params->has_direct_io) {
         dest->direct_io = params->direct_io;
+    }
+
+    if (params->has_accel_path) {
+        dest->has_accel_path = true;
+        dest->accel_path = params->accel_path;
     }
 }
 
@@ -1386,6 +1410,12 @@ static void migrate_params_apply(MigrateSetParameters *params, Error **errp)
 
     if (params->has_direct_io) {
         s->parameters.direct_io = params->direct_io;
+    }
+    if (params->has_accel_path) {
+        qapi_free_strList(s->parameters.accel_path);
+        s->parameters.has_accel_path = true;
+        s->parameters.accel_path =
+            QAPI_CLONE(strList, params->accel_path);
     }
 }
 
