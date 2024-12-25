@@ -129,6 +129,18 @@ struct Aspeed2600SoCState {
 #define TYPE_ASPEED2600_SOC "aspeed2600-soc"
 OBJECT_DECLARE_SIMPLE_TYPE(Aspeed2600SoCState, ASPEED2600_SOC)
 
+struct Aspeed27x0CA35SoCState {
+    AspeedSoCState parent;
+
+    ARMCPU cpu[ASPEED_CPUS_NUM];
+    AspeedINTCState intc;
+    GICv3State gic;
+    MemoryRegion dram_empty;
+};
+
+#define TYPE_ASPEED27X0CA35_SOC "aspeed27x0ca35-soc"
+OBJECT_DECLARE_SIMPLE_TYPE(Aspeed27x0CA35SoCState, ASPEED27X0CA35_SOC)
+
 struct Aspeed27x0CM4SoCState {
     AspeedSoCState parent;
 
