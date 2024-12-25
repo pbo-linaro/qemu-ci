@@ -30,6 +30,9 @@ int main(int argc, char **argv)
     migration_test_add_precopy(env);
     migration_test_add_cpr(env);
     migration_test_add_misc(env);
+#ifdef CONFIG_DSA_OPT
+    migration_test_add_dsa(env);
+#endif
 
     ret = g_test_run();
 

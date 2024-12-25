@@ -355,6 +355,13 @@ if gnutls.found()
   endif
 endif
 
+migration_dsa_files = []
+if config_host_data.get('CONFIG_DSA_OPT')
+  migration_dsa_files = [files(
+    'migration/dsa-tests.c',
+  )]
+endif
+
 qtests = {
   'bios-tables-test': [io, 'boot-sector.c', 'acpi-utils.c', 'tpm-emu.c'],
   'cdrom-test': files('boot-sector.c'),
@@ -362,7 +369,8 @@ qtests = {
                              'migration/migration-util.c') + dbus_vmstate1,
   'erst-test': files('erst-test.c'),
   'ivshmem-test': [rt, '../../contrib/ivshmem-server/ivshmem-server.c'],
-  'migration-test': migration_files + migration_tls_files,
+  'migration-test': migration_files + migration_tls_files + \
+                    migration_dsa_files,
   'pxe-test': files('boot-sector.c'),
   'pnv-xive2-test': files('pnv-xive2-common.c', 'pnv-xive2-flush-sync.c'),
   'qos-test': [chardev, io, qos_test_ss.apply({}).sources()],
