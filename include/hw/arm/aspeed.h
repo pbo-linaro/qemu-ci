@@ -10,7 +10,9 @@
 #define ARM_ASPEED_H
 
 #include "hw/boards.h"
+#include "hw/sd/sdhci.h"
 #include "qom/object.h"
+#include "system/blockdev.h"
 
 typedef struct AspeedMachineState AspeedMachineState;
 
@@ -41,5 +43,9 @@ struct AspeedMachineClass {
     uint32_t uart_default;
 };
 
+void sdhci_attach_drive(SDHCIState *sdhci, DriveInfo *dinfo, bool emmc,
+                               bool boot_emmc);
+void write_boot_rom(BlockBackend *blk, hwaddr addr, size_t rom_size,
+                           Error **errp);
 
 #endif
