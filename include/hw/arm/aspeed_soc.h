@@ -101,6 +101,8 @@ struct AspeedSoCState {
     UnimplementedDeviceState sgpiom;
     UnimplementedDeviceState ltpi;
     UnimplementedDeviceState jtag[ASPEED_JTAG_NUM];
+    UnimplementedDeviceState intc;
+    UnimplementedDeviceState ipc;
     AspeedAPB2OPBState fsi[2];
 };
 
@@ -126,6 +128,15 @@ struct Aspeed2600SoCState {
 
 #define TYPE_ASPEED2600_SOC "aspeed2600-soc"
 OBJECT_DECLARE_SIMPLE_TYPE(Aspeed2600SoCState, ASPEED2600_SOC)
+
+struct Aspeed27x0CM4SoCState {
+    AspeedSoCState parent;
+
+    ARMv7MState armv7m;
+};
+
+#define TYPE_ASPEED27X0CM4_SOC "aspeed27x0cm4-soc"
+OBJECT_DECLARE_SIMPLE_TYPE(Aspeed27x0CM4SoCState, ASPEED27X0CM4_SOC)
 
 struct Aspeed27x0SoCState {
     AspeedSoCState parent;
@@ -201,6 +212,15 @@ enum {
     ASPEED_DEV_EHCI2,
     ASPEED_DEV_VIC,
     ASPEED_DEV_INTC,
+    ASPEED_DEV_INTC0,
+    ASPEED_DEV_INTC1,
+    ASPEED_DEV_INTC2,
+    ASPEED_DEV_INTC3,
+    ASPEED_DEV_INTC4,
+    ASPEED_DEV_INTC5,
+    ASPEED_DEV_INTC6,
+    ASPEED_DEV_INTC7,
+    ASPEED_DEV_INTC8,
     ASPEED_DEV_SDMC,
     ASPEED_DEV_SCU,
     ASPEED_DEV_ADC,
@@ -253,6 +273,9 @@ enum {
     ASPEED_DEV_SCUIO,
     ASPEED_DEV_SLI,
     ASPEED_DEV_SLIIO,
+    ASPEED_DEV_IPC0,
+    ASPEED_DEV_IPC1,
+    ASPEED_DEV_IPC2,
     ASPEED_GIC_DIST,
     ASPEED_GIC_REDIST,
 };
