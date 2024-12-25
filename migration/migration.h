@@ -337,11 +337,11 @@ struct MigrationState {
          */
         QemuSemaphore rp_sem;
         /*
-         * We post to this when we got one PONG from dest. So far it's an
+         * We set this when we got one PONG from dest. So far it's an
          * easy way to know the main channel has successfully established
          * on dest QEMU.
          */
-        QemuSemaphore rp_pong_acks;
+        QemuEvent rp_pong_acks;
     } rp_state;
 
     double mbps;
@@ -377,7 +377,7 @@ struct MigrationState {
     QemuSemaphore wait_unplug_sem;
 
     /* Migration is paused due to pause-before-switchover */
-    QemuSemaphore pause_sem;
+    QemuEvent pause_event;
 
     /* The semaphore is used to notify COLO thread that failover is finished */
     QemuSemaphore colo_exit_sem;
