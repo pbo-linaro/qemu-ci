@@ -196,7 +196,7 @@ int get_physical_address(CPULoongArchState *env, hwaddr *physical,
 
     plv = kernel_mode | (user_mode << R_CSR_DMW_PLV3_SHIFT);
     if (is_la64(env)) {
-        base_v = address >> R_CSR_DMW_64_VSEG_SHIFT;
+        base_v = (uint64_t)address >> R_CSR_DMW_64_VSEG_SHIFT;
     } else {
         base_v = address >> R_CSR_DMW_32_VSEG_SHIFT;
     }
