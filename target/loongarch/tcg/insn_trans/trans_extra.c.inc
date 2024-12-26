@@ -46,13 +46,15 @@ static bool gen_rdtime(DisasContext *ctx, arg_rr *a,
 {
     TCGv dst1 = gpr_dst(ctx, a->rd, EXT_NONE);
     TCGv dst2 = gpr_dst(ctx, a->rj, EXT_NONE);
+    TCGv_i64 val = tcg_temp_new_i64();
 
     translator_io_start(&ctx->base);
-    gen_helper_rdtime_d(dst1, tcg_env);
+    gen_helper_rdtime_d(val, tcg_env);
     if (word) {
-        tcg_gen_sextract_tl(dst1, dst1, high ? 32 : 0, 32);
+        tcg_gen_sextract_i64(val, val, high ? 32 : 0, 32);
+        tcg_gen_trunc_i64_tl(dst1, val);
     }
-    tcg_gen_ld_i64(dst2, tcg_env, offsetof(CPULoongArchState, CSR_TID));
+    tcg_gen_ld_tl(dst2, tcg_env, offsetof(CPULoongArchState, CSR_TID));
 
     return true;
 }
