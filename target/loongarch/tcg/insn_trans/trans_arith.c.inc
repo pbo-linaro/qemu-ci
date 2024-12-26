@@ -92,8 +92,24 @@ static void gen_sltu(TCGv dest, TCGv src1, TCGv src2)
 
 static void gen_mulh_w(TCGv dest, TCGv src1, TCGv src2)
 {
-    tcg_gen_mul_i64(dest, src1, src2);
-    tcg_gen_sari_i64(dest, dest, 32);
+#ifdef TARGET_LOONGARCH64
+    tcg_gen_mul_tl(dest, src1, src2);
+    tcg_gen_sari_tl(dest, dest, 32);
+#else
+    TCGv_i32 discard = tcg_temp_new_i32();
+    tcg_gen_muls2_i32(discard, dest, src1, src2);
+#endif
+}
+
+static void gen_mulh_wu(TCGv dest, TCGv src1, TCGv src2)
+{
+#ifdef TARGET_LOONGARCH64
+    /* Signs are handled by the caller's EXT_ZERO */
+    gen_mulh_w(dest, src1, src2);
+#else
+    TCGv_i32 discard = tcg_temp_new_i32();
+    tcg_gen_mulu2_i32(discard, dest, src1, src2);
+#endif
 }
 
 static void gen_mulh_d(TCGv dest, TCGv src1, TCGv src2)
@@ -113,6 +129,7 @@ static void prep_divisor_d(TCGv ret, TCGv src1, TCGv src2)
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
     TCGv zero = tcg_constant_tl(0);
+    target_long min = 1ull << (TARGET_LONG_BITS - 1);
 
     /*
      * If min / -1, set the divisor to 1.
@@ -121,7 +138,7 @@ static void prep_divisor_d(TCGv ret, TCGv src1, TCGv src2)
      * This avoids potential host overflow trap;
      * the required result is undefined.
      */
-    tcg_gen_setcondi_tl(TCG_COND_EQ, ret, src1, INT64_MIN);
+    tcg_gen_setcondi_tl(TCG_COND_EQ, ret, src1, min);
     tcg_gen_setcondi_tl(TCG_COND_EQ, t0, src2, -1);
     tcg_gen_setcondi_tl(TCG_COND_EQ, t1, src2, 0);
     tcg_gen_and_tl(ret, ret, t0);
@@ -275,7 +292,7 @@ TRANS(sltu, ALL, gen_rrr, EXT_NONE, EXT_NONE, EXT_NONE, gen_sltu)
 TRANS(mul_w, ALL, gen_rrr, EXT_SIGN, EXT_SIGN, EXT_SIGN, tcg_gen_mul_tl)
 TRANS(mul_d, 64, gen_rrr, EXT_NONE, EXT_NONE, EXT_NONE, tcg_gen_mul_tl)
 TRANS(mulh_w, ALL, gen_rrr, EXT_SIGN, EXT_SIGN, EXT_NONE, gen_mulh_w)
-TRANS(mulh_wu, ALL, gen_rrr, EXT_ZERO, EXT_ZERO, EXT_NONE, gen_mulh_w)
+TRANS(mulh_wu, ALL, gen_rrr, EXT_ZERO, EXT_ZERO, EXT_NONE, gen_mulh_wu)
 TRANS(mulh_d, 64, gen_rrr, EXT_NONE, EXT_NONE, EXT_NONE, gen_mulh_d)
 TRANS(mulh_du, 64, gen_rrr, EXT_NONE, EXT_NONE, EXT_NONE, gen_mulh_du)
 TRANS(mulw_d_w, 64, gen_rrr, EXT_SIGN, EXT_SIGN, EXT_NONE, tcg_gen_mul_tl)
