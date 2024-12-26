@@ -260,7 +260,7 @@
   'if': { 'any': [ 'TARGET_S390X',
                    'TARGET_I386',
                    'TARGET_ARM',
-                   'TARGET_LOONGARCH64',
+                   'TARGET_LOONGARCH',
                    'TARGET_RISCV' ] } }
 
 ##
@@ -314,7 +314,7 @@
   'if': { 'any': [ 'TARGET_S390X',
                    'TARGET_I386',
                    'TARGET_ARM',
-                   'TARGET_LOONGARCH64',
+                   'TARGET_LOONGARCH',
                    'TARGET_RISCV' ] } }
 
 ##
@@ -383,7 +383,7 @@
                    'TARGET_I386',
                    'TARGET_S390X',
                    'TARGET_MIPS',
-                   'TARGET_LOONGARCH64',
+                   'TARGET_LOONGARCH',
                    'TARGET_RISCV' ] } }
 
 ##
@@ -401,7 +401,7 @@
                    'TARGET_I386',
                    'TARGET_S390X',
                    'TARGET_MIPS',
-                   'TARGET_LOONGARCH64',
+                   'TARGET_LOONGARCH',
                    'TARGET_RISCV' ] } }
 
 ##
