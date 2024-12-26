@@ -375,6 +375,36 @@ static int loongarch_cpu_mmu_index(CPUState *cs, bool ifetch)
     return MMU_DA_IDX;
 }
 
+static void loongarch_la132_initfn(Object *obj)
+{
+    LoongArchCPU *cpu = LOONGARCH_CPU(obj);
+    CPULoongArchState *env = &cpu->env;
+
+    int i;
+
+    for (i = 0; i < 21; i++) {
+        env->cpucfg[i] = 0x0;
+    }
+
+    cpu->dtb_compatible = "loongarch,Loongson-1C103";
+    env->cpucfg[0] = 0x148042;  /* PRID */
+
+    uint32_t data = 0;
+    data = FIELD_DP32(data, CPUCFG1, ARCH, 1); /* LA32 */
+    data = FIELD_DP32(data, CPUCFG1, PGMMU, 1);
+    data = FIELD_DP32(data, CPUCFG1, IOCSR, 1);
+    data = FIELD_DP32(data, CPUCFG1, PALEN, 0x1f); /* 32 bits */
+    data = FIELD_DP32(data, CPUCFG1, VALEN, 0x1f); /* 32 bits */
+    data = FIELD_DP32(data, CPUCFG1, UAL, 1);
+    data = FIELD_DP32(data, CPUCFG1, RI, 0);
+    data = FIELD_DP32(data, CPUCFG1, EP, 0);
+    data = FIELD_DP32(data, CPUCFG1, RPLV, 0);
+    data = FIELD_DP32(data, CPUCFG1, HP, 1);
+    data = FIELD_DP32(data, CPUCFG1, IOCSR_BRD, 1);
+    env->cpucfg[1] = data;
+}
+
+#ifdef TARGET_LOONGARCH64
 static void loongarch_la464_initfn(Object *obj)
 {
     LoongArchCPU *cpu = LOONGARCH_CPU(obj);
@@ -473,40 +503,12 @@ static void loongarch_la464_initfn(Object *obj)
     loongarch_cpu_post_init(obj);
 }
 
-static void loongarch_la132_initfn(Object *obj)
-{
-    LoongArchCPU *cpu = LOONGARCH_CPU(obj);
-    CPULoongArchState *env = &cpu->env;
-
-    int i;
-
-    for (i = 0; i < 21; i++) {
-        env->cpucfg[i] = 0x0;
-    }
-
-    cpu->dtb_compatible = "loongarch,Loongson-1C103";
-    env->cpucfg[0] = 0x148042;  /* PRID */
-
-    uint32_t data = 0;
-    data = FIELD_DP32(data, CPUCFG1, ARCH, 1); /* LA32 */
-    data = FIELD_DP32(data, CPUCFG1, PGMMU, 1);
-    data = FIELD_DP32(data, CPUCFG1, IOCSR, 1);
-    data = FIELD_DP32(data, CPUCFG1, PALEN, 0x1f); /* 32 bits */
-    data = FIELD_DP32(data, CPUCFG1, VALEN, 0x1f); /* 32 bits */
-    data = FIELD_DP32(data, CPUCFG1, UAL, 1);
-    data = FIELD_DP32(data, CPUCFG1, RI, 0);
-    data = FIELD_DP32(data, CPUCFG1, EP, 0);
-    data = FIELD_DP32(data, CPUCFG1, RPLV, 0);
-    data = FIELD_DP32(data, CPUCFG1, HP, 1);
-    data = FIELD_DP32(data, CPUCFG1, IOCSR_BRD, 1);
-    env->cpucfg[1] = data;
-}
-
 static void loongarch_max_initfn(Object *obj)
 {
     /* '-cpu max' for TCG: we use cpu la464. */
     loongarch_la464_initfn(obj);
 }
+#endif
 
 static void loongarch_cpu_reset_hold(Object *obj, ResetType type)
 {
@@ -871,6 +873,7 @@ static void loongarch32_cpu_class_init(ObjectClass *c, void *data)
     cc->gdb_arch_name = loongarch32_gdb_arch_name;
 }
 
+#ifdef TARGET_LOONGARCH64
 static const gchar *loongarch64_gdb_arch_name(CPUState *cs)
 {
     return "loongarch64";
@@ -883,6 +886,7 @@ static void loongarch64_cpu_class_init(ObjectClass *c, void *data)
     cc->gdb_core_xml_file = "loongarch-base64.xml";
     cc->gdb_arch_name = loongarch64_gdb_arch_name;
 }
+#endif
 
 #define DEFINE_LOONGARCH_CPU_TYPE(size, model, initfn) \
     { \
@@ -910,6 +914,7 @@ static const TypeInfo loongarch_cpu_type_infos[] = {
         .abstract = true,
         .class_init = loongarch32_cpu_class_init,
     },
+#ifdef TARGET_LOONGARCH64
     {
         .name = TYPE_LOONGARCH64_CPU,
         .parent = TYPE_LOONGARCH_CPU,
@@ -917,9 +922,12 @@ static const TypeInfo loongarch_cpu_type_infos[] = {
         .abstract = true,
         .class_init = loongarch64_cpu_class_init,
     },
-    DEFINE_LOONGARCH_CPU_TYPE(64, "la464", loongarch_la464_initfn),
+#endif
     DEFINE_LOONGARCH_CPU_TYPE(32, "la132", loongarch_la132_initfn),
+#ifdef TARGET_LOONGARCH64
+    DEFINE_LOONGARCH_CPU_TYPE(64, "la464", loongarch_la464_initfn),
     DEFINE_LOONGARCH_CPU_TYPE(64, "max", loongarch_max_initfn),
+#endif
 };
 
 DEFINE_TYPES(loongarch_cpu_type_infos)
