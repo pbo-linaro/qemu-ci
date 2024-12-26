@@ -1440,7 +1440,11 @@ static void virt_class_init(ObjectClass *oc, void *data)
     HotplugHandlerClass *hc = HOTPLUG_HANDLER_CLASS(oc);
 
     mc->init = virt_init;
+#if defined(TARGET_LOONGARCH64)
     mc->default_cpu_type = LOONGARCH_CPU_TYPE_NAME("la464");
+#elif defined(TARGET_LOONGARCH32)
+    mc->default_cpu_type = LOONGARCH_CPU_TYPE_NAME("max32");
+#endif
     mc->default_ram_id = "loongarch.ram";
     mc->desc = "QEMU LoongArch Virtual Machine";
     mc->max_cpus = LOONGARCH_MAX_CPUS;
