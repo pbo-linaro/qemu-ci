@@ -4761,7 +4761,8 @@ static bool trans_## NAME (DisasContext *ctx, arg_cv *a)                       \
                                                                                \
     tcg_gen_or_i64(t1, al, ah);                                                \
     tcg_gen_setcondi_i64(COND, t1, t1, 0);                                     \
-    tcg_gen_st8_tl(t1, tcg_env, offsetof(CPULoongArchState, cf[a->cd & 0x7])); \
+    tcg_gen_st8_i64(t1, tcg_env, offsetof(CPULoongArchState,                   \
+                                          cf[a->cd & 0x7]));                   \
                                                                                \
     return true;                                                               \
 }
@@ -4807,7 +4808,8 @@ static bool trans_## NAME(DisasContext *ctx, arg_cv * a)                       \
     tcg_gen_or_i64(t2, d[2], d[3]);                                            \
     tcg_gen_or_i64(t1, t2, t1);                                                \
     tcg_gen_setcondi_i64(COND, t1, t1, 0);                                     \
-    tcg_gen_st8_tl(t1, tcg_env, offsetof(CPULoongArchState, cf[a->cd & 0x7])); \
+    tcg_gen_st8_i64(t1, tcg_env, offsetof(CPULoongArchState,                   \
+                                          cf[a->cd & 0x7]));                   \
                                                                                \
     return true;                                                               \
 }
@@ -4850,12 +4852,12 @@ static bool gen_g2x(DisasContext *ctx, arg_vr_i *a, MemOp mop,
     return gen_g2v_vl(ctx, a, 32, mop, func);
 }
 
-TRANS(vinsgr2vr_b, LSX, gen_g2v, MO_8, tcg_gen_st8_i64)
-TRANS(vinsgr2vr_h, LSX, gen_g2v, MO_16, tcg_gen_st16_i64)
-TRANS(vinsgr2vr_w, LSX, gen_g2v, MO_32, tcg_gen_st32_i64)
-TRANS(vinsgr2vr_d, LSX, gen_g2v, MO_64, tcg_gen_st_i64)
-TRANS(xvinsgr2vr_w, LASX, gen_g2x, MO_32, tcg_gen_st32_i64)
-TRANS(xvinsgr2vr_d, LASX, gen_g2x, MO_64, tcg_gen_st_i64)
+TRANS(vinsgr2vr_b, LSX, gen_g2v, MO_8, tcg_gen_st8_tl)
+TRANS(vinsgr2vr_h, LSX, gen_g2v, MO_16, tcg_gen_st16_tl)
+TRANS(vinsgr2vr_w, LSX, gen_g2v, MO_32, tcg_gen_st32_tl)
+TRANS(vinsgr2vr_d, LSX, gen_g2v, MO_64, tcg_gen_st_tl)
+TRANS(xvinsgr2vr_w, LASX, gen_g2x, MO_32, tcg_gen_st32_tl)
+TRANS(xvinsgr2vr_d, LASX, gen_g2x, MO_64, tcg_gen_st_tl)
 
 static bool gen_v2g_vl(DisasContext *ctx, arg_rv_i *a, uint32_t oprsz, MemOp mop,
                        void (*func)(TCGv, TCGv_ptr, tcg_target_long))
@@ -4883,18 +4885,18 @@ static bool gen_x2g(DisasContext *ctx, arg_rv_i *a, MemOp mop,
     return gen_v2g_vl(ctx, a, 32, mop, func);
 }
 
-TRANS(vpickve2gr_b, LSX, gen_v2g, MO_8, tcg_gen_ld8s_i64)
-TRANS(vpickve2gr_h, LSX, gen_v2g, MO_16, tcg_gen_ld16s_i64)
-TRANS(vpickve2gr_w, LSX, gen_v2g, MO_32, tcg_gen_ld32s_i64)
-TRANS(vpickve2gr_d, LSX, gen_v2g, MO_64, tcg_gen_ld_i64)
-TRANS(vpickve2gr_bu, LSX, gen_v2g, MO_8, tcg_gen_ld8u_i64)
-TRANS(vpickve2gr_hu, LSX, gen_v2g, MO_16, tcg_gen_ld16u_i64)
-TRANS(vpickve2gr_wu, LSX, gen_v2g, MO_32, tcg_gen_ld32u_i64)
-TRANS(vpickve2gr_du, LSX, gen_v2g, MO_64, tcg_gen_ld_i64)
-TRANS(xvpickve2gr_w, LASX, gen_x2g, MO_32, tcg_gen_ld32s_i64)
-TRANS(xvpickve2gr_d, LASX, gen_x2g, MO_64, tcg_gen_ld_i64)
-TRANS(xvpickve2gr_wu, LASX, gen_x2g, MO_32, tcg_gen_ld32u_i64)
-TRANS(xvpickve2gr_du, LASX, gen_x2g, MO_64, tcg_gen_ld_i64)
+TRANS(vpickve2gr_b, LSX, gen_v2g, MO_8, tcg_gen_ld8s_tl)
+TRANS(vpickve2gr_h, LSX, gen_v2g, MO_16, tcg_gen_ld16s_tl)
+TRANS(vpickve2gr_w, LSX, gen_v2g, MO_32, tcg_gen_ld32s_tl)
+TRANS(vpickve2gr_d, LSX, gen_v2g, MO_64, tcg_gen_ld_tl)
+TRANS(vpickve2gr_bu, LSX, gen_v2g, MO_8, tcg_gen_ld8u_tl)
+TRANS(vpickve2gr_hu, LSX, gen_v2g, MO_16, tcg_gen_ld16u_tl)
+TRANS(vpickve2gr_wu, LSX, gen_v2g, MO_32, tcg_gen_ld32u_tl)
+TRANS(vpickve2gr_du, LSX, gen_v2g, MO_64, tcg_gen_ld_tl)
+TRANS(xvpickve2gr_w, LASX, gen_x2g, MO_32, tcg_gen_ld32s_tl)
+TRANS(xvpickve2gr_d, LASX, gen_x2g, MO_64, tcg_gen_ld_tl)
+TRANS(xvpickve2gr_wu, LASX, gen_x2g, MO_32, tcg_gen_ld32u_tl)
+TRANS(xvpickve2gr_du, LASX, gen_x2g, MO_64, tcg_gen_ld_tl)
 
 static bool gvec_dup_vl(DisasContext *ctx, arg_vr *a,
                         uint32_t oprsz, MemOp mop)
@@ -4905,8 +4907,8 @@ static bool gvec_dup_vl(DisasContext *ctx, arg_vr *a,
         return true;
     }
 
-    tcg_gen_gvec_dup_i64(mop, vec_full_offset(a->vd),
-                         oprsz, ctx->vl/8, src);
+    tcg_gen_gvec_dup_tl(mop, vec_full_offset(a->vd),
+                         oprsz, ctx->vl/TARGET_LONG_SIZE, src);
     return true;
 }
 
@@ -5007,8 +5009,8 @@ static bool gen_vreplve_vl(DisasContext *ctx, arg_vvr *a,
     if (!check_vec(ctx, oprsz)) {
         return true;
     }
-
-    tcg_gen_andi_i64(t0, gpr_src(ctx, a->rk, EXT_NONE), (LSX_LEN / bit) - 1);
+    tcg_gen_extu_tl_i64(t2, gpr_src(ctx, a->rk, EXT_NONE));
+    tcg_gen_andi_i64(t0, t2, (LSX_LEN / bit) - 1);
     tcg_gen_shli_i64(t0, t0, vece);
     if (HOST_BIG_ENDIAN) {
         tcg_gen_xori_i64(t0, t0, vece << ((LSX_LEN / bit) - 1));
@@ -5099,10 +5101,10 @@ static bool do_vbsll_v(DisasContext *ctx, arg_vv_i *a, uint32_t oprsz)
     }
 
     for (i = 0; i < oprsz / 16; i++) {
-        TCGv desthigh = tcg_temp_new_i64();
-        TCGv destlow = tcg_temp_new_i64();
-        TCGv high = tcg_temp_new_i64();
-        TCGv low = tcg_temp_new_i64();
+        TCGv_i64 desthigh = tcg_temp_new_i64();
+        TCGv_i64 destlow = tcg_temp_new_i64();
+        TCGv_i64 high = tcg_temp_new_i64();
+        TCGv_i64 low = tcg_temp_new_i64();
 
         get_vreg64(low, a->vj, 2 * i);
 
@@ -5131,10 +5133,10 @@ static bool do_vbsrl_v(DisasContext *ctx, arg_vv_i *a, uint32_t oprsz)
     }
 
     for (i = 0; i < oprsz / 16; i++) {
-        TCGv desthigh = tcg_temp_new_i64();
-        TCGv destlow = tcg_temp_new_i64();
-        TCGv high = tcg_temp_new_i64();
-        TCGv low = tcg_temp_new_i64();
+        TCGv_i64 desthigh = tcg_temp_new_i64();
+        TCGv_i64 destlow = tcg_temp_new_i64();
+        TCGv_i64 high = tcg_temp_new_i64();
+        TCGv_i64 low = tcg_temp_new_i64();
         get_vreg64(high, a->vj, 2 * i + 1);
 
         ofs = ((a->imm) & 0xf) * 8;
@@ -5459,7 +5461,7 @@ static void gen_xvld(DisasContext *ctx, int vreg, TCGv addr)
 {
     int i;
     TCGv temp = tcg_temp_new();
-    TCGv dest = tcg_temp_new();
+    TCGv_i64 dest = tcg_temp_new_i64();
 
     tcg_gen_qemu_ld_i64(dest, addr, ctx->mem_idx, MO_TEUQ);
     set_vreg64(dest, vreg, 0);
@@ -5475,7 +5477,7 @@ static void gen_xvst(DisasContext * ctx, int vreg, TCGv addr)
 {
     int i;
     TCGv temp = tcg_temp_new();
-    TCGv dest = tcg_temp_new();
+    TCGv_i64 dest = tcg_temp_new_i64();
 
     get_vreg64(dest, vreg, 0);
     tcg_gen_qemu_st_i64(dest, addr, ctx->mem_idx, MO_TEUQ);
