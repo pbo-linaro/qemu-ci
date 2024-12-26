@@ -276,8 +276,8 @@ union fpr_t {
 struct LoongArchTLB {
     uint64_t tlb_misc;
     /* Fields corresponding to CSR_TLBELO0/1 */
-    uint64_t tlb_entry0;
-    uint64_t tlb_entry1;
+    target_ulong tlb_entry0;
+    target_ulong tlb_entry1;
 };
 typedef struct LoongArchTLB LoongArchTLB;
 #endif
@@ -289,18 +289,18 @@ enum loongarch_features {
 
 typedef struct  LoongArchBT {
     /* scratch registers */
-    uint64_t scr0;
-    uint64_t scr1;
-    uint64_t scr2;
-    uint64_t scr3;
+    target_ulong scr0;
+    target_ulong scr1;
+    target_ulong scr2;
+    target_ulong scr3;
     /* loongarch eflags */
     uint32_t eflags;
     uint32_t ftop;
 } lbt_t;
 
 typedef struct CPUArchState {
-    uint64_t gpr[32];
-    uint64_t pc;
+    target_ulong gpr[32];
+    target_ulong pc;
 
     fpr_t fpr[32];
     bool cf[8];
@@ -310,69 +310,69 @@ typedef struct CPUArchState {
     uint32_t cpucfg[21];
 
     /* LoongArch CSRs */
-    uint64_t CSR_CRMD;
-    uint64_t CSR_PRMD;
-    uint64_t CSR_EUEN;
-    uint64_t CSR_MISC;
-    uint64_t CSR_ECFG;
-    uint64_t CSR_ESTAT;
-    uint64_t CSR_ERA;
-    uint64_t CSR_BADV;
-    uint64_t CSR_BADI;
-    uint64_t CSR_EENTRY;
-    uint64_t CSR_TLBIDX;
-    uint64_t CSR_TLBEHI;
-    uint64_t CSR_TLBELO0;
-    uint64_t CSR_TLBELO1;
-    uint64_t CSR_ASID;
-    uint64_t CSR_PGDL;
-    uint64_t CSR_PGDH;
-    uint64_t CSR_PGD;
-    uint64_t CSR_PWCL;
-    uint64_t CSR_PWCH;
-    uint64_t CSR_STLBPS;
-    uint64_t CSR_RVACFG;
-    uint64_t CSR_CPUID;
-    uint64_t CSR_PRCFG1;
-    uint64_t CSR_PRCFG2;
-    uint64_t CSR_PRCFG3;
-    uint64_t CSR_SAVE[16];
-    uint64_t CSR_TID;
-    uint64_t CSR_TCFG;
-    uint64_t CSR_TVAL;
-    uint64_t CSR_CNTC;
-    uint64_t CSR_TICLR;
-    uint64_t CSR_LLBCTL;
-    uint64_t CSR_IMPCTL1;
-    uint64_t CSR_IMPCTL2;
-    uint64_t CSR_TLBRENTRY;
-    uint64_t CSR_TLBRBADV;
-    uint64_t CSR_TLBRERA;
-    uint64_t CSR_TLBRSAVE;
-    uint64_t CSR_TLBRELO0;
-    uint64_t CSR_TLBRELO1;
-    uint64_t CSR_TLBREHI;
-    uint64_t CSR_TLBRPRMD;
-    uint64_t CSR_MERRCTL;
-    uint64_t CSR_MERRINFO1;
-    uint64_t CSR_MERRINFO2;
-    uint64_t CSR_MERRENTRY;
-    uint64_t CSR_MERRERA;
-    uint64_t CSR_MERRSAVE;
-    uint64_t CSR_CTAG;
-    uint64_t CSR_DMW[4];
-    uint64_t CSR_DBG;
-    uint64_t CSR_DERA;
-    uint64_t CSR_DSAVE;
+    target_ulong CSR_CRMD;
+    target_ulong CSR_PRMD;
+    target_ulong CSR_EUEN;
+    target_ulong CSR_MISC;
+    target_ulong CSR_ECFG;
+    target_ulong CSR_ESTAT;
+    target_ulong CSR_ERA;
+    target_ulong CSR_BADV;
+    target_ulong CSR_BADI;
+    target_ulong CSR_EENTRY;
+    target_ulong CSR_TLBIDX;
+    target_ulong CSR_TLBEHI;
+    target_ulong CSR_TLBELO0;
+    target_ulong CSR_TLBELO1;
+    target_ulong CSR_ASID;
+    target_ulong CSR_PGDL;
+    target_ulong CSR_PGDH;
+    target_ulong CSR_PGD;
+    target_ulong CSR_PWCL;
+    target_ulong CSR_PWCH;
+    target_ulong CSR_STLBPS;
+    target_ulong CSR_RVACFG;
+    target_ulong CSR_CPUID;
+    target_ulong CSR_PRCFG1;
+    target_ulong CSR_PRCFG2;
+    target_ulong CSR_PRCFG3;
+    target_ulong CSR_SAVE[16];
+    target_ulong CSR_TID;
+    target_ulong CSR_TCFG;
+    target_ulong CSR_TVAL;
+    target_ulong CSR_CNTC;
+    target_ulong CSR_TICLR;
+    target_ulong CSR_LLBCTL;
+    target_ulong CSR_IMPCTL1;
+    target_ulong CSR_IMPCTL2;
+    target_ulong CSR_TLBRENTRY;
+    target_ulong CSR_TLBRBADV;
+    target_ulong CSR_TLBRERA;
+    target_ulong CSR_TLBRSAVE;
+    target_ulong CSR_TLBRELO0;
+    target_ulong CSR_TLBRELO1;
+    target_ulong CSR_TLBREHI;
+    target_ulong CSR_TLBRPRMD;
+    target_ulong CSR_MERRCTL;
+    target_ulong CSR_MERRINFO1;
+    target_ulong CSR_MERRINFO2;
+    target_ulong CSR_MERRENTRY;
+    target_ulong CSR_MERRERA;
+    target_ulong CSR_MERRSAVE;
+    target_ulong CSR_CTAG;
+    target_ulong CSR_DMW[4];
+    target_ulong CSR_DBG;
+    target_ulong CSR_DERA;
+    target_ulong CSR_DSAVE;
     struct {
-        uint64_t guest_addr;
+        target_ulong guest_addr;
     } stealtime;
 
 #ifdef CONFIG_TCG
     float_status fp_status;
     uint32_t fcsr0_mask;
-    uint64_t lladdr; /* LL virtual address compared against SC */
-    uint64_t llval;
+    target_ulong lladdr; /* LL virtual address compared against SC */
+    target_ulong llval;
 #endif
 #ifndef CONFIG_USER_ONLY
 #ifdef CONFIG_TCG
@@ -381,7 +381,7 @@ typedef struct CPUArchState {
 
     AddressSpace *address_space_iocsr;
     bool load_elf;
-    uint64_t elf_address;
+    target_ulong elf_address;
     uint32_t mp_state;
     /* Store ipistate to access from this struct */
     DeviceState *ipistate;

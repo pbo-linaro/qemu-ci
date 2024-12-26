@@ -748,7 +748,7 @@ static void loongarch_cpu_dump_state(CPUState *cs, FILE *f, int flags)
     CPULoongArchState *env = cpu_env(cs);
     int i;
 
-    qemu_fprintf(f, " PC=%016" PRIx64 " ", env->pc);
+    qemu_fprintf(f, " PC=" TARGET_FMT_lx " ", env->pc);
     qemu_fprintf(f, " FCSR0 0x%08x\n", env->fcsr0);
 
     /* gpr */
@@ -756,28 +756,28 @@ static void loongarch_cpu_dump_state(CPUState *cs, FILE *f, int flags)
         if ((i & 3) == 0) {
             qemu_fprintf(f, " GPR%02d:", i);
         }
-        qemu_fprintf(f, " %s %016" PRIx64, regnames[i], env->gpr[i]);
+        qemu_fprintf(f, " %s " TARGET_FMT_lx, regnames[i], env->gpr[i]);
         if ((i & 3) == 3) {
             qemu_fprintf(f, "\n");
         }
     }
 
-    qemu_fprintf(f, "CRMD=%016" PRIx64 "\n", env->CSR_CRMD);
-    qemu_fprintf(f, "PRMD=%016" PRIx64 "\n", env->CSR_PRMD);
-    qemu_fprintf(f, "EUEN=%016" PRIx64 "\n", env->CSR_EUEN);
-    qemu_fprintf(f, "ESTAT=%016" PRIx64 "\n", env->CSR_ESTAT);
-    qemu_fprintf(f, "ERA=%016" PRIx64 "\n", env->CSR_ERA);
-    qemu_fprintf(f, "BADV=%016" PRIx64 "\n", env->CSR_BADV);
-    qemu_fprintf(f, "BADI=%016" PRIx64 "\n", env->CSR_BADI);
-    qemu_fprintf(f, "EENTRY=%016" PRIx64 "\n", env->CSR_EENTRY);
-    qemu_fprintf(f, "PRCFG1=%016" PRIx64 ", PRCFG2=%016" PRIx64 ","
-                 " PRCFG3=%016" PRIx64 "\n",
+    qemu_fprintf(f, "CRMD=" TARGET_FMT_lx "\n", env->CSR_CRMD);
+    qemu_fprintf(f, "PRMD=" TARGET_FMT_lx "\n", env->CSR_PRMD);
+    qemu_fprintf(f, "EUEN=" TARGET_FMT_lx "\n", env->CSR_EUEN);
+    qemu_fprintf(f, "ESTAT=" TARGET_FMT_lx "\n", env->CSR_ESTAT);
+    qemu_fprintf(f, "ERA=" TARGET_FMT_lx "\n", env->CSR_ERA);
+    qemu_fprintf(f, "BADV=" TARGET_FMT_lx "\n", env->CSR_BADV);
+    qemu_fprintf(f, "BADI=" TARGET_FMT_lx "\n", env->CSR_BADI);
+    qemu_fprintf(f, "EENTRY=" TARGET_FMT_lx "\n", env->CSR_EENTRY);
+    qemu_fprintf(f, "PRCFG1=" TARGET_FMT_lx ", PRCFG2=" TARGET_FMT_lx ","
+                 " PRCFG3=" TARGET_FMT_lx "\n",
                  env->CSR_PRCFG1, env->CSR_PRCFG2, env->CSR_PRCFG3);
-    qemu_fprintf(f, "TLBRENTRY=%016" PRIx64 "\n", env->CSR_TLBRENTRY);
-    qemu_fprintf(f, "TLBRBADV=%016" PRIx64 "\n", env->CSR_TLBRBADV);
-    qemu_fprintf(f, "TLBRERA=%016" PRIx64 "\n", env->CSR_TLBRERA);
-    qemu_fprintf(f, "TCFG=%016" PRIx64 "\n", env->CSR_TCFG);
-    qemu_fprintf(f, "TVAL=%016" PRIx64 "\n", env->CSR_TVAL);
+    qemu_fprintf(f, "TLBRENTRY=" TARGET_FMT_lx "\n", env->CSR_TLBRENTRY);
+    qemu_fprintf(f, "TLBRBADV=" TARGET_FMT_lx "\n", env->CSR_TLBRBADV);
+    qemu_fprintf(f, "TLBRERA=" TARGET_FMT_lx "\n", env->CSR_TLBRERA);
+    qemu_fprintf(f, "TCFG=" TARGET_FMT_lx "\n", env->CSR_TCFG);
+    qemu_fprintf(f, "TVAL=" TARGET_FMT_lx "\n", env->CSR_TVAL);
 
     /* fpr */
     if (flags & CPU_DUMP_FPU) {
