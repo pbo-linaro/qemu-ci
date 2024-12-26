@@ -15,11 +15,11 @@
 #endif
 
 static bool gen_fff(DisasContext *ctx, arg_fff *a,
-                    void (*func)(TCGv, TCGv_env, TCGv, TCGv))
+                    void (*func)(TCGv_i64, TCGv_env, TCGv_i64, TCGv_i64))
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src1 = get_fpr(ctx, a->fj);
-    TCGv src2 = get_fpr(ctx, a->fk);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src1 = get_fpr(ctx, a->fj);
+    TCGv_i64 src2 = get_fpr(ctx, a->fk);
 
     CHECK_FPE;
 
@@ -30,10 +30,10 @@ static bool gen_fff(DisasContext *ctx, arg_fff *a,
 }
 
 static bool gen_ff(DisasContext *ctx, arg_ff *a,
-                   void (*func)(TCGv, TCGv_env, TCGv))
+                   void (*func)(TCGv_i64, TCGv_env, TCGv_i64))
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src = get_fpr(ctx, a->fj);
 
     CHECK_FPE;
 
@@ -44,14 +44,15 @@ static bool gen_ff(DisasContext *ctx, arg_ff *a,
 }
 
 static bool gen_muladd(DisasContext *ctx, arg_ffff *a,
-                       void (*func)(TCGv, TCGv_env, TCGv, TCGv, TCGv, TCGv_i32),
+                       void (*func)(TCGv_i64, TCGv_env, TCGv_i64,
+                                    TCGv_i64, TCGv_i64, TCGv_i32),
                        int flag)
 {
     TCGv_i32 tflag = tcg_constant_i32(flag);
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src1 = get_fpr(ctx, a->fj);
-    TCGv src2 = get_fpr(ctx, a->fk);
-    TCGv src3 = get_fpr(ctx, a->fa);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src1 = get_fpr(ctx, a->fj);
+    TCGv_i64 src2 = get_fpr(ctx, a->fk);
+    TCGv_i64 src3 = get_fpr(ctx, a->fa);
 
     CHECK_FPE;
 
@@ -63,9 +64,9 @@ static bool gen_muladd(DisasContext *ctx, arg_ffff *a,
 
 static bool trans_fcopysign_s(DisasContext *ctx, arg_fcopysign_s *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src1 = get_fpr(ctx, a->fk);
-    TCGv src2 = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src1 = get_fpr(ctx, a->fk);
+    TCGv_i64 src2 = get_fpr(ctx, a->fj);
 
     if (!avail_FP_SP(ctx)) {
         return false;
@@ -81,9 +82,9 @@ static bool trans_fcopysign_s(DisasContext *ctx, arg_fcopysign_s *a)
 
 static bool trans_fcopysign_d(DisasContext *ctx, arg_fcopysign_d *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src1 = get_fpr(ctx, a->fk);
-    TCGv src2 = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src1 = get_fpr(ctx, a->fk);
+    TCGv_i64 src2 = get_fpr(ctx, a->fj);
 
     if (!avail_FP_DP(ctx)) {
         return false;
@@ -99,8 +100,8 @@ static bool trans_fcopysign_d(DisasContext *ctx, arg_fcopysign_d *a)
 
 static bool trans_fabs_s(DisasContext *ctx, arg_fabs_s *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src = get_fpr(ctx, a->fj);
 
     if (!avail_FP_SP(ctx)) {
         return false;
@@ -117,8 +118,8 @@ static bool trans_fabs_s(DisasContext *ctx, arg_fabs_s *a)
 
 static bool trans_fabs_d(DisasContext *ctx, arg_fabs_d *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src = get_fpr(ctx, a->fj);
 
     if (!avail_FP_DP(ctx)) {
         return false;
@@ -134,8 +135,8 @@ static bool trans_fabs_d(DisasContext *ctx, arg_fabs_d *a)
 
 static bool trans_fneg_s(DisasContext *ctx, arg_fneg_s *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src = get_fpr(ctx, a->fj);
 
     if (!avail_FP_SP(ctx)) {
         return false;
@@ -152,8 +153,8 @@ static bool trans_fneg_s(DisasContext *ctx, arg_fneg_s *a)
 
 static bool trans_fneg_d(DisasContext *ctx, arg_fneg_d *a)
 {
-    TCGv dest = get_fpr(ctx, a->fd);
-    TCGv src = get_fpr(ctx, a->fj);
+    TCGv_i64 dest = get_fpr(ctx, a->fd);
+    TCGv_i64 src = get_fpr(ctx, a->fj);
 
     if (!avail_FP_DP(ctx)) {
         return false;

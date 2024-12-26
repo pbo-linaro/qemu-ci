@@ -218,15 +218,15 @@ static void gen_set_gpr(int reg_num, TCGv t, DisasExtend dst_ext)
     }
 }
 
-static TCGv get_fpr(DisasContext *ctx, int reg_num)
+static TCGv_i64 get_fpr(DisasContext *ctx, int reg_num)
 {
-    TCGv t = tcg_temp_new();
+    TCGv_i64 t = tcg_temp_new_i64();
     tcg_gen_ld_i64(t, tcg_env,
                    offsetof(CPULoongArchState, fpr[reg_num].vreg.D(0)));
     return  t;
 }
 
-static void set_fpr(int reg_num, TCGv val)
+static void set_fpr(int reg_num, TCGv_i64 val)
 {
     tcg_gen_st_i64(val, tcg_env,
                    offsetof(CPULoongArchState, fpr[reg_num].vreg.D(0)));
