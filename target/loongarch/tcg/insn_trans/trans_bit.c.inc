@@ -18,13 +18,17 @@ static bool gen_rr(DisasContext *ctx, arg_rr *a,
 
 static void gen_bytepick_w(TCGv dest, TCGv src1, TCGv src2, target_long sa)
 {
+#ifdef TARGET_LOONGARCH64
     tcg_gen_concat_tl_i64(dest, src1, src2);
     tcg_gen_sextract_i64(dest, dest, (32 - sa * 8), 32);
+#else
+    tcg_gen_extract2_tl(dest, src1, src2, (32 - sa * 8));
+#endif
 }
 
 static void gen_bytepick_d(TCGv dest, TCGv src1, TCGv src2, target_long sa)
 {
-    tcg_gen_extract2_i64(dest, src1, src2, (64 - sa * 8));
+    tcg_gen_extract2_tl(dest, src1, src2, (64 - sa * 8));
 }
 
 static bool gen_bstrins(DisasContext *ctx, arg_rr_ms_ls *a,
@@ -85,7 +89,7 @@ static void gen_cto_w(TCGv dest, TCGv src1)
 
 static void gen_clz_d(TCGv dest, TCGv src1)
 {
-    tcg_gen_clzi_i64(dest, src1, TARGET_LONG_BITS);
+    tcg_gen_clzi_tl(dest, src1, TARGET_LONG_BITS);
 }
 
 static void gen_clo_d(TCGv dest, TCGv src1)
@@ -107,8 +111,8 @@ static void gen_cto_d(TCGv dest, TCGv src1)
 
 static void gen_revb_2w(TCGv dest, TCGv src1)
 {
-    tcg_gen_bswap64_i64(dest, src1);
-    tcg_gen_rotri_i64(dest, dest, 32);
+    tcg_gen_bswap_tl(dest, src1);
+    tcg_gen_rotri_tl(dest, dest, 32);
 }
 
 static void gen_revb_2h(TCGv dest, TCGv src1)
@@ -126,7 +130,7 @@ static void gen_revb_2h(TCGv dest, TCGv src1)
 
 static void gen_revb_4h(TCGv dest, TCGv src1)
 {
-    TCGv mask = tcg_constant_tl(0x00FF00FF00FF00FFULL);
+    TCGv mask = tcg_constant_tl((target_ulong)0x00FF00FF00FF00FFULL);
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
 
@@ -139,22 +143,22 @@ static void gen_revb_4h(TCGv dest, TCGv src1)
 
 static void gen_revh_2w(TCGv dest, TCGv src1)
 {
-    TCGv_i64 t0 = tcg_temp_new_i64();
-    TCGv_i64 t1 = tcg_temp_new_i64();
-    TCGv_i64 mask = tcg_constant_i64(0x0000ffff0000ffffull);
+    TCGv t0 = tcg_temp_new();
+    TCGv t1 = tcg_temp_new();
+    TCGv mask = tcg_constant_tl((target_ulong)0x0000ffff0000ffffull);
 
-    tcg_gen_shri_i64(t0, src1, 16);
-    tcg_gen_and_i64(t1, src1, mask);
-    tcg_gen_and_i64(t0, t0, mask);
-    tcg_gen_shli_i64(t1, t1, 16);
-    tcg_gen_or_i64(dest, t1, t0);
+    tcg_gen_shri_tl(t0, src1, 16);
+    tcg_gen_and_tl(t1, src1, mask);
+    tcg_gen_and_tl(t0, t0, mask);
+    tcg_gen_shli_tl(t1, t1, 16);
+    tcg_gen_or_tl(dest, t1, t0);
 }
 
 static void gen_revh_d(TCGv dest, TCGv src1)
 {
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
-    TCGv mask = tcg_constant_tl(0x0000FFFF0000FFFFULL);
+    TCGv mask = tcg_constant_tl((target_ulong)0x0000FFFF0000FFFFULL);
 
     tcg_gen_shri_tl(t1, src1, 16);
     tcg_gen_and_tl(t1, t1, mask);
@@ -191,7 +195,7 @@ TRANS(ctz_d, 64, gen_rr, EXT_NONE, EXT_NONE, gen_ctz_d)
 TRANS(revb_2h, ALL, gen_rr, EXT_NONE, EXT_SIGN, gen_revb_2h)
 TRANS(revb_4h, 64, gen_rr, EXT_NONE, EXT_NONE, gen_revb_4h)
 TRANS(revb_2w, 64, gen_rr, EXT_NONE, EXT_NONE, gen_revb_2w)
-TRANS(revb_d, 64, gen_rr, EXT_NONE, EXT_NONE, tcg_gen_bswap64_i64)
+TRANS(revb_d, 64, gen_rr, EXT_NONE, EXT_NONE, tcg_gen_bswap_tl)
 TRANS(revh_2w, 64, gen_rr, EXT_NONE, EXT_NONE, gen_revh_2w)
 TRANS(revh_d, 64, gen_rr, EXT_NONE, EXT_NONE, gen_revh_d)
 TRANS(bitrev_4b, ALL, gen_rr, EXT_ZERO, EXT_SIGN, gen_helper_bitswap)
