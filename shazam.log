@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/Z3BouGUFFP87PJyx@p100/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2] target/hppa: Speed up hppa_is_pa20()
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 1
+---
+Applying: target/hppa: Speed up hppa_is_pa20()
+Patch failed at 0001 target/hppa: Speed up hppa_is_pa20()
+error: patch failed: target/hppa/cpu.h:266
+error: target/hppa/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
