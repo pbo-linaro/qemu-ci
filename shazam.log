@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/DM8PR13MB50781054A4FDACE6F4FB6469B30F2@DM8PR13MB5078.namprd13.prod.outlook.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2] backends/cryptodev-vhost-user: Fix local_error leaks
+  ---
+  [32m✓[0m Signed: DKIM/outlook.com
+---
+Total patches: 1
+---
+Applying: backends/cryptodev-vhost-user: Fix local_error leaks
+Patch failed at 0001 backends/cryptodev-vhost-user: Fix local_error leaks
+error: git diff header lacks filename information when removing 1 leading pathname component (line 14)
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
