@@ -65,25 +65,71 @@ static int loongarch_cpu_by_arch_id(LoongsonIPICommonState *lics,
 static void loongarch_cpu_plug(HotplugHandler *hotplug_dev,
                                DeviceState *dev, Error **errp)
 {
+    LoongarchIPIState *lis = LOONGARCH_IPI(hotplug_dev);
     Object *obj = OBJECT(dev);
+    LoongArchCPU *cpu;
+    int phy_id, index;
 
     if (!object_dynamic_cast(obj, TYPE_LOONGARCH_CPU)) {
         warn_report("LoongArch IPI: Invalid %s device type",
                                        object_get_typename(obj));
         return;
     }
+
+    cpu = LOONGARCH_CPU(dev);
+    phy_id = cpu->phy_id;
+    if ((phy_id >= MAX_PHY_ID) || (phy_id < 0)) {
+        warn_report("LoongArch IPI: Invalid phy id %d", phy_id);
+        return;
+    }
+
+    if (lis->devs[phy_id].index >= 0) {
+        warn_report("LoongArch IPI: phy id %d is added already", phy_id);
+        return;
+    }
+
+    index = find_first_zero_bit(lis->present_map, LOONGARCH_MAX_CPUS);
+    if (index == LOONGARCH_MAX_CPUS) {
+        error_setg(errp, "no free cpu slots available");
+        return;
+    }
+
+    /* connect ipi irq to cpu irq */
+    set_bit(index, lis->present_map);
+    lis->devs[phy_id].index = index;
+    lis->devs[phy_id].cs = CPU(dev);
+    qdev_connect_gpio_out(DEVICE(lis), index, qdev_get_gpio_in(dev, IRQ_IPI));
 }
 
 static void loongarch_cpu_unplug(HotplugHandler *hotplug_dev,
                                  DeviceState *dev, Error **errp)
 {
+    LoongarchIPIState *lis = LOONGARCH_IPI(hotplug_dev);
     Object *obj = OBJECT(dev);
+    LoongArchCPU *cpu;
+    int phy_id;
 
     if (!object_dynamic_cast(obj, TYPE_LOONGARCH_CPU)) {
         warn_report("LoongArch IPI: Invalid %s device type",
                                        object_get_typename(obj));
         return;
     }
+
+    cpu = LOONGARCH_CPU(dev);
+    phy_id = cpu->phy_id;
+    if ((phy_id >= MAX_PHY_ID) || (phy_id < 0)) {
+        warn_report("LoongArch IPI: Invalid phy id %d", phy_id);
+        return;
+    }
+
+    if (lis->devs[phy_id].index < 0) {
+        warn_report("LoongArch IPI: phy id %d is not added", phy_id);
+        return;
+    }
+
+    clear_bit(lis->devs[phy_id].index, lis->present_map);
+    lis->devs[phy_id].index = INVALID_CPU;
+    lis->devs[phy_id].cs = NULL;
 }
 
 static void loongarch_ipi_realize(DeviceState *dev, Error **errp)

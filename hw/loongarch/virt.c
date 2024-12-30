@@ -851,6 +851,7 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
     CPULoongArchState *env;
     CPUState *cpu_state;
     int cpu, pin, i, start, num;
+    Error *local_err = NULL;
 
     /*
      * Extended IRQ model.
@@ -913,9 +914,7 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
         lacpu = LOONGARCH_CPU(cpu_state);
         env = &(lacpu->env);
         env->address_space_iocsr = &lvms->as_iocsr;
-
-        /* connect ipi irq to cpu irq */
-        qdev_connect_gpio_out(ipi, cpu, qdev_get_gpio_in(cpudev, IRQ_IPI));
+        hotplug_handler_plug(HOTPLUG_HANDLER(ipi), cpudev, &local_err);
         env->ipistate = ipi;
     }
 
