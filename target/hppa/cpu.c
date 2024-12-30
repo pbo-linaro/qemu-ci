@@ -209,6 +209,8 @@ static void hppa_cpu_reset_hold(Object *obj, ResetType type)
 
     memset(env, 0, offsetof(CPUHPPAState, end_reset_fields));
 
+    env->is_pa20 = !!object_dynamic_cast(obj, TYPE_HPPA64_CPU);
+
     cpu_hppa_loaded_fr0(env);
     cpu_hppa_put_psw(env, PSW_M);
 }
