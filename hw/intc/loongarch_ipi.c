@@ -8,6 +8,7 @@
 #include "qemu/osdep.h"
 #include "hw/boards.h"
 #include "qemu/error-report.h"
+#include "qapi/error.h"
 #include "hw/intc/loongarch_ipi.h"
 #include "target/loongarch/cpu.h"
 
@@ -85,11 +86,33 @@ static void loongarch_cpu_unplug(HotplugHandler *hotplug_dev,
     }
 }
 
+static void loongarch_ipi_realize(DeviceState *dev, Error **errp)
+{
+    LoongarchIPIState *lis = LOONGARCH_IPI(dev);
+    LoongarchIPIClass *lic = LOONGARCH_IPI_GET_CLASS(dev);
+    Error *local_err = NULL;
+    int i;
+
+    lic->parent_realize(dev, &local_err);
+    if (local_err) {
+        error_propagate(errp, local_err);
+        return;
+    }
+
+    for (i = 0; i < MAX_PHY_ID; i++) {
+        lis->devs[i].index = INVALID_CPU;
+    }
+}
+
 static void loongarch_ipi_class_init(ObjectClass *klass, void *data)
 {
+    DeviceClass *dc = DEVICE_CLASS(klass);
     LoongsonIPICommonClass *licc = LOONGSON_IPI_COMMON_CLASS(klass);
+    LoongarchIPIClass *lic = LOONGARCH_IPI_CLASS(klass);
     HotplugHandlerClass *hc = HOTPLUG_HANDLER_CLASS(klass);
 
+    device_class_set_parent_realize(dc, loongarch_ipi_realize,
+                                    &lic->parent_realize);
     licc->get_iocsr_as = get_iocsr_as;
     licc->cpu_by_arch_id = loongarch_cpu_by_arch_id;
     hc->plug = loongarch_cpu_plug;
@@ -100,6 +123,7 @@ static const TypeInfo loongarch_ipi_types[] = {
     {
         .name               = TYPE_LOONGARCH_IPI,
         .parent             = TYPE_LOONGSON_IPI_COMMON,
+        .instance_size      = sizeof(LoongarchIPIState),
         .class_init         = loongarch_ipi_class_init,
         .interfaces         = (InterfaceInfo[]) {
             { TYPE_HOTPLUG_HANDLER },
