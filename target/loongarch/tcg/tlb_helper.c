@@ -538,9 +538,9 @@ target_ulong helper_lddir(CPULoongArchState *env, target_ulong base,
     badvaddr = env->CSR_TLBRBADV;
     base = base & TARGET_PHYS_MASK;
 
-    /* 0:64bit, 1:128bit, 2:192bit, 3:256bit */
+    /* 0:64bit, 1:128bit, 2:256bit, 3:512bit */
     shift = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTEWIDTH);
-    shift = (shift + 1) * 3;
+    shift = shift + 3;
 
     get_dir_base_width(env, &dir_base, &dir_width, level);
     index = (badvaddr >> dir_base) & ((1 << dir_width) - 1);
@@ -595,9 +595,9 @@ void helper_ldpte(CPULoongArchState *env, target_ulong base, target_ulong odd,
             tmp0 += MAKE_64BIT_MASK(ps, 1);
         }
     } else {
-        /* 0:64bit, 1:128bit, 2:192bit, 3:256bit */
+        /* 0:64bit, 1:128bit, 2:256bit, 3:512bit */
         shift = FIELD_EX64(env->CSR_PWCL, CSR_PWCL, PTEWIDTH);
-        shift = (shift + 1) * 3;
+        shift = shift + 3;
         badv = env->CSR_TLBRBADV;
 
         ptindex = (badv >> ptbase) & ((1 << ptwidth) - 1);
