@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20241230153929.87137-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] accel/tcg: Remove pointless initialization of cflags_next_tb
+  [32m✓[0m [PATCH 2/3] target/cpus: Remove pointless re-assignment of CPUState::exception_index
+  [32m✓[0m [PATCH 3/3] target/cpus: Remove pointless re-assignment of CPUState::halted
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: accel/tcg: Remove pointless initialization of cflags_next_tb
+Applying: target/cpus: Remove pointless re-assignment of CPUState::exception_index
+Patch failed at 0002 target/cpus: Remove pointless re-assignment of CPUState::exception_index
+error: patch failed: target/hppa/cpu.c:203
+error: target/hppa/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
