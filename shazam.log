@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20241231032654.133039-1-frank.chang@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 41 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v11 1/6] target/riscv: Add 'ext_smrnmi' in the RISCVCPUConfig
+  [32m✓[0m [PATCH v11 2/6] target/riscv: Add Smrnmi CSRs
+  [32m✓[0m [PATCH v11 3/6] target/riscv: Handle Smrnmi interrupt and exception
+  [32m✓[0m [PATCH v11 4/6] target/riscv: Add Smrnmi mnret instruction
+  [32m✓[0m [PATCH v11 5/6] target/riscv: Add Smrnmi cpu extension
+  [32m✓[0m [PATCH v11 6/6] target/riscv: Add Zicfilp support for Smrnmi
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 6
+---
+Applying: target/riscv: Add 'ext_smrnmi' in the RISCVCPUConfig
+Applying: target/riscv: Add Smrnmi CSRs
+Applying: target/riscv: Handle Smrnmi interrupt and exception
+Patch failed at 0003 target/riscv: Handle Smrnmi interrupt and exception
+error: patch failed: hw/riscv/riscv_hart.c:33
+error: hw/riscv/riscv_hart.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
