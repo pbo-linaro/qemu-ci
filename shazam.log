@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20241231002336.25931-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/9] rust: vmstate: add new type safe implementation
+  [32m✓[0m [PATCH RFC 2/9] rust: vmstate: implement VMState for non-leaf types
+  [32m✓[0m [PATCH RFC 3/9] rust: vmstate: add varray support to vmstate_of!
+  [32m✓[0m [PATCH RFC 4/9] rust: vmstate: implement Zeroable for VMStateField
+  [32m✓[0m [PATCH RFC 5/9] rust: vmstate: implement VMState for scalar types
+  [32m✓[0m [PATCH RFC 6/9] rust: vmstate: add public utility macros to implement VMState
+  [32m✓[0m [PATCH RFC 7/9] rust: qemu_api: add vmstate_struct and vmstate_cell
+  [32m✓[0m [PATCH RFC 8/9] rust: pl011: switch vmstate to new-style macros
+  [32m✓[0m [PATCH RFC 9/9] rust: vmstate: remove translation of C vmstate macros
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+Applying: rust: vmstate: add new type safe implementation
+Patch failed at 0001 rust: vmstate: add new type safe implementation
+error: patch failed: rust/qemu-api/src/prelude.rs:18
+error: rust/qemu-api/src/prelude.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
