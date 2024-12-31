@@ -162,6 +162,7 @@ static uint64_t vfio_generic_quirk_mirror_read(void *opaque,
     (void)vfio_region_read(&vdev->bars[mirror->bar].region,
                            addr + mirror->offset, size);
 
+    addr += mirror->config_offset;
     data = vfio_pci_read_config(&vdev->pdev, addr, size);
     trace_vfio_quirk_generic_mirror_read(vdev->vbasedev.name,
                                          memory_region_name(mirror->mem),
@@ -175,6 +176,7 @@ static void vfio_generic_quirk_mirror_write(void *opaque, hwaddr addr,
     VFIOConfigMirrorQuirk *mirror = opaque;
     VFIOPCIDevice *vdev = mirror->vdev;
 
+    addr += mirror->config_offset;
     vfio_pci_write_config(&vdev->pdev, addr, data, size);
     trace_vfio_quirk_generic_mirror_write(vdev->vbasedev.name,
                                           memory_region_name(mirror->mem),
@@ -456,6 +458,7 @@ static void vfio_probe_ati_bar2_quirk(VFIOPCIDevice *vdev, int nr)
     mirror->mem = quirk->mem;
     mirror->vdev = vdev;
     mirror->offset = 0x4000;
+    mirror->config_offset = 0;
     mirror->bar = nr;
 
     memory_region_init_io(mirror->mem, OBJECT(vdev),
@@ -908,6 +911,7 @@ static void vfio_probe_nvidia_bar0_quirk(VFIOPCIDevice *vdev, int nr)
     mirror->mem = quirk->mem;
     mirror->vdev = vdev;
     mirror->offset = 0x88000;
+    mirror->config_offset = 0;
     mirror->bar = nr;
     last = (LastDataSet *)&mirror->data;
     last->quirk = quirk;
@@ -929,6 +933,7 @@ static void vfio_probe_nvidia_bar0_quirk(VFIOPCIDevice *vdev, int nr)
         mirror->mem = quirk->mem;
         mirror->vdev = vdev;
         mirror->offset = 0x1800;
+        mirror->config_offset = 0;
         mirror->bar = nr;
         last = (LastDataSet *)&mirror->data;
         last->quirk = quirk;
