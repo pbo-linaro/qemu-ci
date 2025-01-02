@@ -31,6 +31,10 @@
 #define TCG_TARGET_HAS_ctpop(T)         have_popcnt
 #define TCG_TARGET_HAS_ctz(T)           1
 #define TCG_TARGET_HAS_div2(T)          1
+#define TCG_TARGET_HAS_muls2(T)         1
+#define TCG_TARGET_HAS_mulu2(T)         1
+#define TCG_TARGET_HAS_mulsh(T)         0
+#define TCG_TARGET_HAS_muluh(T)         0
 #define TCG_TARGET_HAS_rot(T)           1
 
 /* optional integer and vector instructions */
@@ -52,10 +56,6 @@
 #define TCG_TARGET_HAS_negsetcond_i32   1
 #define TCG_TARGET_HAS_add2_i32         1
 #define TCG_TARGET_HAS_sub2_i32         1
-#define TCG_TARGET_HAS_mulu2_i32        1
-#define TCG_TARGET_HAS_muls2_i32        1
-#define TCG_TARGET_HAS_muluh_i32        0
-#define TCG_TARGET_HAS_mulsh_i32        0
 
 #if TCG_TARGET_REG_BITS == 64
 /* Keep 32-bit values zero-extended in a register.  */
@@ -73,10 +73,6 @@
 #define TCG_TARGET_HAS_negsetcond_i64   1
 #define TCG_TARGET_HAS_add2_i64         1
 #define TCG_TARGET_HAS_sub2_i64         1
-#define TCG_TARGET_HAS_mulu2_i64        1
-#define TCG_TARGET_HAS_muls2_i64        1
-#define TCG_TARGET_HAS_muluh_i64        0
-#define TCG_TARGET_HAS_mulsh_i64        0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 #else
 #define TCG_TARGET_HAS_qemu_st8_i32     1

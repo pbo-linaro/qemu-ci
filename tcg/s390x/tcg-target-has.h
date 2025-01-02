@@ -34,6 +34,10 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_ctpop(T)       1
 #define TCG_TARGET_HAS_ctz(T)         0
 #define TCG_TARGET_HAS_div2(T)        1
+#define TCG_TARGET_HAS_muls2(T)       (T == TCG_TYPE_I64 && HAVE_FACILITY(MISC_INSN_EXT2))
+#define TCG_TARGET_HAS_mulu2(T)       (T == TCG_TYPE_I64)
+#define TCG_TARGET_HAS_mulsh(T)       0
+#define TCG_TARGET_HAS_muluh(T)       0
 #define TCG_TARGET_HAS_rot(T)         1
 
 /* optional integer and vector instructions */
@@ -55,10 +59,6 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_negsetcond_i32 1
 #define TCG_TARGET_HAS_add2_i32       1
 #define TCG_TARGET_HAS_sub2_i32       1
-#define TCG_TARGET_HAS_mulu2_i32      0
-#define TCG_TARGET_HAS_muls2_i32      0
-#define TCG_TARGET_HAS_muluh_i32      0
-#define TCG_TARGET_HAS_mulsh_i32      0
 #define TCG_TARGET_HAS_extr_i64_i32   0
 #define TCG_TARGET_HAS_qemu_st8_i32   0
 
@@ -75,10 +75,6 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_negsetcond_i64 1
 #define TCG_TARGET_HAS_add2_i64       1
 #define TCG_TARGET_HAS_sub2_i64       1
-#define TCG_TARGET_HAS_mulu2_i64      1
-#define TCG_TARGET_HAS_muls2_i64      HAVE_FACILITY(MISC_INSN_EXT2)
-#define TCG_TARGET_HAS_muluh_i64      0
-#define TCG_TARGET_HAS_mulsh_i64      0
 
 #define TCG_TARGET_HAS_qemu_ldst_i128 1
 

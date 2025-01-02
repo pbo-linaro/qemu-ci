@@ -29,6 +29,10 @@ extern bool use_neon_instructions;
 #define TCG_TARGET_HAS_ctpop(T)         0
 #define TCG_TARGET_HAS_ctz(T)           use_armv7_instructions
 #define TCG_TARGET_HAS_div(T)           use_idiv_instructions
+#define TCG_TARGET_HAS_muls2(T)         1
+#define TCG_TARGET_HAS_mulu2(T)         1
+#define TCG_TARGET_HAS_mulsh(T)         0
+#define TCG_TARGET_HAS_muluh(T)         0
 #define TCG_TARGET_HAS_rem(T)           0
 #define TCG_TARGET_HAS_rot(T)           1
 
@@ -49,10 +53,6 @@ extern bool use_neon_instructions;
 #define TCG_TARGET_HAS_sextract_i32     use_armv7_instructions
 #define TCG_TARGET_HAS_extract2_i32     1
 #define TCG_TARGET_HAS_negsetcond_i32   1
-#define TCG_TARGET_HAS_mulu2_i32        1
-#define TCG_TARGET_HAS_muls2_i32        1
-#define TCG_TARGET_HAS_muluh_i32        0
-#define TCG_TARGET_HAS_mulsh_i32        0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
 #define TCG_TARGET_HAS_qemu_ldst_i128   0

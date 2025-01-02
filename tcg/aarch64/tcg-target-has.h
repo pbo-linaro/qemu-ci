@@ -18,6 +18,10 @@
 #define TCG_TARGET_HAS_ctpop(T)         0
 #define TCG_TARGET_HAS_ctz(T)           1
 #define TCG_TARGET_HAS_div(T)           1
+#define TCG_TARGET_HAS_muls2(T)         0
+#define TCG_TARGET_HAS_mulu2(T)         0
+#define TCG_TARGET_HAS_mulsh(T)         (T == TCG_TYPE_I64)
+#define TCG_TARGET_HAS_muluh(T)         (T == TCG_TYPE_I64)
 #define TCG_TARGET_HAS_rem(T)           1
 #define TCG_TARGET_HAS_rot(T)           1
 
@@ -40,10 +44,6 @@
 #define TCG_TARGET_HAS_negsetcond_i32   1
 #define TCG_TARGET_HAS_add2_i32         1
 #define TCG_TARGET_HAS_sub2_i32         1
-#define TCG_TARGET_HAS_mulu2_i32        0
-#define TCG_TARGET_HAS_muls2_i32        0
-#define TCG_TARGET_HAS_muluh_i32        0
-#define TCG_TARGET_HAS_mulsh_i32        0
 #define TCG_TARGET_HAS_extr_i64_i32     0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
@@ -60,10 +60,6 @@
 #define TCG_TARGET_HAS_negsetcond_i64   1
 #define TCG_TARGET_HAS_add2_i64         1
 #define TCG_TARGET_HAS_sub2_i64         1
-#define TCG_TARGET_HAS_mulu2_i64        0
-#define TCG_TARGET_HAS_muls2_i64        0
-#define TCG_TARGET_HAS_muluh_i64        1
-#define TCG_TARGET_HAS_mulsh_i64        1
 
 /*
  * Without FEAT_LSE2, we must use LDXP+STXP to implement atomic 128-bit load,

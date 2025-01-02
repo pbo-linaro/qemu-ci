@@ -15,6 +15,10 @@
 #define TCG_TARGET_HAS_ctpop(T)         0
 #define TCG_TARGET_HAS_ctz(T)           1
 #define TCG_TARGET_HAS_div(T)           1
+#define TCG_TARGET_HAS_muls2(T)         0
+#define TCG_TARGET_HAS_mulu2(T)         0
+#define TCG_TARGET_HAS_mulsh(T)         1
+#define TCG_TARGET_HAS_muluh(T)         1
 #define TCG_TARGET_HAS_rem(T)           1
 #define TCG_TARGET_HAS_rot(T)           1
 
@@ -33,10 +37,6 @@
 #define TCG_TARGET_HAS_extract2_i32     0
 #define TCG_TARGET_HAS_add2_i32         0
 #define TCG_TARGET_HAS_sub2_i32         0
-#define TCG_TARGET_HAS_mulu2_i32        0
-#define TCG_TARGET_HAS_muls2_i32        0
-#define TCG_TARGET_HAS_muluh_i32        1
-#define TCG_TARGET_HAS_mulsh_i32        1
 #define TCG_TARGET_HAS_ext8s_i32        1
 #define TCG_TARGET_HAS_ext16s_i32       1
 #define TCG_TARGET_HAS_ext8u_i32        1
@@ -60,10 +60,6 @@
 #define TCG_TARGET_HAS_ext32u_i64       1
 #define TCG_TARGET_HAS_add2_i64         0
 #define TCG_TARGET_HAS_sub2_i64         0
-#define TCG_TARGET_HAS_mulu2_i64        0
-#define TCG_TARGET_HAS_muls2_i64        0
-#define TCG_TARGET_HAS_muluh_i64        1
-#define TCG_TARGET_HAS_mulsh_i64        1
 
 #define TCG_TARGET_HAS_qemu_ldst_i128   (cpuinfo & CPUINFO_LSX)
 

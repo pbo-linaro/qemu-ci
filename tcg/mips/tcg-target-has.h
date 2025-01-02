@@ -44,6 +44,10 @@ extern bool use_mips32r2_instructions;
 #define TCG_TARGET_HAS_ctpop(T)         0
 #define TCG_TARGET_HAS_ctz(T)           0
 #define TCG_TARGET_HAS_div(T)           1
+#define TCG_TARGET_HAS_muls2(T)         (!use_mips32r6_instructions)
+#define TCG_TARGET_HAS_mulu2(T)         (!use_mips32r6_instructions)
+#define TCG_TARGET_HAS_mulsh(T)         1
+#define TCG_TARGET_HAS_muluh(T)         1
 #define TCG_TARGET_HAS_rem(T)           1
 #define TCG_TARGET_HAS_rot(T)           use_mips32r2_instructions
 
@@ -55,10 +59,6 @@ extern bool use_mips32r2_instructions;
 #define TCG_TARGET_HAS_not(T)           1
 #define TCG_TARGET_HAS_orc(T)           0
 
-#define TCG_TARGET_HAS_mulu2_i32        (!use_mips32r6_instructions)
-#define TCG_TARGET_HAS_muls2_i32        (!use_mips32r6_instructions)
-#define TCG_TARGET_HAS_muluh_i32        1
-#define TCG_TARGET_HAS_mulsh_i32        1
 #define TCG_TARGET_HAS_negsetcond_i32   0
 
 #if TCG_TARGET_REG_BITS == 64
@@ -67,10 +67,6 @@ extern bool use_mips32r2_instructions;
 #define TCG_TARGET_HAS_extr_i64_i32     1
 #define TCG_TARGET_HAS_add2_i64         0
 #define TCG_TARGET_HAS_sub2_i64         0
-#define TCG_TARGET_HAS_mulu2_i64        (!use_mips32r6_instructions)
-#define TCG_TARGET_HAS_muls2_i64        (!use_mips32r6_instructions)
-#define TCG_TARGET_HAS_muluh_i64        1
-#define TCG_TARGET_HAS_mulsh_i64        1
 #define TCG_TARGET_HAS_ext32s_i64       1
 #define TCG_TARGET_HAS_ext32u_i64       1
 #define TCG_TARGET_HAS_negsetcond_i64   0

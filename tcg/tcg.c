@@ -2235,13 +2235,13 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sub2_i32:
         return TCG_TARGET_HAS_sub2_i32;
     case INDEX_op_mulu2_i32:
-        return TCG_TARGET_HAS_mulu2_i32;
+        return TCG_TARGET_HAS_mulu2(TCG_TYPE_I32);
     case INDEX_op_muls2_i32:
-        return TCG_TARGET_HAS_muls2_i32;
+        return TCG_TARGET_HAS_muls2(TCG_TYPE_I32);
     case INDEX_op_muluh_i32:
-        return TCG_TARGET_HAS_muluh_i32;
+        return TCG_TARGET_HAS_muluh(TCG_TYPE_I32);
     case INDEX_op_mulsh_i32:
-        return TCG_TARGET_HAS_mulsh_i32;
+        return TCG_TARGET_HAS_mulsh(TCG_TYPE_I32);
     case INDEX_op_ext8s_i32:
         return TCG_TARGET_HAS_ext8s_i32;
     case INDEX_op_ext16s_i32:
@@ -2369,13 +2369,13 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sub2_i64:
         return TCG_TARGET_HAS_sub2_i64;
     case INDEX_op_mulu2_i64:
-        return TCG_TARGET_HAS_mulu2_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_mulu2(TCG_TYPE_I64);
     case INDEX_op_muls2_i64:
-        return TCG_TARGET_HAS_muls2_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_muls2(TCG_TYPE_I64);
     case INDEX_op_muluh_i64:
-        return TCG_TARGET_HAS_muluh_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_muluh(TCG_TYPE_I64);
     case INDEX_op_mulsh_i64:
-        return TCG_TARGET_HAS_mulsh_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_mulsh(TCG_TYPE_I64);
 
     case INDEX_op_mov_vec:
     case INDEX_op_dup_vec:
@@ -4013,22 +4013,22 @@ liveness_pass_1(TCGContext *s)
         case INDEX_op_mulu2_i32:
             opc_new = INDEX_op_mul_i32;
             opc_new2 = INDEX_op_muluh_i32;
-            have_opc_new2 = TCG_TARGET_HAS_muluh_i32;
+            have_opc_new2 = TCG_TARGET_HAS_muluh(TCG_TYPE_I32);
             goto do_mul2;
         case INDEX_op_muls2_i32:
             opc_new = INDEX_op_mul_i32;
             opc_new2 = INDEX_op_mulsh_i32;
-            have_opc_new2 = TCG_TARGET_HAS_mulsh_i32;
+            have_opc_new2 = TCG_TARGET_HAS_mulsh(TCG_TYPE_I32);
             goto do_mul2;
         case INDEX_op_mulu2_i64:
             opc_new = INDEX_op_mul_i64;
             opc_new2 = INDEX_op_muluh_i64;
-            have_opc_new2 = TCG_TARGET_HAS_muluh_i64;
+            have_opc_new2 = TCG_TARGET_HAS_muluh(TCG_TYPE_I64);
             goto do_mul2;
         case INDEX_op_muls2_i64:
             opc_new = INDEX_op_mul_i64;
             opc_new2 = INDEX_op_mulsh_i64;
-            have_opc_new2 = TCG_TARGET_HAS_mulsh_i64;
+            have_opc_new2 = TCG_TARGET_HAS_mulsh(TCG_TYPE_I64);
             goto do_mul2;
         do_mul2:
             nb_iargs = 2;
