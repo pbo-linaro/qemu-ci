@@ -1138,20 +1138,27 @@ static void init_call_layout(TCGHelperInfo *info)
         break;
     case dh_typecode_i32:
     case dh_typecode_s32:
+        info->nr_out = 1;
+        info->out_kind = TCG_CALL_RET_NORMAL;
+        info->out_type = TCG_TYPE_I32;
+        break;
     case dh_typecode_ptr:
         info->nr_out = 1;
         info->out_kind = TCG_CALL_RET_NORMAL;
+        info->out_type = TCG_TYPE_PTR;
         break;
     case dh_typecode_i64:
     case dh_typecode_s64:
         info->nr_out = 64 / TCG_TARGET_REG_BITS;
         info->out_kind = TCG_CALL_RET_NORMAL;
+        info->out_type = TCG_TYPE_I64;
         /* Query the last register now to trigger any assert early. */
         tcg_target_call_oarg_reg(info->out_kind, info->nr_out - 1);
         break;
     case dh_typecode_i128:
         info->nr_out = 128 / TCG_TARGET_REG_BITS;
         info->out_kind = TCG_TARGET_CALL_RET_I128;
+        info->out_type = TCG_TYPE_I128;
         switch (TCG_TARGET_CALL_RET_I128) {
         case TCG_CALL_RET_NORMAL:
             /* Query the last register now to trigger any assert early. */

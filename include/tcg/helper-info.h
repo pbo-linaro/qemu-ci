@@ -58,7 +58,8 @@ struct TCGHelperInfo {
     unsigned flags              : 8;
     unsigned nr_in              : 8;
     unsigned nr_out             : 8;
-    TCGCallReturnKind out_kind  : 8;
+    TCGCallReturnKind out_kind  : 4;
+    TCGType out_type            : 4;
 
     /* Maximum physical arguments are constrained by TCG_TYPE_I128. */
     TCGCallArgumentLoc in[MAX_CALL_IARGS * (128 / TCG_TARGET_REG_BITS)];
