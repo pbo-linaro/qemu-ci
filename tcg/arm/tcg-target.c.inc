@@ -1925,18 +1925,18 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
                             args[0], args[1], args[2], const_args[2]);
         }
         break;
-    case INDEX_op_and_i32:
+    case INDEX_op_and:
         tcg_out_dat_rIK(s, COND_AL, ARITH_AND, ARITH_BIC,
                         args[0], args[1], args[2], const_args[2]);
         break;
-    case INDEX_op_andc_i32:
+    case INDEX_op_andc:
         tcg_out_dat_rIK(s, COND_AL, ARITH_BIC, ARITH_AND,
                         args[0], args[1], args[2], const_args[2]);
         break;
-    case INDEX_op_or_i32:
+    case INDEX_op_or:
         c = ARITH_ORR;
         goto gen_arith;
-    case INDEX_op_xor_i32:
+    case INDEX_op_xor:
         c = ARITH_EOR;
         /* Fall through.  */
     gen_arith:
@@ -1985,7 +1985,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_neg_i32:
         tcg_out_dat_imm(s, COND_AL, ARITH_RSB, args[0], args[1], 0);
         break;
-    case INDEX_op_not_i32:
+    case INDEX_op_not:
         tcg_out_dat_reg(s, COND_AL,
                         ARITH_MVN, args[0], 0, args[1], SHIFT_IMM_LSL(0));
         break;
@@ -2183,7 +2183,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_ld_i32:
     case INDEX_op_neg_i32:
-    case INDEX_op_not_i32:
+    case INDEX_op_not:
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap32_i32:
     case INDEX_op_extract_i32:
@@ -2199,8 +2199,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_negsetcond_i32:
         return C_O1_I2(r, r, rIN);
 
-    case INDEX_op_and_i32:
-    case INDEX_op_andc_i32:
+    case INDEX_op_and:
+    case INDEX_op_andc:
     case INDEX_op_clz_i32:
     case INDEX_op_ctz_i32:
         return C_O1_I2(r, r, rIK);
@@ -2214,8 +2214,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_muls2_i32:
         return C_O2_I2(r, r, r, r);
 
-    case INDEX_op_or_i32:
-    case INDEX_op_xor_i32:
+    case INDEX_op_or:
+    case INDEX_op_xor:
         return C_O1_I2(r, r, rI);
 
     case INDEX_op_shl_i32:

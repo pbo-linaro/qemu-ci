@@ -2222,10 +2222,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_insn(s, 3502, SUB, ext, a0, TCG_REG_XZR, a1);
         break;
 
-    case INDEX_op_and_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_and_i64:
+    case INDEX_op_and:
         if (c2) {
             tcg_out_logicali(s, I3404_ANDI, ext, a0, a1, a2);
         } else {
@@ -2233,10 +2230,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_andc_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_andc_i64:
+    case INDEX_op_andc:
         if (c2) {
             tcg_out_logicali(s, I3404_ANDI, ext, a0, a1, ~a2);
         } else {
@@ -2244,10 +2238,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_or_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_or_i64:
+    case INDEX_op_or:
         if (c2) {
             tcg_out_logicali(s, I3404_ORRI, ext, a0, a1, a2);
         } else {
@@ -2255,10 +2246,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_orc_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_orc_i64:
+    case INDEX_op_orc:
         if (c2) {
             tcg_out_logicali(s, I3404_ORRI, ext, a0, a1, ~a2);
         } else {
@@ -2266,10 +2254,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_xor_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_xor_i64:
+    case INDEX_op_xor:
         if (c2) {
             tcg_out_logicali(s, I3404_EORI, ext, a0, a1, a2);
         } else {
@@ -2277,10 +2262,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_eqv_i32:
-        a2 = (int32_t)a2;
-        /* FALLTHRU */
-    case INDEX_op_eqv_i64:
+    case INDEX_op_eqv:
         if (c2) {
             tcg_out_logicali(s, I3404_EORI, ext, a0, a1, ~a2);
         } else {
@@ -2288,8 +2270,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_not_i64:
-    case INDEX_op_not_i32:
+    case INDEX_op_not:
         tcg_out_insn(s, 3510, ORN, ext, a0, TCG_REG_XZR, a1);
         break;
 
@@ -2976,8 +2957,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ld_i64:
     case INDEX_op_neg_i32:
     case INDEX_op_neg_i64:
-    case INDEX_op_not_i32:
-    case INDEX_op_not_i64:
+    case INDEX_op_not:
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap32_i32:
     case INDEX_op_bswap16_i64:
@@ -3023,18 +3003,12 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_mulsh_i64:
         return C_O1_I2(r, r, r);
 
-    case INDEX_op_and_i32:
-    case INDEX_op_and_i64:
-    case INDEX_op_or_i32:
-    case INDEX_op_or_i64:
-    case INDEX_op_xor_i32:
-    case INDEX_op_xor_i64:
-    case INDEX_op_andc_i32:
-    case INDEX_op_andc_i64:
-    case INDEX_op_orc_i32:
-    case INDEX_op_orc_i64:
-    case INDEX_op_eqv_i32:
-    case INDEX_op_eqv_i64:
+    case INDEX_op_and:
+    case INDEX_op_or:
+    case INDEX_op_xor:
+    case INDEX_op_andc:
+    case INDEX_op_orc:
+    case INDEX_op_eqv:
         return C_O1_I2(r, r, rL);
 
     case INDEX_op_shl_i32:

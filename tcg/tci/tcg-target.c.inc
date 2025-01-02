@@ -44,8 +44,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_ld_i32:
     case INDEX_op_ld_i64:
-    case INDEX_op_not_i32:
-    case INDEX_op_not_i64:
+    case INDEX_op_not:
     case INDEX_op_neg_i32:
     case INDEX_op_neg_i64:
     case INDEX_op_ext_i32_i64:
@@ -83,22 +82,14 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_sub_i64:
     case INDEX_op_mul_i32:
     case INDEX_op_mul_i64:
-    case INDEX_op_and_i32:
-    case INDEX_op_and_i64:
-    case INDEX_op_andc_i32:
-    case INDEX_op_andc_i64:
-    case INDEX_op_eqv_i32:
-    case INDEX_op_eqv_i64:
-    case INDEX_op_nand_i32:
-    case INDEX_op_nand_i64:
-    case INDEX_op_nor_i32:
-    case INDEX_op_nor_i64:
-    case INDEX_op_or_i32:
-    case INDEX_op_or_i64:
-    case INDEX_op_orc_i32:
-    case INDEX_op_orc_i64:
-    case INDEX_op_xor_i32:
-    case INDEX_op_xor_i64:
+    case INDEX_op_and:
+    case INDEX_op_andc:
+    case INDEX_op_eqv:
+    case INDEX_op_nand:
+    case INDEX_op_nor:
+    case INDEX_op_or:
+    case INDEX_op_orc:
+    case INDEX_op_xor:
     case INDEX_op_shl_i32:
     case INDEX_op_shl_i64:
     case INDEX_op_shr_i32:
@@ -728,14 +719,14 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     CASE_32_64(add)
     CASE_32_64(sub)
     CASE_32_64(mul)
-    CASE_32_64(and)
-    CASE_32_64(or)
-    CASE_32_64(xor)
-    CASE_32_64(andc)     /* Optional (TCG_TARGET_HAS_andc_*). */
-    CASE_32_64(orc)      /* Optional (TCG_TARGET_HAS_orc_*). */
-    CASE_32_64(eqv)      /* Optional (TCG_TARGET_HAS_eqv_*). */
-    CASE_32_64(nand)     /* Optional (TCG_TARGET_HAS_nand_*). */
-    CASE_32_64(nor)      /* Optional (TCG_TARGET_HAS_nor_*). */
+    case INDEX_op_and:
+    case INDEX_op_or:
+    case INDEX_op_xor:
+    case INDEX_op_andc:
+    case INDEX_op_orc:
+    case INDEX_op_eqv:
+    case INDEX_op_nand:
+    case INDEX_op_nor:
     CASE_32_64(shl)
     CASE_32_64(shr)
     CASE_32_64(sar)
@@ -770,7 +761,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
 
     CASE_32_64(neg)      /* Optional (TCG_TARGET_HAS_neg_*). */
-    CASE_32_64(not)      /* Optional (TCG_TARGET_HAS_not_*). */
+    case INDEX_op_not:
     CASE_32_64(ctpop)    /* Optional (TCG_TARGET_HAS_ctpop_*). */
     case INDEX_op_bswap32_i32: /* Optional (TCG_TARGET_HAS_bswap). */
     case INDEX_op_bswap64_i64: /* Optional (TCG_TARGET_HAS_bswap). */

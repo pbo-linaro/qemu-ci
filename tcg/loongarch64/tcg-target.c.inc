@@ -1312,13 +1312,11 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_opc_srai_d(s, a0, a1, 32);
         break;
 
-    case INDEX_op_not_i32:
-    case INDEX_op_not_i64:
+    case INDEX_op_not:
         tcg_out_opc_nor(s, a0, a1, TCG_REG_ZERO);
         break;
 
-    case INDEX_op_nor_i32:
-    case INDEX_op_nor_i64:
+    case INDEX_op_nor:
         if (c2) {
             tcg_out_opc_ori(s, a0, a1, a2);
             tcg_out_opc_nor(s, a0, a0, TCG_REG_ZERO);
@@ -1327,8 +1325,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_andc_i32:
-    case INDEX_op_andc_i64:
+    case INDEX_op_andc:
         if (c2) {
             /* guaranteed to fit due to constraint */
             tcg_out_opc_andi(s, a0, a1, ~a2);
@@ -1337,8 +1334,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_orc_i32:
-    case INDEX_op_orc_i64:
+    case INDEX_op_orc:
         if (c2) {
             /* guaranteed to fit due to constraint */
             tcg_out_opc_ori(s, a0, a1, ~a2);
@@ -1347,8 +1343,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_and_i32:
-    case INDEX_op_and_i64:
+    case INDEX_op_and:
         if (c2) {
             tcg_out_opc_andi(s, a0, a1, a2);
         } else {
@@ -1356,8 +1351,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_or_i32:
-    case INDEX_op_or_i64:
+    case INDEX_op_or:
         if (c2) {
             tcg_out_opc_ori(s, a0, a1, a2);
         } else {
@@ -1365,8 +1359,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_xor_i32:
-    case INDEX_op_xor_i64:
+    case INDEX_op_xor:
         if (c2) {
             tcg_out_opc_xori(s, a0, a1, a2);
         } else {
@@ -2249,8 +2242,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ext_i32_i64:
     case INDEX_op_neg_i32:
     case INDEX_op_neg_i64:
-    case INDEX_op_not_i32:
-    case INDEX_op_not_i64:
+    case INDEX_op_not:
     case INDEX_op_extract_i32:
     case INDEX_op_extract_i64:
     case INDEX_op_sextract_i32:
@@ -2268,10 +2260,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_qemu_ld_a64_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_andc_i32:
-    case INDEX_op_andc_i64:
-    case INDEX_op_orc_i32:
-    case INDEX_op_orc_i64:
+    case INDEX_op_andc:
+    case INDEX_op_orc:
         /*
          * LoongArch insns for these ops don't have reg-imm forms, but we
          * can express using andi/ori if ~constant satisfies
@@ -2296,14 +2286,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_add_i64:
         return C_O1_I2(r, r, rJ);
 
-    case INDEX_op_and_i32:
-    case INDEX_op_and_i64:
-    case INDEX_op_nor_i32:
-    case INDEX_op_nor_i64:
-    case INDEX_op_or_i32:
-    case INDEX_op_or_i64:
-    case INDEX_op_xor_i32:
-    case INDEX_op_xor_i64:
+    case INDEX_op_and:
+    case INDEX_op_nor:
+    case INDEX_op_or:
+    case INDEX_op_xor:
         /* LoongArch reg-imm bitops have their imms ZERO-extended */
         return C_O1_I2(r, r, rU);
 

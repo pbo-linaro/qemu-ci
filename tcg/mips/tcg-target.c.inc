@@ -1769,12 +1769,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_add_i64:
         i1 = OPC_DADDU, i2 = OPC_DADDIU;
         goto do_binary;
-    case INDEX_op_or_i32:
-    case INDEX_op_or_i64:
+    case INDEX_op_or:
         i1 = OPC_OR, i2 = OPC_ORI;
         goto do_binary;
-    case INDEX_op_xor_i32:
-    case INDEX_op_xor_i64:
+    case INDEX_op_xor:
         i1 = OPC_XOR, i2 = OPC_XORI;
     do_binary:
         if (c2) {
@@ -1796,28 +1794,23 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             break;
         }
         goto do_binaryv;
-    case INDEX_op_and_i32:
-        if (c2 && a2 != (uint16_t)a2) {
-            int msb = ctz32(~a2) - 1;
-            tcg_debug_assert(use_mips32r2_instructions);
-            tcg_debug_assert(is_p2m1(a2));
-            tcg_out_opc_bf(s, OPC_EXT, a0, a1, msb, 0);
-            break;
-        }
-        i1 = OPC_AND, i2 = OPC_ANDI;
-        goto do_binary;
-    case INDEX_op_and_i64:
+
+    case INDEX_op_and:
         if (c2 && a2 != (uint16_t)a2) {
             int msb = ctz64(~a2) - 1;
             tcg_debug_assert(use_mips32r2_instructions);
             tcg_debug_assert(is_p2m1(a2));
-            tcg_out_opc_bf64(s, OPC_DEXT, OPC_DEXTM, OPC_DEXTU, a0, a1, msb, 0);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_bf(s, OPC_EXT, a0, a1, msb, 0);
+            } else {
+                tcg_out_opc_bf64(s, OPC_DEXT, OPC_DEXTM, OPC_DEXTU, a0, a1, msb, 0);
+            }
             break;
         }
         i1 = OPC_AND, i2 = OPC_ANDI;
         goto do_binary;
-    case INDEX_op_nor_i32:
-    case INDEX_op_nor_i64:
+
+    case INDEX_op_nor:
         i1 = OPC_NOR;
         goto do_binaryv;
 
@@ -1946,8 +1939,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_neg_i64:
         i1 = OPC_DSUBU;
         goto do_unary;
-    case INDEX_op_not_i32:
-    case INDEX_op_not_i64:
+    case INDEX_op_not:
         i1 = OPC_NOR;
         goto do_unary;
     do_unary:
@@ -2183,14 +2175,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_ld_i32:
     case INDEX_op_neg_i32:
-    case INDEX_op_not_i32:
+    case INDEX_op_not:
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap32_i32:
     case INDEX_op_extract_i32:
     case INDEX_op_sextract_i32:
     case INDEX_op_ld_i64:
     case INDEX_op_neg_i64:
-    case INDEX_op_not_i64:
     case INDEX_op_bswap16_i64:
     case INDEX_op_bswap32_i64:
     case INDEX_op_bswap64_i64:
@@ -2219,7 +2210,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_divu_i32:
     case INDEX_op_rem_i32:
     case INDEX_op_remu_i32:
-    case INDEX_op_nor_i32:
+    case INDEX_op_nor:
     case INDEX_op_setcond_i32:
     case INDEX_op_mul_i64:
     case INDEX_op_mulsh_i64:
@@ -2228,7 +2219,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_divu_i64:
     case INDEX_op_rem_i64:
     case INDEX_op_remu_i64:
-    case INDEX_op_nor_i64:
     case INDEX_op_setcond_i64:
         return C_O1_I2(r, rZ, rZ);
     case INDEX_op_muls2_i32:
@@ -2236,13 +2226,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_muls2_i64:
     case INDEX_op_mulu2_i64:
         return C_O2_I2(r, r, r, r);
-    case INDEX_op_and_i32:
-    case INDEX_op_and_i64:
+    case INDEX_op_and:
         return C_O1_I2(r, r, rIK);
-    case INDEX_op_or_i32:
-    case INDEX_op_xor_i32:
-    case INDEX_op_or_i64:
-    case INDEX_op_xor_i64:
+    case INDEX_op_or:
+    case INDEX_op_xor:
         return C_O1_I2(r, r, rI);
     case INDEX_op_shl_i32:
     case INDEX_op_shr_i32:
