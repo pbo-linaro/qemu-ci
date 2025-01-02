@@ -2252,7 +2252,7 @@ bool tcg_op_supported(TCGOpcode op)
     }
 }
 
-static TCGOp *tcg_op_alloc(TCGOpcode opc, unsigned nargs);
+static TCGOp *tcg_op_alloc(TCGOpcode opc, TCGType type, unsigned nargs);
 
 static void tcg_gen_callN(void *func, TCGHelperInfo *info,
                           TCGTemp *ret, TCGTemp **args)
@@ -2268,7 +2268,7 @@ static void tcg_gen_callN(void *func, TCGHelperInfo *info,
     }
 
     total_args = info->nr_out + info->nr_in + 2;
-    op = tcg_op_alloc(INDEX_op_call, total_args);
+    op = tcg_op_alloc(INDEX_op_call, info->out_type, total_args);
 
 #ifdef CONFIG_PLUGIN
     /* Flag helpers that may affect guest state */
@@ -3217,7 +3217,7 @@ void tcg_remove_ops_after(TCGOp *op)
     }
 }
 
-static TCGOp *tcg_op_alloc(TCGOpcode opc, unsigned nargs)
+static TCGOp *tcg_op_alloc(TCGOpcode opc, TCGType type, unsigned nargs)
 {
     TCGContext *s = tcg_ctx;
     TCGOp *op = NULL;
@@ -3239,6 +3239,7 @@ static TCGOp *tcg_op_alloc(TCGOpcode opc, unsigned nargs)
  found:
     memset(op, 0, offsetof(TCGOp, link));
     op->opc = opc;
+    op->type = type;
     op->nargs = nargs;
 
     /* Check for bitfield overflow. */
@@ -3248,9 +3249,9 @@ static TCGOp *tcg_op_alloc(TCGOpcode opc, unsigned nargs)
     return op;
 }
 
-TCGOp *tcg_emit_op(TCGOpcode opc, unsigned nargs)
+TCGOp *tcg_emit_op(TCGOpcode opc, TCGType type, unsigned nargs)
 {
-    TCGOp *op = tcg_op_alloc(opc, nargs);
+    TCGOp *op = tcg_op_alloc(opc, type, nargs);
 
     if (tcg_ctx->emit_before_op) {
         QTAILQ_INSERT_BEFORE(tcg_ctx->emit_before_op, op, link);
@@ -3261,17 +3262,17 @@ TCGOp *tcg_emit_op(TCGOpcode opc, unsigned nargs)
 }
 
 TCGOp *tcg_op_insert_before(TCGContext *s, TCGOp *old_op,
-                            TCGOpcode opc, unsigned nargs)
+                            TCGOpcode opc, TCGType type, unsigned nargs)
 {
-    TCGOp *new_op = tcg_op_alloc(opc, nargs);
+    TCGOp *new_op = tcg_op_alloc(opc, type, nargs);
     QTAILQ_INSERT_BEFORE(old_op, new_op, link);
     return new_op;
 }
 
 TCGOp *tcg_op_insert_after(TCGContext *s, TCGOp *old_op,
-                           TCGOpcode opc, unsigned nargs)
+                           TCGOpcode opc, TCGType type, unsigned nargs)
 {
-    TCGOp *new_op = tcg_op_alloc(opc, nargs);
+    TCGOp *new_op = tcg_op_alloc(opc, type, nargs);
     QTAILQ_INSERT_AFTER(&s->ops, old_op, new_op, link);
     return new_op;
 }
@@ -4020,7 +4021,8 @@ liveness_pass_2(TCGContext *s)
                 TCGOpcode lopc = (arg_ts->type == TCG_TYPE_I32
                                   ? INDEX_op_ld_i32
                                   : INDEX_op_ld_i64);
-                TCGOp *lop = tcg_op_insert_before(s, op, lopc, 3);
+                TCGOp *lop = tcg_op_insert_before(s, op, lopc,
+                                                  arg_ts->type, 3);
 
                 lop->args[0] = temp_arg(dir_ts);
                 lop->args[1] = temp_arg(arg_ts->mem_base);
@@ -4083,7 +4085,8 @@ liveness_pass_2(TCGContext *s)
                     TCGOpcode sopc = (arg_ts->type == TCG_TYPE_I32
                                       ? INDEX_op_st_i32
                                       : INDEX_op_st_i64);
-                    TCGOp *sop = tcg_op_insert_after(s, op, sopc, 3);
+                    TCGOp *sop = tcg_op_insert_after(s, op, sopc,
+                                                     arg_ts->type, 3);
                     TCGTemp *out_ts = dir_ts;
 
                     if (IS_DEAD_ARG(0)) {
@@ -4119,7 +4122,8 @@ liveness_pass_2(TCGContext *s)
                     TCGOpcode sopc = (arg_ts->type == TCG_TYPE_I32
                                       ? INDEX_op_st_i32
                                       : INDEX_op_st_i64);
-                    TCGOp *sop = tcg_op_insert_after(s, op, sopc, 3);
+                    TCGOp *sop = tcg_op_insert_after(s, op, sopc,
+                                                     arg_ts->type, 3);
 
                     sop->args[0] = temp_arg(dir_ts);
                     sop->args[1] = temp_arg(arg_ts->mem_base);

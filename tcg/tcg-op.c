@@ -39,14 +39,14 @@
 
 TCGOp * NI tcg_gen_op1(TCGOpcode opc, TCGArg a1)
 {
-    TCGOp *op = tcg_emit_op(opc, 1);
+    TCGOp *op = tcg_emit_op(opc, 0, 1);
     op->args[0] = a1;
     return op;
 }
 
 TCGOp * NI tcg_gen_op2(TCGOpcode opc, TCGArg a1, TCGArg a2)
 {
-    TCGOp *op = tcg_emit_op(opc, 2);
+    TCGOp *op = tcg_emit_op(opc, 0, 2);
     op->args[0] = a1;
     op->args[1] = a2;
     return op;
@@ -54,7 +54,7 @@ TCGOp * NI tcg_gen_op2(TCGOpcode opc, TCGArg a1, TCGArg a2)
 
 TCGOp * NI tcg_gen_op3(TCGOpcode opc, TCGArg a1, TCGArg a2, TCGArg a3)
 {
-    TCGOp *op = tcg_emit_op(opc, 3);
+    TCGOp *op = tcg_emit_op(opc, 0, 3);
     op->args[0] = a1;
     op->args[1] = a2;
     op->args[2] = a3;
@@ -64,7 +64,7 @@ TCGOp * NI tcg_gen_op3(TCGOpcode opc, TCGArg a1, TCGArg a2, TCGArg a3)
 TCGOp * NI tcg_gen_op4(TCGOpcode opc, TCGArg a1, TCGArg a2,
                        TCGArg a3, TCGArg a4)
 {
-    TCGOp *op = tcg_emit_op(opc, 4);
+    TCGOp *op = tcg_emit_op(opc, 0, 4);
     op->args[0] = a1;
     op->args[1] = a2;
     op->args[2] = a3;
@@ -75,7 +75,7 @@ TCGOp * NI tcg_gen_op4(TCGOpcode opc, TCGArg a1, TCGArg a2,
 TCGOp * NI tcg_gen_op5(TCGOpcode opc, TCGArg a1, TCGArg a2,
                        TCGArg a3, TCGArg a4, TCGArg a5)
 {
-    TCGOp *op = tcg_emit_op(opc, 5);
+    TCGOp *op = tcg_emit_op(opc, 0, 5);
     op->args[0] = a1;
     op->args[1] = a2;
     op->args[2] = a3;
@@ -87,7 +87,7 @@ TCGOp * NI tcg_gen_op5(TCGOpcode opc, TCGArg a1, TCGArg a2,
 TCGOp * NI tcg_gen_op6(TCGOpcode opc, TCGArg a1, TCGArg a2, TCGArg a3,
                        TCGArg a4, TCGArg a5, TCGArg a6)
 {
-    TCGOp *op = tcg_emit_op(opc, 6);
+    TCGOp *op = tcg_emit_op(opc, 0, 6);
     op->args[0] = a1;
     op->args[1] = a2;
     op->args[2] = a3;

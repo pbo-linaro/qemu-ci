@@ -850,12 +850,12 @@ void tcg_gen_call7(void *func, TCGHelperInfo *, TCGTemp *ret,
                    TCGTemp *, TCGTemp *, TCGTemp *, TCGTemp *,
                    TCGTemp *, TCGTemp *, TCGTemp *);
 
-TCGOp *tcg_emit_op(TCGOpcode opc, unsigned nargs);
+TCGOp *tcg_emit_op(TCGOpcode opc, TCGType type, unsigned nargs);
 void tcg_op_remove(TCGContext *s, TCGOp *op);
 TCGOp *tcg_op_insert_before(TCGContext *s, TCGOp *op,
-                            TCGOpcode opc, unsigned nargs);
+                            TCGOpcode opc, TCGType type, unsigned nargs);
 TCGOp *tcg_op_insert_after(TCGContext *s, TCGOp *op,
-                           TCGOpcode opc, unsigned nargs);
+                           TCGOpcode opc, TCGType type, unsigned nargs);
 
 /**
  * tcg_remove_ops_after:
