@@ -712,10 +712,10 @@ QEMU specific operations
 Host vector operations
 ----------------------
 
-All of the vector ops have two parameters, ``TCGOP_VECL`` & ``TCGOP_VECE``.
+All of the vector ops have two parameters, ``vec_type`` & ``TCGOP_VECE``.
 The former specifies the length of the vector in log2 64-bit units; the
 latter specifies the length of the element (if applicable) in log2 8-bit units.
-E.g. VECL = 1 -> 64 << 1 -> v128, and VECE = 2 -> 1 << 2 -> i32.
+E.g. TCG_TYPE_V128, and VECE = 2 -> 1 << 2 -> i32.
 
 .. list-table::
 
@@ -729,7 +729,7 @@ E.g. VECL = 1 -> 64 << 1 -> v128, and VECE = 2 -> 1 << 2 -> i32.
 
    * - dup_vec *v0*, *r1*
 
-     - | Duplicate the low N bits of *r1* into VECL/VECE copies across *v0*.
+     - | Duplicate the low N bits of *r1* into vec_type/VECE copies across *v0*.
 
    * - dupi_vec *v0*, *c*
 
@@ -738,8 +738,8 @@ E.g. VECL = 1 -> 64 << 1 -> v128, and VECE = 2 -> 1 << 2 -> i32.
 
    * - dup2_vec *v0*, *r1*, *r2*
 
-     - | Duplicate *r2*:*r1* into VECL/64 copies across *v0*. This opcode is
-         only present for 32-bit hosts.
+     - | Duplicate *r2*:*r1* into vec_type/64 copies across *v0*.
+         This opcode is only present for 32-bit hosts.
 
    * - add_vec *v0*, *v1*, *v2*
 
@@ -810,7 +810,7 @@ E.g. VECL = 1 -> 64 << 1 -> v128, and VECE = 2 -> 1 << 2 -> i32.
 
        .. code-block:: c
 
-          for (i = 0; i < VECL/VECE; ++i) {
+          for (i = 0; i < vec_type/VECE; ++i) {
               v0[i] = v1[i] << s2;
           }
 
@@ -832,7 +832,7 @@ E.g. VECL = 1 -> 64 << 1 -> v128, and VECE = 2 -> 1 << 2 -> i32.
 
        .. code-block:: c
 
-          for (i = 0; i < VECL/VECE; ++i) {
+          for (i = 0; i < vec_type/VECE; ++i) {
               v0[i] = v1[i] << v2[i];
           }
 

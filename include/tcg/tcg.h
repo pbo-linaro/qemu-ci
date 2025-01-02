@@ -440,7 +440,6 @@ struct TCGOp {
 #define TCGOP_CALLI(X)    (X)->param1
 #define TCGOP_CALLO(X)    (X)->param2
 
-#define TCGOP_VECL(X)     (X)->param1
 #define TCGOP_VECE(X)     (X)->param2
 
 static inline TCGRegSet output_pref(const TCGOp *op, unsigned i)
