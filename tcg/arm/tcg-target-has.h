@@ -24,6 +24,7 @@ extern bool use_neon_instructions;
 #endif
 
 /* optional integer instructions */
+#define TCG_TARGET_HAS_add2(T)          1
 #define TCG_TARGET_HAS_bswap(T)         1
 #define TCG_TARGET_HAS_clz(T)           1
 #define TCG_TARGET_HAS_ctpop(T)         0
@@ -35,6 +36,7 @@ extern bool use_neon_instructions;
 #define TCG_TARGET_HAS_muluh(T)         0
 #define TCG_TARGET_HAS_rem(T)           0
 #define TCG_TARGET_HAS_rot(T)           1
+#define TCG_TARGET_HAS_sub2(T)          1
 
 /* optional integer and vector instructions */
 #define TCG_TARGET_HAS_andc(T)          1
