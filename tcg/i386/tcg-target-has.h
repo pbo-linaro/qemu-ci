@@ -28,6 +28,7 @@
 /* optional integer instructions */
 #define TCG_TARGET_HAS_bswap(T)         1
 #define TCG_TARGET_HAS_div2(T)          1
+#define TCG_TARGET_HAS_rot(T)           1
 
 /* optional integer and vector instructions */
 #define TCG_TARGET_HAS_andc(T)          (T >= TCG_TYPE_V64 || have_bmi1)
@@ -37,7 +38,6 @@
 #define TCG_TARGET_HAS_not(T)           (T <= TCG_TYPE_REG || have_avx512vl)
 #define TCG_TARGET_HAS_orc(T)           (T >= TCG_TYPE_V64 && have_avx512vl)
 
-#define TCG_TARGET_HAS_rot_i32          1
 #define TCG_TARGET_HAS_ext8s_i32        1
 #define TCG_TARGET_HAS_ext16s_i32       1
 #define TCG_TARGET_HAS_ext8u_i32        1
@@ -60,7 +60,6 @@
 #if TCG_TARGET_REG_BITS == 64
 /* Keep 32-bit values zero-extended in a register.  */
 #define TCG_TARGET_HAS_extr_i64_i32     1
-#define TCG_TARGET_HAS_rot_i64          1
 #define TCG_TARGET_HAS_ext8s_i64        1
 #define TCG_TARGET_HAS_ext16s_i64       1
 #define TCG_TARGET_HAS_ext32s_i64       1

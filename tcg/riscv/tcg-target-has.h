@@ -13,6 +13,7 @@
 #define TCG_TARGET_HAS_bswap(T)         (cpuinfo & CPUINFO_ZBB)
 #define TCG_TARGET_HAS_div(T)           1
 #define TCG_TARGET_HAS_rem(T)           1
+#define TCG_TARGET_HAS_rot(T)           (cpuinfo & CPUINFO_ZBB)
 
 /* optional integer and vector instructions */
 #define TCG_TARGET_HAS_andc(T)          (T <= TCG_TYPE_REG && (cpuinfo & CPUINFO_ZBB))
@@ -23,7 +24,6 @@
 #define TCG_TARGET_HAS_orc(T)           (T <= TCG_TYPE_REG && (cpuinfo & CPUINFO_ZBB))
 
 #define TCG_TARGET_HAS_negsetcond_i32   1
-#define TCG_TARGET_HAS_rot_i32          (cpuinfo & CPUINFO_ZBB)
 #define TCG_TARGET_HAS_deposit_i32      0
 #define TCG_TARGET_HAS_extract_i32      0
 #define TCG_TARGET_HAS_sextract_i32     0
@@ -46,7 +46,6 @@
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
 #define TCG_TARGET_HAS_negsetcond_i64   1
-#define TCG_TARGET_HAS_rot_i64          (cpuinfo & CPUINFO_ZBB)
 #define TCG_TARGET_HAS_deposit_i64      0
 #define TCG_TARGET_HAS_extract_i64      0
 #define TCG_TARGET_HAS_sextract_i64     0

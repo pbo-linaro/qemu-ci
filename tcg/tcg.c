@@ -2221,7 +2221,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_HAS_div2(TCG_TYPE_I32);
     case INDEX_op_rotl_i32:
     case INDEX_op_rotr_i32:
-        return TCG_TARGET_HAS_rot_i32;
+        return TCG_TARGET_HAS_rot(TCG_TYPE_I32);
     case INDEX_op_deposit_i32:
         return TCG_TARGET_HAS_deposit_i32;
     case INDEX_op_extract_i32:
@@ -2318,7 +2318,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div2(TCG_TYPE_I64);
     case INDEX_op_rotl_i64:
     case INDEX_op_rotr_i64:
-        return TCG_TARGET_HAS_rot_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rot(TCG_TYPE_I64);
     case INDEX_op_deposit_i64:
         return TCG_TARGET_HAS_deposit_i64;
     case INDEX_op_extract_i64:
