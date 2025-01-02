@@ -10,9 +10,9 @@
 /* optional integer instructions */
 #define TCG_TARGET_HAS_add2(T)          (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_bswap(T)         1
-#define TCG_TARGET_HAS_clz(T)           1
-#define TCG_TARGET_HAS_ctpop(T)         1
-#define TCG_TARGET_HAS_ctz(T)           1
+#define TCG_TARGET_HAS_clz(T)           (T == TCG_TYPE_REG)
+#define TCG_TARGET_HAS_ctpop(T)         (T == TCG_TYPE_REG)
+#define TCG_TARGET_HAS_ctz(T)           (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_div(T)           (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_muls2(T)         (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_mulu2(T)         (T == TCG_TYPE_REG)

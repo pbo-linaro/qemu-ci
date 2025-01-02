@@ -39,6 +39,9 @@
 #define extract_tr   glue(extract, TCG_TARGET_REG_BITS)
 #define sextract_tr  glue(sextract, TCG_TARGET_REG_BITS)
 #define deposit_tr   glue(deposit, TCG_TARGET_REG_BITS)
+#define clz_tr       glue(clz, TCG_TARGET_REG_BITS)
+#define ctz_tr       glue(ctz, TCG_TARGET_REG_BITS)
+#define ctpop_tr     glue(ctpop, TCG_TARGET_REG_BITS)
 
 __thread uintptr_t tci_tb_ptr;
 
@@ -627,26 +630,18 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
                 regs[r0] = ror64(regs[r1], regs[r2] & 63);
             }
             break;
-
-            /* Arithmetic operations (32 bit). */
-
-        case INDEX_op_clz_i32:
+        case INDEX_op_clz:
             tci_args_rrr(insn, &r0, &r1, &r2);
-            tmp32 = regs[r1];
-            regs[r0] = tmp32 ? clz32(tmp32) : regs[r2];
+            regs[r0] = regs[r1] ? clz_tr(regs[r1]) : regs[r2];
             break;
-        case INDEX_op_ctz_i32:
+        case INDEX_op_ctz:
             tci_args_rrr(insn, &r0, &r1, &r2);
-            tmp32 = regs[r1];
-            regs[r0] = tmp32 ? ctz32(tmp32) : regs[r2];
+            regs[r0] = regs[r1] ? ctz_tr(regs[r1]) : regs[r2];
             break;
-        case INDEX_op_ctpop_i32:
+        case INDEX_op_ctpop:
             tci_args_rr(insn, &r0, &r1);
-            regs[r0] = ctpop32(regs[r1]);
+            regs[r0] = ctpop_tr(regs[r1]);
             break;
-
-            /* Shift/rotate operations (32 bit). */
-
         case INDEX_op_deposit:
             tci_args_rrrbb(insn, &r0, &r1, &r2, &pos, &len);
             regs[r0] = deposit_tr(regs[r1], pos, len, regs[r2]);
@@ -742,21 +737,6 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint64_t *)ptr = regs[r0];
-            break;
-
-            /* Arithmetic operations (64 bit). */
-
-        case INDEX_op_clz_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = regs[r1] ? clz64(regs[r1]) : regs[r2];
-            break;
-        case INDEX_op_ctz_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = regs[r1] ? ctz64(regs[r1]) : regs[r2];
-            break;
-        case INDEX_op_ctpop_i64:
-            tci_args_rr(insn, &r0, &r1);
-            regs[r0] = ctpop64(regs[r1]);
             break;
 
             /* Shift/rotate operations (64 bit). */
@@ -1028,8 +1008,7 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
     case INDEX_op_bswap32:
     case INDEX_op_bswap64:
     case INDEX_op_neg:
-    case INDEX_op_ctpop_i32:
-    case INDEX_op_ctpop_i64:
+    case INDEX_op_ctpop:
         tci_args_rr(insn, &r0, &r1);
         info->fprintf_func(info->stream, "%-12s  %s, %s",
                            op_name, str_r(r0), str_r(r1));
@@ -1055,10 +1034,8 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
     case INDEX_op_sar:
     case INDEX_op_rotl:
     case INDEX_op_rotr:
-    case INDEX_op_clz_i32:
-    case INDEX_op_clz_i64:
-    case INDEX_op_ctz_i32:
-    case INDEX_op_ctz_i64:
+    case INDEX_op_clz:
+    case INDEX_op_ctz:
         tci_args_rrr(insn, &r0, &r1, &r2);
         info->fprintf_func(info->stream, "%-12s  %s, %s, %s",
                            op_name, str_r(r0), str_r(r1), str_r(r2));

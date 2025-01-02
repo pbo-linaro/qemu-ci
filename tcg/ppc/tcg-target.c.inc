@@ -3098,28 +3098,30 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out32(s, NOR | SAB(args[1], args[0], args[2]));
         break;
 
-    case INDEX_op_clz_i32:
-        tcg_out_cntxz(s, TCG_TYPE_I32, CNTLZW, args[0], args[1],
-                      args[2], const_args[2]);
+    case INDEX_op_clz:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_cntxz(s, TCG_TYPE_I32, CNTLZW, args[0], args[1],
+                          args[2], const_args[2]);
+        } else {
+            tcg_out_cntxz(s, TCG_TYPE_I64, CNTLZD, args[0], args[1],
+                          args[2], const_args[2]);
+        }
         break;
-    case INDEX_op_ctz_i32:
-        tcg_out_cntxz(s, TCG_TYPE_I32, CNTTZW, args[0], args[1],
-                      args[2], const_args[2]);
+    case INDEX_op_ctz:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_cntxz(s, TCG_TYPE_I32, CNTTZW, args[0], args[1],
+                          args[2], const_args[2]);
+        } else {
+            tcg_out_cntxz(s, TCG_TYPE_I64, CNTTZD, args[0], args[1],
+                          args[2], const_args[2]);
+        }
         break;
-    case INDEX_op_ctpop_i32:
-        tcg_out32(s, CNTPOPW | SAB(args[1], args[0], 0));
-        break;
-
-    case INDEX_op_clz_i64:
-        tcg_out_cntxz(s, TCG_TYPE_I64, CNTLZD, args[0], args[1],
-                      args[2], const_args[2]);
-        break;
-    case INDEX_op_ctz_i64:
-        tcg_out_cntxz(s, TCG_TYPE_I64, CNTTZD, args[0], args[1],
-                      args[2], const_args[2]);
-        break;
-    case INDEX_op_ctpop_i64:
-        tcg_out32(s, CNTPOPD | SAB(args[1], args[0], 0));
+    case INDEX_op_ctpop:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, CNTPOPW | SAB(args[1], args[0], 0));
+        } else {
+            tcg_out32(s, CNTPOPD | SAB(args[1], args[0], 0));
+        }
         break;
 
     case INDEX_op_mul:
@@ -4083,12 +4085,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return C_O0_I1(r);
 
     case INDEX_op_ld:
-    case INDEX_op_ctpop_i32:
+    case INDEX_op_ctpop:
     case INDEX_op_neg:
     case INDEX_op_not:
     case INDEX_op_extract:
     case INDEX_op_sextract:
-    case INDEX_op_ctpop_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
@@ -4140,10 +4141,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_mulsh:
         return C_O1_I2(r, r, r);
 
-    case INDEX_op_clz_i32:
-    case INDEX_op_ctz_i32:
-    case INDEX_op_clz_i64:
-    case INDEX_op_ctz_i64:
+    case INDEX_op_clz:
+    case INDEX_op_ctz:
         return C_O1_I2(r, r, rZW);
 
     case INDEX_op_brcond:

@@ -1423,18 +1423,20 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_opc_revb_d(s, a0, a1);
         break;
 
-    case INDEX_op_clz_i32:
-        tcg_out_clzctz(s, OPC_CLZ_W, a0, a1, a2, c2, true);
-        break;
-    case INDEX_op_clz_i64:
-        tcg_out_clzctz(s, OPC_CLZ_D, a0, a1, a2, c2, false);
+    case INDEX_op_clz:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_clzctz(s, OPC_CLZ_W, a0, a1, a2, c2, true);
+        } else {
+            tcg_out_clzctz(s, OPC_CLZ_D, a0, a1, a2, c2, false);
+        }
         break;
 
-    case INDEX_op_ctz_i32:
-        tcg_out_clzctz(s, OPC_CTZ_W, a0, a1, a2, c2, true);
-        break;
-    case INDEX_op_ctz_i64:
-        tcg_out_clzctz(s, OPC_CTZ_D, a0, a1, a2, c2, false);
+    case INDEX_op_ctz:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_clzctz(s, OPC_CTZ_W, a0, a1, a2, c2, true);
+        } else {
+            tcg_out_clzctz(s, OPC_CTZ_D, a0, a1, a2, c2, false);
+        }
         break;
 
     case INDEX_op_shl:
@@ -2268,10 +2270,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         /* LoongArch reg-imm bitops have their imms ZERO-extended */
         return C_O1_I2(r, r, rU);
 
-    case INDEX_op_clz_i32:
-    case INDEX_op_clz_i64:
-    case INDEX_op_ctz_i32:
-    case INDEX_op_ctz_i64:
+    case INDEX_op_clz:
+    case INDEX_op_ctz:
         return C_O1_I2(r, r, rW);
 
     case INDEX_op_deposit:

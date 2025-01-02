@@ -2032,12 +2032,12 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_ctz_i32:
+    case INDEX_op_ctz:
         tcg_out_dat_reg(s, COND_AL, INSN_RBIT, TCG_REG_TMP, 0, args[1], 0);
         a1 = TCG_REG_TMP;
         goto do_clz;
 
-    case INDEX_op_clz_i32:
+    case INDEX_op_clz:
         a1 = args[1];
     do_clz:
         a0 = args[0];
@@ -2201,8 +2201,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_and:
     case INDEX_op_andc:
-    case INDEX_op_clz_i32:
-    case INDEX_op_ctz_i32:
+    case INDEX_op_clz:
+    case INDEX_op_ctz:
         return C_O1_I2(r, r, rIK);
 
     case INDEX_op_mul:

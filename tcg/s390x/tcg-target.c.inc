@@ -2668,15 +2668,12 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tgen_sextract(s, args[0], args[1], args[2], args[3]);
         break;
 
-    case INDEX_op_clz_i64:
+    case INDEX_op_clz:
         tgen_clz(s, args[0], args[1], args[2], const_args[2]);
         break;
 
-    case INDEX_op_ctpop_i32:
-        tgen_ctpop(s, TCG_TYPE_I32, args[0], args[1]);
-        break;
-    case INDEX_op_ctpop_i64:
-        tgen_ctpop(s, TCG_TYPE_I64, args[0], args[1]);
+    case INDEX_op_ctpop:
+        tgen_ctpop(s, type, args[0], args[1]);
         break;
 
     case INDEX_op_mb:
@@ -3160,7 +3157,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_negsetcond:
         return C_O1_I2(r, r, rC);
 
-    case INDEX_op_clz_i64:
+    case INDEX_op_clz:
         return C_O1_I2(r, r, rI);
 
     case INDEX_op_and:
@@ -3210,8 +3207,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_extrh_i64_i32:
     case INDEX_op_extract:
     case INDEX_op_sextract:
-    case INDEX_op_ctpop_i32:
-    case INDEX_op_ctpop_i64:
+    case INDEX_op_ctpop:
         return C_O1_I1(r, r);
 
     case INDEX_op_qemu_ld_a32_i32:

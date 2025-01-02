@@ -77,6 +77,9 @@ DEF(extract2, 1, 2, 1, TCG_OPF_INT)
 DEF(bswap16, 1, 1, 1, TCG_OPF_INT)
 DEF(bswap32, 1, 1, 1, TCG_OPF_INT)
 DEF(bswap64, 1, 1, 1, TCG_OPF_INT)
+DEF(clz, 1, 2, 0, TCG_OPF_INT)
+DEF(ctz, 1, 2, 0, TCG_OPF_INT)
+DEF(ctpop, 1, 1, 0, TCG_OPF_INT)
 
 DEF(brcond, 0, 2, 2, TCG_OPF_BB_END | TCG_OPF_COND_BRANCH | TCG_OPF_INT)
 DEF(setcond, 1, 2, 1, TCG_OPF_INT)
@@ -86,19 +89,11 @@ DEF(movcond, 1, 4, 1, TCG_OPF_INT)
 DEF(brcond2_i32, 0, 4, 2, TCG_OPF_BB_END | TCG_OPF_COND_BRANCH)
 DEF(setcond2_i32, 1, 4, 1, 0)
 
-DEF(clz_i32, 1, 2, 0, 0)
-DEF(ctz_i32, 1, 2, 0, 0)
-DEF(ctpop_i32, 1, 1, 0, 0)
-
 /* size changing ops */
 DEF(ext_i32_i64, 1, 1, 0, 0)
 DEF(extu_i32_i64, 1, 1, 0, 0)
 DEF(extrl_i64_i32, 1, 1, 0, 0)
 DEF(extrh_i64_i32, 1, 1, 0, 0)
-
-DEF(clz_i64, 1, 2, 0, 0)
-DEF(ctz_i64, 1, 2, 0, 0)
-DEF(ctpop_i64, 1, 1, 0, 0)
 
 /* host load/store */
 DEF(ld, 1, 1, 2, TCG_OPF_INT)
