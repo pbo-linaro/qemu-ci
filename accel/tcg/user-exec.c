@@ -40,6 +40,11 @@ __thread uintptr_t helper_retaddr;
 
 //#define DEBUG_SIGNAL
 
+void cpu_exec_reset_hold(CPUState *cpu)
+{
+    tcg_exec_reset(cpu);
+}
+
 void cpu_interrupt(CPUState *cpu, int mask)
 {
     g_assert(bql_locked());
