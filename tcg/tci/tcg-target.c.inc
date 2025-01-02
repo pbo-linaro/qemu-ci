@@ -42,8 +42,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld_i32:
-    case INDEX_op_ld_i64:
+    case INDEX_op_ld:
     case INDEX_op_not:
     case INDEX_op_neg:
     case INDEX_op_ext_i32_i64:
@@ -61,8 +60,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ctpop_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st_i32:
-    case INDEX_op_st_i64:
+    case INDEX_op_st:
         return C_O0_I2(r, r);
 
     case INDEX_op_div:
@@ -443,11 +441,11 @@ static void tcg_out_ld(TCGContext *s, TCGType type, TCGReg val, TCGReg base,
 {
     switch (type) {
     case TCG_TYPE_I32:
-        tcg_out_ldst(s, INDEX_op_ld_i32, val, base, offset);
+        tcg_out_ldst(s, INDEX_op_tci_ld32u, val, base, offset);
         break;
 #if TCG_TARGET_REG_BITS == 64
     case TCG_TYPE_I64:
-        tcg_out_ldst(s, INDEX_op_ld_i64, val, base, offset);
+        tcg_out_ldst(s, INDEX_op_ld, val, base, offset);
         break;
 #endif
     default:
@@ -659,7 +657,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_op_rl(s, INDEX_op_brcond, TCG_REG_TMP, arg_label(args[5]));
         break;
 
-    CASE_32_64(ld)
+    case INDEX_op_ld:
         switch (args[3]) {
         case MO_UB:
             opc = INDEX_op_tci_ld8u;
@@ -674,13 +672,13 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             opc = INDEX_op_tci_ld16s;
             break;
         case MO_UL:
-            opc = INDEX_op_ld_i32;
+            opc = INDEX_op_tci_ld32u;
             break;
         case MO_SL:
             opc = INDEX_op_tci_ld32s;
             break;
         case MO_UQ:
-            opc = INDEX_op_ld_i64;
+            opc = INDEX_op_ld;
             break;
         default:
             g_assert_not_reached();
@@ -688,7 +686,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_ldst(s, opc, args[0], args[1], args[2]);
         break;
 
-    CASE_32_64(st)
+    case INDEX_op_st:
         switch (args[3]) {
         case MO_8:
             opc = INDEX_op_tci_st8;
@@ -697,10 +695,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             opc = INDEX_op_tci_st16;
             break;
         case MO_32:
-            opc = INDEX_op_st_i32;
+            opc = INDEX_op_tci_st32;
             break;
         case MO_64:
-            opc = INDEX_op_st_i64;
+            opc = INDEX_op_st;
             break;
         default:
             g_assert_not_reached();
@@ -842,11 +840,11 @@ static void tcg_out_st(TCGContext *s, TCGType type, TCGReg val, TCGReg base,
 {
     switch (type) {
     case TCG_TYPE_I32:
-        tcg_out_ldst(s, INDEX_op_st_i32, val, base, offset);
+        tcg_out_ldst(s, INDEX_op_tci_st32, val, base, offset);
         break;
 #if TCG_TARGET_REG_BITS == 64
     case TCG_TYPE_I64:
-        tcg_out_ldst(s, INDEX_op_st_i64, val, base, offset);
+        tcg_out_ldst(s, INDEX_op_st, val, base, offset);
         break;
 #endif
     default:

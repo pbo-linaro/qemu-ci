@@ -2967,8 +2967,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_ld_i32:
-    case INDEX_op_ld_i64:
+    case INDEX_op_ld:
         switch (args[3]) {
         case MO_UB:
         case MO_SB:
@@ -2997,8 +2996,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_st_i32:
-    case INDEX_op_st_i64:
+    case INDEX_op_st:
         switch (args[3]) {
         case MO_8:
             tcg_out_mem_long(s, STB, STBX, args[0], args[1], args[2]);
@@ -4088,7 +4086,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld_i32:
+    case INDEX_op_ld:
     case INDEX_op_ctpop_i32:
     case INDEX_op_neg:
     case INDEX_op_not:
@@ -4096,7 +4094,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_bswap32_i32:
     case INDEX_op_extract:
     case INDEX_op_sextract:
-    case INDEX_op_ld_i64:
     case INDEX_op_ctpop_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
@@ -4107,8 +4104,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_bswap64_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st_i32:
-    case INDEX_op_st_i64:
+    case INDEX_op_st:
         return C_O0_I2(r, r);
 
     case INDEX_op_or:

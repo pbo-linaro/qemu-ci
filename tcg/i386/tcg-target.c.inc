@@ -2660,7 +2660,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_jxx(s, JCC_JMP, arg_label(a0), 0);
         break;
 
-    OP_32_64(ld):
+    case INDEX_op_ld:
         switch (args[3]) {
         case MO_UB:
             /* Note that we can ignore REXW for the zero-extend to 64-bit.  */
@@ -2692,7 +2692,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    OP_32_64(st):
+    case INDEX_op_st:
         switch (args[3]) {
         case MO_8:
             if (const_args[0]) {
@@ -3663,12 +3663,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld_i32:
-    case INDEX_op_ld_i64:
+    case INDEX_op_ld:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st_i32:
-    case INDEX_op_st_i64:
+    case INDEX_op_st:
         switch (op->args[3]) {
         case MO_8:
             return C_O0_I2(qi, r);

@@ -2194,6 +2194,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_brcond:
     case INDEX_op_deposit:
     case INDEX_op_extract:
+    case INDEX_op_ld:
     case INDEX_op_mov:
     case INDEX_op_movcond:
     case INDEX_op_mul:
@@ -2204,13 +2205,10 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sextract:
     case INDEX_op_shl:
     case INDEX_op_shr:
+    case INDEX_op_st:
     case INDEX_op_sub:
     case INDEX_op_xor:
         return has_type;
-
-    case INDEX_op_ld_i32:
-    case INDEX_op_st_i32:
-        return true;
 
     case INDEX_op_add2:
         return has_type && TCG_TARGET_HAS_add2(type);
@@ -2263,8 +2261,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_ctpop_i32:
         return TCG_TARGET_HAS_ctpop(TCG_TYPE_I32);
 
-    case INDEX_op_ld_i64:
-    case INDEX_op_st_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
@@ -2833,10 +2829,8 @@ void tcg_dump_ops(TCGContext *s, FILE *f, bool have_prefs)
                     i = 1;
                 }
                 break;
-            case INDEX_op_ld_i32:
-            case INDEX_op_ld_i64:
-            case INDEX_op_st_i32:
-            case INDEX_op_st_i64:
+            case INDEX_op_ld:
+            case INDEX_op_st:
                 {
                     tcg_target_long ofs = op->args[k++];
                     MemOp mop = op->args[k++];
@@ -4151,10 +4145,7 @@ liveness_pass_2(TCGContext *s)
             arg_ts = arg_temp(op->args[i]);
             dir_ts = arg_ts->state_ptr;
             if (dir_ts && arg_ts->state == TS_DEAD) {
-                TCGOpcode lopc = (arg_ts->type == TCG_TYPE_I32
-                                  ? INDEX_op_ld_i32
-                                  : INDEX_op_ld_i64);
-                TCGOp *lop = tcg_op_insert_before(s, op, lopc,
+                TCGOp *lop = tcg_op_insert_before(s, op, INDEX_op_ld,
                                                   arg_ts->type, 4);
 
                 lop->args[0] = temp_arg(dir_ts);
@@ -4216,10 +4207,7 @@ liveness_pass_2(TCGContext *s)
                 arg_ts->state = 0;
 
                 if (NEED_SYNC_ARG(0)) {
-                    TCGOpcode sopc = (arg_ts->type == TCG_TYPE_I32
-                                      ? INDEX_op_st_i32
-                                      : INDEX_op_st_i64);
-                    TCGOp *sop = tcg_op_insert_after(s, op, sopc,
+                    TCGOp *sop = tcg_op_insert_after(s, op, INDEX_op_st,
                                                      arg_ts->type, 4);
                     TCGTemp *out_ts = dir_ts;
 
@@ -4254,10 +4242,7 @@ liveness_pass_2(TCGContext *s)
 
                 /* Sync outputs upon their last write.  */
                 if (NEED_SYNC_ARG(i)) {
-                    TCGOpcode sopc = (arg_ts->type == TCG_TYPE_I32
-                                      ? INDEX_op_st_i32
-                                      : INDEX_op_st_i64);
-                    TCGOp *sop = tcg_op_insert_after(s, op, sopc,
+                    TCGOp *sop = tcg_op_insert_after(s, op, INDEX_op_st,
                                                      arg_ts->type, 4);
 
                     sop->args[0] = temp_arg(dir_ts);

@@ -79,10 +79,6 @@ DEF(setcond, 1, 2, 1, TCG_OPF_INT)
 DEF(negsetcond, 1, 2, 1, TCG_OPF_INT)
 DEF(movcond, 1, 4, 1, TCG_OPF_INT)
 
-/* load/store */
-DEF(ld_i32, 1, 1, 2, 0)
-DEF(st_i32, 0, 2, 2, 0)
-
 DEF(brcond2_i32, 0, 4, 2, TCG_OPF_BB_END | TCG_OPF_COND_BRANCH)
 DEF(setcond2_i32, 1, 4, 1, 0)
 
@@ -91,10 +87,6 @@ DEF(bswap32_i32, 1, 1, 1, 0)
 DEF(clz_i32, 1, 2, 0, 0)
 DEF(ctz_i32, 1, 2, 0, 0)
 DEF(ctpop_i32, 1, 1, 0, 0)
-
-/* load/store */
-DEF(ld_i64, 1, 1, 2, 0)
-DEF(st_i64, 0, 2, 2, 0)
 
 /* size changing ops */
 DEF(ext_i32_i64, 1, 1, 0, 0)
@@ -108,6 +100,10 @@ DEF(bswap64_i64, 1, 1, 1, 0)
 DEF(clz_i64, 1, 2, 0, 0)
 DEF(ctz_i64, 1, 2, 0, 0)
 DEF(ctpop_i64, 1, 1, 0, 0)
+
+/* host load/store */
+DEF(ld, 1, 1, 2, TCG_OPF_INT)
+DEF(st, 0, 2, 2, TCG_OPF_INT)
 
 #define DATA64_ARGS  (TCG_TARGET_REG_BITS == 64 ? 1 : 2)
 
