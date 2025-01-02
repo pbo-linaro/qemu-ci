@@ -39,6 +39,7 @@
 #define TCG_TARGET_HAS_negsetcond(T)    1
 #define TCG_TARGET_HAS_rot(T)           1
 #define TCG_TARGET_HAS_sub2(T)          1
+#define TCG_TARGET_HAS_extract2(T)      1
 
 /* optional integer and vector instructions */
 #define TCG_TARGET_HAS_andc(T)          (T >= TCG_TYPE_V64 || have_bmi1)
@@ -52,7 +53,6 @@
 #define TCG_TARGET_HAS_ext16s_i32       1
 #define TCG_TARGET_HAS_ext8u_i32        1
 #define TCG_TARGET_HAS_ext16u_i32       1
-#define TCG_TARGET_HAS_extract2_i32     1
 
 #if TCG_TARGET_REG_BITS == 64
 /* Keep 32-bit values zero-extended in a register.  */
@@ -63,7 +63,6 @@
 #define TCG_TARGET_HAS_ext8u_i64        1
 #define TCG_TARGET_HAS_ext16u_i64       1
 #define TCG_TARGET_HAS_ext32u_i64       1
-#define TCG_TARGET_HAS_extract2_i64     1
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 #else
 #define TCG_TARGET_HAS_qemu_st8_i32     1

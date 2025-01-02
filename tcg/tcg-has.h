@@ -18,7 +18,6 @@
 #define TCG_TARGET_HAS_ext8u_i64        0
 #define TCG_TARGET_HAS_ext16u_i64       0
 #define TCG_TARGET_HAS_ext32u_i64       0
-#define TCG_TARGET_HAS_extract2_i64     0
 #endif
 
 /* Only one of DIV or DIV2 should be defined.  */
