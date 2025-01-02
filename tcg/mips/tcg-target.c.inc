@@ -2014,12 +2014,13 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_clz(s, OPC_DCLZ, OPC_DCLZ_R6, 64, a0, a1, a2);
         break;
 
-    case INDEX_op_deposit_i32:
-        tcg_out_opc_bf(s, OPC_INS, a0, a2, args[3] + args[4] - 1, args[3]);
-        break;
-    case INDEX_op_deposit_i64:
-        tcg_out_opc_bf64(s, OPC_DINS, OPC_DINSM, OPC_DINSU, a0, a2,
-                         args[3] + args[4] - 1, args[3]);
+    case INDEX_op_deposit:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_bf(s, OPC_INS, a0, a2, args[3] + args[4] - 1, args[3]);
+        } else {
+            tcg_out_opc_bf64(s, OPC_DINS, OPC_DINSM, OPC_DINSU, a0, a2,
+                             args[3] + args[4] - 1, args[3]);
+        }
         break;
 
     case INDEX_op_extract:
@@ -2196,8 +2197,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_clz_i64:
         return C_O1_I2(r, r, rWZ);
 
-    case INDEX_op_deposit_i32:
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         return C_O1_I2(r, 0, rZ);
     case INDEX_op_brcond:
         return C_O0_I2(rZ, rZ);

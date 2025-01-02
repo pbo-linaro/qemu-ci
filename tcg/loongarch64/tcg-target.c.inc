@@ -1392,11 +1392,12 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_deposit_i32:
-        tcg_out_opc_bstrins_w(s, a0, a2, args[3], args[3] + args[4] - 1);
-        break;
-    case INDEX_op_deposit_i64:
-        tcg_out_opc_bstrins_d(s, a0, a2, args[3], args[3] + args[4] - 1);
+    case INDEX_op_deposit:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_bstrins_w(s, a0, a2, args[3], args[3] + args[4] - 1);
+        } else {
+            tcg_out_opc_bstrins_d(s, a0, a2, args[3], args[3] + args[4] - 1);
+        }
         break;
 
     case INDEX_op_bswap16_i32:
@@ -2283,8 +2284,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ctz_i64:
         return C_O1_I2(r, r, rW);
 
-    case INDEX_op_deposit_i32:
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         /* Must deposit into the same register as input */
         return C_O1_I2(r, 0, rZ);
 

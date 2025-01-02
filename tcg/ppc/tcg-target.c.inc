@@ -3353,19 +3353,17 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_bswap64(s, args[0], args[1]);
         break;
 
-    case INDEX_op_deposit_i32:
-        if (const_args[2]) {
-            uint32_t mask = ((2u << (args[4] - 1)) - 1) << args[3];
-            tcg_out_andi32(s, args[0], args[0], ~mask);
-        } else {
-            tcg_out_rlw(s, RLWIMI, args[0], args[2], args[3],
-                        32 - args[3] - args[4], 31 - args[3]);
-        }
-        break;
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         if (const_args[2]) {
             uint64_t mask = ((2ull << (args[4] - 1)) - 1) << args[3];
-            tcg_out_andi64(s, args[0], args[0], ~mask);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_andi32(s, args[0], args[0], ~mask);
+            } else {
+                tcg_out_andi64(s, args[0], args[0], ~mask);
+            }
+        } else if (type == TCG_TYPE_I32) {
+            tcg_out_rlw(s, RLWIMI, args[0], args[2], args[3],
+                        32 - args[3] - args[4], 31 - args[3]);
         } else {
             tcg_out_rld(s, RLDIMI, args[0], args[2], args[3],
                         64 - args[3] - args[4]);
@@ -4166,8 +4164,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_movcond:
         return C_O1_I4(r, r, rC, rZ, rZ);
 
-    case INDEX_op_deposit_i32:
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         return C_O1_I2(r, 0, rZ);
     case INDEX_op_brcond2_i32:
         return C_O0_I4(r, r, ri, ri);

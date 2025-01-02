@@ -2655,7 +2655,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_sh64(s, RSY_SRLG, args[0], args[1], TCG_REG_NONE, 32);
         break;
 
-    OP_32_64(deposit):
+    case INDEX_op_deposit:
         a0 = args[0], a1 = args[1], a2 = args[2];
         if (const_args[1]) {
             tgen_deposit(s, a0, a2, args[3], args[4], 1);
@@ -3248,8 +3248,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_qemu_st_a64_i128:
         return C_O0_I3(o, m, r);
 
-    case INDEX_op_deposit_i32:
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         return C_O1_I2(r, rZ, r);
 
     case INDEX_op_movcond:

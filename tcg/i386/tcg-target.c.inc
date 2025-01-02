@@ -3010,7 +3010,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
 #endif
 
-    OP_32_64(deposit):
+    case INDEX_op_deposit:
         if (args[3] == 0 && args[4] == 8) {
             /* load bits 0..7 */
             if (const_a2) {
@@ -3730,8 +3730,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_extract2_i64:
         return C_O1_I2(r, 0, r);
 
-    case INDEX_op_deposit_i32:
-    case INDEX_op_deposit_i64:
+    case INDEX_op_deposit:
         return C_O1_I2(q, 0, qi);
 
     case INDEX_op_setcond:
