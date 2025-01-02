@@ -429,6 +429,10 @@ class VMSDFieldStruct(VMSDFieldGeneric):
         super(VMSDFieldStruct, self).__init__(desc, file)
         self.data = collections.OrderedDict()
 
+        if 'fields' not in self.desc['struct']:
+            raise Exception("No fields in subsection key=%s name=%s" %
+                            (self.section_key, self.vmsd_name))
+
         # When we see compressed array elements, unfold them here
         new_fields = []
         for field in self.desc['struct']['fields']:
@@ -477,6 +481,11 @@ class VMSDFieldStruct(VMSDFieldGeneric):
                     raise Exception("Subsection %s not found at offset %x" % ( subsection['vmsd_name'], self.file.tell()))
                 name = self.file.readstr()
                 version_id = self.file.read32()
+
+                if not subsection:
+                    raise Exception("Empty description for subsection %s" %
+                                    name)
+
                 self.data[name] = VMSDSection(self.file, version_id, subsection, (name, 0))
                 self.data[name].read()
 
@@ -575,9 +584,8 @@ class MigrationDump(object):
         self.filename = filename
         self.vmsd_desc = None
 
-    def read(self, desc_only = False, dump_memory = False, write_memory = False):
-        # Read in the whole file
-        file = MigrationFile(self.filename)
+    def _read(self, file, vmsd_json, desc_only = False, dump_memory = False,
+              write_memory = False):
 
         # File magic
         data = file.read32()
@@ -589,7 +597,7 @@ class MigrationDump(object):
         if data != self.QEMU_VM_FILE_VERSION:
             raise Exception("Invalid version number %d" % data)
 
-        self.load_vmsd_json(file)
+        self.load_vmsd_json(file, vmsd_json)
 
         # Read sections
         self.sections = collections.OrderedDict()
@@ -632,12 +640,25 @@ class MigrationDump(object):
                     raise Exception("Mismatched section footer: %x vs %x" % (read_section_id, section_id))
             else:
                 raise Exception("Unknown section type: %d" % section_type)
-        file.close()
 
-    def load_vmsd_json(self, file):
+    def read(self, desc_only = False, dump_memory = False,
+             write_memory = False):
+        file = MigrationFile(self.filename)
         vmsd_json = file.read_migration_debug_json()
+
+        try:
+            self._read(file, vmsd_json, desc_only, dump_memory, write_memory)
+        except:
+            raise Exception("Full JSON dump:\n%s", vmsd_json)
+        finally:
+            file.close()
+
+    def load_vmsd_json(self, file, vmsd_json):
         self.vmsd_desc = json.loads(vmsd_json, object_pairs_hook=collections.OrderedDict)
         for device in self.vmsd_desc['devices']:
+            if 'fields' not in device:
+                raise Exception("vmstate for device %s has no fields" %
+                                device['name'])
             key = (device['name'], device['instance_id'])
             value = ( VMSDSection, device )
             self.section_classes[key] = value
