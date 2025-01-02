@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250102152012.1049-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 34 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/6] target/arm/tcg: increase cache level for cpu=max
+  [PATCH v5 2/6] arm/virt.c: add cache hierarchy to device tree
+  [PATCH v5 3/6] bios-tables-test: prepare to change ARM ACPI virt PPTT
+  [PATCH v5 4/6] hw/acpi/aml-build.c: add cache hierarchy to pptt table
+  [PATCH v5 5/6] tests/qtest/bios-table-test: testing new ARM ACPI PPTT topology
+  [PATCH v5 6/6] Update the ACPI tables according to the acpi aml_build change, also empty bios-tables-test-allowed-diff.h.
+---
+Total patches: 6
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/arm/tcg: increase cache level for cpu=max
+Applying: arm/virt.c: add cache hierarchy to device tree
+Applying: bios-tables-test: prepare to change ARM ACPI virt PPTT
+Applying: hw/acpi/aml-build.c: add cache hierarchy to pptt table
+Patch failed at 0004 hw/acpi/aml-build.c: add cache hierarchy to pptt table
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:300: trailing whitespace.
+                        "sharing at cache level = 1", 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:394: trailing whitespace.
+            } 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:487: trailing whitespace.
+                if (machine_get_cache_topo_level(ms, 
+warning: 3 lines add whitespace errors.
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:215: trailing whitespace.
+                } 
+error: patch failed: hw/acpi/aml-build.c:2146
+error: hw/acpi/aml-build.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
