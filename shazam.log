@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20250102181714.1421137-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] tcg/s390x: Use ARK and AGRK
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: tcg/s390x: Use ARK and AGRK
+Patch failed at 0001 tcg/s390x: Use ARK and AGRK
+error: patch failed: tcg/s390x/tcg-target.c.inc:2255
+error: tcg/s390x/tcg-target.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
