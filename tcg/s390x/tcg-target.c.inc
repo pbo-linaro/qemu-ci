@@ -2497,21 +2497,47 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_add2_i32:
-        if (const_args[4]) {
-            tcg_out_insn(s, RIL, ALFI, args[0], args[4]);
+    case INDEX_op_add2:
+        if (type == TCG_TYPE_I32) {
+            if (const_args[4]) {
+                tcg_out_insn(s, RIL, ALFI, args[0], args[4]);
+            } else {
+                tcg_out_insn(s, RR, ALR, args[0], args[4]);
+            }
+            tcg_out_insn(s, RRE, ALCR, args[1], args[5]);
         } else {
-            tcg_out_insn(s, RR, ALR, args[0], args[4]);
+            if (const_args[4]) {
+                if ((int64_t)args[4] >= 0) {
+                    tcg_out_insn(s, RIL, ALGFI, args[0], args[4]);
+                } else {
+                    tcg_out_insn(s, RIL, SLGFI, args[0], -args[4]);
+                }
+            } else {
+                tcg_out_insn(s, RRE, ALGR, args[0], args[4]);
+            }
+            tcg_out_insn(s, RRE, ALCGR, args[1], args[5]);
         }
-        tcg_out_insn(s, RRE, ALCR, args[1], args[5]);
         break;
-    case INDEX_op_sub2_i32:
-        if (const_args[4]) {
-            tcg_out_insn(s, RIL, SLFI, args[0], args[4]);
+    case INDEX_op_sub2:
+        if (type == TCG_TYPE_I32) {
+            if (const_args[4]) {
+                tcg_out_insn(s, RIL, SLFI, args[0], args[4]);
+            } else {
+                tcg_out_insn(s, RR, SLR, args[0], args[4]);
+            }
+            tcg_out_insn(s, RRE, SLBR, args[1], args[5]);
         } else {
-            tcg_out_insn(s, RR, SLR, args[0], args[4]);
+            if (const_args[4]) {
+                if ((int64_t)args[4] >= 0) {
+                    tcg_out_insn(s, RIL, SLGFI, args[0], args[4]);
+                } else {
+                    tcg_out_insn(s, RIL, ALGFI, args[0], -args[4]);
+                }
+            } else {
+                tcg_out_insn(s, RRE, SLGR, args[0], args[4]);
+            }
+            tcg_out_insn(s, RRE, SLBGR, args[1], args[5]);
         }
-        tcg_out_insn(s, RRE, SLBR, args[1], args[5]);
         break;
 
     case INDEX_op_br:
@@ -2649,31 +2675,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             tcg_out_insn(s, RR, LCR, TCG_TMP0, args[2]);
             tcg_out_sh64(s, RSY_RLLG, args[0], args[1], TCG_TMP0, 0);
         }
-        break;
-
-    case INDEX_op_add2_i64:
-        if (const_args[4]) {
-            if ((int64_t)args[4] >= 0) {
-                tcg_out_insn(s, RIL, ALGFI, args[0], args[4]);
-            } else {
-                tcg_out_insn(s, RIL, SLGFI, args[0], -args[4]);
-            }
-        } else {
-            tcg_out_insn(s, RRE, ALGR, args[0], args[4]);
-        }
-        tcg_out_insn(s, RRE, ALCGR, args[1], args[5]);
-        break;
-    case INDEX_op_sub2_i64:
-        if (const_args[4]) {
-            if ((int64_t)args[4] >= 0) {
-                tcg_out_insn(s, RIL, SLGFI, args[0], args[4]);
-            } else {
-                tcg_out_insn(s, RIL, ALGFI, args[0], -args[4]);
-            }
-        } else {
-            tcg_out_insn(s, RRE, SLGR, args[0], args[4]);
-        }
-        tcg_out_insn(s, RRE, SLBGR, args[1], args[5]);
         break;
 
     case INDEX_op_brcond_i64:
@@ -3316,13 +3317,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_muls2_i64:
         return C_O2_I2(o, m, r, r);
 
-    case INDEX_op_add2_i32:
-    case INDEX_op_sub2_i32:
-        return C_N1_O1_I4(r, r, 0, 1, ri, r);
-
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i64:
-        return C_N1_O1_I4(r, r, 0, 1, rJU, r);
+    case INDEX_op_add2:
+    case INDEX_op_sub2:
+        return (op->type == TCG_TYPE_I32
+                ? C_N1_O1_I4(r, r, 0, 1, ri, r)
+                : C_N1_O1_I4(r, r, 0, 1, rJU, r));
 
     case INDEX_op_st_vec:
         return C_O0_I2(v, r);

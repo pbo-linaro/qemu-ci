@@ -2208,6 +2208,8 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_deposit_i32:
         return true;
 
+    case INDEX_op_add2:
+        return has_type && TCG_TARGET_HAS_add2(type);
     case INDEX_op_andc:
         return has_type && TCG_TARGET_HAS_andc(type);
     case INDEX_op_eqv:
@@ -2220,6 +2222,8 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return has_type && TCG_TARGET_HAS_not(type);
     case INDEX_op_orc:
         return has_type && TCG_TARGET_HAS_orc(type);
+    case INDEX_op_sub2:
+        return has_type && TCG_TARGET_HAS_sub2(type);
 
     case INDEX_op_negsetcond_i32:
         return TCG_TARGET_HAS_negsetcond(TCG_TYPE_I32);
@@ -2237,10 +2241,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_HAS_rot(TCG_TYPE_I32);
     case INDEX_op_extract2_i32:
         return TCG_TARGET_HAS_extract2(TCG_TYPE_I32);
-    case INDEX_op_add2_i32:
-        return TCG_TARGET_HAS_add2(TCG_TYPE_I32);
-    case INDEX_op_sub2_i32:
-        return TCG_TARGET_HAS_sub2(TCG_TYPE_I32);
     case INDEX_op_mulu2_i32:
         return TCG_TARGET_HAS_mulu2(TCG_TYPE_I32);
     case INDEX_op_muls2_i32:
@@ -2307,10 +2307,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctz(TCG_TYPE_I64);
     case INDEX_op_ctpop_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctpop(TCG_TYPE_I64);
-    case INDEX_op_add2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_add2(TCG_TYPE_I64);
-    case INDEX_op_sub2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_sub2(TCG_TYPE_I64);
     case INDEX_op_mulu2_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_mulu2(TCG_TYPE_I64);
     case INDEX_op_muls2_i64:
@@ -3951,12 +3947,10 @@ liveness_pass_1(TCGContext *s)
             la_reset_pref(ts);
             break;
 
-        case INDEX_op_add2_i32:
-        case INDEX_op_add2_i64:
+        case INDEX_op_add2:
             opc_new = INDEX_op_add;
             goto do_addsub2;
-        case INDEX_op_sub2_i32:
-        case INDEX_op_sub2_i64:
+        case INDEX_op_sub2:
             opc_new = INDEX_op_sub;
         do_addsub2:
             nb_iargs = 4;

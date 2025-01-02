@@ -2141,11 +2141,13 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_add2_i32:
+    case INDEX_op_add2:
+        tcg_debug_assert(TCG_TARGET_REG_BITS == 32);
         tcg_out_addsub2(s, a0, a1, a2, args[3], args[4], args[5],
                         const_args[4], const_args[5], false);
         break;
-    case INDEX_op_sub2_i32:
+    case INDEX_op_sub2:
+        tcg_debug_assert(TCG_TARGET_REG_BITS == 32);
         tcg_out_addsub2(s, a0, a1, a2, args[3], args[4], args[5],
                         const_args[4], const_args[5], true);
         break;
@@ -2252,8 +2254,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return (use_mips32r6_instructions
                 ? C_O1_I4(r, rZ, rZ, rZ, rZ)
                 : C_O1_I4(r, rZ, rZ, rZ, 0));
-    case INDEX_op_add2_i32:
-    case INDEX_op_sub2_i32:
+    case INDEX_op_add2:
+    case INDEX_op_sub2:
         return C_O2_I4(r, r, rZ, rZ, rN, rN);
     case INDEX_op_setcond2_i32:
         return C_O1_I4(r, rZ, rZ, rZ, rZ);

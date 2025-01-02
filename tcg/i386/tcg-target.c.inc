@@ -2969,7 +2969,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     OP_32_64(muls2):
         tcg_out_modrm(s, OPC_GRP3_Ev + rexw, EXT3_IMUL, args[3]);
         break;
-    OP_32_64(add2):
+    case INDEX_op_add2:
         if (const_args[4]) {
             tgen_arithi(s, ARITH_ADD + rexw, a0, args[4], 1);
         } else {
@@ -2981,7 +2981,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             tgen_arithr(s, ARITH_ADC + rexw, a1, args[5]);
         }
         break;
-    OP_32_64(sub2):
+    case INDEX_op_sub2:
         if (const_args[4]) {
             tgen_arithi(s, ARITH_SUB + rexw, a0, args[4], 1);
         } else {
@@ -3777,10 +3777,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_muls2_i64:
         return C_O2_I2(a, d, a, r);
 
-    case INDEX_op_add2_i32:
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i32:
-    case INDEX_op_sub2_i64:
+    case INDEX_op_add2:
+    case INDEX_op_sub2:
         return C_N1_O1_I4(r, r, 0, 1, re, re);
 
     case INDEX_op_ctz_i32:

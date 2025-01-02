@@ -3439,14 +3439,11 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
                         args[3], args[4], const_args[2]);
         break;
 
-#if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_add2_i64:
-#else
-    case INDEX_op_add2_i32:
-#endif
+    case INDEX_op_add2:
         /* Note that the CA bit is defined based on the word size of the
            environment.  So in 64-bit mode it's always carry-out of bit 63.
            The fallback code using deposit works just as well for 32-bit.  */
+        tcg_debug_assert(type == TCG_TYPE_REG);
         a0 = args[0], a1 = args[1];
         if (a0 == args[3] || (!const_args[5] && a0 == args[5])) {
             a0 = TCG_REG_R0;
@@ -3466,11 +3463,8 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-#if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_sub2_i64:
-#else
-    case INDEX_op_sub2_i32:
-#endif
+    case INDEX_op_sub2:
+        tcg_debug_assert(type == TCG_TYPE_REG);
         a0 = args[0], a1 = args[1];
         if (a0 == args[5] || (!const_args[3] && a0 == args[3])) {
             a0 = TCG_REG_R0;
@@ -4229,11 +4223,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return C_O0_I4(r, r, ri, ri);
     case INDEX_op_setcond2_i32:
         return C_O1_I4(r, r, r, ri, ri);
-    case INDEX_op_add2_i64:
-    case INDEX_op_add2_i32:
+    case INDEX_op_add2:
         return C_O2_I4(r, r, r, r, rI, rZM);
-    case INDEX_op_sub2_i64:
-    case INDEX_op_sub2_i32:
+    case INDEX_op_sub2:
         return C_O2_I4(r, r, rI, rZM, r, r);
 
     case INDEX_op_qemu_ld_a32_i32:

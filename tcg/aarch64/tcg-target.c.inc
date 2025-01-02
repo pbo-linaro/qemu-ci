@@ -2456,23 +2456,15 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_extr(s, ext, a0, REG0(2), REG0(1), args[3]);
         break;
 
-    case INDEX_op_add2_i32:
-        tcg_out_addsub2(s, TCG_TYPE_I32, a0, a1, REG0(2), REG0(3),
-                        (int32_t)args[4], args[5], const_args[4],
+    case INDEX_op_add2:
+        tcg_out_addsub2(s, ext, a0, a1, REG0(2), REG0(3),
+                        args[4], args[5], const_args[4],
                         const_args[5], false);
         break;
-    case INDEX_op_add2_i64:
-        tcg_out_addsub2(s, TCG_TYPE_I64, a0, a1, REG0(2), REG0(3), args[4],
-                        args[5], const_args[4], const_args[5], false);
-        break;
-    case INDEX_op_sub2_i32:
-        tcg_out_addsub2(s, TCG_TYPE_I32, a0, a1, REG0(2), REG0(3),
-                        (int32_t)args[4], args[5], const_args[4],
+    case INDEX_op_sub2:
+        tcg_out_addsub2(s, ext, a0, a1, REG0(2), REG0(3),
+                        args[4], args[5], const_args[4],
                         const_args[5], true);
-        break;
-    case INDEX_op_sub2_i64:
-        tcg_out_addsub2(s, TCG_TYPE_I64, a0, a1, REG0(2), REG0(3), args[4],
-                        args[5], const_args[4], const_args[5], true);
         break;
 
     case INDEX_op_muluh_i64:
@@ -3052,10 +3044,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_extract2_i64:
         return C_O1_I2(r, rZ, rZ);
 
-    case INDEX_op_add2_i32:
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i32:
-    case INDEX_op_sub2_i64:
+    case INDEX_op_add2:
+    case INDEX_op_sub2:
         return C_O2_I4(r, r, rZ, rZ, rA, rMZ);
 
     case INDEX_op_add_vec:

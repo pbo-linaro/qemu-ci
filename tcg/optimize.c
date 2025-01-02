@@ -1266,8 +1266,7 @@ static bool fold_addsub2(OptContext *ctx, TCGOp *op, bool add)
         bl = -bl;
         bh = ~bh + !bl;
 
-        op->opc = (op->type == TCG_TYPE_I32
-                   ? INDEX_op_add2_i32 : INDEX_op_add2_i64);
+        op->opc = INDEX_op_add2;
         op->args[4] = arg_new_constant(ctx, op->type, bl);
         op->args[5] = arg_new_constant(ctx, op->type, bh);
     }
@@ -2754,7 +2753,7 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_add_vec:
             done = fold_add_vec(&ctx, op);
             break;
-        CASE_OP_32_64(add2):
+        case INDEX_op_add2:
             done = fold_add2(&ctx, op);
             break;
         case INDEX_op_and:
@@ -2929,7 +2928,7 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_sub_vec:
             done = fold_sub_vec(&ctx, op);
             break;
-        CASE_OP_32_64(sub2):
+        case INDEX_op_sub2:
             done = fold_sub2(&ctx, op);
             break;
         case INDEX_op_xor:

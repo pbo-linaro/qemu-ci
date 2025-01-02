@@ -649,17 +649,31 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
                 tb_ptr = ptr;
             }
             break;
-        case INDEX_op_add2_i32:
+        case INDEX_op_add2:
             tci_args_rrrrrr(insn, &r0, &r1, &r2, &r3, &r4, &r5);
-            T1 = tci_uint64(regs[r3], regs[r2]);
-            T2 = tci_uint64(regs[r5], regs[r4]);
-            tci_write_reg64(regs, r1, r0, T1 + T2);
+            if (TCG_TARGET_REG_BITS == 32) {
+                T1 = tci_uint64(regs[r3], regs[r2]);
+                T2 = tci_uint64(regs[r5], regs[r4]);
+                tci_write_reg64(regs, r1, r0, T1 + T2);
+            } else {
+                T1 = regs[r2] + regs[r4];
+                T2 = regs[r3] + regs[r5] + (T1 < regs[r2]);
+                regs[r0] = T1;
+                regs[r1] = T2;
+            }
             break;
-        case INDEX_op_sub2_i32:
+        case INDEX_op_sub2:
             tci_args_rrrrrr(insn, &r0, &r1, &r2, &r3, &r4, &r5);
-            T1 = tci_uint64(regs[r3], regs[r2]);
-            T2 = tci_uint64(regs[r5], regs[r4]);
-            tci_write_reg64(regs, r1, r0, T1 - T2);
+            if (TCG_TARGET_REG_BITS == 32) {
+                T1 = tci_uint64(regs[r3], regs[r2]);
+                T2 = tci_uint64(regs[r5], regs[r4]);
+                tci_write_reg64(regs, r1, r0, T1 - T2);
+            } else {
+                T1 = regs[r2] - regs[r4];
+                T2 = regs[r3] - regs[r5] - (regs[r2] < regs[r4]);
+                regs[r0] = T1;
+                regs[r1] = T2;
+            }
             break;
         case INDEX_op_mulu2_i32:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
@@ -743,20 +757,6 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
         case INDEX_op_muls2_i64:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
             muls64(&regs[r0], &regs[r1], regs[r2], regs[r3]);
-            break;
-        case INDEX_op_add2_i64:
-            tci_args_rrrrrr(insn, &r0, &r1, &r2, &r3, &r4, &r5);
-            T1 = regs[r2] + regs[r4];
-            T2 = regs[r3] + regs[r5] + (T1 < regs[r2]);
-            regs[r0] = T1;
-            regs[r1] = T2;
-            break;
-        case INDEX_op_sub2_i64:
-            tci_args_rrrrrr(insn, &r0, &r1, &r2, &r3, &r4, &r5);
-            T1 = regs[r2] - regs[r4];
-            T2 = regs[r3] - regs[r5] - (regs[r2] < regs[r4]);
-            regs[r0] = T1;
-            regs[r1] = T2;
             break;
 
             /* Shift/rotate operations (64 bit). */
@@ -1150,10 +1150,8 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
                            str_r(r2), str_r(r3));
         break;
 
-    case INDEX_op_add2_i32:
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i32:
-    case INDEX_op_sub2_i64:
+    case INDEX_op_add2:
+    case INDEX_op_sub2:
         tci_args_rrrrrr(insn, &r0, &r1, &r2, &r3, &r4, &r5);
         info->fprintf_func(info->stream, "%-12s  %s, %s, %s, %s, %s, %s",
                            op_name, str_r(r0), str_r(r1), str_r(r2),
