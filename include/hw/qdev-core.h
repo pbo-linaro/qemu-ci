@@ -1106,6 +1106,8 @@ void device_listener_unregister(DeviceListener *listener);
  */
 bool qdev_should_hide_device(const QDict *opts, bool from_json, Error **errp);
 
+void qemu_create_machine(QDict *qdict);
+
 typedef enum MachineInitPhase {
     /* current_machine is NULL.  */
     PHASE_NO_MACHINE,

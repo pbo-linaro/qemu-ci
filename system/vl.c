@@ -28,6 +28,7 @@
 #include "qemu/units.h"
 #include "exec/cpu-common.h"
 #include "exec/page-vary.h"
+#include "hw/qdev-core.h"
 #include "hw/qdev-properties.h"
 #include "qapi/compat-policy.h"
 #include "qapi/error.h"
@@ -2128,7 +2129,7 @@ static void qemu_create_machine_containers(Object *machine)
     }
 }
 
-static void qemu_create_machine(QDict *qdict)
+void qemu_create_machine(QDict *qdict)
 {
     MachineClass *machine_class = select_machine(qdict, &error_fatal);
     object_set_machine_compat_props(machine_class->compat_props);
