@@ -504,15 +504,15 @@ static uint64_t do_constant_folding_2(TCGOpcode op, TCGType type, uint64_t x, ui
     case INDEX_op_ctpop_i64:
         return ctpop64(x);
 
-    CASE_OP_32_64(bswap16):
+    case INDEX_op_bswap16:
         x = bswap16(x);
         return y & TCG_BSWAP_OS ? (int16_t)x : x;
 
-    CASE_OP_32_64(bswap32):
+    case INDEX_op_bswap32:
         x = bswap32(x);
         return y & TCG_BSWAP_OS ? (int32_t)x : x;
 
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap64:
         return bswap64(x);
 
     case INDEX_op_ext_i32_i64:
@@ -1538,17 +1538,15 @@ static bool fold_bswap(OptContext *ctx, TCGOp *op)
 
     z_mask = t1->z_mask;
     switch (op->opc) {
-    case INDEX_op_bswap16_i32:
-    case INDEX_op_bswap16_i64:
+    case INDEX_op_bswap16:
         z_mask = bswap16(z_mask);
         sign = INT16_MIN;
         break;
-    case INDEX_op_bswap32_i32:
-    case INDEX_op_bswap32_i64:
+    case INDEX_op_bswap32:
         z_mask = bswap32(z_mask);
         sign = INT32_MIN;
         break;
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap64:
         z_mask = bswap64(z_mask);
         sign = INT64_MIN;
         break;
@@ -2734,9 +2732,9 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_brcond2_i32:
             done = fold_brcond2(&ctx, op);
             break;
-        CASE_OP_32_64(bswap16):
-        CASE_OP_32_64(bswap32):
-        case INDEX_op_bswap64_i64:
+        case INDEX_op_bswap16:
+        case INDEX_op_bswap32:
+        case INDEX_op_bswap64:
             done = fold_bswap(&ctx, op);
             break;
         CASE_OP_32_64(clz):

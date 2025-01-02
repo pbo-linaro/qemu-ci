@@ -2514,16 +2514,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_bswap16_i32:
-        a0 = args[0], a1 = args[1], a2 = args[2];
-        tcg_out_insn(s, RRE, LRVR, a0, a1);
-        if (a2 & TCG_BSWAP_OS) {
-            tcg_out_sh32(s, RS_SRA, a0, TCG_REG_NONE, 16);
-        } else {
-            tcg_out_sh32(s, RS_SRL, a0, TCG_REG_NONE, 16);
-        }
-        break;
-    case INDEX_op_bswap16_i64:
+    case INDEX_op_bswap16:
         a0 = args[0], a1 = args[1], a2 = args[2];
         tcg_out_insn(s, RRE, LRVGR, a0, a1);
         if (a2 & TCG_BSWAP_OS) {
@@ -2533,10 +2524,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_bswap32_i32:
-        tcg_out_insn(s, RRE, LRVR, args[0], args[1]);
-        break;
-    case INDEX_op_bswap32_i64:
+    case INDEX_op_bswap32:
         a0 = args[0], a1 = args[1], a2 = args[2];
         tcg_out_insn(s, RRE, LRVR, a0, a1);
         if (a2 & TCG_BSWAP_OS) {
@@ -2544,6 +2532,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         } else if ((a2 & (TCG_BSWAP_IZ | TCG_BSWAP_OZ)) == TCG_BSWAP_OZ) {
             tcg_out_ext32u(s, a0, a0);
         }
+        break;
+
+    case INDEX_op_bswap64:
+        tcg_out_insn(s, RRE, LRVGR, args[0], args[1]);
         break;
 
     case INDEX_op_add2:
@@ -2633,10 +2625,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_qemu_st_a32_i128:
     case INDEX_op_qemu_st_a64_i128:
         tcg_out_qemu_ldst_i128(s, args[0], args[1], args[2], args[3], false);
-        break;
-
-    case INDEX_op_bswap64_i64:
-        tcg_out_insn(s, RRE, LRVGR, args[0], args[1]);
         break;
 
     case INDEX_op_mulu2:
@@ -3211,11 +3199,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
                 ? C_O0_I2(r, ri)
                 : C_O0_I2(r, rC));
 
-    case INDEX_op_bswap16_i32:
-    case INDEX_op_bswap16_i64:
-    case INDEX_op_bswap32_i32:
-    case INDEX_op_bswap32_i64:
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap16:
+    case INDEX_op_bswap32:
+    case INDEX_op_bswap64:
     case INDEX_op_neg:
     case INDEX_op_not:
     case INDEX_op_ext_i32_i64:

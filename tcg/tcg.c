@@ -2214,6 +2214,10 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return has_type && TCG_TARGET_HAS_add2(type);
     case INDEX_op_andc:
         return has_type && TCG_TARGET_HAS_andc(type);
+    case INDEX_op_bswap16:
+    case INDEX_op_bswap32:
+    case INDEX_op_bswap64:
+        return has_type && TCG_TARGET_HAS_bswap(type);
     case INDEX_op_div:
     case INDEX_op_divu:
         return has_type && TCG_TARGET_HAS_div(type);
@@ -2251,9 +2255,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sub2:
         return has_type && TCG_TARGET_HAS_sub2(type);
 
-    case INDEX_op_bswap16_i32:
-    case INDEX_op_bswap32_i32:
-        return TCG_TARGET_HAS_bswap(TCG_TYPE_I32);
     case INDEX_op_clz_i32:
         return TCG_TARGET_HAS_clz(TCG_TYPE_I32);
     case INDEX_op_ctz_i32:
@@ -2267,10 +2268,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_extrh_i64_i32:
         return TCG_TARGET_REG_BITS == 64;
 
-    case INDEX_op_bswap16_i64:
-    case INDEX_op_bswap32_i64:
-    case INDEX_op_bswap64_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_bswap(TCG_TYPE_I64);
     case INDEX_op_clz_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_clz(TCG_TYPE_I64);
     case INDEX_op_ctz_i64:
@@ -2846,11 +2843,9 @@ void tcg_dump_ops(TCGContext *s, FILE *f, bool have_prefs)
                     i = 2;
                 }
                 break;
-            case INDEX_op_bswap16_i32:
-            case INDEX_op_bswap16_i64:
-            case INDEX_op_bswap32_i32:
-            case INDEX_op_bswap32_i64:
-            case INDEX_op_bswap64_i64:
+            case INDEX_op_bswap16:
+            case INDEX_op_bswap32:
+            case INDEX_op_bswap64:
                 {
                     TCGArg flags = op->args[k];
                     const char *name = NULL;

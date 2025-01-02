@@ -2215,13 +2215,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap64:
         tcg_out_opc_imm(s, OPC_REV8, a0, a1, 0);
         break;
-    case INDEX_op_bswap32_i32:
-        a2 = 0;
-        /* fall through */
-    case INDEX_op_bswap32_i64:
+    case INDEX_op_bswap32:
         tcg_out_opc_imm(s, OPC_REV8, a0, a1, 0);
         if (a2 & TCG_BSWAP_OZ) {
             tcg_out_opc_imm(s, OPC_SRLI, a0, a0, 32);
@@ -2229,8 +2226,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             tcg_out_opc_imm(s, OPC_SRAI, a0, a0, 32);
         }
         break;
-    case INDEX_op_bswap16_i64:
-    case INDEX_op_bswap16_i32:
+    case INDEX_op_bswap16:
         tcg_out_opc_imm(s, OPC_REV8, a0, a1, 0);
         if (a2 & TCG_BSWAP_OZ) {
             tcg_out_opc_imm(s, OPC_SRLI, a0, a0, 48);
@@ -2594,11 +2590,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extract:
     case INDEX_op_sextract:
-    case INDEX_op_bswap16_i32:
-    case INDEX_op_bswap32_i32:
-    case INDEX_op_bswap16_i64:
-    case INDEX_op_bswap32_i64:
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap16:
+    case INDEX_op_bswap32:
+    case INDEX_op_bswap64:
     case INDEX_op_ctpop_i32:
     case INDEX_op_ctpop_i64:
         return C_O1_I1(r, r);

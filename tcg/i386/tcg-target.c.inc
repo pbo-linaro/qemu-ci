@@ -2873,7 +2873,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_movcond(s, rexw, args[5], a0, a1, a2, const_a2, args[3]);
         break;
 
-    OP_32_64(bswap16):
+    case INDEX_op_bswap16:
         if (a2 & TCG_BSWAP_OS) {
             /* Output must be sign-extended. */
             if (rexw) {
@@ -2891,7 +2891,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             tcg_out_rolw_8(s, a0);
         }
         break;
-    OP_32_64(bswap32):
+    case INDEX_op_bswap32:
         tcg_out_bswap32(s, a0);
         if (rexw && (a2 & TCG_BSWAP_OS)) {
             tcg_out_ext32s(s, a0, a0);
@@ -3002,7 +3002,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_setcond2(s, args, const_args);
         break;
 #else /* TCG_TARGET_REG_BITS == 64 */
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap64:
         tcg_out_bswap64(s, a0);
         break;
     case INDEX_op_extrh_i64_i32:
@@ -3705,11 +3705,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_brcond:
         return C_O0_I2(r, reT);
 
-    case INDEX_op_bswap16_i32:
-    case INDEX_op_bswap16_i64:
-    case INDEX_op_bswap32_i32:
-    case INDEX_op_bswap32_i64:
-    case INDEX_op_bswap64_i64:
+    case INDEX_op_bswap16:
+    case INDEX_op_bswap32:
+    case INDEX_op_bswap64:
     case INDEX_op_neg:
     case INDEX_op_not:
     case INDEX_op_extrh_i64_i32:
