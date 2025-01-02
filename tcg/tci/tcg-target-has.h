@@ -13,9 +13,9 @@
 #define TCG_TARGET_HAS_clz(T)           1
 #define TCG_TARGET_HAS_ctpop(T)         1
 #define TCG_TARGET_HAS_ctz(T)           1
-#define TCG_TARGET_HAS_div(T)           1
-#define TCG_TARGET_HAS_muls2(T)         1
-#define TCG_TARGET_HAS_mulu2(T)         1
+#define TCG_TARGET_HAS_div(T)           (T == TCG_TYPE_REG)
+#define TCG_TARGET_HAS_muls2(T)         (T == TCG_TYPE_REG)
+#define TCG_TARGET_HAS_mulu2(T)         (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_mulsh(T)         0
 #define TCG_TARGET_HAS_muluh(T)         0
 #define TCG_TARGET_HAS_negsetcond(T)    0

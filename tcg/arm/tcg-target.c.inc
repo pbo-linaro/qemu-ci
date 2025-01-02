@@ -1989,13 +1989,13 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_dat_reg(s, COND_AL,
                         ARITH_MVN, args[0], 0, args[1], SHIFT_IMM_LSL(0));
         break;
-    case INDEX_op_mul_i32:
+    case INDEX_op_mul:
         tcg_out_mul32(s, COND_AL, args[0], args[1], args[2]);
         break;
-    case INDEX_op_mulu2_i32:
+    case INDEX_op_mulu2:
         tcg_out_umull32(s, COND_AL, args[0], args[1], args[2], args[3]);
         break;
-    case INDEX_op_muls2_i32:
+    case INDEX_op_muls2:
         tcg_out_smull32(s, COND_AL, args[0], args[1], args[2], args[3]);
         break;
     /* XXX: Perhaps args[2] & 0x1f is wrong */
@@ -2155,10 +2155,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_div_i32:
+    case INDEX_op_div:
         tcg_out_sdiv(s, COND_AL, args[0], args[1], args[2]);
         break;
-    case INDEX_op_divu_i32:
+    case INDEX_op_divu:
         tcg_out_udiv(s, COND_AL, args[0], args[1], args[2]);
         break;
 
@@ -2205,13 +2205,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ctz_i32:
         return C_O1_I2(r, r, rIK);
 
-    case INDEX_op_mul_i32:
-    case INDEX_op_div_i32:
-    case INDEX_op_divu_i32:
+    case INDEX_op_mul:
+    case INDEX_op_div:
+    case INDEX_op_divu:
         return C_O1_I2(r, r, r);
 
-    case INDEX_op_mulu2_i32:
-    case INDEX_op_muls2_i32:
+    case INDEX_op_mulu2:
+    case INDEX_op_muls2:
         return C_O2_I2(r, r, r, r);
 
     case INDEX_op_or:

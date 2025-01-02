@@ -67,18 +67,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_st_i64:
         return C_O0_I2(r, r);
 
-    case INDEX_op_div_i32:
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i32:
-    case INDEX_op_divu_i64:
-    case INDEX_op_rem_i32:
-    case INDEX_op_rem_i64:
-    case INDEX_op_remu_i32:
-    case INDEX_op_remu_i64:
+    case INDEX_op_div:
+    case INDEX_op_divu:
+    case INDEX_op_rem:
+    case INDEX_op_remu:
     case INDEX_op_add:
     case INDEX_op_sub:
-    case INDEX_op_mul_i32:
-    case INDEX_op_mul_i64:
+    case INDEX_op_mul:
     case INDEX_op_and:
     case INDEX_op_andc:
     case INDEX_op_eqv:
@@ -120,10 +115,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return C_O0_I4(r, r, r, r);
 #endif
 
-    case INDEX_op_mulu2_i32:
-    case INDEX_op_mulu2_i64:
-    case INDEX_op_muls2_i32:
-    case INDEX_op_muls2_i64:
+    case INDEX_op_mulu2:
+    case INDEX_op_muls2:
         return C_O2_I2(r, r, r, r);
 
     case INDEX_op_movcond_i32:
@@ -711,7 +704,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
 
     case INDEX_op_add:
     case INDEX_op_sub:
-    CASE_32_64(mul)
+    case INDEX_op_mul:
     case INDEX_op_and:
     case INDEX_op_or:
     case INDEX_op_xor:
@@ -725,10 +718,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     CASE_32_64(sar)
     CASE_32_64(rotl)     /* Optional (TCG_TARGET_HAS_rot_*). */
     CASE_32_64(rotr)     /* Optional (TCG_TARGET_HAS_rot_*). */
-    CASE_32_64(div)      /* Optional (TCG_TARGET_HAS_div_*). */
-    CASE_32_64(divu)     /* Optional (TCG_TARGET_HAS_div_*). */
-    CASE_32_64(rem)      /* Optional (TCG_TARGET_HAS_div_*). */
-    CASE_32_64(remu)     /* Optional (TCG_TARGET_HAS_div_*). */
+    case INDEX_op_div:
+    case INDEX_op_divu:
+    case INDEX_op_rem:
+    case INDEX_op_remu:
     CASE_32_64(clz)      /* Optional (TCG_TARGET_HAS_clz_*). */
     CASE_32_64(ctz)      /* Optional (TCG_TARGET_HAS_ctz_*). */
         tcg_out_op_rrr(s, opc, args[0], args[1], args[2]);
@@ -791,8 +784,8 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
 #endif
 
-    CASE_32_64(mulu2)
-    CASE_32_64(muls2)
+    case INDEX_op_mulu2:
+    case INDEX_op_muls2:
         tcg_out_op_rrrr(s, opc, args[0], args[1], args[2], args[3]);
         break;
 

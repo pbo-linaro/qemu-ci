@@ -539,7 +539,7 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = regs[r1] - regs[r2];
             break;
-        CASE_32_64(mul)
+        case INDEX_op_mul:
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = regs[r1] * regs[r2];
             break;
@@ -576,24 +576,27 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             regs[r0] = ~(regs[r1] | regs[r2]);
             break;
 
+            /* Arithmetic operations */
+
+        case INDEX_op_div:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = (tcg_target_long)regs[r1] / (tcg_target_long)regs[r2];
+            break;
+        case INDEX_op_divu:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = regs[r1] / regs[r2];
+            break;
+        case INDEX_op_rem:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = (tcg_target_long)regs[r1] % (tcg_target_long)regs[r2];
+            break;
+        case INDEX_op_remu:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = regs[r1] % regs[r2];
+            break;
+
             /* Arithmetic operations (32 bit). */
 
-        case INDEX_op_div_i32:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (int32_t)regs[r1] / (int32_t)regs[r2];
-            break;
-        case INDEX_op_divu_i32:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (uint32_t)regs[r1] / (uint32_t)regs[r2];
-            break;
-        case INDEX_op_rem_i32:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (int32_t)regs[r1] % (int32_t)regs[r2];
-            break;
-        case INDEX_op_remu_i32:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (uint32_t)regs[r1] % (uint32_t)regs[r2];
-            break;
         case INDEX_op_clz_i32:
             tci_args_rrr(insn, &r0, &r1, &r2);
             tmp32 = regs[r1];
@@ -675,15 +678,23 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
                 regs[r1] = T2;
             }
             break;
-        case INDEX_op_mulu2_i32:
+        case INDEX_op_mulu2:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
+#if TCG_TARGET_REG_BITS == 32
             tmp64 = (uint64_t)(uint32_t)regs[r2] * (uint32_t)regs[r3];
             tci_write_reg64(regs, r1, r0, tmp64);
+#else
+            mulu64(&regs[r0], &regs[r1], regs[r2], regs[r3]);
+#endif
             break;
-        case INDEX_op_muls2_i32:
+        case INDEX_op_muls2:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
+#if TCG_TARGET_REG_BITS == 32
             tmp64 = (int64_t)(int32_t)regs[r2] * (int32_t)regs[r3];
             tci_write_reg64(regs, r1, r0, tmp64);
+#else
+            muls64(&regs[r0], &regs[r1], regs[r2], regs[r3]);
+#endif
             break;
         CASE_32_64(bswap16)
             tci_args_rr(insn, &r0, &r1);
@@ -722,22 +733,6 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
 
             /* Arithmetic operations (64 bit). */
 
-        case INDEX_op_div_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (int64_t)regs[r1] / (int64_t)regs[r2];
-            break;
-        case INDEX_op_divu_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (uint64_t)regs[r1] / (uint64_t)regs[r2];
-            break;
-        case INDEX_op_rem_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (int64_t)regs[r1] % (int64_t)regs[r2];
-            break;
-        case INDEX_op_remu_i64:
-            tci_args_rrr(insn, &r0, &r1, &r2);
-            regs[r0] = (uint64_t)regs[r1] % (uint64_t)regs[r2];
-            break;
         case INDEX_op_clz_i64:
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = regs[r1] ? clz64(regs[r1]) : regs[r2];
@@ -749,14 +744,6 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
         case INDEX_op_ctpop_i64:
             tci_args_rr(insn, &r0, &r1);
             regs[r0] = ctpop64(regs[r1]);
-            break;
-        case INDEX_op_mulu2_i64:
-            tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
-            mulu64(&regs[r0], &regs[r1], regs[r2], regs[r3]);
-            break;
-        case INDEX_op_muls2_i64:
-            tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
-            muls64(&regs[r0], &regs[r1], regs[r2], regs[r3]);
             break;
 
             /* Shift/rotate operations (64 bit). */
@@ -1078,8 +1065,7 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
 
     case INDEX_op_add:
     case INDEX_op_sub:
-    case INDEX_op_mul_i32:
-    case INDEX_op_mul_i64:
+    case INDEX_op_mul:
     case INDEX_op_and:
     case INDEX_op_or:
     case INDEX_op_xor:
@@ -1088,14 +1074,10 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
     case INDEX_op_eqv:
     case INDEX_op_nand:
     case INDEX_op_nor:
-    case INDEX_op_div_i32:
-    case INDEX_op_div_i64:
-    case INDEX_op_rem_i32:
-    case INDEX_op_rem_i64:
-    case INDEX_op_divu_i32:
-    case INDEX_op_divu_i64:
-    case INDEX_op_remu_i32:
-    case INDEX_op_remu_i64:
+    case INDEX_op_div:
+    case INDEX_op_rem:
+    case INDEX_op_divu:
+    case INDEX_op_remu:
     case INDEX_op_shl_i32:
     case INDEX_op_shl_i64:
     case INDEX_op_shr_i32:
@@ -1140,10 +1122,8 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
                            str_r(r3), str_r(r4), str_c(c));
         break;
 
-    case INDEX_op_mulu2_i32:
-    case INDEX_op_mulu2_i64:
-    case INDEX_op_muls2_i32:
-    case INDEX_op_muls2_i64:
+    case INDEX_op_mulu2:
+    case INDEX_op_muls2:
         tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
         info->fprintf_func(info->stream, "%-12s  %s, %s, %s, %s",
                            op_name, str_r(r0), str_r(r1),

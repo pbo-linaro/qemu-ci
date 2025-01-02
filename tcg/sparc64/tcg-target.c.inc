@@ -1395,8 +1395,8 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_sar_i32:
         c = SHIFT_SRA;
         goto do_shift32;
-    case INDEX_op_mul_i32:
-        c = ARITH_UMUL;
+    case INDEX_op_mul:
+        c = type == TCG_TYPE_I32 ? ARITH_UMUL : ARITH_MULX;
         goto gen_arith;
 
     case INDEX_op_neg:
@@ -1406,12 +1406,20 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
 	c = ARITH_ORN;
 	goto gen_arith1;
 
-    case INDEX_op_div_i32:
-        tcg_out_div32(s, a0, a1, a2, c2, 0);
-        break;
-    case INDEX_op_divu_i32:
-        tcg_out_div32(s, a0, a1, a2, c2, 1);
-        break;
+    case INDEX_op_div:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_div32(s, a0, a1, a2, c2, 0);
+            break;
+        }
+        c = ARITH_SDIVX;
+        goto gen_arith;
+    case INDEX_op_divu:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_div32(s, a0, a1, a2, c2, 1);
+            break;
+        }
+        c = ARITH_UDIVX;
+        goto gen_arith;
 
     case INDEX_op_brcond_i32:
         tcg_out_brcond_i32(s, a2, a0, a1, const_args[1], arg_label(args[3]));
@@ -1446,13 +1454,18 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
                                 const_args[4], args[5], const_args[5], true);
         }
         break;
-    case INDEX_op_mulu2_i32:
+    case INDEX_op_mulu2:
         c = ARITH_UMUL;
         goto do_mul2;
-    case INDEX_op_muls2_i32:
+    case INDEX_op_muls2:
         c = ARITH_SMUL;
     do_mul2:
-        /* The 32-bit multiply insns produce a full 64-bit result. */
+        /*
+         * The 32-bit multiply insns produce a full 64-bit result.
+         * Providing these avoids the need for truncating the inputs
+         * to use a 64-bit multiply.
+         */
+        tcg_debug_assert(type == TCG_TYPE_I32);
         tcg_out_arithc(s, a0, a2, args[3], const_args[3], c);
         tcg_out_arithi(s, a1, a0, 32, SHIFT_SRLX);
         break;
@@ -1486,15 +1499,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_sar_i64:
         c = SHIFT_SRAX;
         goto do_shift64;
-    case INDEX_op_mul_i64:
-        c = ARITH_MULX;
-        goto gen_arith;
-    case INDEX_op_div_i64:
-        c = ARITH_SDIVX;
-        goto gen_arith;
-    case INDEX_op_divu_i64:
-        c = ARITH_UDIVX;
-        goto gen_arith;
 
     case INDEX_op_brcond_i64:
         tcg_out_brcond_i64(s, a2, a0, a1, const_args[1], arg_label(args[3]));
@@ -1508,7 +1512,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_movcond_i64:
         tcg_out_movcond_i64(s, args[5], a0, a1, a2, c2, args[3], const_args[3]);
         break;
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
         tcg_out_arith(s, args[0], args[1], args[2], ARITH_UMULXHI);
         break;
 
@@ -1579,12 +1583,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return C_O0_I2(rZ, r);
 
     case INDEX_op_add:
-    case INDEX_op_mul_i32:
-    case INDEX_op_mul_i64:
-    case INDEX_op_div_i32:
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i32:
-    case INDEX_op_divu_i64:
+    case INDEX_op_mul:
+    case INDEX_op_div:
+    case INDEX_op_divu:
     case INDEX_op_sub:
     case INDEX_op_and:
     case INDEX_op_andc:
@@ -1612,10 +1613,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_add2:
     case INDEX_op_sub2:
         return C_O2_I4(r, r, rZ, rZ, rJ, rJ);
-    case INDEX_op_mulu2_i32:
-    case INDEX_op_muls2_i32:
+    case INDEX_op_mulu2:
+    case INDEX_op_muls2:
         return C_O2_I2(r, r, rZ, rJ);
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
         return C_O1_I2(r, r, r);
 
     default:

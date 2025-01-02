@@ -2267,27 +2267,22 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_insn(s, 3510, ORN, ext, a0, TCG_REG_XZR, a1);
         break;
 
-    case INDEX_op_mul_i64:
-    case INDEX_op_mul_i32:
+    case INDEX_op_mul:
         tcg_out_insn(s, 3509, MADD, ext, a0, a1, a2, TCG_REG_XZR);
         break;
 
-    case INDEX_op_div_i64:
-    case INDEX_op_div_i32:
+    case INDEX_op_div:
         tcg_out_insn(s, 3508, SDIV, ext, a0, a1, a2);
         break;
-    case INDEX_op_divu_i64:
-    case INDEX_op_divu_i32:
+    case INDEX_op_divu:
         tcg_out_insn(s, 3508, UDIV, ext, a0, a1, a2);
         break;
 
-    case INDEX_op_rem_i64:
-    case INDEX_op_rem_i32:
+    case INDEX_op_rem:
         tcg_out_insn(s, 3508, SDIV, ext, TCG_REG_TMP0, a1, a2);
         tcg_out_insn(s, 3509, MSUB, ext, a0, TCG_REG_TMP0, a2, a1);
         break;
-    case INDEX_op_remu_i64:
-    case INDEX_op_remu_i32:
+    case INDEX_op_remu:
         tcg_out_insn(s, 3508, UDIV, ext, TCG_REG_TMP0, a1, a2);
         tcg_out_insn(s, 3509, MSUB, ext, a0, TCG_REG_TMP0, a2, a1);
         break;
@@ -2467,10 +2462,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
                         const_args[5], true);
         break;
 
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
         tcg_out_insn(s, 3508, UMULH, TCG_TYPE_I64, a0, a1, a2);
         break;
-    case INDEX_op_mulsh_i64:
+    case INDEX_op_mulsh:
         tcg_out_insn(s, 3508, SMULH, TCG_TYPE_I64, a0, a1, a2);
         break;
 
@@ -2971,18 +2966,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_negsetcond_i64:
         return C_O1_I2(r, r, rC);
 
-    case INDEX_op_mul_i32:
-    case INDEX_op_mul_i64:
-    case INDEX_op_div_i32:
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i32:
-    case INDEX_op_divu_i64:
-    case INDEX_op_rem_i32:
-    case INDEX_op_rem_i64:
-    case INDEX_op_remu_i32:
-    case INDEX_op_remu_i64:
-    case INDEX_op_muluh_i64:
-    case INDEX_op_mulsh_i64:
+    case INDEX_op_mul:
+    case INDEX_op_div:
+    case INDEX_op_divu:
+    case INDEX_op_rem:
+    case INDEX_op_remu:
+    case INDEX_op_muluh:
+    case INDEX_op_mulsh:
         return C_O1_I2(r, r, r);
 
     case INDEX_op_and:

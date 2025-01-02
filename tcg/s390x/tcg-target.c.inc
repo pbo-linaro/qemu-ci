@@ -2387,35 +2387,58 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_mul_i32:
-        a0 = args[0], a1 = args[1], a2 = (int32_t)args[2];
-        if (const_args[2]) {
-            tcg_out_mov(s, TCG_TYPE_I32, a0, a1);
-            if (a2 == (int16_t)a2) {
-                tcg_out_insn(s, RI, MHI, a0, a2);
+    case INDEX_op_mul:
+        a0 = args[0], a1 = args[1], a2 = args[2];
+        if (type == TCG_TYPE_I32) {
+            if (const_args[2]) {
+                tcg_out_mov(s, TCG_TYPE_I32, a0, a1);
+                if (a2 == (int16_t)a2) {
+                    tcg_out_insn(s, RI, MHI, a0, a2);
+                } else {
+                    tcg_out_insn(s, RIL, MSFI, a0, a2);
+                }
+            } else if (a0 == a1) {
+                tcg_out_insn(s, RRE, MSR, a0, a2);
             } else {
-                tcg_out_insn(s, RIL, MSFI, a0, a2);
+                tcg_out_insn(s, RRFa, MSRKC, a0, a1, a2);
             }
-        } else if (a0 == a1) {
-            tcg_out_insn(s, RRE, MSR, a0, a2);
         } else {
-            tcg_out_insn(s, RRFa, MSRKC, a0, a1, a2);
+            if (const_args[2]) {
+                tcg_out_mov(s, TCG_TYPE_I64, a0, a1);
+                if (a2 == (int16_t)a2) {
+                    tcg_out_insn(s, RI, MGHI, a0, a2);
+                } else {
+                    tcg_out_insn(s, RIL, MSGFI, a0, a2);
+                }
+            } else if (a0 == a1) {
+                tcg_out_insn(s, RRE, MSGR, a0, a2);
+            } else {
+                tcg_out_insn(s, RRFa, MSGRKC, a0, a1, a2);
+            }
         }
         break;
 
-    case INDEX_op_div2_i32:
+    case INDEX_op_div2:
         tcg_debug_assert(args[0] == args[2]);
         tcg_debug_assert(args[1] == args[3]);
         tcg_debug_assert((args[1] & 1) == 0);
         tcg_debug_assert(args[0] == args[1] + 1);
-        tcg_out_insn(s, RR, DR, args[1], args[4]);
+        if (type == TCG_TYPE_I32) {
+            tcg_out_insn(s, RR, DR, args[1], args[4]);
+        } else {
+            tcg_out_insn(s, RRE, DSGR, args[1], args[4]);
+        }
         break;
-    case INDEX_op_divu2_i32:
+    case INDEX_op_divu2:
         tcg_debug_assert(args[0] == args[2]);
         tcg_debug_assert(args[1] == args[3]);
         tcg_debug_assert((args[1] & 1) == 0);
         tcg_debug_assert(args[0] == args[1] + 1);
-        tcg_out_insn(s, RRE, DLR, args[1], args[4]);
+        if (type == TCG_TYPE_I32) {
+            tcg_out_insn(s, RRE, DLR, args[1], args[4]);
+        } else {
+            tcg_out_insn(s, RRE, DLGR, args[1], args[4]);
+        }
         break;
 
     case INDEX_op_shl_i32:
@@ -2590,49 +2613,13 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_insn(s, RRE, LRVGR, args[0], args[1]);
         break;
 
-    case INDEX_op_mul_i64:
-        a0 = args[0], a1 = args[1], a2 = args[2];
-        if (const_args[2]) {
-            tcg_out_mov(s, TCG_TYPE_I64, a0, a1);
-            if (a2 == (int16_t)a2) {
-                tcg_out_insn(s, RI, MGHI, a0, a2);
-            } else {
-                tcg_out_insn(s, RIL, MSGFI, a0, a2);
-            }
-        } else if (a0 == a1) {
-            tcg_out_insn(s, RRE, MSGR, a0, a2);
-        } else {
-            tcg_out_insn(s, RRFa, MSGRKC, a0, a1, a2);
-        }
-        break;
-
-    case INDEX_op_div2_i64:
-        /*
-         * ??? We get an unnecessary sign-extension of the dividend
-         * into op0 with this definition, but as we do in fact always
-         * produce both quotient and remainder using INDEX_op_div_i64
-         * instead requires jumping through even more hoops.
-         */
-        tcg_debug_assert(args[0] == args[2]);
-        tcg_debug_assert(args[1] == args[3]);
-        tcg_debug_assert((args[1] & 1) == 0);
-        tcg_debug_assert(args[0] == args[1] + 1);
-        tcg_out_insn(s, RRE, DSGR, args[1], args[4]);
-        break;
-    case INDEX_op_divu2_i64:
-        tcg_debug_assert(args[0] == args[2]);
-        tcg_debug_assert(args[1] == args[3]);
-        tcg_debug_assert((args[1] & 1) == 0);
-        tcg_debug_assert(args[0] == args[1] + 1);
-        tcg_out_insn(s, RRE, DLGR, args[1], args[4]);
-        break;
-    case INDEX_op_mulu2_i64:
+    case INDEX_op_mulu2:
         tcg_debug_assert(args[0] == args[2]);
         tcg_debug_assert((args[1] & 1) == 0);
         tcg_debug_assert(args[0] == args[1] + 1);
         tcg_out_insn(s, RRE, MLGR, args[1], args[3]);
         break;
-    case INDEX_op_muls2_i64:
+    case INDEX_op_muls2:
         tcg_debug_assert((args[1] & 1) == 0);
         tcg_debug_assert(args[0] == args[1] + 1);
         tcg_out_insn(s, RRFa, MGRK, args[1], args[2], args[3]);
@@ -3242,14 +3229,14 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_nor:
         return C_O1_I2(r, r, r);
 
-    case INDEX_op_mul_i32:
-        return (HAVE_FACILITY(MISC_INSN_EXT2)
-                ? C_O1_I2(r, r, ri)
-                : C_O1_I2(r, 0, ri));
-    case INDEX_op_mul_i64:
-        return (HAVE_FACILITY(MISC_INSN_EXT2)
-                ? C_O1_I2(r, r, rJ)
-                : C_O1_I2(r, 0, rJ));
+    case INDEX_op_mul:
+        return (op->type == TCG_TYPE_I32
+                ? (HAVE_FACILITY(MISC_INSN_EXT2)
+                   ? C_O1_I2(r, r, ri)
+                   : C_O1_I2(r, 0, ri))
+                : (HAVE_FACILITY(MISC_INSN_EXT2)
+                   ? C_O1_I2(r, r, rJ)
+                   : C_O1_I2(r, 0, rJ)));
 
     case INDEX_op_shl_i32:
     case INDEX_op_shr_i32:
@@ -3306,15 +3293,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_movcond_i64:
         return C_O1_I4(r, r, rC, rI, r);
 
-    case INDEX_op_div2_i32:
-    case INDEX_op_div2_i64:
-    case INDEX_op_divu2_i32:
-    case INDEX_op_divu2_i64:
+    case INDEX_op_div2:
+    case INDEX_op_divu2:
         return C_O2_I3(o, m, 0, 1, r);
 
-    case INDEX_op_mulu2_i64:
+    case INDEX_op_mulu2:
         return C_O2_I2(o, m, 0, r);
-    case INDEX_op_muls2_i64:
+    case INDEX_op_muls2:
         return C_O2_I2(o, m, r, r);
 
     case INDEX_op_add2:

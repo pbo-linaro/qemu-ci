@@ -2188,6 +2188,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_add:
     case INDEX_op_and:
     case INDEX_op_mov:
+    case INDEX_op_mul:
     case INDEX_op_neg:
     case INDEX_op_or:
     case INDEX_op_sub:
@@ -2199,7 +2200,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_movcond_i32:
     case INDEX_op_ld_i32:
     case INDEX_op_st_i32:
-    case INDEX_op_mul_i32:
     case INDEX_op_shl_i32:
     case INDEX_op_shr_i32:
     case INDEX_op_sar_i32:
@@ -2212,8 +2212,22 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return has_type && TCG_TARGET_HAS_add2(type);
     case INDEX_op_andc:
         return has_type && TCG_TARGET_HAS_andc(type);
+    case INDEX_op_div:
+    case INDEX_op_divu:
+        return has_type && TCG_TARGET_HAS_div(type);
+    case INDEX_op_div2:
+    case INDEX_op_divu2:
+        return has_type && TCG_TARGET_HAS_div2(type);
     case INDEX_op_eqv:
         return has_type && TCG_TARGET_HAS_eqv(type);
+    case INDEX_op_muls2:
+        return has_type && TCG_TARGET_HAS_muls2(type);
+    case INDEX_op_mulsh:
+        return has_type && TCG_TARGET_HAS_mulsh(type);
+    case INDEX_op_mulu2:
+        return has_type && TCG_TARGET_HAS_mulu2(type);
+    case INDEX_op_muluh:
+        return has_type && TCG_TARGET_HAS_muluh(type);
     case INDEX_op_nand:
         return has_type && TCG_TARGET_HAS_nand(type);
     case INDEX_op_nor:
@@ -2222,33 +2236,19 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return has_type && TCG_TARGET_HAS_not(type);
     case INDEX_op_orc:
         return has_type && TCG_TARGET_HAS_orc(type);
+    case INDEX_op_rem:
+    case INDEX_op_remu:
+        return has_type && TCG_TARGET_HAS_rem(type);
     case INDEX_op_sub2:
         return has_type && TCG_TARGET_HAS_sub2(type);
 
     case INDEX_op_negsetcond_i32:
         return TCG_TARGET_HAS_negsetcond(TCG_TYPE_I32);
-    case INDEX_op_div_i32:
-    case INDEX_op_divu_i32:
-        return TCG_TARGET_HAS_div(TCG_TYPE_I32);
-    case INDEX_op_rem_i32:
-    case INDEX_op_remu_i32:
-        return TCG_TARGET_HAS_rem(TCG_TYPE_I32);
-    case INDEX_op_div2_i32:
-    case INDEX_op_divu2_i32:
-        return TCG_TARGET_HAS_div2(TCG_TYPE_I32);
     case INDEX_op_rotl_i32:
     case INDEX_op_rotr_i32:
         return TCG_TARGET_HAS_rot(TCG_TYPE_I32);
     case INDEX_op_extract2_i32:
         return TCG_TARGET_HAS_extract2(TCG_TYPE_I32);
-    case INDEX_op_mulu2_i32:
-        return TCG_TARGET_HAS_mulu2(TCG_TYPE_I32);
-    case INDEX_op_muls2_i32:
-        return TCG_TARGET_HAS_muls2(TCG_TYPE_I32);
-    case INDEX_op_muluh_i32:
-        return TCG_TARGET_HAS_muluh(TCG_TYPE_I32);
-    case INDEX_op_mulsh_i32:
-        return TCG_TARGET_HAS_mulsh(TCG_TYPE_I32);
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap32_i32:
         return TCG_TARGET_HAS_bswap(TCG_TYPE_I32);
@@ -2268,7 +2268,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_movcond_i64:
     case INDEX_op_ld_i64:
     case INDEX_op_st_i64:
-    case INDEX_op_mul_i64:
     case INDEX_op_shl_i64:
     case INDEX_op_shr_i64:
     case INDEX_op_sar_i64:
@@ -2283,15 +2282,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
 
     case INDEX_op_negsetcond_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_negsetcond(TCG_TYPE_I64);
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div(TCG_TYPE_I64);
-    case INDEX_op_rem_i64:
-    case INDEX_op_remu_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rem(TCG_TYPE_I64);
-    case INDEX_op_div2_i64:
-    case INDEX_op_divu2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div2(TCG_TYPE_I64);
     case INDEX_op_rotl_i64:
     case INDEX_op_rotr_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rot(TCG_TYPE_I64);
@@ -2307,14 +2297,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctz(TCG_TYPE_I64);
     case INDEX_op_ctpop_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctpop(TCG_TYPE_I64);
-    case INDEX_op_mulu2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_mulu2(TCG_TYPE_I64);
-    case INDEX_op_muls2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_muls2(TCG_TYPE_I64);
-    case INDEX_op_muluh_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_muluh(TCG_TYPE_I64);
-    case INDEX_op_mulsh_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_mulsh(TCG_TYPE_I64);
 
     case INDEX_op_mov_vec:
     case INDEX_op_dup_vec:
@@ -3974,25 +3956,15 @@ liveness_pass_1(TCGContext *s)
             }
             goto do_not_remove;
 
-        case INDEX_op_mulu2_i32:
-            opc_new = INDEX_op_mul_i32;
-            opc_new2 = INDEX_op_muluh_i32;
-            have_opc_new2 = TCG_TARGET_HAS_muluh(TCG_TYPE_I32);
+        case INDEX_op_mulu2:
+            opc_new = INDEX_op_mul;
+            opc_new2 = INDEX_op_muluh;
+            have_opc_new2 = TCG_TARGET_HAS_muluh(op->type);
             goto do_mul2;
-        case INDEX_op_muls2_i32:
-            opc_new = INDEX_op_mul_i32;
-            opc_new2 = INDEX_op_mulsh_i32;
-            have_opc_new2 = TCG_TARGET_HAS_mulsh(TCG_TYPE_I32);
-            goto do_mul2;
-        case INDEX_op_mulu2_i64:
-            opc_new = INDEX_op_mul_i64;
-            opc_new2 = INDEX_op_muluh_i64;
-            have_opc_new2 = TCG_TARGET_HAS_muluh(TCG_TYPE_I64);
-            goto do_mul2;
-        case INDEX_op_muls2_i64:
-            opc_new = INDEX_op_mul_i64;
-            opc_new2 = INDEX_op_mulsh_i64;
-            have_opc_new2 = TCG_TARGET_HAS_mulsh(TCG_TYPE_I64);
+        case INDEX_op_muls2:
+            opc_new = INDEX_op_mul;
+            opc_new2 = INDEX_op_mulsh;
+            have_opc_new2 = TCG_TARGET_HAS_mulsh(op->type);
             goto do_mul2;
         do_mul2:
             nb_iargs = 2;

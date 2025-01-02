@@ -2107,39 +2107,44 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_opc_reg(s, insn, a0, TCG_REG_ZERO, a1);
         break;
 
-    case INDEX_op_mul_i32:
-        tcg_out_opc_reg(s, OPC_MULW, a0, a1, a2);
-        break;
-    case INDEX_op_mul_i64:
-        tcg_out_opc_reg(s, OPC_MUL, a0, a1, a2);
-        break;
-
-    case INDEX_op_div_i32:
-        tcg_out_opc_reg(s, OPC_DIVW, a0, a1, a2);
-        break;
-    case INDEX_op_div_i64:
-        tcg_out_opc_reg(s, OPC_DIV, a0, a1, a2);
+    case INDEX_op_mul:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_reg(s, OPC_MULW, a0, a1, a2);
+        } else {
+            tcg_out_opc_reg(s, OPC_MUL, a0, a1, a2);
+        }
         break;
 
-    case INDEX_op_divu_i32:
-        tcg_out_opc_reg(s, OPC_DIVUW, a0, a1, a2);
-        break;
-    case INDEX_op_divu_i64:
-        tcg_out_opc_reg(s, OPC_DIVU, a0, a1, a2);
-        break;
-
-    case INDEX_op_rem_i32:
-        tcg_out_opc_reg(s, OPC_REMW, a0, a1, a2);
-        break;
-    case INDEX_op_rem_i64:
-        tcg_out_opc_reg(s, OPC_REM, a0, a1, a2);
+    case INDEX_op_div:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_reg(s, OPC_DIVW, a0, a1, a2);
+        } else {
+            tcg_out_opc_reg(s, OPC_DIV, a0, a1, a2);
+        }
         break;
 
-    case INDEX_op_remu_i32:
-        tcg_out_opc_reg(s, OPC_REMUW, a0, a1, a2);
+    case INDEX_op_divu:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_reg(s, OPC_DIVUW, a0, a1, a2);
+        } else {
+            tcg_out_opc_reg(s, OPC_DIVU, a0, a1, a2);
+        }
         break;
-    case INDEX_op_remu_i64:
-        tcg_out_opc_reg(s, OPC_REMU, a0, a1, a2);
+
+    case INDEX_op_rem:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_reg(s, OPC_REMW, a0, a1, a2);
+        } else {
+            tcg_out_opc_reg(s, OPC_REM, a0, a1, a2);
+        }
+        break;
+
+    case INDEX_op_remu:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_opc_reg(s, OPC_REMUW, a0, a1, a2);
+        } else {
+            tcg_out_opc_reg(s, OPC_REMU, a0, a1, a2);
+        }
         break;
 
     case INDEX_op_shl_i32:
@@ -2314,13 +2319,11 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_opc_imm(s, OPC_SRAI, a0, a1, 32);
         break;
 
-    case INDEX_op_mulsh_i32:
-    case INDEX_op_mulsh_i64:
+    case INDEX_op_mulsh:
         tcg_out_opc_reg(s, OPC_MULH, a0, a1, a2);
         break;
 
-    case INDEX_op_muluh_i32:
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
         tcg_out_opc_reg(s, OPC_MULHU, a0, a1, a2);
         break;
 
@@ -2644,20 +2647,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_sub:
         return C_O1_I2(r, rZ, rN);
 
-    case INDEX_op_mul_i32:
-    case INDEX_op_mulsh_i32:
-    case INDEX_op_muluh_i32:
-    case INDEX_op_div_i32:
-    case INDEX_op_divu_i32:
-    case INDEX_op_rem_i32:
-    case INDEX_op_remu_i32:
-    case INDEX_op_mul_i64:
-    case INDEX_op_mulsh_i64:
-    case INDEX_op_muluh_i64:
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i64:
-    case INDEX_op_rem_i64:
-    case INDEX_op_remu_i64:
+    case INDEX_op_mul:
+    case INDEX_op_mulsh:
+    case INDEX_op_muluh:
+    case INDEX_op_div:
+    case INDEX_op_divu:
+    case INDEX_op_rem:
+    case INDEX_op_remu:
         return C_O1_I2(r, rZ, rZ);
 
     case INDEX_op_shl_i32:

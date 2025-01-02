@@ -403,7 +403,7 @@ static bool tcg_opt_gen_movi(OptContext *ctx, TCGOp *op,
     return tcg_opt_gen_mov(ctx, op, dst, arg_new_constant(ctx, op->type, val));
 }
 
-static uint64_t do_constant_folding_2(TCGOpcode op, uint64_t x, uint64_t y)
+static uint64_t do_constant_folding_2(TCGOpcode op, TCGType type, uint64_t x, uint64_t y)
 {
     uint64_t l64, h64;
 
@@ -414,7 +414,7 @@ static uint64_t do_constant_folding_2(TCGOpcode op, uint64_t x, uint64_t y)
     case INDEX_op_sub:
         return x - y;
 
-    CASE_OP_32_64(mul):
+    case INDEX_op_mul:
         return x * y;
 
     case INDEX_op_and:
@@ -525,35 +525,40 @@ static uint64_t do_constant_folding_2(TCGOpcode op, uint64_t x, uint64_t y)
     case INDEX_op_extrh_i64_i32:
         return (uint64_t)x >> 32;
 
-    case INDEX_op_muluh_i32:
-        return ((uint64_t)(uint32_t)x * (uint32_t)y) >> 32;
-    case INDEX_op_mulsh_i32:
-        return ((int64_t)(int32_t)x * (int32_t)y) >> 32;
-
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
+        if (type == TCG_TYPE_I32) {
+            return ((uint64_t)(uint32_t)x * (uint32_t)y) >> 32;
+        }
         mulu64(&l64, &h64, x, y);
         return h64;
-    case INDEX_op_mulsh_i64:
+
+    case INDEX_op_mulsh:
+        if (type == TCG_TYPE_I32) {
+            return ((int64_t)(int32_t)x * (int32_t)y) >> 32;
+        }
         muls64(&l64, &h64, x, y);
         return h64;
 
-    case INDEX_op_div_i32:
+    case INDEX_op_div:
         /* Avoid crashing on divide by zero, otherwise undefined.  */
-        return (int32_t)x / ((int32_t)y ? : 1);
-    case INDEX_op_divu_i32:
-        return (uint32_t)x / ((uint32_t)y ? : 1);
-    case INDEX_op_div_i64:
+        if (type == TCG_TYPE_I32) {
+            return (int32_t)x / ((int32_t)y ? : 1);
+        }
         return (int64_t)x / ((int64_t)y ? : 1);
-    case INDEX_op_divu_i64:
+    case INDEX_op_divu:
+        if (type == TCG_TYPE_I32) {
+            return (uint32_t)x / ((uint32_t)y ? : 1);
+        }
         return (uint64_t)x / ((uint64_t)y ? : 1);
-
-    case INDEX_op_rem_i32:
-        return (int32_t)x % ((int32_t)y ? : 1);
-    case INDEX_op_remu_i32:
-        return (uint32_t)x % ((uint32_t)y ? : 1);
-    case INDEX_op_rem_i64:
+    case INDEX_op_rem:
+        if (type == TCG_TYPE_I32) {
+            return (int32_t)x % ((int32_t)y ? : 1);
+        }
         return (int64_t)x % ((int64_t)y ? : 1);
-    case INDEX_op_remu_i64:
+    case INDEX_op_remu:
+        if (type == TCG_TYPE_I32) {
+            return (uint32_t)x % ((uint32_t)y ? : 1);
+        }
         return (uint64_t)x % ((uint64_t)y ? : 1);
 
     default:
@@ -564,7 +569,7 @@ static uint64_t do_constant_folding_2(TCGOpcode op, uint64_t x, uint64_t y)
 static uint64_t do_constant_folding(TCGOpcode op, TCGType type,
                                     uint64_t x, uint64_t y)
 {
-    uint64_t res = do_constant_folding_2(op, x, y);
+    uint64_t res = do_constant_folding_2(op, type, x, y);
     if (type == TCG_TYPE_I32) {
         res = (int32_t)res;
     }
@@ -2020,21 +2025,23 @@ static bool fold_multiply2(OptContext *ctx, TCGOp *op)
         TCGOp *op2;
 
         switch (op->opc) {
-        case INDEX_op_mulu2_i32:
-            l = (uint64_t)(uint32_t)a * (uint32_t)b;
-            h = (int32_t)(l >> 32);
-            l = (int32_t)l;
+        case INDEX_op_mulu2:
+            if (op->type == TCG_TYPE_I32) {
+                l = (uint64_t)(uint32_t)a * (uint32_t)b;
+                h = (int32_t)(l >> 32);
+                l = (int32_t)l;
+            } else {
+                mulu64(&l, &h, a, b);
+            }
             break;
-        case INDEX_op_muls2_i32:
-            l = (int64_t)(int32_t)a * (int32_t)b;
-            h = l >> 32;
-            l = (int32_t)l;
-            break;
-        case INDEX_op_mulu2_i64:
-            mulu64(&l, &h, a, b);
-            break;
-        case INDEX_op_muls2_i64:
-            muls64(&l, &h, a, b);
+        case INDEX_op_muls2:
+            if (op->type == TCG_TYPE_I32) {
+                l = (int64_t)(int32_t)a * (int32_t)b;
+                h = l >> 32;
+                l = (int32_t)l;
+            } else {
+                muls64(&l, &h, a, b);
+            }
             break;
         default:
             g_assert_not_reached();
@@ -2785,8 +2792,8 @@ void tcg_optimize(TCGContext *s)
         CASE_OP_32_64(deposit):
             done = fold_deposit(&ctx, op);
             break;
-        CASE_OP_32_64(div):
-        CASE_OP_32_64(divu):
+        case INDEX_op_div:
+        case INDEX_op_divu:
             done = fold_divide(&ctx, op);
             break;
         case INDEX_op_dup_vec:
@@ -2833,15 +2840,15 @@ void tcg_optimize(TCGContext *s)
         CASE_OP_32_64(movcond):
             done = fold_movcond(&ctx, op);
             break;
-        CASE_OP_32_64(mul):
+        case INDEX_op_mul:
             done = fold_mul(&ctx, op);
             break;
-        CASE_OP_32_64(mulsh):
-        CASE_OP_32_64(muluh):
+        case INDEX_op_mulsh:
+        case INDEX_op_muluh:
             done = fold_mul_highpart(&ctx, op);
             break;
-        CASE_OP_32_64(muls2):
-        CASE_OP_32_64(mulu2):
+        case INDEX_op_muls2:
+        case INDEX_op_mulu2:
             done = fold_multiply2(&ctx, op);
             break;
         case INDEX_op_nand:
@@ -2890,8 +2897,8 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_qemu_st_a64_i128:
             done = fold_qemu_st(&ctx, op);
             break;
-        CASE_OP_32_64(rem):
-        CASE_OP_32_64(remu):
+        case INDEX_op_rem:
+        case INDEX_op_remu:
             done = fold_remainder(&ctx, op);
             break;
         CASE_OP_32_64(rotl):

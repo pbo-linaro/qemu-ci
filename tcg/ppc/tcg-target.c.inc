@@ -3124,29 +3124,47 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out32(s, CNTPOPD | SAB(args[1], args[0], 0));
         break;
 
-    case INDEX_op_mul_i32:
+    case INDEX_op_mul:
         a0 = args[0], a1 = args[1], a2 = args[2];
         if (const_args[2]) {
             tcg_out32(s, MULLI | TAI(a0, a1, a2));
-        } else {
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, MULLW | TAB(a0, a1, a2));
+        } else {
+            tcg_out32(s, MULLD | TAB(a0, a1, a2));
         }
         break;
 
-    case INDEX_op_div_i32:
-        tcg_out32(s, DIVW | TAB(args[0], args[1], args[2]));
+    case INDEX_op_div:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, DIVW | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, DIVD | TAB(args[0], args[1], args[2]));
+        }
         break;
 
-    case INDEX_op_divu_i32:
-        tcg_out32(s, DIVWU | TAB(args[0], args[1], args[2]));
+    case INDEX_op_divu:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, DIVWU | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, DIVDU | TAB(args[0], args[1], args[2]));
+        }
         break;
 
-    case INDEX_op_rem_i32:
-        tcg_out32(s, MODSW | TAB(args[0], args[1], args[2]));
+    case INDEX_op_rem:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, MODSW | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, MODSD | TAB(args[0], args[1], args[2]));
+        }
         break;
 
-    case INDEX_op_remu_i32:
-        tcg_out32(s, MODUW | TAB(args[0], args[1], args[2]));
+    case INDEX_op_remu:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, MODUW | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, MODUD | TAB(args[0], args[1], args[2]));
+        }
         break;
 
     case INDEX_op_shl_i32:
@@ -3250,27 +3268,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
     case INDEX_op_extrh_i64_i32:
         tcg_out_sari64(s, args[0], args[1], 32);
-        break;
-
-    case INDEX_op_mul_i64:
-        a0 = args[0], a1 = args[1], a2 = args[2];
-        if (const_args[2]) {
-            tcg_out32(s, MULLI | TAI(a0, a1, a2));
-        } else {
-            tcg_out32(s, MULLD | TAB(a0, a1, a2));
-        }
-        break;
-    case INDEX_op_div_i64:
-        tcg_out32(s, DIVD | TAB(args[0], args[1], args[2]));
-        break;
-    case INDEX_op_divu_i64:
-        tcg_out32(s, DIVDU | TAB(args[0], args[1], args[2]));
-        break;
-    case INDEX_op_rem_i64:
-        tcg_out32(s, MODSD | TAB(args[0], args[1], args[2]));
-        break;
-    case INDEX_op_remu_i64:
-        tcg_out32(s, MODUD | TAB(args[0], args[1], args[2]));
         break;
 
     case INDEX_op_qemu_ld_a64_i32:
@@ -3484,17 +3481,19 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_muluh_i32:
-        tcg_out32(s, MULHWU | TAB(args[0], args[1], args[2]));
+    case INDEX_op_muluh:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, MULHWU | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, MULHDU | TAB(args[0], args[1], args[2]));
+        }
         break;
-    case INDEX_op_mulsh_i32:
-        tcg_out32(s, MULHW | TAB(args[0], args[1], args[2]));
-        break;
-    case INDEX_op_muluh_i64:
-        tcg_out32(s, MULHDU | TAB(args[0], args[1], args[2]));
-        break;
-    case INDEX_op_mulsh_i64:
-        tcg_out32(s, MULHD | TAB(args[0], args[1], args[2]));
+    case INDEX_op_mulsh:
+        if (type == TCG_TYPE_I32) {
+            tcg_out32(s, MULHW | TAB(args[0], args[1], args[2]));
+        } else {
+            tcg_out32(s, MULHD | TAB(args[0], args[1], args[2]));
+        }
         break;
 
     case INDEX_op_mb:
@@ -4178,24 +4177,17 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_rotr_i64:
         return C_O1_I2(r, r, ri);
 
-    case INDEX_op_mul_i32:
-    case INDEX_op_mul_i64:
+    case INDEX_op_mul:
         return C_O1_I2(r, r, rI);
 
-    case INDEX_op_div_i32:
-    case INDEX_op_divu_i32:
-    case INDEX_op_rem_i32:
-    case INDEX_op_remu_i32:
+    case INDEX_op_div:
+    case INDEX_op_divu:
+    case INDEX_op_rem:
+    case INDEX_op_remu:
     case INDEX_op_nand:
     case INDEX_op_nor:
-    case INDEX_op_muluh_i32:
-    case INDEX_op_mulsh_i32:
-    case INDEX_op_div_i64:
-    case INDEX_op_divu_i64:
-    case INDEX_op_rem_i64:
-    case INDEX_op_remu_i64:
-    case INDEX_op_mulsh_i64:
-    case INDEX_op_muluh_i64:
+    case INDEX_op_muluh:
+    case INDEX_op_mulsh:
         return C_O1_I2(r, r, r);
 
     case INDEX_op_clz_i32:
