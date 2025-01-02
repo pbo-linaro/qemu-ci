@@ -2004,7 +2004,7 @@ static bool fold_movcond(OptContext *ctx, TCGOp *op)
         switch (ctx->type) {
         case TCG_TYPE_I32:
             opc = INDEX_op_setcond_i32;
-            if (TCG_TARGET_HAS_negsetcond_i32) {
+            if (TCG_TARGET_HAS_negsetcond(TCG_TYPE_I32)) {
                 negopc = INDEX_op_negsetcond_i32;
             }
             tv = (int32_t)tv;
@@ -2012,7 +2012,7 @@ static bool fold_movcond(OptContext *ctx, TCGOp *op)
             break;
         case TCG_TYPE_I64:
             opc = INDEX_op_setcond_i64;
-            if (TCG_TARGET_HAS_negsetcond_i64) {
+            if (TCG_TARGET_HAS_negsetcond(TCG_TYPE_I64)) {
                 negopc = INDEX_op_negsetcond_i64;
             }
             break;

@@ -39,6 +39,7 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_mulu2(T)       (T == TCG_TYPE_I64)
 #define TCG_TARGET_HAS_mulsh(T)       0
 #define TCG_TARGET_HAS_muluh(T)       0
+#define TCG_TARGET_HAS_negsetcond(T)  1
 #define TCG_TARGET_HAS_rot(T)         1
 #define TCG_TARGET_HAS_sub2(T)        1
 
@@ -58,7 +59,6 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_extract_i32    1
 #define TCG_TARGET_HAS_sextract_i32   0
 #define TCG_TARGET_HAS_extract2_i32   0
-#define TCG_TARGET_HAS_negsetcond_i32 1
 #define TCG_TARGET_HAS_extr_i64_i32   0
 #define TCG_TARGET_HAS_qemu_st8_i32   0
 
@@ -72,7 +72,6 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_extract_i64    1
 #define TCG_TARGET_HAS_sextract_i64   0
 #define TCG_TARGET_HAS_extract2_i64   0
-#define TCG_TARGET_HAS_negsetcond_i64 1
 
 #define TCG_TARGET_HAS_qemu_ldst_i128 1
 

@@ -2209,7 +2209,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return true;
 
     case INDEX_op_negsetcond_i32:
-        return TCG_TARGET_HAS_negsetcond_i32;
+        return TCG_TARGET_HAS_negsetcond(TCG_TYPE_I32);
     case INDEX_op_div_i32:
     case INDEX_op_divu_i32:
         return TCG_TARGET_HAS_div(TCG_TYPE_I32);
@@ -2306,7 +2306,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_REG_BITS == 64;
 
     case INDEX_op_negsetcond_i64:
-        return TCG_TARGET_HAS_negsetcond_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_negsetcond(TCG_TYPE_I64);
     case INDEX_op_div_i64:
     case INDEX_op_divu_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div(TCG_TYPE_I64);

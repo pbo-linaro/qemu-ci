@@ -18,6 +18,7 @@
 #define TCG_TARGET_HAS_mulu2(T)         1
 #define TCG_TARGET_HAS_mulsh(T)         0
 #define TCG_TARGET_HAS_muluh(T)         0
+#define TCG_TARGET_HAS_negsetcond(T)    0
 #define TCG_TARGET_HAS_rem(T)           1
 #define TCG_TARGET_HAS_rot(T)           1
 #define TCG_TARGET_HAS_sub2(T)          1
@@ -38,7 +39,6 @@
 #define TCG_TARGET_HAS_extract_i32      1
 #define TCG_TARGET_HAS_sextract_i32     1
 #define TCG_TARGET_HAS_extract2_i32     0
-#define TCG_TARGET_HAS_negsetcond_i32   0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
 #if TCG_TARGET_REG_BITS == 64
@@ -53,7 +53,6 @@
 #define TCG_TARGET_HAS_ext8u_i64        1
 #define TCG_TARGET_HAS_ext16u_i64       1
 #define TCG_TARGET_HAS_ext32u_i64       1
-#define TCG_TARGET_HAS_negsetcond_i64   0
 #endif /* TCG_TARGET_REG_BITS == 64 */
 
 #define TCG_TARGET_HAS_qemu_ldst_i128   0
