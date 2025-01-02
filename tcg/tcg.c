@@ -3324,7 +3324,7 @@ static void process_op_defs(TCGContext *s)
     }
 
     for (TCGOpcode op = 0; op < NB_OPS; op++) {
-        TCGOpDef *def = &tcg_op_defs[op];
+        const TCGOpDef *def = &tcg_op_defs[op];
         const TCGConstraintSet *tdefs;
         unsigned con_set;
         int nb_args;
@@ -3355,7 +3355,7 @@ static void process_op_defs(TCGContext *s)
 
 static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
 {
-    TCGOpDef *def = &tcg_op_defs[op->opc];
+    const TCGOpDef *def = &tcg_op_defs[op->opc];
     unsigned con_set;
 
     if (def->nb_iargs + def->nb_oargs == 0) {
