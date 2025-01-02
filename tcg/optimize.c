@@ -2654,119 +2654,70 @@ static bool fold_sub2(OptContext *ctx, TCGOp *op)
 static bool fold_tcg_ld(OptContext *ctx, TCGOp *op)
 {
     uint64_t z_mask = -1, s_mask = 0;
+    MemOp memop = op->args[3];
+    unsigned size = memop_size(memop);
 
-    /* We can't do any folding with a load, but we can record bits. */
-    switch (op->opc) {
-    CASE_OP_32_64(ld8s):
-        s_mask = INT8_MIN;
-        break;
-    CASE_OP_32_64(ld8u):
-        z_mask = MAKE_64BIT_MASK(0, 8);
-        break;
-    CASE_OP_32_64(ld16s):
-        s_mask = INT16_MIN;
-        break;
-    CASE_OP_32_64(ld16u):
-        z_mask = MAKE_64BIT_MASK(0, 16);
-        break;
-    case INDEX_op_ld32s_i64:
-        s_mask = INT32_MIN;
-        break;
-    case INDEX_op_ld32u_i64:
-        z_mask = MAKE_64BIT_MASK(0, 32);
-        break;
-    default:
-        g_assert_not_reached();
+    if (size == tcg_type_size(ctx->type)) {
+        TCGTemp *dst, *src;
+        intptr_t ofs;
+
+        if (op->args[1] != tcgv_ptr_arg(tcg_env)) {
+            return finish_folding(ctx, op);
+        }
+
+        ofs = op->args[2];
+        dst = arg_temp(op->args[0]);
+        src = find_mem_copy_for(ctx, op->type, ofs);
+        if (src && src->base_type == op->type) {
+            return tcg_opt_gen_mov(ctx, op, temp_arg(dst), temp_arg(src));
+        }
+
+        reset_ts(ctx, dst);
+        record_mem_copy(ctx, op->type, dst, ofs, ofs + size - 1);
+        return true;
+    }
+
+    if (memop & MO_SIGN) {
+        s_mask = -1ull << (size * 8 - 1);
+    } else {
+        z_mask = MAKE_64BIT_MASK(0, size * 8);
     }
     return fold_masks_zs(ctx, op, z_mask, s_mask);
-}
-
-static bool fold_tcg_ld_memcopy(OptContext *ctx, TCGOp *op)
-{
-    TCGTemp *dst, *src;
-    intptr_t ofs;
-    TCGType type;
-
-    if (op->args[1] != tcgv_ptr_arg(tcg_env)) {
-        return finish_folding(ctx, op);
-    }
-
-    type = ctx->type;
-    ofs = op->args[2];
-    dst = arg_temp(op->args[0]);
-    src = find_mem_copy_for(ctx, type, ofs);
-    if (src && src->base_type == type) {
-        return tcg_opt_gen_mov(ctx, op, temp_arg(dst), temp_arg(src));
-    }
-
-    reset_ts(ctx, dst);
-    record_mem_copy(ctx, type, dst, ofs, ofs + tcg_type_size(type) - 1);
-    return true;
 }
 
 static bool fold_tcg_st(OptContext *ctx, TCGOp *op)
 {
     intptr_t ofs = op->args[2];
-    intptr_t lm1;
+    MemOp memop = op->args[3];
+    unsigned size = memop_size(memop);
+    intptr_t last = ofs + size - 1;
 
-    if (op->args[1] != tcgv_ptr_arg(tcg_env)) {
-        remove_mem_copy_all(ctx);
+    if (size == tcg_type_size(ctx->type)) {
+        TCGTemp *src = arg_temp(op->args[0]);
+
+        if (op->args[1] != tcgv_ptr_arg(tcg_env)) {
+            remove_mem_copy_all(ctx);
+            return true;
+        }
+
+        /*
+         * Eliminate duplicate stores of a constant.
+         * This happens frequently when the target ISA zero-extends.
+         */
+        if (ts_is_const(src)) {
+            TCGTemp *prev = find_mem_copy_for(ctx, op->type, ofs);
+            if (src == prev) {
+                tcg_op_remove(ctx->tcg, op);
+                return true;
+            }
+        }
+
+        remove_mem_copy_in(ctx, ofs, last);
+        record_mem_copy(ctx, op->type, src, ofs, last);
         return true;
     }
 
-    switch (op->opc) {
-    CASE_OP_32_64(st8):
-        lm1 = 0;
-        break;
-    CASE_OP_32_64(st16):
-        lm1 = 1;
-        break;
-    case INDEX_op_st32_i64:
-    case INDEX_op_st_i32:
-        lm1 = 3;
-        break;
-    case INDEX_op_st_i64:
-        lm1 = 7;
-        break;
-    case INDEX_op_st_vec:
-        lm1 = tcg_type_size(ctx->type) - 1;
-        break;
-    default:
-        g_assert_not_reached();
-    }
-    remove_mem_copy_in(ctx, ofs, ofs + lm1);
-    return true;
-}
-
-static bool fold_tcg_st_memcopy(OptContext *ctx, TCGOp *op)
-{
-    TCGTemp *src;
-    intptr_t ofs, last;
-    TCGType type;
-
-    if (op->args[1] != tcgv_ptr_arg(tcg_env)) {
-        return fold_tcg_st(ctx, op);
-    }
-
-    src = arg_temp(op->args[0]);
-    ofs = op->args[2];
-    type = ctx->type;
-
-    /*
-     * Eliminate duplicate stores of a constant.
-     * This happens frequently when the target ISA zero-extends.
-     */
-    if (ts_is_const(src)) {
-        TCGTemp *prev = find_mem_copy_for(ctx, type, ofs);
-        if (src == prev) {
-            tcg_op_remove(ctx->tcg, op);
-            return true;
-        }
-    }
-
-    last = ofs + tcg_type_size(type) - 1;
     remove_mem_copy_in(ctx, ofs, last);
-    record_mem_copy(ctx, type, src, ofs, last);
     return true;
 }
 
@@ -2900,28 +2851,15 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_extrh_i64_i32:
             done = fold_extu(&ctx, op);
             break;
-        CASE_OP_32_64(ld8s):
-        CASE_OP_32_64(ld8u):
-        CASE_OP_32_64(ld16s):
-        CASE_OP_32_64(ld16u):
-        case INDEX_op_ld32s_i64:
-        case INDEX_op_ld32u_i64:
-            done = fold_tcg_ld(&ctx, op);
-            break;
         case INDEX_op_ld_i32:
         case INDEX_op_ld_i64:
         case INDEX_op_ld_vec:
-            done = fold_tcg_ld_memcopy(&ctx, op);
-            break;
-        CASE_OP_32_64(st8):
-        CASE_OP_32_64(st16):
-        case INDEX_op_st32_i64:
-            done = fold_tcg_st(&ctx, op);
+            done = fold_tcg_ld(&ctx, op);
             break;
         case INDEX_op_st_i32:
         case INDEX_op_st_i64:
         case INDEX_op_st_vec:
-            done = fold_tcg_st_memcopy(&ctx, op);
+            done = fold_tcg_st(&ctx, op);
             break;
         case INDEX_op_mb:
             done = fold_mb(&ctx, op);

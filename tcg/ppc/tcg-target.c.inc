@@ -2966,47 +2966,55 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
             tcg_out32(s, insn);
         }
         break;
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8u_i64:
-        tcg_out_mem_long(s, LBZ, LBZX, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld8s_i64:
-        tcg_out_mem_long(s, LBZ, LBZX, args[0], args[1], args[2]);
-        tcg_out_ext8s(s, TCG_TYPE_REG, args[0], args[0]);
-        break;
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16u_i64:
-        tcg_out_mem_long(s, LHZ, LHZX, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld16s_i32:
-    case INDEX_op_ld16s_i64:
-        tcg_out_mem_long(s, LHA, LHAX, args[0], args[1], args[2]);
-        break;
+
     case INDEX_op_ld_i32:
-    case INDEX_op_ld32u_i64:
-        tcg_out_mem_long(s, LWZ, LWZX, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld32s_i64:
-        tcg_out_mem_long(s, LWA, LWAX, args[0], args[1], args[2]);
-        break;
     case INDEX_op_ld_i64:
-        tcg_out_mem_long(s, LD, LDX, args[0], args[1], args[2]);
+        switch (args[3]) {
+        case MO_UB:
+        case MO_SB:
+            tcg_out_mem_long(s, LBZ, LBZX, args[0], args[1], args[2]);
+            if (args[3] & MO_SIGN) {
+                tcg_out_ext8s(s, TCG_TYPE_REG, args[0], args[0]);
+            }
+            break;
+        case MO_UW:
+            tcg_out_mem_long(s, LHZ, LHZX, args[0], args[1], args[2]);
+            break;
+        case MO_SW:
+            tcg_out_mem_long(s, LHA, LHAX, args[0], args[1], args[2]);
+            break;
+        case MO_UL:
+            tcg_out_mem_long(s, LWZ, LWZX, args[0], args[1], args[2]);
+            break;
+        case MO_SL:
+            tcg_out_mem_long(s, LWA, LWAX, args[0], args[1], args[2]);
+            break;
+        case MO_UQ:
+            tcg_out_mem_long(s, LD, LDX, args[0], args[1], args[2]);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
-    case INDEX_op_st8_i32:
-    case INDEX_op_st8_i64:
-        tcg_out_mem_long(s, STB, STBX, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_st16_i32:
-    case INDEX_op_st16_i64:
-        tcg_out_mem_long(s, STH, STHX, args[0], args[1], args[2]);
-        break;
+
     case INDEX_op_st_i32:
-    case INDEX_op_st32_i64:
-        tcg_out_mem_long(s, STW, STWX, args[0], args[1], args[2]);
-        break;
     case INDEX_op_st_i64:
-        tcg_out_mem_long(s, STD, STDX, args[0], args[1], args[2]);
+        switch (args[3]) {
+        case MO_8:
+            tcg_out_mem_long(s, STB, STBX, args[0], args[1], args[2]);
+            break;
+        case MO_16:
+            tcg_out_mem_long(s, STH, STHX, args[0], args[1], args[2]);
+            break;
+        case MO_32:
+            tcg_out_mem_long(s, STW, STWX, args[0], args[1], args[2]);
+            break;
+        case MO_64:
+            tcg_out_mem_long(s, STD, STDX, args[0], args[1], args[2]);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
 
     case INDEX_op_add_i32:
@@ -4167,10 +4175,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16s_i32:
     case INDEX_op_ld_i32:
     case INDEX_op_ctpop_i32:
     case INDEX_op_neg_i32:
@@ -4179,12 +4183,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_bswap32_i32:
     case INDEX_op_extract_i32:
     case INDEX_op_sextract_i32:
-    case INDEX_op_ld8u_i64:
-    case INDEX_op_ld8s_i64:
-    case INDEX_op_ld16u_i64:
-    case INDEX_op_ld16s_i64:
-    case INDEX_op_ld32u_i64:
-    case INDEX_op_ld32s_i64:
     case INDEX_op_ld_i64:
     case INDEX_op_ctpop_i64:
     case INDEX_op_neg_i64:
@@ -4200,12 +4198,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_sextract_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st8_i32:
-    case INDEX_op_st16_i32:
     case INDEX_op_st_i32:
-    case INDEX_op_st8_i64:
-    case INDEX_op_st16_i64:
-    case INDEX_op_st32_i64:
     case INDEX_op_st_i64:
         return C_O0_I2(r, r);
 

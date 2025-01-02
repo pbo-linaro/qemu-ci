@@ -2658,52 +2658,77 @@ static inline void tcg_out_op(TCGContext *s, TCGOpcode opc,
     case INDEX_op_br:
         tcg_out_jxx(s, JCC_JMP, arg_label(a0), 0);
         break;
-    OP_32_64(ld8u):
-        /* Note that we can ignore REXW for the zero-extend to 64-bit.  */
-        tcg_out_modrm_offset(s, OPC_MOVZBL, a0, a1, a2);
-        break;
-    OP_32_64(ld8s):
-        tcg_out_modrm_offset(s, OPC_MOVSBL + rexw, a0, a1, a2);
-        break;
-    OP_32_64(ld16u):
-        /* Note that we can ignore REXW for the zero-extend to 64-bit.  */
-        tcg_out_modrm_offset(s, OPC_MOVZWL, a0, a1, a2);
-        break;
-    OP_32_64(ld16s):
-        tcg_out_modrm_offset(s, OPC_MOVSWL + rexw, a0, a1, a2);
-        break;
+
+    OP_32_64(ld):
+        switch (args[3]) {
+        case MO_UB:
+            /* Note that we can ignore REXW for the zero-extend to 64-bit.  */
+            tcg_out_modrm_offset(s, OPC_MOVZBL, a0, a1, a2);
+            break;
+        case MO_SB:
+            tcg_out_modrm_offset(s, OPC_MOVSBL + rexw, a0, a1, a2);
+            break;
+        case MO_UW:
+            /* Note that we can ignore REXW for the zero-extend to 64-bit.  */
+            tcg_out_modrm_offset(s, OPC_MOVZWL, a0, a1, a2);
+            break;
+        case MO_SW:
+            tcg_out_modrm_offset(s, OPC_MOVSWL + rexw, a0, a1, a2);
+            break;
+        case MO_UL:
+            tcg_out_ld(s, TCG_TYPE_I32, a0, a1, a2);
+            break;
 #if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_ld32u_i64:
+        case MO_SL:
+            tcg_out_modrm_offset(s, OPC_MOVSLQ, a0, a1, a2);
+            break;
+        case MO_UQ:
+            tcg_out_ld(s, TCG_TYPE_I64, a0, a1, a2);
+            break;
 #endif
-    case INDEX_op_ld_i32:
-        tcg_out_ld(s, TCG_TYPE_I32, a0, a1, a2);
+        default:
+            g_assert_not_reached();
+        }
         break;
 
-    OP_32_64(st8):
-        if (const_args[0]) {
-            tcg_out_modrm_offset(s, OPC_MOVB_EvIz, 0, a1, a2);
-            tcg_out8(s, a0);
-        } else {
-            tcg_out_modrm_offset(s, OPC_MOVB_EvGv | P_REXB_R, a0, a1, a2);
-        }
-        break;
-    OP_32_64(st16):
-        if (const_args[0]) {
-            tcg_out_modrm_offset(s, OPC_MOVL_EvIz | P_DATA16, 0, a1, a2);
-            tcg_out16(s, a0);
-        } else {
-            tcg_out_modrm_offset(s, OPC_MOVL_EvGv | P_DATA16, a0, a1, a2);
-        }
-        break;
+    OP_32_64(st):
+        switch (args[3]) {
+        case MO_8:
+            if (const_args[0]) {
+                tcg_out_modrm_offset(s, OPC_MOVB_EvIz, 0, a1, a2);
+                tcg_out8(s, a0);
+            } else {
+                tcg_out_modrm_offset(s, OPC_MOVB_EvGv | P_REXB_R, a0, a1, a2);
+            }
+            break;
+        case MO_16:
+            if (const_args[0]) {
+                tcg_out_modrm_offset(s, OPC_MOVL_EvIz | P_DATA16, 0, a1, a2);
+                tcg_out16(s, a0);
+            } else {
+                tcg_out_modrm_offset(s, OPC_MOVL_EvGv | P_DATA16, a0, a1, a2);
+            }
+            break;
+        case MO_32:
+            if (const_args[0]) {
+                tcg_out_modrm_offset(s, OPC_MOVL_EvIz, 0, a1, a2);
+                tcg_out32(s, a0);
+            } else {
+                tcg_out_st(s, TCG_TYPE_I32, a0, a1, a2);
+            }
+            break;
 #if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_st32_i64:
+        case MO_64:
+            if (const_args[0]) {
+                tcg_out_modrm_offset(s, OPC_MOVL_EvIz | P_REXW, 0, a1, a2);
+                tcg_out32(s, a0);
+            } else {
+                tcg_out_st(s, TCG_TYPE_I64, a0, a1, a2);
+            }
+            break;
 #endif
-    case INDEX_op_st_i32:
-        if (const_args[0]) {
-            tcg_out_modrm_offset(s, OPC_MOVL_EvIz, 0, a1, a2);
-            tcg_out32(s, a0);
-        } else {
-            tcg_out_st(s, TCG_TYPE_I32, a0, a1, a2);
+        default:
+            g_assert_not_reached();
         }
         break;
 
@@ -2978,21 +3003,6 @@ static inline void tcg_out_op(TCGContext *s, TCGOpcode opc,
         tcg_out_setcond2(s, args, const_args);
         break;
 #else /* TCG_TARGET_REG_BITS == 64 */
-    case INDEX_op_ld32s_i64:
-        tcg_out_modrm_offset(s, OPC_MOVSLQ, a0, a1, a2);
-        break;
-    case INDEX_op_ld_i64:
-        tcg_out_ld(s, TCG_TYPE_I64, a0, a1, a2);
-        break;
-    case INDEX_op_st_i64:
-        if (const_args[0]) {
-            tcg_out_modrm_offset(s, OPC_MOVL_EvIz | P_REXW, 0, a1, a2);
-            tcg_out32(s, a0);
-        } else {
-            tcg_out_st(s, TCG_TYPE_I64, a0, a1, a2);
-        }
-        break;
-
     case INDEX_op_bswap64_i64:
         tcg_out_bswap64(s, a0);
         break;
@@ -3667,32 +3677,22 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8u_i64:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld8s_i64:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16u_i64:
-    case INDEX_op_ld16s_i32:
-    case INDEX_op_ld16s_i64:
     case INDEX_op_ld_i32:
-    case INDEX_op_ld32u_i64:
-    case INDEX_op_ld32s_i64:
     case INDEX_op_ld_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st8_i32:
-    case INDEX_op_st8_i64:
-        return C_O0_I2(qi, r);
-
-    case INDEX_op_st16_i32:
-    case INDEX_op_st16_i64:
     case INDEX_op_st_i32:
-    case INDEX_op_st32_i64:
-        return C_O0_I2(ri, r);
-
     case INDEX_op_st_i64:
-        return C_O0_I2(re, r);
+        switch (op->args[3]) {
+        case MO_8:
+            return C_O0_I2(qi, r);
+        case MO_16:
+        case MO_32:
+            return C_O0_I2(ri, r);
+        case MO_64:
+            return C_O0_I2(re, r);
+        }
+        g_assert_not_reached();
 
     case INDEX_op_add_i32:
     case INDEX_op_add_i64:

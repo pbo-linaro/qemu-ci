@@ -1862,29 +1862,42 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
         tcg_out_goto_label(s, COND_AL, arg_label(args[0]));
         break;
 
-    case INDEX_op_ld8u_i32:
-        tcg_out_ld8u(s, COND_AL, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld8s_i32:
-        tcg_out_ld8s(s, COND_AL, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld16u_i32:
-        tcg_out_ld16u(s, COND_AL, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_ld16s_i32:
-        tcg_out_ld16s(s, COND_AL, args[0], args[1], args[2]);
-        break;
     case INDEX_op_ld_i32:
-        tcg_out_ld32u(s, COND_AL, args[0], args[1], args[2]);
+        switch (args[3]) {
+        case MO_UB:
+            tcg_out_ld8u(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_SB:
+            tcg_out_ld8s(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_UW:
+            tcg_out_ld16u(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_SW:
+            tcg_out_ld16s(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_UL:
+            tcg_out_ld32u(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
-    case INDEX_op_st8_i32:
-        tcg_out_st8(s, COND_AL, args[0], args[1], args[2]);
-        break;
-    case INDEX_op_st16_i32:
-        tcg_out_st16(s, COND_AL, args[0], args[1], args[2]);
-        break;
+
     case INDEX_op_st_i32:
-        tcg_out_st32(s, COND_AL, args[0], args[1], args[2]);
+        switch (args[3]) {
+        case MO_8:
+            tcg_out_st8(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_16:
+            tcg_out_st16(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        case MO_32:
+            tcg_out_st32(s, COND_AL, args[0], args[1], args[2]);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
 
     case INDEX_op_movcond_i32:
@@ -2168,10 +2181,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16s_i32:
     case INDEX_op_ld_i32:
     case INDEX_op_neg_i32:
     case INDEX_op_not_i32:
@@ -2181,8 +2190,6 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_sextract_i32:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st8_i32:
-    case INDEX_op_st16_i32:
     case INDEX_op_st_i32:
         return C_O0_I2(r, r);
 

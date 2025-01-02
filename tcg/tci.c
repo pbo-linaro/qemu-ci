@@ -488,44 +488,42 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
 
             /* Load/store operations (32 bit). */
 
-        CASE_32_64(ld8u)
+        case INDEX_op_tci_ld8u:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(uint8_t *)ptr;
             break;
-        CASE_32_64(ld8s)
+        case INDEX_op_tci_ld8s:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(int8_t *)ptr;
             break;
-        CASE_32_64(ld16u)
+        case INDEX_op_tci_ld16u:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(uint16_t *)ptr;
             break;
-        CASE_32_64(ld16s)
+        case INDEX_op_tci_ld16s:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(int16_t *)ptr;
             break;
         case INDEX_op_ld_i32:
-        CASE_64(ld32u)
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(uint32_t *)ptr;
             break;
-        CASE_32_64(st8)
+        case INDEX_op_tci_st8:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint8_t *)ptr = regs[r0];
             break;
-        CASE_32_64(st16)
+        case INDEX_op_tci_st16:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint16_t *)ptr = regs[r0];
             break;
         case INDEX_op_st_i32:
-        CASE_64(st32)
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint32_t *)ptr = regs[r0];
@@ -692,7 +690,7 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
 #if TCG_TARGET_REG_BITS == 64
             /* Load/store operations (64 bit). */
 
-        case INDEX_op_ld32s_i64:
+        case INDEX_op_tci_ld32s:
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             regs[r0] = *(int32_t *)ptr;
@@ -1045,23 +1043,15 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
                            op_name, str_r(r0), ptr);
         break;
 
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8u_i64:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld8s_i64:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16u_i64:
-    case INDEX_op_ld16s_i32:
-    case INDEX_op_ld16s_i64:
-    case INDEX_op_ld32u_i64:
-    case INDEX_op_ld32s_i64:
+    case INDEX_op_tci_ld8u:
+    case INDEX_op_tci_ld8s:
+    case INDEX_op_tci_ld16u:
+    case INDEX_op_tci_ld16s:
+    case INDEX_op_tci_ld32s:
     case INDEX_op_ld_i32:
     case INDEX_op_ld_i64:
-    case INDEX_op_st8_i32:
-    case INDEX_op_st8_i64:
-    case INDEX_op_st16_i32:
-    case INDEX_op_st16_i64:
-    case INDEX_op_st32_i64:
+    case INDEX_op_tci_st8:
+    case INDEX_op_tci_st16:
     case INDEX_op_st_i32:
     case INDEX_op_st_i64:
         tci_args_rrs(insn, &r0, &r1, &s2);

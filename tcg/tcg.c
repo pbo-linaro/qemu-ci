@@ -2173,13 +2173,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_setcond_i32:
     case INDEX_op_brcond_i32:
     case INDEX_op_movcond_i32:
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16s_i32:
     case INDEX_op_ld_i32:
-    case INDEX_op_st8_i32:
-    case INDEX_op_st16_i32:
     case INDEX_op_st_i32:
     case INDEX_op_add_i32:
     case INDEX_op_sub_i32:
@@ -2254,16 +2248,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_setcond_i64:
     case INDEX_op_brcond_i64:
     case INDEX_op_movcond_i64:
-    case INDEX_op_ld8u_i64:
-    case INDEX_op_ld8s_i64:
-    case INDEX_op_ld16u_i64:
-    case INDEX_op_ld16s_i64:
-    case INDEX_op_ld32u_i64:
-    case INDEX_op_ld32s_i64:
     case INDEX_op_ld_i64:
-    case INDEX_op_st8_i64:
-    case INDEX_op_st16_i64:
-    case INDEX_op_st32_i64:
     case INDEX_op_st_i64:
     case INDEX_op_add_i64:
     case INDEX_op_sub_i64:
@@ -2684,6 +2669,17 @@ static const char * const ldst_name[(MO_BSWAP | MO_SSIZE) + 1] =
     [MO_128 + MO_LE] = "leo",
 };
 
+static const char * const ldst_noend_name[MO_SSIZE + 1] = {
+    [MO_UB] = "ub",
+    [MO_SB] = "sb",
+    [MO_UW] = "uw",
+    [MO_SW] = "sw",
+    [MO_UL] = "ul",
+    [MO_SL] = "sl",
+    [MO_64] = "uq",
+    [MO_128] = "uo",
+};
+
 static const char * const alignment_name[(MO_AMASK >> MO_ASHIFT) + 1] = {
     [MO_UNALN >> MO_ASHIFT]    = "un+",
     [MO_ALIGN >> MO_ASHIFT]    = "al+",
@@ -2874,6 +2870,25 @@ void tcg_dump_ops(TCGContext *s, FILE *f, bool have_prefs)
                         col += ne_fprintf(f, ",$0x%x,%u", mop, ix);
                     }
                     i = 1;
+                }
+                break;
+            case INDEX_op_ld_i32:
+            case INDEX_op_ld_i64:
+            case INDEX_op_st_i32:
+            case INDEX_op_st_i64:
+                {
+                    tcg_target_long ofs = op->args[k++];
+                    MemOp mop = op->args[k++];
+                    const char *s_op = ldst_noend_name[mop & MO_SSIZE];
+
+                    if (!(mop & ~MO_SSIZE) && s_op) {
+                        col += ne_fprintf(f, ",$0x%" TCG_PRIlx ",%s",
+                                          ofs, s_op);
+                    } else {
+                        col += ne_fprintf(f, ",$0x%" TCG_PRIlx ",0x%x",
+                                          ofs, mop);
+                    }
+                    i = 2;
                 }
                 break;
             case INDEX_op_bswap16_i32:
@@ -4199,11 +4214,12 @@ liveness_pass_2(TCGContext *s)
                                   ? INDEX_op_ld_i32
                                   : INDEX_op_ld_i64);
                 TCGOp *lop = tcg_op_insert_before(s, op, lopc,
-                                                  arg_ts->type, 3);
+                                                  arg_ts->type, 4);
 
                 lop->args[0] = temp_arg(dir_ts);
                 lop->args[1] = temp_arg(arg_ts->mem_base);
                 lop->args[2] = arg_ts->mem_offset;
+                lop->args[3] = arg_ts->type - TCG_TYPE_I32 + MO_32;
 
                 /* Loaded, but synced with memory.  */
                 arg_ts->state = TS_MEM;
@@ -4263,7 +4279,7 @@ liveness_pass_2(TCGContext *s)
                                       ? INDEX_op_st_i32
                                       : INDEX_op_st_i64);
                     TCGOp *sop = tcg_op_insert_after(s, op, sopc,
-                                                     arg_ts->type, 3);
+                                                     arg_ts->type, 4);
                     TCGTemp *out_ts = dir_ts;
 
                     if (IS_DEAD_ARG(0)) {
@@ -4277,6 +4293,7 @@ liveness_pass_2(TCGContext *s)
                     sop->args[0] = temp_arg(out_ts);
                     sop->args[1] = temp_arg(arg_ts->mem_base);
                     sop->args[2] = arg_ts->mem_offset;
+                    sop->args[3] = arg_ts->type - TCG_TYPE_I32 + MO_32;
                 } else {
                     tcg_debug_assert(!IS_DEAD_ARG(0));
                 }
@@ -4300,11 +4317,12 @@ liveness_pass_2(TCGContext *s)
                                       ? INDEX_op_st_i32
                                       : INDEX_op_st_i64);
                     TCGOp *sop = tcg_op_insert_after(s, op, sopc,
-                                                     arg_ts->type, 3);
+                                                     arg_ts->type, 4);
 
                     sop->args[0] = temp_arg(dir_ts);
                     sop->args[1] = temp_arg(arg_ts->mem_base);
                     sop->args[2] = arg_ts->mem_offset;
+                    sop->args[3] = arg_ts->type - TCG_TYPE_I32 + MO_32;
 
                     arg_ts->state = TS_MEM;
                 }

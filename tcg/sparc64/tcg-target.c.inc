@@ -1315,32 +1315,53 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
         glue(glue(case INDEX_op_, x), _i32):    \
         glue(glue(case INDEX_op_, x), _i64)
 
-    OP_32_64(ld8u):
-        tcg_out_ldst(s, a0, a1, a2, LDUB);
+    OP_32_64(ld):
+        switch (args[3]) {
+        case MO_UB:
+            tcg_out_ldst(s, a0, a1, a2, LDUB);
+            break;
+        case MO_SB:
+            tcg_out_ldst(s, a0, a1, a2, LDSB);
+            break;
+        case MO_UW:
+            tcg_out_ldst(s, a0, a1, a2, LDUH);
+            break;
+        case MO_SW:
+            tcg_out_ldst(s, a0, a1, a2, LDSH);
+            break;
+        case MO_UL:
+            tcg_out_ldst(s, a0, a1, a2, LDUW);
+            break;
+        case MO_SL:
+            tcg_out_ldst(s, a0, a1, a2, LDSW);
+            break;
+        case MO_UQ:
+            tcg_out_ldst(s, a0, a1, a2, LDX);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
-    OP_32_64(ld8s):
-        tcg_out_ldst(s, a0, a1, a2, LDSB);
+
+    OP_32_64(st):
+        switch (args[3]) {
+        case MO_8:
+            tcg_out_ldst(s, a0, a1, a2, STB);
+            break;
+        case MO_16:
+            tcg_out_ldst(s, a0, a1, a2, STH);
+            break;
+        case MO_32:
+            tcg_out_ldst(s, a0, a1, a2, STW);
+            break;
+        case MO_64:
+            tcg_out_ldst(s, a0, a1, a2, STX);
+            break;
+        default:
+            g_assert_not_reached();
+        }
         break;
-    OP_32_64(ld16u):
-        tcg_out_ldst(s, a0, a1, a2, LDUH);
-        break;
-    OP_32_64(ld16s):
-        tcg_out_ldst(s, a0, a1, a2, LDSH);
-        break;
-    case INDEX_op_ld_i32:
-    case INDEX_op_ld32u_i64:
-        tcg_out_ldst(s, a0, a1, a2, LDUW);
-        break;
-    OP_32_64(st8):
-        tcg_out_ldst(s, a0, a1, a2, STB);
-        break;
-    OP_32_64(st16):
-        tcg_out_ldst(s, a0, a1, a2, STH);
-        break;
-    case INDEX_op_st_i32:
-    case INDEX_op_st32_i64:
-        tcg_out_ldst(s, a0, a1, a2, STW);
-        break;
+
     OP_32_64(add):
         c = ARITH_ADD;
         goto gen_arith;
@@ -1443,15 +1464,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
         tcg_out_qemu_st(s, a0, a1, a2, TCG_TYPE_I64);
         break;
 
-    case INDEX_op_ld32s_i64:
-        tcg_out_ldst(s, a0, a1, a2, LDSW);
-        break;
-    case INDEX_op_ld_i64:
-        tcg_out_ldst(s, a0, a1, a2, LDX);
-        break;
-    case INDEX_op_st_i64:
-        tcg_out_ldst(s, a0, a1, a2, STX);
-        break;
     case INDEX_op_shl_i64:
         c = SHIFT_SLLX;
     do_shift64:
@@ -1541,17 +1553,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 
-    case INDEX_op_ld8u_i32:
-    case INDEX_op_ld8u_i64:
-    case INDEX_op_ld8s_i32:
-    case INDEX_op_ld8s_i64:
-    case INDEX_op_ld16u_i32:
-    case INDEX_op_ld16u_i64:
-    case INDEX_op_ld16s_i32:
-    case INDEX_op_ld16s_i64:
     case INDEX_op_ld_i32:
-    case INDEX_op_ld32u_i64:
-    case INDEX_op_ld32s_i64:
     case INDEX_op_ld_i64:
     case INDEX_op_neg_i32:
     case INDEX_op_neg_i64:
@@ -1569,12 +1571,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_qemu_ld_a64_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_st8_i32:
-    case INDEX_op_st8_i64:
-    case INDEX_op_st16_i32:
-    case INDEX_op_st16_i64:
     case INDEX_op_st_i32:
-    case INDEX_op_st32_i64:
     case INDEX_op_st_i64:
     case INDEX_op_qemu_st_a32_i32:
     case INDEX_op_qemu_st_a64_i32:
