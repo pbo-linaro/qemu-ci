@@ -3335,7 +3335,6 @@ static void process_op_defs(TCGContext *s)
         }
 
         if (def->flags & TCG_OPF_NOT_PRESENT) {
-            def->args_ct = empty_cts;
             continue;
         }
 
@@ -3351,9 +3350,24 @@ static void process_op_defs(TCGContext *s)
         tdefs = &constraint_sets[con_set];
         tcg_debug_assert(tdefs->nb_oargs == def->nb_oargs);
         tcg_debug_assert(tdefs->nb_iargs == def->nb_iargs);
-
-        def->args_ct = all_args_cts[con_set];
     }
+}
+
+static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
+{
+    TCGOpDef *def = &tcg_op_defs[op->opc];
+    unsigned con_set;
+
+    if (def->nb_iargs + def->nb_oargs == 0) {
+        return NULL;
+    }
+    if (def->flags & TCG_OPF_NOT_PRESENT) {
+        return empty_cts;
+    }
+
+    con_set = tcg_target_op_def(op->opc);
+    tcg_debug_assert(con_set < ARRAY_SIZE(constraint_sets));
+    return all_args_cts[con_set];
 }
 
 static void remove_label_use(TCGOp *op, int idx)
@@ -3823,6 +3837,7 @@ liveness_pass_1(TCGContext *s)
         TCGTemp *ts;
         TCGOpcode opc = op->opc;
         const TCGOpDef *def = &tcg_op_defs[opc];
+        const TCGArgConstraint *args_ct;
 
         switch (opc) {
         case INDEX_op_call:
@@ -4112,8 +4127,9 @@ liveness_pass_1(TCGContext *s)
                 break;
 
             default:
+                args_ct = opcode_args_ct(op);
                 for (i = nb_oargs; i < nb_oargs + nb_iargs; i++) {
-                    const TCGArgConstraint *ct = &def->args_ct[i];
+                    const TCGArgConstraint *ct = &args_ct[i];
                     TCGRegSet set, *pset;
 
                     ts = arg_temp(op->args[i]);
@@ -4903,6 +4919,7 @@ static void tcg_reg_alloc_dup(TCGContext *s, const TCGOp *op)
 {
     const TCGLifeData arg_life = op->life;
     TCGRegSet dup_out_regs, dup_in_regs;
+    const TCGArgConstraint *dup_args_ct;
     TCGTemp *its, *ots;
     TCGType itype, vtype;
     unsigned vece;
@@ -4929,8 +4946,9 @@ static void tcg_reg_alloc_dup(TCGContext *s, const TCGOp *op)
         return;
     }
 
-    dup_out_regs = tcg_op_defs[INDEX_op_dup_vec].args_ct[0].regs;
-    dup_in_regs = tcg_op_defs[INDEX_op_dup_vec].args_ct[1].regs;
+    dup_args_ct = opcode_args_ct(op);
+    dup_out_regs = dup_args_ct[0].regs;
+    dup_in_regs = dup_args_ct[1].regs;
 
     /* Allocate the output register now.  */
     if (ots->val_type != TEMP_VAL_REG) {
@@ -5016,6 +5034,7 @@ static void tcg_reg_alloc_op(TCGContext *s, const TCGOp *op)
     int i, k, nb_iargs, nb_oargs;
     TCGReg reg;
     TCGArg arg;
+    const TCGArgConstraint *args_ct;
     const TCGArgConstraint *arg_ct;
     TCGTemp *ts;
     TCGArg new_args[TCG_MAX_OP_ARGS];
@@ -5060,6 +5079,8 @@ static void tcg_reg_alloc_op(TCGContext *s, const TCGOp *op)
         break;
     }
 
+    args_ct = opcode_args_ct(op);
+
     /* satisfy input constraints */
     for (k = 0; k < nb_iargs; k++) {
         TCGRegSet i_preferred_regs, i_required_regs;
@@ -5067,9 +5088,9 @@ static void tcg_reg_alloc_op(TCGContext *s, const TCGOp *op)
         TCGTemp *ts2;
         int i1, i2;
 
-        i = def->args_ct[nb_oargs + k].sort_index;
+        i = args_ct[nb_oargs + k].sort_index;
         arg = op->args[i];
-        arg_ct = &def->args_ct[i];
+        arg_ct = &args_ct[i];
         ts = arg_temp(arg);
 
         if (ts->val_type == TEMP_VAL_CONST
@@ -5099,7 +5120,7 @@ static void tcg_reg_alloc_op(TCGContext *s, const TCGOp *op)
                  * register and move it.
                  */
                 if (temp_readonly(ts) || !IS_DEAD_ARG(i)
-                    || def->args_ct[arg_ct->alias_index].newreg) {
+                    || args_ct[arg_ct->alias_index].newreg) {
                     allocate_new_reg = true;
                 } else if (ts->val_type == TEMP_VAL_REG) {
                     /*
@@ -5284,10 +5305,10 @@ static void tcg_reg_alloc_op(TCGContext *s, const TCGOp *op)
         }
 
         /* satisfy the output constraints */
-        for(k = 0; k < nb_oargs; k++) {
-            i = def->args_ct[k].sort_index;
+        for (k = 0; k < nb_oargs; k++) {
+            i = args_ct[k].sort_index;
             arg = op->args[i];
-            arg_ct = &def->args_ct[i];
+            arg_ct = &args_ct[i];
             ts = arg_temp(arg);
 
             /* ENV should not be modified.  */
@@ -5401,8 +5422,7 @@ static bool tcg_reg_alloc_dup2(TCGContext *s, const TCGOp *op)
     /* Allocate the output register now.  */
     if (ots->val_type != TEMP_VAL_REG) {
         TCGRegSet allocated_regs = s->reserved_regs;
-        TCGRegSet dup_out_regs =
-            tcg_op_defs[INDEX_op_dup_vec].args_ct[0].regs;
+        TCGRegSet dup_out_regs = opcode_args_ct(op)[0].regs;
         TCGReg oreg;
 
         /* Make sure to not spill the input registers. */
