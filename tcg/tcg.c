@@ -2192,12 +2192,14 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_add:
     case INDEX_op_and:
     case INDEX_op_brcond:
+    case INDEX_op_extract:
     case INDEX_op_mov:
     case INDEX_op_movcond:
     case INDEX_op_mul:
     case INDEX_op_neg:
     case INDEX_op_or:
     case INDEX_op_setcond:
+    case INDEX_op_sextract:
     case INDEX_op_sub:
     case INDEX_op_xor:
         return has_type;
@@ -2207,8 +2209,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_shl_i32:
     case INDEX_op_shr_i32:
     case INDEX_op_sar_i32:
-    case INDEX_op_extract_i32:
-    case INDEX_op_sextract_i32:
     case INDEX_op_deposit_i32:
         return true;
 
@@ -2272,8 +2272,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
     case INDEX_op_extrh_i64_i32:
-    case INDEX_op_extract_i64:
-    case INDEX_op_sextract_i64:
     case INDEX_op_deposit_i64:
         return TCG_TARGET_REG_BITS == 64;
 

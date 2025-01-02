@@ -990,7 +990,7 @@ void tcg_gen_extract_i32(TCGv_i32 ret, TCGv_i32 arg,
     }
 
     if (TCG_TARGET_extract_valid(TCG_TYPE_I32, ofs, len)) {
-        tcg_gen_op4ii_i32(INDEX_op_extract_i32, ret, arg, ofs, len);
+        tcg_gen_op4ii_i32(INDEX_op_extract, ret, arg, ofs, len);
         return;
     }
     if (ofs == 0) {
@@ -1000,7 +1000,7 @@ void tcg_gen_extract_i32(TCGv_i32 ret, TCGv_i32 arg,
 
     /* Assume that zero-extension, if available, is cheaper than a shift.  */
     if (TCG_TARGET_extract_valid(TCG_TYPE_I32, 0, ofs + len)) {
-        tcg_gen_op4ii_i32(INDEX_op_extract_i32, ret, arg, 0, ofs + len);
+        tcg_gen_op4ii_i32(INDEX_op_extract, ret, arg, 0, ofs + len);
         tcg_gen_shri_i32(ret, ret, ofs);
         return;
     }
@@ -1035,19 +1035,19 @@ void tcg_gen_sextract_i32(TCGv_i32 ret, TCGv_i32 arg,
     }
 
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I32, ofs, len)) {
-        tcg_gen_op4ii_i32(INDEX_op_sextract_i32, ret, arg, ofs, len);
+        tcg_gen_op4ii_i32(INDEX_op_sextract, ret, arg, ofs, len);
         return;
     }
 
     /* Assume that sign-extension, if available, is cheaper than a shift.  */
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I32, 0, ofs + len)) {
-        tcg_gen_op4ii_i32(INDEX_op_sextract_i32, ret, arg, 0, ofs + len);
+        tcg_gen_op4ii_i32(INDEX_op_sextract, ret, arg, 0, ofs + len);
         tcg_gen_sari_i32(ret, ret, ofs);
         return;
     }
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I32, 0, len)) {
         tcg_gen_shri_i32(ret, arg, ofs);
-        tcg_gen_op4ii_i32(INDEX_op_sextract_i32, ret, ret, 0, len);
+        tcg_gen_op4ii_i32(INDEX_op_sextract, ret, ret, 0, len);
         return;
     }
 
@@ -2690,7 +2690,7 @@ void tcg_gen_extract_i64(TCGv_i64 ret, TCGv_i64 arg,
     }
 
     if (TCG_TARGET_extract_valid(TCG_TYPE_I64, ofs, len)) {
-        tcg_gen_op4ii_i64(INDEX_op_extract_i64, ret, arg, ofs, len);
+        tcg_gen_op4ii_i64(INDEX_op_extract, ret, arg, ofs, len);
         return;
     }
     if (ofs == 0) {
@@ -2700,7 +2700,7 @@ void tcg_gen_extract_i64(TCGv_i64 ret, TCGv_i64 arg,
 
     /* Assume that zero-extension, if available, is cheaper than a shift.  */
     if (TCG_TARGET_extract_valid(TCG_TYPE_I64, 0, ofs + len)) {
-        tcg_gen_op4ii_i64(INDEX_op_extract_i64, ret, arg, 0, ofs + len);
+        tcg_gen_op4ii_i64(INDEX_op_extract, ret, arg, 0, ofs + len);
         tcg_gen_shri_i64(ret, ret, ofs);
         return;
     }
@@ -2767,19 +2767,19 @@ void tcg_gen_sextract_i64(TCGv_i64 ret, TCGv_i64 arg,
     }
 
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I64, ofs, len)) {
-        tcg_gen_op4ii_i64(INDEX_op_sextract_i64, ret, arg, ofs, len);
+        tcg_gen_op4ii_i64(INDEX_op_sextract, ret, arg, ofs, len);
         return;
     }
 
     /* Assume that sign-extension, if available, is cheaper than a shift.  */
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I64, 0, ofs + len)) {
-        tcg_gen_op4ii_i64(INDEX_op_sextract_i64, ret, arg, 0, ofs + len);
+        tcg_gen_op4ii_i64(INDEX_op_sextract, ret, arg, 0, ofs + len);
         tcg_gen_sari_i64(ret, ret, ofs);
         return;
     }
     if (TCG_TARGET_sextract_valid(TCG_TYPE_I64, 0, len)) {
         tcg_gen_shri_i64(ret, arg, ofs);
-        tcg_gen_op4ii_i64(INDEX_op_sextract_i64, ret, ret, 0, len);
+        tcg_gen_op4ii_i64(INDEX_op_sextract, ret, ret, 0, len);
         return;
     }
 

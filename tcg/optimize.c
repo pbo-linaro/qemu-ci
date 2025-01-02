@@ -2279,19 +2279,19 @@ static void fold_setcond_tst_pow2(OptContext *ctx, TCGOp *op, bool neg)
     case TCG_TYPE_I32:
         shr_opc = INDEX_op_shr_i32;
         if (TCG_TARGET_extract_valid(TCG_TYPE_I32, sh, 1)) {
-            uext_opc = INDEX_op_extract_i32;
+            uext_opc = INDEX_op_extract;
         }
         if (TCG_TARGET_sextract_valid(TCG_TYPE_I32, sh, 1)) {
-            sext_opc = INDEX_op_sextract_i32;
+            sext_opc = INDEX_op_sextract;
         }
         break;
     case TCG_TYPE_I64:
         shr_opc = INDEX_op_shr_i64;
         if (TCG_TARGET_extract_valid(TCG_TYPE_I64, sh, 1)) {
-            uext_opc = INDEX_op_extract_i64;
+            uext_opc = INDEX_op_extract;
         }
         if (TCG_TARGET_sextract_valid(TCG_TYPE_I64, sh, 1)) {
-            sext_opc = INDEX_op_sextract_i64;
+            sext_opc = INDEX_op_sextract;
         }
         break;
     default:
@@ -2786,7 +2786,7 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_eqv_vec:
             done = fold_eqv(&ctx, op);
             break;
-        CASE_OP_32_64(extract):
+        case INDEX_op_extract:
             done = fold_extract(&ctx, op);
             break;
         CASE_OP_32_64(extract2):
@@ -2906,7 +2906,7 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_bitsel_vec:
             done = fold_bitsel_vec(&ctx, op);
             break;
-        CASE_OP_32_64(sextract):
+        case INDEX_op_sextract:
             done = fold_sextract(&ctx, op);
             break;
         case INDEX_op_sub:

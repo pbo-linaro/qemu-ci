@@ -1366,33 +1366,24 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_extract_i32:
+    case INDEX_op_extract:
         if (a2 == 0 && args[3] <= 12) {
             tcg_out_opc_andi(s, a0, a1, (1 << args[3]) - 1);
-        } else {
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_bstrpick_w(s, a0, a1, a2, a2 + args[3] - 1);
-        }
-        break;
-    case INDEX_op_extract_i64:
-        if (a2 == 0 && args[3] <= 12) {
-            tcg_out_opc_andi(s, a0, a1, (1 << args[3]) - 1);
         } else {
             tcg_out_opc_bstrpick_d(s, a0, a1, a2, a2 + args[3] - 1);
         }
         break;
 
-    case INDEX_op_sextract_i64:
-        if (a2 + args[3] == 32) {
+    case INDEX_op_sextract:
+        if (type == TCG_TYPE_I64 && a2 + args[3] == 32) {
             if (a2 == 0) {
                 tcg_out_ext32s(s, a0, a1);
             } else {
                 tcg_out_opc_srai_w(s, a0, a1, a2);
             }
-            break;
-        }
-        /* FALLTHRU */
-    case INDEX_op_sextract_i32:
-        if (a2 == 0 && args[3] == 8) {
+        } else if (a2 == 0 && args[3] == 8) {
             tcg_out_ext8s(s, TCG_TYPE_REG, a0, a1);
         } else if (a2 == 0 && args[3] == 16) {
             tcg_out_ext16s(s, TCG_TYPE_REG, a0, a1);
@@ -2236,10 +2227,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ext_i32_i64:
     case INDEX_op_neg:
     case INDEX_op_not:
-    case INDEX_op_extract_i32:
-    case INDEX_op_extract_i64:
-    case INDEX_op_sextract_i32:
-    case INDEX_op_sextract_i64:
+    case INDEX_op_extract:
+    case INDEX_op_sextract:
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap16_i64:
     case INDEX_op_bswap32_i32:

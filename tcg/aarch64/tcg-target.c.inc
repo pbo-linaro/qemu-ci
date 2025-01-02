@@ -2419,8 +2419,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_dep(s, ext, a0, REG0(2), args[3], args[4]);
         break;
 
-    case INDEX_op_extract_i64:
-    case INDEX_op_extract_i32:
+    case INDEX_op_extract:
         if (a2 == 0) {
             uint64_t mask = MAKE_64BIT_MASK(0, args[3]);
             tcg_out_logicali(s, I3404_ANDI, ext, a0, a1, mask);
@@ -2429,8 +2428,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_sextract_i64:
-    case INDEX_op_sextract_i32:
+    case INDEX_op_sextract:
         tcg_out_sbfm(s, ext, a0, a1, a2, a2 + args[3] - 1);
         break;
 
@@ -2934,10 +2932,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
     case INDEX_op_extrh_i64_i32:
-    case INDEX_op_extract_i32:
-    case INDEX_op_extract_i64:
-    case INDEX_op_sextract_i32:
-    case INDEX_op_sextract_i64:
+    case INDEX_op_extract:
+    case INDEX_op_sextract:
         return C_O1_I1(r, r);
 
     case INDEX_op_st_i32:

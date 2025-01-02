@@ -3042,8 +3042,8 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_extract_i64:
-        if (a2 + args[3] == 32) {
+    case INDEX_op_extract:
+        if (TCG_TARGET_REG_BITS == 64 && a2 + args[3] == 32) {
             if (a2 == 0) {
                 tcg_out_ext32u(s, a0, a1);
                 break;
@@ -3053,8 +3053,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
             tcg_out_shifti(s, SHIFT_SHR, a0, a2);
             break;
         }
-        /* FALLTHRU */
-    case INDEX_op_extract_i32:
         if (a2 == 0 && args[3] == 8) {
             tcg_out_ext8u(s, a0, a1);
         } else if (a2 == 0 && args[3] == 16) {
@@ -3076,24 +3074,14 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_sextract_i64:
+    case INDEX_op_sextract:
         if (a2 == 0 && args[3] == 8) {
-            tcg_out_ext8s(s, TCG_TYPE_I64, a0, a1);
+            tcg_out_ext8s(s, type, a0, a1);
         } else if (a2 == 0 && args[3] == 16) {
-            tcg_out_ext16s(s, TCG_TYPE_I64, a0, a1);
-        } else if (a2 == 0 && args[3] == 32) {
+            tcg_out_ext16s(s, type, a0, a1);
+        } else if (type == TCG_TYPE_I64 && a2 == 0 && args[3] == 32) {
             tcg_out_ext32s(s, a0, a1);
-        } else {
-            g_assert_not_reached();
-        }
-        break;
-
-    case INDEX_op_sextract_i32:
-        if (a2 == 0 && args[3] == 8) {
-            tcg_out_ext8s(s, TCG_TYPE_I32, a0, a1);
-        } else if (a2 == 0 && args[3] == 16) {
-            tcg_out_ext16s(s, TCG_TYPE_I32, a0, a1);
-        } else if (a2 == 8 && args[3] == 8) {
+        } else if (type == TCG_TYPE_I32 && a2 == 8 && args[3] == 8) {
             if (a1 < 4 && a0 < 8) {
                 tcg_out_modrm(s, OPC_MOVSBL, a0, a1 + 4);
             } else {
@@ -3737,10 +3725,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
-    case INDEX_op_extract_i32:
-    case INDEX_op_extract_i64:
-    case INDEX_op_sextract_i32:
-    case INDEX_op_sextract_i64:
+    case INDEX_op_extract:
+    case INDEX_op_sextract:
     case INDEX_op_ctpop_i32:
     case INDEX_op_ctpop_i64:
         return C_O1_I1(r, r);
