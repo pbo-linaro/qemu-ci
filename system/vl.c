@@ -2114,17 +2114,15 @@ static void parse_memory_options(void)
     loc_pop(&loc);
 }
 
-static const char *const machine_containers[] = {
-    "unattached",
-    "peripheral",
-    "peripheral-anon"
-};
-
 static void qemu_create_machine_containers(Object *machine)
 {
-    int i;
+    static const char *const machine_containers[] = {
+        "unattached",
+        "peripheral",
+        "peripheral-anon"
+    };
 
-    for (i = 0; i < ARRAY_SIZE(machine_containers); i++) {
+    for (unsigned i = 0; i < ARRAY_SIZE(machine_containers); i++) {
         object_property_add_new_container(machine, machine_containers[i]);
     }
 }
