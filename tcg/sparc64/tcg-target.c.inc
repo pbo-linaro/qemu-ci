@@ -1421,17 +1421,33 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         c = ARITH_UDIVX;
         goto gen_arith;
 
-    case INDEX_op_brcond_i32:
-        tcg_out_brcond_i32(s, a2, a0, a1, const_args[1], arg_label(args[3]));
+    case INDEX_op_brcond:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_brcond_i32(s, a2, a0, a1, const_args[1], arg_label(args[3]));
+        } else {
+            tcg_out_brcond_i64(s, a2, a0, a1, const_args[1], arg_label(args[3]));
+        }
         break;
-    case INDEX_op_setcond_i32:
-        tcg_out_setcond_i32(s, args[3], a0, a1, a2, c2, false);
+    case INDEX_op_setcond:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_setcond_i32(s, args[3], a0, a1, a2, c2, false);
+        } else {
+            tcg_out_setcond_i64(s, args[3], a0, a1, a2, c2, false);
+        }
         break;
-    case INDEX_op_negsetcond_i32:
-        tcg_out_setcond_i32(s, args[3], a0, a1, a2, c2, true);
+    case INDEX_op_negsetcond:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_setcond_i32(s, args[3], a0, a1, a2, c2, true);
+        } else {
+            tcg_out_setcond_i64(s, args[3], a0, a1, a2, c2, true);
+        }
         break;
-    case INDEX_op_movcond_i32:
-        tcg_out_movcond_i32(s, args[5], a0, a1, a2, c2, args[3], const_args[3]);
+    case INDEX_op_movcond:
+        if (type == TCG_TYPE_I32) {
+            tcg_out_movcond_i32(s, args[5], a0, a1, a2, c2, args[3], const_args[3]);
+        } else {
+            tcg_out_movcond_i64(s, args[5], a0, a1, a2, c2, args[3], const_args[3]);
+        }
         break;
 
     case INDEX_op_add2:
@@ -1500,18 +1516,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         c = SHIFT_SRAX;
         goto do_shift64;
 
-    case INDEX_op_brcond_i64:
-        tcg_out_brcond_i64(s, a2, a0, a1, const_args[1], arg_label(args[3]));
-        break;
-    case INDEX_op_setcond_i64:
-        tcg_out_setcond_i64(s, args[3], a0, a1, a2, c2, false);
-        break;
-    case INDEX_op_negsetcond_i64:
-        tcg_out_setcond_i64(s, args[3], a0, a1, a2, c2, true);
-        break;
-    case INDEX_op_movcond_i64:
-        tcg_out_movcond_i64(s, args[5], a0, a1, a2, c2, args[3], const_args[3]);
-        break;
     case INDEX_op_muluh:
         tcg_out_arith(s, args[0], args[1], args[2], ARITH_UMULXHI);
         break;
@@ -1598,17 +1602,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_shr_i64:
     case INDEX_op_sar_i32:
     case INDEX_op_sar_i64:
-    case INDEX_op_setcond_i32:
-    case INDEX_op_setcond_i64:
-    case INDEX_op_negsetcond_i32:
-    case INDEX_op_negsetcond_i64:
+    case INDEX_op_setcond:
+    case INDEX_op_negsetcond:
         return C_O1_I2(r, rZ, rJ);
 
-    case INDEX_op_brcond_i32:
-    case INDEX_op_brcond_i64:
+    case INDEX_op_brcond:
         return C_O0_I2(rZ, rJ);
-    case INDEX_op_movcond_i32:
-    case INDEX_op_movcond_i64:
+    case INDEX_op_movcond:
         return C_O1_I4(r, rZ, rJ, rI, 0);
     case INDEX_op_add2:
     case INDEX_op_sub2:

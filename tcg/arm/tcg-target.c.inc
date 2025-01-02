@@ -1900,7 +1900,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_movcond_i32:
+    case INDEX_op_movcond:
         /* Constraints mean that v2 is always in the same register as dest,
          * so we only need to do "if condition passed, move v1 to dest".
          */
@@ -2054,18 +2054,18 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_brcond_i32:
+    case INDEX_op_brcond:
         c = tcg_out_cmp(s, args[2], args[0], args[1], const_args[1]);
         tcg_out_goto_label(s, tcg_cond_to_arm_cond[c], arg_label(args[3]));
         break;
-    case INDEX_op_setcond_i32:
+    case INDEX_op_setcond:
         c = tcg_out_cmp(s, args[3], args[1], args[2], const_args[2]);
         tcg_out_dat_imm(s, tcg_cond_to_arm_cond[c],
                         ARITH_MOV, args[0], 0, 1);
         tcg_out_dat_imm(s, tcg_cond_to_arm_cond[tcg_invert_cond(c)],
                         ARITH_MOV, args[0], 0, 0);
         break;
-    case INDEX_op_negsetcond_i32:
+    case INDEX_op_negsetcond:
         c = tcg_out_cmp(s, args[3], args[1], args[2], const_args[2]);
         tcg_out_dat_imm(s, tcg_cond_to_arm_cond[c],
                         ARITH_MVN, args[0], 0, 0);
@@ -2195,8 +2195,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_add:
     case INDEX_op_sub:
-    case INDEX_op_setcond_i32:
-    case INDEX_op_negsetcond_i32:
+    case INDEX_op_setcond:
+    case INDEX_op_negsetcond:
         return C_O1_I2(r, r, rIN);
 
     case INDEX_op_and:
@@ -2225,13 +2225,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_rotr_i32:
         return C_O1_I2(r, r, ri);
 
-    case INDEX_op_brcond_i32:
+    case INDEX_op_brcond:
         return C_O0_I2(r, rIN);
     case INDEX_op_deposit_i32:
         return C_O1_I2(r, 0, rZ);
     case INDEX_op_extract2_i32:
         return C_O1_I2(r, rZ, rZ);
-    case INDEX_op_movcond_i32:
+    case INDEX_op_movcond:
         return C_O1_I4(r, r, rIN, rIK, 0);
     case INDEX_op_add2:
         return C_O2_I4(r, r, r, r, rIN, rIK);

@@ -92,8 +92,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_rotl_i64:
     case INDEX_op_rotr_i32:
     case INDEX_op_rotr_i64:
-    case INDEX_op_setcond_i32:
-    case INDEX_op_setcond_i64:
+    case INDEX_op_setcond:
     case INDEX_op_deposit_i32:
     case INDEX_op_deposit_i64:
     case INDEX_op_clz_i32:
@@ -102,8 +101,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ctz_i64:
         return C_O1_I2(r, r, r);
 
-    case INDEX_op_brcond_i32:
-    case INDEX_op_brcond_i64:
+    case INDEX_op_brcond:
         return C_O0_I2(r, r);
 
     case INDEX_op_add2:
@@ -119,8 +117,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_muls2:
         return C_O2_I2(r, r, r, r);
 
-    case INDEX_op_movcond_i32:
-    case INDEX_op_movcond_i64:
+    case INDEX_op_movcond:
     case INDEX_op_setcond2_i32:
         return C_O1_I4(r, r, r, r, r);
 
@@ -643,14 +640,37 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_op_l(s, opc, arg_label(args[0]));
         break;
 
-    CASE_32_64(setcond)
+    case INDEX_op_setcond:
+        if (type == TCG_TYPE_I32) {
+            opc = INDEX_op_tci_setcond32;
+        }
         tcg_out_op_rrrc(s, opc, args[0], args[1], args[2], args[3]);
         break;
-
-    CASE_32_64(movcond)
     case INDEX_op_setcond2_i32:
+        tcg_debug_assert(TCG_TARGET_REG_BITS == 32);
         tcg_out_op_rrrrrc(s, opc, args[0], args[1], args[2],
                           args[3], args[4], args[5]);
+        break;
+
+    case INDEX_op_movcond:
+        if (type == TCG_TYPE_I32) {
+            opc = INDEX_op_tci_movcond32;
+        }
+        tcg_out_op_rrrrrc(s, opc, args[0], args[1], args[2],
+                          args[3], args[4], args[5]);
+        break;
+
+    case INDEX_op_brcond:
+        tcg_out_op_rrrc(s, (type == TCG_TYPE_I32
+                            ? INDEX_op_tci_setcond32 : INDEX_op_setcond),
+                        TCG_REG_TMP, args[0], args[1], args[2]);
+        tcg_out_op_rl(s, opc, TCG_REG_TMP, arg_label(args[3]));
+        break;
+    case INDEX_op_brcond2_i32:
+        tcg_debug_assert(TCG_TARGET_REG_BITS == 32);
+        tcg_out_op_rrrrrc(s, INDEX_op_setcond2_i32, TCG_REG_TMP,
+                          args[0], args[1], args[2], args[3], args[4]);
+        tcg_out_op_rl(s, INDEX_op_brcond, TCG_REG_TMP, arg_label(args[5]));
         break;
 
     CASE_32_64(ld)
@@ -739,13 +759,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_op_rrbb(s, INDEX_op_extract_i64, args[0], args[1], 32, 32);
         break;
 
-    CASE_32_64(brcond)
-        tcg_out_op_rrrc(s, (opc == INDEX_op_brcond_i32
-                            ? INDEX_op_setcond_i32 : INDEX_op_setcond_i64),
-                        TCG_REG_TMP, args[0], args[1], args[2]);
-        tcg_out_op_rl(s, opc, TCG_REG_TMP, arg_label(args[3]));
-        break;
-
     case INDEX_op_neg:
     case INDEX_op_not:
     CASE_32_64(ctpop)    /* Optional (TCG_TARGET_HAS_ctpop_*). */
@@ -775,14 +788,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_op_rrrrrr(s, opc, args[0], args[1], args[2],
                           args[3], args[4], args[5]);
         break;
-
-#if TCG_TARGET_REG_BITS == 32
-    case INDEX_op_brcond2_i32:
-        tcg_out_op_rrrrrc(s, INDEX_op_setcond2_i32, TCG_REG_TMP,
-                          args[0], args[1], args[2], args[3], args[4]);
-        tcg_out_op_rl(s, INDEX_op_brcond_i32, TCG_REG_TMP, arg_label(args[5]));
-        break;
-#endif
 
     case INDEX_op_mulu2:
     case INDEX_op_muls2:

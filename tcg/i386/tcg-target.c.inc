@@ -2859,17 +2859,17 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_modrm(s, OPC_POPCNT + rexw, a0, a1);
         break;
 
-    OP_32_64(brcond):
+    case INDEX_op_brcond:
         tcg_out_brcond(s, rexw, a2, a0, a1, const_args[1],
                        arg_label(args[3]), 0);
         break;
-    OP_32_64(setcond):
+    case INDEX_op_setcond:
         tcg_out_setcond(s, rexw, args[3], a0, a1, a2, const_a2, false);
         break;
-    OP_32_64(negsetcond):
+    case INDEX_op_negsetcond:
         tcg_out_setcond(s, rexw, args[3], a0, a1, a2, const_a2, true);
         break;
-    OP_32_64(movcond):
+    case INDEX_op_movcond:
         tcg_out_movcond(s, rexw, args[5], a0, a1, a2, const_a2, args[3]);
         break;
 
@@ -3721,8 +3721,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_rotr_i64:
         return C_O1_I2(r, 0, ci);
 
-    case INDEX_op_brcond_i32:
-    case INDEX_op_brcond_i64:
+    case INDEX_op_brcond:
         return C_O0_I2(r, reT);
 
     case INDEX_op_bswap16_i32:
@@ -3754,14 +3753,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_deposit_i64:
         return C_O1_I2(q, 0, qi);
 
-    case INDEX_op_setcond_i32:
-    case INDEX_op_setcond_i64:
-    case INDEX_op_negsetcond_i32:
-    case INDEX_op_negsetcond_i64:
+    case INDEX_op_setcond:
+    case INDEX_op_negsetcond:
         return C_O1_I2(q, r, reT);
 
-    case INDEX_op_movcond_i32:
-    case INDEX_op_movcond_i64:
+    case INDEX_op_movcond:
         return C_O1_I4(r, r, reT, r, 0);
 
     case INDEX_op_div2:
