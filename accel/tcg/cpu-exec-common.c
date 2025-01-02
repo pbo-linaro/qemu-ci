@@ -21,6 +21,7 @@
 #include "system/cpus.h"
 #include "system/tcg.h"
 #include "qemu/plugin.h"
+#include "exec/tb-flush.h"
 #include "internal-common.h"
 
 bool tcg_allowed;
@@ -55,4 +56,9 @@ void cpu_loop_exit_atomic(CPUState *cpu, uintptr_t pc)
     g_assert(!cpu_in_serial_context(cpu));
     cpu->exception_index = EXCP_ATOMIC;
     cpu_loop_exit_restore(cpu, pc);
+}
+
+void tcg_exec_reset(CPUState *cpu)
+{
+    tcg_flush_jmp_cache(cpu);
 }

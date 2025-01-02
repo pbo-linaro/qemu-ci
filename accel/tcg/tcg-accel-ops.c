@@ -34,7 +34,6 @@
 #include "qemu/timer.h"
 #include "exec/exec-all.h"
 #include "exec/hwaddr.h"
-#include "exec/tb-flush.h"
 #include "exec/translation-block.h"
 #include "gdbstub/enums.h"
 
@@ -44,6 +43,7 @@
 #include "tcg-accel-ops-mttcg.h"
 #include "tcg-accel-ops-rr.h"
 #include "tcg-accel-ops-icount.h"
+#include "internal-common.h"
 
 /* common functionality among all TCG variants */
 
@@ -83,7 +83,7 @@ int tcg_cpu_exec(CPUState *cpu)
 
 static void tcg_cpu_reset_hold(CPUState *cpu)
 {
-    tcg_flush_jmp_cache(cpu);
+    tcg_exec_reset(cpu);
 
     tlb_flush(cpu);
 }
