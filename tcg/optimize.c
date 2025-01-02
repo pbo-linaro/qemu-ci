@@ -1101,17 +1101,17 @@ static bool fold_to_not(OptContext *ctx, TCGOp *op, int idx)
     switch (ctx->type) {
     case TCG_TYPE_I32:
         not_op = INDEX_op_not_i32;
-        have_not = TCG_TARGET_HAS_not_i32;
+        have_not = TCG_TARGET_HAS_not(TCG_TYPE_I32);
         break;
     case TCG_TYPE_I64:
         not_op = INDEX_op_not_i64;
-        have_not = TCG_TARGET_HAS_not_i64;
+        have_not = TCG_TARGET_HAS_not(TCG_TYPE_I64);
         break;
     case TCG_TYPE_V64:
     case TCG_TYPE_V128:
     case TCG_TYPE_V256:
         not_op = INDEX_op_not_vec;
-        have_not = TCG_TARGET_HAS_not_vec;
+        have_not = TCG_TARGET_HAS_not(ctx->type);
         break;
     default:
         g_assert_not_reached();
@@ -1378,7 +1378,7 @@ static bool fold_bitsel_vec(OptContext *ctx, TCGOp *op)
             return tcg_opt_gen_mov(ctx, op, op->args[0], op->args[1]);
         }
         if (tv == 0 && fv == -1) {
-            if (TCG_TARGET_HAS_not_vec) {
+            if (TCG_TARGET_HAS_not(op->type)) {
                 op->opc = INDEX_op_not_vec;
                 return fold_not(ctx, op);
             } else {
@@ -1395,7 +1395,7 @@ static bool fold_bitsel_vec(OptContext *ctx, TCGOp *op)
             op->args[2] = op->args[3];
             return fold_or(ctx, op);
         }
-        if (tv == 0 && TCG_TARGET_HAS_andc_vec) {
+        if (tv == 0 && TCG_TARGET_HAS_andc(op->type)) {
             op->opc = INDEX_op_andc_vec;
             op->args[2] = op->args[1];
             op->args[1] = op->args[3];
@@ -1408,7 +1408,7 @@ static bool fold_bitsel_vec(OptContext *ctx, TCGOp *op)
             op->opc = INDEX_op_and_vec;
             return fold_and(ctx, op);
         }
-        if (fv == -1 && TCG_TARGET_HAS_orc_vec) {
+        if (fv == -1 && TCG_TARGET_HAS_orc(op->type)) {
             op->opc = INDEX_op_orc_vec;
             op->args[2] = op->args[1];
             op->args[1] = op->args[3];

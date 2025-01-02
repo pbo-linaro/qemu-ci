@@ -3422,7 +3422,7 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_bitsel_vec:
         return C_O1_I3(v, v, v, v);
     case INDEX_op_cmpsel_vec:
-        return (TCG_TARGET_HAS_orc_vec
+        return (HAVE_FACILITY(VECTOR_ENH1)
                 ? C_O1_I4(v, v, v, vZM, v)
                 : C_O1_I4(v, v, v, vZ, v));
 

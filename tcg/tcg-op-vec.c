@@ -310,7 +310,10 @@ void tcg_gen_xor_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 
 void tcg_gen_andc_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 {
-    if (TCG_TARGET_HAS_andc_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_andc(type)) {
         vec_gen_op3(INDEX_op_andc_vec, 0, r, a, b);
     } else {
         TCGv_vec t = tcg_temp_new_vec_matching(r);
@@ -322,7 +325,10 @@ void tcg_gen_andc_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 
 void tcg_gen_orc_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 {
-    if (TCG_TARGET_HAS_orc_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_orc(type)) {
         vec_gen_op3(INDEX_op_orc_vec, 0, r, a, b);
     } else {
         TCGv_vec t = tcg_temp_new_vec_matching(r);
@@ -334,7 +340,10 @@ void tcg_gen_orc_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 
 void tcg_gen_nand_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 {
-    if (TCG_TARGET_HAS_nand_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_nand(type)) {
         vec_gen_op3(INDEX_op_nand_vec, 0, r, a, b);
     } else {
         tcg_gen_and_vec(0, r, a, b);
@@ -344,7 +353,10 @@ void tcg_gen_nand_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 
 void tcg_gen_nor_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 {
-    if (TCG_TARGET_HAS_nor_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_nor(type)) {
         vec_gen_op3(INDEX_op_nor_vec, 0, r, a, b);
     } else {
         tcg_gen_or_vec(0, r, a, b);
@@ -354,7 +366,10 @@ void tcg_gen_nor_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 
 void tcg_gen_eqv_vec(unsigned vece, TCGv_vec r, TCGv_vec a, TCGv_vec b)
 {
-    if (TCG_TARGET_HAS_eqv_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_eqv(type)) {
         vec_gen_op3(INDEX_op_eqv_vec, 0, r, a, b);
     } else {
         tcg_gen_xor_vec(0, r, a, b);
@@ -388,7 +403,10 @@ static bool do_op2(unsigned vece, TCGv_vec r, TCGv_vec a, TCGOpcode opc)
 
 void tcg_gen_not_vec(unsigned vece, TCGv_vec r, TCGv_vec a)
 {
-    if (TCG_TARGET_HAS_not_vec) {
+    TCGTemp *rt = tcgv_vec_temp(r);
+    TCGType type __attribute__((unused)) = rt->base_type;
+
+    if (TCG_TARGET_HAS_not(type)) {
         vec_gen_op2(INDEX_op_not_vec, 0, r, a);
     } else {
         tcg_gen_xor_vec(0, r, a, tcg_constant_vec_matching(r, 0, -1));
