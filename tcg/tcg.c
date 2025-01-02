@@ -2185,9 +2185,12 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_qemu_st_a64_i128:
         return TCG_TARGET_HAS_qemu_ldst_i128;
 
+    case INDEX_op_add:
     case INDEX_op_and:
     case INDEX_op_mov:
+    case INDEX_op_neg:
     case INDEX_op_or:
+    case INDEX_op_sub:
     case INDEX_op_xor:
         return has_type;
 
@@ -2196,9 +2199,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_movcond_i32:
     case INDEX_op_ld_i32:
     case INDEX_op_st_i32:
-    case INDEX_op_add_i32:
-    case INDEX_op_sub_i32:
-    case INDEX_op_neg_i32:
     case INDEX_op_mul_i32:
     case INDEX_op_shl_i32:
     case INDEX_op_shr_i32:
@@ -2268,9 +2268,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_movcond_i64:
     case INDEX_op_ld_i64:
     case INDEX_op_st_i64:
-    case INDEX_op_add_i64:
-    case INDEX_op_sub_i64:
-    case INDEX_op_neg_i64:
     case INDEX_op_mul_i64:
     case INDEX_op_shl_i64:
     case INDEX_op_shr_i64:
@@ -3955,16 +3952,12 @@ liveness_pass_1(TCGContext *s)
             break;
 
         case INDEX_op_add2_i32:
-            opc_new = INDEX_op_add_i32;
+        case INDEX_op_add2_i64:
+            opc_new = INDEX_op_add;
             goto do_addsub2;
         case INDEX_op_sub2_i32:
-            opc_new = INDEX_op_sub_i32;
-            goto do_addsub2;
-        case INDEX_op_add2_i64:
-            opc_new = INDEX_op_add_i64;
-            goto do_addsub2;
         case INDEX_op_sub2_i64:
-            opc_new = INDEX_op_sub_i64;
+            opc_new = INDEX_op_sub;
         do_addsub2:
             nb_iargs = 4;
             nb_oargs = 2;

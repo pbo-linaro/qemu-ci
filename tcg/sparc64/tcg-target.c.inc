@@ -1362,10 +1362,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    OP_32_64(add):
+    case INDEX_op_add:
         c = ARITH_ADD;
         goto gen_arith;
-    OP_32_64(sub):
+    case INDEX_op_sub:
         c = ARITH_SUB;
         goto gen_arith;
     case INDEX_op_and:
@@ -1399,7 +1399,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         c = ARITH_UMUL;
         goto gen_arith;
 
-    OP_32_64(neg):
+    case INDEX_op_neg:
 	c = ARITH_SUB;
 	goto gen_arith1;
     case INDEX_op_not:
@@ -1554,8 +1554,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_ld_i32:
     case INDEX_op_ld_i64:
-    case INDEX_op_neg_i32:
-    case INDEX_op_neg_i64:
+    case INDEX_op_neg:
     case INDEX_op_not:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
@@ -1577,16 +1576,14 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_qemu_st_a64_i64:
         return C_O0_I2(rZ, r);
 
-    case INDEX_op_add_i32:
-    case INDEX_op_add_i64:
+    case INDEX_op_add:
     case INDEX_op_mul_i32:
     case INDEX_op_mul_i64:
     case INDEX_op_div_i32:
     case INDEX_op_div_i64:
     case INDEX_op_divu_i32:
     case INDEX_op_divu_i64:
-    case INDEX_op_sub_i32:
-    case INDEX_op_sub_i64:
+    case INDEX_op_sub:
     case INDEX_op_and:
     case INDEX_op_andc:
     case INDEX_op_or:

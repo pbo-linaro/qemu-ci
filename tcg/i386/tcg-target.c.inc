@@ -2733,7 +2733,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    OP_32_64(add):
+    case INDEX_op_add:
         /* For 3-operand addition, use LEA.  */
         if (a0 != a1) {
             TCGArg c3 = 0;
@@ -2751,7 +2751,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         c = ARITH_ADD;
         goto gen_arith;
-    OP_32_64(sub):
+    case INDEX_op_sub:
         c = ARITH_SUB;
         goto gen_arith;
     case INDEX_op_and:
@@ -2898,7 +2898,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    OP_32_64(neg):
+    case INDEX_op_neg:
         tcg_out_modrm(s, OPC_GRP3_Ev + rexw, EXT3_NEG, a0);
         break;
     case INDEX_op_not:
@@ -3692,12 +3692,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         }
         g_assert_not_reached();
 
-    case INDEX_op_add_i32:
-    case INDEX_op_add_i64:
+    case INDEX_op_add:
         return C_O1_I2(r, r, re);
 
-    case INDEX_op_sub_i32:
-    case INDEX_op_sub_i64:
+    case INDEX_op_sub:
     case INDEX_op_mul_i32:
     case INDEX_op_mul_i64:
     case INDEX_op_or:
@@ -3733,8 +3731,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_bswap32_i32:
     case INDEX_op_bswap32_i64:
     case INDEX_op_bswap64_i64:
-    case INDEX_op_neg_i32:
-    case INDEX_op_neg_i64:
+    case INDEX_op_neg:
     case INDEX_op_not:
     case INDEX_op_extrh_i64_i32:
         return C_O1_I1(r, 0);

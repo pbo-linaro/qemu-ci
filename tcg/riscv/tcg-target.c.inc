@@ -1968,6 +1968,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     TCGArg a1 = args[1];
     TCGArg a2 = args[2];
     int c2 = const_args[2];
+    RISCVInsn insn;
 
     switch (opc) {
     case INDEX_op_goto_ptr:
@@ -2031,33 +2032,23 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_add_i32:
+    case INDEX_op_add:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_ADDIW, a0, a1, a2);
+            insn = type == TCG_TYPE_I32 ? OPC_ADDIW : OPC_ADDI;
+            tcg_out_opc_imm(s, insn, a0, a1, a2);
         } else {
-            tcg_out_opc_reg(s, OPC_ADDW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_add_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_ADDI, a0, a1, a2);
-        } else {
-            tcg_out_opc_reg(s, OPC_ADD, a0, a1, a2);
+            insn = type == TCG_TYPE_I32 ? OPC_ADDW : OPC_ADD;
+            tcg_out_opc_reg(s, insn, a0, a1, a2);
         }
         break;
 
-    case INDEX_op_sub_i32:
+    case INDEX_op_sub:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_ADDIW, a0, a1, -a2);
+            insn = type == TCG_TYPE_I32 ? OPC_ADDIW : OPC_ADDI;
+            tcg_out_opc_imm(s, insn, a0, a1, -a2);
         } else {
-            tcg_out_opc_reg(s, OPC_SUBW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_sub_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_ADDI, a0, a1, -a2);
-        } else {
-            tcg_out_opc_reg(s, OPC_SUB, a0, a1, a2);
+            insn = type == TCG_TYPE_I32 ? OPC_SUBW : OPC_SUB;
+            tcg_out_opc_reg(s, insn, a0, a1, a2);
         }
         break;
 
@@ -2111,11 +2102,9 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_opc_imm(s, OPC_XORI, a0, a1, -1);
         break;
 
-    case INDEX_op_neg_i32:
-        tcg_out_opc_reg(s, OPC_SUBW, a0, TCG_REG_ZERO, a1);
-        break;
-    case INDEX_op_neg_i64:
-        tcg_out_opc_reg(s, OPC_SUB, a0, TCG_REG_ZERO, a1);
+    case INDEX_op_neg:
+        insn = type == TCG_TYPE_I32 ? OPC_SUBW : OPC_SUB;
+        tcg_out_opc_reg(s, insn, a0, TCG_REG_ZERO, a1);
         break;
 
     case INDEX_op_mul_i32:
@@ -2620,9 +2609,8 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_ld_i32:
     case INDEX_op_not:
-    case INDEX_op_neg_i32:
+    case INDEX_op_neg:
     case INDEX_op_ld_i64:
-    case INDEX_op_neg_i64:
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
     case INDEX_op_extrh_i64_i32:
@@ -2644,11 +2632,10 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_st_i64:
         return C_O0_I2(rZ, r);
 
-    case INDEX_op_add_i32:
+    case INDEX_op_add:
     case INDEX_op_and:
     case INDEX_op_or:
     case INDEX_op_xor:
-    case INDEX_op_add_i64:
     case INDEX_op_setcond_i32:
     case INDEX_op_setcond_i64:
     case INDEX_op_negsetcond_i32:
@@ -2660,8 +2647,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_eqv:
         return C_O1_I2(r, r, rJ);
 
-    case INDEX_op_sub_i32:
-    case INDEX_op_sub_i64:
+    case INDEX_op_sub:
         return C_O1_I2(r, rZ, rN);
 
     case INDEX_op_mul_i32:
