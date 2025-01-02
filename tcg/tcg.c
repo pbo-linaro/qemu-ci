@@ -2208,6 +2208,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sar_i32:
     case INDEX_op_extract_i32:
     case INDEX_op_sextract_i32:
+    case INDEX_op_deposit_i32:
         return true;
 
     case INDEX_op_negsetcond_i32:
@@ -2224,8 +2225,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_rotl_i32:
     case INDEX_op_rotr_i32:
         return TCG_TARGET_HAS_rot(TCG_TYPE_I32);
-    case INDEX_op_deposit_i32:
-        return TCG_TARGET_HAS_deposit_i32;
     case INDEX_op_extract2_i32:
         return TCG_TARGET_HAS_extract2_i32;
     case INDEX_op_add2_i32:
@@ -2303,6 +2302,7 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extract_i64:
     case INDEX_op_sextract_i64:
+    case INDEX_op_deposit_i64:
         return TCG_TARGET_REG_BITS == 64;
 
     case INDEX_op_negsetcond_i64:
@@ -2319,8 +2319,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_rotl_i64:
     case INDEX_op_rotr_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rot(TCG_TYPE_I64);
-    case INDEX_op_deposit_i64:
-        return TCG_TARGET_HAS_deposit_i64;
     case INDEX_op_extract2_i64:
         return TCG_TARGET_HAS_extract2_i64;
     case INDEX_op_extrl_i64_i32:
@@ -2447,24 +2445,16 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
 
 bool tcg_op_deposit_valid(TCGType type, unsigned ofs, unsigned len)
 {
-    switch (type) {
-    case TCG_TYPE_I32:
-        tcg_debug_assert(ofs < 32);
-        tcg_debug_assert(len > 0);
-        tcg_debug_assert(len <= 32);
-        tcg_debug_assert(ofs + len <= 32);
-        return TCG_TARGET_HAS_deposit_i32 && TCG_TARGET_deposit_i32_valid(ofs, len);
+    unsigned width;
 
-    case TCG_TYPE_I64:
-        tcg_debug_assert(ofs < 64);
-        tcg_debug_assert(len > 0);
-        tcg_debug_assert(len <= 64);
-        tcg_debug_assert(ofs + len <= 64);
-        return TCG_TARGET_HAS_deposit_i64 && TCG_TARGET_deposit_i64_valid(ofs, len);
+    tcg_debug_assert(type == TCG_TYPE_I32 || type == TCG_TYPE_I64);
+    width = (type == TCG_TYPE_I32 ? 32 : 64);
 
-    default:
-        g_assert_not_reached();
-    }
+    tcg_debug_assert(ofs < width);
+    tcg_debug_assert(len > 0);
+    tcg_debug_assert(len <= width - ofs);
+
+    return TCG_TARGET_deposit_valid(type, ofs, len);
 }
 
 static TCGOp *tcg_op_alloc(TCGOpcode opc, TCGType type, unsigned nargs);

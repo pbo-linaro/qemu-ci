@@ -41,7 +41,6 @@ extern bool use_vis3_instructions;
 #define TCG_TARGET_HAS_ext16s_i32       0
 #define TCG_TARGET_HAS_ext8u_i32        0
 #define TCG_TARGET_HAS_ext16u_i32       0
-#define TCG_TARGET_HAS_deposit_i32      0
 #define TCG_TARGET_HAS_extract2_i32     0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
@@ -52,7 +51,6 @@ extern bool use_vis3_instructions;
 #define TCG_TARGET_HAS_ext8u_i64        0
 #define TCG_TARGET_HAS_ext16u_i64       0
 #define TCG_TARGET_HAS_ext32u_i64       1
-#define TCG_TARGET_HAS_deposit_i64      0
 #define TCG_TARGET_HAS_extract2_i64     0
 
 #define TCG_TARGET_HAS_qemu_ldst_i128   0
@@ -63,5 +61,7 @@ extern bool use_vis3_instructions;
     ((type) == TCG_TYPE_I64 && (ofs) + (len) == 32)
 
 #define TCG_TARGET_sextract_valid  TCG_TARGET_extract_valid
+
+#define TCG_TARGET_deposit_valid(type, ofs, len) 0
 
 #endif
