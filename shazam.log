@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250102-la-direct-kernel-boot-v3-0-40dbc45d633a@flygoat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/2] hw/core/loader: Use ssize_t for efi zboot unpacker
+  [32m✓[0m [PATCH v3 2/2] hw/loongarch/boot: Support Linux raw boot image
+  ---
+  [31m✗[0m No key: openpgp/jiaxun.yang@flygoat.com
+  [32m✓[0m Signed: DKIM/flygoat.com
+---
+Total patches: 2
+---
+ Base: base-commit c69612063e1844b76ac01e3a781b979548c3585c not known, ignoring
+Applying: hw/core/loader: Use ssize_t for efi zboot unpacker
+Applying: hw/loongarch/boot: Support Linux raw boot image
+Patch failed at 0002 hw/loongarch/boot: Support Linux raw boot image
+error: patch failed: hw/loongarch/boot.c:16
+error: hw/loongarch/boot.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
