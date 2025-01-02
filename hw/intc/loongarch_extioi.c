@@ -320,6 +320,9 @@ static void loongarch_extioi_realize(DeviceState *dev, Error **errp)
     LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(dev);
     LoongArchExtIOIClass *lec = LOONGARCH_EXTIOI_GET_CLASS(dev);
     SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
+    MachineState *machine = MACHINE(qdev_get_machine());
+    MachineClass *mc = MACHINE_GET_CLASS(machine);
+    const CPUArchIdList *id_list;
     Error *local_err = NULL;
     int i, pin;
 
@@ -347,6 +350,8 @@ static void loongarch_extioi_realize(DeviceState *dev, Error **errp)
         s->status |= BIT(EXTIOI_ENABLE);
     }
 
+    id_list = mc->possible_cpu_arch_ids(machine);
+    s->num_cpu = id_list->len;
     s->cpu = g_new0(ExtIOICore, s->num_cpu);
     if (s->cpu == NULL) {
         error_setg(errp, "Memory allocation for ExtIOICore faile");
@@ -357,6 +362,8 @@ static void loongarch_extioi_realize(DeviceState *dev, Error **errp)
         for (pin = 0; pin < LS3A_INTC_IP; pin++) {
             qdev_init_gpio_out(dev, &s->cpu[i].parent_irq[pin], 1);
         }
+        s->cpu[i].arch_id = id_list->cpus[i].arch_id;
+        s->cpu[i].cpu = CPU(id_list->cpus[i].cpu);
     }
 }
 
