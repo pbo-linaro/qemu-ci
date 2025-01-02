@@ -60,6 +60,15 @@
 #include "user/guest-base.h"
 #endif
 
+/*
+ * Make sure operands fit in the TCGOp bitfields.
+ * For TCGOp.nargs, maximum physical arguments are constrained by
+ * MAX_CALL_IARGS * TCG_TYPE_I128 on 32-bit hosts, so 128 / 32.
+ */
+QEMU_BUILD_BUG_ON(NB_OPS > (1 << 8));
+QEMU_BUILD_BUG_ON(TCG_TYPE_COUNT > (1 << 3));
+QEMU_BUILD_BUG_ON(MAX_CALL_IARGS * (128 / 32) > (1 << 5));
+
 /* Forward declarations for functions declared in tcg-target.c.inc and
    used here. */
 static void tcg_target_init(TCGContext *s);

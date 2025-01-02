@@ -417,7 +417,8 @@ typedef uint32_t TCGLifeData;
 
 struct TCGOp {
     TCGOpcode opc   : 8;
-    unsigned nargs  : 8;
+    TCGType type    : 3;
+    unsigned nargs  : 5;
 
     /* Parameters for this opcode.  See below.  */
     unsigned param1 : 8;
@@ -441,9 +442,6 @@ struct TCGOp {
 
 #define TCGOP_VECL(X)     (X)->param1
 #define TCGOP_VECE(X)     (X)->param2
-
-/* Make sure operands fit in the bitfields above.  */
-QEMU_BUILD_BUG_ON(NB_OPS > (1 << 8));
 
 static inline TCGRegSet output_pref(const TCGOp *op, unsigned i)
 {
