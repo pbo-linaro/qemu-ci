@@ -3327,14 +3327,16 @@ static void process_op_defs(TCGContext *s)
         const TCGOpDef *def = &tcg_op_defs[op];
         const TCGConstraintSet *tdefs;
         unsigned con_set;
-        int nb_args;
+        TCGType type;
 
-        nb_args = def->nb_iargs + def->nb_oargs;
-        if (nb_args == 0) {
+        if (def->flags & TCG_OPF_NOT_PRESENT) {
             continue;
         }
 
-        if (def->flags & TCG_OPF_NOT_PRESENT) {
+        type = (def->flags & TCG_OPF_VECTOR ? TCG_TYPE_V64
+                : def->flags & TCG_OPF_64BIT ? TCG_TYPE_I64
+                : TCG_TYPE_I32);
+        if (!tcg_op_supported(op, type)) {
             continue;
         }
 
@@ -3355,17 +3357,17 @@ static void process_op_defs(TCGContext *s)
 
 static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
 {
-    const TCGOpDef *def = &tcg_op_defs[op->opc];
+    TCGOpcode opc = op->opc;
+    const TCGOpDef *def = &tcg_op_defs[opc];
     unsigned con_set;
 
-    if (def->nb_iargs + def->nb_oargs == 0) {
-        return NULL;
-    }
     if (def->flags & TCG_OPF_NOT_PRESENT) {
         return empty_cts;
     }
 
-    con_set = tcg_target_op_def(op->opc);
+    tcg_debug_assert(tcg_op_supported(opc, op->type));
+
+    con_set = tcg_target_op_def(opc);
     tcg_debug_assert(con_set < ARRAY_SIZE(constraint_sets));
     return all_args_cts[con_set];
 }

@@ -24,7 +24,6 @@
 
 #include "qemu/osdep.h"
 #include "tcg/tcg.h"
-#include "tcg-has.h"
 
 const TCGOpDef tcg_op_defs[] = {
 #define DEF(s, oargs, iargs, cargs, flags) \
