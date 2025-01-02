@@ -871,6 +871,7 @@ static int tcg_out_pool_finalize(TCGContext *s)
 #define C_N1_O1_I4(O1, O2, I1, I2, I3, I4) C_PFX6(c_n1_o1_i4_, O1, O2, I1, I2, I3, I4),
 
 typedef enum {
+    C_NotImplemented = -1,
 #include "tcg-target-con-set.h"
 } TCGConstraintSetIndex;
 
@@ -3326,7 +3327,7 @@ static void process_op_defs(TCGContext *s)
     for (TCGOpcode op = 0; op < NB_OPS; op++) {
         const TCGOpDef *def = &tcg_op_defs[op];
         const TCGConstraintSet *tdefs;
-        unsigned con_set;
+        TCGConstraintSetIndex con_set;
         TCGType type;
 
         if (def->flags & TCG_OPF_NOT_PRESENT) {
@@ -3342,11 +3343,10 @@ static void process_op_defs(TCGContext *s)
 
         /*
          * Macro magic should make it impossible, but double-check that
-         * the array index is in range.  Since the signness of an enum
-         * is implementation defined, force the result to unsigned.
+         * the array index is in range.
          */
         con_set = tcg_target_op_def(op);
-        tcg_debug_assert(con_set < ARRAY_SIZE(constraint_sets));
+        tcg_debug_assert(con_set >= 0 && con_set < ARRAY_SIZE(constraint_sets));
 
         /* The constraint arguments must match TCGOpcode arguments. */
         tdefs = &constraint_sets[con_set];
@@ -3359,7 +3359,7 @@ static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
 {
     TCGOpcode opc = op->opc;
     const TCGOpDef *def = &tcg_op_defs[opc];
-    unsigned con_set;
+    TCGConstraintSetIndex con_set;
 
     if (def->flags & TCG_OPF_NOT_PRESENT) {
         return empty_cts;
@@ -3368,7 +3368,7 @@ static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
     tcg_debug_assert(tcg_op_supported(opc, op->type));
 
     con_set = tcg_target_op_def(opc);
-    tcg_debug_assert(con_set < ARRAY_SIZE(constraint_sets));
+    tcg_debug_assert(con_set >= 0 && con_set < ARRAY_SIZE(constraint_sets));
     return all_args_cts[con_set];
 }
 
