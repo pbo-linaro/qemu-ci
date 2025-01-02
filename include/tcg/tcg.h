@@ -831,6 +831,7 @@ typedef struct TCGTargetOpDef {
 } TCGTargetOpDef;
 
 bool tcg_op_supported(TCGOpcode op, TCGType type);
+bool tcg_op_deposit_valid(TCGType type, unsigned ofs, unsigned len);
 
 void tcg_gen_call0(void *func, TCGHelperInfo *, TCGTemp *ret);
 void tcg_gen_call1(void *func, TCGHelperInfo *, TCGTemp *ret, TCGTemp *);
