@@ -10,16 +10,6 @@
 #include "hw/intc/loongarch_extioi_common.h"
 #include "migration/vmstate.h"
 
-static void loongarch_extioi_common_realize(DeviceState *dev, Error **errp)
-{
-    LoongArchExtIOICommonState *s = (LoongArchExtIOICommonState *)dev;
-
-    if (s->num_cpu == 0) {
-        error_setg(errp, "num-cpu must be at least 1");
-        return;
-    }
-}
-
 static int loongarch_extioi_common_pre_save(void *opaque)
 {
     LoongArchExtIOICommonState *s = (LoongArchExtIOICommonState *)opaque;
@@ -82,7 +72,6 @@ static const VMStateDescription vmstate_loongarch_extioi = {
 };
 
 static const Property extioi_properties[] = {
-    DEFINE_PROP_UINT32("num-cpu", LoongArchExtIOICommonState, num_cpu, 1),
     DEFINE_PROP_BIT("has-virtualization-extension", LoongArchExtIOICommonState,
                     features, EXTIOI_HAS_VIRT_EXTENSION, 0),
 };
@@ -90,10 +79,7 @@ static const Property extioi_properties[] = {
 static void loongarch_extioi_common_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
-    LoongArchExtIOICommonClass *lecc = LOONGARCH_EXTIOI_COMMON_CLASS(klass);
 
-    device_class_set_parent_realize(dc, loongarch_extioi_common_realize,
-                                    &lecc->parent_realize);
     device_class_set_props(dc, extioi_properties);
     dc->vmsd = &vmstate_loongarch_extioi;
 }

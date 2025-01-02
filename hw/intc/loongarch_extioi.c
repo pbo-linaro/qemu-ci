@@ -318,19 +318,11 @@ static const MemoryRegionOps extioi_virt_ops = {
 static void loongarch_extioi_realize(DeviceState *dev, Error **errp)
 {
     LoongArchExtIOICommonState *s = LOONGARCH_EXTIOI_COMMON(dev);
-    LoongArchExtIOIClass *lec = LOONGARCH_EXTIOI_GET_CLASS(dev);
     SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
     MachineState *machine = MACHINE(qdev_get_machine());
     MachineClass *mc = MACHINE_GET_CLASS(machine);
     const CPUArchIdList *id_list;
-    Error *local_err = NULL;
     int i, pin;
-
-    lec->parent_realize(dev, &local_err);
-    if (local_err) {
-        error_propagate(errp, local_err);
-        return;
-    }
 
     for (i = 0; i < EXTIOI_IRQS; i++) {
         sysbus_init_irq(sbd, &s->irq[i]);
