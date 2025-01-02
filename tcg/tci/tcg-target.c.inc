@@ -808,18 +808,18 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
     CASE_32_64(neg)      /* Optional (TCG_TARGET_HAS_neg_*). */
     CASE_32_64(not)      /* Optional (TCG_TARGET_HAS_not_*). */
     CASE_32_64(ctpop)    /* Optional (TCG_TARGET_HAS_ctpop_*). */
-    case INDEX_op_bswap32_i32: /* Optional (TCG_TARGET_HAS_bswap32_i32). */
-    case INDEX_op_bswap64_i64: /* Optional (TCG_TARGET_HAS_bswap64_i64). */
+    case INDEX_op_bswap32_i32: /* Optional (TCG_TARGET_HAS_bswap). */
+    case INDEX_op_bswap64_i64: /* Optional (TCG_TARGET_HAS_bswap). */
         tcg_out_op_rr(s, opc, args[0], args[1]);
         break;
 
-    case INDEX_op_bswap16_i32: /* Optional (TCG_TARGET_HAS_bswap16_i32). */
+    case INDEX_op_bswap16_i32: /* Optional (TCG_TARGET_HAS_bswap). */
         exts = INDEX_op_ext16s_i32;
         goto do_bswap;
-    case INDEX_op_bswap16_i64: /* Optional (TCG_TARGET_HAS_bswap16_i64). */
+    case INDEX_op_bswap16_i64: /* Optional (TCG_TARGET_HAS_bswap). */
         exts = INDEX_op_ext16s_i64;
         goto do_bswap;
-    case INDEX_op_bswap32_i64: /* Optional (TCG_TARGET_HAS_bswap32_i64). */
+    case INDEX_op_bswap32_i64: /* Optional (TCG_TARGET_HAS_bswap). */
         exts = INDEX_op_ext32s_i64;
     do_bswap:
         /* The base tci bswaps zero-extend, and ignore high bits. */
