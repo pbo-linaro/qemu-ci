@@ -3286,6 +3286,9 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
             tcg_out32(s, RLDCL | SAB(args[1], args[0], TCG_REG_R0) | MB64(0));
         }
         break;
+    case INDEX_op_extrh_i64_i32:
+        tcg_out_sari64(s, args[0], args[1], 32);
+        break;
 
     case INDEX_op_mul_i64:
         a0 = args[0], a1 = args[1], a2 = args[2];
@@ -4203,6 +4206,8 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_ext32s_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
+    case INDEX_op_extrh_i64_i32:
     case INDEX_op_bswap16_i64:
     case INDEX_op_bswap32_i64:
     case INDEX_op_bswap64_i64:

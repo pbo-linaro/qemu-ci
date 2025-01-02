@@ -2674,6 +2674,9 @@ static inline void tcg_out_op(TCGContext *s, TCGOpcode opc,
     case INDEX_op_sar_i64:
         op = RSY_SRAG;
         goto do_shift64;
+    case INDEX_op_extrh_i64_i32:
+        tcg_out_sh64(s, RSY_SRLG, args[0], args[1], TCG_REG_NONE, 32);
+        break;
 
     case INDEX_op_rotl_i64:
         if (const_args[2]) {
@@ -3358,6 +3361,8 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_ext32u_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
+    case INDEX_op_extrh_i64_i32:
     case INDEX_op_extract_i32:
     case INDEX_op_extract_i64:
     case INDEX_op_sextract_i32:

@@ -1518,6 +1518,9 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
         tcg_debug_assert(a2 + args[3] == 32);
         tcg_out_arithi(s, a0, a1, a2, SHIFT_SRA);
         break;
+    case INDEX_op_extrh_i64_i32:
+        tcg_out_arithc(s, a0, a1, 32, true, SHIFT_SRLX);
+        break;
 
     case INDEX_op_mov_i32:  /* Always emitted via tcg_out_mov.  */
     case INDEX_op_mov_i64:
@@ -1536,6 +1539,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
     case INDEX_op_ext32u_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
     default:
         g_assert_not_reached();
     }
@@ -1567,6 +1571,8 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_ext32u_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
+    case INDEX_op_extrh_i64_i32:
     case INDEX_op_extract_i64:
     case INDEX_op_sextract_i64:
     case INDEX_op_qemu_ld_a32_i32:

@@ -2358,6 +2358,10 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
         }
         break;
 
+    case INDEX_op_extrh_i64_i32:
+        tcg_out_shr(s, TCG_TYPE_I64, a0, a1, 32);
+        break;
+
     case INDEX_op_clz_i64:
     case INDEX_op_clz_i32:
         tcg_out_cltz(s, ext, a0, a1, a2, c2, false);
@@ -3006,6 +3010,8 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_ext32u_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
+    case INDEX_op_extrh_i64_i32:
     case INDEX_op_extract_i32:
     case INDEX_op_extract_i64:
     case INDEX_op_sextract_i32:

@@ -70,6 +70,8 @@ static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
     case INDEX_op_ext32u_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
+    case INDEX_op_extrl_i64_i32:
+    case INDEX_op_extrh_i64_i32:
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap16_i64:
     case INDEX_op_bswap32_i32:
@@ -780,6 +782,9 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc,
     CASE_32_64(extract)  /* Optional (TCG_TARGET_HAS_extract_*). */
     CASE_32_64(sextract) /* Optional (TCG_TARGET_HAS_sextract_*). */
         tcg_out_op_rrbb(s, opc, args[0], args[1], args[2], args[3]);
+        break;
+    case INDEX_op_extrh_i64_i32:
+        tcg_out_op_rrbb(s, INDEX_op_extract_i64, args[0], args[1], 32, 32);
         break;
 
     CASE_32_64(brcond)
