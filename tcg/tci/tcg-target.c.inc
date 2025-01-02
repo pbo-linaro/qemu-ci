@@ -36,9 +36,9 @@
 #endif
 #define TCG_TARGET_CALL_RET_I128        TCG_CALL_RET_NORMAL
 
-static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
+static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 {
-    switch (op) {
+    switch (op->opc) {
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 

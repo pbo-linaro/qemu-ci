@@ -2209,9 +2209,9 @@ void tcg_expand_vec_op(TCGOpcode opc, TCGType type, unsigned vece,
     g_assert_not_reached();
 }
 
-static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode op)
+static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 {
-    switch (op) {
+    switch (op->opc) {
     case INDEX_op_goto_ptr:
         return C_O0_I1(r);
 

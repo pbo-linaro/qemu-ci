@@ -875,7 +875,7 @@ typedef enum {
 #include "tcg-target-con-set.h"
 } TCGConstraintSetIndex;
 
-static TCGConstraintSetIndex tcg_target_op_def(TCGOpcode);
+static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *);
 
 #undef C_O0_I1
 #undef C_O0_I2
@@ -1512,14 +1512,14 @@ static void init_call_layout(TCGHelperInfo *info)
 }
 
 static int indirect_reg_alloc_order[ARRAY_SIZE(tcg_target_reg_alloc_order)];
-static void process_op_defs(TCGContext *s);
+static void process_constraint_sets(void);
 static TCGTemp *tcg_global_reg_new_internal(TCGContext *s, TCGType type,
                                             TCGReg reg, const char *name);
 
 static void tcg_context_init(unsigned max_cpus)
 {
     TCGContext *s = &tcg_init_ctx;
-    int  n, i;
+    int n, i;
     TCGTemp *ts;
 
     memset(s, 0, sizeof(*s));
@@ -1533,7 +1533,7 @@ static void tcg_context_init(unsigned max_cpus)
     init_call_layout(&info_helper_st128_mmu);
 
     tcg_target_init(s);
-    process_op_defs(s);
+    process_constraint_sets();
 
     /* Reverse the order of the saved registers, assuming they're all at
        the start of tcg_target_reg_alloc_order.  */
@@ -3135,12 +3135,8 @@ static void sort_constraints(TCGArgConstraint *a, int start, int n)
 static const TCGArgConstraint empty_cts[TCG_MAX_OP_ARGS];
 static TCGArgConstraint all_args_cts[ARRAY_SIZE(constraint_sets)][TCG_MAX_OP_ARGS];
 
-static void process_op_defs(TCGContext *s)
+static void process_constraint_sets(void)
 {
-    /*
-     * Process each constraint set.
-     */
-
     for (size_t c = 0; c < ARRAY_SIZE(constraint_sets); ++c) {
         const TCGConstraintSet *tdefs = &constraint_sets[c];
         TCGArgConstraint *args_ct = all_args_cts[c];
@@ -3323,36 +3319,6 @@ static void process_op_defs(TCGContext *s)
         sort_constraints(args_ct, 0, nb_oargs);
         sort_constraints(args_ct, nb_oargs, nb_iargs);
     }
-
-    for (TCGOpcode op = 0; op < NB_OPS; op++) {
-        const TCGOpDef *def = &tcg_op_defs[op];
-        const TCGConstraintSet *tdefs;
-        TCGConstraintSetIndex con_set;
-        TCGType type;
-
-        if (def->flags & TCG_OPF_NOT_PRESENT) {
-            continue;
-        }
-
-        type = (def->flags & TCG_OPF_VECTOR ? TCG_TYPE_V64
-                : def->flags & TCG_OPF_64BIT ? TCG_TYPE_I64
-                : TCG_TYPE_I32);
-        if (!tcg_op_supported(op, type)) {
-            continue;
-        }
-
-        /*
-         * Macro magic should make it impossible, but double-check that
-         * the array index is in range.
-         */
-        con_set = tcg_target_op_def(op);
-        tcg_debug_assert(con_set >= 0 && con_set < ARRAY_SIZE(constraint_sets));
-
-        /* The constraint arguments must match TCGOpcode arguments. */
-        tdefs = &constraint_sets[con_set];
-        tcg_debug_assert(tdefs->nb_oargs == def->nb_oargs);
-        tcg_debug_assert(tdefs->nb_iargs == def->nb_iargs);
-    }
 }
 
 static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
@@ -3367,8 +3333,13 @@ static const TCGArgConstraint *opcode_args_ct(const TCGOp *op)
 
     tcg_debug_assert(tcg_op_supported(opc, op->type));
 
-    con_set = tcg_target_op_def(opc);
+    con_set = tcg_target_op_def(op);
     tcg_debug_assert(con_set >= 0 && con_set < ARRAY_SIZE(constraint_sets));
+
+    /* The constraint arguments must match TCGOpcode arguments. */
+    tcg_debug_assert(constraint_sets[con_set].nb_oargs == def->nb_oargs);
+    tcg_debug_assert(constraint_sets[con_set].nb_iargs == def->nb_iargs);
+
     return all_args_cts[con_set];
 }
 
