@@ -25,8 +25,9 @@
 #define have_avx512dq     ((cpuinfo & CPUINFO_AVX512DQ) && have_avx512vl)
 #define have_avx512vbmi2  ((cpuinfo & CPUINFO_AVX512VBMI2) && have_avx512vl)
 
-/* optional instructions */
-#define TCG_TARGET_HAS_div2_i32         1
+/* optional integer instructions */
+#define TCG_TARGET_HAS_div2(T)          1
+
 #define TCG_TARGET_HAS_rot_i32          1
 #define TCG_TARGET_HAS_ext8s_i32        1
 #define TCG_TARGET_HAS_ext16s_i32       1
@@ -58,7 +59,6 @@
 #if TCG_TARGET_REG_BITS == 64
 /* Keep 32-bit values zero-extended in a register.  */
 #define TCG_TARGET_HAS_extr_i64_i32     1
-#define TCG_TARGET_HAS_div2_i64         1
 #define TCG_TARGET_HAS_rot_i64          1
 #define TCG_TARGET_HAS_ext8s_i64        1
 #define TCG_TARGET_HAS_ext16s_i64       1

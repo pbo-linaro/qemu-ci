@@ -23,7 +23,10 @@ extern bool use_idiv_instructions;
 extern bool use_neon_instructions;
 #endif
 
-/* optional instructions */
+/* optional integer instructions */
+#define TCG_TARGET_HAS_div(T)           use_idiv_instructions
+#define TCG_TARGET_HAS_rem(T)           0
+
 #define TCG_TARGET_HAS_ext8s_i32        1
 #define TCG_TARGET_HAS_ext16s_i32       1
 #define TCG_TARGET_HAS_ext8u_i32        0 /* and r0, r1, #0xff */
@@ -49,8 +52,6 @@ extern bool use_neon_instructions;
 #define TCG_TARGET_HAS_muls2_i32        1
 #define TCG_TARGET_HAS_muluh_i32        0
 #define TCG_TARGET_HAS_mulsh_i32        0
-#define TCG_TARGET_HAS_div_i32          use_idiv_instructions
-#define TCG_TARGET_HAS_rem_i32          0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
 #define TCG_TARGET_HAS_qemu_ldst_i128   0

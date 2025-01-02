@@ -2212,13 +2212,13 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_HAS_negsetcond_i32;
     case INDEX_op_div_i32:
     case INDEX_op_divu_i32:
-        return TCG_TARGET_HAS_div_i32;
+        return TCG_TARGET_HAS_div(TCG_TYPE_I32);
     case INDEX_op_rem_i32:
     case INDEX_op_remu_i32:
-        return TCG_TARGET_HAS_rem_i32;
+        return TCG_TARGET_HAS_rem(TCG_TYPE_I32);
     case INDEX_op_div2_i32:
     case INDEX_op_divu2_i32:
-        return TCG_TARGET_HAS_div2_i32;
+        return TCG_TARGET_HAS_div2(TCG_TYPE_I32);
     case INDEX_op_rotl_i32:
     case INDEX_op_rotr_i32:
         return TCG_TARGET_HAS_rot_i32;
@@ -2310,13 +2310,13 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return TCG_TARGET_HAS_negsetcond_i64;
     case INDEX_op_div_i64:
     case INDEX_op_divu_i64:
-        return TCG_TARGET_HAS_div_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div(TCG_TYPE_I64);
     case INDEX_op_rem_i64:
     case INDEX_op_remu_i64:
-        return TCG_TARGET_HAS_rem_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rem(TCG_TYPE_I64);
     case INDEX_op_div2_i64:
     case INDEX_op_divu2_i64:
-        return TCG_TARGET_HAS_div2_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_div2(TCG_TYPE_I64);
     case INDEX_op_rotl_i64:
     case INDEX_op_rotr_i64:
         return TCG_TARGET_HAS_rot_i64;

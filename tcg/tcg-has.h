@@ -12,9 +12,6 @@
 #if TCG_TARGET_REG_BITS == 32
 /* Turn some undef macros into false macros.  */
 #define TCG_TARGET_HAS_extr_i64_i32     0
-#define TCG_TARGET_HAS_div_i64          0
-#define TCG_TARGET_HAS_rem_i64          0
-#define TCG_TARGET_HAS_div2_i64         0
 #define TCG_TARGET_HAS_rot_i64          0
 #define TCG_TARGET_HAS_ext8s_i64        0
 #define TCG_TARGET_HAS_ext16s_i64       0
@@ -64,17 +61,11 @@
 #endif
 
 /* Only one of DIV or DIV2 should be defined.  */
-#if defined(TCG_TARGET_HAS_div_i32)
-#define TCG_TARGET_HAS_div2_i32         0
-#elif defined(TCG_TARGET_HAS_div2_i32)
-#define TCG_TARGET_HAS_div_i32          0
-#define TCG_TARGET_HAS_rem_i32          0
-#endif
-#if defined(TCG_TARGET_HAS_div_i64)
-#define TCG_TARGET_HAS_div2_i64         0
-#elif defined(TCG_TARGET_HAS_div2_i64)
-#define TCG_TARGET_HAS_div_i64          0
-#define TCG_TARGET_HAS_rem_i64          0
+#if defined(TCG_TARGET_HAS_div)
+#define TCG_TARGET_HAS_div2(T)          0
+#elif defined(TCG_TARGET_HAS_div2)
+#define TCG_TARGET_HAS_div(T)           0
+#define TCG_TARGET_HAS_rem(T)           0
 #endif
 
 #if !defined(TCG_TARGET_HAS_v64) \
