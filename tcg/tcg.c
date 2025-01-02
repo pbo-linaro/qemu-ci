@@ -2224,6 +2224,8 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
         return has_type && TCG_TARGET_HAS_div2(type);
     case INDEX_op_eqv:
         return has_type && TCG_TARGET_HAS_eqv(type);
+    case INDEX_op_extract2:
+        return has_type && TCG_TARGET_HAS_extract2(type);
     case INDEX_op_muls2:
         return has_type && TCG_TARGET_HAS_muls2(type);
     case INDEX_op_mulsh:
@@ -2251,8 +2253,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_sub2:
         return has_type && TCG_TARGET_HAS_sub2(type);
 
-    case INDEX_op_extract2_i32:
-        return TCG_TARGET_HAS_extract2(TCG_TYPE_I32);
     case INDEX_op_bswap16_i32:
     case INDEX_op_bswap32_i32:
         return TCG_TARGET_HAS_bswap(TCG_TYPE_I32);
@@ -2271,8 +2271,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_extrh_i64_i32:
         return TCG_TARGET_REG_BITS == 64;
 
-    case INDEX_op_extract2_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_extract2(TCG_TYPE_I64);
     case INDEX_op_bswap16_i64:
     case INDEX_op_bswap32_i64:
     case INDEX_op_bswap64_i64:

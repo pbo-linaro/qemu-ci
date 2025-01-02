@@ -1070,7 +1070,7 @@ void tcg_gen_extract2_i32(TCGv_i32 ret, TCGv_i32 al, TCGv_i32 ah,
     } else if (al == ah) {
         tcg_gen_rotri_i32(ret, al, ofs);
     } else if (TCG_TARGET_HAS_extract2(TCG_TYPE_I32)) {
-        tcg_gen_op4i_i32(INDEX_op_extract2_i32, ret, al, ah, ofs);
+        tcg_gen_op4i_i32(INDEX_op_extract2, ret, al, ah, ofs);
     } else {
         TCGv_i32 t0 = tcg_temp_ebb_new_i32();
         tcg_gen_shri_i32(t0, al, ofs);
@@ -2802,7 +2802,7 @@ void tcg_gen_extract2_i64(TCGv_i64 ret, TCGv_i64 al, TCGv_i64 ah,
     } else if (al == ah) {
         tcg_gen_rotri_i64(ret, al, ofs);
     } else if (TCG_TARGET_HAS_extract2(TCG_TYPE_I64)) {
-        tcg_gen_op4i_i64(INDEX_op_extract2_i64, ret, al, ah, ofs);
+        tcg_gen_op4i_i64(INDEX_op_extract2, ret, al, ah, ofs);
     } else {
         TCGv_i64 t0 = tcg_temp_ebb_new_i64();
         tcg_gen_shri_i64(t0, al, ofs);

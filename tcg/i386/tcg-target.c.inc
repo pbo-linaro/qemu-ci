@@ -3093,7 +3093,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    OP_32_64(extract2):
+    case INDEX_op_extract2:
         /* Note that SHRD outputs to the r/m operand.  */
         tcg_out_modrm(s, OPC_SHRD_Ib + rexw, a2, a0);
         tcg_out8(s, args[3]);
@@ -3726,8 +3726,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_ctpop_i64:
         return C_O1_I1(r, r);
 
-    case INDEX_op_extract2_i32:
-    case INDEX_op_extract2_i64:
+    case INDEX_op_extract2:
         return C_O1_I2(r, 0, r);
 
     case INDEX_op_deposit:

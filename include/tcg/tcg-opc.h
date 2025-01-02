@@ -72,6 +72,7 @@ DEF(rotr, 1, 2, 0, TCG_OPF_INT)
 DEF(extract, 1, 1, 2, TCG_OPF_INT)
 DEF(sextract, 1, 1, 2, TCG_OPF_INT)
 DEF(deposit, 1, 2, 2, TCG_OPF_INT)
+DEF(extract2, 1, 2, 1, TCG_OPF_INT)
 
 DEF(brcond, 0, 2, 2, TCG_OPF_BB_END | TCG_OPF_COND_BRANCH | TCG_OPF_INT)
 DEF(setcond, 1, 2, 1, TCG_OPF_INT)
@@ -81,8 +82,6 @@ DEF(movcond, 1, 4, 1, TCG_OPF_INT)
 /* load/store */
 DEF(ld_i32, 1, 1, 2, 0)
 DEF(st_i32, 0, 2, 2, 0)
-/* shifts/rotates */
-DEF(extract2_i32, 1, 2, 1, 0)
 
 DEF(brcond2_i32, 0, 4, 2, TCG_OPF_BB_END | TCG_OPF_COND_BRANCH)
 DEF(setcond2_i32, 1, 4, 1, 0)
@@ -96,8 +95,6 @@ DEF(ctpop_i32, 1, 1, 0, 0)
 /* load/store */
 DEF(ld_i64, 1, 1, 2, 0)
 DEF(st_i64, 0, 2, 2, 0)
-/* shifts/rotates */
-DEF(extract2_i64, 1, 2, 1, 0)
 
 /* size changing ops */
 DEF(ext_i32_i64, 1, 1, 0, 0)

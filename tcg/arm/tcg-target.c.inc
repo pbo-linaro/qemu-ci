@@ -2133,7 +2133,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_sextract:
         tcg_out_sextract(s, COND_AL, args[0], args[1], args[2], args[3]);
         break;
-    case INDEX_op_extract2_i32:
+    case INDEX_op_extract2:
         /* ??? These optimization vs zero should be generic.  */
         /* ??? But we can't substitute 2 for 1 in the opcode stream yet.  */
         if (const_args[1]) {
@@ -2229,7 +2229,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
         return C_O0_I2(r, rIN);
     case INDEX_op_deposit:
         return C_O1_I2(r, 0, rZ);
-    case INDEX_op_extract2_i32:
+    case INDEX_op_extract2:
         return C_O1_I2(r, rZ, rZ);
     case INDEX_op_movcond:
         return C_O1_I4(r, r, rIN, rIK, 0);

@@ -2426,8 +2426,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_sbfm(s, ext, a0, a1, a2, a2 + args[3] - 1);
         break;
 
-    case INDEX_op_extract2_i64:
-    case INDEX_op_extract2_i32:
+    case INDEX_op_extract2:
         tcg_out_extr(s, ext, a0, REG0(2), REG0(1), args[3]);
         break;
 
@@ -2998,8 +2997,7 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_deposit:
         return C_O1_I2(r, 0, rZ);
 
-    case INDEX_op_extract2_i32:
-    case INDEX_op_extract2_i64:
+    case INDEX_op_extract2:
         return C_O1_I2(r, rZ, rZ);
 
     case INDEX_op_add2:
