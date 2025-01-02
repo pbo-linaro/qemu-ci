@@ -596,26 +596,20 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = (uint32_t)regs[r1] % (uint32_t)regs[r2];
             break;
-#if TCG_TARGET_HAS_clz_i32
         case INDEX_op_clz_i32:
             tci_args_rrr(insn, &r0, &r1, &r2);
             tmp32 = regs[r1];
             regs[r0] = tmp32 ? clz32(tmp32) : regs[r2];
             break;
-#endif
-#if TCG_TARGET_HAS_ctz_i32
         case INDEX_op_ctz_i32:
             tci_args_rrr(insn, &r0, &r1, &r2);
             tmp32 = regs[r1];
             regs[r0] = tmp32 ? ctz32(tmp32) : regs[r2];
             break;
-#endif
-#if TCG_TARGET_HAS_ctpop_i32
         case INDEX_op_ctpop_i32:
             tci_args_rr(insn, &r0, &r1);
             regs[r0] = ctpop32(regs[r1]);
             break;
-#endif
 
             /* Shift/rotate operations (32 bit). */
 
@@ -768,24 +762,18 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = (uint64_t)regs[r1] % (uint64_t)regs[r2];
             break;
-#if TCG_TARGET_HAS_clz_i64
         case INDEX_op_clz_i64:
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = regs[r1] ? clz64(regs[r1]) : regs[r2];
             break;
-#endif
-#if TCG_TARGET_HAS_ctz_i64
         case INDEX_op_ctz_i64:
             tci_args_rrr(insn, &r0, &r1, &r2);
             regs[r0] = regs[r1] ? ctz64(regs[r1]) : regs[r2];
             break;
-#endif
-#if TCG_TARGET_HAS_ctpop_i64
         case INDEX_op_ctpop_i64:
             tci_args_rr(insn, &r0, &r1);
             regs[r0] = ctpop64(regs[r1]);
             break;
-#endif
 #if TCG_TARGET_HAS_mulu2_i64
         case INDEX_op_mulu2_i64:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);

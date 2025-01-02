@@ -2266,11 +2266,11 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_nor_i32:
         return TCG_TARGET_HAS_nor(TCG_TYPE_I32);
     case INDEX_op_clz_i32:
-        return TCG_TARGET_HAS_clz_i32;
+        return TCG_TARGET_HAS_clz(TCG_TYPE_I32);
     case INDEX_op_ctz_i32:
-        return TCG_TARGET_HAS_ctz_i32;
+        return TCG_TARGET_HAS_ctz(TCG_TYPE_I32);
     case INDEX_op_ctpop_i32:
-        return TCG_TARGET_HAS_ctpop_i32;
+        return TCG_TARGET_HAS_ctpop(TCG_TYPE_I32);
 
     case INDEX_op_brcond2_i32:
     case INDEX_op_setcond2_i32:
@@ -2359,11 +2359,11 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_nor_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_nor(TCG_TYPE_I64);
     case INDEX_op_clz_i64:
-        return TCG_TARGET_HAS_clz_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_clz(TCG_TYPE_I64);
     case INDEX_op_ctz_i64:
-        return TCG_TARGET_HAS_ctz_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctz(TCG_TYPE_I64);
     case INDEX_op_ctpop_i64:
-        return TCG_TARGET_HAS_ctpop_i64;
+        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_ctpop(TCG_TYPE_I64);
     case INDEX_op_add2_i64:
         return TCG_TARGET_HAS_add2_i64;
     case INDEX_op_sub2_i64:

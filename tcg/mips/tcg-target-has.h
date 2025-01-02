@@ -40,6 +40,9 @@ extern bool use_mips32r2_instructions;
 
 /* optional integer instructions */
 #define TCG_TARGET_HAS_bswap(T)         1
+#define TCG_TARGET_HAS_clz(T)           use_mips32r2_instructions
+#define TCG_TARGET_HAS_ctpop(T)         0
+#define TCG_TARGET_HAS_ctz(T)           0
 #define TCG_TARGET_HAS_div(T)           1
 #define TCG_TARGET_HAS_rem(T)           1
 #define TCG_TARGET_HAS_rot(T)           use_mips32r2_instructions
@@ -80,9 +83,6 @@ extern bool use_mips32r2_instructions;
 #define TCG_TARGET_HAS_extract2_i32     0
 #define TCG_TARGET_HAS_ext8s_i32        use_mips32r2_instructions
 #define TCG_TARGET_HAS_ext16s_i32       use_mips32r2_instructions
-#define TCG_TARGET_HAS_clz_i32          use_mips32r2_instructions
-#define TCG_TARGET_HAS_ctz_i32          0
-#define TCG_TARGET_HAS_ctpop_i32        0
 #define TCG_TARGET_HAS_qemu_st8_i32     0
 
 #if TCG_TARGET_REG_BITS == 64
@@ -92,9 +92,6 @@ extern bool use_mips32r2_instructions;
 #define TCG_TARGET_HAS_extract2_i64     0
 #define TCG_TARGET_HAS_ext8s_i64        use_mips32r2_instructions
 #define TCG_TARGET_HAS_ext16s_i64       use_mips32r2_instructions
-#define TCG_TARGET_HAS_clz_i64          use_mips32r2_instructions
-#define TCG_TARGET_HAS_ctz_i64          0
-#define TCG_TARGET_HAS_ctpop_i64        0
 #endif
 
 /* optional instructions automatically implemented */
