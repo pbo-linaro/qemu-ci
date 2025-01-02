@@ -52,7 +52,6 @@ extern uint64_t s390_facilities[3];
 #define TCG_TARGET_HAS_not(T)         (T >= TCG_TYPE_V64 || HAVE_FACILITY(MISC_INSN_EXT3))
 #define TCG_TARGET_HAS_orc(T)         (T >= TCG_TYPE_V64 ? HAVE_FACILITY(VECTOR_ENH1) : HAVE_FACILITY(MISC_INSN_EXT3))
 
-#define TCG_TARGET_HAS_qemu_st8_i32   0
 #define TCG_TARGET_HAS_qemu_ldst_i128 1
 #define TCG_TARGET_HAS_tst            1
 

@@ -2914,8 +2914,6 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_qemu_ld_a64_i128:
             done = fold_qemu_ld_2reg(&ctx, op);
             break;
-        case INDEX_op_qemu_st8_a32_i32:
-        case INDEX_op_qemu_st8_a64_i32:
         case INDEX_op_qemu_st_a32_i32:
         case INDEX_op_qemu_st_a64_i32:
         case INDEX_op_qemu_st_a32_i64:
