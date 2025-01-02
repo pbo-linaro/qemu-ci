@@ -2287,8 +2287,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_insn(s, 3509, MSUB, ext, a0, TCG_REG_TMP0, a2, a1);
         break;
 
-    case INDEX_op_shl_i64:
-    case INDEX_op_shl_i32:
+    case INDEX_op_shl:
         if (c2) {
             tcg_out_shl(s, ext, a0, a1, a2);
         } else {
@@ -2296,8 +2295,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_shr_i64:
-    case INDEX_op_shr_i32:
+    case INDEX_op_shr:
         if (c2) {
             tcg_out_shr(s, ext, a0, a1, a2);
         } else {
@@ -2305,8 +2303,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_sar_i64:
-    case INDEX_op_sar_i32:
+    case INDEX_op_sar:
         if (c2) {
             tcg_out_sar(s, ext, a0, a1, a2);
         } else {
@@ -2314,8 +2311,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_rotr_i64:
-    case INDEX_op_rotr_i32:
+    case INDEX_op_rotr:
         if (c2) {
             tcg_out_rotr(s, ext, a0, a1, a2);
         } else {
@@ -2323,8 +2319,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         }
         break;
 
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotl_i32:
+    case INDEX_op_rotl:
         if (c2) {
             tcg_out_rotl(s, ext, a0, a1, a2);
         } else {
@@ -2965,16 +2960,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_eqv:
         return C_O1_I2(r, r, rL);
 
-    case INDEX_op_shl_i32:
-    case INDEX_op_shr_i32:
-    case INDEX_op_sar_i32:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i64:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, r, ri);
 
     case INDEX_op_clz_i32:

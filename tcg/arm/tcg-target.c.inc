@@ -1999,19 +1999,19 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_smull32(s, COND_AL, args[0], args[1], args[2], args[3]);
         break;
     /* XXX: Perhaps args[2] & 0x1f is wrong */
-    case INDEX_op_shl_i32:
+    case INDEX_op_shl:
         c = const_args[2] ?
                 SHIFT_IMM_LSL(args[2] & 0x1f) : SHIFT_REG_LSL(args[2]);
         goto gen_shift32;
-    case INDEX_op_shr_i32:
+    case INDEX_op_shr:
         c = const_args[2] ? (args[2] & 0x1f) ? SHIFT_IMM_LSR(args[2] & 0x1f) :
                 SHIFT_IMM_LSL(0) : SHIFT_REG_LSR(args[2]);
         goto gen_shift32;
-    case INDEX_op_sar_i32:
+    case INDEX_op_sar:
         c = const_args[2] ? (args[2] & 0x1f) ? SHIFT_IMM_ASR(args[2] & 0x1f) :
                 SHIFT_IMM_LSL(0) : SHIFT_REG_ASR(args[2]);
         goto gen_shift32;
-    case INDEX_op_rotr_i32:
+    case INDEX_op_rotr:
         c = const_args[2] ? (args[2] & 0x1f) ? SHIFT_IMM_ROR(args[2] & 0x1f) :
                 SHIFT_IMM_LSL(0) : SHIFT_REG_ROR(args[2]);
         /* Fall through.  */
@@ -2019,7 +2019,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_dat_reg(s, COND_AL, ARITH_MOV, args[0], 0, args[1], c);
         break;
 
-    case INDEX_op_rotl_i32:
+    case INDEX_op_rotl:
         if (const_args[2]) {
             tcg_out_dat_reg(s, COND_AL, ARITH_MOV, args[0], 0, args[1],
                             ((0x20 - args[2]) & 0x1f) ?
@@ -2218,11 +2218,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_xor:
         return C_O1_I2(r, r, rI);
 
-    case INDEX_op_shl_i32:
-    case INDEX_op_shr_i32:
-    case INDEX_op_sar_i32:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotr_i32:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, r, ri);
 
     case INDEX_op_brcond:

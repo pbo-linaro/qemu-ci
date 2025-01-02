@@ -429,34 +429,34 @@ static uint64_t do_constant_folding_2(TCGOpcode op, TCGType type, uint64_t x, ui
     case INDEX_op_xor_vec:
         return x ^ y;
 
-    case INDEX_op_shl_i32:
-        return (uint32_t)x << (y & 31);
-
-    case INDEX_op_shl_i64:
+    case INDEX_op_shl:
+        if (type == TCG_TYPE_I32) {
+            return (uint32_t)x << (y & 31);
+        }
         return (uint64_t)x << (y & 63);
 
-    case INDEX_op_shr_i32:
-        return (uint32_t)x >> (y & 31);
-
-    case INDEX_op_shr_i64:
+    case INDEX_op_shr:
+        if (type == TCG_TYPE_I32) {
+            return (uint32_t)x >> (y & 31);
+        }
         return (uint64_t)x >> (y & 63);
 
-    case INDEX_op_sar_i32:
-        return (int32_t)x >> (y & 31);
-
-    case INDEX_op_sar_i64:
+    case INDEX_op_sar:
+        if (type == TCG_TYPE_I32) {
+            return (int32_t)x >> (y & 31);
+        }
         return (int64_t)x >> (y & 63);
 
-    case INDEX_op_rotr_i32:
-        return ror32(x, y & 31);
-
-    case INDEX_op_rotr_i64:
+    case INDEX_op_rotr:
+        if (type == TCG_TYPE_I32) {
+            return ror32(x, y & 31);
+        }
         return ror64(x, y & 63);
 
-    case INDEX_op_rotl_i32:
-        return rol32(x, y & 31);
-
-    case INDEX_op_rotl_i64:
+    case INDEX_op_rotl:
+        if (type == TCG_TYPE_I32) {
+            return rol32(x, y & 31);
+        }
         return rol64(x, y & 63);
 
     case INDEX_op_not:
@@ -2255,8 +2255,6 @@ static int fold_setcond_zmask(OptContext *ctx, TCGOp *op, bool neg)
 
 static void fold_setcond_tst_pow2(OptContext *ctx, TCGOp *op, bool neg)
 {
-    TCGOpcode shr_opc;
-    TCGOpcode uext_opc = 0, sext_opc = 0;
     TCGCond cond = op->args[3];
     TCGArg ret, src1, src2;
     TCGOp *op2;
@@ -2275,47 +2273,26 @@ static void fold_setcond_tst_pow2(OptContext *ctx, TCGOp *op, bool neg)
     }
     sh = ctz64(val);
 
-    switch (op->type) {
-    case TCG_TYPE_I32:
-        shr_opc = INDEX_op_shr_i32;
-        if (TCG_TARGET_extract_valid(TCG_TYPE_I32, sh, 1)) {
-            uext_opc = INDEX_op_extract;
-        }
-        if (TCG_TARGET_sextract_valid(TCG_TYPE_I32, sh, 1)) {
-            sext_opc = INDEX_op_sextract;
-        }
-        break;
-    case TCG_TYPE_I64:
-        shr_opc = INDEX_op_shr_i64;
-        if (TCG_TARGET_extract_valid(TCG_TYPE_I64, sh, 1)) {
-            uext_opc = INDEX_op_extract;
-        }
-        if (TCG_TARGET_sextract_valid(TCG_TYPE_I64, sh, 1)) {
-            sext_opc = INDEX_op_sextract;
-        }
-        break;
-    default:
-        g_assert_not_reached();
-    }
-
     ret = op->args[0];
     src1 = op->args[1];
     inv = cond == TCG_COND_TSTEQ;
 
-    if (sh && sext_opc && neg && !inv) {
-        op->opc = sext_opc;
+    if (sh && neg && !inv &&
+        TCG_TARGET_sextract_valid(op->type, sh, 1)) {
+        op->opc = INDEX_op_sextract;
         op->args[1] = src1;
         op->args[2] = sh;
         op->args[3] = 1;
         return;
-    } else if (sh && uext_opc) {
-        op->opc = uext_opc;
+    } else if (sh && TCG_TARGET_extract_valid(op->type, sh, 1)) {
+        op->opc = INDEX_op_extract;
         op->args[1] = src1;
         op->args[2] = sh;
         op->args[3] = 1;
     } else {
         if (sh) {
-            op2 = tcg_op_insert_before(ctx->tcg, op, shr_opc, op->type, 3);
+            op2 = tcg_op_insert_before(ctx->tcg, op,
+                                       INDEX_op_shr, op->type, 3);
             op2->args[0] = ret;
             op2->args[1] = src1;
             op2->args[2] = arg_new_constant(ctx, op->type, sh);
@@ -2516,13 +2493,13 @@ static bool fold_shift(OptContext *ctx, TCGOp *op)
     }
 
     switch (op->opc) {
-    CASE_OP_32_64(sar):
+    case INDEX_op_sar:
         /*
          * Arithmetic right shift will not reduce the number of
          * input sign repetitions.
          */
         return fold_masks_s(ctx, op, s_mask);
-    CASE_OP_32_64(shr):
+    case INDEX_op_shr:
         /*
          * If the sign bit is known zero, then logical right shift
          * will not reduce the number of input sign repetitions.
@@ -2881,11 +2858,11 @@ void tcg_optimize(TCGContext *s)
         case INDEX_op_remu:
             done = fold_remainder(&ctx, op);
             break;
-        CASE_OP_32_64(rotl):
-        CASE_OP_32_64(rotr):
-        CASE_OP_32_64(sar):
-        CASE_OP_32_64(shl):
-        CASE_OP_32_64(shr):
+        case INDEX_op_rotl:
+        case INDEX_op_rotr:
+        case INDEX_op_sar:
+        case INDEX_op_shl:
+        case INDEX_op_shr:
             done = fold_shift(&ctx, op);
             break;
         case INDEX_op_setcond:

@@ -2147,76 +2147,71 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_shl_i32:
+    case INDEX_op_shl:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_SLLIW, a0, a1, a2 & 0x1f);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_imm(s, OPC_SLLIW, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_imm(s, OPC_SLLI, a0, a1, a2 & 0x3f);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_reg(s, OPC_SLLW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_shl_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_SLLI, a0, a1, a2 & 0x3f);
         } else {
             tcg_out_opc_reg(s, OPC_SLL, a0, a1, a2);
         }
         break;
 
-    case INDEX_op_shr_i32:
+    case INDEX_op_shr:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_SRLIW, a0, a1, a2 & 0x1f);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_imm(s, OPC_SRLIW, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_imm(s, OPC_SRLI, a0, a1, a2 & 0x3f);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_reg(s, OPC_SRLW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_shr_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_SRLI, a0, a1, a2 & 0x3f);
         } else {
             tcg_out_opc_reg(s, OPC_SRL, a0, a1, a2);
         }
         break;
 
-    case INDEX_op_sar_i32:
+    case INDEX_op_sar:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_SRAIW, a0, a1, a2 & 0x1f);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_imm(s, OPC_SRAIW, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_imm(s, OPC_SRAI, a0, a1, a2 & 0x3f);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_reg(s, OPC_SRAW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_sar_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_SRAI, a0, a1, a2 & 0x3f);
         } else {
             tcg_out_opc_reg(s, OPC_SRA, a0, a1, a2);
         }
         break;
 
-    case INDEX_op_rotl_i32:
+    case INDEX_op_rotl:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_RORIW, a0, a1, -a2 & 0x1f);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_imm(s, OPC_RORIW, a0, a1, -a2 & 0x1f);
+            } else {
+                tcg_out_opc_imm(s, OPC_RORI, a0, a1, -a2 & 0x3f);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_reg(s, OPC_ROLW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_rotl_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_RORI, a0, a1, -a2 & 0x3f);
         } else {
             tcg_out_opc_reg(s, OPC_ROL, a0, a1, a2);
         }
         break;
 
-    case INDEX_op_rotr_i32:
+    case INDEX_op_rotr:
         if (c2) {
-            tcg_out_opc_imm(s, OPC_RORIW, a0, a1, a2 & 0x1f);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_imm(s, OPC_RORIW, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_imm(s, OPC_RORI, a0, a1, a2 & 0x3f);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out_opc_reg(s, OPC_RORW, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_rotr_i64:
-        if (c2) {
-            tcg_out_opc_imm(s, OPC_RORI, a0, a1, a2 & 0x3f);
         } else {
             tcg_out_opc_reg(s, OPC_ROR, a0, a1, a2);
         }
@@ -2640,16 +2635,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_remu:
         return C_O1_I2(r, rZ, rZ);
 
-    case INDEX_op_shl_i32:
-    case INDEX_op_shr_i32:
-    case INDEX_op_sar_i32:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i64:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, r, ri);
 
     case INDEX_op_clz_i32:

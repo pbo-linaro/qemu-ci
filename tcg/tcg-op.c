@@ -474,7 +474,7 @@ void tcg_gen_not_i32(TCGv_i32 ret, TCGv_i32 arg)
 
 void tcg_gen_shl_i32(TCGv_i32 ret, TCGv_i32 arg1, TCGv_i32 arg2)
 {
-    tcg_gen_op3_i32(INDEX_op_shl_i32, ret, arg1, arg2);
+    tcg_gen_op3_i32(INDEX_op_shl, ret, arg1, arg2);
 }
 
 void tcg_gen_shli_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
@@ -489,7 +489,7 @@ void tcg_gen_shli_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
 
 void tcg_gen_shr_i32(TCGv_i32 ret, TCGv_i32 arg1, TCGv_i32 arg2)
 {
-    tcg_gen_op3_i32(INDEX_op_shr_i32, ret, arg1, arg2);
+    tcg_gen_op3_i32(INDEX_op_shr, ret, arg1, arg2);
 }
 
 void tcg_gen_shri_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
@@ -504,7 +504,7 @@ void tcg_gen_shri_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
 
 void tcg_gen_sar_i32(TCGv_i32 ret, TCGv_i32 arg1, TCGv_i32 arg2)
 {
-    tcg_gen_op3_i32(INDEX_op_sar_i32, ret, arg1, arg2);
+    tcg_gen_op3_i32(INDEX_op_sar, ret, arg1, arg2);
 }
 
 void tcg_gen_sari_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
@@ -827,7 +827,7 @@ void tcg_gen_ctpop_i32(TCGv_i32 ret, TCGv_i32 arg1)
 void tcg_gen_rotl_i32(TCGv_i32 ret, TCGv_i32 arg1, TCGv_i32 arg2)
 {
     if (TCG_TARGET_HAS_rot(TCG_TYPE_I32)) {
-        tcg_gen_op3_i32(INDEX_op_rotl_i32, ret, arg1, arg2);
+        tcg_gen_op3_i32(INDEX_op_rotl, ret, arg1, arg2);
     } else {
         TCGv_i32 t0, t1;
 
@@ -865,7 +865,7 @@ void tcg_gen_rotli_i32(TCGv_i32 ret, TCGv_i32 arg1, int32_t arg2)
 void tcg_gen_rotr_i32(TCGv_i32 ret, TCGv_i32 arg1, TCGv_i32 arg2)
 {
     if (TCG_TARGET_HAS_rot(TCG_TYPE_I32)) {
-        tcg_gen_op3_i32(INDEX_op_rotr_i32, ret, arg1, arg2);
+        tcg_gen_op3_i32(INDEX_op_rotr, ret, arg1, arg2);
     } else {
         TCGv_i32 t0, t1;
 
@@ -1603,7 +1603,7 @@ void tcg_gen_xor_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 void tcg_gen_shl_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 {
     if (TCG_TARGET_REG_BITS == 64) {
-        tcg_gen_op3_i64(INDEX_op_shl_i64, ret, arg1, arg2);
+        tcg_gen_op3_i64(INDEX_op_shl, ret, arg1, arg2);
     } else {
         gen_helper_shl_i64(ret, arg1, arg2);
     }
@@ -1612,7 +1612,7 @@ void tcg_gen_shl_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 void tcg_gen_shr_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 {
     if (TCG_TARGET_REG_BITS == 64) {
-        tcg_gen_op3_i64(INDEX_op_shr_i64, ret, arg1, arg2);
+        tcg_gen_op3_i64(INDEX_op_shr, ret, arg1, arg2);
     } else {
         gen_helper_shr_i64(ret, arg1, arg2);
     }
@@ -1621,7 +1621,7 @@ void tcg_gen_shr_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 void tcg_gen_sar_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 {
     if (TCG_TARGET_REG_BITS == 64) {
-        tcg_gen_op3_i64(INDEX_op_sar_i64, ret, arg1, arg2);
+        tcg_gen_op3_i64(INDEX_op_sar, ret, arg1, arg2);
     } else {
         gen_helper_sar_i64(ret, arg1, arg2);
     }
@@ -2471,7 +2471,7 @@ void tcg_gen_rotl_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 {
     if (TCG_TARGET_REG_BITS == 64 &&
         TCG_TARGET_HAS_rot(TCG_TYPE_I64)) {
-        tcg_gen_op3_i64(INDEX_op_rotl_i64, ret, arg1, arg2);
+        tcg_gen_op3_i64(INDEX_op_rotl, ret, arg1, arg2);
     } else {
         TCGv_i64 t0, t1;
         t0 = tcg_temp_ebb_new_i64();
@@ -2510,7 +2510,7 @@ void tcg_gen_rotr_i64(TCGv_i64 ret, TCGv_i64 arg1, TCGv_i64 arg2)
 {
     if (TCG_TARGET_REG_BITS == 64 &&
         TCG_TARGET_HAS_rot(TCG_TYPE_I64)) {
-        tcg_gen_op3_i64(INDEX_op_rotr_i64, ret, arg1, arg2);
+        tcg_gen_op3_i64(INDEX_op_rotr, ret, arg1, arg2);
     } else {
         TCGv_i64 t0, t1;
         t0 = tcg_temp_ebb_new_i64();

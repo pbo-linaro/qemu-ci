@@ -3167,44 +3167,75 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         }
         break;
 
-    case INDEX_op_shl_i32:
+    case INDEX_op_shl:
         if (const_args[2]) {
             /* Limit immediate shift count lest we create an illegal insn.  */
-            tcg_out_shli32(s, args[0], args[1], args[2] & 31);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_shli32(s, args[0], args[1], args[2] & 31);
+            } else {
+                tcg_out_shli64(s, args[0], args[1], args[2] & 63);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, SLW | SAB(args[1], args[0], args[2]));
+        } else {
+            tcg_out32(s, SLD | SAB(args[1], args[0], args[2]));
         }
         break;
-    case INDEX_op_shr_i32:
+    case INDEX_op_shr:
         if (const_args[2]) {
             /* Limit immediate shift count lest we create an illegal insn.  */
-            tcg_out_shri32(s, args[0], args[1], args[2] & 31);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_shri32(s, args[0], args[1], args[2] & 31);
+            } else {
+                tcg_out_shri64(s, args[0], args[1], args[2] & 63);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, SRW | SAB(args[1], args[0], args[2]));
+        } else {
+            tcg_out32(s, SRD | SAB(args[1], args[0], args[2]));
         }
         break;
-    case INDEX_op_sar_i32:
+    case INDEX_op_sar:
         if (const_args[2]) {
-            tcg_out_sari32(s, args[0], args[1], args[2]);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_sari32(s, args[0], args[1], args[2]);
+            } else {
+                tcg_out_sari64(s, args[0], args[1], args[2]);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, SRAW | SAB(args[1], args[0], args[2]));
+        } else {
+            tcg_out32(s, SRAD | SAB(args[1], args[0], args[2]));
         }
         break;
-    case INDEX_op_rotl_i32:
+    case INDEX_op_rotl:
         if (const_args[2]) {
-            tcg_out_rlw(s, RLWINM, args[0], args[1], args[2], 0, 31);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_rlw(s, RLWINM, args[0], args[1], args[2], 0, 31);
+            } else {
+                tcg_out_rld(s, RLDICL, args[0], args[1], args[2], 0);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, RLWNM | SAB(args[1], args[0], args[2])
                          | MB(0) | ME(31));
+        } else {
+            tcg_out32(s, RLDCL | SAB(args[1], args[0], args[2]) | MB64(0));
         }
         break;
-    case INDEX_op_rotr_i32:
+    case INDEX_op_rotr:
         if (const_args[2]) {
-            tcg_out_rlw(s, RLWINM, args[0], args[1], 32 - args[2], 0, 31);
-        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_rlw(s, RLWINM, args[0], args[1], 32 - args[2], 0, 31);
+            } else {
+                tcg_out_rld(s, RLDICL, args[0], args[1], 64 - args[2], 0);
+            }
+        } else if (type == TCG_TYPE_I32) {
             tcg_out32(s, SUBFIC | TAI(TCG_REG_R0, args[2], 32));
             tcg_out32(s, RLWNM | SAB(args[1], args[0], TCG_REG_R0)
                          | MB(0) | ME(31));
+        } else {
+            tcg_out32(s, SUBFIC | TAI(TCG_REG_R0, args[2], 64));
+            tcg_out32(s, RLDCL | SAB(args[1], args[0], TCG_REG_R0) | MB64(0));
         }
         break;
 
@@ -3224,44 +3255,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out32(s, NOR | SAB(args[1], args[0], args[1]));
         break;
 
-    case INDEX_op_shl_i64:
-        if (const_args[2]) {
-            /* Limit immediate shift count lest we create an illegal insn.  */
-            tcg_out_shli64(s, args[0], args[1], args[2] & 63);
-        } else {
-            tcg_out32(s, SLD | SAB(args[1], args[0], args[2]));
-        }
-        break;
-    case INDEX_op_shr_i64:
-        if (const_args[2]) {
-            /* Limit immediate shift count lest we create an illegal insn.  */
-            tcg_out_shri64(s, args[0], args[1], args[2] & 63);
-        } else {
-            tcg_out32(s, SRD | SAB(args[1], args[0], args[2]));
-        }
-        break;
-    case INDEX_op_sar_i64:
-        if (const_args[2]) {
-            tcg_out_sari64(s, args[0], args[1], args[2]);
-        } else {
-            tcg_out32(s, SRAD | SAB(args[1], args[0], args[2]));
-        }
-        break;
-    case INDEX_op_rotl_i64:
-        if (const_args[2]) {
-            tcg_out_rld(s, RLDICL, args[0], args[1], args[2], 0);
-        } else {
-            tcg_out32(s, RLDCL | SAB(args[1], args[0], args[2]) | MB64(0));
-        }
-        break;
-    case INDEX_op_rotr_i64:
-        if (const_args[2]) {
-            tcg_out_rld(s, RLDICL, args[0], args[1], 64 - args[2], 0);
-        } else {
-            tcg_out32(s, SUBFIC | TAI(TCG_REG_R0, args[2], 64));
-            tcg_out32(s, RLDCL | SAB(args[1], args[0], TCG_REG_R0) | MB64(0));
-        }
-        break;
     case INDEX_op_extrh_i64_i32:
         tcg_out_sari64(s, args[0], args[1], 32);
         break;
@@ -4139,16 +4132,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
 
     case INDEX_op_and:
     case INDEX_op_andc:
-    case INDEX_op_shl_i32:
-    case INDEX_op_shr_i32:
-    case INDEX_op_sar_i32:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i64:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, r, ri);
 
     case INDEX_op_mul:

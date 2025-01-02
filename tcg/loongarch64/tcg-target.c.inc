@@ -1440,82 +1440,85 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_clzctz(s, OPC_CTZ_D, a0, a1, a2, c2, false);
         break;
 
-    case INDEX_op_shl_i32:
+    case INDEX_op_shl:
         if (c2) {
-            tcg_out_opc_slli_w(s, a0, a1, a2 & 0x1f);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_slli_w(s, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_slli_d(s, a0, a1, a2 & 0x3f);
+            }
         } else {
-            tcg_out_opc_sll_w(s, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_shl_i64:
-        if (c2) {
-            tcg_out_opc_slli_d(s, a0, a1, a2 & 0x3f);
-        } else {
-            tcg_out_opc_sll_d(s, a0, a1, a2);
-        }
-        break;
-
-    case INDEX_op_shr_i32:
-        if (c2) {
-            tcg_out_opc_srli_w(s, a0, a1, a2 & 0x1f);
-        } else {
-            tcg_out_opc_srl_w(s, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_shr_i64:
-        if (c2) {
-            tcg_out_opc_srli_d(s, a0, a1, a2 & 0x3f);
-        } else {
-            tcg_out_opc_srl_d(s, a0, a1, a2);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_sll_w(s, a0, a1, a2);
+            } else {
+                tcg_out_opc_sll_d(s, a0, a1, a2);
+            }
         }
         break;
 
-    case INDEX_op_sar_i32:
+    case INDEX_op_shr:
         if (c2) {
-            tcg_out_opc_srai_w(s, a0, a1, a2 & 0x1f);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_srli_w(s, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_srli_d(s, a0, a1, a2 & 0x3f);
+            }
         } else {
-            tcg_out_opc_sra_w(s, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_sar_i64:
-        if (c2) {
-            tcg_out_opc_srai_d(s, a0, a1, a2 & 0x3f);
-        } else {
-            tcg_out_opc_sra_d(s, a0, a1, a2);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_srl_w(s, a0, a1, a2);
+            } else {
+                tcg_out_opc_srl_d(s, a0, a1, a2);
+            }
         }
         break;
 
-    case INDEX_op_rotl_i32:
+    case INDEX_op_sar:
+        if (c2) {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_srai_w(s, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_srai_d(s, a0, a1, a2 & 0x3f);
+            }
+        } else {
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_sra_w(s, a0, a1, a2);
+            } else {
+                tcg_out_opc_sra_d(s, a0, a1, a2);
+            }
+        }
+        break;
+
+    case INDEX_op_rotl:
         /* transform into equivalent rotr/rotri */
         if (c2) {
-            tcg_out_opc_rotri_w(s, a0, a1, (32 - a2) & 0x1f);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_rotri_w(s, a0, a1, (32 - a2) & 0x1f);
+            } else {
+                tcg_out_opc_rotri_d(s, a0, a1, (64 - a2) & 0x3f);
+            }
         } else {
             tcg_out_opc_sub_w(s, TCG_REG_TMP0, TCG_REG_ZERO, a2);
-            tcg_out_opc_rotr_w(s, a0, a1, TCG_REG_TMP0);
-        }
-        break;
-    case INDEX_op_rotl_i64:
-        /* transform into equivalent rotr/rotri */
-        if (c2) {
-            tcg_out_opc_rotri_d(s, a0, a1, (64 - a2) & 0x3f);
-        } else {
-            tcg_out_opc_sub_w(s, TCG_REG_TMP0, TCG_REG_ZERO, a2);
-            tcg_out_opc_rotr_d(s, a0, a1, TCG_REG_TMP0);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_rotr_w(s, a0, a1, TCG_REG_TMP0);
+            } else {
+                tcg_out_opc_rotr_d(s, a0, a1, TCG_REG_TMP0);
+            }
         }
         break;
 
-    case INDEX_op_rotr_i32:
+    case INDEX_op_rotr:
         if (c2) {
-            tcg_out_opc_rotri_w(s, a0, a1, a2 & 0x1f);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_rotri_w(s, a0, a1, a2 & 0x1f);
+            } else {
+                tcg_out_opc_rotri_d(s, a0, a1, a2 & 0x3f);
+            }
         } else {
-            tcg_out_opc_rotr_w(s, a0, a1, a2);
-        }
-        break;
-    case INDEX_op_rotr_i64:
-        if (c2) {
-            tcg_out_opc_rotri_d(s, a0, a1, a2 & 0x3f);
-        } else {
-            tcg_out_opc_rotr_d(s, a0, a1, a2);
+            if (type == TCG_TYPE_I32) {
+                tcg_out_opc_rotr_w(s, a0, a1, a2);
+            } else {
+                tcg_out_opc_rotr_d(s, a0, a1, a2);
+            }
         }
         break;
 
@@ -2251,16 +2254,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
          */
         return C_O1_I2(r, r, rC);
 
-    case INDEX_op_shl_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i32:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i32:
-    case INDEX_op_sar_i64:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, r, ri);
 
     case INDEX_op_add:

@@ -1383,18 +1383,36 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_xor:
         c = ARITH_XOR;
         goto gen_arith;
-    case INDEX_op_shl_i32:
-        c = SHIFT_SLL;
+
+    case INDEX_op_shl:
+        if (type == TCG_TYPE_I32) {
+            c = SHIFT_SLL;
+            goto do_shift32;
+        }
+        c = SHIFT_SLLX;
+    do_shift64:
+        /* Limit immediate shift count lest we create an illegal insn.  */
+        tcg_out_arithc(s, a0, a1, a2 & 63, c2, c);
+        break;
     do_shift32:
         /* Limit immediate shift count lest we create an illegal insn.  */
         tcg_out_arithc(s, a0, a1, a2 & 31, c2, c);
         break;
-    case INDEX_op_shr_i32:
-        c = SHIFT_SRL;
-        goto do_shift32;
-    case INDEX_op_sar_i32:
-        c = SHIFT_SRA;
-        goto do_shift32;
+    case INDEX_op_shr:
+        if (type == TCG_TYPE_I32) {
+            c = SHIFT_SRL;
+            goto do_shift32;
+        }
+        c = SHIFT_SRLX;
+        goto do_shift64;
+    case INDEX_op_sar:
+        if (type == TCG_TYPE_I32) {
+            c = SHIFT_SRA;
+            goto do_shift32;
+        }
+        c = SHIFT_SRAX;
+        goto do_shift64;
+
     case INDEX_op_mul:
         c = type == TCG_TYPE_I32 ? ARITH_UMUL : ARITH_MULX;
         goto gen_arith;
@@ -1503,19 +1521,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_qemu_st(s, a0, a1, a2, TCG_TYPE_I64);
         break;
 
-    case INDEX_op_shl_i64:
-        c = SHIFT_SLLX;
-    do_shift64:
-        /* Limit immediate shift count lest we create an illegal insn.  */
-        tcg_out_arithc(s, a0, a1, a2 & 63, c2, c);
-        break;
-    case INDEX_op_shr_i64:
-        c = SHIFT_SRLX;
-        goto do_shift64;
-    case INDEX_op_sar_i64:
-        c = SHIFT_SRAX;
-        goto do_shift64;
-
     case INDEX_op_muluh:
         tcg_out_arith(s, args[0], args[1], args[2], ARITH_UMULXHI);
         break;
@@ -1598,12 +1603,9 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_or:
     case INDEX_op_orc:
     case INDEX_op_xor:
-    case INDEX_op_shl_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i32:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i32:
-    case INDEX_op_sar_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
     case INDEX_op_setcond:
     case INDEX_op_negsetcond:
         return C_O1_I2(r, rZ, rJ);

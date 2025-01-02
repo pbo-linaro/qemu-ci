@@ -20,7 +20,7 @@
 #define TCG_TARGET_HAS_muluh(T)         0
 #define TCG_TARGET_HAS_negsetcond(T)    0
 #define TCG_TARGET_HAS_rem(T)           1
-#define TCG_TARGET_HAS_rot(T)           1
+#define TCG_TARGET_HAS_rot(T)           (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_sub2(T)          (T == TCG_TYPE_REG)
 #define TCG_TARGET_HAS_extract2(T)      0
 

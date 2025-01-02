@@ -2198,17 +2198,17 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_mul:
     case INDEX_op_neg:
     case INDEX_op_or:
+    case INDEX_op_sar:
     case INDEX_op_setcond:
     case INDEX_op_sextract:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
     case INDEX_op_sub:
     case INDEX_op_xor:
         return has_type;
 
     case INDEX_op_ld_i32:
     case INDEX_op_st_i32:
-    case INDEX_op_shl_i32:
-    case INDEX_op_shr_i32:
-    case INDEX_op_sar_i32:
     case INDEX_op_deposit_i32:
         return true;
 
@@ -2245,12 +2245,12 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_rem:
     case INDEX_op_remu:
         return has_type && TCG_TARGET_HAS_rem(type);
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
+        return has_type && TCG_TARGET_HAS_rot(type);
     case INDEX_op_sub2:
         return has_type && TCG_TARGET_HAS_sub2(type);
 
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotr_i32:
-        return TCG_TARGET_HAS_rot(TCG_TYPE_I32);
     case INDEX_op_extract2_i32:
         return TCG_TARGET_HAS_extract2(TCG_TYPE_I32);
     case INDEX_op_bswap16_i32:
@@ -2265,9 +2265,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
 
     case INDEX_op_ld_i64:
     case INDEX_op_st_i64:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i64:
     case INDEX_op_ext_i32_i64:
     case INDEX_op_extu_i32_i64:
     case INDEX_op_extrl_i64_i32:
@@ -2275,9 +2272,6 @@ bool tcg_op_supported(TCGOpcode op, TCGType type)
     case INDEX_op_deposit_i64:
         return TCG_TARGET_REG_BITS == 64;
 
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i64:
-        return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_rot(TCG_TYPE_I64);
     case INDEX_op_extract2_i64:
         return TCG_TARGET_REG_BITS == 64 && TCG_TARGET_HAS_extract2(TCG_TYPE_I64);
     case INDEX_op_bswap16_i64:

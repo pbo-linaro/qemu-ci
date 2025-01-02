@@ -2803,7 +2803,7 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_modrm(s, OPC_GRP3_Ev + rexw, EXT3_DIV, args[4]);
         break;
 
-    OP_32_64(shl):
+    case INDEX_op_shl:
         /* For small constant 3-operand shift, use LEA.  */
         if (const_a2 && a0 != a1 && (a2 - 1) < 3) {
             if (a2 - 1 == 0) {
@@ -2818,18 +2818,18 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         c = SHIFT_SHL;
         vexop = OPC_SHLX;
         goto gen_shift_maybe_vex;
-    OP_32_64(shr):
+    case INDEX_op_shr:
         c = SHIFT_SHR;
         vexop = OPC_SHRX;
         goto gen_shift_maybe_vex;
-    OP_32_64(sar):
+    case INDEX_op_sar:
         c = SHIFT_SAR;
         vexop = OPC_SARX;
         goto gen_shift_maybe_vex;
-    OP_32_64(rotl):
+    case INDEX_op_rotl:
         c = SHIFT_ROL;
         goto gen_shift;
-    OP_32_64(rotr):
+    case INDEX_op_rotr:
         c = SHIFT_ROR;
         goto gen_shift;
     gen_shift_maybe_vex:
@@ -3695,18 +3695,13 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_andc:
         return C_O1_I2(r, r, rI);
 
-    case INDEX_op_shl_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i32:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i32:
-    case INDEX_op_sar_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
         return have_bmi2 ? C_O1_I2(r, r, ri) : C_O1_I2(r, 0, ci);
 
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
         return C_O1_I2(r, 0, ci);
 
     case INDEX_op_brcond:

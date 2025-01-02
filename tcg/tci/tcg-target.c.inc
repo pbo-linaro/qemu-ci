@@ -80,16 +80,11 @@ static TCGConstraintSetIndex tcg_target_op_def(const TCGOp *op)
     case INDEX_op_or:
     case INDEX_op_orc:
     case INDEX_op_xor:
-    case INDEX_op_shl_i32:
-    case INDEX_op_shl_i64:
-    case INDEX_op_shr_i32:
-    case INDEX_op_shr_i64:
-    case INDEX_op_sar_i32:
-    case INDEX_op_sar_i64:
-    case INDEX_op_rotl_i32:
-    case INDEX_op_rotl_i64:
-    case INDEX_op_rotr_i32:
-    case INDEX_op_rotr_i64:
+    case INDEX_op_shl:
+    case INDEX_op_shr:
+    case INDEX_op_sar:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
     case INDEX_op_setcond:
     case INDEX_op_deposit_i32:
     case INDEX_op_deposit_i64:
@@ -725,18 +720,33 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_eqv:
     case INDEX_op_nand:
     case INDEX_op_nor:
-    CASE_32_64(shl)
-    CASE_32_64(shr)
-    CASE_32_64(sar)
-    CASE_32_64(rotl)     /* Optional (TCG_TARGET_HAS_rot_*). */
-    CASE_32_64(rotr)     /* Optional (TCG_TARGET_HAS_rot_*). */
     case INDEX_op_div:
     case INDEX_op_divu:
     case INDEX_op_rem:
     case INDEX_op_remu:
+    case INDEX_op_shl:
+    case INDEX_op_rotl:
+    case INDEX_op_rotr:
     CASE_32_64(clz)      /* Optional (TCG_TARGET_HAS_clz_*). */
     CASE_32_64(ctz)      /* Optional (TCG_TARGET_HAS_ctz_*). */
         tcg_out_op_rrr(s, opc, args[0], args[1], args[2]);
+        break;
+
+    case INDEX_op_shr:
+        if (type < TCG_TYPE_REG) {
+            tcg_out_ext32u(s, TCG_REG_TMP, args[1]);
+            tcg_out_op_rrr(s, opc, args[0], TCG_REG_TMP, args[2]);
+        } else {
+            tcg_out_op_rrr(s, opc, args[0], args[1], args[2]);
+        }
+        break;
+    case INDEX_op_sar:
+        if (type < TCG_TYPE_REG) {
+            tcg_out_ext32s(s, TCG_REG_TMP, args[1]);
+            tcg_out_op_rrr(s, opc, args[0], TCG_REG_TMP, args[2]);
+        } else {
+            tcg_out_op_rrr(s, opc, args[0], args[1], args[2]);
+        }
         break;
 
     CASE_32_64(deposit)  /* Optional (TCG_TARGET_HAS_deposit_*). */
