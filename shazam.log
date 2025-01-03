@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/20250103064514.2660438-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] hw/loongarch/virt: Checkpatch cleanup
+---
+Total patches: 1
+---
+ Base: using specified base-commit 2b7a80e07a29074530a0ebc8005a418ee07b1faf
+Applying: hw/loongarch/virt: Checkpatch cleanup
+Patch failed at 0001 hw/loongarch/virt: Checkpatch cleanup
+error: patch failed: hw/loongarch/virt.c:452
+error: hw/loongarch/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
