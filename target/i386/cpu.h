@@ -987,6 +987,9 @@ uint64_t x86_cpu_get_supported_feature_word(X86CPU *cpu, FeatureWord w);
 /* Non-Serializing Write to Model Specific Register (WRMSRNS) */
 #define CPUID_7_1_EAX_WRMSRNS           (1U << 19)
 
+/* The immediate form of MSR access instructions */
+#define CPUID_7_1_ECX_MSR_IMM           (1U << 5)
+
 /* Do not exhibit MXCSR Configuration Dependent Timing (MCDT) behavior */
 #define CPUID_7_2_EDX_MCDT_NO           (1U << 5)
 
