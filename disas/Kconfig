@@ -3,6 +3,7 @@ config ALPHA_DIS
 
 config ARM_DIS
     bool
+    default y if CAPSTONE
 
 config AVR_DIS
     bool
@@ -15,6 +16,7 @@ config HPPA_DIS
 
 config I386_DIS
     bool
+    default y if CAPSTONE
 
 config LOONGARCH_DIS
     bool
@@ -33,6 +35,7 @@ config OPENRISC_DIS
 
 config PPC_DIS
     bool
+    default y if CAPSTONE
 
 config RISCV_DIS
     bool
@@ -42,6 +45,7 @@ config RX_DIS
 
 config S390_DIS
     bool
+    default y if CAPSTONE
 
 config SH4_DIS
     bool
