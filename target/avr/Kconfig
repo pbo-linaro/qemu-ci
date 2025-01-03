@@ -1,2 +1,3 @@
 config AVR
     bool
+    select AVR_DIS

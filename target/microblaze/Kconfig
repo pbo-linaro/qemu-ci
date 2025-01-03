@@ -1,3 +1,4 @@
 config MICROBLAZE
     bool
+    select MICROBLAZE_DIS
     select DEVICE_TREE # needed by boot.c

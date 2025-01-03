@@ -1,5 +1,7 @@
 config SPARC
     bool
+    select SPARC_DIS
 
 config SPARC64
     bool
+    select SPARC_DIS

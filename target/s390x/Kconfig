@@ -1,5 +1,6 @@
 config S390X
     bool
+    select S390_DIS
     select PCI
     select S390_FLIC
 

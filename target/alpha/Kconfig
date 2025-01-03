@@ -1,2 +1,3 @@
 config ALPHA
     bool
+    select ALPHA_DIS

@@ -1,4 +1,5 @@
 config SH4
     bool
+    select SH4_DIS
     # needed for sh_intc_get_pending_vector
     select SH_INTC

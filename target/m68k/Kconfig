@@ -1,3 +1,4 @@
 config M68K
     bool
+    select M68K_DIS
     imply SEMIHOSTING if TCG

@@ -1,2 +1,3 @@
 config RX
     bool
+    select RX_DIS

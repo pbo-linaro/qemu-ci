@@ -3319,7 +3319,8 @@ foreach target : target_dirs
   endif
 
   foreach k, v: disassemblers
-    if host_arch.startswith(k) or config_target['TARGET_BASE_ARCH'].startswith(k)
+    if host_arch.startswith(k) \
+        or (target.endswith('-user') and config_target['TARGET_BASE_ARCH'].startswith(k))
       foreach sym: v
         config_target += { sym: 'y' }
       endforeach

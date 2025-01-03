@@ -1,0 +1,56 @@
+config ALPHA_DIS
+    bool
+
+config ARM_DIS
+    bool
+
+config AVR_DIS
+    bool
+
+config HEXAGON_DIS
+    bool
+
+config HPPA_DIS
+    bool
+
+config I386_DIS
+    bool
+
+config LOONGARCH_DIS
+    bool
+
+config M68K_DIS
+    bool
+
+config MICROBLAZE_DIS
+    bool
+
+config MIPS_DIS
+    bool
+
+config OPENRISC_DIS
+    bool
+
+config PPC_DIS
+    bool
+
+config RISCV_DIS
+    bool
+
+config RX_DIS
+    bool
+
+config S390_DIS
+    bool
+
+config SH4_DIS
+    bool
+
+config SPARC_DIS
+    bool
+
+config TRICORE_DIS
+    bool
+
+config XTENSA_DIS
+    bool

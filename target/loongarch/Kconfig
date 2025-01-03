@@ -1,2 +1,3 @@
 config LOONGARCH64
     bool
+    select LOONGARCH_DIS

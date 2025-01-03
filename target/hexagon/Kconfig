@@ -1,2 +1,3 @@
 config HEXAGON
     bool
+    select HEXAGON_DIS
