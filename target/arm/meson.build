@@ -1,4 +1,5 @@
 arm_ss = ss.source_set()
+arm_ss.add(capstone)
 arm_ss.add(files(
   'cpu.c',
   'debug_helper.c',

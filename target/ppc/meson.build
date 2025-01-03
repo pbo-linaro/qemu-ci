@@ -1,4 +1,5 @@
 ppc_ss = ss.source_set()
+ppc_ss.add(capstone)
 ppc_ss.add(files(
   'cpu-models.c',
   'cpu.c',

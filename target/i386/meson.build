@@ -1,4 +1,5 @@
 i386_ss = ss.source_set()
+i386_ss.add(capstone)
 i386_ss.add(files(
   'cpu.c',
   'gdbstub.c',

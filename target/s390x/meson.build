@@ -1,4 +1,5 @@
 s390x_ss = ss.source_set()
+s390x_ss.add(capstone)
 s390x_ss.add(files(
   'cpu.c',
   'cpu_features.c',
