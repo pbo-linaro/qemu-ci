@@ -667,6 +667,7 @@ typedef enum FeatureWord {
     FEAT_7_1_EDX,       /* CPUID[EAX=7,ECX=1].EDX */
     FEAT_7_2_EDX,       /* CPUID[EAX=7,ECX=2].EDX */
     FEAT_24_0_EBX,      /* CPUID[EAX=0x24,ECX=0].EBX */
+    FEAT_7_1_ECX,       /* CPUID[EAX=7,ECX=1].ECX */
     FEATURE_WORDS,
 } FeatureWord;
 
