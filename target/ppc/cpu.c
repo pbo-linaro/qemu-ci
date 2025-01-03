@@ -130,23 +130,45 @@ void ppc_store_ciabr(CPUPPCState *env, target_ulong val)
     ppc_update_ciabr(env);
 }
 
-void ppc_update_daw0(CPUPPCState *env)
+void ppc_update_daw(CPUPPCState *env, uint32_t spr_daw)
 {
     CPUState *cs = env_cpu(env);
-    target_ulong deaw = env->spr[SPR_DAWR0] & PPC_BITMASK(0, 60);
-    uint32_t dawrx = env->spr[SPR_DAWRX0];
-    int mrd = extract32(dawrx, PPC_BIT_NR(48), 54 - 48);
-    bool dw = extract32(dawrx, PPC_BIT_NR(57), 1);
-    bool dr = extract32(dawrx, PPC_BIT_NR(58), 1);
-    bool hv = extract32(dawrx, PPC_BIT_NR(61), 1);
-    bool sv = extract32(dawrx, PPC_BIT_NR(62), 1);
-    bool pr = extract32(dawrx, PPC_BIT_NR(62), 1);
+    struct CPUWatchpoint **dawr_watchpt;
+    target_ulong deaw;
+    uint32_t dawrx;
+    int mrd, flags;
+    bool dw, dr, hv, sv, pr;
     vaddr len;
-    int flags;
 
-    if (env->dawr0_watchpoint) {
-        cpu_watchpoint_remove_by_ref(cs, env->dawr0_watchpoint);
-        env->dawr0_watchpoint = NULL;
+    switch (spr_daw) {
+    case SPR_DAWR0:
+    case SPR_DAWRX0:
+        dawr_watchpt = &env->dawr0_watchpoint;
+        deaw = env->spr[SPR_DAWR0] & PPC_BITMASK(0, 60);
+        dawrx = env->spr[SPR_DAWRX0];
+        break;
+
+    case SPR_DAWR1:
+    case SPR_DAWRX1:
+        dawr_watchpt = &env->dawr1_watchpoint;
+        deaw = env->spr[SPR_DAWR1] & PPC_BITMASK(0, 60);
+        dawrx = env->spr[SPR_DAWRX1];
+        break;
+    default:
+        dawrx = 0;
+        *dawr_watchpt = NULL;
+        break;
+    }
+    mrd = extract32(dawrx, PPC_BIT_NR(48), 54 - 48);
+    dw = extract32(dawrx, PPC_BIT_NR(57), 1);
+    dr = extract32(dawrx, PPC_BIT_NR(58), 1);
+    hv = extract32(dawrx, PPC_BIT_NR(61), 1);
+    sv = extract32(dawrx, PPC_BIT_NR(62), 1);
+    pr = extract32(dawrx, PPC_BIT_NR(62), 1);
+
+    if (*dawr_watchpt) {
+        cpu_watchpoint_remove_by_ref(cs, *dawr_watchpt);
+        *dawr_watchpt = NULL;
     }
 
     if (!dr && !dw) {
@@ -166,30 +188,31 @@ void ppc_update_daw0(CPUPPCState *env)
         flags |= BP_MEM_WRITE;
     }
 
-    cpu_watchpoint_insert(cs, deaw, len, flags, &env->dawr0_watchpoint);
+    cpu_watchpoint_insert(cs, deaw, len, flags, dawr_watchpt);
 }
 
-void ppc_store_dawr0(CPUPPCState *env, target_ulong val)
+void ppc_store_dawr(CPUPPCState *env, target_ulong val, uint32_t dawr)
 {
-    env->spr[SPR_DAWR0] = val;
-    ppc_update_daw0(env);
+    env->spr[dawr] = val;
+    ppc_update_daw(env, dawr);
 }
 
-void ppc_store_dawrx0(CPUPPCState *env, uint32_t val)
+void ppc_store_dawrx(CPUPPCState *env, uint32_t val, uint32_t dawrx)
 {
     int hrammc = extract32(val, PPC_BIT_NR(56), 1);
 
     if (hrammc) {
         /* This might be done with a second watchpoint at the xor of DEAW[0] */
-        qemu_log_mask(LOG_UNIMP, "%s: DAWRX0[HRAMMC] is unimplemented\n",
+        qemu_log_mask(LOG_UNIMP, "%s: DAWRX[HRAMMC] is unimplemented\n",
                       __func__);
     }
 
-    env->spr[SPR_DAWRX0] = val;
-    ppc_update_daw0(env);
+    env->spr[dawrx] = val;
+    ppc_update_daw(env, dawrx);
 }
-#endif
-#endif
+
+#endif /* TARGET_PPC64 */
+#endif /* !CONFIG_USER_ONLY */
 
 static inline void fpscr_set_rounding_mode(CPUPPCState *env)
 {
