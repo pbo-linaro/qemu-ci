@@ -12,8 +12,9 @@ xtensa_ss.add(files(
   'op_helper.c',
   'translate.c',
   'win_helper.c',
-  'xtensa-isa.c',
 ))
+
+common_ss.add(when: 'CONFIG_XTENSA_DIS', if_true: files('xtensa-isa.c'))
 
 xtensa_system_ss = ss.source_set()
 xtensa_system_ss.add(files(
