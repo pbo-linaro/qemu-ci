@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250104-auto-v4-0-972461ee87fd@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/2] virtio-net: Convert feature properties to OnOffAuto
+  [32m✓[0m [PATCH v4 2/2] virtio-net: Report RSS warning at device realization
+  ---
+  [32m✓[0m Signed: DKIM/daynix-com.20230601.gappssmtp.com (From: akihiko.odaki@daynix.com)
+---
+Total patches: 2
+---
+ Base: base-commit d4ce41e114a1f079b0994b1e6aa7f01e20ba490d not known, ignoring
+Applying: virtio-net: Convert feature properties to OnOffAuto
+Patch failed at 0001 virtio-net: Convert feature properties to OnOffAuto
+error: patch failed: hw/core/machine.c:38
+error: hw/core/machine.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
