@@ -27,8 +27,16 @@
 #include "qemu/accel.h"
 #include "hw/boards.h"
 #include "system/cpus.h"
+#include "system/hw_accel.h"
 #include "qemu/error-report.h"
 #include "accel-system.h"
+
+CPUTailQ hw_accel_cpus_queue = QTAILQ_HEAD_INITIALIZER(hw_accel_cpus_queue);
+
+CPUTailQ *hw_accel_get_cpus_queue(void)
+{
+    return &hw_accel_cpus_queue;
+}
 
 int accel_init_machine(AccelState *accel, MachineState *ms)
 {
