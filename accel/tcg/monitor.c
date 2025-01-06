@@ -19,6 +19,7 @@
 #include "tcg/tcg.h"
 #include "internal-common.h"
 #include "tb-context.h"
+#include "tcg-accel-ops.h"
 
 
 static void dump_drift_info(GString *buf)
@@ -131,7 +132,7 @@ static void tlb_flush_counts(size_t *pfull, size_t *ppart, size_t *pelide)
     CPUState *cpu;
     size_t full = 0, part = 0, elide = 0;
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         full += qatomic_read(&cpu->neg.tlb.c.full_flush_count);
         part += qatomic_read(&cpu->neg.tlb.c.part_flush_count);
         elide += qatomic_read(&cpu->neg.tlb.c.elide_flush_count);

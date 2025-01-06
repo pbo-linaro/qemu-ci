@@ -42,7 +42,7 @@ void rr_kick_vcpu_thread(CPUState *unused)
 {
     CPUState *cpu;
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         cpu_exit(cpu);
     };
 }
@@ -116,7 +116,7 @@ static void rr_wait_io_event(void)
 
     rr_start_kick_timer();
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         qemu_wait_io_event_common(cpu);
     }
 }
@@ -129,7 +129,7 @@ static void rr_deal_with_unplugged_cpus(void)
 {
     CPUState *cpu;
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         if (cpu->unplug && !cpu_can_run(cpu)) {
             tcg_cpu_destroy(cpu);
             break;
@@ -160,7 +160,7 @@ static int rr_cpu_count(void)
 
     if (cpu_list_generation_id_get() != last_gen_id) {
         cpu_count = 0;
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_TCG(cpu) {
             ++cpu_count;
         }
         last_gen_id = cpu_list_generation_id_get();
@@ -201,7 +201,7 @@ static void *rr_cpu_thread_fn(void *arg)
         qemu_cond_wait_bql(first_cpu->halt_cond);
 
         /* process any pending work */
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_TCG(cpu) {
             current_cpu = cpu;
             qemu_wait_io_event_common(cpu);
         }

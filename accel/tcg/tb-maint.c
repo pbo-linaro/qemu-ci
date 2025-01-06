@@ -36,6 +36,7 @@
 #ifdef CONFIG_USER_ONLY
 #include "user/page-protection.h"
 #endif
+#include "tcg-accel-ops.h"
 
 
 /* List iterators for lists of tagged pointers in TranslationBlock. */
@@ -771,7 +772,7 @@ static void do_tb_flush(CPUState *cpu, run_on_cpu_data tb_flush_count)
     }
     did_flush = true;
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         tcg_flush_jmp_cache(cpu);
     }
 
@@ -885,13 +886,13 @@ static void tb_jmp_cache_inval_tb(TranslationBlock *tb)
 
     if (tb_cflags(tb) & CF_PCREL) {
         /* A TB may be at any virtual address */
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_TCG(cpu) {
             tcg_flush_jmp_cache(cpu);
         }
     } else {
         uint32_t h = tb_jmp_cache_hash_func(tb->pc);
 
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_TCG(cpu) {
             CPUJumpCache *jc = cpu->tb_jmp_cache;
 
             if (qatomic_read(&jc->array[h].tb) == tb) {

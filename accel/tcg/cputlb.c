@@ -48,6 +48,7 @@
 #endif
 #include "tcg/tcg-ldst.h"
 #include "tcg/oversized-guest.h"
+#include "tcg-accel-ops.h"
 
 /* DEBUG defines, enable DEBUG_TLB_LOG to log to the CPU_LOG_MMU target */
 /* #define DEBUG_TLB */
@@ -368,7 +369,7 @@ static void flush_all_helper(CPUState *src, run_on_cpu_func fn,
 {
     CPUState *cpu;
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_TCG(cpu) {
         if (cpu != src) {
             async_run_on_cpu(cpu, fn, d);
         }
@@ -646,7 +647,7 @@ void tlb_flush_page_by_mmuidx_all_cpus_synced(CPUState *src_cpu,
         TLBFlushPageByMMUIdxData *d;
 
         /* Allocate a separate data block for each destination cpu.  */
-        CPU_FOREACH(dst_cpu) {
+        CPU_FOREACH_TCG(dst_cpu) {
             if (dst_cpu != src_cpu) {
                 d = g_new(TLBFlushPageByMMUIdxData, 1);
                 d->addr = addr;
@@ -839,7 +840,7 @@ void tlb_flush_range_by_mmuidx_all_cpus_synced(CPUState *src_cpu,
     d.bits = bits;
 
     /* Allocate a separate data block for each destination cpu.  */
-    CPU_FOREACH(dst_cpu) {
+    CPU_FOREACH_TCG(dst_cpu) {
         if (dst_cpu != src_cpu) {
             p = g_memdup(&d, sizeof(d));
             async_run_on_cpu(dst_cpu, tlb_flush_range_by_mmuidx_async_1,
