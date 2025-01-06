@@ -504,7 +504,7 @@ static int hvf_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
         }
     }
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_HVF(cpu) {
         err = hvf_update_guest_debug(cpu);
         if (err) {
             return err;
@@ -543,7 +543,7 @@ static int hvf_remove_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
         }
     }
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_HVF(cpu) {
         err = hvf_update_guest_debug(cpu);
         if (err) {
             return err;
@@ -560,7 +560,7 @@ static void hvf_remove_all_breakpoints(CPUState *cpu)
     QTAILQ_FOREACH_SAFE(bp, &hvf_state->hvf_sw_breakpoints, entry, next) {
         if (hvf_arch_remove_sw_breakpoint(cpu, bp) != 0) {
             /* Try harder to find a CPU that currently sees the breakpoint. */
-            CPU_FOREACH(tmpcpu)
+            CPU_FOREACH_HVF(tmpcpu)
             {
                 if (hvf_arch_remove_sw_breakpoint(tmpcpu, bp) == 0) {
                     break;
@@ -572,7 +572,7 @@ static void hvf_remove_all_breakpoints(CPUState *cpu)
     }
     hvf_arch_remove_all_hw_breakpoints();
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_HVF(cpu) {
         hvf_update_guest_debug(cpu);
     }
 }
@@ -581,6 +581,7 @@ static void hvf_accel_ops_class_init(ObjectClass *oc, void *data)
 {
     AccelOpsClass *ops = ACCEL_OPS_CLASS(oc);
 
+    ops->get_cpus_queue = hw_accel_get_cpus_queue;
     ops->create_vcpu_thread = hvf_start_vcpu_thread;
     ops->kick_vcpu_thread = hvf_kick_vcpu_thread;
 

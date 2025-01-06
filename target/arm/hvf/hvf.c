@@ -2269,10 +2269,10 @@ static void hvf_arch_set_traps(void)
 
     /* Check whether guest debugging is enabled for at least one vCPU; if it
      * is, enable exiting the guest on all vCPUs */
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_HVF(cpu) {
         should_enable_traps |= cpu->accel->guest_debug_enabled;
     }
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_HVF(cpu) {
         /* Set whether debug exceptions exit the guest */
         r = hv_vcpu_set_trap_debug_exceptions(cpu->accel->fd,
                                               should_enable_traps);
