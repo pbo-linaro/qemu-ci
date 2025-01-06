@@ -47,6 +47,13 @@
 
 /* common functionality among all TCG variants */
 
+CPUTailQ tcg_cpus_queue = QTAILQ_HEAD_INITIALIZER(tcg_cpus_queue);
+
+static CPUTailQ *tcg_get_cpus_queue(void)
+{
+    return &tcg_cpus_queue;
+}
+
 void tcg_cpu_init_cflags(CPUState *cpu, bool parallel)
 {
     uint32_t cflags;
@@ -199,6 +206,7 @@ static inline void tcg_remove_all_breakpoints(CPUState *cpu)
 
 static void tcg_accel_ops_init(AccelOpsClass *ops)
 {
+    ops->get_cpus_queue = tcg_get_cpus_queue;
     if (qemu_tcg_mttcg_enabled()) {
         ops->create_vcpu_thread = mttcg_start_vcpu_thread;
         ops->kick_vcpu_thread = mttcg_kick_vcpu_thread;
