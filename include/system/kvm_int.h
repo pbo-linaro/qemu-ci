@@ -13,6 +13,7 @@
 #include "qapi/qapi-types-common.h"
 #include "qemu/accel.h"
 #include "qemu/queue.h"
+#include "system/hw_accel.h"
 #include "system/kvm.h"
 #include "hw/boards.h"
 #include "hw/i386/topology.h"
@@ -167,6 +168,8 @@ struct KVMState
     uint16_t xen_evtchn_max_pirq;
     char *device;
 };
+
+#define CPU_FOREACH_KVM(cpu) CPU_FOREACH_HWACCEL(cpu)
 
 void kvm_memory_listener_register(KVMState *s, KVMMemoryListener *kml,
                                   AddressSpace *as, int as_id, const char *name);

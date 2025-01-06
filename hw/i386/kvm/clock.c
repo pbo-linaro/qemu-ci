@@ -17,6 +17,7 @@
 #include "qemu/host-utils.h"
 #include "qemu/module.h"
 #include "system/kvm.h"
+#include "system/kvm_int.h"
 #include "system/runstate.h"
 #include "system/hw_accel.h"
 #include "kvm/kvm_i386.h"
@@ -196,7 +197,7 @@ static void kvmclock_vm_state_change(void *opaque, bool running,
         if (!cap_clock_ctrl) {
             return;
         }
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_KVM(cpu) {
             run_on_cpu(cpu, do_kvmclock_ctrl, RUN_ON_CPU_NULL);
         }
     } else {

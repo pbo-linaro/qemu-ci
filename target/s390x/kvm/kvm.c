@@ -1559,7 +1559,7 @@ static void handle_diag_318(S390CPU *cpu, struct kvm_run *run)
         return;
     }
 
-    CPU_FOREACH(t) {
+    CPU_FOREACH_KVM(t) {
         run_on_cpu(t, s390_do_cpu_set_diag318,
                    RUN_ON_CPU_HOST_ULONG(diag318_info));
     }

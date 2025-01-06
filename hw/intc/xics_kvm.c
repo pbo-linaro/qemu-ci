@@ -29,6 +29,7 @@
 #include "qapi/error.h"
 #include "trace.h"
 #include "system/kvm.h"
+#include "system/kvm_int.h"
 #include "hw/ppc/spapr.h"
 #include "hw/ppc/spapr_cpu_core.h"
 #include "hw/ppc/xics.h"
@@ -418,7 +419,7 @@ int xics_kvm_connect(SpaprInterruptController *intc, uint32_t nr_servers,
     kvm_gsi_direct_mapping = true;
 
     /* Create the presenters */
-    CPU_FOREACH(cs) {
+    CPU_FOREACH_KVM(cs) {
         PowerPCCPU *cpu = POWERPC_CPU(cs);
 
         icp_kvm_realize(DEVICE(spapr_cpu_state(cpu)->icp), &local_err);
@@ -434,7 +435,7 @@ int xics_kvm_connect(SpaprInterruptController *intc, uint32_t nr_servers,
     }
 
     /* Connect the presenters to the initial VCPUs of the machine */
-    CPU_FOREACH(cs) {
+    CPU_FOREACH_KVM(cs) {
         PowerPCCPU *cpu = POWERPC_CPU(cs);
         icp_set_kvm_state(spapr_cpu_state(cpu)->icp, &local_err);
         if (local_err) {

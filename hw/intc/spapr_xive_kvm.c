@@ -14,6 +14,7 @@
 #include "target/ppc/cpu.h"
 #include "system/cpus.h"
 #include "system/kvm.h"
+#include "system/kvm_int.h"
 #include "system/runstate.h"
 #include "hw/ppc/spapr.h"
 #include "hw/ppc/spapr_cpu_core.h"
@@ -678,7 +679,7 @@ int kvmppc_xive_post_load(SpaprXive *xive, int version_id)
      * 'post_load' handler of XiveTCTX because the machine is not
      * necessarily connected to the KVM device at that time.
      */
-    CPU_FOREACH(cs) {
+    CPU_FOREACH_KVM(cs) {
         PowerPCCPU *cpu = POWERPC_CPU(cs);
 
         ret = kvmppc_xive_cpu_set_state(spapr_cpu_state(cpu)->tctx, &local_err);
@@ -795,7 +796,7 @@ int kvmppc_xive_connect(SpaprInterruptController *intc, uint32_t nr_servers,
         kvmppc_xive_change_state_handler, xive);
 
     /* Connect the presenters to the initial VCPUs of the machine */
-    CPU_FOREACH(cs) {
+    CPU_FOREACH_KVM(cs) {
         PowerPCCPU *cpu = POWERPC_CPU(cs);
 
         ret = kvmppc_xive_cpu_connect(spapr_cpu_state(cpu)->tctx, errp);

@@ -1422,7 +1422,7 @@ int kvm_xen_soft_reset(void)
         return err;
     }
 
-    CPU_FOREACH(cpu) {
+    CPU_FOREACH_KVM(cpu) {
         async_run_on_cpu(cpu, do_vcpu_soft_reset, RUN_ON_CPU_NULL);
     }
 

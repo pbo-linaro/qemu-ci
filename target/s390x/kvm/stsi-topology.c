@@ -10,6 +10,7 @@
 #include "cpu.h"
 #include "hw/s390x/sclp.h"
 #include "hw/s390x/cpu-topology.h"
+#include "system/kvm_int.h"
 
 QEMU_BUILD_BUG_ON(S390_CPU_ENTITLEMENT_LOW != 1);
 QEMU_BUILD_BUG_ON(S390_CPU_ENTITLEMENT_MEDIUM != 2);
@@ -256,7 +257,7 @@ static void s390_topology_fill_list_sorted(S390TopologyList *topology_list)
 
     QTAILQ_INSERT_HEAD(topology_list, &sentinel, next);
 
-    CPU_FOREACH(cs) {
+    CPU_FOREACH_KVM(cs) {
         S390TopologyId id = s390_topology_from_cpu(S390_CPU(cs));
         S390TopologyEntry *entry = NULL, *tmp;
 

@@ -329,7 +329,7 @@ void kvm_synchronize_all_tsc(void)
     CPUState *cpu;
 
     if (kvm_enabled()) {
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_KVM(cpu) {
             run_on_cpu(cpu, do_kvm_synchronize_tsc, RUN_ON_CPU_NULL);
         }
     }
@@ -2847,7 +2847,7 @@ static void *kvm_msr_energy_thread(void *data)
          * Identify the vcpu threads
          * Calculate the number of vcpu per package
          */
-        CPU_FOREACH(cpu) {
+        CPU_FOREACH_KVM(cpu) {
             for (int i = 0; i < num_threads; i++) {
                 if (cpu->thread_id == thd_stat[i].thread_id) {
                     thd_stat[i].is_vcpu = true;
