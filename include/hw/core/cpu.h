@@ -591,6 +591,14 @@ static inline CPUArchState *cpu_env(CPUState *cpu)
 typedef QTAILQ_HEAD(CPUTailQ, CPUState) CPUTailQ;
 extern CPUTailQ cpus_queue;
 
+/**
+ * cpus_get_accel_cpus_queue:
+ * @cpu: The vCPU to get the accelerator #CPUTailQ.
+ *
+ * Returns the #CPUTailQ associated with the accelerator of the vCPU.
+ */
+CPUTailQ *cpus_get_accel_cpus_queue(CPUState *cpu);
+
 #define first_cpu        QTAILQ_FIRST_RCU(&cpus_queue)
 #define CPU_NEXT(cpu)    QTAILQ_NEXT_RCU(cpu, node)
 #define CPU_FOREACH(cpu) QTAILQ_FOREACH_RCU(cpu, &cpus_queue, node)

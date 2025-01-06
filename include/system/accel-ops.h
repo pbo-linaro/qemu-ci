@@ -12,6 +12,7 @@
 
 #include "exec/vaddr.h"
 #include "qom/object.h"
+#include "hw/core/cpu.h"
 
 #define ACCEL_OPS_SUFFIX "-ops"
 #define TYPE_ACCEL_OPS "accel" ACCEL_OPS_SUFFIX
@@ -37,6 +38,11 @@ struct AccelOpsClass {
     bool (*cpus_are_resettable)(void);
     void (*cpu_reset_hold)(CPUState *cpu);
 
+    /**
+     * get_cpus_queue:
+     * Returns the #CPUTailQ maintained by this accelerator.
+     */
+    CPUTailQ *(*get_cpus_queue)(void);
     void (*create_vcpu_thread)(CPUState *cpu); /* MANDATORY NON-NULL */
     void (*kick_vcpu_thread)(CPUState *cpu);
     bool (*cpu_thread_is_idle)(CPUState *cpu);

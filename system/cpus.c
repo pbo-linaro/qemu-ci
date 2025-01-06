@@ -209,6 +209,11 @@ void cpu_exec_reset_hold(CPUState *cpu)
     }
 }
 
+CPUTailQ *cpus_get_accel_cpus_queue(CPUState *cpu)
+{
+    return cpus_accel ? cpus_accel->get_cpus_queue() : NULL;
+}
+
 int64_t cpus_get_virtual_clock(void)
 {
     /*

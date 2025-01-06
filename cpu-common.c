@@ -82,6 +82,7 @@ unsigned int cpu_list_generation_id_get(void)
 void cpu_list_add(CPUState *cpu)
 {
     static bool cpu_index_auto_assigned;
+    CPUTailQ *accel_cpus_queue = cpus_get_accel_cpus_queue(cpu);
 
     QEMU_LOCK_GUARD(&qemu_cpu_list_lock);
     if (cpu->cpu_index == UNASSIGNED_CPU_INDEX) {
@@ -92,17 +93,26 @@ void cpu_list_add(CPUState *cpu)
         assert(!cpu_index_auto_assigned);
     }
     QTAILQ_INSERT_TAIL_RCU(&cpus_queue, cpu, node);
+    if (accel_cpus_queue) {
+        QTAILQ_INSERT_TAIL_RCU(accel_cpus_queue, cpu, node);
+    }
+
     cpu_list_generation_id++;
 }
 
 void cpu_list_remove(CPUState *cpu)
 {
+    CPUTailQ *accel_cpus_queue = cpus_get_accel_cpus_queue(cpu);
+
     QEMU_LOCK_GUARD(&qemu_cpu_list_lock);
     if (!QTAILQ_IN_USE(cpu, node)) {
         /* there is nothing to undo since cpu_exec_init() hasn't been called */
         return;
     }
 
+    if (accel_cpus_queue) {
+        QTAILQ_REMOVE_RCU(accel_cpus_queue, cpu, node);
+    }
     QTAILQ_REMOVE_RCU(&cpus_queue, cpu, node);
     cpu->cpu_index = UNASSIGNED_CPU_INDEX;
     cpu_list_generation_id++;

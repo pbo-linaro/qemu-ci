@@ -18,6 +18,11 @@ void cpu_exec_reset_hold(CPUState *cpu)
 {
 }
 
+CPUTailQ *cpus_get_accel_cpus_queue(CPUState *cpu)
+{
+    return NULL;
+}
+
 /* User mode emulation does not support record/replay yet.  */
 
 bool replay_exception(void)
