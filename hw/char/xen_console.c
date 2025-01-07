@@ -551,7 +551,7 @@ static void xen_console_device_create(XenBackendInstance *backend,
     }
 
     if (xs_node_scanf(xsh, XBT_NULL, fe, "type", errp, "%ms", &type) != 1) {
-        error_prepend(errp, "failed to read console device type: ");
+        error_setg(errp, "failed to read console device type: ");
         goto fail;
     }
 
@@ -582,7 +582,7 @@ static void xen_console_device_create(XenBackendInstance *backend,
     } else if (number) {
         cd = serial_hd(number);
         if (!cd) {
-            error_prepend(errp, "console: No serial device #%ld found: ",
+            error_setg(errp, "console: No serial device #%ld found: ",
                           number);
             goto fail;
         }
