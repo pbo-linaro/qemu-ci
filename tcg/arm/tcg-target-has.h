@@ -82,4 +82,21 @@ extern bool use_neon_instructions;
 #define TCG_TARGET_HAS_cmpsel_vec       0
 #define TCG_TARGET_HAS_tst_vec          1
 
+static inline bool
+tcg_target_extract_valid(TCGType type, unsigned ofs, unsigned len)
+{
+    if (use_armv7_instructions) {
+        return true;  /* SBFX or UBFX */
+    }
+    switch (len) {
+    case 8:   /* SXTB or UXTB */
+    case 16:  /* SXTH or UXTH */
+        return (ofs % 8) == 0;
+    }
+    return false;
+}
+
+#define TCG_TARGET_extract_valid   tcg_target_extract_valid
+#define TCG_TARGET_sextract_valid  tcg_target_extract_valid
+
 #endif
