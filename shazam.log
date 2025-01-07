@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/9b64bbe0-473d-4f6b-a673-356e74517fb4@tls.msk.ru/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] A few patches for u-boot-sam460ex
+---
+Total patches: 1
+---
+Applying: u-boot-sam460ex: build fixes
+Patch failed at 0001 u-boot-sam460ex: build fixes
+error: roms/u-boot-sam460ex/board/ACube/Sam460ex/Sam460ex.c: does not exist in index
+error: roms/u-boot-sam460ex/common/usb.c: does not exist in index
+error: roms/u-boot-sam460ex/config.mk: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
