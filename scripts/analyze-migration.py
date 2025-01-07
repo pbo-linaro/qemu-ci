@@ -388,12 +388,21 @@ class VMSDFieldInt(VMSDFieldGeneric):
         return self.data
 
 class VMSDFieldUInt(VMSDFieldInt):
+    NULL_PTR_MARKER = 0x30
+
     def __init__(self, desc, file):
         super(VMSDFieldUInt, self).__init__(desc, file)
 
     def read(self):
         super(VMSDFieldUInt, self).read()
         self.data = self.udata
+
+        if self.data == self.NULL_PTR_MARKER:
+            # The migration stream encodes NULL pointers as '0' so any
+            # 0x30 in the stream could be a NULL. There's not much we
+            # can do without breaking backward compatibility.
+            pass
+
         return self.data
 
 class VMSDFieldIntLE(VMSDFieldInt):
