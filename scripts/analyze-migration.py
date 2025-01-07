@@ -497,7 +497,14 @@ class VMSDFieldStruct(VMSDFieldGeneric):
                     raise Exception("internal index of data field unmatched (%d/%d)" % (len(a), int(field['index'])))
                 a.append(field['data'])
             else:
-                self.data[field['name']] = field['data']
+                # There could be multiple entries for the same field
+                # name, e.g. when a compressed array was broken in
+                # more than one piece.
+                if (field['name'] in self.data and
+                    type(self.data[field['name']]) == list):
+                    self.data[field['name']].append(field['data'])
+                else:
+                    self.data[field['name']] = field['data']
 
         if 'subsections' in self.desc['struct']:
             for subsection in self.desc['struct']['subsections']:
