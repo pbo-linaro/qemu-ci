@@ -1342,6 +1342,10 @@ static void tgen_or(TCGContext *s, TCGType type,
     tcg_out_arith(s, a0, a1, a2, ARITH_OR);
 }
 
+static const TCGOutOpBinary outop_eqv = {
+    .base.static_constraint = C_NotImplemented,
+};
+
 static void tgen_ori(TCGContext *s, TCGType type,
                       TCGReg a0, TCGReg a1, tcg_target_long a2)
 {
