@@ -629,14 +629,31 @@ void spr_write_ciabr(DisasContext *ctx, int sprn, int gprn)
 void spr_write_dawr0(DisasContext *ctx, int sprn, int gprn)
 {
     translator_io_start(&ctx->base);
-    gen_helper_store_dawr0(tcg_env, cpu_gpr[gprn]);
+    gen_helper_store_dawr(tcg_env, cpu_gpr[gprn],
+                          tcg_constant_i32(SPR_DAWR0));
 }
 
 void spr_write_dawrx0(DisasContext *ctx, int sprn, int gprn)
 {
     translator_io_start(&ctx->base);
-    gen_helper_store_dawrx0(tcg_env, cpu_gpr[gprn]);
+    gen_helper_store_dawrx(tcg_env, cpu_gpr[gprn],
+                           tcg_constant_i32(SPR_DAWRX0));
 }
+
+void spr_write_dawr1(DisasContext *ctx, int sprn, int gprn)
+{
+    translator_io_start(&ctx->base);
+    gen_helper_store_dawr(tcg_env, cpu_gpr[gprn],
+                          tcg_constant_i32(SPR_DAWR1));
+}
+
+void spr_write_dawrx1(DisasContext *ctx, int sprn, int gprn)
+{
+    translator_io_start(&ctx->base);
+    gen_helper_store_dawrx(tcg_env, cpu_gpr[gprn],
+                          tcg_constant_i32(SPR_DAWRX1));
+}
+
 #endif /* defined(TARGET_PPC64) && !defined(CONFIG_USER_ONLY) */
 
 /* CTR */

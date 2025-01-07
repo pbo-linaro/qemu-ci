@@ -223,14 +223,14 @@ void helper_store_ciabr(CPUPPCState *env, target_ulong value)
     ppc_store_ciabr(env, value);
 }
 
-void helper_store_dawr0(CPUPPCState *env, target_ulong value)
+void helper_store_dawr(CPUPPCState *env, target_ulong value, uint32_t dawr)
 {
-    ppc_store_dawr0(env, value);
+    ppc_store_dawr(env, value, dawr);
 }
 
-void helper_store_dawrx0(CPUPPCState *env, target_ulong value)
+void helper_store_dawrx(CPUPPCState *env, target_ulong value, uint32_t dawrx)
 {
-    ppc_store_dawrx0(env, value);
+    ppc_store_dawrx(env, value, dawrx);
 }
 
 /*

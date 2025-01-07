@@ -818,11 +818,11 @@ static target_ulong h_set_mode_resource_set_ciabr(PowerPCCPU *cpu,
     return H_SUCCESS;
 }
 
-static target_ulong h_set_mode_resource_set_dawr0(PowerPCCPU *cpu,
-                                                  SpaprMachineState *spapr,
-                                                  target_ulong mflags,
-                                                  target_ulong value1,
-                                                  target_ulong value2)
+static target_ulong h_set_mode_resource_set_dawr(PowerPCCPU *cpu,
+                                                 SpaprMachineState *spapr,
+                                                 target_ulong mflags,
+                                                 target_ulong value1,
+                                                 target_ulong value2)
 {
     CPUPPCState *env = &cpu->env;
 
@@ -835,8 +835,12 @@ static target_ulong h_set_mode_resource_set_dawr0(PowerPCCPU *cpu,
         return H_P4;
     }
 
-    ppc_store_dawr0(env, value1);
-    ppc_store_dawrx0(env, value2);
+    ppc_store_dawr(env, value1, SPR_DAWR0);
+    ppc_store_dawrx(env, value2, SPR_DAWRX0);
+    if (env->excp_model > POWERPC_EXCP_POWER10) {
+        ppc_store_dawr(env, value1, SPR_DAWR1);
+        ppc_store_dawrx(env, value2, SPR_DAWRX1);
+    }
 
     return H_SUCCESS;
 }
@@ -914,9 +918,9 @@ static target_ulong h_set_mode(PowerPCCPU *cpu, SpaprMachineState *spapr,
         ret = h_set_mode_resource_set_ciabr(cpu, spapr, args[0], args[2],
                                             args[3]);
         break;
-    case H_SET_MODE_RESOURCE_SET_DAWR0:
-        ret = h_set_mode_resource_set_dawr0(cpu, spapr, args[0], args[2],
-                                            args[3]);
+    case H_SET_MODE_RESOURCE_SET_DAWR:
+        ret = h_set_mode_resource_set_dawr(cpu, spapr, args[0], args[2],
+                                           args[3]);
         break;
     case H_SET_MODE_RESOURCE_LE:
         ret = h_set_mode_resource_le(cpu, spapr, args[0], args[2], args[3]);

@@ -1261,6 +1261,7 @@ struct CPUArchState {
     ppc_slb_t slb[MAX_SLB_ENTRIES]; /* PowerPC 64 SLB area */
     struct CPUBreakpoint *ciabr_breakpoint;
     struct CPUWatchpoint *dawr0_watchpoint;
+    struct CPUWatchpoint *dawr1_watchpoint;
 #endif
     target_ulong sr[32];   /* segment registers */
     uint32_t nb_BATs;      /* number of BATs */
@@ -1589,9 +1590,9 @@ void ppc_store_sdr1(CPUPPCState *env, target_ulong value);
 void ppc_store_lpcr(PowerPCCPU *cpu, target_ulong val);
 void ppc_update_ciabr(CPUPPCState *env);
 void ppc_store_ciabr(CPUPPCState *env, target_ulong value);
-void ppc_update_daw0(CPUPPCState *env);
-void ppc_store_dawr0(CPUPPCState *env, target_ulong value);
-void ppc_store_dawrx0(CPUPPCState *env, uint32_t value);
+void ppc_update_daw(CPUPPCState *env, uint32_t daw);
+void ppc_store_dawr(CPUPPCState *env, target_ulong value, uint32_t dawr);
+void ppc_store_dawrx(CPUPPCState *env, uint32_t value, uint32_t dawrx);
 #endif /* !defined(CONFIG_USER_ONLY) */
 void ppc_store_msr(CPUPPCState *env, target_ulong value);
 
