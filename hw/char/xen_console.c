@@ -531,6 +531,7 @@ static void xen_console_device_create(XenBackendInstance *backend,
     const char *name = xen_backend_get_name(backend);
     unsigned long number;
     char *fe = NULL, *type = NULL, *output = NULL;
+    const char *node_path;
     char label[32];
     XenDevice *xendev = NULL;
     XenConsole *con;
@@ -550,7 +551,10 @@ static void xen_console_device_create(XenBackendInstance *backend,
         goto fail;
     }
 
-    if (xs_node_scanf(xsh, XBT_NULL, fe, "type", errp, "%ms", &type) != 1) {
+    node_path = g_strdup_printf("%s/type", fe);
+    type = qemu_xen_xs_read(xsh, XBT_NULL, node_path, NULL);
+    g_free(node_path);
+    if (!type) {
         error_setg(errp, "failed to read console device type: ");
         goto fail;
     }
@@ -568,7 +572,10 @@ static void xen_console_device_create(XenBackendInstance *backend,
 
     snprintf(label, sizeof(label), "xencons%ld", number);
 
-    if (xs_node_scanf(xsh, XBT_NULL, fe, "output", NULL, "%ms", &output) == 1) {
+    node_path = g_strdup_printf("%s/output", fe);
+    output = qemu_xen_xs_read(xsh, XBT_NULL, node_path, NULL);
+    g_free(node_path);
+    if (!output) {
         /*
          * FIXME: sure we want to support implicit
          * muxed monitors here?

@@ -142,6 +142,7 @@ again:
 
     opts = qdict_new();
     for (i = 0; i < n; i++) {
+        const char *node_path;
         char *val;
 
         /*
@@ -156,8 +157,10 @@ again:
             !strcmp(key[i], "hotplug-status"))
             continue;
 
-        if (xs_node_scanf(xenbus->xsh, tid, path, key[i], NULL, "%ms",
-                          &val) == 1) {
+        node_path = g_strdup_printf("%s/%s", path, key[i]);
+        val = qemu_xen_xs_read(xenbus->xsh, tid, node_path, NULL);
+        g_free(node_path);
+        if (val) {
             qdict_put_str(opts, key[i], val);
             free(val);
         }
