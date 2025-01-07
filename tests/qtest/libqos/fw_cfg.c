@@ -17,6 +17,8 @@
 #include "../libqtest.h"
 #include "qemu/bswap.h"
 #include "hw/nvram/fw_cfg.h"
+#include "malloc-pc.h"
+#include "libqos-malloc.h"
 
 void qfw_cfg_select(QFWCFG *fw_cfg, uint16_t key)
 {
@@ -58,6 +60,59 @@ uint64_t qfw_cfg_get_u64(QFWCFG *fw_cfg, uint16_t key)
 static void mm_fw_cfg_select(QFWCFG *fw_cfg, uint16_t key)
 {
     qtest_writew(fw_cfg->qts, fw_cfg->base, key);
+}
+
+static void
+qfw_cfg_dma_transfer(QFWCFG *fw_cfg, void *address, uint32_t length,
+                     uint32_t control)
+{
+    FWCfgDmaAccess access;
+    uint32_t addr;
+    QGuestAllocator guest_malloc;
+    uint64_t guest_access_addr;
+    uint64_t gaddr;
+
+    pc_alloc_init(&guest_malloc, fw_cfg->qts, ALLOC_NO_FLAGS);
+
+    /* create a data buffer in guest memory */
+    gaddr = guest_alloc(&guest_malloc, length);
+    g_assert(gaddr);
+    qtest_bufwrite(fw_cfg->qts, gaddr, address, length);
+
+    access.address = cpu_to_be64(gaddr);
+    access.length = cpu_to_be32(length);
+    access.control = cpu_to_be32(control);
+
+    guest_access_addr = guest_alloc(&guest_malloc, sizeof(access));
+    g_assert(guest_access_addr);
+    qtest_bufwrite(fw_cfg->qts, guest_access_addr, &access, sizeof(access));
+
+    /* lower 32 bits */
+    addr = cpu_to_be32((uint32_t)(uintptr_t)guest_access_addr);
+    qtest_outl(fw_cfg->qts, fw_cfg->base + 8, addr);
+    /* upper 32 bits */
+    addr = cpu_to_be32((uint32_t)(uintptr_t)(guest_access_addr >> 32));
+    qtest_outl(fw_cfg->qts, fw_cfg->base + 4, addr);
+
+    g_assert(!(be32_to_cpu(access.control) & FW_CFG_DMA_CTL_ERROR));
+
+    guest_free(&guest_malloc, guest_access_addr);
+    guest_free(&guest_malloc, gaddr);
+    alloc_destroy(&guest_malloc);
+}
+
+static void
+qfw_cfg_write_entry(QFWCFG *fw_cfg, uint16_t key, void *buf, int len)
+{
+    qfw_cfg_select(fw_cfg, key);
+    qfw_cfg_dma_transfer(fw_cfg, buf, len, FW_CFG_DMA_CTL_WRITE);
+}
+
+static void
+qfw_cfg_read_entry(QFWCFG *fw_cfg, uint16_t key, void *buf, int len)
+{
+    qfw_cfg_select(fw_cfg, key);
+    qfw_cfg_dma_transfer(fw_cfg, buf, len, FW_CFG_DMA_CTL_READ);
 }
 
 /*
@@ -102,6 +157,101 @@ size_t qfw_cfg_get_file(QFWCFG *fw_cfg, const char *filename,
     }
     g_free(filesbuf);
     return filesize;
+}
+
+/*
+ * The caller need check the return value. When the return value is
+ * nonzero, it means that some bytes have been transferred.
+ *
+ * If the fw_cfg file in question is smaller than the allocated & passed-in
+ * buffer, then the first len bytes were read.
+ *
+ * If the fw_cfg file in question is larger than the passed-in
+ * buffer, then the return value explains how much was actually read.
+ *
+ * It is illegal to call this function if fw_cfg does not support DMA
+ * interface. The caller should ensure that DMA is supported before
+ * calling this function.
+ */
+size_t qfw_cfg_read_file(QFWCFG *fw_cfg, const char *filename,
+                         void *data, size_t buflen)
+{
+    uint32_t count;
+    uint32_t i;
+    unsigned char *filesbuf = NULL;
+    size_t dsize;
+    size_t len = 0;
+    FWCfgFile *pdir_entry;
+
+    qfw_cfg_get(fw_cfg, FW_CFG_FILE_DIR, &count, sizeof(count));
+    count = be32_to_cpu(count);
+    dsize = sizeof(uint32_t) + count * sizeof(struct fw_cfg_file);
+    filesbuf = g_malloc(dsize);
+    qfw_cfg_get(fw_cfg, FW_CFG_FILE_DIR, filesbuf, dsize);
+    pdir_entry = (FWCfgFile *)(filesbuf + sizeof(uint32_t));
+    for (i = 0; i < count; ++i, ++pdir_entry) {
+        if (!strcmp(pdir_entry->name, filename)) {
+            len = be32_to_cpu(pdir_entry->size);
+            uint16_t sel = be16_to_cpu(pdir_entry->select);
+            if (len > buflen) {
+                len = buflen;
+            }
+            qfw_cfg_read_entry(fw_cfg, sel, data, len);
+            break;
+        }
+    }
+    g_free(filesbuf);
+    return len;
+}
+
+/*
+ * The caller need check the return value. When the return value is
+ * nonzero, it means that some bytes have been transferred.
+ *
+ * If the fw_cfg file in question is smaller than the allocated & passed-in
+ * buffer, then the buffer has been partially written.
+ *
+ * If the fw_cfg file in question is larger than the passed-in
+ * buffer, then the return value explains how much was actually written.
+ *
+ * It is illegal to call this function if fw_cfg does not support DMA
+ * interface. The caller should ensure that DMA is supported before
+ * calling this function.
+ */
+size_t qfw_cfg_write_file(QFWCFG *fw_cfg, const char *filename,
+                          void *data, size_t buflen)
+{
+    uint32_t count;
+    uint32_t i;
+    size_t len = 0;
+    uint32_t id;
+    unsigned char *filesbuf = NULL;
+    size_t dsize;
+    FWCfgFile *pdir_entry;
+
+    /* write operation is only valid if DMA is supported */
+    id = qfw_cfg_get_u32(fw_cfg, FW_CFG_ID);
+    g_assert(id & FW_CFG_VERSION_DMA);
+
+    qfw_cfg_get(fw_cfg, FW_CFG_FILE_DIR, &count, sizeof(count));
+    count = be32_to_cpu(count);
+    dsize = sizeof(uint32_t) + count * sizeof(struct fw_cfg_file);
+    filesbuf = g_malloc(dsize);
+    qfw_cfg_get(fw_cfg, FW_CFG_FILE_DIR, filesbuf, dsize);
+    pdir_entry = (FWCfgFile *)(filesbuf + sizeof(uint32_t));
+    for (i = 0; i < count; ++i, ++pdir_entry) {
+        if (!strcmp(pdir_entry->name, filename)) {
+            len = be32_to_cpu(pdir_entry->size);
+            uint16_t sel = be16_to_cpu(pdir_entry->select);
+            if (len > buflen) {
+                len = buflen;
+            }
+            qfw_cfg_write_entry(fw_cfg, sel, data, len);
+            break;
+        }
+    }
+    g_free(filesbuf);
+    return len;
 }
 
 static void mm_fw_cfg_read(QFWCFG *fw_cfg, void *data, size_t len)
