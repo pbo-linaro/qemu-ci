@@ -93,5 +93,6 @@ void vfio_user_set_handler(VFIODevice *vbasedev,
                            void (*handler)(void *opaque, VFIOUserMsg *msg),
                            void *reqarg);
 bool vfio_user_validate_version(VFIOUserProxy *proxy, Error **errp);
+int vfio_user_get_info(VFIOUserProxy *proxy, struct vfio_device_info *info);
 
 #endif /* VFIO_USER_H */
