@@ -1140,6 +1140,7 @@ static abi_long host_to_target_data_addr_rtattr(struct rtattr *rtattr)
     /* binary: depends on family type */
     case IFA_ADDRESS:
     case IFA_LOCAL:
+    case IFA_PROTO:
         break;
     /* string */
     case IFA_LABEL:
