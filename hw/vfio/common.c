@@ -1551,6 +1551,25 @@ retry:
     return info;
 }
 
+void vfio_prepare_device(VFIODevice *vbasedev, VFIOContainerBase *bcontainer,
+                         VFIOGroup *group, struct vfio_device_info *info)
+{
+    vbasedev->group = group;
+
+    vbasedev->num_irqs = info->num_irqs;
+    vbasedev->num_regions = info->num_regions;
+    vbasedev->flags = info->flags;
+    vbasedev->reset_works = !!(info->flags & VFIO_DEVICE_FLAGS_RESET);
+
+    vbasedev->bcontainer = bcontainer;
+    QLIST_INSERT_HEAD(&bcontainer->device_list, vbasedev, container_next);
+    if (group) {
+        QLIST_INSERT_HEAD(&group->device_list, vbasedev, next);
+    }
+
+    QLIST_INSERT_HEAD(&vfio_device_list, vbasedev, global_next);
+}
+
 bool vfio_attach_device_by_iommu_type(const char *iommu_type, char *name,
                                       VFIODevice *vbasedev, AddressSpace *as,
                                       Error **errp)

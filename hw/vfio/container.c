@@ -878,16 +878,10 @@ static bool vfio_get_device(VFIOGroup *group, const char *name,
     }
 
     vbasedev->fd = fd;
-    vbasedev->group = group;
-    QLIST_INSERT_HEAD(&group->device_list, vbasedev, next);
 
-    vbasedev->num_irqs = info->num_irqs;
-    vbasedev->num_regions = info->num_regions;
-    vbasedev->flags = info->flags;
+    vfio_prepare_device(vbasedev, &group->container->bcontainer, group, info);
 
     trace_vfio_get_device(name, info->flags, info->num_regions, info->num_irqs);
-
-    vbasedev->reset_works = !!(info->flags & VFIO_DEVICE_FLAGS_RESET);
 
     return true;
 }
@@ -941,7 +935,6 @@ static bool vfio_legacy_attach_device(const char *name, VFIODevice *vbasedev,
     int groupid = vfio_device_groupid(vbasedev, errp);
     VFIODevice *vbasedev_iter;
     VFIOGroup *group;
-    VFIOContainerBase *bcontainer;
 
     if (groupid < 0) {
         return false;
@@ -969,11 +962,6 @@ static bool vfio_legacy_attach_device(const char *name, VFIODevice *vbasedev,
         vfio_put_group(group);
         return false;
     }
-
-    bcontainer = &group->container->bcontainer;
-    vbasedev->bcontainer = bcontainer;
-    QLIST_INSERT_HEAD(&bcontainer->device_list, vbasedev, container_next);
-    QLIST_INSERT_HEAD(&vfio_device_list, vbasedev, global_next);
 
     return true;
 }
