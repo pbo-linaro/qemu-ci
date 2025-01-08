@@ -78,6 +78,7 @@ static void vfio_user_pci_realize(PCIDevice *pdev, Error **errp)
     AddressSpace *as;
     SocketAddress addr;
     VFIOUserProxy *proxy;
+    int ret;
 
     /*
      * TODO: make option parser understand SocketAddress
@@ -130,8 +131,45 @@ static void vfio_user_pci_realize(PCIDevice *pdev, Error **errp)
         goto error;
     }
 
+    if (!vfio_populate_device(vdev, errp)) {
+        goto error;
+    }
+
+    /* Get a copy of config space */
+    ret = vbasedev->io->region_read(vbasedev, VFIO_PCI_CONFIG_REGION_INDEX, 0,
+                               MIN(pci_config_size(pdev), vdev->config_size),
+                               pdev->config);
+    if (ret < (int)MIN(pci_config_size(&vdev->pdev), vdev->config_size)) {
+        error_setg_errno(errp, -ret, "failed to read device config space");
+        goto error;
+    }
+
+    if (!vfio_pci_config_setup(vdev, errp)) {
+        goto error;
+    }
+
+    /*
+     * vfio_pci_config_setup will have registered the device's BARs
+     * and setup any MSIX BARs, so errors after it succeeds must
+     * use out_teardown
+     */
+
+    if (!vfio_add_capabilities(vdev, errp)) {
+        goto out_teardown;
+    }
+
+    if (!vfio_interrupt_setup(vdev, errp)) {
+        goto out_teardown;
+    }
+
+    vfio_register_err_notifier(vdev);
+    vfio_register_req_notifier(vdev);
+
     return;
 
+out_teardown:
+    vfio_teardown_msi(vdev);
+    vfio_bars_exit(vdev);
 error:
     error_prepend(errp, VFIO_MSG_PREFIX, vdev->vbasedev.name);
 }
@@ -166,6 +204,10 @@ static void vfio_user_instance_finalize(Object *obj)
 {
     VFIOPCIDevice *vdev = VFIO_PCI_BASE(obj);
     VFIODevice *vbasedev = &vdev->vbasedev;
+
+    vfio_bars_finalize(vdev);
+    g_free(vdev->emulated_config_bits);
+    g_free(vdev->rom);
 
     vfio_pci_put_device(vdev);
 
