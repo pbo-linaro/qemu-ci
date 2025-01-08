@@ -1551,24 +1551,19 @@ retry:
     return info;
 }
 
-bool vfio_attach_device(char *name, VFIODevice *vbasedev,
-                        AddressSpace *as, Error **errp)
+bool vfio_attach_device_by_iommu_type(const char *iommu_type, char *name,
+                                      VFIODevice *vbasedev, AddressSpace *as,
+                                      Error **errp)
 {
-    const VFIOIOMMUClass *ops =
-        VFIO_IOMMU_CLASS(object_class_by_name(TYPE_VFIO_IOMMU_LEGACY));
     HostIOMMUDevice *hiod = NULL;
-
-    if (vbasedev->iommufd) {
-        ops = VFIO_IOMMU_CLASS(object_class_by_name(TYPE_VFIO_IOMMU_IOMMUFD));
-    }
-
-    assert(ops);
-
+    const VFIOIOMMUClass *ops =
+        VFIO_IOMMU_CLASS(object_class_by_name(iommu_type));
 
     if (!vbasedev->mdev) {
         hiod = HOST_IOMMU_DEVICE(object_new(ops->hiod_typename));
         vbasedev->hiod = hiod;
     }
+
 
     if (!ops->attach_device(name, vbasedev, as, errp)) {
         object_unref(hiod);
@@ -1577,6 +1572,19 @@ bool vfio_attach_device(char *name, VFIODevice *vbasedev,
     }
 
     return true;
+}
+
+bool vfio_attach_device(char *name, VFIODevice *vbasedev,
+                       AddressSpace *as, Error **errp)
+{
+    const char *iommu_type = TYPE_VFIO_IOMMU_LEGACY;
+
+    if (vbasedev->iommufd) {
+        iommu_type = TYPE_VFIO_IOMMU_IOMMUFD;
+    }
+
+    return vfio_attach_device_by_iommu_type(iommu_type, name, vbasedev,
+                                            as, errp);
 }
 
 void vfio_detach_device(VFIODevice *vbasedev)
