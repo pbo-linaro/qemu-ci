@@ -491,6 +491,21 @@ const PropertyInfo qdev_prop_string = {
     .set   = set_string,
 };
 
+static void set_on_off_auto(Object *obj, Visitor *v, const char *name,
+                            void *opaque, Error **errp)
+{
+    Property *prop = opaque;
+    int *ptr = object_field_prop_ptr(obj, prop);
+    bool value;
+
+    if (visit_type_bool(v, name, &value, NULL)) {
+        *ptr = value ? ON_OFF_AUTO_ON : ON_OFF_AUTO_OFF;
+        return;
+    }
+
+    qdev_propinfo_set_enum(obj, v, name, opaque, errp);
+}
+
 /* --- on/off/auto --- */
 
 const PropertyInfo qdev_prop_on_off_auto = {
@@ -498,7 +513,7 @@ const PropertyInfo qdev_prop_on_off_auto = {
     .description = "on/off/auto",
     .enum_table = &OnOffAuto_lookup,
     .get = qdev_propinfo_get_enum,
-    .set = qdev_propinfo_set_enum,
+    .set = set_on_off_auto,
     .set_default_value = qdev_propinfo_set_default_value_enum,
 };
 
