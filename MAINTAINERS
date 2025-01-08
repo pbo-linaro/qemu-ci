@@ -4139,6 +4139,8 @@ M: John Levon <john.levon@nutanix.com>
 M: Thanos Makatos <thanos.makatos@nutanix.com>
 S: Supported
 F: docs/devel/vfio-user.rst
+F: hw/vfio/user-container.c
+F: hw/vfio/user-pci.c
 F: subprojects/libvfio-user
 
 EBPF:

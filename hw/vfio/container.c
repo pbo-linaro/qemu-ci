@@ -886,7 +886,7 @@ static bool vfio_get_device(VFIOGroup *group, const char *name,
     return true;
 }
 
-static void vfio_put_base_device(VFIODevice *vbasedev)
+void vfio_put_base_device(VFIODevice *vbasedev)
 {
     if (vbasedev->regions != NULL) {
         int i;

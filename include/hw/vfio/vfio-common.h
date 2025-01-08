@@ -80,6 +80,7 @@ typedef struct VFIOMigration {
 
 struct VFIOGroup;
 
+/* MMU container sub-class for legacy vfio implementation. */
 typedef struct VFIOContainer {
     VFIOContainerBase bcontainer;
     int fd; /* /dev/vfio/vfio, empowered by the attached groups */
@@ -106,6 +107,7 @@ typedef struct VFIOIOASHwpt {
     QLIST_ENTRY(VFIOIOASHwpt) next;
 } VFIOIOASHwpt;
 
+/* MMU container sub-class for vfio iommufd implementation. */
 typedef struct VFIOIOMMUFDContainer {
     VFIOContainerBase bcontainer;
     IOMMUFDBackend *be;
@@ -114,6 +116,13 @@ typedef struct VFIOIOMMUFDContainer {
 } VFIOIOMMUFDContainer;
 
 OBJECT_DECLARE_SIMPLE_TYPE(VFIOIOMMUFDContainer, VFIO_IOMMU_IOMMUFD);
+
+/* MMU container sub-class for vfio-user. */
+typedef struct VFIOUserContainer {
+    VFIOContainerBase bcontainer;
+} VFIOUserContainer;
+
+OBJECT_DECLARE_SIMPLE_TYPE(VFIOUserContainer, VFIO_IOMMU_USER);
 
 typedef struct VFIODeviceOps VFIODeviceOps;
 typedef struct VFIODeviceIO VFIODeviceIO;
@@ -284,6 +293,7 @@ bool vfio_attach_device_by_iommu_type(const char *iommu_type, char *name,
                                       VFIODevice *vbasedev, AddressSpace *as,
                                       Error **errp);
 void vfio_detach_device(VFIODevice *vbasedev);
+void vfio_put_base_device(VFIODevice *vbasedev);
 
 int vfio_kvm_device_add_fd(int fd, Error **errp);
 int vfio_kvm_device_del_fd(int fd, Error **errp);
