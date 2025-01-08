@@ -953,7 +953,7 @@ static void vfio_devices_dma_logging_stop(VFIOContainerBase *bcontainer)
             continue;
         }
 
-        if (ioctl(vbasedev->fd, VFIO_DEVICE_FEATURE, feature)) {
+        if (vbasedev->io->device_feature(vbasedev, feature)) {
             warn_report("%s: Failed to stop DMA logging, err %d (%s)",
                         vbasedev->name, -errno, strerror(errno));
         }
@@ -1056,9 +1056,8 @@ static bool vfio_devices_dma_logging_start(VFIOContainerBase *bcontainer,
             continue;
         }
 
-        ret = ioctl(vbasedev->fd, VFIO_DEVICE_FEATURE, feature);
+        ret = vbasedev->io->device_feature(vbasedev, feature);
         if (ret) {
-            ret = -errno;
             error_setg_errno(errp, errno, "%s: Failed to start DMA logging",
                              vbasedev->name);
             goto out;
@@ -1137,7 +1136,7 @@ static int vfio_device_dma_logging_report(VFIODevice *vbasedev, hwaddr iova,
     feature->flags = VFIO_DEVICE_FEATURE_GET |
                      VFIO_DEVICE_FEATURE_DMA_LOGGING_REPORT;
 
-    if (ioctl(vbasedev->fd, VFIO_DEVICE_FEATURE, feature)) {
+    if (vbasedev->io->device_feature(vbasedev, feature)) {
         return -errno;
     }
 

@@ -682,7 +682,7 @@ static void vfio_ccw_instance_init(Object *obj)
      * ram_block_discard_disable().
      */
     vfio_device_init(vbasedev, VFIO_DEVICE_TYPE_CCW, &vfio_ccw_ops,
-                     DEVICE(vcdev), true);
+                     &vfio_dev_io_ioctl, DEVICE(vcdev), true);
 }
 
 #ifdef CONFIG_IOMMUFD
