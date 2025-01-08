@@ -1551,6 +1551,16 @@ retry:
     return info;
 }
 
+static void vfio_get_all_regions(VFIODevice *vbasedev)
+{
+    struct vfio_region_info *info;
+    int i;
+
+    for (i = 0; i < vbasedev->num_regions; i++) {
+        vfio_get_region_info(vbasedev, i, &info);
+    }
+}
+
 void vfio_prepare_device(VFIODevice *vbasedev, VFIOContainerBase *bcontainer,
                          VFIOGroup *group, struct vfio_device_info *info)
 {
@@ -1568,6 +1578,8 @@ void vfio_prepare_device(VFIODevice *vbasedev, VFIOContainerBase *bcontainer,
     }
 
     QLIST_INSERT_HEAD(&vfio_device_list, vbasedev, global_next);
+
+    vfio_get_all_regions(vbasedev);
 }
 
 bool vfio_attach_device_by_iommu_type(const char *iommu_type, char *name,
