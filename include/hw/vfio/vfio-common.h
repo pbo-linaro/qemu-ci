@@ -79,6 +79,7 @@ typedef struct VFIOMigration {
 } VFIOMigration;
 
 struct VFIOGroup;
+typedef struct VFIOUserProxy VFIOUserProxy;
 
 /* MMU container sub-class for legacy vfio implementation. */
 typedef struct VFIOContainer {
@@ -162,6 +163,7 @@ typedef struct VFIODevice {
     IOMMUFDBackend *iommufd;
     VFIOIOASHwpt *hwpt;
     QLIST_ENTRY(VFIODevice) hwpt_next;
+    VFIOUserProxy *proxy;
     struct vfio_region_info **regions;
 } VFIODevice;
 

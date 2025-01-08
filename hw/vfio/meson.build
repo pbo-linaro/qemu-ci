@@ -18,7 +18,7 @@ vfio_ss.add(when: 'CONFIG_VFIO_PCI', if_true: files(
 ))
 
 if get_option('vfio_user_client').enabled()
-  vfio_ss.add(files('user-container.c', 'user-pci.c'))
+  vfio_ss.add(files('user.c', 'user-container.c', 'user-pci.c'))
 endif
 
 vfio_ss.add(when: 'CONFIG_VFIO_CCW', if_true: files('ccw.c'))
