@@ -32,6 +32,9 @@ config PLATFORM_BUS
 config REGISTER
     bool
 
+config SHARED_IRQ
+    bool
+
 config SPLIT_IRQ
     bool
 
