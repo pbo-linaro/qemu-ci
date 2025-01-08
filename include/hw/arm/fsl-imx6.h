@@ -23,6 +23,7 @@
 #include "hw/misc/imx7_snvs.h"
 #include "hw/watchdog/wdt_imx2.h"
 #include "hw/char/imx_serial.h"
+#include "hw/core/shared-irq.h"
 #include "hw/timer/imx_gpt.h"
 #include "hw/timer/imx_epit.h"
 #include "hw/i2c/imx_i2c.h"
@@ -73,6 +74,7 @@ struct FslIMX6State {
     ChipideaState      usb[FSL_IMX6_NUM_USBS];
     IMXFECState        eth;
     DesignwarePCIEHost pcie;
+    SharedIRQ          pcie4_msi_irq;
     MemoryRegion       rom;
     MemoryRegion       caam;
     MemoryRegion       ocram;
@@ -457,7 +459,7 @@ struct FslIMX6State {
 #define FSL_IMX6_PCIE1_IRQ 120
 #define FSL_IMX6_PCIE2_IRQ 121
 #define FSL_IMX6_PCIE3_IRQ 122
-#define FSL_IMX6_PCIE4_IRQ 123
+#define FSL_IMX6_PCIE4_MSI_IRQ 123
 #define FSL_IMX6_DCIC1_IRQ 124
 #define FSL_IMX6_DCIC2_IRQ 125
 #define FSL_IMX6_MLB150_HIGH_IRQ 126
