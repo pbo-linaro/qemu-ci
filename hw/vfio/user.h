@@ -11,7 +11,17 @@
  *
  */
 
+#include <stdbool.h>
+
+#include "glib-compat.h"
 #include "user-protocol.h"
+#include "qemu/osdep.h"
+#include "qemu/typedefs.h"
+#include "qemu/queue.h"
+#include "qemu/sockets.h"
+#include "qemu/thread.h"
+
+typedef struct VFIODevice VFIODevice;
 
 typedef struct {
     int send_fds;

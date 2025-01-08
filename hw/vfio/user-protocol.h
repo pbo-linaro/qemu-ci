@@ -16,6 +16,8 @@
  * region and offset info for read and write commands.
  */
 
+#include <stdint.h>
+
 typedef struct {
     uint16_t id;
     uint16_t command;
