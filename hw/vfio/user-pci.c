@@ -111,6 +111,8 @@ static void vfio_user_pci_realize(PCIDevice *pdev, Error **errp)
     vbasedev->ops = &vfio_user_pci_ops;
     vbasedev->type = VFIO_DEVICE_TYPE_PCI;
     vbasedev->dev = DEVICE(vdev);
+    vbasedev->io = &vfio_dev_io_sock;
+    vbasedev->use_regfds = true;
 
     /*
      * vfio-user devices are effectively mdevs (don't use a host iommu).
