@@ -183,12 +183,15 @@ void vfio_region_write(void *opaque, hwaddr addr,
         break;
     }
 
-    ret = vbasedev->io->region_write(vbasedev, region->nr, addr, size, &buf);
+    ret = vbasedev->io->region_write(vbasedev, region->nr, addr, size, &buf,
+                                     region->post_wr);
     if (ret != size) {
+        const char *errmsg = ret < 0 ? strerror(-ret) : "short write";
+
         error_report("%s(%s:region%d+0x%"HWADDR_PRIx", 0x%"PRIx64
-                     ",%d) failed: %m",
+                     ",%d) failed: %s",
                      __func__, vbasedev->name, region->nr,
-                     addr, data, size);
+                     addr, data, size, errmsg);
     }
 
     trace_vfio_region_write(vbasedev->name, region->nr, addr, data, size);
@@ -220,9 +223,11 @@ uint64_t vfio_region_read(void *opaque,
 
     ret = vbasedev->io->region_read(vbasedev, region->nr, addr, size, &buf);
     if (ret != size) {
-        error_report("%s(%s:region%d+0x%"HWADDR_PRIx", %d) failed: %m",
+        const char *errmsg = ret < 0 ? strerror(-ret) : "short read";
+
+        error_report("%s(%s:region%d+0x%"HWADDR_PRIx", %d) failed: %s",
                      __func__, vbasedev->name, region->nr,
-                     addr, size);
+                     addr, size, errmsg);
         return (uint64_t)-1;
     }
     switch (size) {
@@ -364,12 +369,13 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
     region->size = info->size;
     region->fd_offset = info->offset;
     region->nr = index;
+    region->post_wr = false;
+
     if (vbasedev->regfds != NULL) {
         region->fd = vbasedev->regfds[index];
     } else {
         region->fd = vbasedev->fd;
     }
-
 
     if (region->size) {
         region->mem = g_new0(MemoryRegion, 1);
@@ -827,7 +833,7 @@ static int vfio_io_region_read(VFIODevice *vbasedev, uint8_t index, off_t off,
 }
 
 static int vfio_io_region_write(VFIODevice *vbasedev, uint8_t index, off_t off,
-                                uint32_t size, void *data)
+                                uint32_t size, void *data, bool post)
 {
     struct vfio_region_info *info = vbasedev->regions[index];
     int ret;

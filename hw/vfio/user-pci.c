@@ -40,6 +40,7 @@ struct VFIOUserPCIDevice {
     VFIOPCIDevice device;
     char *sock_name;
     bool send_queued;   /* all sends are queued */
+    bool no_post;       /* all regions write are sync */
 };
 
 /*
@@ -101,6 +102,9 @@ static void vfio_user_pci_realize(PCIDevice *pdev, Error **errp)
 
     if (udev->send_queued) {
         proxy->flags |= VFIO_PROXY_FORCE_QUEUED;
+    }
+    if (udev->no_post) {
+        proxy->flags |= VFIO_PROXY_NO_POST;
     }
 
     if (!vfio_user_validate_version(proxy, errp)) {
@@ -173,6 +177,7 @@ static void vfio_user_instance_finalize(Object *obj)
 static const Property vfio_user_pci_dev_properties[] = {
     DEFINE_PROP_STRING("socket", VFIOUserPCIDevice, sock_name),
     DEFINE_PROP_BOOL("x-send-queued", VFIOUserPCIDevice, send_queued, false),
+    DEFINE_PROP_BOOL("x-no-posted-writes", VFIOUserPCIDevice, no_post, false),
 };
 
 static void vfio_user_pci_dev_class_init(ObjectClass *klass, void *data)
