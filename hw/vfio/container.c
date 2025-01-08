@@ -117,7 +117,7 @@ unmap_exit:
  */
 static int vfio_legacy_dma_unmap(const VFIOContainerBase *bcontainer,
                                  hwaddr iova, ram_addr_t size,
-                                 IOMMUTLBEntry *iotlb)
+                                 IOMMUTLBEntry *iotlb, int flags)
 {
     const VFIOContainer *container = container_of(bcontainer, VFIOContainer,
                                                   bcontainer);
@@ -138,6 +138,34 @@ static int vfio_legacy_dma_unmap(const VFIOContainerBase *bcontainer,
         }
 
         need_dirty_sync = true;
+    }
+
+    /* use unmap all if supported */
+    if (flags & VFIO_DMA_UNMAP_FLAG_ALL) {
+        unmap.iova = 0;
+        unmap.size = 0;
+        if (container->unmap_all_supported) {
+            ret = ioctl(container->fd, VFIO_IOMMU_UNMAP_DMA, unmap);
+        } else {
+            /* unmap in halves */
+            Int128 llsize = int128_rshift(int128_2_64(), 1);
+
+            unmap.size = int128_get64(llsize);
+
+            ret = ioctl(container->fd, VFIO_IOMMU_UNMAP_DMA, unmap);
+
+            if (ret == 0) {
+                unmap.iova += int128_get64(llsize);
+
+                ret = ioctl(container->fd, VFIO_IOMMU_UNMAP_DMA, unmap);
+            }
+        }
+
+        if (ret != 0) {
+            return -errno;
+        }
+
+        goto out;
     }
 
     while (ioctl(container->fd, VFIO_IOMMU_UNMAP_DMA, &unmap)) {
@@ -163,6 +191,7 @@ static int vfio_legacy_dma_unmap(const VFIOContainerBase *bcontainer,
         return -errno;
     }
 
+out:
     if (need_dirty_sync) {
         ret = vfio_get_dirty_bitmap(bcontainer, iova, size,
                                     iotlb->translated_addr, &local_err);
@@ -200,7 +229,7 @@ static int vfio_legacy_dma_map(const VFIOContainerBase *bcontainer, hwaddr iova,
      */
     if (ioctl(container->fd, VFIO_IOMMU_MAP_DMA, &map) == 0 ||
         (errno == EBUSY &&
-         vfio_legacy_dma_unmap(bcontainer, iova, size, NULL) == 0 &&
+         vfio_legacy_dma_unmap(bcontainer, iova, size, NULL, 0) == 0 &&
          ioctl(container->fd, VFIO_IOMMU_MAP_DMA, &map) == 0)) {
         return 0;
     }
@@ -535,6 +564,11 @@ static bool vfio_legacy_setup(VFIOContainerBase *bcontainer, Error **errp)
     vfio_get_info_iova_range(info, bcontainer);
 
     vfio_get_iommu_info_migration(container, info);
+
+    ret = ioctl(container->fd, VFIO_CHECK_EXTENSION, VFIO_UNMAP_ALL);
+
+    container->unmap_all_supported = (ret != 0);
+
     return true;
 }
 
