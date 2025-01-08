@@ -86,17 +86,17 @@ int qapi_enum_parse(const QEnumLookup *lookup, const char *buf,
 
 bool qapi_bool_parse(const char *name, const char *value, bool *obj, Error **errp)
 {
-    if (g_str_equal(value, "on") ||
-        g_str_equal(value, "yes") ||
-        g_str_equal(value, "true") ||
-        g_str_equal(value, "y")) {
+    if (!g_strcmp0(value, "on") ||
+        !g_strcmp0(value, "yes") ||
+        !g_strcmp0(value, "true") ||
+        !g_strcmp0(value, "y")) {
         *obj = true;
         return true;
     }
-    if (g_str_equal(value, "off") ||
-        g_str_equal(value, "no") ||
-        g_str_equal(value, "false") ||
-        g_str_equal(value, "n")) {
+    if (!g_strcmp0(value, "off") ||
+        !g_strcmp0(value, "no") ||
+        !g_strcmp0(value, "false") ||
+        !g_strcmp0(value, "n")) {
         *obj = false;
         return true;
     }
