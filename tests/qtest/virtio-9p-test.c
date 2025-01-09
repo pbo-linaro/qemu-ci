@@ -737,6 +737,43 @@ static void fs_use_file_after_unlink(void *obj, void *data,
     g_assert_cmpint(count, ==, write_count);
 }
 
+static void fs_use_dir_after_unlink(void *obj, void *data,
+                                    QGuestAllocator *t_alloc)
+{
+    QVirtio9P *v9p = obj;
+    v9fs_set_allocator(t_alloc);
+    g_autofree char *real_dir = virtio_9p_test_path("10/doa_dir");
+    struct stat st_dir;
+    struct v9fs_attr attr;
+    uint32_t fid_dir;
+
+    tattach({ .client = v9p });
+
+    /* create a dir "10/doa_dir" and make sure it exists */
+    tmkdir({ .client = v9p, .atPath = "/", .name = "10" });
+    tmkdir({ .client = v9p, .atPath = "10", .name = "doa_dir" });
+    g_assert(stat(real_dir, &st_dir) == 0);
+    g_assert((st_dir.st_mode & S_IFMT) == S_IFDIR);
+
+    /* request a FID for that directory that we can work with next */
+    fid_dir = twalk({
+        .client = v9p, .fid = 0, .path = "10/doa_dir"
+    }).newfid;
+    g_assert(fid_dir != 0);
+
+    /* now first open the dir before ... */
+    tlopen({ .client = v9p, .fid = fid_dir, .flags = O_RDONLY });
+    /* ... removing the dir from file system */
+    tunlinkat({ .client = v9p, .atPath = "10", .name = "doa_dir",
+                .flags = AT_REMOVEDIR });
+
+    /* dir is removed, but we still have it open, so this should succeed */
+    tgetattr({
+        .client = v9p, .fid = fid_dir, .request_mask = P9_GETATTR_BASIC,
+        .rgetattr.attr = &attr
+    });
+}
+
 static void cleanup_9p_local_driver(void *data)
 {
     /* remove previously created test dir when test is completed */
@@ -804,6 +841,8 @@ static void register_virtio_9p_test(void)
                  &opts);
     qos_add_test("local/use_file_after_unlink", "virtio-9p",
                  fs_use_file_after_unlink, &opts);
+    qos_add_test("local/use_dir_after_unlink", "virtio-9p",
+                 fs_use_dir_after_unlink, &opts);
 }
 
 libqos_init(register_virtio_9p_test);
