@@ -693,8 +693,8 @@ static void fs_unlinkat_hardlink(void *obj, void *data,
     g_assert(stat(real_file, &st_real) == 0);
 }
 
-static void fs_use_after_unlink(void *obj, void *data,
-                                QGuestAllocator *t_alloc)
+static void fs_use_file_after_unlink(void *obj, void *data,
+                                     QGuestAllocator *t_alloc)
 {
     QVirtio9P *v9p = obj;
     v9fs_set_allocator(t_alloc);
@@ -802,8 +802,8 @@ static void register_virtio_9p_test(void)
     qos_add_test("local/hardlink_file", "virtio-9p", fs_hardlink_file, &opts);
     qos_add_test("local/unlinkat_hardlink", "virtio-9p", fs_unlinkat_hardlink,
                  &opts);
-    qos_add_test("local/use_after_unlink", "virtio-9p", fs_use_after_unlink,
-                 &opts);
+    qos_add_test("local/use_file_after_unlink", "virtio-9p",
+                 fs_use_file_after_unlink, &opts);
 }
 
 libqos_init(register_virtio_9p_test);
