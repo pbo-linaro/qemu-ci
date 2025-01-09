@@ -206,29 +206,108 @@ vext_continus_ldst_tlb(CPURISCVState *env, vext_ldst_elem_fn_tlb *ldst_tlb,
     }
 }
 
+#if !HOST_BIG_ENDIAN
+/* Atomic operations for load/store */
+
+#define GEN_VEXT_LDST_ATOMIC_HOST(SIZE, TYPE)                             \
+static inline QEMU_ALWAYS_INLINE void                                     \
+vext_ldst_atom_##SIZE##_host(void *vd, uint32_t byte_offset, TYPE *host,  \
+                             bool is_load)                                \
+{                                                                         \
+    TYPE *vd_ptr = (TYPE *) (vd + byte_offset);                           \
+    if (is_load) {                                                        \
+        *vd_ptr = qatomic_read__nocheck(host);                            \
+    } else {                                                              \
+        qatomic_set__nocheck(host, *vd_ptr);                              \
+    }                                                                     \
+}                                                                         \
+
+GEN_VEXT_LDST_ATOMIC_HOST(2, uint16_t)
+GEN_VEXT_LDST_ATOMIC_HOST(4, uint32_t)
+#ifdef CONFIG_ATOMIC64
+GEN_VEXT_LDST_ATOMIC_HOST(8, uint64_t)
+#endif
+
+static inline QEMU_ALWAYS_INLINE void
+vext_ldst_atom_16_host(void *vd, uint32_t byte_offset, Int128 *host,
+                       bool is_load)
+{
+    Int128 *vd_ptr = (Int128 *) (vd + byte_offset);
+    if (is_load) {
+        *vd_ptr = atomic16_read_ro(host);
+    } else {
+        atomic16_set(host, *vd_ptr);
+    }
+}
+#endif
+
 static inline QEMU_ALWAYS_INLINE void
 vext_continus_ldst_host(CPURISCVState *env, vext_ldst_elem_fn_host *ldst_host,
                         void *vd, uint32_t evl, uint32_t reg_start, void *host,
-                        uint32_t esz, bool is_load)
+                        uint32_t esz, bool is_load, uint32_t log2_esz)
 {
 #if HOST_BIG_ENDIAN
     for (; reg_start < evl; reg_start++, host += esz) {
         ldst_host(vd, reg_start, host);
     }
 #else
-    if (esz == 1) {
-        uint32_t byte_offset = reg_start * esz;
-        uint32_t size = (evl - reg_start) * esz;
+    uint32_t size = (evl - reg_start) * esz;
+    uint32_t test = (uintptr_t) host;
 
+    /* Misaligned load/stores do not require any atomicity */
+    if (esz == 1 || unlikely(test % esz != 0)) {
+        uint32_t byte_offset = reg_start * esz;
         if (is_load) {
             memcpy(vd + byte_offset, host, size);
         } else {
             memcpy(host, vd + byte_offset, size);
         }
-    } else {
-        for (; reg_start < evl; reg_start++, host += esz) {
-            ldst_host(vd, reg_start, host);
+        return;
+    }
+
+    /*
+     * At this point esz > 1 and host is aligned to at least esz, so the ldst
+     * can be completed in atomic chunks of at least esz if the atomic operation
+     * is available.
+     */
+
+    /* Test that both alignment and size are multiples of the atomic width. */
+    test |= size;
+
+    /*
+     * If !HAVE_ATOMIC128_RO, then atomic16_set may be implemented with a
+     * 16-byte compare and store loop, which is expensive, so prefer two 8-byte
+     * stores in this case.
+     */
+    if (HAVE_ATOMIC128_RO && (is_load || HAVE_ATOMIC128_RW)
+        && (test % 16 == 0)) {
+        for (; reg_start < evl; reg_start += 16 >> log2_esz, host += 16) {
+            vext_ldst_atom_16_host(vd, reg_start * esz, host, is_load);
         }
+        return;
+    }
+#ifdef CONFIG_ATOMIC64
+    if (test % 8 == 0) {
+        for (; reg_start < evl; reg_start += 8 >> log2_esz, host += 8) {
+            vext_ldst_atom_8_host(vd, reg_start * esz, host, is_load);
+        }
+        return;
+    }
+#endif
+    if (test % 4 == 0) {
+        for (; reg_start < evl; reg_start += 4 >> log2_esz, host += 4) {
+            vext_ldst_atom_4_host(vd, reg_start * esz, host, is_load);
+        }
+        return;
+    }
+    if (test % 2 == 0) {
+        for (; reg_start < evl; reg_start += 2 >> log2_esz, host += 2) {
+            vext_ldst_atom_2_host(vd, reg_start * esz, host, is_load);
+        }
+        return;
+    }
+    for (; reg_start < evl; reg_start++, host += esz) {
+        ldst_host(vd, reg_start, host);
     }
 #endif
 }
@@ -343,7 +422,7 @@ vext_page_ldst_us(CPURISCVState *env, void *vd, target_ulong addr,
     if (flags == 0) {
         if (nf == 1) {
             vext_continus_ldst_host(env, ldst_host, vd, evl, env->vstart, host,
-                                    esz, is_load);
+                                    esz, is_load, log2_esz);
         } else {
             for (i = env->vstart; i < evl; ++i) {
                 k = 0;
