@@ -142,6 +142,18 @@ int xs_node_scanf(struct qemu_xs_handle *h,  xs_transaction_t tid,
     return rc;
 }
 
+char *xs_node_read(struct qemu_xs_handle *h, xs_transaction_t tid,
+                   const char *node, const char *key)
+{
+    char *path = (strlen(node) != 0) ? g_strdup_printf("%s/%s", node, key)
+                                     : g_strdup(key);
+    char *value = qemu_xen_xs_read(h, tid, path, NULL);
+
+    g_free(path);
+
+    return value;
+}
+
 struct qemu_xs_watch *xs_node_watch(struct qemu_xs_handle *h, const char *node,
                                     const char *key, xs_watch_fn fn,
                                     void *opaque, Error **errp)

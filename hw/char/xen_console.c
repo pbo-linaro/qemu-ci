@@ -550,8 +550,9 @@ static void xen_console_device_create(XenBackendInstance *backend,
         goto fail;
     }
 
-    if (xs_node_scanf(xsh, XBT_NULL, fe, "type", errp, "%ms", &type) != 1) {
-        error_prepend(errp, "failed to read console device type: ");
+    type = xs_node_read(xsh, XBT_NULL, fe, "type");
+    if (!type) {
+        error_setg(errp, "failed to read console device type");
         goto fail;
     }
 
@@ -568,7 +569,8 @@ static void xen_console_device_create(XenBackendInstance *backend,
 
     snprintf(label, sizeof(label), "xencons%ld", number);
 
-    if (xs_node_scanf(xsh, XBT_NULL, fe, "output", NULL, "%ms", &output) == 1) {
+    output = xs_node_read(xsh, XBT_NULL, fe, "output");
+    if (!output) {
         /*
          * FIXME: sure we want to support implicit
          * muxed monitors here?
@@ -582,8 +584,8 @@ static void xen_console_device_create(XenBackendInstance *backend,
     } else if (number) {
         cd = serial_hd(number);
         if (!cd) {
-            error_prepend(errp, "console: No serial device #%ld found: ",
-                          number);
+            error_setg(errp, "console: No serial device #%ld found",
+                       number);
             goto fail;
         }
     } else {
