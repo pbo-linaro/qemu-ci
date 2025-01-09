@@ -377,6 +377,8 @@ class VMSDFieldCap(object):
 
 
 class VMSDFieldInt(VMSDFieldGeneric):
+    NULL_PTR_MARKER = 0x30
+
     def __init__(self, desc, file):
         super(VMSDFieldInt, self).__init__(desc, file)
         self.size = int(desc['size'])
@@ -385,6 +387,16 @@ class VMSDFieldInt(VMSDFieldGeneric):
         self.udtype = '>u%d' % self.size
 
     def __repr__(self):
+
+        # A NULL pointer is encoded in the stream as a '0' to
+        # disambiguate from a mere 0x0 value and avoid consumers
+        # trying to follow the NULL pointer. Displaying '0', 0x30 or
+        # 0x0 when analyzing the JSON debug stream could become
+        # confusing, so use an explicit term instead. The actual value
+        # in the stream was already validated by VMSDFieldNull.
+        if self.data == self.NULL_PTR_MARKER:
+            return "nullptr"
+
         if self.data < 0:
             return ('%s (%d)' % ((self.format % self.udata), self.data))
         else:
@@ -416,6 +428,15 @@ class VMSDFieldIntLE(VMSDFieldInt):
     def __init__(self, desc, file):
         super(VMSDFieldIntLE, self).__init__(desc, file)
         self.dtype = '<i%d' % self.size
+
+class VMSDFieldNull(VMSDFieldUInt):
+    def __init__(self, desc, file):
+        super(VMSDFieldUInt, self).__init__(desc, file)
+
+    def read(self):
+        super(VMSDFieldUInt, self).read()
+        assert(self.data == self.NULL_PTR_MARKER)
+        return self.data
 
 class VMSDFieldBool(VMSDFieldGeneric):
     def __init__(self, desc, file):
@@ -558,6 +579,7 @@ vmsd_field_readers = {
     "bitmap" : VMSDFieldGeneric,
     "struct" : VMSDFieldStruct,
     "capability": VMSDFieldCap,
+    "nullptr": VMSDFieldNull,
     "unknown" : VMSDFieldGeneric,
 }
 
