@@ -772,6 +772,9 @@ static void fs_use_dir_after_unlink(void *obj, void *data,
         .client = v9p, .fid = fid_dir, .request_mask = P9_GETATTR_BASIC,
         .rgetattr.attr = &attr
     });
+    treaddir({
+        .client = v9p, .fid = fid_dir, .offset = 0, .count = P9_MAX_SIZE - 11
+    });
 }
 
 static void cleanup_9p_local_driver(void *data)
