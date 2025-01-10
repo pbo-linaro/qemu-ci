@@ -473,114 +473,6 @@ static void powerpc_mcheck_checkstop(CPUPPCState *env)
 #endif
 }
 
-static void powerpc_excp_40x(PowerPCCPU *cpu, int excp)
-{
-    CPUPPCState *env = &cpu->env;
-    target_ulong msr, new_msr, vector;
-    int srr0 = SPR_SRR0, srr1 = SPR_SRR1;
-
-    /* new srr1 value excluding must-be-zero bits */
-    msr = env->msr & ~0x783f0000ULL;
-
-    /* new interrupt handler msr preserves ME unless explicitly overridden */
-    new_msr = env->msr & (((target_ulong)1 << MSR_ME));
-
-    /* HV emu assistance interrupt only exists on server arch 2.05 or later */
-    if (excp == POWERPC_EXCP_HV_EMU) {
-        excp = POWERPC_EXCP_PROGRAM;
-    }
-
-    vector = env->excp_vectors[excp];
-    if (vector == (target_ulong)-1ULL) {
-        cpu_abort(env_cpu(env),
-                  "Raised an exception without defined vector %d\n", excp);
-    }
-    vector |= env->excp_prefix;
-
-    switch (excp) {
-    case POWERPC_EXCP_CRITICAL:    /* Critical input                         */
-        srr0 = SPR_40x_SRR2;
-        srr1 = SPR_40x_SRR3;
-        break;
-    case POWERPC_EXCP_MCHECK:    /* Machine check exception                  */
-        powerpc_mcheck_checkstop(env);
-        /* machine check exceptions don't have ME set */
-        new_msr &= ~((target_ulong)1 << MSR_ME);
-        srr0 = SPR_40x_SRR2;
-        srr1 = SPR_40x_SRR3;
-        break;
-    case POWERPC_EXCP_DSI:       /* Data storage exception                   */
-        trace_ppc_excp_dsi(env->spr[SPR_40x_ESR], env->spr[SPR_40x_DEAR]);
-        break;
-    case POWERPC_EXCP_ISI:       /* Instruction storage exception            */
-        trace_ppc_excp_isi(msr, env->nip);
-        break;
-    case POWERPC_EXCP_EXTERNAL:  /* External input                           */
-        break;
-    case POWERPC_EXCP_ALIGN:     /* Alignment exception                      */
-        break;
-    case POWERPC_EXCP_PROGRAM:   /* Program exception                        */
-        switch (env->error_code & ~0xF) {
-        case POWERPC_EXCP_FP:
-            if (!FIELD_EX64_FE(env->msr) || !FIELD_EX64(env->msr, MSR, FP)) {
-                trace_ppc_excp_fp_ignore();
-                powerpc_reset_excp_state(cpu);
-                return;
-            }
-            env->spr[SPR_40x_ESR] = ESR_FP;
-            break;
-        case POWERPC_EXCP_INVAL:
-            trace_ppc_excp_inval(env->nip);
-            env->spr[SPR_40x_ESR] = ESR_PIL;
-            break;
-        case POWERPC_EXCP_PRIV:
-            env->spr[SPR_40x_ESR] = ESR_PPR;
-            break;
-        case POWERPC_EXCP_TRAP:
-            env->spr[SPR_40x_ESR] = ESR_PTR;
-            break;
-        default:
-            cpu_abort(env_cpu(env), "Invalid program exception %d. Aborting\n",
-                      env->error_code);
-            break;
-        }
-        break;
-    case POWERPC_EXCP_SYSCALL:   /* System call exception                    */
-        dump_syscall(env);
-
-        /*
-         * We need to correct the NIP which in this case is supposed
-         * to point to the next instruction
-         */
-        env->nip += 4;
-        break;
-    case POWERPC_EXCP_FIT:       /* Fixed-interval timer interrupt           */
-        trace_ppc_excp_print("FIT");
-        break;
-    case POWERPC_EXCP_WDT:       /* Watchdog timer interrupt                 */
-        trace_ppc_excp_print("WDT");
-        break;
-    case POWERPC_EXCP_DTLB:      /* Data TLB error                           */
-    case POWERPC_EXCP_ITLB:      /* Instruction TLB error                    */
-        break;
-    case POWERPC_EXCP_PIT:       /* Programmable interval timer interrupt    */
-        trace_ppc_excp_print("PIT");
-        break;
-    case POWERPC_EXCP_DEBUG:     /* Debug interrupt                          */
-        cpu_abort(env_cpu(env), "%s exception not implemented\n",
-                  powerpc_excp_name(excp));
-        break;
-    default:
-        cpu_abort(env_cpu(env), "Invalid PowerPC exception %d. Aborting\n",
-                  excp);
-        break;
-    }
-
-    env->spr[srr0] = env->nip;
-    env->spr[srr1] = msr;
-    powerpc_set_excp_state(cpu, vector, new_msr);
-}
-
 static void powerpc_excp_6xx(PowerPCCPU *cpu, int excp)
 {
     CPUPPCState *env = &cpu->env;
@@ -1635,9 +1527,6 @@ static void powerpc_excp(PowerPCCPU *cpu, int excp)
     env->excp_stats[excp]++;
 
     switch (env->excp_model) {
-    case POWERPC_EXCP_40x:
-        powerpc_excp_40x(cpu, excp);
-        break;
     case POWERPC_EXCP_6xx:
         powerpc_excp_6xx(cpu, excp);
         break;
@@ -2779,11 +2668,6 @@ void raise_ebb_perfm_exception(CPUPPCState *env)
 
 /*****************************************************************************/
 /* Embedded PowerPC specific helpers */
-void helper_40x_rfci(CPUPPCState *env)
-{
-    do_rfi(env, env->spr[SPR_40x_SRR2], env->spr[SPR_40x_SRR3]);
-}
-
 void helper_rfci(CPUPPCState *env)
 {
     do_rfi(env, env->spr[SPR_BOOKE_CSRR0], env->spr[SPR_BOOKE_CSRR1]);

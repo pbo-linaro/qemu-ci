@@ -196,8 +196,6 @@ typedef enum powerpc_excp_t {
     POWERPC_EXCP_UNKNOWN   = 0,
     /* Standard PowerPC exception model */
     POWERPC_EXCP_STD,
-    /* PowerPC 40x exception model      */
-    POWERPC_EXCP_40x,
     /* PowerPC 603/604/G2 exception model */
     POWERPC_EXCP_6xx,
     /* PowerPC 7xx exception model      */
@@ -2206,9 +2204,7 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_403_TBL           (0x3DC)
 #define SPR_403_TBU           (0x3DD)
 #define SPR_SEBR              (0x3DE)
-#define SPR_40x_SRR2          (0x3DE)
 #define SPR_SER               (0x3DF)
-#define SPR_40x_SRR3          (0x3DF)
 #define SPR_L3OHCR            (0x3E8)
 #define SPR_L3ITCR1           (0x3E9)
 #define SPR_L3ITCR2           (0x3EA)
@@ -2405,8 +2401,6 @@ enum {
 
     /* Embedded PowerPC dedicated instructions                               */
     PPC_WRTEE          = 0x0001000000000000ULL,
-    /* PowerPC 40x exception model                                           */
-    PPC_40x_EXCP       = 0x0002000000000000ULL,
     /* PowerPC 405 Mac instructions                                          */
     PPC_405_MAC        = 0x0004000000000000ULL,
     /* PowerPC 440 specific instructions                                     */
@@ -2450,7 +2444,7 @@ enum {
                         | PPC_CACHE_DCBA | PPC_CACHE_LOCK \
                         | PPC_EXTERN | PPC_SEGMENT | PPC_6xx_TLB \
                         | PPC_40x_TLB | PPC_SEGMENT_64B \
-                        | PPC_SLBI | PPC_WRTEE | PPC_40x_EXCP \
+                        | PPC_SLBI | PPC_WRTEE \
                         | PPC_405_MAC | PPC_440_SPEC | PPC_BOOKE \
                         | PPC_MFAPIDI | PPC_TLBIVA | PPC_TLBIVAX \
                         | PPC_4xx_COMMON | PPC_40x_ICBT | PPC_RFMCI \
