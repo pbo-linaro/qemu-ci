@@ -164,6 +164,81 @@ func (s *{type_name}) UnmarshalJSON(data []byte) error {{
 """
 
 
+TEMPLATE_UNION_CHECK_VARIANT_FIELD = """
+    if s.{field} != nil && err == nil {{
+        if len(bytes) != 0 {{
+            err = errors.New(`multiple variant fields set`)
+        }} else if err = unwrapToMap(m, s.{field}); err == nil {{
+            m["{discriminator}"] = {go_enum_value}
+            bytes, err = json.Marshal(m)
+        }}
+    }}
+"""
+
+TEMPLATE_UNION_CHECK_UNBRANCHED_FIELD = """
+    if s.{field} && err == nil {{
+        if len(bytes) != 0 {{
+            err = errors.New(`multiple variant fields set`)
+        }} else {{
+            m["{discriminator}"] = {go_enum_value}
+            bytes, err = json.Marshal(m)
+        }}
+    }}
+"""
+
+TEMPLATE_UNION_DRIVER_VARIANT_CASE = """
+    case {go_enum_value}:
+        s.{field} = new({member_type})
+        if err := json.Unmarshal(data, s.{field}); err != nil {{
+            s.{field} = nil
+            return err
+        }}"""
+
+TEMPLATE_UNION_DRIVER_UNBRANCHED_CASE = """
+    case {go_enum_value}:
+        s.{field} = true
+"""
+
+TEMPLATE_UNION_METHODS = """
+func (s {type_name}) MarshalJSON() ([]byte, error) {{
+    var bytes []byte
+    var err error
+    m := make(map[string]any)
+    {{
+        type Alias {type_name}
+        v := Alias(s)
+        unwrapToMap(m, &v)
+    }}
+{check_fields}
+    if err != nil {{
+        return nil, fmt.Errorf("marshal {type_name} due:'%s' struct='%+v'", err, s)
+    }} else if len(bytes) == 0 {{
+        return nil, fmt.Errorf("marshal {type_name} unsupported, struct='%+v'", s)
+    }}
+    return bytes, nil
+}}
+
+func (s *{type_name}) UnmarshalJSON(data []byte) error {{
+{base_type_def}
+    tmp := struct {{
+        {base_type_name}
+    }}{{}}
+
+    if err := json.Unmarshal(data, &tmp); err != nil {{
+        return err
+    }}
+{base_type_assign_unmarshal}
+    switch tmp.{discriminator} {{
+{driver_cases}
+    default:
+        return fmt.Errorf("unmarshal {type_name} received unrecognized value '%s'",
+            tmp.{discriminator})
+    }}
+    return nil
+}}
+"""
+
+
 # Takes the documentation object of a specific type and returns
 # that type's documentation and its member's docs.
 def qapi_to_golang_struct_docs(doc: QAPIDoc) -> (str, Dict[str, str]):
@@ -209,6 +284,12 @@ def qapi_name_is_base(name: str) -> bool:
 
 def qapi_name_is_object(name: str) -> bool:
     return name.startswith("q_obj_")
+
+
+def qapi_base_name_to_parent(name: str) -> str:
+    if qapi_name_is_base(name):
+        name = name[6:-5]
+    return name
 
 
 def qapi_to_field_name(name: str) -> str:
@@ -648,7 +729,7 @@ def recursive_base(
         embed_base = self.schema.lookup_entity(base.base.name)
         fields, with_nullable = recursive_base(self, embed_base, discriminator)
 
-    doc = self.docmap.get(base.name, None)
+    doc = self.docmap.get(qapi_base_name_to_parent(base.name), None)
     _, docfields = qapi_to_golang_struct_docs(doc)
 
     for member in base.local_members:
@@ -728,6 +809,24 @@ def qapi_to_golang_struct(
             fields.append(field)
             with_nullable = True if nullable else with_nullable
 
+    if info.defn_meta == "union" and variants:
+        enum_name = variants.tag_member.type.name
+        enum_obj = self.schema.lookup_entity(enum_name)
+        if len(exists) != len(enum_obj.members):
+            fields.append({"comment": "Unbranched enum fields"})
+            for member in enum_obj.members:
+                if member.name in exists:
+                    continue
+
+                field_doc = (
+                    docfields.get(member.name, "") if doc_enabled else ""
+                )
+                field, nullable = get_struct_field(
+                    self, member.name, "bool", field_doc, False, False, True
+                )
+                fields.append(field)
+                with_nullable = True if nullable else with_nullable
+
     type_name = qapi_to_go_type_name(name)
     content = string_to_code(
         generate_struct_type(
@@ -739,6 +838,98 @@ def qapi_to_golang_struct(
             self, name, base, members, variants
         )
     return content
+
+
+def qapi_to_golang_methods_union(
+    self: QAPISchemaGenGolangVisitor,
+    name: str,
+    base: Optional[QAPISchemaObjectType],
+    variants: Optional[QAPISchemaVariants],
+) -> str:
+    type_name = qapi_to_go_type_name(name)
+
+    assert base
+    base_type_assign_unmarshal = ""
+    base_type_name = qapi_to_go_type_name(base.name)
+    base_type_def = qapi_to_golang_struct(
+        self,
+        base.name,
+        base.info,
+        base.ifcond,
+        base.features,
+        base.base,
+        base.members,
+        base.branches,
+        indent=1,
+        doc_enabled=False,
+    )
+
+    discriminator = qapi_to_field_name(variants.tag_member.name)
+    for member in base.local_members:
+        field = qapi_to_field_name(member.name)
+        if field == discriminator:
+            continue
+        base_type_assign_unmarshal += f"""
+    s.{field} = tmp.{field}"""
+
+    driver_cases = ""
+    check_fields = ""
+    exists = {}
+    enum_name = variants.tag_member.type.name
+    if variants:
+        for var in variants.variants:
+            if var.type.is_implicit():
+                continue
+
+            field = qapi_to_field_name(var.name)
+            enum_value = qapi_to_field_name_enum(var.name)
+            member_type = qapi_schema_type_to_go_type(var.type.name)
+            go_enum_value = f"""{enum_name}{enum_value}"""
+            exists[go_enum_value] = True
+
+            check_fields += TEMPLATE_UNION_CHECK_VARIANT_FIELD.format(
+                field=field,
+                discriminator=variants.tag_member.name,
+                go_enum_value=go_enum_value,
+            )
+            driver_cases += TEMPLATE_UNION_DRIVER_VARIANT_CASE.format(
+                go_enum_value=go_enum_value,
+                field=field,
+                member_type=member_type,
+            )
+
+    enum_obj = self.schema.lookup_entity(enum_name)
+    if len(exists) != len(enum_obj.members):
+        for member in enum_obj.members:
+            value = qapi_to_field_name_enum(member.name)
+            go_enum_value = f"""{enum_name}{value}"""
+
+            if go_enum_value in exists:
+                continue
+
+            field = qapi_to_field_name(member.name)
+
+            check_fields += TEMPLATE_UNION_CHECK_UNBRANCHED_FIELD.format(
+                field=field,
+                discriminator=variants.tag_member.name,
+                go_enum_value=go_enum_value,
+            )
+            driver_cases += TEMPLATE_UNION_DRIVER_UNBRANCHED_CASE.format(
+                go_enum_value=go_enum_value,
+                field=field,
+            )
+
+    return string_to_code(
+        TEMPLATE_UNION_METHODS.format(
+            type_name=type_name,
+            check_fields=check_fields[1:],
+            base_type_def=base_type_def[1:],
+            base_type_name=base_type_name,
+            base_type_assign_unmarshal=base_type_assign_unmarshal,
+            discriminator=discriminator,
+            driver_cases=driver_cases[1:],
+        )
+    )
 
 
 def generate_template_alternate(
@@ -851,6 +1042,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             "enum",
             "helper",
             "struct",
+            "union",
         )
         self.target = dict.fromkeys(types, "")
         self.schema: QAPISchema
@@ -858,6 +1050,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         self.enums: dict[str, str] = {}
         self.alternates: dict[str, str] = {}
         self.structs: dict[str, str] = {}
+        self.unions: dict[str, str] = {}
         self.accept_null_types = []
         self.docmap = {}
 
@@ -918,6 +1111,7 @@ import (
         self.target["enum"] += generate_content_from_dict(self.enums)
         self.target["alternate"] += generate_content_from_dict(self.alternates)
         self.target["struct"] += generate_content_from_dict(self.structs)
+        self.target["union"] += generate_content_from_dict(self.unions)
 
     def visit_object_type(
         self,
@@ -929,11 +1123,11 @@ import (
         members: List[QAPISchemaObjectTypeMember],
         branches: Optional[QAPISchemaBranches],
     ) -> None:
-        # Do not handle anything besides struct.
+        # Do not handle anything besides struct and unions.
         if (
             name == self.schema.the_empty_object_type.name
             or not isinstance(name, str)
-            or info.defn_meta not in ["struct"]
+            or info.defn_meta not in ["struct", "union"]
         ):
             return
 
@@ -963,6 +1157,14 @@ import (
                 qapi_to_golang_struct(
                     self, name, info, ifcond, features, base, members, branches
                 )
+            )
+        else:
+            assert name not in self.unions
+            self.unions[name] = qapi_to_golang_struct(
+                self, name, info, ifcond, features, base, members, branches
+            )
+            self.unions[name] += qapi_to_golang_methods_union(
+                self, name, base, branches
             )
 
     def visit_alternate_type(
