@@ -512,13 +512,22 @@ static int vhost_vdpa_cvq_map_buf(struct vhost_vdpa *v, void *buf, size_t size,
     DMAMap map = {};
     int r;
 
-    map.translated_addr = (hwaddr)(uintptr_t)buf;
     map.size = size - 1;
     map.perm = write ? IOMMU_RW : IOMMU_RO,
+
+    /* Allocate an IOVA range in the IOVA tree */
     r = vhost_iova_tree_map_alloc(v->shared->iova_tree, &map);
     if (unlikely(r != IOVA_OK)) {
-        error_report("Cannot map injected element");
+        error_report("Cannot allocate IOVA range for injected element");
         return r;
+    }
+    map.translated_addr = (hwaddr)(uintptr_t)buf;
+
+    /* Add IOVA->HVA mapping to the IOVA->HVA tree */
+    r = vhost_iova_tree_insert(v->shared->iova_tree, &map);
+    if (unlikely(r != IOVA_OK)) {
+        error_report("Cannot map injected element into IOVA->HVA tree");
+        goto dma_map_err;
     }
 
     r = vhost_vdpa_dma_map(v->shared, v->address_space_id, map.iova,

@@ -28,12 +28,15 @@ struct VhostIOVATree {
 
     /* IOVA address to qemu memory maps. */
     IOVATree *iova_taddr_map;
+
+    /* Allocated IOVA addresses */
+    IOVATree *iova_map;
 };
 
 /**
- * Create a new IOVA tree
+ * Create a new VhostIOVATree
  *
- * Returns the new IOVA tree
+ * Returns the new VhostIOVATree
  */
 VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
 {
@@ -44,15 +47,17 @@ VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
     tree->iova_last = iova_last;
 
     tree->iova_taddr_map = iova_tree_new();
+    tree->iova_map = iova_tree_new();
     return tree;
 }
 
 /**
- * Delete an iova tree
+ * Delete a VhostIOVATree
  */
 void vhost_iova_tree_delete(VhostIOVATree *iova_tree)
 {
     iova_tree_destroy(iova_tree->iova_taddr_map);
+    iova_tree_destroy(iova_tree->iova_map);
     g_free(iova_tree);
 }
 
@@ -94,7 +99,7 @@ int vhost_iova_tree_map_alloc(VhostIOVATree *tree, DMAMap *map)
     }
 
     /* Allocate a node in IOVA address */
-    return iova_tree_alloc_map(tree->iova_taddr_map, map, iova_first,
+    return iova_tree_alloc_map(tree->iova_map, map, iova_first,
                                tree->iova_last);
 }
 
@@ -107,4 +112,26 @@ int vhost_iova_tree_map_alloc(VhostIOVATree *tree, DMAMap *map)
 void vhost_iova_tree_remove(VhostIOVATree *iova_tree, DMAMap map)
 {
     iova_tree_remove(iova_tree->iova_taddr_map, map);
+    iova_tree_remove(iova_tree->iova_map, map);
+}
+
+/**
+ * Insert a new mapping to the IOVA->HVA tree
+ *
+ * @tree: The VhostIOVATree
+ * @map: The IOVA->HVA mapping
+ *
+ * Returns:
+ * - IOVA_OK if the map fits in the container
+ * - IOVA_ERR_INVALID if the map does not make sense (e.g. size overflow)
+ * - IOVA_ERR_OVERLAP if the IOVA range overlaps with an existing range
+ */
+int vhost_iova_tree_insert(VhostIOVATree *iova_tree, DMAMap *map)
+{
+    if (map->translated_addr + map->size < map->translated_addr ||
+        map->perm == IOMMU_NONE) {
+        return IOVA_ERR_INVALID;
+    }
+
+    return iova_tree_insert(iova_tree->iova_taddr_map, map);
 }
