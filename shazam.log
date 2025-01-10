@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250110-counter_delegation-v5-0-e83d797ae294@rivosinc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 84 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/11] target/riscv: Add properties for Indirect CSR Access extension
+  [32m✓[0m [PATCH v5 2/11] target/riscv: Decouple AIA processing from xiselect and xireg
+  [32m✓[0m [PATCH v5 3/11] target/riscv: Enable S*stateen bits for AIA
+  [32m✓[0m [PATCH v5 4/11] target/riscv: Support generic CSR indirect access
+  [32m✓[0m [PATCH v5 5/11] target/riscv: Add properties for counter delegation ISA extensions
+  [32m✓[0m [PATCH v5 6/11] target/riscv: Add counter delegation definitions
+  [32m✓[0m [PATCH v5 7/11] target/riscv: Add select value range check for counter delegation
+  [32m✓[0m [PATCH v5 8/11] target/riscv: Add counter delegation/configuration support
+  [32m✓[0m [PATCH v5 9/11] target/riscv: Invoke pmu init after feature enable
+  [32m✓[0m [PATCH v5 10/11] target/riscv: Add implied rule for counter delegation extensions
+  [32m✓[0m [PATCH v5 11/11] target/riscv: Add configuration for S[m|s]csrind, Smcdeleg/Ssccfg
+  ---
+  [32m✓[0m Signed: DKIM/rivosinc-com.20230601.gappssmtp.com (From: atishp@rivosinc.com)
+---
+Total patches: 11
+---
+ Base: base-commit b74e358af21fddb93228c4aed22520950cbe9dd7 not known, ignoring
+Applying: target/riscv: Add properties for Indirect CSR Access extension
+Patch failed at 0001 target/riscv: Add properties for Indirect CSR Access extension
+error: patch failed: target/riscv/cpu.c:192
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
