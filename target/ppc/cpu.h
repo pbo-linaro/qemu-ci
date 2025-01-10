@@ -2234,9 +2234,7 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_L3CR              (0x3FA)
 #define SPR_750_TDCH          (0x3FA)
 #define SPR_IABR2             (0x3FA)
-#define SPR_40x_DCCR          (0x3FA)
 #define SPR_ICTC              (0x3FB)
-#define SPR_40x_ICCR          (0x3FB)
 #define SPR_THRM1             (0x3FC)
 #define SPR_403_PBL1          (0x3FC)
 #define SPR_SP                (0x3FD)
@@ -2408,8 +2406,6 @@ enum {
     PPC_TLBIVAX        = 0x0080000000000000ULL,
     /* PowerPC 4xx dedicated instructions                                    */
     PPC_4xx_COMMON     = 0x0100000000000000ULL,
-    /* PowerPC 40x ibct instructions                                         */
-    PPC_40x_ICBT       = 0x0200000000000000ULL,
     /* rfmci is not implemented in all BookE PowerPC                         */
     PPC_RFMCI          = 0x0400000000000000ULL,
     /* rfdi instruction                                                      */
@@ -2440,7 +2436,7 @@ enum {
                         | PPC_SLBI | PPC_WRTEE \
                         | PPC_405_MAC | PPC_440_SPEC | PPC_BOOKE \
                         | PPC_MFAPIDI | PPC_TLBIVA | PPC_TLBIVAX \
-                        | PPC_4xx_COMMON | PPC_40x_ICBT | PPC_RFMCI \
+                        | PPC_4xx_COMMON | PPC_RFMCI \
                         | PPC_RFDI | PPC_DCR | PPC_DCRX | PPC_POPCNTWD \
                         | PPC_CILDST)
 
