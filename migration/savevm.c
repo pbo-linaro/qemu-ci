@@ -1686,7 +1686,6 @@ static int qemu_savevm_state(QEMUFile *f, Error **errp)
 {
     int ret;
     MigrationState *ms = migrate_get_current();
-    MigrationStatus status;
 
     if (migration_is_running()) {
         error_setg(errp, "There's a migration process in progress");
@@ -1723,11 +1722,11 @@ cleanup:
     qemu_savevm_state_cleanup();
 
     if (ret != 0) {
-        status = MIGRATION_STATUS_FAILED;
+        qatomic_set(&ms->failing, 1);
     } else {
-        status = MIGRATION_STATUS_COMPLETED;
+        migrate_set_state(&ms->state, MIGRATION_STATUS_SETUP,
+                          MIGRATION_STATUS_COMPLETED);
     }
-    migrate_set_state(&ms->state, MIGRATION_STATUS_SETUP, status);
 
     /* f is outer parameter, it should not stay in global migration state after
      * this function finished */

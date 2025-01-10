@@ -471,6 +471,15 @@ struct MigrationState {
     bool switchover_acked;
     /* Is this a rdma migration */
     bool rdma_migration;
+    /*
+     * Is migration failing? Migration status should not be set to
+     * MIGRATION_STATUS_FAILED until migrate fd cleanup is done, else
+     * the client can trigger another instance of migration before
+     * the cleanup is complete. Hence, set the status to 'failing'
+     * when a migration failure happens and once the cleanup is done,
+     * set it to MIGRATION_STATUS_FAILED.
+     */
+    int failing;
 };
 
 void migrate_set_state(MigrationStatus *state, MigrationStatus old_state,

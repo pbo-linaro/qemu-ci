@@ -878,8 +878,7 @@ bool multifd_send_setup(void)
     return true;
 
 err:
-    migrate_set_state(&s->state, MIGRATION_STATUS_SETUP,
-                      MIGRATION_STATUS_FAILED);
+    qatomic_set(&s->failing, 1);
     return false;
 }
 
@@ -949,8 +948,7 @@ static void multifd_recv_terminate_threads(Error *err)
         migrate_set_error(s, err);
         if (s->state == MIGRATION_STATUS_SETUP ||
             s->state == MIGRATION_STATUS_ACTIVE) {
-            migrate_set_state(&s->state, s->state,
-                              MIGRATION_STATUS_FAILED);
+            qatomic_set(&s->failing, 1);
         }
     }
 

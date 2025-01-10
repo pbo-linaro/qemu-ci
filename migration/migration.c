@@ -1143,8 +1143,9 @@ static bool migration_is_active(void)
 {
     MigrationState *s = current_migration;
 
-    return (s->state == MIGRATION_STATUS_ACTIVE ||
-            s->state == MIGRATION_STATUS_POSTCOPY_ACTIVE);
+    return ((s->state == MIGRATION_STATUS_ACTIVE ||
+            s->state == MIGRATION_STATUS_POSTCOPY_ACTIVE) &&
+            !qatomic_read(&s->failing));
 }
 
 static bool migrate_show_downtime(MigrationState *s)
@@ -1439,6 +1440,11 @@ static void migrate_fd_cleanup(MigrationState *s)
                           MIGRATION_STATUS_CANCELLED);
     }
 
+    if (qatomic_xchg(&s->failing, 0)) {
+        migrate_set_state(&s->state, s->state,
+                          MIGRATION_STATUS_FAILED);
+    }
+
     if (s->error) {
         /* It is used on info migrate.  We can't free it */
         error_report_err(error_copy(s->error));
@@ -1484,17 +1490,16 @@ static void migrate_error_free(MigrationState *s)
 static void migrate_fd_error(MigrationState *s, const Error *error)
 {
     MigrationStatus current = s->state;
-    MigrationStatus next;
 
     assert(s->to_dst_file == NULL);
 
     switch (current) {
     case MIGRATION_STATUS_SETUP:
-        next = MIGRATION_STATUS_FAILED;
+        qatomic_set(&s->failing, 1);
         break;
     case MIGRATION_STATUS_POSTCOPY_RECOVER_SETUP:
         /* Never fail a postcopy migration; switch back to PAUSED instead */
-        next = MIGRATION_STATUS_POSTCOPY_PAUSED;
+        migrate_set_state(&s->state, current, MIGRATION_STATUS_POSTCOPY_PAUSED);
         break;
     default:
         /*
@@ -1506,7 +1511,6 @@ static void migrate_fd_error(MigrationState *s, const Error *error)
         return;
     }
 
-    migrate_set_state(&s->state, current, next);
     migrate_set_error(s, error);
 }
 
@@ -2101,8 +2105,7 @@ void qmp_migrate(const char *uri, bool has_channels,
     } else {
         error_setg(&local_err, QERR_INVALID_PARAMETER_VALUE, "uri",
                    "a valid migration protocol");
-        migrate_set_state(&s->state, MIGRATION_STATUS_SETUP,
-                          MIGRATION_STATUS_FAILED);
+        qatomic_set(&s->failing, 1);
     }
 
     if (local_err) {
@@ -2498,7 +2501,7 @@ static int postcopy_start(MigrationState *ms, Error **errp)
     if (migrate_postcopy_preempt()) {
         migration_wait_main_channel(ms);
         if (postcopy_preempt_establish_channel(ms)) {
-            migrate_set_state(&ms->state, ms->state, MIGRATION_STATUS_FAILED);
+            qatomic_set(&ms->failing, 1);
             error_setg(errp, "%s: Failed to establish preempt channel",
                        __func__);
             return -1;
@@ -2648,8 +2651,7 @@ static int postcopy_start(MigrationState *ms, Error **errp)
 fail_closefb:
     qemu_fclose(fb);
 fail:
-    migrate_set_state(&ms->state, MIGRATION_STATUS_POSTCOPY_ACTIVE,
-                          MIGRATION_STATUS_FAILED);
+    qatomic_set(&ms->failing, 1);
     if (restart_block) {
         /* A failure happened early enough that we know the destination hasn't
          * accessed block devices, so we're safe to recover.
@@ -2782,8 +2784,7 @@ static void migration_completion_failed(MigrationState *s,
         bql_unlock();
     }
 
-    migrate_set_state(&s->state, current_active_state,
-                      MIGRATION_STATUS_FAILED);
+    qatomic_set(&s->failing, 1);
 }
 
 /**
@@ -2850,8 +2851,6 @@ fail:
  */
 static void bg_migration_completion(MigrationState *s)
 {
-    int current_active_state = s->state;
-
     if (s->state == MIGRATION_STATUS_ACTIVE) {
         /*
          * By this moment we have RAM content saved into the migration stream.
@@ -2874,8 +2873,7 @@ static void bg_migration_completion(MigrationState *s)
     return;
 
 fail:
-    migrate_set_state(&s->state, current_active_state,
-                      MIGRATION_STATUS_FAILED);
+    qatomic_set(&s->failing, 1);
 }
 
 typedef enum MigThrError {
@@ -3047,6 +3045,10 @@ static MigThrError migration_detect_error(MigrationState *s)
         return MIG_THR_ERR_FATAL;
     }
 
+    if (qatomic_read(&s->failing)) {
+        return MIG_THR_ERR_FATAL;
+    }
+
     /*
      * Try to detect any file errors.  Note that postcopy_qemufile_src will
      * be NULL when postcopy preempt is not enabled.
@@ -3077,7 +3079,7 @@ static MigThrError migration_detect_error(MigrationState *s)
          * For precopy (or postcopy with error outside IO), we fail
          * with no time.
          */
-        migrate_set_state(&s->state, state, MIGRATION_STATUS_FAILED);
+        qatomic_set(&s->failing, 1);
         trace_migration_thread_file_err();
 
         /* Time to stop the migration, now. */
@@ -3492,8 +3494,7 @@ static void *migration_thread(void *opaque)
     if (ret) {
         migrate_set_error(s, local_err);
         error_free(local_err);
-        migrate_set_state(&s->state, MIGRATION_STATUS_ACTIVE,
-                          MIGRATION_STATUS_FAILED);
+        qatomic_set(&s->failing, 1);
         goto out;
     }
 
@@ -3617,8 +3618,7 @@ static void *bg_migration_thread(void *opaque)
     if (ret) {
         migrate_set_error(s, local_err);
         error_free(local_err);
-        migrate_set_state(&s->state, MIGRATION_STATUS_ACTIVE,
-                          MIGRATION_STATUS_FAILED);
+        qatomic_set(&s->failing, 1);
         goto fail_setup;
     }
 
@@ -3685,8 +3685,7 @@ static void *bg_migration_thread(void *opaque)
 
 fail:
     if (early_fail) {
-        migrate_set_state(&s->state, MIGRATION_STATUS_ACTIVE,
-                MIGRATION_STATUS_FAILED);
+        qatomic_set(&s->failing, 1);
         bql_unlock();
     }
 
@@ -3805,7 +3804,7 @@ void migrate_fd_connect(MigrationState *s, Error *error_in)
 
 fail:
     migrate_set_error(s, local_err);
-    migrate_set_state(&s->state, s->state, MIGRATION_STATUS_FAILED);
+    qatomic_set(&s->failing, 1);
     error_report_err(local_err);
     migrate_fd_cleanup(s);
 }
