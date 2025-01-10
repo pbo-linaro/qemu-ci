@@ -946,18 +946,6 @@ void spr_write_dpdes(DisasContext *ctx, int sprn, int gprn)
 
 /* PowerPC 40x specific registers */
 #if !defined(CONFIG_USER_ONLY)
-void spr_read_40x_pit(DisasContext *ctx, int gprn, int sprn)
-{
-    translator_io_start(&ctx->base);
-    gen_helper_load_40x_pit(cpu_gpr[gprn], tcg_env);
-}
-
-void spr_write_40x_pit(DisasContext *ctx, int sprn, int gprn)
-{
-    translator_io_start(&ctx->base);
-    gen_helper_store_40x_pit(tcg_env, cpu_gpr[gprn]);
-}
-
 void spr_write_40x_dbcr0(DisasContext *ctx, int sprn, int gprn)
 {
     translator_io_start(&ctx->base);
@@ -965,18 +953,6 @@ void spr_write_40x_dbcr0(DisasContext *ctx, int sprn, int gprn)
     gen_helper_store_40x_dbcr0(tcg_env, cpu_gpr[gprn]);
     /* We must stop translation as we may have rebooted */
     ctx->base.is_jmp = DISAS_EXIT_UPDATE;
-}
-
-void spr_write_40x_tcr(DisasContext *ctx, int sprn, int gprn)
-{
-    translator_io_start(&ctx->base);
-    gen_helper_store_40x_tcr(tcg_env, cpu_gpr[gprn]);
-}
-
-void spr_write_40x_tsr(DisasContext *ctx, int sprn, int gprn)
-{
-    translator_io_start(&ctx->base);
-    gen_helper_store_40x_tsr(tcg_env, cpu_gpr[gprn]);
 }
 
 void spr_write_40x_pid(DisasContext *ctx, int sprn, int gprn)

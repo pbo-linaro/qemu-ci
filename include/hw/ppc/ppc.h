@@ -8,19 +8,6 @@ PowerPCCPU *ppc_get_vcpu_by_pir(int pir);
 int ppc_cpu_pir(PowerPCCPU *cpu);
 int ppc_cpu_tir(PowerPCCPU *cpu);
 
-/* PowerPC hardware exceptions management helpers */
-typedef void (*clk_setup_cb)(void *opaque, uint32_t freq);
-typedef struct clk_setup_t clk_setup_t;
-struct clk_setup_t {
-    clk_setup_cb cb;
-    void *opaque;
-};
-static inline void clk_setup (clk_setup_t *clk, uint32_t freq)
-{
-    if (clk->cb != NULL)
-        (*clk->cb)(clk->opaque, freq);
-}
-
 struct ppc_tb_t {
     /* Time base management */
     int64_t  tb_offset;    /* Compensation                    */
@@ -67,8 +54,6 @@ int ppc_dcr_init (CPUPPCState *env, int (*dcr_read_error)(int dcrn),
                   int (*dcr_write_error)(int dcrn));
 int ppc_dcr_register (CPUPPCState *env, int dcrn, void *opaque,
                       dcr_read_cb drc_read, dcr_write_cb dcr_write);
-clk_setup_cb ppc_40x_timers_init (CPUPPCState *env, uint32_t freq,
-                                  unsigned int decr_excp);
 
 /* Embedded PowerPC reset */
 void ppc40x_core_reset(PowerPCCPU *cpu);

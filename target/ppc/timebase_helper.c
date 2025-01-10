@@ -181,26 +181,6 @@ void helper_store_tbu40(CPUPPCState *env, target_ulong val)
     }
 }
 
-target_ulong helper_load_40x_pit(CPUPPCState *env)
-{
-    return load_40x_pit(env);
-}
-
-void helper_store_40x_pit(CPUPPCState *env, target_ulong val)
-{
-    store_40x_pit(env, val);
-}
-
-void helper_store_40x_tcr(CPUPPCState *env, target_ulong val)
-{
-    store_40x_tcr(env, val);
-}
-
-void helper_store_40x_tsr(CPUPPCState *env, target_ulong val)
-{
-    store_40x_tsr(env, val);
-}
-
 void helper_store_booke_tcr(CPUPPCState *env, target_ulong val)
 {
     store_booke_tcr(env, val);

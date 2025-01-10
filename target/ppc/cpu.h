@@ -1615,11 +1615,7 @@ void cpu_ppc_store_tbu40(CPUPPCState *env, uint64_t value);
 uint64_t cpu_ppc_load_purr(CPUPPCState *env);
 void cpu_ppc_store_purr(CPUPPCState *env, uint64_t value);
 #if !defined(CONFIG_USER_ONLY)
-target_ulong load_40x_pit(CPUPPCState *env);
-void store_40x_pit(CPUPPCState *env, target_ulong val);
 void store_40x_dbcr0(CPUPPCState *env, uint32_t val);
-void store_40x_tcr(CPUPPCState *env, target_ulong val);
-void store_40x_tsr(CPUPPCState *env, target_ulong val);
 void store_booke_tcr(CPUPPCState *env, target_ulong val);
 void store_booke_tsr(CPUPPCState *env, target_ulong val);
 void ppc_tlb_invalidate_all(CPUPPCState *env);
@@ -2196,11 +2192,8 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_403_CDBCR         (0x3D7)
 #define SPR_L3ITCR0           (0x3D8)
 #define SPR_TCR               (0x3D8)
-#define SPR_40x_TSR           (0x3D8)
 #define SPR_IBR               (0x3DA)
-#define SPR_40x_TCR           (0x3DA)
 #define SPR_ESASRR            (0x3DB)
-#define SPR_40x_PIT           (0x3DB)
 #define SPR_403_TBL           (0x3DC)
 #define SPR_403_TBU           (0x3DD)
 #define SPR_SEBR              (0x3DE)
