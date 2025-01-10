@@ -850,7 +850,8 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
     LoongArchCPU *lacpu;
     CPULoongArchState *env;
     CPUState *cpu_state;
-    int cpu, pin, i, start, num;
+    int cpu, i, start, num;
+    Error *local_err = NULL;
 
     /*
      * Extended IRQ model.
@@ -932,16 +933,9 @@ static void virt_irq_init(LoongArchVirtMachineState *lvms)
                     sysbus_mmio_get_region(SYS_BUS_DEVICE(extioi), 1));
     }
 
-    /*
-     * connect ext irq to the cpu irq
-     * cpu_pin[9:2] <= intc_pin[7:0]
-     */
     for (cpu = 0; cpu < ms->smp.cpus; cpu++) {
         cpudev = DEVICE(qemu_get_cpu(cpu));
-        for (pin = 0; pin < LS3A_INTC_IP; pin++) {
-            qdev_connect_gpio_out(extioi, (cpu * 8 + pin),
-                                  qdev_get_gpio_in(cpudev, pin + 2));
-        }
+        hotplug_handler_plug(HOTPLUG_HANDLER(extioi), cpudev, &local_err);
     }
 
     pch_pic = qdev_new(TYPE_LOONGARCH_PIC);
