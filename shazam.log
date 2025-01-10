@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20250110125441.3208676-1-cleger@rivosinc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 118 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v8 1/9] target/riscv: Fix henvcfg potentially containing stale bits
+  [32m✓[0m [PATCH v8 2/9] target/riscv: Add Ssdbltrp CSRs handling
+  [32m✓[0m [PATCH v8 3/9] target/riscv: Implement Ssdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH v8 4/9] target/riscv: Implement Ssdbltrp exception handling
+  [32m✓[0m [PATCH v8 5/9] target/riscv: Add Ssdbltrp ISA extension enable switch
+  [32m✓[0m [PATCH v8 6/9] target/riscv: Add Smdbltrp CSRs handling
+  [32m✓[0m [PATCH v8 7/9] target/riscv: Implement Smdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH v8 8/9] target/riscv: Implement Smdbltrp behavior
+  [32m✓[0m [PATCH v8 9/9] target/riscv: Add Smdbltrp ISA extension enable switch
+  ---
+  [32m✓[0m Signed: DKIM/rivosinc-com.20230601.gappssmtp.com (From: cleger@rivosinc.com)
+---
+Total patches: 9
+---
+Applying: target/riscv: Fix henvcfg potentially containing stale bits
+Applying: target/riscv: Add Ssdbltrp CSRs handling
+Patch failed at 0002 target/riscv: Add Ssdbltrp CSRs handling
+error: patch failed: target/riscv/cpu_bits.h:782
+error: target/riscv/cpu_bits.h: patch does not apply
+error: patch failed: target/riscv/cpu_cfg.h:83
+error: target/riscv/cpu_cfg.h: patch does not apply
+error: patch failed: target/riscv/csr.c:2959
+error: target/riscv/csr.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
