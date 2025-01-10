@@ -232,8 +232,6 @@ typedef enum powerpc_mmu_t {
      * keywords: tlbld tlbli TLBMISS PTEHI PTELO)
      */
     POWERPC_MMU_SOFT_74xx  = 0x00000003,
-    /* PowerPC 4xx MMU with software TLB                       */
-    POWERPC_MMU_SOFT_4xx   = 0x00000004,
     /* PowerPC MMU in real mode only                           */
     POWERPC_MMU_REAL       = 0x00000006,
     /* Freescale MPC8xx MMU model                              */
@@ -2146,7 +2144,6 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_7XX_UPMC3         (0x3AD)
 #define SPR_7XX_UPMC4         (0x3AE)
 #define SPR_USDA              (0x3AF)
-#define SPR_40x_ZPR           (0x3B0)
 #define SPR_BOOKE_MAS7        (0x3B0)
 #define SPR_74XX_MMCR2        (0x3B0)
 #define SPR_7XX_PMC5          (0x3B1)
@@ -2181,13 +2178,10 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_BOOKE_ICDBDR      (0x3D3)
 #define SPR_TLBMISS           (0x3D4)
 #define SPR_IMISS             (0x3D4)
-#define SPR_40x_ESR           (0x3D4)
 #define SPR_PTEHI             (0x3D5)
 #define SPR_ICMP              (0x3D5)
-#define SPR_40x_DEAR          (0x3D5)
 #define SPR_PTELO             (0x3D6)
 #define SPR_RPA               (0x3D6)
-#define SPR_40x_EVPR          (0x3D6)
 #define SPR_L3PM              (0x3D7)
 #define SPR_403_CDBCR         (0x3D7)
 #define SPR_L3ITCR0           (0x3D8)

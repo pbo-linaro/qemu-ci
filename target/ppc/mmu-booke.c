@@ -68,69 +68,6 @@ int ppcemb_tlb_search(CPUPPCState *env, target_ulong address, uint32_t pid)
     return -1;
 }
 
-int mmu40x_get_physical_address(CPUPPCState *env, hwaddr *raddr, int *prot,
-                                target_ulong address,
-                                MMUAccessType access_type)
-{
-    ppcemb_tlb_t *tlb;
-    int i, ret, zsel, zpr, pr;
-
-    ret = -1;
-    pr = FIELD_EX64(env->msr, MSR, PR);
-    for (i = 0; i < env->nb_tlb; i++) {
-        tlb = &env->tlb.tlbe[i];
-        if (!ppcemb_tlb_check(env, tlb, raddr, address,
-                              env->spr[SPR_40x_PID], i)) {
-            continue;
-        }
-        zsel = (tlb->attr >> 4) & 0xF;
-        zpr = (env->spr[SPR_40x_ZPR] >> (30 - (2 * zsel))) & 0x3;
-        qemu_log_mask(CPU_LOG_MMU,
-                      "%s: TLB %d zsel %d zpr %d ty %d attr %08x\n",
-                      __func__, i, zsel, zpr, access_type, tlb->attr);
-        /* Check execute enable bit */
-        switch (zpr) {
-        case 0x2:
-            if (pr != 0) {
-                goto check_perms;
-            }
-            /* fall through */
-        case 0x3:
-            /* All accesses granted */
-            *prot = PAGE_RWX;
-            ret = 0;
-            break;
-
-        case 0x0:
-            if (pr != 0) {
-                /* Raise Zone protection fault.  */
-                env->spr[SPR_40x_ESR] = 1 << 22;
-                *prot = 0;
-                ret = -2;
-                break;
-            }
-            /* fall through */
-        case 0x1:
-check_perms:
-            /* Check from TLB entry */
-            *prot = tlb->prot;
-            if (check_prot_access_type(*prot, access_type)) {
-                ret = 0;
-            } else {
-                env->spr[SPR_40x_ESR] = 0;
-                ret = -2;
-            }
-            break;
-        }
-    }
-    qemu_log_mask(CPU_LOG_MMU, "%s: access %s " TARGET_FMT_lx " => "
-                  HWADDR_FMT_plx " %d %d\n",  __func__,
-                  ret < 0 ? "refused" : "granted", address,
-                  ret < 0 ? 0 : *raddr, *prot, ret);
-
-    return ret;
-}
-
 static bool mmubooke_check_pid(CPUPPCState *env, ppcemb_tlb_t *tlb,
                                hwaddr *raddr, target_ulong addr, int i)
 {

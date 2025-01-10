@@ -3040,9 +3040,6 @@ void ppc_cpu_do_unaligned_access(CPUState *cs, vaddr vaddr,
     insn = ppc_ldl_code(env, env->nip);
 
     switch (env->mmu_model) {
-    case POWERPC_MMU_SOFT_4xx:
-        env->spr[SPR_40x_DEAR] = vaddr;
-        break;
     case POWERPC_MMU_BOOKE:
     case POWERPC_MMU_BOOKE206:
         env->spr[SPR_BOOKE_DEAR] = vaddr;
