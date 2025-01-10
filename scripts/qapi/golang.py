@@ -148,12 +148,41 @@ def gen_golang(schema: QAPISchema, output_dir: str, prefix: str) -> None:
     vis.write(output_dir)
 
 
+def qapi_name_is_base(name: str) -> bool:
+    return qapi_name_is_object(name) and name.endswith("-base")
+
+
+def qapi_name_is_object(name: str) -> bool:
+    return name.startswith("q_obj_")
+
+
 def qapi_to_field_name(name: str) -> str:
     return name.title().replace("_", "").replace("-", "")
 
 
 def qapi_to_field_name_enum(name: str) -> str:
     return name.title().replace("-", "")
+
+
+def qapi_to_go_type_name(name: str) -> str:
+    # We want to keep CamelCase for Golang types. We want to avoid removing
+    # already set CameCase names while fixing uppercase ones, eg:
+    # 1) q_obj_SocketAddress_base -> SocketAddressBase
+    # 2) q_obj_WATCHDOG-arg -> WatchdogArg
+
+    if qapi_name_is_object(name):
+        # Remove q_obj_ prefix
+        name = name[6:]
+
+    # Handle CamelCase
+    words = list(name.replace("_", "-").split("-"))
+    name = words[0]
+    if name.islower() or name.isupper():
+        name = name.title()
+
+    name += "".join(word.title() for word in words[1:])
+
+    return name
 
 
 def qapi_schema_type_to_go_type(qapitype: str) -> str:
@@ -323,6 +352,131 @@ def generate_struct_type(
     return f"""{type_doc}{with_type} struct{members}"""
 
 
+def get_struct_field(
+    self: QAPISchemaGenGolangVisitor,
+    qapi_name: str,
+    qapi_type_name: str,
+    field_doc: str,
+    is_optional: bool,
+    is_variant: bool,
+) -> dict[str:str]:
+    field = qapi_to_field_name(qapi_name)
+    member_type = qapi_schema_type_to_go_type(qapi_type_name)
+
+    optional = ""
+    if is_optional:
+        if member_type not in self.accept_null_types:
+            optional = ",omitempty"
+
+    # Use pointer to type when field is optional
+    isptr = "*" if is_optional and member_type[0] not in "*[" else ""
+
+    fieldtag = (
+        '`json:"-"`' if is_variant else f'`json:"{qapi_name}{optional}"`'
+    )
+    arg = {
+        "name": f"{field}",
+        "type": f"{isptr}{member_type}",
+        "tag": f"{fieldtag}",
+    }
+    if field_doc != "":
+        arg["doc"] = field_doc
+
+    return arg
+
+
+def recursive_base(
+    self: QAPISchemaGenGolangVisitor,
+    base: Optional[QAPISchemaObjectType],
+) -> List[dict[str:str]]:
+    fields: List[dict[str:str]] = []
+
+    if not base:
+        return fields
+
+    if base.base is not None:
+        embed_base = self.schema.lookup_entity(base.base.name)
+        fields = recursive_base(self, embed_base)
+
+    doc = self.docmap.get(base.name, None)
+    _, docfields = qapi_to_golang_struct_docs(doc)
+
+    for member in base.local_members:
+        field_doc = docfields.get(member.name, "")
+        field = get_struct_field(
+            self,
+            member.name,
+            member.type.name,
+            field_doc,
+            member.optional,
+            False,
+        )
+        fields.append(field)
+
+    return fields
+
+
+# Helper function that is used for most of QAPI types
+def qapi_to_golang_struct(
+    self: QAPISchemaGenGolangVisitor,
+    name: str,
+    info: Optional[QAPISourceInfo],
+    __: QAPISchemaIfCond,
+    ___: List[QAPISchemaFeature],
+    base: Optional[QAPISchemaObjectType],
+    members: List[QAPISchemaObjectTypeMember],
+    variants: Optional[QAPISchemaVariants],
+    indent: int = 0,
+    doc_enabled: bool = True,
+) -> str:
+    fields = recursive_base(self, base)
+
+    doc = self.docmap.get(name, None)
+    type_doc, docfields = qapi_to_golang_struct_docs(doc)
+    if not doc_enabled:
+        type_doc = ""
+
+    if members:
+        for member in members:
+            field_doc = docfields.get(member.name, "") if doc_enabled else ""
+            field = get_struct_field(
+                self,
+                member.name,
+                member.type.name,
+                field_doc,
+                member.optional,
+                False,
+            )
+            fields.append(field)
+
+    exists = {}
+    if variants:
+        fields.append({"comment": "Variants fields"})
+        for variant in variants.variants:
+            if variant.type.is_implicit():
+                continue
+
+            exists[variant.name] = True
+            field_doc = docfields.get(variant.name, "") if doc_enabled else ""
+            field = get_struct_field(
+                self,
+                variant.name,
+                variant.type.name,
+                field_doc,
+                True,
+                True,
+            )
+            fields.append(field)
+
+    type_name = qapi_to_go_type_name(name)
+    content = string_to_code(
+        generate_struct_type(
+            type_name, type_doc=type_doc, args=fields, indent=indent
+        )
+    )
+    return content
+
+
 def generate_template_alternate(
     self: QAPISchemaGenGolangVisitor,
     name: str,
@@ -419,12 +573,14 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             "alternate",
             "enum",
             "helper",
+            "struct",
         )
         self.target = dict.fromkeys(types, "")
         self.schema: QAPISchema
         self.golang_package_name = "qapi"
         self.enums: dict[str, str] = {}
         self.alternates: dict[str, str] = {}
+        self.structs: dict[str, str] = {}
         self.accept_null_types = []
         self.docmap = {}
 
@@ -454,7 +610,11 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             self.target[target] = f"package {self.golang_package_name}"
 
             imports = "\n"
-            if target == "helper":
+            if target == "struct":
+                imports += """
+import "encoding/json"
+"""
+            elif target == "helper":
                 imports += """
 import (
     "encoding/json"
@@ -479,6 +639,7 @@ import (
         del self.schema
         self.target["enum"] += generate_content_from_dict(self.enums)
         self.target["alternate"] += generate_content_from_dict(self.alternates)
+        self.target["struct"] += generate_content_from_dict(self.structs)
 
     def visit_object_type(
         self,
@@ -490,7 +651,41 @@ import (
         members: List[QAPISchemaObjectTypeMember],
         branches: Optional[QAPISchemaBranches],
     ) -> None:
-        pass
+        # Do not handle anything besides struct.
+        if (
+            name == self.schema.the_empty_object_type.name
+            or not isinstance(name, str)
+            or info.defn_meta not in ["struct"]
+        ):
+            return
+
+        # Base structs are embed
+        if qapi_name_is_base(name):
+            return
+
+        # visit all inner objects as well, they are not going to be
+        # called by python's generator.
+        if branches:
+            for branch in branches.variants:
+                assert isinstance(branch.type, QAPISchemaObjectType)
+                self.visit_object_type(
+                    self,
+                    branch.type.name,
+                    branch.type.info,
+                    branch.type.ifcond,
+                    branch.type.base,
+                    branch.type.local_members,
+                    branch.type.branches,
+                )
+
+        # Save generated Go code to be written later
+        if info.defn_meta == "struct":
+            assert name not in self.structs
+            self.structs[name] = string_to_code(
+                qapi_to_golang_struct(
+                    self, name, info, ifcond, features, base, members, branches
+                )
+            )
 
     def visit_alternate_type(
         self,
