@@ -1128,6 +1128,9 @@ static void stellaris_init(MachineState *ms, stellaris_board_info *board)
     qdev_prop_set_uint8(nvic, "num-prio-bits", NUM_PRIO_BITS);
     qdev_prop_set_string(nvic, "cpu-type", ms->cpu_type);
     qdev_prop_set_bit(nvic, "enable-bitband", true);
+    if (!DEV_CAP(1, MPU)) {
+        qdev_prop_set_uint32(nvic, "mpu-ns-regions", 0); /* Disable MPU */
+    }
     qdev_connect_clock_in(nvic, "cpuclk",
                           qdev_get_clock_out(ssys_dev, "SYSCLK"));
     /* This SoC does not connect the systick reference clock */
