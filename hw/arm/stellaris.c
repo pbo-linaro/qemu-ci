@@ -701,8 +701,16 @@ static void stellaris_i2c_init(Object *obj)
     sysbus_init_mmio(sbd, &s->iomem);
 }
 
-/* Analogue to Digital Converter.  This is only partially implemented,
-   enough for applications that use a combined ADC and timer tick.  */
+/*
+ * Analogue to Digital Converter.
+ *
+ * Each of the 4 trigger inputs has a MUX for 5 inputs
+ * (see Stellaris Data Sheet Figure 11-1: "ADC Module Block Diagram").
+ *
+ * This model only consider the GPTM inputs, thus MUX is not implemented.
+ */
+
+#define STELLARIS_ADC_TRIGGERS      4
 
 #define STELLARIS_ADC_EM_CONTROLLER 0
 #define STELLARIS_ADC_EM_COMP       1
@@ -986,7 +994,7 @@ static void stellaris_adc_init(Object *obj)
     memory_region_init_io(&s->iomem, obj, &stellaris_adc_ops, s,
                           "adc", 0x1000);
     sysbus_init_mmio(sbd, &s->iomem);
-    qdev_init_gpio_in(dev, stellaris_adc_trigger, 1);
+    qdev_init_gpio_in(dev, stellaris_adc_trigger, STELLARIS_ADC_TRIGGERS);
 }
 
 /* Board init.  */
@@ -1061,7 +1069,7 @@ static void stellaris_init(MachineState *ms, stellaris_board_info *board)
     DeviceState *gpio_dev[NUM_GPIO], *nvic;
     qemu_irq gpio_in[NUM_GPIO][8];
     qemu_irq gpio_out[NUM_GPIO][8];
-    qemu_irq adc;
+    DeviceState *adc;
     int sram_size;
     int flash_size;
     DeviceState *i2c_dev[NUM_I2C];
@@ -1144,15 +1152,12 @@ static void stellaris_init(MachineState *ms, stellaris_board_info *board)
     sysbus_connect_irq(SYS_BUS_DEVICE(ssys_dev), 0, qdev_get_gpio_in(nvic, 28));
 
     if (DEV_CAP(1, ADC)) {
-        dev = sysbus_create_varargs(TYPE_STELLARIS_ADC, 0x40038000,
+        adc = sysbus_create_varargs(TYPE_STELLARIS_ADC, 0x40038000,
                                     qdev_get_gpio_in(nvic, 14),
                                     qdev_get_gpio_in(nvic, 15),
                                     qdev_get_gpio_in(nvic, 16),
                                     qdev_get_gpio_in(nvic, 17),
                                     NULL);
-        adc = qdev_get_gpio_in(dev, 0);
-    } else {
-        adc = NULL;
     }
     for (i = 0; i < NUM_GPTM; i++) {
         if (DEV_CAP(2, GPTM(i))) {
@@ -1166,9 +1171,12 @@ static void stellaris_init(MachineState *ms, stellaris_board_info *board)
             sysbus_realize_and_unref(sbd, &error_fatal);
             sysbus_mmio_map(sbd, 0, 0x40030000 + i * 0x1000);
             sysbus_connect_irq(sbd, 0, qdev_get_gpio_in(nvic, timer_irq[i]));
+
             /* TODO: This is incorrect, but we get away with it because
                the ADC output is only ever pulsed.  */
-            qdev_connect_gpio_out(dev, 0, adc);
+            if (adc) {
+                qdev_connect_gpio_out(dev, 0, qdev_get_gpio_in(adc, i));
+            }
         }
     }
 
