@@ -55,6 +55,22 @@ static void iova_tree_alloc_args_iterate(struct IOVATreeAllocArgs *args,
     args->this = next;
 }
 
+static int gpa_tree_compare(gconstpointer a, gconstpointer b, gpointer data)
+{
+    const DMAMap *m1 = a, *m2 = b;
+
+    if (m1->translated_addr > m2->translated_addr + m2->size) {
+        return 1;
+    }
+
+    if (m1->translated_addr + m1->size < m2->translated_addr) {
+        return -1;
+    }
+
+    /* Overlapped */
+    return 0;
+}
+
 static int iova_tree_compare(gconstpointer a, gconstpointer b, gpointer data)
 {
     const DMAMap *m1 = a, *m2 = b;
@@ -69,6 +85,15 @@ static int iova_tree_compare(gconstpointer a, gconstpointer b, gpointer data)
 
     /* Overlapped */
     return 0;
+}
+
+IOVATree *gpa_tree_new(void)
+{
+    IOVATree *gpa_tree = g_new0(IOVATree, 1);
+
+    gpa_tree->tree = g_tree_new_full(gpa_tree_compare, NULL, g_free, NULL);
+
+    return gpa_tree;
 }
 
 IOVATree *iova_tree_new(void)
@@ -119,6 +144,27 @@ static inline void iova_tree_insert_internal(GTree *gtree, DMAMap *range)
 {
     /* Key and value are sharing the same range data */
     g_tree_insert(gtree, range, range);
+}
+
+int gpa_tree_insert(IOVATree *tree, const DMAMap *map)
+{
+    DMAMap *new;
+
+    if (map->translated_addr + map->size < map->translated_addr ||
+        map->perm == IOMMU_NONE) {
+        return IOVA_ERR_INVALID;
+    }
+
+    /* We don't allow inserting ranges that overlap with existing ones */
+    if (iova_tree_find(tree,map)) {
+        return IOVA_ERR_OVERLAP;
+    }
+
+    new = g_new0(DMAMap, 1);
+    memcpy(new, map, sizeof(*new));
+    iova_tree_insert_internal(tree->tree, new);
+
+    return IOVA_OK;
 }
 
 int iova_tree_insert(IOVATree *tree, const DMAMap *map)

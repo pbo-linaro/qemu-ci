@@ -31,6 +31,9 @@ struct VhostIOVATree {
 
     /* Allocated IOVA addresses */
     IOVATree *iova_map;
+
+    /* GPA to IOVA address memory maps */
+    IOVATree *gpa_iova_map;
 };
 
 /**
@@ -48,6 +51,7 @@ VhostIOVATree *vhost_iova_tree_new(hwaddr iova_first, hwaddr iova_last)
 
     tree->iova_taddr_map = iova_tree_new();
     tree->iova_map = iova_tree_new();
+    tree->gpa_iova_map = gpa_tree_new();
     return tree;
 }
 
@@ -58,6 +62,7 @@ void vhost_iova_tree_delete(VhostIOVATree *iova_tree)
 {
     iova_tree_destroy(iova_tree->iova_taddr_map);
     iova_tree_destroy(iova_tree->iova_map);
+    iova_tree_destroy(iova_tree->gpa_iova_map);
     g_free(iova_tree);
 }
 
@@ -133,4 +138,49 @@ int vhost_iova_tree_insert(VhostIOVATree *iova_tree, DMAMap *map)
     }
 
     return iova_tree_insert(iova_tree->iova_taddr_map, map);
+}
+
+/** Insert a new GPA->IOVA mapping to the GPA->IOVA tree
+ *
+ * @iova_tree: The VhostIOVATree
+ * @map: The GPA->IOVA mapping
+ *
+ * Returns:
+ * - IOVA_OK if the map fits in the container
+ * - IOVA_ERR_INVALID if the map does not make sense (e.g. size overflow)
+ * - IOVA_ERR_OVERLAP if the GPA range overlaps with an existing range
+ */
+int vhost_iova_tree_insert_gpa(VhostIOVATree *iova_tree, DMAMap *map)
+{
+    if (map->iova + map->size < map->iova || map->perm == IOMMU_NONE) {
+        return IOVA_ERR_INVALID;
+    }
+
+    return gpa_tree_insert(iova_tree->gpa_iova_map, map);
+}
+
+/**
+ * Find the IOVA address stored from a guest memory address (GPA)
+ *
+ * @tree: The VhostIOVATree
+ * @map: The map with the guest memory address
+ *
+ * Returns the stored GPA->IOVA mapping, or NULL if not found.
+ */
+const DMAMap *vhost_iova_tree_find_gpa(const VhostIOVATree *tree,
+                                       const DMAMap *map)
+{
+    return iova_tree_find_iova(tree->gpa_iova_map, map);
+}
+
+/**
+ * Remove existing mappings from the GPA->IOVA & IOVA trees
+ *
+ * @iova_tree: The VhostIOVATree
+ * @map: The guest memory address map to remove
+ */
+void vhost_iova_tree_remove_gpa(VhostIOVATree *iova_tree, DMAMap map)
+{
+    iova_tree_remove(iova_tree->gpa_iova_map, map);
+    iova_tree_remove(iova_tree->iova_map, map);
 }

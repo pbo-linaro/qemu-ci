@@ -361,10 +361,10 @@ static void vhost_vdpa_listener_region_add(MemoryListener *listener,
     if (s->shadow_data) {
         int r;
 
-        mem_region.translated_addr = (hwaddr)(uintptr_t)vaddr,
         mem_region.size = int128_get64(llsize) - 1,
         mem_region.perm = IOMMU_ACCESS_FLAG(true, section->readonly),
 
+        /* Allocate an IOVA range in the IOVA tree */
         r = vhost_iova_tree_map_alloc(s->iova_tree, &mem_region);
         if (unlikely(r != IOVA_OK)) {
             error_report("Can't allocate a mapping (%d)", r);
@@ -372,6 +372,14 @@ static void vhost_vdpa_listener_region_add(MemoryListener *listener,
         }
 
         iova = mem_region.iova;
+        mem_region.translated_addr = section->offset_within_address_space;
+
+        /* Add GPA->IOVA mapping to the GPA->IOVA tree */
+        r = vhost_iova_tree_insert_gpa(s->iova_tree, &mem_region);
+        if (unlikely(r != IOVA_OK)) {
+            error_report("Can't add listener region mapping (%d)", r);
+            goto fail_map;
+        }
     }
 
     vhost_vdpa_iotlb_batch_begin_once(s);
@@ -386,7 +394,7 @@ static void vhost_vdpa_listener_region_add(MemoryListener *listener,
 
 fail_map:
     if (s->shadow_data) {
-        vhost_iova_tree_remove(s->iova_tree, mem_region);
+        vhost_iova_tree_remove_gpa(s->iova_tree, mem_region);
     }
 
 fail:
@@ -440,21 +448,19 @@ static void vhost_vdpa_listener_region_del(MemoryListener *listener,
 
     if (s->shadow_data) {
         const DMAMap *result;
-        const void *vaddr = memory_region_get_ram_ptr(section->mr) +
-            section->offset_within_region +
-            (iova - section->offset_within_address_space);
         DMAMap mem_region = {
-            .translated_addr = (hwaddr)(uintptr_t)vaddr,
+            .translated_addr = section->offset_within_address_space,
             .size = int128_get64(llsize) - 1,
         };
 
-        result = vhost_iova_tree_find_iova(s->iova_tree, &mem_region);
+        /* Search the GPA->IOVA tree */
+        result = vhost_iova_tree_find_gpa(s->iova_tree, &mem_region);
         if (!result) {
             /* The memory listener map wasn't mapped */
             return;
         }
         iova = result->iova;
-        vhost_iova_tree_remove(s->iova_tree, *result);
+        vhost_iova_tree_remove_gpa(s->iova_tree, *result);
     }
     vhost_vdpa_iotlb_batch_begin_once(s);
     /*
