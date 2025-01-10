@@ -12,6 +12,7 @@
 
 #include "exec/memory.h"
 #include "exec/address-spaces.h"
+#include "exec/ramblock.h"
 #include "block/block.h"
 #include "block/accounting.h"
 
@@ -201,10 +202,12 @@ MemTxResult dma_memory_set(AddressSpace *as, dma_addr_t addr,
  * @len: pointer to length of buffer; updated on return
  * @dir: indicates the transfer direction
  * @attrs: memory attributes
+ * @guest_addr: optional output for GPA
  */
 static inline void *dma_memory_map(AddressSpace *as,
                                    dma_addr_t addr, dma_addr_t *len,
-                                   DMADirection dir, MemTxAttrs attrs)
+                                   DMADirection dir, MemTxAttrs attrs,
+                                   hwaddr *guest_addr)
 {
     hwaddr xlen = *len;
     void *p;
@@ -212,6 +215,26 @@ static inline void *dma_memory_map(AddressSpace *as,
     p = address_space_map(as, addr, &xlen, dir == DMA_DIRECTION_FROM_DEVICE,
                           attrs);
     *len = xlen;
+
+    /* Attempt to find a backing GPA for this HVA */
+    if (guest_addr) {
+        if (p) {
+            RAMBlock *rb;
+            ram_addr_t offset;
+
+            rb = qemu_ram_block_from_host(p, false, &offset);
+            if (rb) {
+                /* HVA corresponds to guest memory */
+                *guest_addr = rb->offset + offset;
+            } else {
+                /* HVA doesn't correspond to guest memory */
+                *guest_addr = 0;
+            }
+        } else {
+            /* Mapping failed */
+            *guest_addr = 0;
+        }
+    }
     return p;
 }
 

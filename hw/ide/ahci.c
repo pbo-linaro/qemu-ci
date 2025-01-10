@@ -221,7 +221,7 @@ static void map_page(AddressSpace *as, uint8_t **ptr, uint64_t addr,
     }
 
     *ptr = dma_memory_map(as, addr, &len, DMA_DIRECTION_FROM_DEVICE,
-                          MEMTXATTRS_UNSPECIFIED);
+                          MEMTXATTRS_UNSPECIFIED, NULL);
     if (len < wanted && *ptr) {
         dma_memory_unmap(as, *ptr, len, DMA_DIRECTION_FROM_DEVICE, len);
         *ptr = NULL;
@@ -928,7 +928,7 @@ static int ahci_populate_sglist(AHCIDevice *ad, QEMUSGList *sglist,
     /* map PRDT */
     if (!(prdt = dma_memory_map(ad->hba->as, prdt_addr, &prdt_len,
                                 DMA_DIRECTION_TO_DEVICE,
-                                MEMTXATTRS_UNSPECIFIED))){
+                                MEMTXATTRS_UNSPECIFIED, NULL))) {
         trace_ahci_populate_sglist_no_map(ad->hba, ad->port_no);
         return -1;
     }
@@ -1338,7 +1338,8 @@ static void handle_cmd(AHCIState *s, int port, uint8_t slot)
     tbl_addr = le64_to_cpu(cmd->tbl_addr);
     cmd_len = 0x80;
     cmd_fis = dma_memory_map(s->as, tbl_addr, &cmd_len,
-                             DMA_DIRECTION_TO_DEVICE, MEMTXATTRS_UNSPECIFIED);
+                             DMA_DIRECTION_TO_DEVICE, MEMTXATTRS_UNSPECIFIED,
+                             NULL);
     if (!cmd_fis) {
         trace_handle_cmd_badfis(s, port);
         return;

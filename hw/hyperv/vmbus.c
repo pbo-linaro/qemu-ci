@@ -374,7 +374,7 @@ static ssize_t gpadl_iter_io(GpadlIter *iter, void *buf, uint32_t len)
             maddr = (iter->gpadl->gfns[idx] << TARGET_PAGE_BITS) | off_in_page;
 
             iter->map = dma_memory_map(iter->as, maddr, &mlen, iter->dir,
-                                       MEMTXATTRS_UNSPECIFIED);
+                                       MEMTXATTRS_UNSPECIFIED, NULL);
             if (mlen != pgleft) {
                 dma_memory_unmap(iter->as, iter->map, mlen, iter->dir, 0);
                 iter->map = NULL;
@@ -492,7 +492,8 @@ int vmbus_map_sgl(VMBusChanReq *req, DMADirection dir, struct iovec *iov,
             }
 
             iov[ret_cnt].iov_base = dma_memory_map(sgl->as, a, &l, dir,
-                                                   MEMTXATTRS_UNSPECIFIED);
+                                                   MEMTXATTRS_UNSPECIFIED,
+                                                   NULL);
             if (!l) {
                 ret = -EFAULT;
                 goto err;
@@ -568,7 +569,8 @@ static vmbus_ring_buffer *ringbuf_map_hdr(VMBusRingBufCommon *ringbuf)
     dma_addr_t mlen = sizeof(*rb);
 
     rb = dma_memory_map(ringbuf->as, ringbuf->rb_addr, &mlen,
-                        DMA_DIRECTION_FROM_DEVICE, MEMTXATTRS_UNSPECIFIED);
+                        DMA_DIRECTION_FROM_DEVICE, MEMTXATTRS_UNSPECIFIED,
+                        NULL);
     if (mlen != sizeof(*rb)) {
         dma_memory_unmap(ringbuf->as, rb, mlen,
                          DMA_DIRECTION_FROM_DEVICE, 0);
