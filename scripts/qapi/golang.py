@@ -14,10 +14,11 @@ Golang QAPI generator
 from __future__ import annotations
 
 import os, textwrap
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .schema import (
     QAPISchema,
+    QAPISchemaAlternateType,
     QAPISchemaBranches,
     QAPISchemaEnumMember,
     QAPISchemaFeature,
@@ -30,6 +31,7 @@ from .schema import (
 )
 from .source import QAPISourceInfo
 
+FOUR_SPACES = "    "
 
 TEMPLATE_ENUM = """
 {maindoc}
@@ -38,6 +40,72 @@ type {name} string
 const (
 {fields}
 )
+"""
+
+TEMPLATE_HELPER = """
+// Creates a decoder that errors on unknown Fields
+// Returns nil if successfully decoded @from payload to @into type
+// Returns error if failed to decode @from payload to @into type
+func StrictDecode(into interface{}, from []byte) error {
+    dec := json.NewDecoder(strings.NewReader(string(from)))
+    dec.DisallowUnknownFields()
+
+    if err := dec.Decode(into); err != nil {
+        return err
+    }
+    return nil
+}
+"""
+
+TEMPLATE_ALTERNATE_CHECK_INVALID_JSON_NULL = """
+    // Check for json-null first
+    if string(data) == "null" {{
+        return errors.New(`null not supported for {name}`)
+    }}"""
+
+TEMPLATE_ALTERNATE_NULLABLE_CHECK = """
+        }} else if s.{var_name} != nil {{
+            return *s.{var_name}, false"""
+
+TEMPLATE_ALTERNATE_MARSHAL_CHECK = """
+    if s.{var_name} != nil {{
+        return json.Marshal(s.{var_name})
+    }} else """
+
+TEMPLATE_ALTERNATE_UNMARSHAL_CHECK = """
+    // Check for {var_type}
+    {{
+        s.{var_name} = new({var_type})
+        if err := StrictDecode(s.{var_name}, data); err == nil {{
+            return nil
+        }}
+        s.{var_name} = nil
+    }}
+
+"""
+
+TEMPLATE_ALTERNATE_NULLABLE_MARSHAL_CHECK = """
+    if s.IsNull {
+        return []byte("null"), nil
+    } else """
+
+TEMPLATE_ALTERNATE_NULLABLE_UNMARSHAL_CHECK = """
+    // Check for json-null first
+    if string(data) == "null" {
+        s.IsNull = true
+        return nil
+    }"""
+
+TEMPLATE_ALTERNATE_METHODS = """
+func (s {name}) MarshalJSON() ([]byte, error) {{
+{marshal_check_fields}
+    return {marshal_return_default}
+}}
+
+func (s *{name}) UnmarshalJSON(data []byte) error {{
+{unmarshal_check_fields}
+    return fmt.Errorf("Can't convert to {name}: %s", string(data))
+}}
 """
 
 
@@ -80,8 +148,86 @@ def gen_golang(schema: QAPISchema, output_dir: str, prefix: str) -> None:
     vis.write(output_dir)
 
 
+def qapi_to_field_name(name: str) -> str:
+    return name.title().replace("_", "").replace("-", "")
+
+
 def qapi_to_field_name_enum(name: str) -> str:
     return name.title().replace("-", "")
+
+
+def qapi_schema_type_to_go_type(qapitype: str) -> str:
+    schema_types_to_go = {
+        "str": "string",
+        "null": "nil",
+        "bool": "bool",
+        "number": "float64",
+        "size": "uint64",
+        "int": "int64",
+        "int8": "int8",
+        "int16": "int16",
+        "int32": "int32",
+        "int64": "int64",
+        "uint8": "uint8",
+        "uint16": "uint16",
+        "uint32": "uint32",
+        "uint64": "uint64",
+        "any": "any",
+        "QType": "QType",
+    }
+
+    prefix = ""
+    if qapitype.endswith("List"):
+        prefix = "[]"
+        qapitype = qapitype[:-4]
+
+    qapitype = schema_types_to_go.get(qapitype, qapitype)
+    return prefix + qapitype
+
+
+# Helper for Alternate generation
+def qapi_field_to_alternate_go_field(
+    member_name: str, type_name: str
+) -> Tuple[str, str, str]:
+    # Nothing to generate on null types. We update some
+    # variables to handle json-null on marshalling methods.
+    if type_name == "null":
+        return "IsNull", "bool", ""
+
+    # On Alternates, fields are optional represented in Go as pointer
+    return (
+        qapi_to_field_name(member_name),
+        qapi_schema_type_to_go_type(type_name),
+        "*",
+    )
+
+
+def fetch_indent_blocks_over_args(
+    args: List[dict[str:str]],
+) -> Tuple[int, int]:
+    maxname, maxtype = 0, 0
+    blocks: tuple(int, int) = []
+    for arg in args:
+        if "comment" in arg or "doc" in arg:
+            blocks.append((maxname, maxtype))
+            maxname, maxtype = 0, 0
+
+            if "comment" in arg:
+                # They are single blocks
+                continue
+
+        if "type" not in arg:
+            # Embed type are on top of the struct and the following
+            # fields do not consider it for formatting
+            blocks.append((maxname, maxtype))
+            maxname, maxtype = 0, 0
+            continue
+
+        maxname = max(maxname, len(arg.get("name", "")))
+        maxtype = max(maxtype, len(arg.get("type", "")))
+
+    blocks.append((maxname, maxtype))
+    return blocks
 
 
 def fetch_indent_blocks_over_enum_with_docs(
@@ -106,6 +252,137 @@ def fetch_indent_blocks_over_enum_with_docs(
     return blocks
 
 
+# Helper function for boxed or self contained structures.
+def generate_struct_type(
+    type_name,
+    type_doc: str = "",
+    args: List[dict[str:str]] = None,
+    indent: int = 0,
+) -> str:
+    base_indent = FOUR_SPACES * indent
+
+    with_type = ""
+    if type_name != "":
+        with_type = f"\n{base_indent}type {type_name}"
+
+    if type_doc != "":
+        # Append line jump only if type_doc exists
+        type_doc = f"\n{type_doc}"
+
+    if args is None:
+        # No args, early return
+        return f"""{type_doc}{with_type} struct{{}}"""
+
+    # The logic below is to generate fields of the struct.
+    # We have to be mindful of the different indentation possibilities between
+    # $var_name $var_type $var_tag that are vertically indented with gofmt.
+    #
+    # So, we first have to iterate over all args and find all indent blocks
+    # by calculating the spaces between (1) member and type and between (2)
+    # the type and tag. (1) and (2) is the tuple present in List returned
+    # by the helper function fetch_indent_blocks_over_args.
+    inner_indent = base_indent + FOUR_SPACES
+    doc_indent = inner_indent + "// "
+    fmt = textwrap.TextWrapper(
+        width=70, initial_indent=doc_indent, subsequent_indent=doc_indent
+    )
+
+    indent_block = iter(fetch_indent_blocks_over_args(args))
+    maxname, maxtype = next(indent_block)
+    members = " {\n"
+    for index, arg in enumerate(args):
+        if "comment" in arg:
+            maxname, maxtype = next(indent_block)
+            members += f"""    // {arg["comment"]}\n"""
+            # comments are single blocks, so we can skip to next arg
+            continue
+
+        name2type = ""
+        if "doc" in arg:
+            maxname, maxtype = next(indent_block)
+            members += fmt.fill(arg["doc"])
+            members += "\n"
+
+        name = arg["name"]
+        if "type" in arg:
+            namelen = len(name)
+            name2type = " " * max(1, (maxname - namelen + 1))
+
+        type2tag = ""
+        if "tag" in arg:
+            typelen = len(arg["type"])
+            type2tag = " " * max(1, (maxtype - typelen + 1))
+
+        gotype = arg.get("type", "")
+        tag = arg.get("tag", "")
+        members += (
+            f"""{inner_indent}{name}{name2type}{gotype}{type2tag}{tag}\n"""
+        )
+
+    members += f"{base_indent}}}\n"
+    return f"""{type_doc}{with_type} struct{members}"""
+
+
+def generate_template_alternate(
+    self: QAPISchemaGenGolangVisitor,
+    name: str,
+    variants: Optional[QAPISchemaVariants],
+) -> str:
+    args: List[dict[str:str]] = []
+    nullable = name in self.accept_null_types
+    if nullable:
+        # Examples in QEMU QAPI schema: StrOrNull and BlockdevRefOrNull
+        marshal_return_default = """[]byte("{}"), nil"""
+        marshal_check_fields = TEMPLATE_ALTERNATE_NULLABLE_MARSHAL_CHECK[1:]
+        unmarshal_check_fields = TEMPLATE_ALTERNATE_NULLABLE_UNMARSHAL_CHECK
+    else:
+        marshal_return_default = f'nil, errors.New("{name} has empty fields")'
+        marshal_check_fields = ""
+        unmarshal_check_fields = (
+            TEMPLATE_ALTERNATE_CHECK_INVALID_JSON_NULL.format(name=name)
+        )
+
+    doc = self.docmap.get(name, None)
+    content, docfields = qapi_to_golang_struct_docs(doc)
+    if variants:
+        for var in variants.variants:
+            var_name, var_type, isptr = qapi_field_to_alternate_go_field(
+                var.name, var.type.name
+            )
+            args.append(
+                {
+                    "name": f"{var_name}",
+                    "type": f"{isptr}{var_type}",
+                    "doc": docfields.get(var.name, ""),
+                }
+            )
+            # Null is special, handled first
+            if var.type.name == "null":
+                assert nullable
+                continue
+
+            skip_indent = 1 + len(FOUR_SPACES)
+            if marshal_check_fields == "":
+                skip_indent = 1
+            marshal_check_fields += TEMPLATE_ALTERNATE_MARSHAL_CHECK[
+                skip_indent:
+            ].format(var_name=var_name)
+            unmarshal_check_fields += TEMPLATE_ALTERNATE_UNMARSHAL_CHECK[
+                :-1
+            ].format(var_name=var_name, var_type=var_type)
+
+    content += string_to_code(generate_struct_type(name, args=args))
+    content += string_to_code(
+        TEMPLATE_ALTERNATE_METHODS.format(
+            name=name,
+            marshal_check_fields=marshal_check_fields[:-6],
+            marshal_return_default=marshal_return_default,
+            unmarshal_check_fields=unmarshal_check_fields[1:],
+        )
+    )
+    return "\n" + content
+
+
 def generate_content_from_dict(data: dict[str, str]) -> str:
     content = ""
 
@@ -115,19 +392,55 @@ def generate_content_from_dict(data: dict[str, str]) -> str:
     return content.replace("\n\n\n", "\n\n")
 
 
+def string_to_code(text: str) -> str:
+    DOUBLE_BACKTICK = "``"
+    result = ""
+    for line in text.splitlines():
+        # replace left four spaces with tabs
+        limit = len(line) - len(line.lstrip())
+        result += line[:limit].replace(FOUR_SPACES, "\t")
+
+        # work with the rest of the line
+        if line[limit : limit + 2] == "//":
+            # gofmt tool does not like comments with backticks.
+            result += line[limit:].replace(DOUBLE_BACKTICK, '"')
+        else:
+            result += line[limit:]
+        result += "\n"
+
+    return result
+
+
 class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
     # pylint: disable=too-many-arguments
     def __init__(self, _: str):
         super().__init__()
-        types = ("enum",)
+        types = (
+            "alternate",
+            "enum",
+            "helper",
+        )
         self.target = dict.fromkeys(types, "")
         self.schema: QAPISchema
         self.golang_package_name = "qapi"
         self.enums: dict[str, str] = {}
+        self.alternates: dict[str, str] = {}
+        self.accept_null_types = []
         self.docmap = {}
 
     def visit_begin(self, schema: QAPISchema) -> None:
         self.schema = schema
+
+        # We need to be aware of any types that accept JSON NULL
+        for name, entity in self.schema._entity_dict.items():
+            if not isinstance(entity, QAPISchemaAlternateType):
+                # Assume that only Alternate types accept JSON NULL
+                continue
+
+            for var in entity.alternatives.variants:
+                if var.type.name == "null":
+                    self.accept_null_types.append(name)
+                    break
 
         # iterate once in schema.docs to map doc objects to its name
         for doc in schema.docs:
@@ -136,12 +449,36 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             self.docmap[doc.symbol] = doc
 
         # Every Go file needs to reference its package name
+        # and most have some imports too.
         for target in self.target:
             self.target[target] = f"package {self.golang_package_name}"
+
+            imports = "\n"
+            if target == "helper":
+                imports += """
+import (
+    "encoding/json"
+    "fmt"
+    "strings"
+)
+"""
+            else:
+                imports += """
+import (
+    "encoding/json"
+    "errors"
+    "fmt"
+)
+"""
+            if target != "enum":
+                self.target[target] += string_to_code(imports)
+
+        self.target["helper"] += string_to_code(TEMPLATE_HELPER)
 
     def visit_end(self) -> None:
         del self.schema
         self.target["enum"] += generate_content_from_dict(self.enums)
+        self.target["alternate"] += generate_content_from_dict(self.alternates)
 
     def visit_object_type(
         self,
@@ -163,7 +500,10 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         features: List[QAPISchemaFeature],
         variants: QAPISchemaVariants,
     ) -> None:
-        pass
+        assert name not in self.alternates
+        self.alternates[name] = generate_template_alternate(
+            self, name, variants
+        )
 
     def visit_enum_type(
         self,
