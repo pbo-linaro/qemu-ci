@@ -78,24 +78,37 @@ uint16_t vhost_svq_available_slots(const VhostShadowVirtqueue *svq)
  * @vaddr: Translated IOVA addresses
  * @iovec: Source qemu's VA addresses
  * @num: Length of iovec and minimum length of vaddr
+ * @gpas: Descriptors' GPAs, if backed by guest memory
  */
 static bool vhost_svq_translate_addr(const VhostShadowVirtqueue *svq,
                                      hwaddr *addrs, const struct iovec *iovec,
-                                     size_t num)
+                                     size_t num, const hwaddr *gpas)
 {
     if (num == 0) {
         return true;
     }
 
     for (size_t i = 0; i < num; ++i) {
-        DMAMap needle = {
-            .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
-            .size = iovec[i].iov_len,
-        };
+        const DMAMap *map;
+        DMAMap needle;
         Int128 needle_last, map_last;
         size_t off;
 
-        const DMAMap *map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        if (gpas) {
+            /* Search the GPA->IOVA tree */
+            needle = (DMAMap) {
+                .translated_addr = gpas[i],
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_tree_find_gpa(svq->iova_tree, &needle);
+        } else {
+            /* Searh the IOVA->HVA tree */
+            needle = (DMAMap) {
+                .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        }
         /*
          * Map cannot be NULL since iova map contains all guest space and
          * qemu already has a physical address mapped
@@ -132,12 +145,14 @@ static bool vhost_svq_translate_addr(const VhostShadowVirtqueue *svq,
  * @num: iovec length
  * @more_descs: True if more descriptors come in the chain
  * @write: True if they are writeable descriptors
+ * @gpas: Descriptors' GPAs, if backed by guest memory
  *
  * Return true if success, false otherwise and print error.
  */
 static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
                                         const struct iovec *iovec, size_t num,
-                                        bool more_descs, bool write)
+                                        bool more_descs, bool write,
+                                        const hwaddr *gpas)
 {
     uint16_t i = svq->free_head, last = svq->free_head;
     unsigned n;
@@ -149,7 +164,7 @@ static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
         return true;
     }
 
-    ok = vhost_svq_translate_addr(svq, sg, iovec, num);
+    ok = vhost_svq_translate_addr(svq, sg, iovec, num, gpas);
     if (unlikely(!ok)) {
         return false;
     }
@@ -175,7 +190,8 @@ static bool vhost_svq_vring_write_descs(VhostShadowVirtqueue *svq, hwaddr *sg,
 static bool vhost_svq_add_split(VhostShadowVirtqueue *svq,
                                 const struct iovec *out_sg, size_t out_num,
                                 const struct iovec *in_sg, size_t in_num,
-                                unsigned *head)
+                                unsigned *head, const hwaddr *in_gpas,
+                                const hwaddr *out_gpas)
 {
     unsigned avail_idx;
     vring_avail_t *avail = svq->vring.avail;
@@ -192,12 +208,13 @@ static bool vhost_svq_add_split(VhostShadowVirtqueue *svq,
     }
 
     ok = vhost_svq_vring_write_descs(svq, sgs, out_sg, out_num, in_num > 0,
-                                     false);
+                                     false, out_gpas);
     if (unlikely(!ok)) {
         return false;
     }
 
-    ok = vhost_svq_vring_write_descs(svq, sgs, in_sg, in_num, false, true);
+    ok = vhost_svq_vring_write_descs(svq, sgs, in_sg, in_num, false, true,
+                                     in_gpas);
     if (unlikely(!ok)) {
         return false;
     }
@@ -253,12 +270,20 @@ int vhost_svq_add(VhostShadowVirtqueue *svq, const struct iovec *out_sg,
     unsigned qemu_head;
     unsigned ndescs = in_num + out_num;
     bool ok;
+    hwaddr *in_gpas = NULL;
+    hwaddr *out_gpas = NULL;
 
     if (unlikely(ndescs > vhost_svq_available_slots(svq))) {
         return -ENOSPC;
     }
 
-    ok = vhost_svq_add_split(svq, out_sg, out_num, in_sg, in_num, &qemu_head);
+    if (elem) {
+        in_gpas = elem->in_xlat_addr;
+        out_gpas = elem->out_xlat_addr;
+    }
+
+    ok = vhost_svq_add_split(svq, out_sg, out_num, in_sg, in_num, &qemu_head,
+                             in_gpas, out_gpas);
     if (unlikely(!ok)) {
         return -EINVAL;
     }
