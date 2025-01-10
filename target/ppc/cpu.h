@@ -270,8 +270,6 @@ typedef enum powerpc_input_t {
     PPC_FLAGS_INPUT_6xx,
     /* BookE bus                        */
     PPC_FLAGS_INPUT_BookE,
-    /* PowerPC 405 bus                  */
-    PPC_FLAGS_INPUT_405,
     /* PowerPC 970 bus                  */
     PPC_FLAGS_INPUT_970,
     /* PowerPC POWER7 bus               */
@@ -2172,9 +2170,7 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_BAMR              (0x3B7)
 #define SPR_7XX_MMCR0         (0x3B8)
 #define SPR_7XX_PMC1          (0x3B9)
-#define SPR_40x_SGR           (0x3B9)
 #define SPR_7XX_PMC2          (0x3BA)
-#define SPR_40x_DCWR          (0x3BA)
 #define SPR_7XX_SIAR          (0x3BB)
 #define SPR_405_SLER          (0x3BB)
 #define SPR_7XX_MMCR1         (0x3BC)
@@ -2223,7 +2219,6 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_40x_DBSR          (0x3F0)
 #define SPR_HID1              (0x3F1)
 #define SPR_IABR              (0x3F2)
-#define SPR_40x_DBCR0         (0x3F2)
 #define SPR_Exxx_L1CSR0       (0x3F2)
 #define SPR_ICTRL             (0x3F3)
 #define SPR_HID2              (0x3F3)
@@ -2232,20 +2227,16 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_440_DBDR          (0x3F3)
 #define SPR_LDSTDB            (0x3F4)
 #define SPR_750_TDCL          (0x3F4)
-#define SPR_40x_IAC1          (0x3F4)
 #define SPR_MMUCSR0           (0x3F4)
 #define SPR_970_HID4          (0x3F4)
 #define SPR_DABR              (0x3F5)
 #define DABR_MASK (~(target_ulong)0x7)
 #define SPR_Exxx_BUCSR        (0x3F5)
-#define SPR_40x_IAC2          (0x3F5)
-#define SPR_40x_DAC1          (0x3F6)
 #define SPR_MSSCR0            (0x3F6)
 #define SPR_970_HID5          (0x3F6)
 #define SPR_MSSSR0            (0x3F7)
 #define SPR_MSSCR1            (0x3F7)
 #define SPR_DABRX             (0x3F7)
-#define SPR_40x_DAC2          (0x3F7)
 #define SPR_MMUCFG            (0x3F7)
 #define SPR_LDSTCR            (0x3F8)
 #define SPR_L2PMCR            (0x3F8)

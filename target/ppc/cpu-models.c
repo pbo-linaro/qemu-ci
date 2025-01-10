@@ -67,56 +67,6 @@
     POWERPC_DEF_SVR(_name, _desc, _pvr, POWERPC_SVR_NONE, _type)
 
     /* Embedded PowerPC                                                      */
-    /* PowerPC 405 family                                                    */
-    /* PowerPC 405 cores                                                     */
-    POWERPC_DEF("405d2",         CPU_POWERPC_405D2,                  405,
-                "PowerPC 405 D2")
-    POWERPC_DEF("405d4",         CPU_POWERPC_405D4,                  405,
-                "PowerPC 405 D4")
-    /* PowerPC 405 microcontrollers                                          */
-    POWERPC_DEF("405cra",        CPU_POWERPC_405CRa,                 405,
-                "PowerPC 405 CRa")
-    POWERPC_DEF("405crb",        CPU_POWERPC_405CRb,                 405,
-                "PowerPC 405 CRb")
-    POWERPC_DEF("405crc",        CPU_POWERPC_405CRc,                 405,
-                "PowerPC 405 CRc")
-    POWERPC_DEF("405ep",         CPU_POWERPC_405EP,                  405,
-                "PowerPC 405 EP")
-    POWERPC_DEF("405ez",         CPU_POWERPC_405EZ,                  405,
-                "PowerPC 405 EZ")
-    POWERPC_DEF("405gpa",        CPU_POWERPC_405GPa,                 405,
-                "PowerPC 405 GPa")
-    POWERPC_DEF("405gpb",        CPU_POWERPC_405GPb,                 405,
-                "PowerPC 405 GPb")
-    POWERPC_DEF("405gpc",        CPU_POWERPC_405GPc,                 405,
-                "PowerPC 405 GPc")
-    POWERPC_DEF("405gpd",        CPU_POWERPC_405GPd,                 405,
-                "PowerPC 405 GPd")
-    POWERPC_DEF("405gpr",        CPU_POWERPC_405GPR,                 405,
-                "PowerPC 405 GPR")
-    POWERPC_DEF("405lp",         CPU_POWERPC_405LP,                  405,
-                "PowerPC 405 LP")
-    POWERPC_DEF("npe405h",       CPU_POWERPC_NPE405H,                405,
-                "Npe405 H")
-    POWERPC_DEF("npe405h2",      CPU_POWERPC_NPE405H2,               405,
-                "Npe405 H2")
-    POWERPC_DEF("npe405l",       CPU_POWERPC_NPE405L,                405,
-                "Npe405 L")
-    POWERPC_DEF("npe4gs3",       CPU_POWERPC_NPE4GS3,                405,
-                "Npe4GS3")
-    /* PowerPC 401/403/405 based set-top-box microcontrollers                */
-    POWERPC_DEF("stb03",         CPU_POWERPC_STB03,                  405,
-                "STB03xx")
-    POWERPC_DEF("stb04",         CPU_POWERPC_STB04,                  405,
-                "STB04xx")
-    POWERPC_DEF("stb25",         CPU_POWERPC_STB25,                  405,
-                "STB25xx")
-    /* Xilinx PowerPC 405 cores                                              */
-    POWERPC_DEF("x2vp4",         CPU_POWERPC_X2VP4,                  405,
-                NULL)
-    POWERPC_DEF("x2vp20",        CPU_POWERPC_X2VP20,                 405,
-                NULL)
-    /* PowerPC 440 family                                                    */
 #if defined(TODO_USER_ONLY)
     POWERPC_DEF("440",           CPU_POWERPC_440,                    440GP,
                 "Generic PowerPC 440")
@@ -742,13 +692,6 @@
 /* PowerPC CPU aliases                                                     */
 
 PowerPCCPUAlias ppc_cpu_aliases[] = {
-    { "405", "405d4" },
-    { "405cr", "405crc" },
-    { "405gp", "405gpd" },
-    { "405gpe", "405crc" },
-    { "x2vp7", "x2vp4" },
-    { "x2vp50", "x2vp20" },
-
     { "440ep", "440epb" },
     { "460ex", "460exb" },
 #if defined(TODO_USER_ONLY)

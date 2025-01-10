@@ -39,36 +39,6 @@ extern PowerPCCPUAlias ppc_cpu_aliases[];
 /* PVR definitions for most known PowerPC                                    */
 enum {
     /* IBM Processor for Network Resources */
-    CPU_POWERPC_COBRA              = 0x10100000, /* XXX: 405 ? */
-    /* PowerPC 405 family */
-    /* PowerPC 405 cores */
-    CPU_POWERPC_405D2              = 0x20010000,
-    CPU_POWERPC_405D4              = 0x41810000,
-    /* PowerPC 405 microcontrollers */
-    /* XXX: missing 0x200108a0 */
-    CPU_POWERPC_405CRa             = 0x40110041,
-    CPU_POWERPC_405CRb             = 0x401100C5,
-    CPU_POWERPC_405CRc             = 0x40110145,
-    CPU_POWERPC_405EP              = 0x51210950,
-    CPU_POWERPC_405EZ              = 0x41511460, /* 0x51210950 ? */
-    CPU_POWERPC_405GPa             = 0x40110000,
-    CPU_POWERPC_405GPb             = 0x40110040,
-    CPU_POWERPC_405GPc             = 0x40110082,
-    CPU_POWERPC_405GPd             = 0x401100C4,
-    CPU_POWERPC_405GPR             = 0x50910951,
-    CPU_POWERPC_405LP              = 0x41F10000,
-    /* IBM network processors */
-    CPU_POWERPC_NPE405H            = 0x414100C0,
-    CPU_POWERPC_NPE405H2           = 0x41410140,
-    CPU_POWERPC_NPE405L            = 0x416100C0,
-    CPU_POWERPC_NPE4GS3            = 0x40B10000,
-    /* IBM STBxxx (PowerPC 401/403/405 core based microcontrollers) */
-    CPU_POWERPC_STB03              = 0x40310000, /* 0x40130000 ? */
-    CPU_POWERPC_STB04              = 0x41810000,
-    CPU_POWERPC_STB25              = 0x51510950,
-    /* Xilinx cores */
-    CPU_POWERPC_X2VP4              = 0x20010820,
-    CPU_POWERPC_X2VP20             = 0x20010860,
     /* PowerPC 440 family */
     /* Generic PowerPC 440 */
 #define CPU_POWERPC_440              CPU_POWERPC_440GXf
