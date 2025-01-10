@@ -955,13 +955,6 @@ void spr_write_40x_dbcr0(DisasContext *ctx, int sprn, int gprn)
     ctx->base.is_jmp = DISAS_EXIT_UPDATE;
 }
 
-void spr_write_40x_pid(DisasContext *ctx, int sprn, int gprn)
-{
-    TCGv t0 = tcg_temp_new();
-    tcg_gen_andi_tl(t0, cpu_gpr[gprn], 0xFF);
-    gen_helper_store_40x_pid(tcg_env, t0);
-}
-
 void spr_write_booke_tcr(DisasContext *ctx, int sprn, int gprn)
 {
     translator_io_start(&ctx->base);
@@ -5096,77 +5089,6 @@ static void gen_rfmci(DisasContext *ctx)
 #endif /* defined(CONFIG_USER_ONLY) */
 }
 
-/* TLB management - PowerPC 405 implementation */
-
-/* tlbre */
-static void gen_tlbre_40x(DisasContext *ctx)
-{
-#if defined(CONFIG_USER_ONLY)
-    GEN_PRIV(ctx);
-#else
-    CHK_SV(ctx);
-    switch (rB(ctx->opcode)) {
-    case 0:
-        gen_helper_4xx_tlbre_hi(cpu_gpr[rD(ctx->opcode)], tcg_env,
-                                cpu_gpr[rA(ctx->opcode)]);
-        break;
-    case 1:
-        gen_helper_4xx_tlbre_lo(cpu_gpr[rD(ctx->opcode)], tcg_env,
-                                cpu_gpr[rA(ctx->opcode)]);
-        break;
-    default:
-        gen_inval_exception(ctx, POWERPC_EXCP_INVAL_INVAL);
-        break;
-    }
-#endif /* defined(CONFIG_USER_ONLY) */
-}
-
-/* tlbsx - tlbsx. */
-static void gen_tlbsx_40x(DisasContext *ctx)
-{
-#if defined(CONFIG_USER_ONLY)
-    GEN_PRIV(ctx);
-#else
-    TCGv t0;
-
-    CHK_SV(ctx);
-    t0 = tcg_temp_new();
-    gen_addr_reg_index(ctx, t0);
-    gen_helper_4xx_tlbsx(cpu_gpr[rD(ctx->opcode)], tcg_env, t0);
-    if (Rc(ctx->opcode)) {
-        TCGLabel *l1 = gen_new_label();
-        tcg_gen_trunc_tl_i32(cpu_crf[0], cpu_so);
-        tcg_gen_brcondi_tl(TCG_COND_EQ, cpu_gpr[rD(ctx->opcode)], -1, l1);
-        tcg_gen_ori_i32(cpu_crf[0], cpu_crf[0], 0x02);
-        gen_set_label(l1);
-    }
-#endif /* defined(CONFIG_USER_ONLY) */
-}
-
-/* tlbwe */
-static void gen_tlbwe_40x(DisasContext *ctx)
-{
-#if defined(CONFIG_USER_ONLY)
-    GEN_PRIV(ctx);
-#else
-    CHK_SV(ctx);
-
-    switch (rB(ctx->opcode)) {
-    case 0:
-        gen_helper_4xx_tlbwe_hi(tcg_env, cpu_gpr[rA(ctx->opcode)],
-                                cpu_gpr[rS(ctx->opcode)]);
-        break;
-    case 1:
-        gen_helper_4xx_tlbwe_lo(tcg_env, cpu_gpr[rA(ctx->opcode)],
-                                cpu_gpr[rS(ctx->opcode)]);
-        break;
-    default:
-        gen_inval_exception(ctx, POWERPC_EXCP_INVAL_INVAL);
-        break;
-    }
-#endif /* defined(CONFIG_USER_ONLY) */
-}
-
 /* TLB management - PowerPC 440 implementation */
 
 /* tlbre */
@@ -5879,9 +5801,6 @@ GEN_HANDLER(icread, 0x1F, 0x06, 0x1F, 0x03E00001, PPC_4xx_COMMON),
 GEN_HANDLER_E(rfci, 0x13, 0x13, 0x01, 0x03FF8001, PPC_BOOKE, PPC2_BOOKE206),
 GEN_HANDLER(rfdi, 0x13, 0x07, 0x01, 0x03FF8001, PPC_RFDI),
 GEN_HANDLER(rfmci, 0x13, 0x06, 0x01, 0x03FF8001, PPC_RFMCI),
-GEN_HANDLER2(tlbre_40x, "tlbre", 0x1F, 0x12, 0x1D, 0x00000001, PPC_40x_TLB),
-GEN_HANDLER2(tlbsx_40x, "tlbsx", 0x1F, 0x12, 0x1C, 0x00000000, PPC_40x_TLB),
-GEN_HANDLER2(tlbwe_40x, "tlbwe", 0x1F, 0x12, 0x1E, 0x00000001, PPC_40x_TLB),
 GEN_HANDLER2(tlbre_440, "tlbre", 0x1F, 0x12, 0x1D, 0x00000001, PPC_BOOKE),
 GEN_HANDLER2(tlbsx_440, "tlbsx", 0x1F, 0x12, 0x1C, 0x00000000, PPC_BOOKE),
 GEN_HANDLER2(tlbwe_440, "tlbwe", 0x1F, 0x12, 0x1E, 0x00000001, PPC_BOOKE),

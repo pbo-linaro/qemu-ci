@@ -2383,8 +2383,6 @@ enum {
     PPC_SEGMENT        = 0x0000020000000000ULL,
     /*   PowerPC 6xx TLB management instructions                             */
     PPC_6xx_TLB        = 0x0000040000000000ULL,
-    /*   PowerPC 40x TLB management instructions                             */
-    PPC_40x_TLB        = 0x0000100000000000ULL,
     /*   segment register access instructions for PowerPC 64 "bridge"        */
     PPC_SEGMENT_64B    = 0x0000200000000000ULL,
     /*   SLB management                                                      */
@@ -2432,7 +2430,7 @@ enum {
                         | PPC_CACHE_DCBZ \
                         | PPC_CACHE_DCBA | PPC_CACHE_LOCK \
                         | PPC_EXTERN | PPC_SEGMENT | PPC_6xx_TLB \
-                        | PPC_40x_TLB | PPC_SEGMENT_64B \
+                        | PPC_SEGMENT_64B \
                         | PPC_SLBI | PPC_WRTEE \
                         | PPC_405_MAC | PPC_440_SPEC | PPC_BOOKE \
                         | PPC_MFAPIDI | PPC_TLBIVA | PPC_TLBIVAX \
