@@ -110,7 +110,7 @@ static void multi_serial_pci_realize(PCIDevice *dev, Error **errp)
             multi_serial_pci_exit(dev);
             return;
         }
-        s->irq = pci->irqs[i];
+        qdev_connect_gpio_out(DEVICE(s), 0, pci->irqs[i]);
         pci->name[i] = g_strdup_printf("uart #%zu", i + 1);
         memory_region_init_io(&s->io, OBJECT(pci), &serial_io_ops, s,
                               pci->name[i], 8);
