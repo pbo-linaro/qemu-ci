@@ -44,6 +44,15 @@ struct PCISerialState {
 #define TYPE_PCI_SERIAL "pci-serial"
 OBJECT_DECLARE_SIMPLE_TYPE(PCISerialState, PCI_SERIAL)
 
+static void serial_pci_reset_hold(Object *obj, ResetType type)
+{
+    PCIDevice *dev = PCI_DEVICE(obj);
+    PCISerialState *pci = DO_UPCAST(PCISerialState, dev, dev);
+    SerialState *s = &pci->state;
+
+    device_cold_reset(DEVICE(s));
+}
+
 static void serial_pci_realize(PCIDevice *dev, Error **errp)
 {
     PCISerialState *pci = DO_UPCAST(PCISerialState, dev, dev);
@@ -89,6 +98,8 @@ static void serial_pci_class_initfn(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     PCIDeviceClass *pc = PCI_DEVICE_CLASS(klass);
+    ResettableClass *rc = RESETTABLE_CLASS(klass);
+
     pc->realize = serial_pci_realize;
     pc->exit = serial_pci_exit;
     pc->vendor_id = PCI_VENDOR_ID_REDHAT;
@@ -98,6 +109,7 @@ static void serial_pci_class_initfn(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_pci_serial;
     device_class_set_props(dc, serial_pci_properties);
     set_bit(DEVICE_CATEGORY_INPUT, dc->categories);
+    rc->phases.hold = serial_pci_reset_hold;
 }
 
 static void serial_pci_init(Object *o)

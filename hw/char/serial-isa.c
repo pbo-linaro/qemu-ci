@@ -53,6 +53,14 @@ static const int isa_serial_irq[MAX_ISA_SERIAL_PORTS] = {
     4, 3, 4, 3
 };
 
+static void serial_isa_reset_hold(Object *obj, ResetType type)
+{
+    ISASerialState *isa = ISA_SERIAL(obj);
+    SerialState *s = &isa->state;
+
+    device_cold_reset(DEVICE(s));
+}
+
 static void serial_isa_realizefn(DeviceState *dev, Error **errp)
 {
     static int index;
@@ -123,11 +131,13 @@ static void serial_isa_class_initfn(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     AcpiDevAmlIfClass *adevc = ACPI_DEV_AML_IF_CLASS(klass);
+    ResettableClass *rc = RESETTABLE_CLASS(klass);
 
     dc->realize = serial_isa_realizefn;
     dc->vmsd = &vmstate_isa_serial;
     adevc->build_dev_aml = serial_isa_build_aml;
     device_class_set_props(dc, serial_isa_properties);
+    rc->phases.hold = serial_isa_reset_hold;
     set_bit(DEVICE_CATEGORY_INPUT, dc->categories);
 }
 

@@ -90,6 +90,19 @@ static size_t multi_serial_get_port_count(PCIDeviceClass *pc)
     g_assert_not_reached();
 }
 
+static void multi_serial_pci_reset_hold(Object *obj, ResetType type)
+{
+    PCIDevice *dev = PCI_DEVICE(obj);
+    PCIDeviceClass *pc = PCI_DEVICE_GET_CLASS(dev);
+    PCIMultiSerialState *pci = DO_UPCAST(PCIMultiSerialState, dev, dev);
+    size_t nports = multi_serial_get_port_count(pc);
+
+    for (size_t i = 0; i < nports; i++) {
+        SerialState *s = &pci->state[i];
+
+        device_cold_reset(DEVICE(s));
+    }
+}
 
 static void multi_serial_pci_realize(PCIDevice *dev, Error **errp)
 {
@@ -150,6 +163,8 @@ static void multi_2x_serial_pci_class_initfn(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     PCIDeviceClass *pc = PCI_DEVICE_CLASS(klass);
+    ResettableClass *rc = RESETTABLE_CLASS(klass);
+
     pc->realize = multi_serial_pci_realize;
     pc->exit = multi_serial_pci_exit;
     pc->vendor_id = PCI_VENDOR_ID_REDHAT;
@@ -159,12 +174,15 @@ static void multi_2x_serial_pci_class_initfn(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_pci_multi_serial;
     device_class_set_props(dc, multi_2x_serial_pci_properties);
     set_bit(DEVICE_CATEGORY_INPUT, dc->categories);
+    rc->phases.hold = multi_serial_pci_reset_hold;
 }
 
 static void multi_4x_serial_pci_class_initfn(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     PCIDeviceClass *pc = PCI_DEVICE_CLASS(klass);
+    ResettableClass *rc = RESETTABLE_CLASS(klass);
+
     pc->realize = multi_serial_pci_realize;
     pc->exit = multi_serial_pci_exit;
     pc->vendor_id = PCI_VENDOR_ID_REDHAT;
@@ -174,6 +192,7 @@ static void multi_4x_serial_pci_class_initfn(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_pci_multi_serial;
     device_class_set_props(dc, multi_4x_serial_pci_properties);
     set_bit(DEVICE_CATEGORY_INPUT, dc->categories);
+    rc->phases.hold = multi_serial_pci_reset_hold;
 }
 
 static void multi_serial_init(Object *o)

@@ -29,6 +29,7 @@
 #include "migration/vmstate.h"
 #include "qapi/error.h"
 #include "hw/qdev-properties.h"
+#include "system/reset.h"
 
 static uint64_t serial_mm_read(void *opaque, hwaddr addr, unsigned size)
 {
@@ -82,6 +83,16 @@ static void serial_mm_realize(DeviceState *dev, Error **errp)
                           8 << smm->regshift);
     sysbus_init_mmio(SYS_BUS_DEVICE(smm), &s->io);
     sysbus_init_irq(SYS_BUS_DEVICE(smm), &smm->serial.irq);
+
+    /*
+     * Because this Device is not on any bus in the qbus tree (it is
+     * not a sysbus device and it's not on some other bus like a PCI
+     * bus) it will not be automatically reset by the 'reset the
+     * sysbus' hook registered by vl.c like most devices. So we must
+     * manually register a reset hook for it.
+     * TODO: there should be a better way to do this.
+     */
+    qemu_register_reset(resettable_cold_reset_fn, DEVICE(s));
 }
 
 static const VMStateDescription vmstate_serial_mm = {
