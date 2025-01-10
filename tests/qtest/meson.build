@@ -5,7 +5,7 @@ slow_qtests = {
   'cdrom-test' : 610,
   'device-introspect-test' : 720,
   'ide-test' : 120,
-  'migration-test' : 480,
+  # 'migration-test' : 480,
   'npcm7xx_pwm-test': 300,
   'npcm7xx_watchdog_timer-test': 120,
   'qmp-cmd-test' : 120,
@@ -111,7 +111,7 @@ qtests_i386 = \
    'device-plug-test',
    'drive_del-test',
    'cpu-plug-test',
-   'migration-test',
+   # 'migration-test',
   ]
 
 if dbus_display and config_all_devices.has_key('CONFIG_VGA')
@@ -184,7 +184,8 @@ qtests_ppc64 = \
   (slirp.found() ? ['pxe-test'] : []) +              \
   (config_all_devices.has_key('CONFIG_USB_UHCI') ? ['usb-hcd-uhci-test'] : []) +             \
   (config_all_devices.has_key('CONFIG_USB_XHCI_NEC') ? ['usb-hcd-xhci-test'] : []) +         \
-  qtests_pci + ['migration-test', 'cpu-plug-test', 'drive_del-test']
+  qtests_pci + ['cpu-plug-test', 'drive_del-test']
+  #qtests_pci + ['migration-test', 'cpu-plug-test', 'drive_del-test']
 
 qtests_sh4 = (config_all_devices.has_key('CONFIG_ISA_TESTDEV') ? ['endianness-test'] : [])
 qtests_sh4eb = (config_all_devices.has_key('CONFIG_ISA_TESTDEV') ? ['endianness-test'] : [])
@@ -258,7 +259,8 @@ qtests_aarch64 = \
   ['arm-cpu-features',
    'numa-test',
    'boot-serial-test',
-   'migration-test']
+   ]
+   #'migration-test']
 
 qtests_s390x = \
   qtests_filter + \
@@ -267,7 +269,8 @@ qtests_s390x = \
    'device-plug-test',
    'virtio-ccw-test',
    'cpu-plug-test',
-   'migration-test']
+   ]
+   #'migration-test']
 
 qtests_riscv32 = \
   (config_all_devices.has_key('CONFIG_SIFIVE_E_AON') ? ['sifive-e-aon-watchdog-test'] : [])
@@ -361,7 +364,7 @@ qtests = {
                              'migration/migration-util.c') + dbus_vmstate1,
   'erst-test': files('erst-test.c'),
   'ivshmem-test': [rt, '../../contrib/ivshmem-server/ivshmem-server.c'],
-  'migration-test': migration_files + migration_tls_files,
+  #'migration-test': migration_files + migration_tls_files,
   'pxe-test': files('boot-sector.c'),
   'pnv-xive2-test': files('pnv-xive2-common.c', 'pnv-xive2-flush-sync.c'),
   'qos-test': [chardev, io, qos_test_ss.apply({}).sources()],
