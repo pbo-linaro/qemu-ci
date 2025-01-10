@@ -238,6 +238,73 @@ func (s *{type_name}) UnmarshalJSON(data []byte) error {{
 }}
 """
 
+TEMPLATE_EVENT = """
+type Timestamp struct {{
+    Seconds      int64 `json:"seconds"`
+    Microseconds int64 `json:"microseconds"`
+}}
+
+type Event interface {{
+    json.Marshaler
+    json.Unmarshaler
+}}
+
+func marshalEvent(obj interface{{}}, name string, ts Timestamp) ([]byte, error) {{
+    m := make(map[string]any)
+    m["event"] = name
+    m["timestamp"] = ts
+    if bytes, err := json.Marshal(obj); err != nil {{
+        return []byte{{}}, err
+    }} else if len(bytes) > 2 {{
+        m["data"] = obj
+    }}
+    return json.Marshal(m)
+}}
+
+func GetEventType(data []byte) (Event, error) {{
+    tmp := struct {{
+        Name string `json:"event"`
+    }}{{}}
+
+    if err := json.Unmarshal(data, &tmp); err != nil {{
+        return nil, fmt.Errorf("Failed to unmarshal: %s", string(data))
+    }}
+
+    switch tmp.Name {{{cases}
+    default:
+        return nil, fmt.Errorf("Event %s not match to any type", tmp.Name)
+    }}
+}}
+"""
+
+TEMPLATE_EVENT_METHODS = """
+func (s {type_name}) MarshalJSON() ([]byte, error) {{
+	type Alias {type_name}
+	return marshalEvent(Alias(s), "{name}", s.MessageTimestamp)
+}}
+
+func (s *{type_name}) UnmarshalJSON(data []byte) error {{
+	type Alias {type_name}
+    tmp := struct {{
+        Name string    `json:"event"`
+        Time Timestamp `json:"timestamp"`
+        Data Alias     `json:"data"`
+    }}{{}}
+
+    if err := json.Unmarshal(data, &tmp); err != nil {{
+        return fmt.Errorf("Failed to unmarshal: %s", string(data))
+    }}
+
+    if !strings.EqualFold(tmp.Name, "{name}") {{
+        return fmt.Errorf("Event type does not match with %s", tmp.Name)
+    }}
+
+    *s = {type_name}(tmp.Data)
+    s.MessageTimestamp = tmp.Time
+    return nil
+}}
+"""
+
 
 # Takes the documentation object of a specific type and returns
 # that type's documentation and its member's docs.
@@ -300,7 +367,7 @@ def qapi_to_field_name_enum(name: str) -> str:
     return name.title().replace("-", "")
 
 
-def qapi_to_go_type_name(name: str) -> str:
+def qapi_to_go_type_name(name: str, meta: Optional[str] = None) -> str:
     # We want to keep CamelCase for Golang types. We want to avoid removing
     # already set CameCase names while fixing uppercase ones, eg:
     # 1) q_obj_SocketAddress_base -> SocketAddressBase
@@ -317,6 +384,12 @@ def qapi_to_go_type_name(name: str) -> str:
         name = name.title()
 
     name += "".join(word.title() for word in words[1:])
+
+    # Handle specific meta suffix
+    types = ["event"]
+    if meta in types:
+        name = name[:-3] if name.endswith("Arg") else name
+        name += meta.title().replace(" ", "")
 
     return name
 
@@ -773,6 +846,16 @@ def qapi_to_golang_struct(
     if not doc_enabled:
         type_doc = ""
 
+    if info.defn_meta == "event":
+        fields.insert(
+            0,
+            {
+                "name": "MessageTimestamp",
+                "type": "Timestamp",
+                "tag": """`json:"-"`""",
+            },
+        )
+
     if members:
         for member in members:
             field_doc = docfields.get(member.name, "") if doc_enabled else ""
@@ -827,7 +910,8 @@ def qapi_to_golang_struct(
                 fields.append(field)
                 with_nullable = True if nullable else with_nullable
 
-    type_name = qapi_to_go_type_name(name)
+    type_name = qapi_to_go_type_name(name, info.defn_meta)
+
     content = string_to_code(
         generate_struct_type(
             type_name, type_doc=type_doc, args=fields, indent=indent
@@ -1005,6 +1089,21 @@ def generate_template_alternate(
     return "\n" + content
 
 
+def generate_template_event(events: dict[str, Tuple[str, str]]) -> str:
+    content = ""
+    cases = ""
+    for name in sorted(events):
+        type_name, gocode = events[name]
+        content += gocode
+        cases += f"""
+    case "{name}":
+        return &{type_name}{{}}, nil
+"""
+
+    content += string_to_code(TEMPLATE_EVENT.format(cases=cases))
+    return content
+
+
 def generate_content_from_dict(data: dict[str, str]) -> str:
     content = ""
 
@@ -1040,12 +1139,14 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         types = (
             "alternate",
             "enum",
+            "event",
             "helper",
             "struct",
             "union",
         )
         self.target = dict.fromkeys(types, "")
         self.schema: QAPISchema
+        self.events: dict[str, Tuple[str, str]] = {}
         self.golang_package_name = "qapi"
         self.enums: dict[str, str] = {}
         self.alternates: dict[str, str] = {}
@@ -1084,7 +1185,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
                 imports += """
 import "encoding/json"
 """
-            elif target == "helper":
+            elif target == "helper" or target == "event":
                 imports += """
 import (
     "encoding/json"
@@ -1112,6 +1213,7 @@ import (
         self.target["alternate"] += generate_content_from_dict(self.alternates)
         self.target["struct"] += generate_content_from_dict(self.structs)
         self.target["union"] += generate_content_from_dict(self.unions)
+        self.target["event"] += generate_template_event(self.events)
 
     def visit_object_type(
         self,
@@ -1267,7 +1369,40 @@ import (
         arg_type: Optional[QAPISchemaObjectType],
         boxed: bool,
     ) -> None:
-        pass
+        assert name == info.defn_name
+        assert name not in self.events
+        type_name = qapi_to_go_type_name(name, info.defn_meta)
+
+        if isinstance(arg_type, QAPISchemaObjectType):
+            content = string_to_code(
+                qapi_to_golang_struct(
+                    self,
+                    name,
+                    info,
+                    arg_type.ifcond,
+                    arg_type.features,
+                    arg_type.base,
+                    arg_type.members,
+                    arg_type.branches,
+                )
+            )
+        else:
+            args: List[dict[str:str]] = []
+            args.append(
+                {
+                    "name": "MessageTimestamp",
+                    "type": "Timestamp",
+                    "tag": """`json:"-"`""",
+                }
+            )
+            content = string_to_code(
+                generate_struct_type(type_name, args=args)
+            )
+
+        content += string_to_code(
+            TEMPLATE_EVENT_METHODS.format(name=name, type_name=type_name)
+        )
+        self.events[name] = (type_name, content)
 
     def write(self, output_dir: str) -> None:
         for module_name, content in self.target.items():
