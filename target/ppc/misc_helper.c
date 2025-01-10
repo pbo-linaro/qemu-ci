@@ -404,11 +404,6 @@ void helper_store_40x_dbcr0(CPUPPCState *env, target_ulong val)
     /* Bits 28 & 29 affect reset or shutdown. */
     store_40x_dbcr0(env, val);
 }
-
-void helper_store_40x_sler(CPUPPCState *env, target_ulong val)
-{
-    store_40x_sler(env, val);
-}
 #endif
 
 /*****************************************************************************/

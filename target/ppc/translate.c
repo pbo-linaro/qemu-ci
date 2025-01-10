@@ -967,12 +967,6 @@ void spr_write_40x_dbcr0(DisasContext *ctx, int sprn, int gprn)
     ctx->base.is_jmp = DISAS_EXIT_UPDATE;
 }
 
-void spr_write_40x_sler(DisasContext *ctx, int sprn, int gprn)
-{
-    translator_io_start(&ctx->base);
-    gen_helper_store_40x_sler(tcg_env, cpu_gpr[gprn]);
-}
-
 void spr_write_40x_tcr(DisasContext *ctx, int sprn, int gprn)
 {
     translator_io_start(&ctx->base);

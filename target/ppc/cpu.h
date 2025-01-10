@@ -1620,7 +1620,6 @@ void cpu_ppc_store_purr(CPUPPCState *env, uint64_t value);
 target_ulong load_40x_pit(CPUPPCState *env);
 void store_40x_pit(CPUPPCState *env, target_ulong val);
 void store_40x_dbcr0(CPUPPCState *env, uint32_t val);
-void store_40x_sler(CPUPPCState *env, uint32_t val);
 void store_40x_tcr(CPUPPCState *env, target_ulong val);
 void store_40x_tsr(CPUPPCState *env, target_ulong val);
 void store_booke_tcr(CPUPPCState *env, target_ulong val);
@@ -2172,7 +2171,6 @@ void ppc_compat_add_property(Object *obj, const char *name,
 #define SPR_7XX_PMC1          (0x3B9)
 #define SPR_7XX_PMC2          (0x3BA)
 #define SPR_7XX_SIAR          (0x3BB)
-#define SPR_405_SLER          (0x3BB)
 #define SPR_7XX_MMCR1         (0x3BC)
 #define SPR_405_SU0R          (0x3BC)
 #define SPR_401_SKR           (0x3BC)

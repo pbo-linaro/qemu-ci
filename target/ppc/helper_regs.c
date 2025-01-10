@@ -354,16 +354,6 @@ int hreg_store_msr(CPUPPCState *env, target_ulong value, int alter_hv)
 }
 
 #ifndef CONFIG_USER_ONLY
-void store_40x_sler(CPUPPCState *env, uint32_t val)
-{
-    /* XXX: TO BE FIXED */
-    if (val != 0x00000000) {
-        cpu_abort(env_cpu(env),
-                  "Little-endian regions are not supported by now\n");
-    }
-    env->spr[SPR_405_SLER] = val;
-}
-
 void check_tlb_flush(CPUPPCState *env, bool global)
 {
     CPUState *cs = env_cpu(env);

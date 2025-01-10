@@ -138,7 +138,6 @@ void spr_write_sdr1(DisasContext *ctx, int sprn, int gprn);
 void spr_read_40x_pit(DisasContext *ctx, int gprn, int sprn);
 void spr_write_40x_pit(DisasContext *ctx, int sprn, int gprn);
 void spr_write_40x_dbcr0(DisasContext *ctx, int sprn, int gprn);
-void spr_write_40x_sler(DisasContext *ctx, int sprn, int gprn);
 void spr_write_40x_tcr(DisasContext *ctx, int sprn, int gprn);
 void spr_write_40x_tsr(DisasContext *ctx, int sprn, int gprn);
 void spr_write_40x_pid(DisasContext *ctx, int sprn, int gprn);
