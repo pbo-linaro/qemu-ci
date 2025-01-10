@@ -93,8 +93,7 @@ int vhost_iova_tree_map_alloc(VhostIOVATree *tree, DMAMap *map)
     /* Some vhost devices do not like addr 0. Skip first page */
     hwaddr iova_first = tree->iova_first ?: qemu_real_host_page_size();
 
-    if (map->translated_addr + map->size < map->translated_addr ||
-        map->perm == IOMMU_NONE) {
+    if (map->perm == IOMMU_NONE) {
         return IOVA_ERR_INVALID;
     }
 
