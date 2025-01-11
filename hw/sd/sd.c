@@ -820,6 +820,16 @@ static inline uint64_t sd_addr_to_wpnum(uint64_t addr)
     return addr >> (HWBLOCK_SHIFT + SECTOR_SHIFT + WPGROUP_SHIFT);
 }
 
+static bool sd_get_inserted(SDState *sd)
+{
+    return sd->blk && blk_is_inserted(sd->blk);
+}
+
+static bool sd_get_readonly(SDState *sd)
+{
+    return sd->wp_switch;
+}
+
 static void sd_reset(DeviceState *dev)
 {
     SDState *sd = SDMMC_COMMON(dev);
@@ -865,16 +875,9 @@ static void sd_reset(DeviceState *dev)
     sd->dat_lines = 0xf;
     sd->cmd_line = true;
     sd->multi_blk_cnt = 0;
-}
 
-static bool sd_get_inserted(SDState *sd)
-{
-    return sd->blk && blk_is_inserted(sd->blk);
-}
-
-static bool sd_get_readonly(SDState *sd)
-{
-    return sd->wp_switch;
+    qemu_set_irq(sd->readonly_cb, sd_get_readonly(sd));
+    qemu_set_irq(sd->inserted_cb, sd_get_inserted(sd));
 }
 
 static void sd_cardchange(void *opaque, bool load, Error **errp)
@@ -1032,14 +1035,6 @@ SDState *sd_init(BlockBackend *blk, bool is_spi)
     sd = SD_CARD(dev);
     sd->me_no_qdev_me_kill_mammoth_with_rocks = true;
     return sd;
-}
-
-void sd_set_cb(SDState *sd, qemu_irq readonly, qemu_irq insert)
-{
-    sd->readonly_cb = readonly;
-    sd->inserted_cb = insert;
-    qemu_set_irq(readonly, sd->blk ? !blk_is_writable(sd->blk) : 0);
-    qemu_set_irq(insert, sd->blk ? blk_is_inserted(sd->blk) : 0);
 }
 
 static void sd_blk_read(SDState *sd, uint64_t addr, uint32_t len)
@@ -2727,6 +2722,8 @@ static void sd_instance_init(Object *obj)
     sd->last_cmd_name = "UNSET";
     sd->enable = true;
     sd->ocr_power_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, sd_ocr_powerup, sd);
+    qdev_init_gpio_out_named(DEVICE(sd), &sd->inserted_cb, "cd", 1);
+    qdev_init_gpio_out_named(DEVICE(sd), &sd->readonly_cb, "wp", 1);
 }
 
 static void sd_instance_finalize(Object *obj)
