@@ -181,6 +181,8 @@ struct SDState {
     qemu_irq inserted_cb;
     QEMUTimer *ocr_power_timer;
     bool enable;
+    bool readonly_active_low;
+    bool inserted_active_low;
     uint8_t dat_lines;
     bool cmd_line;
 };
@@ -876,8 +878,8 @@ static void sd_reset(DeviceState *dev)
     sd->cmd_line = true;
     sd->multi_blk_cnt = 0;
 
-    qemu_set_irq(sd->readonly_cb, sd_get_readonly(sd));
-    qemu_set_irq(sd->inserted_cb, sd_get_inserted(sd));
+    qemu_set_irq(sd->readonly_cb, sd_get_readonly(sd) ^ sd->readonly_active_low);
+    qemu_set_irq(sd->inserted_cb, sd_get_inserted(sd) ^ sd->inserted_active_low);
 }
 
 static void sd_cardchange(void *opaque, bool load, Error **errp)
@@ -896,9 +898,9 @@ static void sd_cardchange(void *opaque, bool load, Error **errp)
     }
 
     if (sd->me_no_qdev_me_kill_mammoth_with_rocks) {
-        qemu_set_irq(sd->inserted_cb, inserted);
+        qemu_set_irq(sd->inserted_cb, inserted ^ sd->inserted_active_low);
         if (inserted) {
-            qemu_set_irq(sd->readonly_cb, readonly);
+            qemu_set_irq(sd->readonly_cb, readonly ^ sd->readonly_active_low);
         }
     } else {
         sdbus = SD_BUS(qdev_get_parent_bus(dev));
@@ -2797,6 +2799,8 @@ static void emmc_realize(DeviceState *dev, Error **errp)
 
 static const Property sdmmc_common_properties[] = {
     DEFINE_PROP_DRIVE("drive", SDState, blk),
+    DEFINE_PROP_BOOL("cd-active-low", SDState, inserted_active_low, false),
+    DEFINE_PROP_BOOL("wp-active-low", SDState, readonly_active_low, false),
 };
 
 static const Property sd_properties[] = {
