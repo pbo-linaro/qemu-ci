@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250111130653.1239737-1-baturo.alexey@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] target/riscv: Support Supm and Sspm as part of Zjpm v1.0
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: target/riscv: Support Supm and Sspm as part of Zjpm v1.0
+Patch failed at 0001 target/riscv: Support Supm and Sspm as part of Zjpm v1.0
+error: patch failed: target/riscv/cpu.c:202
+error: target/riscv/cpu.c: patch does not apply
+error: patch failed: target/riscv/cpu_cfg.h:133
+error: target/riscv/cpu_cfg.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
