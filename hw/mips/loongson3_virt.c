@@ -492,9 +492,8 @@ static void mips_loongson3_virt_init(MachineState *machine)
 {
     int i;
     long bios_size;
-    MIPSCPU *cpu;
+    g_autofree MIPSCPU **cpus = NULL;
     Clock *cpuclk;
-    CPUMIPSState *env;
     DeviceState *liointc;
     DeviceState *ipi = NULL;
     char *filename;
@@ -569,13 +568,16 @@ static void mips_loongson3_virt_init(MachineState *machine)
     cpuclk = clock_new(OBJECT(machine), "cpu-refclk");
     clock_set_hz(cpuclk, DEF_LOONGSON3_FREQ);
 
+    cpus = g_new(MIPSCPU *, machine->smp.cpus);
     for (i = 0; i < machine->smp.cpus; i++) {
+        MIPSCPU *cpu;
         int node = i / LOONGSON3_CORE_PER_NODE;
         int core = i % LOONGSON3_CORE_PER_NODE;
         int ip;
 
         /* init CPUs */
         cpu = mips_cpu_create_with_clock(machine->cpu_type, cpuclk, false);
+        cpus[i] = cpu;
 
         /* Init internal devices */
         cpu_mips_irq_init_cpu(cpu);
@@ -609,7 +611,6 @@ static void mips_loongson3_virt_init(MachineState *machine)
                                pin, cpu->env.irq[ip + 2]);
         }
     }
-    env = &MIPS_CPU(first_cpu)->env;
 
     /* Allocate RAM/BIOS, 0x00000000~0x10000000 is alias of 0x80000000~0x90000000 */
     memory_region_init_rom(bios, NULL, "loongson3.bios",
@@ -640,7 +641,7 @@ static void mips_loongson3_virt_init(MachineState *machine)
         loaderparams.kernel_filename = kernel_filename;
         loaderparams.kernel_cmdline = kernel_cmdline;
         loaderparams.initrd_filename = initrd_filename;
-        loaderparams.kernel_entry = load_kernel(env);
+        loaderparams.kernel_entry = load_kernel(&cpus[0]->env);
 
         init_boot_rom();
         init_boot_param();
