@@ -32,4 +32,5 @@ typedef struct {
     GenCSRWrite writefn;
 } CSRInfo;
 
+CSRInfo *get_csr(unsigned int csr_num);
 #endif /* TARGET_LOONGARCH_TCG_LOONGARCH_H */
