@@ -1022,6 +1022,8 @@ int main(int argc, char **argv, char **envp)
 
     target_cpu_copy_regs(env, regs);
 
+    current_cpu = cpu;
+
     if (gdbstub) {
         if (gdbserver_start(gdbstub) < 0) {
             fprintf(stderr, "qemu: could not open gdbserver on %s\n",
