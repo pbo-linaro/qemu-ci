@@ -19,7 +19,7 @@
 #include "cpu.h"
 #include "internals.h"
 #include "fpu/softfloat-helpers.h"
-#include "cpu-csr.h"
+#include "csr.h"
 #ifndef CONFIG_USER_ONLY
 #include "system/reset.h"
 #endif
@@ -765,6 +765,44 @@ static ObjectClass *loongarch_cpu_class_by_name(const char *cpu_model)
     return oc;
 }
 
+static void loongarch_cpu_dump_csr(CPUState *cs, FILE *f)
+{
+#ifndef CONFIG_USER_ONLY
+    int i;
+    CSRInfo *csr_info;
+    CPULoongArchState *env = cpu_env(cs);
+    unsigned long *addr;
+    int col = 0;
+
+    qemu_fprintf(f, "\n");
+
+    /* Dump all generic CSR register */
+    for (i = 0; i < LOONGARCH_CSR_DBG; i++) {
+        csr_info = get_csr(i);
+        if (!csr_info) {
+            if (i == (col + 3)) {
+                qemu_fprintf(f, "\n");
+            }
+
+            continue;
+        }
+
+        if ((i >  (col + 3)) || (i == col)) {
+            col = i & ~3;
+            qemu_fprintf(f, " CSR%03d:", col);
+        }
+
+        addr = (void *)env + csr_info->offset;
+        qemu_fprintf(f, " %s %" PRIx64, csr_info->name, *addr);
+
+        if (i == (col + 3)) {
+            qemu_fprintf(f, "\n");
+        }
+    }
+    qemu_fprintf(f, "\n");
+#endif
+}
+
 static void loongarch_cpu_dump_state(CPUState *cs, FILE *f, int flags)
 {
     CPULoongArchState *env = cpu_env(cs);
@@ -784,22 +822,8 @@ static void loongarch_cpu_dump_state(CPUState *cs, FILE *f, int flags)
         }
     }
 
-    qemu_fprintf(f, "CRMD=%016" PRIx64 "\n", env->CSR_CRMD);
-    qemu_fprintf(f, "PRMD=%016" PRIx64 "\n", env->CSR_PRMD);
-    qemu_fprintf(f, "EUEN=%016" PRIx64 "\n", env->CSR_EUEN);
-    qemu_fprintf(f, "ESTAT=%016" PRIx64 "\n", env->CSR_ESTAT);
-    qemu_fprintf(f, "ERA=%016" PRIx64 "\n", env->CSR_ERA);
-    qemu_fprintf(f, "BADV=%016" PRIx64 "\n", env->CSR_BADV);
-    qemu_fprintf(f, "BADI=%016" PRIx64 "\n", env->CSR_BADI);
-    qemu_fprintf(f, "EENTRY=%016" PRIx64 "\n", env->CSR_EENTRY);
-    qemu_fprintf(f, "PRCFG1=%016" PRIx64 ", PRCFG2=%016" PRIx64 ","
-                 " PRCFG3=%016" PRIx64 "\n",
-                 env->CSR_PRCFG1, env->CSR_PRCFG2, env->CSR_PRCFG3);
-    qemu_fprintf(f, "TLBRENTRY=%016" PRIx64 "\n", env->CSR_TLBRENTRY);
-    qemu_fprintf(f, "TLBRBADV=%016" PRIx64 "\n", env->CSR_TLBRBADV);
-    qemu_fprintf(f, "TLBRERA=%016" PRIx64 "\n", env->CSR_TLBRERA);
-    qemu_fprintf(f, "TCFG=%016" PRIx64 "\n", env->CSR_TCFG);
-    qemu_fprintf(f, "TVAL=%016" PRIx64 "\n", env->CSR_TVAL);
+    /* csr */
+    loongarch_cpu_dump_csr(cs, f);
 
     /* fpr */
     if (flags & CPU_DUMP_FPU) {

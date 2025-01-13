@@ -26,6 +26,7 @@ enum {
 };
 
 typedef struct {
+    const char *name;
     int offset;
     int flags;
     GenCSRRead readfn;
