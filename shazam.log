@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250114190001.1650942-1-dbarboza@ventanamicro.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 5 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/4] target/riscv: add ssu64xl
+  [32m✓[0m [PATCH v2 2/4] target/riscv: use RVB in RVA22U64
+  [32m✓[0m [PATCH v2 3/4] target/riscv: add RVA23U64 profile
+  [32m✓[0m [PATCH v2 4/4] target/riscv: add RVA23S64 profile
+  ---
+  [32m✓[0m Signed: DKIM/ventanamicro.com
+---
+Total patches: 4
+---
+Applying: target/riscv: add ssu64xl
+Patch failed at 0001 target/riscv: add ssu64xl
+error: corrupt binary patch at line 27: -- 
+error: patch failed: target/riscv/cpu.c:213
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
