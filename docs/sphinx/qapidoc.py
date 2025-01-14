@@ -355,6 +355,19 @@ class Transmogrifier:
         self.add_lines(text, info)
         self.ensure_blank_line()
 
+    def visit_entity(self, ent):
+        assert ent is not None
+
+        try:
+            self._curr_ent = ent
+            # This line gets credited to the start of the /definition/.
+            self.add_line(f".. qapi:{ent.meta}:: {ent.name}", ent.info)
+            with self.indented():
+                self.preamble(ent)
+                self.visit_sections(ent)
+        finally:
+            self._curr_ent = None
+
 
 # Disable black auto-formatter until re-enabled:
 # fmt: off
