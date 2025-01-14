@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250114174601.23-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 41 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v6 1/7] tests: virt: Update expected ACPI tables for virt test
+  [PATCH v6 2/7] target/arm/tcg: increase cache level for cpu=max
+  [PATCH v6 3/7] arm/virt.c: add cache hierarchy to device tree
+  [PATCH v6 4/7] bios-tables-test: prepare to change ARM ACPI virt PPTT
+  [PATCH v6 5/7] hw/acpi/aml-build.c: add cache hierarchy to pptt table
+  [PATCH v6 6/7] tests/qtest/bios-table-test: testing new ARM ACPI PPTT topology
+  [PATCH v6 7/7] Update the ACPI tables according to the acpi aml_build change, also empty bios-tables-test-allowed-diff.h.
+---
+Total patches: 7
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tests: virt: Update expected ACPI tables for virt test
+Applying: target/arm/tcg: increase cache level for cpu=max
+Applying: arm/virt.c: add cache hierarchy to device tree
+Applying: bios-tables-test: prepare to change ARM ACPI virt PPTT
+Applying: hw/acpi/aml-build.c: add cache hierarchy to pptt table
+Patch failed at 0005 hw/acpi/aml-build.c: add cache hierarchy to pptt table
+error: corrupt binary patch at line 40: -- 
+error: patch failed: hw/acpi/aml-build.c:2146
+error: hw/acpi/aml-build.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
