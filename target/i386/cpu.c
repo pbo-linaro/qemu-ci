@@ -5896,7 +5896,7 @@ static void x86_cpu_parse_featurestr(const char *typename, char *features,
     }
 }
 
-static bool x86_cpu_filter_features(X86CPU *cpu, bool verbose);
+static bool x86_cpu_filter_features(X86CPU *cpu, Error **errp);
 
 /* Build a list with the name of all features on a feature word array */
 static void x86_cpu_list_feature_names(FeatureWordArray features,
@@ -6084,7 +6084,7 @@ static void x86_cpu_class_check_missing_features(X86CPUClass *xcc,
         error_free(err);
     }
 
-    x86_cpu_filter_features(xc, false);
+    x86_cpu_filter_features(xc, NULL);
 
     x86_cpu_list_feature_names(xc->filtered_features, tail);
 
@@ -7650,7 +7650,7 @@ void x86_cpu_expand_features(X86CPU *cpu, Error **errp)
  *
  * Returns: true if any flag is not supported by the host, false otherwise.
  */
-static bool x86_cpu_filter_features(X86CPU *cpu, bool verbose)
+static bool x86_cpu_filter_features(X86CPU *cpu, Error **errp)
 {
     CPUX86State *env = &cpu->env;
     FeatureWord w;
@@ -7660,7 +7660,7 @@ static bool x86_cpu_filter_features(X86CPU *cpu, bool verbose)
     uint32_t eax_0, ebx_0, ecx_0, edx_0;
     uint32_t eax_1, ebx_1, ecx_1, edx_1;
 
-    if (verbose) {
+    if (errp) {
         prefix = accel_uses_host_cpuid()
                  ? "host doesn't support requested feature"
                  : "TCG doesn't support requested feature";
@@ -7712,15 +7712,13 @@ static bool x86_cpu_filter_features(X86CPU *cpu, bool verbose)
         uint8_t version = ebx_0 & 0xff;
 
         if (version < env->avx10_version) {
-            if (prefix) {
-                warn_report("%s: avx10.%d. Adjust to avx10.%d",
-                            prefix, env->avx10_version, version);
-            }
+            error_setg(errp, "%s: avx10.%d. Adjust to avx10.%d",
+                       prefix, env->avx10_version, version);
             env->avx10_version = version;
             have_filtered_features = true;
         }
     } else if (env->avx10_version && prefix) {
-        warn_report("%s: avx10.%d.", prefix, env->avx10_version);
+        error_setg(errp, "%s: avx10.%d.", prefix, env->avx10_version);
         have_filtered_features = true;
     }
 
@@ -7822,14 +7820,8 @@ static void x86_cpu_realizefn(DeviceState *dev, Error **errp)
         }
     }
 
-    if (x86_cpu_filter_features(cpu, cpu->enforce_cpuid)) {
-        if (cpu->enforce_cpuid) {
-            error_setg(&local_err,
-                       accel_uses_host_cpuid() ?
-                       "Host doesn't support requested features" :
-                       "TCG doesn't support requested features");
-            goto out;
-        }
+    if (x86_cpu_filter_features(cpu, cpu->enforce_cpuid ? &local_err : NULL)) {
+        goto out;
     }
 
     /* On AMD CPUs, some CPUID[8000_0001].EDX bits must match the bits on
