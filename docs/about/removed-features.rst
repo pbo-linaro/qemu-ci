@@ -1065,6 +1065,10 @@ for all machine types using the PXA2xx and OMAP2 SoCs. We are also
 dropping the ``cheetah`` OMAP1 board, because we don't have any
 test images for it and don't know of anybody who does.
 
+Arm ``virt-2.6`` (removed in 10.0)
+''''''''''''''''''''''''''''''''''
+This versioned machine has been supported for a period of more than 6 years.
+
 linux-user mode CPUs
 --------------------
 
