@@ -1012,6 +1012,10 @@ This machine has been renamed ``fuloong2e``.
 These machine types were very old and likely could not be used for live
 migration from old QEMU versions anymore. Use a newer machine type instead.
 
+``pc-q35-2.4`` and `pc-i440fx-2.4` (removed in 10.0)
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+This versioned machine has been supported for a period of more than 6 years.
+
 Raspberry Pi ``raspi2`` and ``raspi3`` machines (removed in 6.2)
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
