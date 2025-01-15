@@ -19,6 +19,13 @@
 
 OBJECT_DECLARE_TYPE(S390CcwMachineState, S390CcwMachineClass, S390_CCW_MACHINE)
 
+typedef struct Cpi {
+    uint8_t system_type[8];
+    uint8_t system_name[8];
+    uint64_t system_level;
+    uint8_t sysplex_name[8];
+    uint64_t timestamp;
+} QEMU_PACKED Cpi;
 
 struct S390CcwMachineState {
     /*< private >*/
@@ -33,6 +40,7 @@ struct S390CcwMachineState {
     uint64_t max_pagesize;
 
     SCLPDevice *sclp;
+    Cpi cpi;
 };
 
 static inline uint64_t s390_get_memory_limit(S390CcwMachineState *s390ms)

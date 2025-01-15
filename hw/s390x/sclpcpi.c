@@ -20,8 +20,11 @@
  */
 
 #include "qemu/osdep.h"
+#include "qemu/timer.h"
 #include "hw/s390x/sclp.h"
 #include "hw/s390x/event-facility.h"
+#include "hw/s390x/ebcdic.h"
+#include "hw/s390x/s390-virtio-ccw.h"
 
 typedef struct Data {
     uint8_t id_format;
@@ -60,6 +63,13 @@ static sccb_mask_t receive_mask(void)
 static int write_event_data(SCLPEvent *event, EventBufferHeader *evt_buf_hdr)
 {
     CPI *cpi = container_of(evt_buf_hdr, CPI, ebh);
+    S390CcwMachineState *ms = S390_CCW_MACHINE(qdev_get_machine());
+
+    ascii_put(ms->cpi.system_type, (char *)cpi->data.system_type, 8);
+    ascii_put(ms->cpi.system_name, (char *)cpi->data.system_name, 8);
+    ascii_put(ms->cpi.sysplex_name, (char *)cpi->data.sysplex_name, 8);
+    ms->cpi.system_level = cpi->data.system_level;
+    ms->cpi.timestamp = qemu_clock_get_ns(QEMU_CLOCK_HOST);
 
     cpi->ebh.flags = SCLP_EVENT_BUFFER_ACCEPTED;
     return SCLP_RC_NORMAL_COMPLETION;

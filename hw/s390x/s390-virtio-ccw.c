@@ -49,6 +49,7 @@
 #include "hw/virtio/virtio-md-pci.h"
 #include "hw/s390x/virtio-ccw-md.h"
 #include CONFIG_DEVICES
+#include "qapi/qapi-visit-machine.h"
 
 static Error *pv_mig_blocker;
 
@@ -773,6 +774,25 @@ static void machine_set_loadparm(Object *obj, Visitor *v,
     s390_ipl_fmt_loadparm(ms->loadparm, val, errp);
 }
 
+static void machine_get_cpi(Object *obj, Visitor *v,
+                             const char *name, void *opaque, Error **errp)
+{
+    S390CcwMachineState *ms = S390_CCW_MACHINE(obj);
+    S390Cpi *cpi;
+    cpi = &(S390Cpi){
+        .system_type = g_strndup((char *) ms->cpi.system_type,
+                       sizeof(ms->cpi.system_type)),
+        .system_name = g_strndup((char *) ms->cpi.system_name,
+                       sizeof(ms->cpi.system_name)),
+        .system_level = g_strdup_printf("0x%lx", ms->cpi.system_level),
+        .sysplex_name = g_strndup((char *) ms->cpi.sysplex_name,
+                        sizeof(ms->cpi.sysplex_name)),
+        .timestamp = ms->cpi.timestamp
+    };
+
+    visit_type_S390Cpi(v, name, &cpi, &error_abort);
+}
+
 static void ccw_machine_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -826,6 +846,12 @@ static void ccw_machine_class_init(ObjectClass *oc, void *data)
             "Up to 8 chars in set of [A-Za-z0-9. ] (lower case chars converted"
             " to upper case) to pass to machine loader, boot manager,"
             " and guest kernel");
+    object_class_property_add(oc, "s390-cpi", "S390Cpi",
+        machine_get_cpi, NULL, NULL, NULL);
+    object_class_property_set_description(oc, "s390-cpi",
+        "Control-progam identifiers provide data about the guest "
+        "operating system");
+
 }
 
 static inline void s390_machine_initfn(Object *obj)

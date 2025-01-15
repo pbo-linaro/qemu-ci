@@ -1898,3 +1898,27 @@
 { 'command': 'x-query-interrupt-controllers',
   'returns': 'HumanReadableText',
   'features': [ 'unstable' ]}
+
+##
+# @S390Cpi:
+#
+# Control-program identifiers provide data about Linux instance.
+#
+# @system-type: operating system of Linux instance
+#
+# @system-name: system name of Linux instance
+#
+# @system-level: distribution and kernel version of Linux instance
+#
+# @sysplex-name: sysplex name of Linux instance
+#
+# @timestamp: latest update of CPI data
+#
+# Since: 9.2
+##
+{ 'struct': 'S390Cpi', 'data': {
+     'system-type': 'str',
+     'system-name': 'str',
+     'system-level': 'str',
+     'sysplex-name': 'str',
+     'timestamp': 'uint64' } }
