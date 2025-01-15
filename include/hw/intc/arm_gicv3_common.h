@@ -45,9 +45,6 @@
 #define GICV3_REDIST_SIZE 0x20000
 #define GICV4_REDIST_SIZE 0x40000
 
-/* Number of SGI target-list bits */
-#define GICV3_TARGETLIST_BITS 16
-
 /* Maximum number of list registers (architectural limit) */
 #define GICV3_LR_MAX 16
 
