@@ -75,6 +75,7 @@ static void igb_pci_start_hw(QOSGraphObject *obj)
 
     /* Enable and configure MSI-X */
     qpci_msix_enable(&d->pci_dev);
+    e1000e_pci_msix_enable_rxtxq_vectors(d);
     e1000e_macreg_write(&d->e1000e, E1000_IVAR0, IGB_IVAR_TEST_CFG);
 
     /* Check the device link status */
@@ -160,6 +161,14 @@ static void *igb_pci_create(void *pci_bus, QGuestAllocator *alloc, void *addr)
     /* Allocate and setup RX ring */
     d->e1000e.rx_ring = guest_alloc(alloc, E1000E_RING_LEN);
     g_assert(d->e1000e.rx_ring != 0);
+
+    /* Allocate and clear msix msg addr for TX */
+    d->msix_msg_addr[E1000E_TX0_MSG_ID] = guest_alloc(alloc, 4);
+    g_assert(d->msix_msg_addr[E1000E_TX0_MSG_ID] != 0);
+
+    /* Allocate and clear msix msg addr for RX */
+    d->msix_msg_addr[E1000E_RX0_MSG_ID] = guest_alloc(alloc, 4);
+    g_assert(d->msix_msg_addr[E1000E_RX0_MSG_ID] != 0);
 
     d->obj.get_driver = igb_pci_get_driver;
     d->obj.start_hw = igb_pci_start_hw;

@@ -19,6 +19,7 @@
 #include "qemu/osdep.h"
 #include "hw/net/e1000_regs.h"
 #include "hw/pci/pci_ids.h"
+#include "hw/pci/pci_regs.h"
 #include "../libqtest.h"
 #include "pci-pc.h"
 #include "qemu/sockets.h"
@@ -77,16 +78,48 @@ static void e1000e_foreach_callback(QPCIDevice *dev, int devfn, void *data)
     g_free(dev);
 }
 
+static bool e1000e_test_msix_irq(QE1000E *d, uint16_t msg_id,
+                                 uint64_t guest_msix_addr,
+                                 uint32_t msix_data)
+{
+    QE1000E_PCI *d_pci = container_of(d, QE1000E_PCI, e1000e);
+    QPCIDevice *pci_dev = &d_pci->pci_dev;
+    uint32_t data;
+
+    /* msix irq test must enable msix */
+    g_assert(pci_dev->msix_enabled);
+
+    /* Vector must be enabled (e.g., with enable_rxtxq_vectors) */
+    g_assert(!qpci_msix_masked(pci_dev, msg_id));
+
+    data = qtest_readl(pci_dev->bus->qts, guest_msix_addr);
+    if (data == msix_data) {
+        /* Clear msix addr ready for next interrupt */
+        qtest_writel(pci_dev->bus->qts, guest_msix_addr, 0);
+        return true;
+    } else if (data == 0) {
+        return false;
+    } else {
+        /* Must only be either 0 (no interrupt) or the msix data. */
+        g_assert_not_reached();
+    }
+}
+
 void e1000e_wait_isr(QE1000E *d, uint16_t msg_id)
 {
     QE1000E_PCI *d_pci = container_of(d, QE1000E_PCI, e1000e);
-    guint64 end_time = g_get_monotonic_time() + 5 * G_TIME_SPAN_SECOND;
+    QPCIDevice *pci_dev = &d_pci->pci_dev;
+    uint64_t end_time = g_get_monotonic_time() + 5 * G_TIME_SPAN_SECOND;
+    uint64_t guest_msix_addr = d_pci->msix_msg_addr[msg_id];
+    uint32_t msix_data = E1000E_MSIX_DATA[msg_id];
+
+    assert(pci_dev->msix_enabled);
 
     do {
-        if (qpci_msix_pending(&d_pci->pci_dev, msg_id)) {
+        if (e1000e_test_msix_irq(d, msg_id, guest_msix_addr, msix_data)) {
             return;
         }
-        qtest_clock_step(d_pci->pci_dev.bus->qts, 10000);
+        qtest_clock_step(pci_dev->bus->qts, 10000);
     } while (g_get_monotonic_time() < end_time);
 
     g_error("Timeout expired");
@@ -97,6 +130,45 @@ static void e1000e_pci_destructor(QOSGraphObject *obj)
     QE1000E_PCI *epci = (QE1000E_PCI *) obj;
     qpci_iounmap(&epci->pci_dev, epci->mac_regs);
     qpci_msix_disable(&epci->pci_dev);
+}
+
+static void e1000e_pci_msix_enable_vector(QE1000E_PCI *d, uint16_t msg_id)
+{
+    QPCIDevice *pci_dev = &d->pci_dev;
+    uint64_t guest_msix_addr = d->msix_msg_addr[msg_id];
+    uint32_t msix_data = E1000E_MSIX_DATA[msg_id];
+    uint32_t control;
+    uint64_t off;
+
+    g_assert_cmpint(msg_id , >=, 0);
+    g_assert_cmpint(msg_id , <, qpci_msix_table_size(pci_dev));
+    g_assert_cmpint(msg_id , <, E1000E_MSG_ID_MAX);
+    g_assert(guest_msix_addr != 0);
+    g_assert(msix_data != 0);
+
+    off = pci_dev->msix_table_off + (msg_id * 16);
+
+    qpci_io_writel(pci_dev, pci_dev->msix_table_bar,
+                   off + PCI_MSIX_ENTRY_LOWER_ADDR, guest_msix_addr & ~0UL);
+    qpci_io_writel(pci_dev, pci_dev->msix_table_bar,
+                   off + PCI_MSIX_ENTRY_UPPER_ADDR,
+                   (guest_msix_addr >> 32) & ~0UL);
+    qpci_io_writel(pci_dev, pci_dev->msix_table_bar,
+                   off + PCI_MSIX_ENTRY_DATA, msix_data);
+
+    control = qpci_io_readl(pci_dev, pci_dev->msix_table_bar,
+                            off + PCI_MSIX_ENTRY_VECTOR_CTRL);
+    qpci_io_writel(pci_dev, pci_dev->msix_table_bar,
+                   off + PCI_MSIX_ENTRY_VECTOR_CTRL,
+                   control & ~PCI_MSIX_ENTRY_CTRL_MASKBIT);
+}
+
+void e1000e_pci_msix_enable_rxtxq_vectors(QE1000E_PCI *d)
+{
+    g_assert(d->pci_dev.msix_enabled);
+
+    e1000e_pci_msix_enable_vector(d, E1000E_RX0_MSG_ID);
+    e1000e_pci_msix_enable_vector(d, E1000E_TX0_MSG_ID);
 }
 
 static void e1000e_pci_start_hw(QOSGraphObject *obj)
@@ -113,6 +185,7 @@ static void e1000e_pci_start_hw(QOSGraphObject *obj)
 
     /* Enable and configure MSI-X */
     qpci_msix_enable(&d->pci_dev);
+    e1000e_pci_msix_enable_rxtxq_vectors(d);
     e1000e_macreg_write(&d->e1000e, E1000_IVAR, E1000E_IVAR_TEST_CFG);
 
     /* Check the device status - link and speed */
@@ -195,6 +268,14 @@ static void *e1000e_pci_create(void *pci_bus, QGuestAllocator *alloc,
     /* Allocate and setup RX ring */
     d->e1000e.rx_ring = guest_alloc(alloc, E1000E_RING_LEN);
     g_assert(d->e1000e.rx_ring != 0);
+
+    /* Allocate and clear msix msg addr for TX */
+    d->msix_msg_addr[E1000E_TX0_MSG_ID] = guest_alloc(alloc, 4);
+    g_assert(d->msix_msg_addr[E1000E_TX0_MSG_ID] != 0);
+
+    /* Allocate and clear msix msg addr for RX */
+    d->msix_msg_addr[E1000E_RX0_MSG_ID] = guest_alloc(alloc, 4);
+    g_assert(d->msix_msg_addr[E1000E_RX0_MSG_ID] != 0);
 
     d->obj.get_driver = e1000e_pci_get_driver;
     d->obj.start_hw = e1000e_pci_start_hw;
