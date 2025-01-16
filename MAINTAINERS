@@ -2414,6 +2414,11 @@ F: hw/audio/virtio-snd-pci.c
 F: include/hw/audio/virtio-snd.h
 F: docs/system/devices/virtio-snd.rst
 
+vmclock
+M: David Woodhouse <dwmw2@infradead.org>
+S: Supported
+F: hw/acpi/vmclock.c
+
 nvme
 M: Keith Busch <kbusch@kernel.org>
 M: Klaus Jensen <its@irrelevant.dk>
