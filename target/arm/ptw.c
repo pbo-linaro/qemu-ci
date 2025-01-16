@@ -158,7 +158,7 @@ ARMMMUIdx stage_1_mmu_idx(ARMMMUIdx mmu_idx)
     }
 }
 
-ARMMMUIdx arm_stage1_mmu_idx(CPUARMState *env)
+ARMMMUIdx arm_stage1_mmu_idx(const CPUARMState *env)
 {
     return stage_1_mmu_idx(arm_mmu_idx(env));
 }

@@ -59,7 +59,7 @@ static inline int vfp_exceptbits_from_host(int host_bits)
     return target_bits;
 }
 
-static uint32_t vfp_get_fpsr_from_host(CPUARMState *env)
+static uint32_t vfp_get_fpsr_from_host(const CPUARMState *env)
 {
     uint32_t i;
 
@@ -132,7 +132,7 @@ static void vfp_set_fpcr_to_host(CPUARMState *env, uint32_t val, uint32_t mask)
 
 #else
 
-static uint32_t vfp_get_fpsr_from_host(CPUARMState *env)
+static uint32_t vfp_get_fpsr_from_host(const CPUARMState *env)
 {
     return 0;
 }
@@ -162,7 +162,7 @@ uint32_t vfp_get_fpcr(CPUARMState *env)
     return fpcr;
 }
 
-uint32_t vfp_get_fpsr(CPUARMState *env)
+uint32_t vfp_get_fpsr(const CPUARMState *env)
 {
     uint32_t fpsr = env->vfp.fpsr;
     uint32_t i;

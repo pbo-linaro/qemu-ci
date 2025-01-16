@@ -1267,7 +1267,7 @@ uint32_t sve_vqm1_for_el_sm(CPUARMState *env, int el, bool sm);
 /* Likewise, but using @sm = PSTATE.SM. */
 uint32_t sve_vqm1_for_el(CPUARMState *env, int el);
 
-static inline bool is_a64(CPUARMState *env)
+static inline bool is_a64(const CPUARMState *env)
 {
     return env->aarch64;
 }
@@ -1503,7 +1503,7 @@ static inline unsigned int aarch64_pstate_mode(unsigned int el, bool handler)
  * interprocessing, so we don't attempt to sync with the cpsr state used by
  * the 32 bit decoder.
  */
-static inline uint32_t pstate_read(CPUARMState *env)
+static inline uint32_t pstate_read(const CPUARMState *env)
 {
     int ZF;
 
@@ -1525,7 +1525,7 @@ static inline void pstate_write(CPUARMState *env, uint32_t val)
 }
 
 /* Return the current CPSR value.  */
-uint32_t cpsr_read(CPUARMState *env);
+uint32_t cpsr_read(const CPUARMState *env);
 
 typedef enum CPSRWriteType {
     CPSRWriteByInstr = 0,         /* from guest MSR or CPS */
@@ -1545,7 +1545,7 @@ void cpsr_write(CPUARMState *env, uint32_t val, uint32_t mask,
                 CPSRWriteType write_type);
 
 /* Return the current xPSR value.  */
-static inline uint32_t xpsr_read(CPUARMState *env)
+static inline uint32_t xpsr_read(const CPUARMState *env)
 {
     int ZF;
     ZF = (env->ZF == 0);
@@ -1765,7 +1765,7 @@ QEMU_BUILD_BUG_ON(FPSCR_FPSR_MASK & FPSCR_FPCR_MASK);
  *
  * Return the current AArch64 FPSR value
  */
-uint32_t vfp_get_fpsr(CPUARMState *env);
+uint32_t vfp_get_fpsr(const CPUARMState *env);
 
 /**
  * vfp_get_fpcr: read the AArch64 FPCR
@@ -2445,7 +2445,7 @@ enum arm_features {
     ARM_FEATURE_BACKCOMPAT_CNTFRQ, /* 62.5MHz timer default */
 };
 
-static inline int arm_feature(CPUARMState *env, int feature)
+static inline int arm_feature(const CPUARMState *env, int feature)
 {
     return (env->features & (1ULL << feature)) != 0;
 }
@@ -2486,7 +2486,7 @@ static inline ARMSecuritySpace arm_secure_to_space(bool secure)
  * an exception return to those levels.  Unlike arm_security_space,
  * this doesn't care about the current EL.
  */
-ARMSecuritySpace arm_security_space_below_el3(CPUARMState *env);
+ARMSecuritySpace arm_security_space_below_el3(const CPUARMState *env);
 
 /**
  * arm_is_secure_below_el3:
@@ -2495,14 +2495,14 @@ ARMSecuritySpace arm_security_space_below_el3(CPUARMState *env);
  * Return true if exception levels below EL3 are in secure state,
  * or would be following an exception return to those levels.
  */
-static inline bool arm_is_secure_below_el3(CPUARMState *env)
+static inline bool arm_is_secure_below_el3(const CPUARMState *env)
 {
     ARMSecuritySpace ss = arm_security_space_below_el3(env);
     return ss == ARMSS_Secure;
 }
 
 /* Return true if the CPU is AArch64 EL3 or AArch32 Mon */
-static inline bool arm_is_el3_or_mon(CPUARMState *env)
+static inline bool arm_is_el3_or_mon(const CPUARMState *env)
 {
     assert(!arm_feature(env, ARM_FEATURE_M));
     if (arm_feature(env, ARM_FEATURE_EL3)) {
@@ -2524,7 +2524,7 @@ static inline bool arm_is_el3_or_mon(CPUARMState *env)
  *
  * Return the current security space of the cpu.
  */
-ARMSecuritySpace arm_security_space(CPUARMState *env);
+ARMSecuritySpace arm_security_space(const CPUARMState *env);
 
 /**
  * arm_is_secure:
@@ -2532,7 +2532,7 @@ ARMSecuritySpace arm_security_space(CPUARMState *env);
  *
  * Return true if the processor is in secure state.
  */
-static inline bool arm_is_secure(CPUARMState *env)
+static inline bool arm_is_secure(const CPUARMState *env)
 {
     return arm_space_is_secure(arm_security_space(env));
 }
@@ -2541,7 +2541,7 @@ static inline bool arm_is_secure(CPUARMState *env)
  * Return true if the current security state has AArch64 EL2 or AArch32 Hyp.
  * This corresponds to the pseudocode EL2Enabled().
  */
-static inline bool arm_is_el2_enabled_secstate(CPUARMState *env,
+static inline bool arm_is_el2_enabled_secstate(const CPUARMState *env,
                                                ARMSecuritySpace space)
 {
     assert(space != ARMSS_Root);
@@ -2549,39 +2549,39 @@ static inline bool arm_is_el2_enabled_secstate(CPUARMState *env,
            && (space != ARMSS_Secure || (env->cp15.scr_el3 & SCR_EEL2));
 }
 
-static inline bool arm_is_el2_enabled(CPUARMState *env)
+static inline bool arm_is_el2_enabled(const CPUARMState *env)
 {
     return arm_is_el2_enabled_secstate(env, arm_security_space_below_el3(env));
 }
 
 #else
-static inline ARMSecuritySpace arm_security_space_below_el3(CPUARMState *env)
+static inline ARMSecuritySpace arm_security_space_below_el3(const CPUARMState *env)
 {
     return ARMSS_NonSecure;
 }
 
-static inline bool arm_is_secure_below_el3(CPUARMState *env)
+static inline bool arm_is_secure_below_el3(const CPUARMState *env)
 {
     return false;
 }
 
-static inline ARMSecuritySpace arm_security_space(CPUARMState *env)
+static inline ARMSecuritySpace arm_security_space(const CPUARMState *env)
 {
     return ARMSS_NonSecure;
 }
 
-static inline bool arm_is_secure(CPUARMState *env)
+static inline bool arm_is_secure(const CPUARMState *env)
 {
     return false;
 }
 
-static inline bool arm_is_el2_enabled_secstate(CPUARMState *env,
+static inline bool arm_is_el2_enabled_secstate(const CPUARMState *env,
                                                ARMSecuritySpace space)
 {
     return false;
 }
 
-static inline bool arm_is_el2_enabled(CPUARMState *env)
+static inline bool arm_is_el2_enabled(const CPUARMState *env)
 {
     return false;
 }
@@ -2593,12 +2593,13 @@ static inline bool arm_is_el2_enabled(CPUARMState *env)
  * "for all purposes other than a direct read or write access of HCR_EL2."
  * Not included here is HCR_RW.
  */
-uint64_t arm_hcr_el2_eff_secstate(CPUARMState *env, ARMSecuritySpace space);
-uint64_t arm_hcr_el2_eff(CPUARMState *env);
-uint64_t arm_hcrx_el2_eff(CPUARMState *env);
+uint64_t arm_hcr_el2_eff_secstate(const CPUARMState *env,
+                                  ARMSecuritySpace space);
+uint64_t arm_hcr_el2_eff(const CPUARMState *env);
+uint64_t arm_hcrx_el2_eff(const CPUARMState *env);
 
 /* Return true if the specified exception level is running in AArch64 state. */
-static inline bool arm_el_is_aa64(CPUARMState *env, int el)
+static inline bool arm_el_is_aa64(const CPUARMState *env, int el)
 {
     /* This isn't valid for EL0 (if we're in EL0, is_a64() is what you want,
      * and if we're not in EL0 then the state of EL0 isn't well defined.)
@@ -2637,7 +2638,7 @@ static inline bool arm_el_is_aa64(CPUARMState *env, int el)
  * it doesn't exist at all) then there is no register banking, and all
  * accesses are to the non-secure version.
  */
-static inline bool access_secure_reg(CPUARMState *env)
+static inline bool access_secure_reg(const CPUARMState *env)
 {
     bool ret = (arm_feature(env, ARM_FEATURE_EL3) &&
                 !arm_el_is_aa64(env, 3) &&
@@ -2677,7 +2678,7 @@ uint32_t arm_phys_excp_target_el(CPUState *cs, uint32_t excp_idx,
                                  uint32_t cur_el, bool secure);
 
 /* Return the highest implemented Exception Level */
-static inline int arm_highest_el(CPUARMState *env)
+static inline int arm_highest_el(const CPUARMState *env)
 {
     if (arm_feature(env, ARM_FEATURE_EL3)) {
         return 3;
@@ -2689,7 +2690,7 @@ static inline int arm_highest_el(CPUARMState *env)
 }
 
 /* Return true if a v7M CPU is in Handler mode */
-static inline bool arm_v7m_is_handler_mode(CPUARMState *env)
+static inline bool arm_v7m_is_handler_mode(const CPUARMState *env)
 {
     return env->v7m.exception != 0;
 }
@@ -2697,7 +2698,7 @@ static inline bool arm_v7m_is_handler_mode(CPUARMState *env)
 /* Return the current Exception Level (as per ARMv8; note that this differs
  * from the ARMv7 Privilege Level).
  */
-static inline int arm_current_el(CPUARMState *env)
+static inline int arm_current_el(const CPUARMState *env)
 {
     if (arm_feature(env, ARM_FEATURE_M)) {
         return arm_v7m_is_handler_mode(env) ||
@@ -3004,7 +3005,7 @@ static inline ARMSecuritySpace arm_phys_to_space(ARMMMUIdx idx)
     return idx - ARMMMUIdx_Phys_S;
 }
 
-static inline bool arm_v7m_csselr_razwi(ARMCPU *cpu)
+static inline bool arm_v7m_csselr_razwi(const ARMCPU *cpu)
 {
     /* If all the CLIDR.Ctypem bits are 0 there are no caches, and
      * CSSELR is RAZ/WI.
@@ -3012,7 +3013,7 @@ static inline bool arm_v7m_csselr_razwi(ARMCPU *cpu)
     return (cpu->clidr & R_V7M_CLIDR_CTYPE_ALL_MASK) != 0;
 }
 
-static inline bool arm_sctlr_b(CPUARMState *env)
+static inline bool arm_sctlr_b(const CPUARMState *env)
 {
     return
         /* We need not implement SCTLR.ITD in user-mode emulation, so
@@ -3025,9 +3026,9 @@ static inline bool arm_sctlr_b(CPUARMState *env)
         (env->cp15.sctlr_el[1] & SCTLR_B) != 0;
 }
 
-uint64_t arm_sctlr(CPUARMState *env, int el);
+uint64_t arm_sctlr(const CPUARMState *env, int el);
 
-static inline bool arm_cpu_data_is_big_endian_a32(CPUARMState *env,
+static inline bool arm_cpu_data_is_big_endian_a32(const CPUARMState *env,
                                                   bool sctlr_b)
 {
 #ifdef CONFIG_USER_ONLY
@@ -3057,7 +3058,7 @@ static inline bool arm_cpu_data_is_big_endian_a64(int el, uint64_t sctlr)
 }
 
 /* Return true if the processor is in big-endian mode. */
-static inline bool arm_cpu_data_is_big_endian(CPUARMState *env)
+static inline bool arm_cpu_data_is_big_endian(const CPUARMState *env)
 {
     if (!is_a64(env)) {
         return arm_cpu_data_is_big_endian_a32(env, arm_sctlr_b(env));
@@ -3219,7 +3220,7 @@ FIELD(TBFLAG_A64, NV2_MEM_BE, 36, 1)
  *
  * Return the VL cached within env->hflags, in units of quadwords.
  */
-static inline int sve_vq(CPUARMState *env)
+static inline int sve_vq(const CPUARMState *env)
 {
     return EX_TBFLAG_A64(env->hflags, VL) + 1;
 }
@@ -3230,7 +3231,7 @@ static inline int sve_vq(CPUARMState *env)
  *
  * Return the SVL cached within env->hflags, in units of quadwords.
  */
-static inline int sme_vq(CPUARMState *env)
+static inline int sme_vq(const CPUARMState *env)
 {
     return EX_TBFLAG_A64(env->hflags, SVL) + 1;
 }
@@ -3252,7 +3253,7 @@ static inline bool bswap_code(bool sctlr_b)
 }
 
 #ifdef CONFIG_USER_ONLY
-static inline bool arm_cpu_bswap_data(CPUARMState *env)
+static inline bool arm_cpu_bswap_data(const CPUARMState *env)
 {
     return TARGET_BIG_ENDIAN ^ arm_cpu_data_is_big_endian(env);
 }

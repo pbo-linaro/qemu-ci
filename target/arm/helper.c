@@ -264,7 +264,7 @@ void init_cpreg_list(ARMCPU *cpu)
     g_list_free(keys);
 }
 
-static bool arm_pan_enabled(CPUARMState *env)
+static bool arm_pan_enabled(const CPUARMState *env)
 {
     if (is_a64(env)) {
         if ((arm_hcr_el2_eff(env) & (HCR_NV | HCR_NV1)) == (HCR_NV | HCR_NV1)) {
@@ -5229,7 +5229,8 @@ static void hcr_writelow(CPUARMState *env, const ARMCPRegInfo *ri,
  * Bits that are not included here:
  * RW       (read from SCR_EL3.RW as needed)
  */
-uint64_t arm_hcr_el2_eff_secstate(CPUARMState *env, ARMSecuritySpace space)
+uint64_t arm_hcr_el2_eff_secstate(const CPUARMState *env,
+                                  ARMSecuritySpace space)
 {
     uint64_t ret = env->cp15.hcr_el2;
 
@@ -5294,7 +5295,7 @@ uint64_t arm_hcr_el2_eff_secstate(CPUARMState *env, ARMSecuritySpace space)
     return ret;
 }
 
-uint64_t arm_hcr_el2_eff(CPUARMState *env)
+uint64_t arm_hcr_el2_eff(const CPUARMState *env)
 {
     if (arm_feature(env, ARM_FEATURE_M)) {
         return 0;
@@ -5396,7 +5397,7 @@ static const ARMCPRegInfo hcrx_el2_reginfo = {
 };
 
 /* Return the effective value of HCRX_EL2.  */
-uint64_t arm_hcrx_el2_eff(CPUARMState *env)
+uint64_t arm_hcrx_el2_eff(const CPUARMState *env)
 {
     /*
      * The bits in this register behave as 0 for all purposes other than
@@ -5411,7 +5412,7 @@ uint64_t arm_hcrx_el2_eff(CPUARMState *env)
      */
     if (!arm_is_el2_enabled(env)) {
         uint64_t hcrx = 0;
-        if (cpu_isar_feature(aa64_mops, env_archcpu(env))) {
+        if (cpu_isar_feature(aa64_mops, const_env_archcpu(env))) {
             /* MSCEn behaves as 1 if EL2 is not enabled */
             hcrx |= HCRX_MSCEN;
         }
@@ -9333,7 +9334,7 @@ static int bad_mode_switch(CPUARMState *env, int mode, CPSRWriteType write_type)
     }
 }
 
-uint32_t cpsr_read(CPUARMState *env)
+uint32_t cpsr_read(const CPUARMState *env)
 {
     int ZF;
     ZF = (env->ZF == 0);
@@ -10703,7 +10704,7 @@ void arm_cpu_do_interrupt(CPUState *cs)
 }
 #endif /* !CONFIG_USER_ONLY */
 
-uint64_t arm_sctlr(CPUARMState *env, int el)
+uint64_t arm_sctlr(const CPUARMState *env, int el)
 {
     /* Only EL0 needs to be adjusted for EL1&0 or EL2&0 or EL3&0 */
     if (el == 0) {
@@ -11127,7 +11128,7 @@ ARMMMUIdx arm_v7m_mmu_idx_for_secstate(CPUARMState *env, bool secstate)
 }
 #endif
 
-ARMMMUIdx arm_mmu_idx_el(CPUARMState *env, int el)
+ARMMMUIdx arm_mmu_idx_el(const CPUARMState *env, int el)
 {
     ARMMMUIdx idx;
     uint64_t hcr;
@@ -11180,7 +11181,7 @@ ARMMMUIdx arm_mmu_idx_el(CPUARMState *env, int el)
     return idx;
 }
 
-ARMMMUIdx arm_mmu_idx(CPUARMState *env)
+ARMMMUIdx arm_mmu_idx(const CPUARMState *env)
 {
     return arm_mmu_idx_el(env, arm_current_el(env));
 }
@@ -11412,7 +11413,7 @@ void aarch64_sve_change_el(CPUARMState *env, int old_el,
 #endif
 
 #ifndef CONFIG_USER_ONLY
-ARMSecuritySpace arm_security_space(CPUARMState *env)
+ARMSecuritySpace arm_security_space(const CPUARMState *env)
 {
     if (arm_feature(env, ARM_FEATURE_M)) {
         return arm_secure_to_space(env->v7m.secure);
@@ -11429,7 +11430,7 @@ ARMSecuritySpace arm_security_space(CPUARMState *env)
     /* Check for AArch64 EL3 or AArch32 Mon. */
     if (is_a64(env)) {
         if (extract32(env->pstate, 2, 2) == 3) {
-            if (cpu_isar_feature(aa64_rme, env_archcpu(env))) {
+            if (cpu_isar_feature(aa64_rme, const_env_archcpu(env))) {
                 return ARMSS_Root;
             } else {
                 return ARMSS_Secure;
@@ -11444,7 +11445,7 @@ ARMSecuritySpace arm_security_space(CPUARMState *env)
     return arm_security_space_below_el3(env);
 }
 
-ARMSecuritySpace arm_security_space_below_el3(CPUARMState *env)
+ARMSecuritySpace arm_security_space_below_el3(const CPUARMState *env)
 {
     assert(!arm_feature(env, ARM_FEATURE_M));
 

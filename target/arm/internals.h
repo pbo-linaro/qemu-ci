@@ -832,7 +832,7 @@ static inline ARMMMUIdx core_to_aa64_mmu_idx(int mmu_idx)
 int arm_mmu_idx_to_el(ARMMMUIdx mmu_idx);
 
 /* Return the MMU index for a v7M CPU in the specified security state */
-ARMMMUIdx arm_v7m_mmu_idx_for_secstate(CPUARMState *env, bool secstate);
+ARMMMUIdx arm_v7m_mmu_idx_for_secstate(const CPUARMState *env, bool secstate);
 
 /*
  * Return true if the stage 1 translation regime is using LPAE
@@ -1189,7 +1189,7 @@ void arm_cpu_update_vserr(ARMCPU *cpu);
  *
  * Return the full ARMMMUIdx for the translation regime for EL.
  */
-ARMMMUIdx arm_mmu_idx_el(CPUARMState *env, int el);
+ARMMMUIdx arm_mmu_idx_el(const CPUARMState *env, int el);
 
 /**
  * arm_mmu_idx:
@@ -1197,7 +1197,7 @@ ARMMMUIdx arm_mmu_idx_el(CPUARMState *env, int el);
  *
  * Return the full ARMMMUIdx for the current translation regime.
  */
-ARMMMUIdx arm_mmu_idx(CPUARMState *env);
+ARMMMUIdx arm_mmu_idx(const CPUARMState *env);
 
 /**
  * arm_stage1_mmu_idx:
@@ -1210,13 +1210,13 @@ static inline ARMMMUIdx stage_1_mmu_idx(ARMMMUIdx mmu_idx)
 {
     return ARMMMUIdx_Stage1_E0;
 }
-static inline ARMMMUIdx arm_stage1_mmu_idx(CPUARMState *env)
+static inline ARMMMUIdx arm_stage1_mmu_idx(const CPUARMState *env)
 {
     return ARMMMUIdx_Stage1_E0;
 }
 #else
 ARMMMUIdx stage_1_mmu_idx(ARMMMUIdx mmu_idx);
-ARMMMUIdx arm_stage1_mmu_idx(CPUARMState *env);
+ARMMMUIdx arm_stage1_mmu_idx(const CPUARMState *env);
 #endif
 
 /**
