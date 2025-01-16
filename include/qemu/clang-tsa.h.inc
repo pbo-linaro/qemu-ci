@@ -1,5 +1,5 @@
-#ifndef CLANG_TSA_H
-#define CLANG_TSA_H
+#ifndef CLANG_TSA_H_INC
+#define CLANG_TSA_H_INC
 
 /*
  * Copyright 2018 Jarkko Hietaniemi <jhi@iki.fi>
@@ -23,6 +23,10 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+#ifndef COMPILER_H
+#error Cannot include this header directly
+#endif
 
 /* http://clang.llvm.org/docs/ThreadSafetyAnalysis.html
  *

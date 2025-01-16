@@ -7,6 +7,8 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#include "qemu/clang-tsa.h.inc"
+
 #define HOST_BIG_ENDIAN (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
 
 /* HOST_LONG_BITS is the size of a native pointer in bits. */
