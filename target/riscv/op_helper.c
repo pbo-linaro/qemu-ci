@@ -269,8 +269,10 @@ target_ulong helper_sret(CPURISCVState *env)
     }
 
     target_ulong retpc = env->sepc;
-    if (!riscv_has_ext(env, RVC) && (retpc & 0x3)) {
-        riscv_raise_exception(env, RISCV_EXCP_INST_ADDR_MIS, GETPC());
+    if (!riscv_has_ext(env, RVC) && !env_archcpu(env)->cfg.ext_zca) {
+        if ((retpc & 0x3) != 0) {
+            riscv_raise_exception(env, RISCV_EXCP_INST_ADDR_MIS, GETPC());
+        }
     }
 
     if (get_field(env->mstatus, MSTATUS_TSR) && !(env->priv >= PRV_M)) {
@@ -328,8 +330,10 @@ target_ulong helper_mret(CPURISCVState *env)
     }
 
     target_ulong retpc = env->mepc;
-    if (!riscv_has_ext(env, RVC) && (retpc & 0x3)) {
-        riscv_raise_exception(env, RISCV_EXCP_INST_ADDR_MIS, GETPC());
+    if (!riscv_has_ext(env, RVC) && !env_archcpu(env)->cfg.ext_zca) {
+        if ((retpc & 0x3) != 0) {
+            riscv_raise_exception(env, RISCV_EXCP_INST_ADDR_MIS, GETPC());
+        }
     }
 
     uint64_t mstatus = env->mstatus;
