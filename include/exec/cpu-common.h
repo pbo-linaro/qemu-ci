@@ -250,6 +250,11 @@ static inline ArchCPU *env_archcpu(CPUArchState *env)
     return (void *)env - sizeof(CPUState);
 }
 
+static inline const ArchCPU *const_env_archcpu(const CPUArchState *env)
+{
+    return (const void *)env - sizeof(CPUState);
+}
+
 /**
  * env_cpu_const(env)
  * @env: The architecture environment
