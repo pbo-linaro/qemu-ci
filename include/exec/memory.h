@@ -104,9 +104,14 @@ struct MemoryRegionSection {
     hwaddr offset_within_region;
     hwaddr offset_within_address_space;
     bool readonly;
+    bool ram_device;
     bool nonvolatile;
     bool unmergeable;
 };
+
+/* memory region flag */
+#define MRF_READONLY 0x1
+#define MRF_RAMDEV   0x2
 
 typedef struct IOMMUTLBEntry IOMMUTLBEntry;
 
@@ -742,7 +747,7 @@ void ram_discard_manager_unregister_listener(RamDiscardManager *rdm,
  * Return: true on success, else false setting @errp with error.
  */
 bool memory_get_xlat_addr(IOMMUTLBEntry *iotlb, void **vaddr,
-                          ram_addr_t *ram_addr, bool *read_only,
+                          ram_addr_t *ram_addr, uint32_t *flag,
                           bool *mr_has_discard_manager, Error **errp);
 
 typedef struct CoalescedMemoryRange CoalescedMemoryRange;
