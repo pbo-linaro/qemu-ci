@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250115-pmu_minor_fixes-v1-0-c32388defb02@rivosinc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] target/riscv: Fix the hpmevent mask
+  [32m✓[0m [PATCH 2/2] target/riscv: Mask out upper sscofpmf bits during validation
+  ---
+  [32m✓[0m Signed: DKIM/rivosinc-com.20230601.gappssmtp.com (From: atishp@rivosinc.com)
+---
+Total patches: 2
+---
+ Base: base-commit b82a273fb2210edf7beb9e5ca1401927fbcbe164 not known, ignoring
+Applying: target/riscv: Fix the hpmevent mask
+Patch failed at 0001 target/riscv: Fix the hpmevent mask
+error: patch failed: target/riscv/cpu_bits.h:933
+error: target/riscv/cpu_bits.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
