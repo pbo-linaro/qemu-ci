@@ -1,0 +1,75 @@
+Grabbing thread from lore.kernel.org/all/20250117055552.108376-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 51 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 406 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/50] target/riscv: rvv: fix typo in vext continuous ldst function names
+  [32m✓[0m [PATCH 2/50] target/riscv: rvv: speed up small unit-stride loads and stores
+  [32m✓[0m [PATCH 3/50] riscv/gdbstub: add V bit to priv reg
+  [32m✓[0m [PATCH 4/50] target/riscv: add shcounterenw
+  [32m✓[0m [PATCH 5/50] target/riscv: add shvstvala
+  [32m✓[0m [PATCH 6/50] target/riscv: add shtvala
+  [32m✓[0m [PATCH 7/50] target/riscv: add shvstvecd
+  [32m✓[0m [PATCH 8/50] target/riscv: add shvsatpa
+  [32m✓[0m [PATCH 9/50] target/riscv: add shgatpa
+  [32m✓[0m [PATCH 10/50] target/riscv/tcg: add sha
+  [32m✓[0m [PATCH 11/50] target/riscv: use RISCVException enum in exception helpers
+  [32m✓[0m [PATCH 12/50] target/riscv: add trace in riscv_raise_exception()
+  [32m✓[0m [PATCH 13/50] target/riscv: Remove obsolete pointer masking extension code.
+  [32m✓[0m [PATCH 14/50] target/riscv: Add new CSR fields for S{sn, mn, m}pm extensions as part of Zjpm v1.0
+  [32m✓[0m [PATCH 15/50] target/riscv: Add helper functions to calculate current number of masked bits for pointer masking
+  [32m✓[0m [PATCH 16/50] target/riscv: Add pointer masking tb flags
+  [32m✓[0m [PATCH 17/50] target/riscv: Update address modify functions to take into account pointer masking
+  [32m✓[0m [PATCH 18/50] target/riscv: Apply pointer masking for virtualized memory accesses
+  [32m✓[0m [PATCH 19/50] target/riscv: Enable updates for pointer masking variables and thus enable pointer masking extension
+  [32m✓[0m [PATCH 20/50] target/riscv: Add 'ext_smrnmi' in the RISCVCPUConfig
+  [32m✓[0m [PATCH 21/50] target/riscv: Add Smrnmi CSRs
+  [32m✓[0m [PATCH 22/50] target/riscv: Handle Smrnmi interrupt and exception
+  [32m✓[0m [PATCH 23/50] target/riscv: Add Smrnmi mnret instruction
+  [32m✓[0m [PATCH 24/50] target/riscv: Add Smrnmi cpu extension
+  [32m✓[0m [PATCH 25/50] target/riscv: Add Zicfilp support for Smrnmi
+  [32m✓[0m [PATCH 26/50] target/riscv: Have kvm_riscv_get_timebase_frequency() take RISCVCPU cpu
+  [32m✓[0m [PATCH 27/50] hw/riscv/virt: Remove unnecessary use of &first_cpu
+  [32m✓[0m [PATCH 28/50] target/riscv: Add properties for Indirect CSR Access extension
+  [32m✓[0m [PATCH 29/50] target/riscv: Decouple AIA processing from xiselect and xireg
+  [32m✓[0m [PATCH 30/50] target/riscv: Enable S*stateen bits for AIA
+  [32m✓[0m [PATCH 31/50] target/riscv: Support generic CSR indirect access
+  [32m✓[0m [PATCH 32/50] target/riscv: Add properties for counter delegation ISA extensions
+  [32m✓[0m [PATCH 33/50] target/riscv: Add counter delegation definitions
+  [32m✓[0m [PATCH 34/50] target/riscv: Add select value range check for counter delegation
+  [32m✓[0m [PATCH 35/50] target/riscv: Add counter delegation/configuration support
+  [32m✓[0m [PATCH 36/50] target/riscv: Invoke pmu init after feature enable
+  [32m✓[0m [PATCH 37/50] target/riscv: Add implied rule for counter delegation extensions
+  [32m✓[0m [PATCH 38/50] target/riscv: Add configuration for S[m|s]csrind, Smcdeleg/Ssccfg
+  [32m✓[0m [PATCH 39/50] target/riscv: Fix henvcfg potentially containing stale bits
+  [32m✓[0m [PATCH 40/50] target/riscv: Add Ssdbltrp CSRs handling
+  [32m✓[0m [PATCH 41/50] target/riscv: Implement Ssdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH 42/50] target/riscv: Implement Ssdbltrp exception handling
+  [32m✓[0m [PATCH 43/50] target/riscv: Add Ssdbltrp ISA extension enable switch
+  [32m✓[0m [PATCH 44/50] target/riscv: Add Smdbltrp CSRs handling
+  [32m✓[0m [PATCH 45/50] target/riscv: Implement Smdbltrp sret, mret and mnret behavior
+  [32m✓[0m [PATCH 46/50] target/riscv: Implement Smdbltrp behavior
+  [32m✓[0m [PATCH 47/50] target/riscv: Add Smdbltrp ISA extension enable switch
+  [32m✓[0m [PATCH 48/50] hw/riscv/riscv-iommu.c: Introduce a translation tag for the page table cache
+  [32m✓[0m [PATCH 49/50] target/riscv: Support Supm and Sspm as part of Zjpm v1.0
+  [32m✓[0m [PATCH 50/50] hw/char/riscv_htif: Convert HTIF_DEBUG() to trace events
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 50
+---
+Applying: target/riscv: rvv: fix typo in vext continuous ldst function names
+Applying: target/riscv: rvv: speed up small unit-stride loads and stores
+Applying: riscv/gdbstub: add V bit to priv reg
+Applying: target/riscv: add shcounterenw
+Patch failed at 0004 target/riscv: add shcounterenw
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/RHCT' without full index line
+error: tests/data/acpi/riscv64/virt/RHCT: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
