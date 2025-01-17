@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250117092657.1051233-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/10] rust: pl011: remove unnecessary "extern crate"
+  [32m✓[0m [PATCH 2/10] rust: pl011: hide unnecessarily "pub" items from outside pl011::device
+  [32m✓[0m [PATCH 3/10] rust: pl011: extract conversion to RegisterOffset
+  [32m✓[0m [PATCH 4/10] rust: pl011: extract CharBackend receive logic into a separate function
+  [32m✓[0m [PATCH 5/10] rust: pl011: pull interrupt updates out of read/write ops
+  [32m✓[0m [PATCH 6/10] rust: pl011: extract PL011Registers
+  [32m✓[0m [PATCH 7/10] rust: pl011: wrap registers with BqlRefCell
+  [32m✓[0m [PATCH 8/10] rust: pl011: remove duplicate definitions
+  [32m✓[0m [PATCH 9/10] rust: pl011: pull device-specific code out of MemoryRegionOps callbacks
+  [32m✓[0m [PATCH 10/10] rust: qdev: make reset take a shared reference
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 10
+---
+Applying: rust: pl011: remove unnecessary "extern crate"
+Applying: rust: pl011: hide unnecessarily "pub" items from outside pl011::device
+Patch failed at 0002 rust: pl011: hide unnecessarily "pub" items from outside pl011::device
+error: patch failed: rust/hw/char/pl011/src/lib.rs:42
+error: rust/hw/char/pl011/src/lib.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
