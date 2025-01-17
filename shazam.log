@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250117001542.8290-1-iii@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 67 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/8] gdbstub: Allow the %d placeholder in the socket path
+  [32m✓[0m [PATCH v6 2/8] gdbstub: Try unlinking the unix socket before binding
+  [32m✓[0m [PATCH v6 3/8] user: Introduce user/signal.h
+  [32m✓[0m [PATCH v6 4/8] user: Introduce host_interrupt_signal
+  [32m✓[0m [PATCH v6 5/8] osdep: Introduce qemu_kill_thread()
+    + Reviewed-by: Warner Losh <imp@bsidmp.com> ([31m✗[0m DKIM/bsdimp-com.20230601.gappssmtp.com)
+  [32m✓[0m [PATCH v6 6/8] gdbstub: Allow late attachment
+  [32m✓[0m [PATCH v6 7/8] docs/user: Document the %d placeholder and suspend=n QEMU_GDB features
+  [32m✓[0m [PATCH v6 8/8] tests/tcg: Add late gdbstub attach test
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: iii@linux.ibm.com)
+---
+Total patches: 8
+---
+Applying: gdbstub: Allow the %d placeholder in the socket path
+Applying: gdbstub: Try unlinking the unix socket before binding
+Patch failed at 0002 gdbstub: Try unlinking the unix socket before binding
+error: patch failed: gdbstub/user.c:424
+error: gdbstub/user.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
