@@ -48,12 +48,12 @@ SRST
 
     For architectures which aim to support live migration compatibility
     across releases, each release will introduce a new versioned machine
-    type. For example, the 2.8.0 release introduced machine types
-    "pc-i440fx-2.8" and "pc-q35-2.8" for the x86\_64/i686 architectures.
+    type. For example, the 9.1.0 release introduced machine types
+    "pc-i440fx-9.1" and "pc-q35-9.1" for the x86\_64/i686 architectures.
 
-    To allow live migration of guests from QEMU version 2.8.0, to QEMU
-    version 2.9.0, the 2.9.0 version must support the "pc-i440fx-2.8"
-    and "pc-q35-2.8" machines too. To allow users live migrating VMs to
+    To allow live migration of guests from QEMU version 9.1.0 to QEMU
+    version 9.2.0, the 9.2.0 version must support the "pc-i440fx-9.1"
+    and "pc-q35-9.1" machines too. To allow users live migrating VMs to
     skip multiple intermediate releases when upgrading, new releases of
     QEMU will support machine types from many previous versions.
 

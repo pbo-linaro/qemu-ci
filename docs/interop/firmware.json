@@ -97,7 +97,7 @@
 #            machine types, not aliases. Glob patterns are understood,
 #            which is especially useful for versioned machine types.
 #            (For example, the glob pattern "pc-i440fx-*" matches
-#            "pc-i440fx-2.12".) On the QEMU command line, "-machine
+#            "pc-i440fx-9.1".) On the QEMU command line, "-machine
 #            type=..." specifies the requested machine type (but that
 #            option does not accept glob patterns).
 #
