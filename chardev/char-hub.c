@@ -224,8 +224,8 @@ static void hub_chr_update_read_handlers(Chardev *chr)
 bool hub_chr_attach_frontend(HubChardev *d, CharBackend *b, Error **errp)
 {
     if (d->frontend) {
-        error_setg(errp, "hub: multiplexed chardev '%s' is already used "
-                   "for multiplexing", d->parent.label);
+        error_setg(errp, "hub: chardev '%s' is already used",
+                   d->parent.label);
         return false;
     }
     d->frontend = b;
