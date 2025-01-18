@@ -255,6 +255,17 @@ typedef struct direntry_t {
     uint32_t size;
 } QEMU_PACKED direntry_t;
 
+typedef struct lfn_direntry_t {
+    uint8_t sequence;
+    uint8_t name01[10];
+    uint8_t attributes;
+    uint8_t direntry_type;
+    uint8_t sfn_checksum;
+    uint8_t name0e[12];
+    uint16_t begin;
+    uint8_t name1c[4];
+} QEMU_PACKED lfn_direntry_t;
+
 /* this structure are used to transparently access the files */
 
 typedef struct mapping_t {
@@ -399,11 +410,26 @@ static void init_mbr(BDRVVVFATState *s, int cyls, int heads, int secs)
 
 /* direntry functions */
 
+static unsigned write_lfn_part(uint8_t *dest, unsigned dsize,
+                               const gunichar2 *lptr, const gunichar2 *lend)
+{
+    unsigned i = 0;
+    for (; i < dsize / 2 && lptr + i <= lend; ++i) { /* incl. trailing U+0000 */
+        /* can't use cpu_to_be16() since dest is unaligned */
+        dest[i / 2 + 0] = lptr[i] & 0xff;
+        dest[i / 2 + 1] = lptr[i] >> 8;
+    }
+    for (; i < dsize / 2; ++i) { /* fill the rest with U+FFFF */
+        dest[i / 2 + 0] = dest[i / 2 + 1] = 0xff;
+    }
+    return i; /* return number of elements written (=dsize) */
+}
+
 static direntry_t *create_long_filename(BDRVVVFATState *s, const char *filename)
 {
-    int number_of_entries, i;
+    unsigned number_of_entries, enidx;
+    gunichar2 *lptr, *lend;
     glong length;
-    direntry_t *entry;
 
     gunichar2 *longname = g_utf8_to_utf16(filename, -1, NULL, &length, NULL);
     if (!longname) {
@@ -411,31 +437,26 @@ static direntry_t *create_long_filename(BDRVVVFATState *s, const char *filename)
         return NULL;
     }
 
-    number_of_entries = DIV_ROUND_UP(length * 2, 26);
+    /*
+     * each lfn_direntry holds 13 utf16 chars (26 bytes) of the file name,
+     * the name is split into several directory entries.
+     */
+    number_of_entries = DIV_ROUND_UP(length, 13);
 
-    for(i=0;i<number_of_entries;i++) {
-        entry=array_get_next(&(s->directory));
-        entry->attributes=0xf;
-        entry->reserved[0]=0;
-        entry->begin=0;
-        entry->name[0]=(number_of_entries-i)|(i==0?0x40:0);
-    }
-    for(i=0;i<26*number_of_entries;i++) {
-        int offset=(i%26);
-        if(offset<10) offset=1+offset;
-        else if(offset<22) offset=14+offset-10;
-        else offset=28+offset-22;
-        entry=array_get(&(s->directory),s->directory.next-1-(i/26));
-        if (i >= 2 * length + 2) {
-            entry->name[offset] = 0xff;
-        } else if (i % 2 == 0) {
-            entry->name[offset] = longname[i / 2] & 0xff;
-        } else {
-            entry->name[offset] = longname[i / 2] >> 8;
-        }
+    lend = longname + length; /* pointer past the end of longname */
+    for (enidx = 0, lptr = longname; enidx < number_of_entries; enidx++) {
+        lfn_direntry_t *en = array_get_next(&(s->directory));
+        en->sequence = (number_of_entries - enidx) | (enidx == 0 ? 0x40 : 0);
+        en->attributes = 0xf;
+        en->direntry_type = 0;
+        en->begin = 0;
+        /* each lftn_direntry has 3 pieces to hold parts of long file name */
+        lptr += write_lfn_part(en->name01, ARRAY_SIZE(en->name01), lptr, lend);
+        lptr += write_lfn_part(en->name0e, ARRAY_SIZE(en->name0e), lptr, lend);
+        lptr += write_lfn_part(en->name1c, ARRAY_SIZE(en->name1c), lptr, lend);
     }
     g_free(longname);
-    return array_get(&(s->directory),s->directory.next-number_of_entries);
+    return array_get(&s->directory, s->directory.next - number_of_entries);
 }
 
 static char is_free(const direntry_t* direntry)
@@ -731,7 +752,7 @@ static inline direntry_t* create_short_and_long_name(BDRVVVFATState* s,
         /* calculate anew, because realloc could have taken place */
         entry_long=array_get(&(s->directory),long_index);
         while(entry_long<entry && is_long_name(entry_long)) {
-            entry_long->reserved[1]=chksum;
+            ((lfn_direntry_t *)entry_long)->sfn_checksum = chksum;
             entry_long++;
         }
     }
