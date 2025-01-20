@@ -9,12 +9,14 @@
  */
 
 #include "qemu/osdep.h"
+#include "qemu/datadir.h"
 #include "exec/address-spaces.h"
 #include "hw/arm/bsa.h"
 #include "hw/arm/fsl-imx8mp.h"
 #include "hw/intc/arm_gicv3.h"
 #include "hw/misc/unimp.h"
 #include "hw/boards.h"
+#include "hw/loader.h"
 #include "system/system.h"
 #include "target/arm/cpu-qom.h"
 #include "qapi/qmp/qlist.h"
@@ -266,6 +268,7 @@ static void fsl_imx8mp_realize(DeviceState *dev, Error **errp)
     MachineState *ms = MACHINE(qdev_get_machine());
     FslImx8mpState *s = FSL_IMX8MP(dev);
     DeviceState *gicdev = DEVICE(&s->gic);
+    g_autofree char *filename = NULL;
     int i;
 
     if (ms->smp.cpus > FSL_IMX8MP_NUM_CPUS) {
@@ -648,10 +651,25 @@ static void fsl_imx8mp_realize(DeviceState *dev, Error **errp)
     sysbus_mmio_map(SYS_BUS_DEVICE(&s->pcie_phy), 0,
                     fsl_imx8mp_memmap[FSL_IMX8MP_PCIE_PHY1].addr);
 
+    /* ROM memory */
+    if (!memory_region_init_ram(&s->boot_rom, OBJECT(dev),
+                                fsl_imx8mp_memmap[FSL_IMX8MP_BOOT_ROM].name,
+                                fsl_imx8mp_memmap[FSL_IMX8MP_BOOT_ROM].size,
+                                errp)) {
+        return;
+    }
+    filename = qemu_find_file(QEMU_FILE_TYPE_BIOS, "imx8mp-boot.rom");
+    load_image_size(filename, memory_region_get_ram_ptr(&s->boot_rom),
+                    memory_region_size(&s->boot_rom));
+    memory_region_add_subregion(get_system_memory(),
+                                fsl_imx8mp_memmap[FSL_IMX8MP_BOOT_ROM].addr,
+                                &s->boot_rom);
+
     /* Unimplemented devices */
     for (i = 0; i < ARRAY_SIZE(fsl_imx8mp_memmap); i++) {
         switch (i) {
         case FSL_IMX8MP_ANA_PLL:
+        case FSL_IMX8MP_BOOT_ROM:
         case FSL_IMX8MP_CCM:
         case FSL_IMX8MP_GIC_DIST:
         case FSL_IMX8MP_GIC_REDIST:

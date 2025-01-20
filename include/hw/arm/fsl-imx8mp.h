@@ -67,6 +67,7 @@ struct FslImx8mpState {
     DesignwarePCIEHost pcie;
     FslImx8mPciePhyState   pcie_phy;
     OrIRQState         gpt5_gpt6_irq;
+    MemoryRegion       boot_rom;
 
     uint32_t           phy_num;
     bool               phy_connected;
