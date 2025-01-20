@@ -2011,6 +2011,27 @@ void memory_region_unregister_iommu_notifier(MemoryRegion *mr,
     memory_region_update_iommu_notify_flags(iommu_mr, NULL);
 }
 
+ssize_t memory_region_iommu_ats_request_translation(IOMMUMemoryRegion *iommu_mr,
+                                                    bool priv_req,
+                                                    bool exec_req,
+                                                    hwaddr addr, size_t length,
+                                                    bool no_write,
+                                                    IOMMUTLBEntry *result,
+                                                    size_t result_length,
+                                                    uint32_t *err_count)
+{
+    IOMMUMemoryRegionClass *imrc =
+        memory_region_get_iommu_class_nocheck(iommu_mr);
+
+    if (!imrc->iommu_ats_request_translation) {
+        return -ENODEV;
+    }
+
+    return imrc->iommu_ats_request_translation(iommu_mr, priv_req, exec_req,
+                                               addr, length, no_write, result,
+                                               result_length, err_count);
+}
+
 void memory_region_notify_iommu_one(IOMMUNotifier *notifier,
                                     const IOMMUTLBEvent *event)
 {

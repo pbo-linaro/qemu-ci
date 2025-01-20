@@ -148,6 +148,10 @@ struct IOMMUTLBEntry {
     uint32_t         pasid;
 };
 
+/* Check if an IOMMU TLB entry indicates a translation error */
+#define IOMMU_TLB_ENTRY_TRANSLATION_ERROR(entry) ((((entry)->perm) & IOMMU_RW) \
+                                                    == IOMMU_NONE)
+
 /*
  * Bitmap for different IOMMUNotifier capabilities. Each notifier can
  * register with one or multiple IOMMU Notifier capability bit(s).
@@ -525,6 +529,20 @@ struct IOMMUMemoryRegionClass {
      * @iommu: the IOMMUMemoryRegion
      */
     int (*num_indexes)(IOMMUMemoryRegion *iommu);
+
+    /**
+     * @iommu_ats_request_translation:
+     * This method must be implemented if the IOMMU has ATS enabled
+     *
+     * @see pci_ats_request_translation_pasid
+     */
+    ssize_t (*iommu_ats_request_translation)(IOMMUMemoryRegion *iommu,
+                                             bool priv_req, bool exec_req,
+                                             hwaddr addr, size_t length,
+                                             bool no_write,
+                                             IOMMUTLBEntry *result,
+                                             size_t result_length,
+                                             uint32_t *err_count);
 };
 
 typedef struct RamDiscardListener RamDiscardListener;
@@ -1881,6 +1899,14 @@ void memory_region_iommu_replay(IOMMUMemoryRegion *iommu_mr, IOMMUNotifier *n);
  */
 void memory_region_unregister_iommu_notifier(MemoryRegion *mr,
                                              IOMMUNotifier *n);
+
+ssize_t memory_region_iommu_ats_request_translation(IOMMUMemoryRegion *iommu_mr,
+                                                bool priv_req, bool exec_req,
+                                                hwaddr addr, size_t length,
+                                                bool no_write,
+                                                IOMMUTLBEntry *result,
+                                                size_t result_length,
+                                                uint32_t *err_count);
 
 /**
  * memory_region_iommu_get_attr: return an IOMMU attr if get_attr() is
