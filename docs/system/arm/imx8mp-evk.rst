@@ -14,6 +14,7 @@ The ``imx8mp-evk`` machine implements the following devices:
  * Generic Interrupt Controller (GICv3)
  * 4 UARTs
  * 3 USDHC Storage Controllers
+ * 1 Designware PCI Express Controller
  * Secure Non-Volatile Storage (SNVS) including an RTC
  * Clock Tree
 
@@ -62,3 +63,15 @@ Now that everything is prepared the newly built image can be run in the QEMU
       -dtb imx8mp-evk-patched.dtb \
       -append "root=/dev/mmcblk2p2" \
       -drive file=sdcard.img,if=sd,bus=2,format=raw,id=mmcblk2
+
+Using PCI Devices
+-----------------
+
+The PCI Express controller spawns two PCI buses, of which only one can be used.
+By default QEMU assigns the wrong bus, so the correct one has to be specified
+manually by adding ``bus=dw-pcie``. For example, when adding an Intel e1000
+network card, the command line looks like:
+
+.. code-block:: bash
+
+  $ qemu-system-aarch64 -M imximp-evk ... -device virtio-net-pci,bus=dw-pcie
