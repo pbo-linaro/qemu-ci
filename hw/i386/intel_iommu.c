@@ -4159,12 +4159,10 @@ static void vtd_report_ir_illegal_access(VTDAddressSpace *vtd_as,
     bool is_fpd_set = false;
     VTDContextEntry ce;
 
-    assert(vtd_as->pasid != PCI_NO_PASID);
-
     /* Try out best to fetch FPD, we can't do anything more */
     if (vtd_dev_to_context_entry(s, bus_n, vtd_as->devfn, &ce) == 0) {
         is_fpd_set = ce.lo & VTD_CONTEXT_ENTRY_FPD;
-        if (!is_fpd_set && s->root_scalable) {
+        if (!is_fpd_set && s->root_scalable && vtd_as->pasid != PCI_NO_PASID) {
             vtd_ce_get_pasid_fpd(s, &ce, &is_fpd_set, vtd_as->pasid);
         }
     }
@@ -4738,6 +4736,71 @@ static IOMMUMemoryRegion *vtd_get_memory_region_pasid(PCIBus *bus,
     return &vtd_as->iommu;
 }
 
+static IOMMUTLBEntry vtd_iommu_ats_do_translate(IOMMUMemoryRegion *iommu,
+                                                hwaddr addr,
+                                                IOMMUAccessFlags flags,
+                                                int iommu_idx)
+{
+    IOMMUTLBEntry entry;
+    VTDAddressSpace *vtd_as = container_of(iommu, VTDAddressSpace, iommu);
+
+    if (vtd_is_interrupt_addr(addr)) {
+        vtd_report_ir_illegal_access(vtd_as, addr, flags & IOMMU_WO);
+        entry.iova = 0;
+        entry.translated_addr = 0;
+        entry.addr_mask = ~VTD_PAGE_MASK_4K;
+        entry.perm = IOMMU_NONE;
+        entry.pasid = PCI_NO_PASID;
+    } else {
+        entry = vtd_iommu_translate(iommu, addr, flags, iommu_idx);
+    }
+    return entry;
+}
+
+static ssize_t vtd_iommu_ats_request_translation(IOMMUMemoryRegion *iommu,
+                                                 bool priv_req, bool exec_req,
+                                                 hwaddr addr, size_t length,
+                                                 bool no_write,
+                                                 IOMMUTLBEntry *result,
+                                                 size_t result_length,
+                                                 uint32_t *err_count)
+{
+    IOMMUAccessFlags flags = IOMMU_ACCESS_FLAG_FULL(true, !no_write, exec_req,
+                                                    priv_req, false, false);
+    ssize_t res_index = 0;
+    hwaddr target_address = addr + length;
+    IOMMUTLBEntry entry;
+
+    *err_count = 0;
+
+    while ((addr < target_address) && (res_index < result_length)) {
+        entry = vtd_iommu_ats_do_translate(iommu, addr, flags, 0);
+        if (!IOMMU_TLB_ENTRY_TRANSLATION_ERROR(&entry)) { /* Translation done */
+            /*
+             * 4.1.2 : Global Mapping (G) : Remapping hardware provides a value
+             * of 0 in this field
+             */
+            entry.perm &= ~IOMMU_GLOBAL;
+        } else {
+            *err_count += 1;
+        }
+        result[res_index] = entry;
+        res_index += 1;
+        addr = (addr & (~entry.addr_mask)) + (entry.addr_mask + 1);
+    }
+
+    /* Buffer too small */
+    if (addr < target_address) {
+        return -ENOMEM;
+    }
+    return res_index;
+}
+
+static uint64_t vtd_get_min_page_size(IOMMUMemoryRegion *iommu)
+{
+    return VTD_PAGE_SIZE;
+}
+
 static PCIIOMMUOps vtd_iommu_ops = {
     .get_address_space = vtd_host_dma_iommu,
     .get_memory_region_pasid = vtd_get_memory_region_pasid,
@@ -4915,6 +4978,8 @@ static void vtd_iommu_memory_region_class_init(ObjectClass *klass,
     imrc->translate = vtd_iommu_translate;
     imrc->notify_flag_changed = vtd_iommu_notify_flag_changed;
     imrc->replay = vtd_iommu_replay;
+    imrc->iommu_ats_request_translation = vtd_iommu_ats_request_translation;
+    imrc->get_min_page_size = vtd_get_min_page_size;
 }
 
 static const TypeInfo vtd_iommu_memory_region_info = {
