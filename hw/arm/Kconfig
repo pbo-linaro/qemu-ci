@@ -584,6 +584,7 @@ config FSL_IMX8MP
     imply I2C_DEVICES
     select ARM_GIC
     select IMX
+    select IMX_FEC
     select IMX_I2C
     select OR_IRQ
     select PCI_EXPRESS_DESIGNWARE
