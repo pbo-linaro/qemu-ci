@@ -513,6 +513,7 @@ config FSL_IMX6
     select IMX_I2C
     select IMX_USBPHY
     select WDT_IMX2
+    select OR_IRQ
     select PL310  # cache controller
     select PCI_EXPRESS_DESIGNWARE
     select SDHCI
@@ -571,6 +572,7 @@ config FSL_IMX7
     select IMX_FEC
     select IMX_I2C
     select WDT_IMX2
+    select OR_IRQ
     select PCI_EXPRESS_DESIGNWARE
     select SDHCI
     select UNIMP
