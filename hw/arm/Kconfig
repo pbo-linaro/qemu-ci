@@ -582,6 +582,7 @@ config FSL_IMX8MP
     imply TEST_DEVICES
     select ARM_GIC
     select IMX
+    select SDHCI
     select UNIMP
 
 config FSL_IMX8MP_EVK

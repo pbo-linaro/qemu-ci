@@ -13,6 +13,7 @@ The ``imx8mp-evk`` machine implements the following devices:
  * Up to 4 Cortex-A53 Cores
  * Generic Interrupt Controller (GICv3)
  * 4 UARTs
+ * 3 USDHC Storage Controllers
  * Secure Non-Volatile Storage (SNVS) including an RTC
  * Clock Tree
 
@@ -25,25 +26,39 @@ for loading a Linux kernel.
 Direct Linux Kernel Boot
 ''''''''''''''''''''''''
 
-Linux mainline v6.12 release is tested at the time of writing. To build a Linux
-mainline kernel that can be booted by the ``imx8mp-evk`` machine, simply
-configure the kernel using the defconfig configuration:
+Probably the easiest way to get started with a whole Linux system on the machine
+is to generate an image with Buildroot. Version 2024.11.1 is tested at the time
+of writing and involves three steps. First run the following command in the
+toplevel directory of the Buildroot source tree:
 
 .. code-block:: bash
 
-  $ export ARCH=arm64
-  $ export CROSS_COMPILE=aarch64-linux-gnu-
-  $ make defconfig
+  $ make freescale_imx8mpevk_defconfig
   $ make
 
-To boot the newly built Linux kernel in QEMU with the ``imx8mp-evk`` machine,
-run:
+Once finished successfully there is an ``output/image`` subfolder. Navigate into
+it and resize the SD card image to a power of two:
+
+.. code-block:: bash
+
+  $ qemu-img resize sdcard.img 256M
+
+Finally, the device tree needs to be patched with the following commands which
+will remove the ``cpu-idle-states`` properties from CPU nodes:
+
+.. code-block:: bash
+
+  $ dtc imx8mp-evk.dtb | sed '/cpu-idle-states/d' > imx8mp-evk-patched.dts
+  $ dtc imx8mp-evk-patched.dts -o imx8mp-evk-patched.dtb
+
+Now that everything is prepared the newly built image can be run in the QEMU
+``imx8mp-evk`` machine:
 
 .. code-block:: bash
 
   $ qemu-system-aarch64 -M imx8mp-evk -smp 4 -m 3G \
       -display none -serial null -serial stdio \
-      -kernel arch/arm64/boot/Image \
-      -dtb arch/arm64/boot/dts/freescale/imx8mp-evk.dtb \
-      -initrd /path/to/rootfs.ext4 \
-      -append "root=/dev/ram"
+      -kernel Image \
+      -dtb imx8mp-evk-patched.dtb \
+      -append "root=/dev/mmcblk2p2" \
+      -drive file=sdcard.img,if=sd,bus=2,format=raw,id=mmcblk2
