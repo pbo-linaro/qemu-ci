@@ -20,5 +20,10 @@ config PCF8574
     bool
     depends on I2C
 
+config TCA6416
+    bool
+    depends on I2C
+    default y if I2C_DEVICES
+
 config ZAURUS_SCOOP
     bool
