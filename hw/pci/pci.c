@@ -2896,6 +2896,52 @@ void pci_device_unset_iommu_device(PCIDevice *dev)
     }
 }
 
+ssize_t pci_ats_request_translation_pasid(PCIDevice *dev, uint32_t pasid,
+                                          bool priv_req, bool exec_req,
+                                          hwaddr addr, size_t length,
+                                          bool no_write, IOMMUTLBEntry *result,
+                                          size_t result_length,
+                                          uint32_t *err_count)
+{
+    IOMMUMemoryRegion *iommu_mr = pci_device_iommu_memory_region_pasid(dev,
+                                                                        pasid);
+
+    assert(result_length);
+
+    if (!iommu_mr || !pcie_ats_enabled(dev)) {
+        return -EPERM;
+    }
+    return memory_region_iommu_ats_request_translation(iommu_mr, priv_req,
+                                                       exec_req, addr, length,
+                                                       no_write, result,
+                                                       result_length,
+                                                       err_count);
+}
+
+int pci_register_iommu_tlb_event_notifier(PCIDevice *dev, uint32_t pasid,
+                                          IOMMUNotifier *n)
+{
+    IOMMUMemoryRegion *iommu_mr = pci_device_iommu_memory_region_pasid(dev,
+                                                                        pasid);
+    if (!iommu_mr) {
+        return -EPERM;
+    }
+    return memory_region_register_iommu_notifier(MEMORY_REGION(iommu_mr), n,
+                                                 &error_fatal);
+}
+
+int pci_unregister_iommu_tlb_event_notifier(PCIDevice *dev, uint32_t pasid,
+                                             IOMMUNotifier *n)
+{
+    IOMMUMemoryRegion *iommu_mr = pci_device_iommu_memory_region_pasid(dev,
+                                                                        pasid);
+    if (!iommu_mr) {
+        return -EPERM;
+    }
+    memory_region_unregister_iommu_notifier(MEMORY_REGION(iommu_mr), n);
+    return 0;
+}
+
 void pci_setup_iommu(PCIBus *bus, const PCIIOMMUOps *ops, void *opaque)
 {
     /*
