@@ -2825,6 +2825,46 @@ AddressSpace *pci_device_iommu_address_space(PCIDevice *dev)
     return &address_space_memory;
 }
 
+static IOMMUMemoryRegion *pci_device_iommu_memory_region_pasid(PCIDevice *dev,
+                                                               uint32_t pasid)
+{
+    PCIBus *bus;
+    PCIBus *iommu_bus;
+    int devfn;
+
+    /*
+     * This function is for internal use in the module,
+     * we can call it with PCI_NO_PASID
+     */
+    if (!dev->is_master ||
+            ((pasid != PCI_NO_PASID) && !pcie_pasid_enabled(dev))) {
+        return NULL;
+    }
+
+    pci_device_get_iommu_bus_devfn(dev, &bus, &iommu_bus, &devfn);
+    if (iommu_bus && iommu_bus->iommu_ops->get_memory_region_pasid) {
+        return iommu_bus->iommu_ops->get_memory_region_pasid(bus,
+                                 iommu_bus->iommu_opaque, devfn, pasid);
+    }
+    return NULL;
+}
+
+bool pci_iommu_init_iotlb_notifier(PCIDevice *dev, uint32_t pasid,
+                                   IOMMUNotifier *n, IOMMUNotify fn,
+                                   void *opaque)
+{
+    IOMMUMemoryRegion *iommu_mr = pci_device_iommu_memory_region_pasid(dev,
+                                                                        pasid);
+    if (!iommu_mr) {
+        return false;
+    }
+    iommu_notifier_init(n, fn, IOMMU_NOTIFIER_DEVIOTLB_EVENTS, 0, HWADDR_MAX,
+                        memory_region_iommu_attrs_to_index(iommu_mr,
+                                                       MEMTXATTRS_UNSPECIFIED));
+    n->opaque = opaque;
+    return true;
+}
+
 bool pci_device_set_iommu_device(PCIDevice *dev, HostIOMMUDevice *hiod,
                                  Error **errp)
 {
