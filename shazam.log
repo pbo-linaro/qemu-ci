@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250121161817.33654-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] hw/pci-host/bonito: Expose output IRQ as QDev GPIO
+  [32m✓[0m [PATCH 2/6] target/mips: Create clock *after* accelerator vCPU is realized
+  [32m✓[0m [PATCH 3/6] target/mips: Initialize CPU-specific timer/IRQs once in DeviceRealize
+  [32m✓[0m [PATCH 4/6] target/mips: Pass env to cpu_mips_clock_init()
+  [32m✓[0m [PATCH 5/6] target/mips: Move CPU timer from hw/mips/ to target/mips/system/
+  [32m✓[0m [PATCH 6/6] target/mips: Allocate CPU IRQs within CPUMIPSState
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 6
+---
+Applying: hw/pci-host/bonito: Expose output IRQ as QDev GPIO
+Applying: target/mips: Create clock *after* accelerator vCPU is realized
+Applying: target/mips: Initialize CPU-specific timer/IRQs once in DeviceRealize
+Applying: target/mips: Pass env to cpu_mips_clock_init()
+Applying: target/mips: Move CPU timer from hw/mips/ to target/mips/system/
+Applying: target/mips: Allocate CPU IRQs within CPUMIPSState
+Patch failed at 0006 target/mips: Allocate CPU IRQs within CPUMIPSState
+error: patch failed: target/mips/internal.h:160
+error: target/mips/internal.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
