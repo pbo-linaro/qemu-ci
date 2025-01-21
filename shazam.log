@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20250121105613.1286672-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 14 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] tests/functional: Convert the kvm_xen_guest avocado test
+  [32m✓[0m [PATCH 2/9] MAINTAINERS: Remove myself as Avocado Framework reviewer
+  [32m✓[0m [PATCH 3/9] crypto: fix bogus error benchmarking pbkdf on fast machines
+  [32m✓[0m [PATCH 4/9] hw/s390x: Fix crash that occurs when inspecting older versioned machines types
+  [32m✓[0m [PATCH 5/9] pc-bios/s390-ccw/virtio: Add a function to reset a virtio device
+  [32m✓[0m [PATCH 6/9] pc-bios/s390-ccw: Fix boot problem with virtio-net devices
+  [32m✓[0m [PATCH 7/9] pc-bios/s390-ccw/netmain: Fix error messages with regards to the TFTP server
+  [32m✓[0m [PATCH 8/9] pc-bios/s390-ccw: Abort IPL on invalid loadparm
+  [32m✓[0m [PATCH 9/9] pc-bios: Update the s390 bios images with the recent changes
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+Applying: tests/functional: Convert the kvm_xen_guest avocado test
+Applying: MAINTAINERS: Remove myself as Avocado Framework reviewer
+Applying: crypto: fix bogus error benchmarking pbkdf on fast machines
+Applying: hw/s390x: Fix crash that occurs when inspecting older versioned machines types
+Applying: pc-bios/s390-ccw/virtio: Add a function to reset a virtio device
+Applying: pc-bios/s390-ccw: Fix boot problem with virtio-net devices
+Applying: pc-bios/s390-ccw/netmain: Fix error messages with regards to the TFTP server
+Applying: pc-bios/s390-ccw: Abort IPL on invalid loadparm
+Applying: pc-bios: Update the s390 bios images with the recent changes
+Patch failed at 0009 pc-bios: Update the s390 bios images with the recent changes
+error: corrupt binary patch at line 1741: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
