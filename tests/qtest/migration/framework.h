@@ -193,6 +193,9 @@ typedef struct {
      */
     bool live;
 
+    /* set multifd on */
+    bool multifd;
+
     /* Postcopy specific fields */
     void *postcopy_data;
     bool postcopy_preempt;

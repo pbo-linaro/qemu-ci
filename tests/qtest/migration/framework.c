@@ -427,6 +427,14 @@ static int migrate_postcopy_prepare(QTestState **from_ptr,
         migrate_set_capability(to, "postcopy-preempt", true);
     }
 
+    if (args->multifd) {
+        migrate_set_capability(from, "multifd", true);
+        migrate_set_capability(to, "multifd", true);
+
+        migrate_set_parameter_int(from, "multifd-channels", 8);
+        migrate_set_parameter_int(to, "multifd-channels", 8);
+    }
+
     migrate_ensure_non_converge(from);
 
     migrate_prepare_for_dirty_mem(from);

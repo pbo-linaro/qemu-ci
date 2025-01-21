@@ -27,6 +27,15 @@ static void test_postcopy(void)
     test_postcopy_common(&args);
 }
 
+static void test_postcopy_multifd(void)
+{
+    MigrateCommon args = {
+        .multifd = true,
+    };
+
+    test_postcopy_common(&args);
+}
+
 static void test_postcopy_suspend(void)
 {
     MigrateCommon args = {
@@ -83,6 +92,7 @@ void migration_test_add_postcopy(MigrationTestEnv *env)
 {
     if (env->has_uffd) {
         migration_test_add("/migration/postcopy/plain", test_postcopy);
+        migration_test_add("/migration/postcopy/multifd", test_postcopy_multifd);
         migration_test_add("/migration/postcopy/recovery/plain",
                            test_postcopy_recovery);
         migration_test_add("/migration/postcopy/preempt/plain",
