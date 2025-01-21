@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20250121070424.2465942-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v1 1/18] hw/intc/aspeed: Rename INTC to INTC0
+  [PATCH v1 2/18] hw/intc/aspeed: Support different memory region ops
+  [PATCH v1 3/18] hw/intc/aspeed: Introduce a new aspeed_2700_intc0_ops for INTC0
+  [PATCH v1 4/18] hw/intc/aspeed: Support setting different memory and register size
+  [PATCH v1 5/18] hw/intc/aspeed: Introduce helper functions for enable and status registers
+  [PATCH v1 6/18] hw/intc/aspeed: Introduce AspeedINTCIRQ structure to save the irq index and register address
+  [PATCH v1 7/18] hw/intc/aspeed: Introduce IRQ handler function to reduce code duplication
+  [PATCH v1 8/18] hw/intc/aspeed: Add Support for Multi-Output IRQ Handling
+  [PATCH v1 9/18] hw/intc/aspeed: Add ID to trace events for better debugging
+  [PATCH v1 10/18] hw/intc/aspeed: Add Support for AST2700 INTC1 Controller
+  [PATCH v1 11/18] hw/misc/aspeed_scu: Add Support for AST2700/AST2750 A1 Silicon Revisions
+  [PATCH v1 12/18] hw/arm/aspeed_ast27x0: Support two levels of INTC controllers for AST2700 A1
+  [PATCH v1 13/18] hw/arm/aspeed: Rename IRQ table and machine name for AST2700 A0
+  [PATCH v1 14/18] hw/arm/aspeed: Add SoC and Machine Support for AST2700 A1
+  [PATCH v1 15/18] hw/misc/aspeed_hace: Fix coding style
+  [PATCH v1 16/18] hw/misc/aspeed_hace: Add AST2700 support
+  [PATCH v1 17/18] hw/arm/aspeed_ast27x0: Add HACE support for AST2700
+  [PATCH v1 18/18] hw/misc/aspeed_hace: (DROP) Fix boot issue in the Crypto Manager Self Test(WORKAROUND)
+---
+Total patches: 18
+---
+Applying: hw/intc/aspeed: Rename INTC to INTC0
+Applying: hw/intc/aspeed: Support different memory region ops
+Applying: hw/intc/aspeed: Introduce a new aspeed_2700_intc0_ops for INTC0
+Applying: hw/intc/aspeed: Support setting different memory and register size
+Applying: hw/intc/aspeed: Introduce helper functions for enable and status registers
+Applying: hw/intc/aspeed: Introduce AspeedINTCIRQ structure to save the irq index and register address
+Applying: hw/intc/aspeed: Introduce IRQ handler function to reduce code duplication
+Applying: hw/intc/aspeed: Add Support for Multi-Output IRQ Handling
+Applying: hw/intc/aspeed: Add ID to trace events for better debugging
+Applying: hw/intc/aspeed: Add Support for AST2700 INTC1 Controller
+Applying: hw/misc/aspeed_scu: Add Support for AST2700/AST2750 A1 Silicon Revisions
+Applying: hw/arm/aspeed_ast27x0: Support two levels of INTC controllers for AST2700 A1
+Patch failed at 0012 hw/arm/aspeed_ast27x0: Support two levels of INTC controllers for AST2700 A1
+error: patch failed: hw/arm/aspeed_ast27x0.c:67
+error: hw/arm/aspeed_ast27x0.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
