@@ -149,7 +149,14 @@ FWCfgState *fw_cfg_arch_create(MachineState *ms,
 #endif
     fw_cfg_add_i32(fw_cfg, FW_CFG_IRQ0_OVERRIDE, 1);
 
-    fw_cfg_add_bytes(fw_cfg, FW_CFG_HPET, &hpet_cfg, sizeof(hpet_cfg));
+#ifdef CONFIG_HPET
+    PCMachineState *pcms =
+        (PCMachineState *)object_dynamic_cast(OBJECT(ms), TYPE_PC_MACHINE);
+    if (pcms && pcms->hpet_enabled) {
+        fw_cfg_add_bytes(fw_cfg, FW_CFG_HPET, &hpet_cfg, sizeof(hpet_cfg));
+    }
+#endif
+
     /* allocate memory for the NUMA channel: one (64bit) word for the number
      * of nodes, one word for each VCPU->node and one word for each node to
      * hold the amount of memory.
