@@ -1,0 +1,54 @@
+Grabbing thread from lore.kernel.org/all/20250121142341.17001-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 29 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/28] target/hexagon: Ensure not being build on system emulation
+  [32m✓[0m [PATCH 2/28] target/rx: Ensure not being build on user emulation
+  [32m✓[0m [PATCH 3/28] target/tricore: Ensure not being build on user emulation
+  [32m✓[0m [PATCH 4/28] cpus: Restrict cpu_get_memory_mapping() to system emulation
+  [32m✓[0m [PATCH 5/28] cpus: Restrict cpu_has_work() to system emulation
+  [32m✓[0m [PATCH 6/28] cpus: Un-inline cpu_has_work()
+  [32m✓[0m [PATCH 7/28] cpus: Introduce SysemuCPUOps::has_work() handler
+  [32m✓[0m [PATCH 8/28] target/alpha: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 9/28] target/arm: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 10/28] target/avr: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 11/28] target/hexagon: Remove CPUClass:has_work() handler
+  [32m✓[0m [PATCH 12/28] target/hppa: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 13/28] target/i386: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 14/28] target/loongarch: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 15/28] target/m68k: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 16/28] target/microblaze: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 17/28] target/mips: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 18/28] target/openrisc: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 19/28] target/ppc: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 20/28] target/riscv: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 21/28] target/rx: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 22/28] target/s390x: Restrict I/O handler installers to system emulation
+  [32m✓[0m [PATCH 23/28] target/s390x: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 24/28] target/sh4: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 25/28] target/sparc: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 26/28] target/tricore: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 27/28] target/xtensa: Move has_work() from CPUClass to SysemuCPUOps
+  [32m✓[0m [PATCH 28/28] cpus: Remove CPUClass::has_work() handler
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 28
+---
+Applying: target/hexagon: Ensure not being build on system emulation
+Applying: target/rx: Ensure not being build on user emulation
+Applying: target/tricore: Ensure not being build on user emulation
+Applying: cpus: Restrict cpu_get_memory_mapping() to system emulation
+Applying: cpus: Restrict cpu_has_work() to system emulation
+Patch failed at 0005 cpus: Restrict cpu_has_work() to system emulation
+error: patch failed: include/hw/core/cpu.h:814
+error: include/hw/core/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
