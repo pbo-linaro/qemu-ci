@@ -472,3 +472,8 @@ const char *target_name(void)
 {
     return TARGET_NAME;
 }
+
+uint32_t target_phys_bits(void)
+{
+    return TARGET_PHYS_ADDR_SPACE_BITS;
+}
