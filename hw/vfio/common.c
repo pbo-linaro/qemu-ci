@@ -555,6 +555,20 @@ static bool vfio_get_section_iova_range(VFIOContainerBase *bcontainer,
     return true;
 }
 
+static void vfio_container_p2p_error_append(VFIOContainerBase *bcontainer,
+                                            Error **errp)
+{
+    error_append_hint(errp, "PCI peer-to-peer transactions on BARs "
+                      "are not supported. ");
+    if (vfio_viommu_preset(bcontainer)) {
+        error_append_hint(errp, "Try setting the vIOMMU \"aw-bits\" "
+                          "property to match CPU address space width\n");
+    } else {
+        error_append_hint(errp, "Try setting the CPU \"phys-bits\" "
+                          "property to match IOMMU address space width\n");
+    }
+}
+
 static void vfio_listener_region_add(MemoryListener *listener,
                                      MemoryRegionSection *section)
 {
@@ -668,9 +682,13 @@ static void vfio_listener_region_add(MemoryListener *listener,
                    "0x%"HWADDR_PRIx", %p) = %d (%s)",
                    bcontainer, iova, int128_get64(llsize), vaddr, ret,
                    strerror(-ret));
+        /*
+         * MMIO region mapping failures are not fatal but in this case
+         * PCI peer-to-peer transactions are broken.
+         */
         if (memory_region_is_ram_device(section->mr)) {
-            /* Allow unexpected mappings not to be fatal for RAM devices */
-            error_report_err(err);
+            vfio_container_p2p_error_append(bcontainer, &err);
+            warn_report_err(err);
             return;
         }
         goto fail;
