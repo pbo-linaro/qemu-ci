@@ -270,7 +270,7 @@ extern int vfio_kvm_device_fd;
 bool vfio_mig_active(void);
 int vfio_block_multiple_devices_migration(VFIODevice *vbasedev, Error **errp);
 void vfio_unblock_multiple_devices_migration(void);
-bool vfio_viommu_preset(VFIODevice *vbasedev);
+bool vfio_viommu_preset(VFIOContainerBase *bcontainer);
 int64_t vfio_mig_bytes_transferred(void);
 void vfio_reset_bytes_transferred(void);
 bool vfio_device_state_is_running(VFIODevice *vbasedev);

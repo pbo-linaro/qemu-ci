@@ -142,9 +142,9 @@ void vfio_unblock_multiple_devices_migration(void)
     migrate_del_blocker(&multiple_devices_migration_blocker);
 }
 
-bool vfio_viommu_preset(VFIODevice *vbasedev)
+bool vfio_viommu_preset(VFIOContainerBase *bcontainer)
 {
-    return vbasedev->bcontainer->space->as != &address_space_memory;
+    return bcontainer->space->as != &address_space_memory;
 }
 
 static void vfio_set_migration_error(int ret)
