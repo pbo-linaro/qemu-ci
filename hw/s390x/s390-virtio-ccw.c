@@ -785,10 +785,10 @@ static void ccw_machine_class_init(ObjectClass *oc, void *data)
     mc->init = ccw_init;
     mc->reset = s390_machine_reset;
     mc->block_default_type = IF_VIRTIO;
-    mc->no_cdrom = 1;
-    mc->no_floppy = 1;
-    mc->no_parallel = 1;
-    mc->no_sdcard = 1;
+    mc->no_cdrom = true;
+    mc->no_floppy = true;
+    mc->no_parallel = true;
+    mc->no_sdcard = true;
     mc->max_cpus = S390_MAX_CPUS;
     mc->has_hotpluggable_cpus = true;
     mc->smp_props.books_supported = true;

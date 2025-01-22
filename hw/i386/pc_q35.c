@@ -348,7 +348,7 @@ static void pc_q35_machine_options(MachineClass *m)
     m->default_display = "std";
     m->default_nic = "e1000e";
     m->default_kernel_irqchip_split = false;
-    m->no_floppy = 1;
+    m->no_floppy = true;
     m->max_cpus = 4096;
     m->no_parallel = !module_object_class_by_name(TYPE_ISA_PARALLEL);
     machine_class_allow_dynamic_sysbus_dev(m, TYPE_AMD_IOMMU_DEVICE);
@@ -668,7 +668,7 @@ static void pc_q35_machine_2_5_options(MachineClass *m)
 
     pc_q35_machine_2_6_options(m);
     x86mc->save_tsc_khz = false;
-    m->legacy_fw_cfg_order = 1;
+    m->legacy_fw_cfg_order = true;
     compat_props_add(m->compat_props, hw_compat_2_5, hw_compat_2_5_len);
     compat_props_add(m->compat_props, pc_compat_2_5, pc_compat_2_5_len);
 }

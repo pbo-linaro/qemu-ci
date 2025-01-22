@@ -322,9 +322,9 @@ void raspi_machine_class_common_init(MachineClass *mc,
                                board_type(board_rev),
                                FIELD_EX32(board_rev, REV_CODE, REVISION));
     mc->block_default_type = IF_SD;
-    mc->no_parallel = 1;
-    mc->no_floppy = 1;
-    mc->no_cdrom = 1;
+    mc->no_parallel = true;
+    mc->no_floppy = true;
+    mc->no_cdrom = true;
     mc->default_cpus = mc->min_cpus = mc->max_cpus = cores_count(board_rev);
     mc->default_ram_size = board_ram_size(board_rev);
     mc->default_ram_id = "ram";

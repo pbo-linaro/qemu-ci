@@ -315,9 +315,9 @@ static void virt_machine_class_init(ObjectClass *oc, void *data)
     mc->desc = "QEMU M68K Virtual Machine";
     mc->init = virt_init;
     mc->default_cpu_type = M68K_CPU_TYPE_NAME("m68040");
-    mc->max_cpus = 1;
-    mc->no_floppy = 1;
-    mc->no_parallel = 1;
+    mc->max_cpus = true;
+    mc->no_floppy = true;
+    mc->no_parallel = true;
     mc->default_ram_id = "m68k_virt.ram";
 }
 

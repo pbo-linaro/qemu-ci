@@ -2877,7 +2877,7 @@ static void pnv_machine_class_init(ObjectClass *oc, void *data)
     mc->max_cpus = MAX_CPUS;
     /* Pnv provides a AHCI device for storage */
     mc->block_default_type = IF_IDE;
-    mc->no_parallel = 1;
+    mc->no_parallel = true;
     mc->default_boot_order = NULL;
     /*
      * RAM defaults to less than 2048 for 32-bit hosts, and large

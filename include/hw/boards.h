@@ -279,13 +279,13 @@ struct MachineClass {
     int max_cpus;
     int min_cpus;
     int default_cpus;
-    unsigned int no_serial:1,
-        no_parallel:1,
-        no_floppy:1,
-        no_cdrom:1,
-        no_sdcard:1,
-        pci_allow_0_address:1,
-        legacy_fw_cfg_order:1;
+    bool no_serial;
+    bool no_parallel;
+    bool no_floppy;
+    bool no_cdrom;
+    bool no_sdcard;
+    bool pci_allow_0_address;
+    bool legacy_fw_cfg_order;
     bool is_default;
     const char *default_machine_opts;
     const char *default_boot_order;

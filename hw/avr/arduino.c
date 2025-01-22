@@ -64,9 +64,9 @@ static void arduino_machine_class_init(ObjectClass *oc, void *data)
     mc->default_cpus = 1;
     mc->min_cpus = mc->default_cpus;
     mc->max_cpus = mc->default_cpus;
-    mc->no_floppy = 1;
-    mc->no_cdrom = 1;
-    mc->no_parallel = 1;
+    mc->no_floppy = true;
+    mc->no_cdrom = true;
+    mc->no_parallel = true;
 }
 
 static void arduino_duemilanove_class_init(ObjectClass *oc, void *data)

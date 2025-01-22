@@ -649,7 +649,7 @@ static void microvm_class_init(ObjectClass *oc, void *data)
     mc->family = "microvm_i386";
     mc->desc = "microvm (i386)";
     mc->units_per_default_bus = 1;
-    mc->no_floppy = 1;
+    mc->no_floppy = true;
     mc->max_cpus = 288;
     mc->has_hotpluggable_cpus = false;
     mc->auto_enable_numa_with_memhp = false;
