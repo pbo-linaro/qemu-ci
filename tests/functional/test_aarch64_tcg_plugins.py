@@ -46,7 +46,7 @@ class PluginKernelBase(LinuxKernelTest):
         except:
             # TODO: probably fails because plugins not enabled but we
             # can't currently probe for the feature.
-            self.cancel("TCG Plugins not enabled?")
+            self.skipTest("TCG Plugins not enabled?")
 
         self.wait_for_console_pattern(console_pattern, vm)
         # ensure logs are flushed
@@ -65,7 +65,7 @@ class PluginKernelNormal(PluginKernelBase):
         kernel_path = self.ASSET_KERNEL.fetch()
         kernel_command_line = (self.KERNEL_COMMON_COMMAND_LINE +
                                'console=ttyAMA0')
-        console_pattern = 'Kernel panic - not syncing: VFS:'
+        console_pattern = 'Please append a correct "root=" boot option'
 
         plugin_log = tempfile.NamedTemporaryFile(mode="r+t", prefix="plugin",
                                                  suffix=".log")
@@ -91,7 +91,7 @@ class PluginKernelNormal(PluginKernelBase):
         kernel_path = self.ASSET_KERNEL.fetch()
         kernel_command_line = (self.KERNEL_COMMON_COMMAND_LINE +
                                'console=ttyAMA0')
-        console_pattern = 'Kernel panic - not syncing: VFS:'
+        console_pattern = 'Please append a correct "root=" boot option'
 
         plugin_log = tempfile.NamedTemporaryFile(mode="r+t", prefix="plugin",
                                                  suffix=".log")
