@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250122095018.2471009-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 2 messages in the thread
+Assuming new revision: v2 ([PATCH] target/i386: extract common bits of gen_repz/gen_repz_nz)
+Looking for additional code-review trailers on lore.kernel.org
+Nothing matching that query.
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] target/i386: extract common bits of gen_repz/gen_repz_nz
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: target/i386: extract common bits of gen_repz/gen_repz_nz
+Patch failed at 0001 target/i386: extract common bits of gen_repz/gen_repz_nz
+error: patch failed: target/i386/tcg/translate.c:1453
+error: target/i386/tcg/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
