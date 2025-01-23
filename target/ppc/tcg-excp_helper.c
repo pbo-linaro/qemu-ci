@@ -56,7 +56,7 @@ void helper_raise_exception(CPUPPCState *env, uint32_t exception)
 
 #ifndef CONFIG_USER_ONLY
 
-void raise_exception_err(CPUPPCState *env, uint32_t exception,
+static G_NORETURN void raise_exception_err(CPUPPCState *env, uint32_t exception,
                                            uint32_t error_code)
 {
     raise_exception_err_ra(env, exception, error_code, 0);
@@ -542,6 +542,17 @@ void helper_pminsn(CPUPPCState *env, uint32_t insn)
     }
 
     ppc_maybe_interrupt(env);
+}
+
+void helper_attn(CPUPPCState *env)
+{
+    /* POWER attn is unprivileged when enabled by HID, otherwise illegal */
+    if ((*env->check_attn)(env)) {
+        powerpc_checkstop(env, "host executed attn");
+    } else {
+        raise_exception_err(env, POWERPC_EXCP_HV_EMU,
+                            POWERPC_EXCP_INVAL | POWERPC_EXCP_INVAL_INVAL);
+    }
 }
 
 #endif /* TARGET_PPC64 */

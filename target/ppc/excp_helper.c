@@ -31,11 +31,6 @@
 
 #include "trace.h"
 
-#ifdef CONFIG_TCG
-#include "exec/helper-proto.h"
-#include "exec/cpu_ldst.h"
-#endif
-
 /*****************************************************************************/
 /* Exception processing */
 #ifndef CONFIG_USER_ONLY
@@ -399,21 +394,6 @@ static void powerpc_set_excp_state(PowerPCCPU *cpu, target_ulong vector,
     /* Reset the reservation */
     env->reserve_addr = -1;
 }
-
-#ifdef CONFIG_TCG
-#if defined(TARGET_PPC64) && !defined(CONFIG_USER_ONLY)
-void helper_attn(CPUPPCState *env)
-{
-    /* POWER attn is unprivileged when enabled by HID, otherwise illegal */
-    if ((*env->check_attn)(env)) {
-        powerpc_checkstop(env, "host executed attn");
-    } else {
-        raise_exception_err(env, POWERPC_EXCP_HV_EMU,
-                            POWERPC_EXCP_INVAL | POWERPC_EXCP_INVAL_INVAL);
-    }
-}
-#endif
-#endif /* CONFIG_TCG */
 
 static void powerpc_mcheck_checkstop(CPUPPCState *env)
 {
