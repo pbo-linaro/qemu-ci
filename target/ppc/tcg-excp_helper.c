@@ -283,4 +283,75 @@ uint32_t ppc_ldl_code(CPUArchState *env, target_ulong addr)
     return insn;
 }
 
+static bool is_prefix_insn(CPUPPCState *env, uint32_t insn)
+{
+    if (!(env->insns_flags2 & PPC2_ISA310)) {
+        return false;
+    }
+    return ((insn & 0xfc000000) == 0x04000000);
+}
+
+bool is_prefix_insn_excp(CPUPPCState *env, int excp)
+{
+    switch (excp) {
+    case POWERPC_EXCP_MCHECK:
+        if (!(env->error_code & PPC_BIT(42))) {
+            /*
+             * Fetch attempt caused a machine check, so attempting to fetch
+             * again would cause a recursive machine check.
+             */
+            return false;
+        }
+        break;
+    case POWERPC_EXCP_HDSI:
+        /* HDSI PRTABLE_FAULT has the originating access type in error_code */
+        if ((env->spr[SPR_HDSISR] & DSISR_PRTABLE_FAULT) &&
+            (env->error_code == MMU_INST_FETCH)) {
+            /*
+             * Fetch failed due to partition scope translation, so prefix
+             * indication is not relevant (and attempting to load the
+             * instruction at NIP would cause recursive faults with the same
+             * translation).
+             */
+            return false;
+        }
+        break;
+
+    case POWERPC_EXCP_DSI:
+    case POWERPC_EXCP_DSEG:
+    case POWERPC_EXCP_ALIGN:
+    case POWERPC_EXCP_PROGRAM:
+    case POWERPC_EXCP_FPU:
+    case POWERPC_EXCP_TRACE:
+    case POWERPC_EXCP_HV_EMU:
+    case POWERPC_EXCP_VPU:
+    case POWERPC_EXCP_VSXU:
+    case POWERPC_EXCP_FU:
+    case POWERPC_EXCP_HV_FU:
+        break;
+    default:
+        return false;
+    }
+
+    return is_prefix_insn(env, ppc_ldl_code(env, env->nip));
+}
+
+void ppc_tcg_hv_emu(CPUPPCState *env, target_ulong *new_msr,
+                    int *srr0, int *srr1)
+{
+    uint32_t insn = ppc_ldl_code(env, env->nip);
+
+    env->spr[SPR_HEIR] = insn;
+    if (is_prefix_insn(env, insn)) {
+        uint32_t insn2 = ppc_ldl_code(env, env->nip + 4);
+
+        env->spr[SPR_HEIR] <<= 32;
+        env->spr[SPR_HEIR] |= insn2;
+    }
+    *srr0 = SPR_HSRR0;
+    *srr1 = SPR_HSRR1;
+    *new_msr |= (target_ulong)MSR_HVB;
+    *new_msr |= env->msr & ((target_ulong)1 << MSR_RI);
+}
+
 #endif /* !CONFIG_USER_ONLY */
