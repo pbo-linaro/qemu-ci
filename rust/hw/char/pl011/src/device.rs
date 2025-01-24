@@ -242,7 +242,6 @@ impl PL011State {
                 }
                 // Update error bits.
                 self.receive_status_error_clear.set_from_data(c);
-                self.update();
                 // Must call qemu_chr_fe_accept_input, so return Continue:
                 return ControlFlow::Continue(u32::from(c));
             }
@@ -266,7 +265,7 @@ impl PL011State {
         })
     }
 
-    fn regs_write(&mut self, offset: RegisterOffset, value: u32) {
+    fn regs_write(&mut self, offset: RegisterOffset, value: u32) -> bool {
         // eprintln!("write offset {offset} value {value}");
         use RegisterOffset::*;
         match offset {
@@ -281,9 +280,10 @@ impl PL011State {
                 unsafe {
                     qemu_chr_fe_write_all(addr_of_mut!(self.char_backend), &ch, 1);
                 }
-                self.loopback_tx(value);
+                // interrupts always checked
+                let _ = self.loopback_tx(value);
                 self.int_level |= registers::INT_TX;
-                self.update();
+                return true;
             }
             RSR => {
                 self.receive_status_error_clear = 0.into();
@@ -307,7 +307,7 @@ impl PL011State {
                     self.reset_rx_fifo();
                     self.reset_tx_fifo();
                 }
-                if self.line_control.send_break() ^ new_val.send_break() {
+                let update = (self.line_control.send_break() != new_val.send_break()) && {
                     let mut break_enable: c_int = new_val.send_break().into();
                     // SAFETY: self.char_backend is a valid CharBackend instance after it's been
                     // initialized in realize().
@@ -318,15 +318,16 @@ impl PL011State {
                             addr_of_mut!(break_enable).cast::<c_void>(),
                         );
                     }
-                    self.loopback_break(break_enable > 0);
-                }
+                    self.loopback_break(break_enable > 0)
+                };
                 self.line_control = new_val;
                 self.set_read_trigger();
+                return update;
             }
             CR => {
                 // ??? Need to implement the enable bit.
                 self.control = value.into();
-                self.loopback_mdmctrl();
+                return self.loopback_mdmctrl();
             }
             FLS => {
                 self.ifl = value;
@@ -334,13 +335,13 @@ impl PL011State {
             }
             IMSC => {
                 self.int_enabled = value;
-                self.update();
+                return true;
             }
             RIS => {}
             MIS => {}
             ICR => {
                 self.int_level &= !value;
-                self.update();
+                return true;
             }
             DMACR => {
                 self.dmacr = value;
@@ -350,14 +351,12 @@ impl PL011State {
                 }
             }
         }
+        false
     }
 
     #[inline]
-    fn loopback_tx(&mut self, value: u32) {
-        if !self.loopback_enabled() {
-            return;
-        }
-
+    #[must_use]
+    fn loopback_tx(&mut self, value: u32) -> bool {
         // Caveat:
         //
         // In real hardware, TX loopback happens at the serial-bit level
@@ -375,12 +374,13 @@ impl PL011State {
         // hardware flow-control is enabled.
         //
         // For simplicity, the above described is not emulated.
-        self.put_fifo(value);
+        self.loopback_enabled() && self.put_fifo(value)
     }
 
-    fn loopback_mdmctrl(&mut self) {
+    #[must_use]
+    fn loopback_mdmctrl(&mut self) -> bool {
         if !self.loopback_enabled() {
-            return;
+            return false;
         }
 
         /*
@@ -421,13 +421,11 @@ impl PL011State {
             il |= Interrupt::RI as u32;
         }
         self.int_level = il;
-        self.update();
+        true
     }
 
-    fn loopback_break(&mut self, enable: bool) {
-        if enable {
-            self.loopback_tx(registers::Data::BREAK.into());
-        }
+    fn loopback_break(&mut self, enable: bool) -> bool {
+        enable && self.loopback_tx(registers::Data::BREAK.into())
     }
 
     fn set_read_trigger(&mut self) {
@@ -489,14 +487,17 @@ impl PL011State {
     }
 
     pub fn receive(&mut self, ch: u32) {
-        if !self.loopback_enabled() {
-            self.put_fifo(ch)
+        if !self.loopback_enabled() && self.put_fifo(ch) {
+            self.update();
         }
     }
 
     pub fn event(&mut self, event: QEMUChrEvent) {
         if event == QEMUChrEvent::CHR_EVENT_BREAK && !self.loopback_enabled() {
-            self.put_fifo(registers::Data::BREAK.into());
+            let update = self.put_fifo(registers::Data::BREAK.into());
+            if update {
+                self.update();
+            }
         }
     }
 
@@ -519,7 +520,8 @@ impl PL011State {
         1
     }
 
-    pub fn put_fifo(&mut self, value: u32) {
+    #[must_use]
+    pub fn put_fifo(&mut self, value: u32) -> bool {
         let depth = self.fifo_depth();
         assert!(depth > 0);
         let slot = (self.read_pos + self.read_count) & (depth - 1);
@@ -532,8 +534,9 @@ impl PL011State {
 
         if self.read_count == self.read_trigger {
             self.int_level |= registers::INT_RX;
-            self.update();
+            return true;
         }
+        false
     }
 
     pub fn update(&self) {
@@ -565,7 +568,8 @@ impl PL011State {
     }
 
     pub fn read(&mut self, offset: hwaddr, _size: u32) -> ControlFlow<u64, u64> {
-        match RegisterOffset::try_from(offset) {
+        let mut update_irq = false;
+        let result = match RegisterOffset::try_from(offset) {
             Err(v) if (0x3f8..0x400).contains(&(v >> 2)) => {
                 let device_id = self.get_class().device_id;
                 ControlFlow::Break(u64::from(device_id[(offset - 0xfe0) >> 2]))
@@ -574,21 +578,29 @@ impl PL011State {
                 // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
                 ControlFlow::Break(0)
             }
-            Ok(field) => {
-                let result = self.regs_read(field);
-                match result {
-                    ControlFlow::Break(value) => ControlFlow::Break(value.into()),
-                    ControlFlow::Continue(value) => ControlFlow::Continue(value.into()),
+            Ok(field) => match self.regs_read(field) {
+                ControlFlow::Break(value) => ControlFlow::Break(value.into()),
+                ControlFlow::Continue(value) => {
+                    update_irq = true;
+                    ControlFlow::Continue(value.into())
                 }
-            }
+            },
+        };
+        if update_irq {
+            self.update();
         }
+        result
     }
 
     pub fn write(&mut self, offset: hwaddr, value: u64) {
+        let mut update_irq = false;
         if let Ok(field) = RegisterOffset::try_from(offset) {
-            self.regs_write(field, value as u32);
+            update_irq = self.regs_write(field, value as u32);
         } else {
             eprintln!("write bad offset {offset} value {value}");
+        }
+        if update_irq {
+            self.update();
         }
     }
 }
