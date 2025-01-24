@@ -1708,13 +1708,18 @@ void HELPER(NAME)(void *vd, void *vn, void *vm, void *va,                  \
     intptr_t i, j, oprsz = simd_oprsz(desc);                               \
     intptr_t segment = MIN(16, oprsz) / sizeof(TYPE);                      \
     TYPE op1_neg = extract32(desc, SIMD_DATA_SHIFT, 1);                    \
-    intptr_t idx = desc >> (SIMD_DATA_SHIFT + 1);                          \
+    intptr_t idx = extract32(desc, SIMD_DATA_SHIFT + 1, 3);                \
+    bool fpcr_ah = extract32(desc, SIMD_DATA_SHIFT + 5, 1);                \
     TYPE *d = vd, *n = vn, *m = vm, *a = va;                               \
     op1_neg <<= (8 * sizeof(TYPE) - 1);                                    \
     for (i = 0; i < oprsz / sizeof(TYPE); i += segment) {                  \
         TYPE mm = m[H(i + idx)];                                           \
         for (j = 0; j < segment; j++) {                                    \
-            d[i + j] = TYPE##_muladd(n[i + j] ^ op1_neg,                   \
+            TYPE nval = n[i + j];                                          \
+            if (!(fpcr_ah && TYPE ## _is_any_nan(nval))) {                 \
+                nval ^= op1_neg;                                           \
+            }                                                              \
+            d[i + j] = TYPE##_muladd(nval,                                 \
                                      mm, a[i + j], 0, stat);               \
         }                                                                  \
     }                                                                      \
