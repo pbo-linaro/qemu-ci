@@ -2083,6 +2083,26 @@ static uint64_t load4_f16(uint64_t *ptr, int is_q, int is_2)
     return ptr[is_q & is_2] >> ((is_2 & ~is_q) << 5);
 }
 
+static uint64_t neg4_f16(uint64_t v, bool fpcr_ah)
+{
+    /*
+     * Negate all inputs for FMLSL at once. This is slightly complicated
+     * by the need to avoid flipping the sign of a NaN when FPCR.AH == 1
+     */
+    uint64_t mask = 0x8000800080008000ull;
+    if (fpcr_ah) {
+        uint64_t tmp = v, signbit = 0x8000;
+        for (int i = 0; i < 4; i++) {
+            if (float16_is_any_nan(extract64(tmp, 0, 16))) {
+                mask ^= signbit;
+            }
+            tmp >>= 16;
+            signbit <<= 16;
+        }
+    }
+    return v ^ mask;
+}
+
 /*
  * Note that FMLAL requires oprsz == 8 or oprsz == 16,
  * as there is not yet SVE versions that might use blocking.
@@ -2094,6 +2114,7 @@ static void do_fmlal(float32 *d, void *vn, void *vm, float_status *fpst,
     intptr_t i, oprsz = simd_oprsz(desc);
     int is_s = extract32(desc, SIMD_DATA_SHIFT, 1);
     int is_2 = extract32(desc, SIMD_DATA_SHIFT + 1, 1);
+    bool fpcr_ah = extract32(desc, SIMD_DATA_SHIFT + 2, 1);
     int is_q = oprsz == 16;
     uint64_t n_4, m_4;
 
@@ -2101,9 +2122,8 @@ static void do_fmlal(float32 *d, void *vn, void *vm, float_status *fpst,
     n_4 = load4_f16(vn, is_q, is_2);
     m_4 = load4_f16(vm, is_q, is_2);
 
-    /* Negate all inputs for FMLSL at once.  */
     if (is_s) {
-        n_4 ^= 0x8000800080008000ull;
+        n_4 = neg4_f16(n_4, fpcr_ah);
     }
 
     for (i = 0; i < oprsz / 4; i++) {
@@ -2155,6 +2175,7 @@ static void do_fmlal_idx(float32 *d, void *vn, void *vm, float_status *fpst,
     int is_s = extract32(desc, SIMD_DATA_SHIFT, 1);
     int is_2 = extract32(desc, SIMD_DATA_SHIFT + 1, 1);
     int index = extract32(desc, SIMD_DATA_SHIFT + 2, 3);
+    bool fpcr_ah = extract32(desc, SIMD_DATA_SHIFT + 5, 1);
     int is_q = oprsz == 16;
     uint64_t n_4;
     float32 m_1;
@@ -2162,9 +2183,8 @@ static void do_fmlal_idx(float32 *d, void *vn, void *vm, float_status *fpst,
     /* Pre-load all of the f16 data, avoiding overlap issues.  */
     n_4 = load4_f16(vn, is_q, is_2);
 
-    /* Negate all inputs for FMLSL at once.  */
     if (is_s) {
-        n_4 ^= 0x8000800080008000ull;
+        n_4 = neg4_f16(n_4, fpcr_ah);
     }
 
     m_1 = float16_to_float32_by_bits(((float16 *)vm)[H2(index)], fz16);

@@ -5968,7 +5968,7 @@ TRANS(FMINNMP_v, do_fp3_vector, a, 0, f_vector_fminnmp)
 static bool do_fmlal(DisasContext *s, arg_qrrr_e *a, bool is_s, bool is_2)
 {
     if (fp_access_check(s)) {
-        int data = (is_2 << 1) | is_s;
+        int data = (s->fpcr_ah << 2) | (is_2 << 1) | is_s;
         tcg_gen_gvec_3_ptr(vec_full_reg_offset(s, a->rd),
                            vec_full_reg_offset(s, a->rn),
                            vec_full_reg_offset(s, a->rm), tcg_env,
@@ -6738,7 +6738,7 @@ TRANS(FMLS_vi, do_fmla_vector_idx, a, true)
 static bool do_fmlal_idx(DisasContext *s, arg_qrrx_e *a, bool is_s, bool is_2)
 {
     if (fp_access_check(s)) {
-        int data = (a->idx << 2) | (is_2 << 1) | is_s;
+        int data = (s->fpcr_ah << 5) | (a->idx << 2) | (is_2 << 1) | is_s;
         tcg_gen_gvec_3_ptr(vec_full_reg_offset(s, a->rd),
                            vec_full_reg_offset(s, a->rn),
                            vec_full_reg_offset(s, a->rm), tcg_env,
