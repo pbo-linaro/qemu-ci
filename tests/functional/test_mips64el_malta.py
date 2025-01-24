@@ -15,9 +15,10 @@ import logging
 from qemu_test import LinuxKernelTest, Asset
 from qemu_test import exec_command_and_wait_for_pattern
 from qemu_test import skipIfMissingImports, skipFlakyTest, skipUntrustedTest
+from replay_kernel import ReplayKernelBase
 
 
-class MaltaMachineConsole(LinuxKernelTest):
+class MaltaMachineConsole(ReplayKernelBase):
 
     ASSET_KERNEL_2_63_2 = Asset(
         ('http://snapshot.debian.org/archive/debian/'
@@ -50,6 +51,15 @@ class MaltaMachineConsole(LinuxKernelTest):
         self.vm.launch()
         console_pattern = 'Kernel command line: %s' % kernel_command_line
         self.wait_for_console_pattern(console_pattern)
+
+    def test_replay_mips64el_malta(self):
+        self.set_machine('malta')
+        kernel_path = self.archive_extract(self.ASSET_KERNEL_2_63_2,
+                                    member='boot/vmlinux-2.6.32-5-5kc-malta')
+        kernel_command_line = self.KERNEL_COMMON_COMMAND_LINE + 'console=ttyS0'
+        console_pattern = 'Kernel command line: %s' % kernel_command_line
+        self.run_rr(kernel_path, kernel_command_line, console_pattern, shift=5)
+
 
     ASSET_KERNEL_3_19_3 = Asset(
         ('https://github.com/philmd/qemu-testing-blob/'
@@ -89,6 +99,20 @@ class MaltaMachineConsole(LinuxKernelTest):
                                                 'reboot: Restarting system')
         # Wait for VM to shut down gracefully
         self.vm.wait()
+
+    @skipUntrustedTest()
+    def test_replay_mips64el_malta_5KEc_cpio(self):
+        self.set_machine('malta')
+        self.cpu = '5KEc'
+        kernel_path = self.ASSET_KERNEL_3_19_3.fetch()
+        initrd_path = self.uncompress(self.ASSET_CPIO_R1)
+
+        kernel_command_line = (self.KERNEL_COMMON_COMMAND_LINE +
+                               'console=ttyS0 console=tty '
+                               'rdinit=/sbin/init noreboot')
+        console_pattern = 'Boot successful.'
+        self.run_rr(kernel_path, kernel_command_line, console_pattern, shift=5,
+                    args=('-initrd', initrd_path))
 
 
 @skipIfMissingImports('numpy', 'cv2')
