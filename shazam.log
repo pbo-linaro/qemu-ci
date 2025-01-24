@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250124191245.12464-1-tomitamoeko@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/5] vfio/igd: remove GTT write quirk in IO BAR 4
+  [32m✓[0m [PATCH v2 2/5] vfio/pci: add placeholder for device-specific config space quirks
+  [32m✓[0m [PATCH v2 3/5] vfio/igd: refactor vfio_probe_igd_bar4_quirk() into pci config quirk
+  [32m✓[0m [PATCH v2 4/5] vfio/igd: do not include GTT stolen size in etc/igd-bdsm-size
+  [32m✓[0m [PATCH v2 5/5] vfio/igd: handle x-igd-opregion in vfio_probe_igd_config_quirk()
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 5
+---
+Applying: vfio/igd: remove GTT write quirk in IO BAR 4
+Patch failed at 0001 vfio/igd: remove GTT write quirk in IO BAR 4
+error: patch failed: hw/vfio/igd.c:300
+error: hw/vfio/igd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
