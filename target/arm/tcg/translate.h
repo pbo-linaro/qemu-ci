@@ -673,6 +673,8 @@ typedef enum ARMFPStatusFlavour {
     FPST_FPCR_A32,
     FPST_FPCR_A64,
     FPST_FPCR_F16,
+    FPST_FPCR_F16_A32,
+    FPST_FPCR_F16_A64,
     FPST_STD,
     FPST_STD_F16,
 } ARMFPStatusFlavour;
@@ -691,6 +693,10 @@ typedef enum ARMFPStatusFlavour {
  *   for AArch64 non-FP16 operations controlled by the FPCR
  * FPST_FPCR_F16
  *   for operations controlled by the FPCR where FPCR.FZ16 is to be used
+ * FPST_FPCR_F16_A32
+ *   for AArch32 operations controlled by the FPCR where FPCR.FZ16 is to be used
+ * FPST_FPCR_F16_A64
+ *   for AArch64 operations controlled by the FPCR where FPCR.FZ16 is to be used
  * FPST_STD
  *   for A32/T32 Neon operations using the "standard FPSCR value"
  * FPST_STD_F16
@@ -710,6 +716,12 @@ static inline TCGv_ptr fpstatus_ptr(ARMFPStatusFlavour flavour)
         break;
     case FPST_FPCR_F16:
         offset = offsetof(CPUARMState, vfp.fp_status_f16);
+        break;
+    case FPST_FPCR_F16_A32:
+        offset = offsetof(CPUARMState, vfp.fp_status_f16_a32);
+        break;
+    case FPST_FPCR_F16_A64:
+        offset = offsetof(CPUARMState, vfp.fp_status_f16_a64);
         break;
     case FPST_STD:
         offset = offsetof(CPUARMState, vfp.standard_fp_status);
