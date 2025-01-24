@@ -839,7 +839,11 @@ uint32_t HELPER(recpe_f16)(uint32_t input, float_status *fpst)
     return make_float16(f16_val);
 }
 
-float32 HELPER(recpe_f32)(float32 input, float_status *fpst)
+/*
+ * FEAT_RPRES means the f32 FRECPE has an "increased precision" variant
+ * which is used when FPCR.AH == 1.
+ */
+static float32 do_recpe_f32(float32 input, float_status *fpst, bool rpres)
 {
     float32 f32 = float32_squash_input_denormal(input, fpst);
     uint32_t f32_val = float32_val(f32);
@@ -886,6 +890,16 @@ float32 HELPER(recpe_f32)(float32 input, float_status *fpst)
     f32_val = deposit32(f32_val, 23, 8, f32_exp);
     f32_val = deposit32(f32_val, 0, 23, extract64(f64_frac, 52 - 23, 23));
     return make_float32(f32_val);
+}
+
+float32 HELPER(recpe_f32)(float32 input, float_status *fpst)
+{
+    return do_recpe_f32(input, fpst, false);
+}
+
+float32 HELPER(recpe_rpres_f32)(float32 input, float_status *fpst)
+{
+    return do_recpe_f32(input, fpst, true);
 }
 
 float64 HELPER(recpe_f64)(float64 input, float_status *fpst)
@@ -1033,7 +1047,11 @@ uint32_t HELPER(rsqrte_f16)(uint32_t input, float_status *s)
     return make_float16(val);
 }
 
-float32 HELPER(rsqrte_f32)(float32 input, float_status *s)
+/*
+ * FEAT_RPRES means the f32 FRSQRTE has an "increased precision" variant
+ * which is used when FPCR.AH == 1.
+ */
+static float32 do_rsqrte_f32(float32 input, float_status *s, bool rpres)
 {
     float32 f32 = float32_squash_input_denormal(input, s);
     uint32_t val = float32_val(f32);
@@ -1076,6 +1094,16 @@ float32 HELPER(rsqrte_f32)(float32 input, float_status *s)
     val = deposit32(val, 23, 8, f32_exp);
     val = deposit32(val, 15, 8, extract64(f64_frac, 52 - 8, 8));
     return make_float32(val);
+}
+
+float32 HELPER(rsqrte_f32)(float32 input, float_status *s)
+{
+    return do_rsqrte_f32(input, s, false);
+}
+
+float32 HELPER(rsqrte_rpres_f32)(float32 input, float_status *s)
+{
+    return do_rsqrte_f32(input, s, true);
 }
 
 float64 HELPER(rsqrte_f64)(float64 input, float_status *s)
