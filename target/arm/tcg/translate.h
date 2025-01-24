@@ -746,6 +746,19 @@ static inline TCGv_ptr fpstatus_ptr(ARMFPStatusFlavour flavour)
     return statusptr;
 }
 
+/*
+ * Return the ARMFPStatusFlavour to use based on element size and
+ * whether FPCR.AH is set.
+ */
+static inline ARMFPStatusFlavour select_fpst(DisasContext *s, MemOp esz)
+{
+    if (s->fpcr_ah) {
+        return esz == MO_16 ? FPST_FPCR_AH_F16 : FPST_FPCR_AH;
+    } else {
+        return esz == MO_16 ? FPST_FPCR_F16_A64 : FPST_FPCR_A64;
+    }
+}
+
 /**
  * finalize_memop_atom:
  * @s: DisasContext
