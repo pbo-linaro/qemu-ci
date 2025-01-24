@@ -881,6 +881,7 @@ void HELPER(gvec_fcaddh)(void *vd, void *vn, void *vm,
     float16 *m = vm;
     uint32_t neg_real = extract32(desc, SIMD_DATA_SHIFT, 1);
     uint32_t neg_imag = neg_real ^ 1;
+    bool fpcr_ah = extract64(desc, SIMD_DATA_SHIFT + 1, 1);
     uintptr_t i;
 
     /* Shift boolean to the sign bit so we can xor to negate.  */
@@ -889,9 +890,17 @@ void HELPER(gvec_fcaddh)(void *vd, void *vn, void *vm,
 
     for (i = 0; i < opr_sz / 2; i += 2) {
         float16 e0 = n[H2(i)];
-        float16 e1 = m[H2(i + 1)] ^ neg_imag;
+        float16 e1 = m[H2(i + 1)];
         float16 e2 = n[H2(i + 1)];
-        float16 e3 = m[H2(i)] ^ neg_real;
+        float16 e3 = m[H2(i)];
+
+        /* FPNeg() mustn't flip sign of a NaN if FPCR.AH == 1 */
+        if (!(fpcr_ah && float16_is_any_nan(e1))) {
+            e1 ^= neg_imag;
+        }
+        if (!(fpcr_ah && float16_is_any_nan(e3))) {
+            e3 ^= neg_real;
+        }
 
         d[H2(i)] = float16_add(e0, e1, fpst);
         d[H2(i + 1)] = float16_add(e2, e3, fpst);
@@ -908,6 +917,7 @@ void HELPER(gvec_fcadds)(void *vd, void *vn, void *vm,
     float32 *m = vm;
     uint32_t neg_real = extract32(desc, SIMD_DATA_SHIFT, 1);
     uint32_t neg_imag = neg_real ^ 1;
+    bool fpcr_ah = extract64(desc, SIMD_DATA_SHIFT + 1, 1);
     uintptr_t i;
 
     /* Shift boolean to the sign bit so we can xor to negate.  */
@@ -916,9 +926,17 @@ void HELPER(gvec_fcadds)(void *vd, void *vn, void *vm,
 
     for (i = 0; i < opr_sz / 4; i += 2) {
         float32 e0 = n[H4(i)];
-        float32 e1 = m[H4(i + 1)] ^ neg_imag;
+        float32 e1 = m[H4(i + 1)];
         float32 e2 = n[H4(i + 1)];
-        float32 e3 = m[H4(i)] ^ neg_real;
+        float32 e3 = m[H4(i)];
+
+        /* FPNeg() mustn't flip sign of a NaN if FPCR.AH == 1 */
+        if (!(fpcr_ah && float32_is_any_nan(e1))) {
+            e1 ^= neg_imag;
+        }
+        if (!(fpcr_ah && float32_is_any_nan(e3))) {
+            e3 ^= neg_real;
+        }
 
         d[H4(i)] = float32_add(e0, e1, fpst);
         d[H4(i + 1)] = float32_add(e2, e3, fpst);
@@ -935,6 +953,7 @@ void HELPER(gvec_fcaddd)(void *vd, void *vn, void *vm,
     float64 *m = vm;
     uint64_t neg_real = extract64(desc, SIMD_DATA_SHIFT, 1);
     uint64_t neg_imag = neg_real ^ 1;
+    bool fpcr_ah = extract64(desc, SIMD_DATA_SHIFT + 1, 1);
     uintptr_t i;
 
     /* Shift boolean to the sign bit so we can xor to negate.  */
@@ -943,9 +962,17 @@ void HELPER(gvec_fcaddd)(void *vd, void *vn, void *vm,
 
     for (i = 0; i < opr_sz / 8; i += 2) {
         float64 e0 = n[i];
-        float64 e1 = m[i + 1] ^ neg_imag;
+        float64 e1 = m[i + 1];
         float64 e2 = n[i + 1];
-        float64 e3 = m[i] ^ neg_real;
+        float64 e3 = m[i];
+
+        /* FPNeg() mustn't flip sign of a NaN if FPCR.AH == 1 */
+        if (!(fpcr_ah && float64_is_any_nan(e1))) {
+            e1 ^= neg_imag;
+        }
+        if (!(fpcr_ah && float64_is_any_nan(e3))) {
+            e3 ^= neg_real;
+        }
 
         d[i] = float64_add(e0, e1, fpst);
         d[i + 1] = float64_add(e2, e3, fpst);
