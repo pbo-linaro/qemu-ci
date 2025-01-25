@@ -54,8 +54,8 @@ struct TypeImpl
     size_t instance_size;
     size_t instance_align;
 
-    void (*class_init)(ObjectClass *klass, void *data);
     void (*class_base_init)(ObjectClass *klass, void *data);
+    void (*class_init)(ObjectClass *klass, void *data);
 
     void *class_data;
 
@@ -119,8 +119,8 @@ static TypeImpl *type_new(const TypeInfo *info)
     ti->instance_size = info->instance_size;
     ti->instance_align = info->instance_align;
 
-    ti->class_init = info->class_init;
     ti->class_base_init = info->class_base_init;
+    ti->class_init = info->class_init;
     ti->class_data = info->class_data;
 
     ti->instance_init = info->instance_init;

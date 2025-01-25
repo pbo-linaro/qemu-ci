@@ -457,14 +457,14 @@ struct Object
  *   assumed to be the size of the parent class.  This allows a type to avoid
  *   implementing an explicit class type if they are not adding additional
  *   virtual functions.
- * @class_init: This function is called after all parent class initialization
- *   has occurred to allow a class to set its default virtual method pointers.
- *   This is also the function to use to override virtual methods from a parent
- *   class.
  * @class_base_init: This function is called for all base classes after all
  *   parent class initialization has occurred, but before the class itself
  *   is initialized.  This is the function to use to undo the effects of
  *   memcpy from the parent class to the descendants.
+ * @class_init: This function is called after all parent class initialization
+ *   has occurred to allow a class to set its default virtual method pointers.
+ *   This is also the function to use to override virtual methods from a parent
+ *   class.
  * @class_data: Data to pass to the @class_init,
  *   @class_base_init. This can be useful when building dynamic
  *   classes.
@@ -486,8 +486,8 @@ struct TypeInfo
     bool abstract;
     size_t class_size;
 
-    void (*class_init)(ObjectClass *klass, void *data);
     void (*class_base_init)(ObjectClass *klass, void *data);
+    void (*class_init)(ObjectClass *klass, void *data);
     void *class_data;
 
     InterfaceInfo *interfaces;

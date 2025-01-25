@@ -486,8 +486,8 @@ pub trait ObjectImpl: ObjectType + ClassInitImpl<Self::Class> {
         instance_finalize: Some(drop_object::<Self>),
         abstract_: Self::ABSTRACT,
         class_size: core::mem::size_of::<Self::Class>(),
-        class_init: Some(rust_class_init::<Self>),
         class_base_init: Self::CLASS_BASE_INIT,
+        class_init: Some(rust_class_init::<Self>),
         class_data: core::ptr::null_mut(),
         interfaces: core::ptr::null_mut(),
     };
