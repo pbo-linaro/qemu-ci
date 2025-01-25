@@ -32,7 +32,8 @@ struct XenDevOps {
 };
 
 struct XenLegacyDevice {
-    DeviceState        qdev;
+    SysBusDevice parent_obj;
+
     const char         *type;
     int                dom;
     int                dev;
