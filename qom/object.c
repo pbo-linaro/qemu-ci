@@ -56,6 +56,7 @@ struct TypeImpl
 
     void (*class_base_init)(ObjectClass *klass, void *data);
     void (*class_init)(ObjectClass *klass, void *data);
+    void (*class_post_init)(ObjectClass *klass, void *data);
 
     void *class_data;
 
@@ -121,6 +122,7 @@ static TypeImpl *type_new(const TypeInfo *info)
 
     ti->class_base_init = info->class_base_init;
     ti->class_init = info->class_init;
+    ti->class_post_init = info->class_post_init;
     ti->class_data = info->class_data;
 
     ti->instance_init = info->instance_init;
@@ -415,6 +417,14 @@ static void type_initialize(TypeImpl *ti)
 
     if (ti->class_init) {
         ti->class_init(ti->class, ti->class_data);
+    }
+
+    parent = type_get_parent(ti);
+    while (parent) {
+        if (parent->class_post_init) {
+            parent->class_post_init(ti->class, ti->class_data);
+        }
+        parent = type_get_parent(parent);
     }
 }
 

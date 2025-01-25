@@ -470,6 +470,11 @@ pub trait ObjectImpl: ObjectType + ClassInitImpl<Self::Class> {
         unsafe extern "C" fn(klass: *mut ObjectClass, data: *mut c_void),
     > = None;
 
+    /// Called to finish initialization of a class.
+    const CLASS_POST_INIT: Option<
+        unsafe extern "C" fn(klass: *mut ObjectClass, data: *mut c_void),
+    > = None;
+
     const TYPE_INFO: TypeInfo = TypeInfo {
         name: Self::TYPE_NAME.as_ptr(),
         parent: Self::ParentType::TYPE_NAME.as_ptr(),
@@ -488,6 +493,7 @@ pub trait ObjectImpl: ObjectType + ClassInitImpl<Self::Class> {
         class_size: core::mem::size_of::<Self::Class>(),
         class_base_init: Self::CLASS_BASE_INIT,
         class_init: Some(rust_class_init::<Self>),
+        class_post_init: Self::CLASS_POST_INIT,
         class_data: core::ptr::null_mut(),
         interfaces: core::ptr::null_mut(),
     };

@@ -465,8 +465,10 @@ struct Object
  *   has occurred to allow a class to set its default virtual method pointers.
  *   This is also the function to use to override virtual methods from a parent
  *   class.
- * @class_data: Data to pass to the @class_init,
- *   @class_base_init. This can be useful when building dynamic
+ * @class_post_init: This function is called to finish initialization of
+ *   a class, after all @class_init functions were called.
+ * @class_data: Data to pass to the @class_base_init, @class_init, and
+ *   @class_post_init. This can be useful when building dynamic
  *   classes.
  * @interfaces: The list of interfaces associated with this type.  This
  *   should point to a static array that's terminated with a zero filled
@@ -488,6 +490,7 @@ struct TypeInfo
 
     void (*class_base_init)(ObjectClass *klass, void *data);
     void (*class_init)(ObjectClass *klass, void *data);
+    void (*class_post_init)(ObjectClass *klass, void *data);
     void *class_data;
 
     InterfaceInfo *interfaces;
