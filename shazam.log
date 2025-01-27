@@ -1,0 +1,66 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.2.1-20250127154029@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 42 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 941 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/41] 9pfs: fix regression regarding CVE-2023-2861
+  [PATCH 2/41] tcg: Reset free_temps before tcg_optimize
+  [PATCH 3/41] tcg/riscv: Fix StoreStore barrier generation
+  [PATCH 4/41] x86/loader: only patch linux kernels
+  [PATCH 5/41] roms: re-add edk2-basetools target
+  [PATCH 6/41] pc-bios: add missing riscv64 descriptor
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [PATCH 7/41] hw/intc/arm_gicv3_its: Zero initialize local DTEntry etc structs
+  [PATCH 8/41] meson.build: Disallow libnfs v6 to fix the broken macOS build
+  [PATCH 9/41] target/i386: Reset TSCs of parked vCPUs too on VM reset
+  [PATCH 10/41] hw/intc/riscv_aplic: Fix APLIC in_clrip and clripnum write emulation
+  [PATCH 11/41] s390x/s390-virtio-ccw: don't crash on weird RAM sizes
+  [PATCH 12/41] target/loongarch: Use actual operand size with vbsrl check
+    + Fixes: df97f338076 ("target/loongarch: Implement xvreplve xvinsve0  xvpickve") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 13/41] docs: Correct '-runas' and '-fsdev/-virtfs proxy' indentation
+  [PATCH 14/41] docs: Correct release of TCG trace-events removal
+  [PATCH 15/41] target/i386/cpu: Fix notes for CPU models
+  [PATCH 16/41] migration/multifd: Fix compile error caused by page_size usage
+  [PATCH 17/41] migration/multifd: Fix compat with QEMU < 9.0
+  [PATCH 18/41] migration: Add more error handling to analyze-migration.py
+  [PATCH 19/41] migration: Remove unused argument in vmsd_desc_field_end
+  [PATCH 20/41] migration: Fix parsing of s390 stream
+  [PATCH 21/41] s390x: Fix CSS migration
+  [PATCH 22/41] migration: Rename vmstate_info_nullptr
+  [PATCH 23/41] migration: Dump correct JSON format for nullptr replacement
+  [PATCH 24/41] migration: Fix arrays of pointers in JSON writer
+  [PATCH 25/41] multifd: bugfix for migration using compression methods
+  [PATCH 26/41] multifd: bugfix for incorrect migration data with QPL compression
+  [PATCH 27/41] multifd: bugfix for incorrect migration data with qatzip compression
+  [PATCH 28/41] tests/functional/test_rx_gdbsim: Use stable URL for test_linux_sash
+  [PATCH 29/41] hw/ufs: Adjust value to match CPU's endian format
+  [PATCH 30/41] tests/qtest/boot-serial-test: Correct HPPA machine name
+  [PATCH 31/41] backends/cryptodev-vhost-user: Fix local_error leaks
+  [PATCH 32/41] hw/usb/hcd-xhci-pci: Use modulo to select MSI vector as per spec
+  [PATCH 33/41] pci: ensure valid link status bits for downstream ports
+  [PATCH 34/41] pci/msix: Fix msix pba read vector poll end calculation
+  [PATCH 35/41] tests: acpi: whitelist expected blobs
+    + Acked-by: Ani Sinha <anisinha@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 36/41] pci: acpi: Windows 'PCI Label Id' bug workaround
+    + Tested-by: Fiona Ebner <f.ebner@proxmox.com>
+  [PATCH 37/41] tests: acpi: update expected blobs
+  [PATCH 38/41] hw/cxl: Fix msix_notify: Assertion `vector < dev->msix_entries_nr`
+  [PATCH 39/41] make-release: only leave tarball of wrap-file subprojects
+    + Reviewed-by: Michael Tokarev <mjt@tls.msk.ru>
+  [PATCH 40/41] i386/cpu: Mark avx10_version filtered when prefix is NULL
+  [PATCH 41/41] crypto: fix bogus error benchmarking pbkdf on fast machines
+---
+Total patches: 41
+---
+Applying: 9pfs: fix regression regarding CVE-2023-2861
+Patch failed at 0001 9pfs: fix regression regarding CVE-2023-2861
+error: patch failed: hw/9pfs/9p-util.h:177
+error: hw/9pfs/9p-util.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
