@@ -291,6 +291,12 @@ bool ppc_cpu_debug_check_breakpoint(CPUState *cs);
 bool ppc_cpu_debug_check_watchpoint(CPUState *cs, CPUWatchpoint *wp);
 
 G_NORETURN void powerpc_checkstop(CPUPPCState *env, const char *reason);
+
+#if defined(TARGET_PPC64)
+bool is_prefix_insn_excp(CPUPPCState *env, int excp);
+void ppc_tcg_hv_emu(CPUPPCState *env, target_ulong *new_msr,
+                    int *srr0, int *srr1);
+#endif /* TARGET_PPC64 */
 #endif /* !CONFIG_USER_ONLY */
 
 FIELD(GER_MSK, XMSK, 0, 4)
