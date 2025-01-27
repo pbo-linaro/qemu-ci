@@ -291,6 +291,7 @@ bool ppc_cpu_debug_check_breakpoint(CPUState *cs);
 bool ppc_cpu_debug_check_watchpoint(CPUState *cs, CPUWatchpoint *wp);
 
 G_NORETURN void powerpc_checkstop(CPUPPCState *env, const char *reason);
+void powerpc_excp(PowerPCCPU *cpu, int excp);
 
 #if defined(TARGET_PPC64)
 bool is_prefix_insn_excp(CPUPPCState *env, int excp);
