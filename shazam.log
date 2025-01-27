@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20250127232604.20386-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/22] target/arm: Rename FPST_FPCR_A32 to FPST_A32
+  [32m✓[0m [PATCH 2/22] target/arm: Rename FPST_FPCR_A64 to FPST_A64
+  [32m✓[0m [PATCH 3/22] target/arm: Rename FPST_FPCR_F16_A32 to FPST_A32_F16
+  [32m✓[0m [PATCH 4/22] target/arm: Rename FPST_FPCR_F16_A64 to FPST_A64_F16
+  [32m✓[0m [PATCH 5/22] target/arm: Rename FPST_FPCR_AH* to FPST_AH*
+  [32m✓[0m [PATCH 6/22] target/arm: Introduce CPUARMState.vfp.fp_status[]
+  [32m✓[0m [PATCH 7/22] target/arm: Remove standard_fp_status_f16
+  [32m✓[0m [PATCH 8/22] target/arm: Remove standard_fp_status
+  [32m✓[0m [PATCH 9/22] target/arm: Remove ah_fp_status_f16
+  [32m✓[0m [PATCH 10/22] target/arm: Remove ah_fp_status
+  [32m✓[0m [PATCH 11/22] target/arm: Remove fp_status_f16_a64
+  [32m✓[0m [PATCH 12/22] target/arm: Remove fp_status_f16_a32
+  [32m✓[0m [PATCH 13/22] target/arm: Remove fp_status_a64
+  [32m✓[0m [PATCH 14/22] target/arm: Remove fp_status_a32
+  [32m✓[0m [PATCH 15/22] target/arm: Simplify fp_status indexing in mve_helper.c
+  [32m✓[0m [PATCH 16/22] target/arm: Simplify DO_VFP_cmp in vfp_helper.c
+  [32m✓[0m [PATCH 17/22] target/arm: Move float*_ah_chs to vec_internal.h
+  [32m✓[0m [PATCH 18/22] target/arm: Introduce float*_maybe_ah_chs
+  [32m✓[0m [PATCH 19/22] target/arm: Use float*_maybe_ah_chs in sve_ftssel_*
+  [32m✓[0m [PATCH 20/22] target/arm: Use float*_maybe_ah_chs in sve_ftmad_*
+  [32m✓[0m [PATCH 21/22] target/arm: Use float*_maybe_ah_chs in sve_ftmad_*
+  [32m✓[0m [PATCH 22/22] target/arm: Use flags for AH negation in do_fmla_zpzzz_*
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 22
+---
+Applying: target/arm: Rename FPST_FPCR_A32 to FPST_A32
+Patch failed at 0001 target/arm: Rename FPST_FPCR_A32 to FPST_A32
+error: patch failed: target/arm/tcg/translate.h:674
+error: target/arm/tcg/translate.h: patch does not apply
+error: patch failed: target/arm/tcg/translate-vfp.c:462
+error: target/arm/tcg/translate-vfp.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
