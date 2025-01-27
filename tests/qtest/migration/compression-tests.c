@@ -39,6 +39,17 @@ static void test_multifd_tcp_zstd(void)
     };
     test_precopy_common(&args);
 }
+
+static void test_multifd_postcopy_tcp_zstd(void)
+{
+    MigrateCommon args = {
+        .postcopy_ram = true,
+        .listen_uri = "defer",
+        .start_hook = migrate_hook_start_precopy_tcp_multifd_zstd,
+    };
+
+    test_precopy_common(&args);
+}
 #endif /* CONFIG_ZSTD */
 
 #ifdef CONFIG_QATZIP
@@ -158,6 +169,8 @@ void migration_test_add_compression(MigrationTestEnv *env)
 #ifdef CONFIG_ZSTD
     migration_test_add("/migration/multifd/tcp/plain/zstd",
                        test_multifd_tcp_zstd);
+    migration_test_add("/migration/multifd+postcopy/tcp/plain/zstd",
+                       test_multifd_postcopy_tcp_zstd);
 #endif
 
 #ifdef CONFIG_QATZIP

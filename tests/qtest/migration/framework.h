@@ -193,7 +193,11 @@ typedef struct {
      */
     bool live;
 
+    /* set multifd on */
+    bool multifd;
+
     /* Postcopy specific fields */
+    bool postcopy_ram;
     void *postcopy_data;
     bool postcopy_preempt;
     PostcopyRecoveryFailStage postcopy_recovery_fail_stage;
