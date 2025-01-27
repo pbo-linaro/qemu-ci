@@ -499,6 +499,45 @@ void ppc_tcg_hv_emu(CPUPPCState *env, target_ulong *new_msr,
     *new_msr |= env->msr & ((target_ulong)1 << MSR_RI);
 }
 
+void helper_attn(CPUPPCState *env)
+{
+    /* POWER attn is unprivileged when enabled by HID, otherwise illegal */
+    if ((*env->check_attn)(env)) {
+        powerpc_checkstop(env, "host executed attn");
+    } else {
+        raise_exception_err(env, POWERPC_EXCP_HV_EMU,
+                            POWERPC_EXCP_INVAL | POWERPC_EXCP_INVAL_INVAL);
+    }
+}
+
+void helper_scv(CPUPPCState *env, uint32_t lev)
+{
+    if (env->spr[SPR_FSCR] & (1ull << FSCR_SCV)) {
+        raise_exception_err(env, POWERPC_EXCP_SYSCALL_VECTORED, lev);
+    } else {
+        raise_exception_err(env, POWERPC_EXCP_FU, FSCR_IC_SCV);
+    }
+}
+
+void helper_pminsn(CPUPPCState *env, uint32_t insn)
+{
+    CPUState *cs = env_cpu(env);
+
+    cs->halted = 1;
+
+    /* Condition for waking up at 0x100 */
+    env->resume_as_sreset = (insn != PPC_PM_STOP) ||
+        (env->spr[SPR_PSSCR] & PSSCR_EC);
+
+    /* HDECR is not to wake from PM state, it may have already fired */
+    if (env->resume_as_sreset) {
+        PowerPCCPU *cpu = env_archcpu(env);
+        ppc_set_irq(cpu, PPC_INTERRUPT_HDECR, 0);
+    }
+
+    ppc_maybe_interrupt(env);
+}
+
 #endif /* TARGET_PPC64 */
 
 #endif /* !CONFIG_USER_ONLY */
