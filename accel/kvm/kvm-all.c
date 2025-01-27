@@ -1296,6 +1296,17 @@ static void kvm_unpoison_all(void *param)
 void kvm_hwpoison_page_add(ram_addr_t ram_addr)
 {
     HWPoisonPage *page;
+    struct RAMBlockInfo rb_info;
+
+    if (qemu_ram_block_location_info_from_addr(ram_addr, &rb_info)) {
+        size_t ps = rb_info.page_size;
+        if (ps > TARGET_PAGE_SIZE) {
+            uint64_t offset = ram_addr - rb_info.offset;
+            error_report("Memory Error on large page from %s:%" PRIx64
+                         "+%" PRIx64 " +%zx", rb_info.idstr,
+                         QEMU_ALIGN_DOWN(offset, ps), rb_info.fd_offset, ps);
+        }
+    }
 
     QLIST_FOREACH(page, &hwpoison_page_list, list) {
         if (page->ram_addr == ram_addr) {

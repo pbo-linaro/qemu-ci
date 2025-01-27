@@ -110,6 +110,15 @@ int qemu_ram_get_fd(RAMBlock *rb);
 size_t qemu_ram_pagesize(RAMBlock *block);
 size_t qemu_ram_pagesize_largest(void);
 
+struct RAMBlockInfo {
+    char idstr[256];
+    ram_addr_t offset;
+    uint64_t fd_offset;
+    size_t page_size;
+};
+bool qemu_ram_block_location_info_from_addr(ram_addr_t ram_addr,
+                                            struct RAMBlockInfo *block);
+
 /**
  * cpu_address_space_init:
  * @cpu: CPU to add this address space to
