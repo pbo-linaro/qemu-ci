@@ -945,6 +945,7 @@ MigrationTestEnv *migration_get_env(void)
     env->arch = qtest_get_arch();
 
     env->has_kvm = qtest_has_accel("kvm");
+    env->has_hvf = qtest_has_accel("hvf");
     env->has_tcg = qtest_has_accel("tcg");
 
     if (!env->has_tcg && !env->has_kvm) {
