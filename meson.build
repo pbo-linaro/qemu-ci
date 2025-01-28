@@ -4834,14 +4834,12 @@ if host_arch == 'unknown'
     message('configure has succeeded and you can continue to build, but')
     message('QEMU will use a slow interpreter to emulate the target CPU.')
   endif
-elif host_arch == 'mips'
+elif cc.sizeof('void *') < 8
   message()
   warning('DEPRECATED HOST CPU')
   message()
   message('Support for CPU host architecture ' + cpu + ' is going to be')
-  message('dropped as soon as the QEMU project stops supporting Debian 12')
-  message('("Bookworm"). Going forward, the QEMU project will not guarantee')
-  message('that QEMU will compile or work on this host CPU.')
+  message('dropped in a future QEMU release.')
 endif
 
 if not supported_oses.contains(host_os)

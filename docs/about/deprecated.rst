@@ -204,6 +204,14 @@ is going to be so much slower it wouldn't make sense for any serious
 instrumentation. Due to implementation differences there will also be
 anomalies in things like memory instrumentation.
 
+32-bit host operating systems (since 10.0)
+''''''''''''''''''''''''''''''''''''''''''
+
+Keeping the 32-bit support alive is a substantial burden for the QEMU
+project. Thus QEMU will soon drop the support for 32-bit host systems.
+Recent testing on 32-bit host OS has been inadequate at best, apparently
+due to lack of interest and usage on such hosts.
+
 System emulator CPUs
 --------------------
 
