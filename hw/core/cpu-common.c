@@ -211,16 +211,17 @@ static void cpu_common_realizefn(DeviceState *dev, Error **errp)
         }
     }
 
-    if (dev->hotplugged) {
-        cpu_synchronize_post_init(cpu);
-        cpu_resume(cpu);
-    }
-
     /* NOTE: latest generic point where the cpu is fully realized */
 }
 
 static void cpu_common_wire(DeviceState *dev)
 {
+    CPUState *cpu = CPU(dev);
+
+    if (dev->hotplugged) {
+        cpu_synchronize_post_init(cpu);
+        cpu_resume(cpu);
+    }
 }
 
 static void cpu_common_unwire(DeviceState *dev)
