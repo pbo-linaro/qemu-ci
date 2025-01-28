@@ -950,11 +950,6 @@ MigrationTestEnv *migration_get_env(void)
     env->has_hvf = qtest_has_accel("hvf");
     env->has_tcg = qtest_has_accel("tcg");
 
-    if (!env->has_tcg && !env->has_kvm) {
-        g_test_skip("No KVM or TCG accelerator available");
-        return env;
-    }
-
     env->has_dirty_ring = env->has_kvm && kvm_dirty_ring_supported();
     env->has_uffd = ufd_version_check(&env->uffd_feature_thread_id);
     env->is_x86 = !strcmp(env->arch, "i386") || !strcmp(env->arch, "x86_64");
