@@ -1,0 +1,56 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.16-20250128004119@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1013 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/31] hw/intc/openpic: Avoid taking address of out-of-bounds array index
+  [PATCH 2/31] bitops.h: Define bit operations on 'uint32_t' arrays
+  [PATCH 3/31] hw/intc/loongarch_extioi: Use set_bit32() and clear_bit32() for s->isr
+  [PATCH 4/31] cirrus-ci: Remove MSYS2 jobs duplicated with gitlab-ci
+  [PATCH 5/31] virtio-net: Fix size check in dhclient workaround
+  [PATCH 6/31] qdev: Fix set_pci_devfn() to visit option only once
+  [PATCH 7/31] ssh: Do not switch session to non-blocking mode
+  [PATCH 8/31] scsi: megasas: Internal cdbs have 16-byte length
+  [PATCH 9/31] tests/9p: fix Rreaddir response name
+    + Fixes: 4829469fd9ff ('tests/virtio-9p: added readdir test') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 10/31] tests/9p: add missing Rgetattr response name
+    + Fixes: a6821b828404 ('tests/9pfs: compare QIDs in fs_walk_none() test') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 11/31] tests/9p: add 'use-after-unlink' test
+  [PATCH 12/31] 9pfs: remove obsolete comment in v9fs_getattr()
+    + Fixes: e06a765efbe3 ('hw/9pfs: Add st_gen support in getattr reply') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 13/31] 9pfs: fix 'Tgetattr' after unlink
+    + Fixes: 00ede4c2529b ('virtio-9p: getattr server implementation...') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 14/31] tests/9p: also check 'Tgetattr' in 'use-after-unlink' test
+  [PATCH 15/31] target/ppc: Fix non-maskable interrupt while halted
+  [PATCH 16/31] hw/openrisc/openrisc_sim: keep serial@90000000 as default
+  [PATCH 17/31] tcg/riscv: Fix StoreStore barrier generation
+  [PATCH 18/31] fuzz: specify audiodev for usb-audio
+  [PATCH 19/31] x86/loader: only patch linux kernels
+  [PATCH 20/31] hw/intc/arm_gicv3_its: Zero initialize local DTEntry etc structs
+  [PATCH 21/31] meson.build: Disallow libnfs v6 to fix the broken macOS build
+  [PATCH 22/31] s390x/s390-virtio-ccw: don't crash on weird RAM sizes
+  [PATCH 23/31] docs: Correct release of TCG trace-events removal
+  [PATCH 24/31] target/i386/cpu: Fix notes for CPU models
+  [PATCH 25/31] backends/cryptodev-vhost-user: Fix local_error leaks
+  [PATCH 26/31] hw/usb/hcd-xhci-pci: Use modulo to select MSI vector as per spec
+  [PATCH 27/31] pci: ensure valid link status bits for downstream ports
+  [PATCH 28/31] pci/msix: Fix msix pba read vector poll end calculation
+  [PATCH 29/31] tests: acpi: whitelist expected blobs
+  [PATCH 30/31] pci: acpi: Windows 'PCI Label Id' bug workaround
+  [PATCH 31/31] tests: acpi: update expected blobs
+---
+Total patches: 31
+---
+Applying: hw/intc/openpic: Avoid taking address of out-of-bounds array index
+Patch failed at 0001 hw/intc/openpic: Avoid taking address of out-of-bounds array index
+error: patch failed: hw/intc/openpic.c:1035
+error: hw/intc/openpic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
