@@ -891,6 +891,8 @@ static void tb_jmp_cache_inval_tb(TranslationBlock *tb)
     } else {
         uint32_t h = tb_jmp_cache_hash_func(tb->pc);
 
+        QEMU_LOCK_GUARD(&qemu_cpu_list_lock);
+
         CPU_FOREACH(cpu) {
             CPUJumpCache *jc = cpu->tb_jmp_cache;
 
