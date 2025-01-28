@@ -938,6 +938,8 @@ MigrationTestEnv *migration_get_env(void)
         exit(1);
     }
 
+    env->arch = qtest_get_arch();
+
     env->has_kvm = qtest_has_accel("kvm");
     env->has_tcg = qtest_has_accel("tcg");
 
@@ -948,7 +950,6 @@ MigrationTestEnv *migration_get_env(void)
 
     env->has_dirty_ring = env->has_kvm && kvm_dirty_ring_supported();
     env->has_uffd = ufd_version_check(&env->uffd_feature_thread_id);
-    env->arch = qtest_get_arch();
     env->is_x86 = !strcmp(env->arch, "i386") || !strcmp(env->arch, "x86_64");
 
     env->tmpfs = g_dir_make_tmp("migration-test-XXXXXX", &err);
