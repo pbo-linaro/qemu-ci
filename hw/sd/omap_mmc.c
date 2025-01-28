@@ -25,7 +25,7 @@
 #include "hw/irq.h"
 #include "hw/sysbus.h"
 #include "hw/arm/omap.h"
-#include "hw/sd/sdcard_legacy.h"
+#include "hw/sd/sd.h"
 
 typedef struct OMAPMMCState {
     SysBusDevice parent_obj;
