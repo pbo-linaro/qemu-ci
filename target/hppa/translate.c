@@ -73,6 +73,7 @@ typedef struct DisasContext {
 
     /* IAOQ_Front at entry to TB. */
     uint64_t iaoq_first;
+    uint64_t gva_offset_mask;
 
     DisasCond null_cond;
     TCGLabel *null_lab;
@@ -1577,7 +1578,7 @@ static void form_gva(DisasContext *ctx, TCGv_i64 *pgva, TCGv_i64 *pofs,
     *pofs = ofs;
     *pgva = addr = tcg_temp_new_i64();
     tcg_gen_andi_i64(addr, modify <= 0 ? ofs : base,
-                     gva_offset_mask(ctx->tb_flags));
+                     ctx->gva_offset_mask);
 #ifndef CONFIG_USER_ONLY
     if (!is_phys) {
         tcg_gen_or_i64(addr, addr, space_select(ctx, sp, base));
@@ -4615,6 +4616,10 @@ static bool trans_diag_mtdiag(DisasContext *ctx, arg_diag_mtdiag *a)
     nullify_over(ctx);
     tcg_gen_st_i64(load_gpr(ctx, a->r1), tcg_env,
                         offsetof(CPUHPPAState, dr[a->dr]));
+    if (ctx->is_pa20 && (a->dr == 2)) {
+        /* Exit TB to recalculate gva_offset_mask on %dr2 */
+        ctx->base.is_jmp = DISAS_IAQ_N_STALE_EXIT;
+    }
     return nullify_end(ctx);
 }
 
@@ -4635,6 +4640,7 @@ static void hppa_tr_init_disas_context(DisasContextBase *dcbase, CPUState *cs)
     ctx->tb_flags = ctx->base.tb->flags;
     ctx->is_pa20 = hppa_is_pa20(cpu_env(cs));
     ctx->psw_xb = ctx->tb_flags & (PSW_X | PSW_B);
+    ctx->gva_offset_mask = cpu_env(cs)->gva_offset_mask;
 
 #ifdef CONFIG_USER_ONLY
     ctx->privilege = PRIV_USER;
