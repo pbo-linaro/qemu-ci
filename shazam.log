@@ -1,0 +1,85 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.1.3-20250127232536@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 59 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1543 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/58] hw/intc/openpic: Avoid taking address of out-of-bounds array index
+  [PATCH 2/58] bitops.h: Define bit operations on 'uint32_t' arrays
+  [PATCH 3/58] hw/intc/loongarch_extioi: Use set_bit32() and clear_bit32() for s->isr
+  [PATCH 4/58] linux-user: Fix strace output for s390x mmap()
+  [PATCH 5/58] virtio-net: Fix size check in dhclient workaround
+  [PATCH 6/58] qdev: Fix set_pci_devfn() to visit option only once
+  [PATCH 7/58] ssh: Do not switch session to non-blocking mode
+  [PATCH 8/58] plugins: add missing export for qemu_plugin_num_vcpus
+  [PATCH 9/58] migration: Allow pipes to keep working for fd migrations
+  [PATCH 10/58] virtio-net: Add queues before loading them
+  [PATCH 11/58] ppc/spapr: fix drc index mismatch for partially enabled vcpus
+  [PATCH 12/58] scsi: megasas: Internal cdbs have 16-byte length
+  [PATCH 13/58] tests/9p: fix Rreaddir response name
+    + Fixes: 4829469fd9ff ('tests/virtio-9p: added readdir test') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 14/58] tests/9p: add missing Rgetattr response name
+    + Fixes: a6821b828404 ('tests/9pfs: compare QIDs in fs_walk_none() test') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 15/58] tests/9p: add 'use-after-unlink' test
+  [PATCH 16/58] 9pfs: remove obsolete comment in v9fs_getattr()
+    + Fixes: e06a765efbe3 ('hw/9pfs: Add st_gen support in getattr reply') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 17/58] 9pfs: fix 'Tgetattr' after unlink
+    + Fixes: 00ede4c2529b ('virtio-9p: getattr server implementation...') ([32m✓[0m DKIM/crudebyte.com)
+  [PATCH 18/58] tests/9p: also check 'Tgetattr' in 'use-after-unlink' test
+  [PATCH 19/58] target/ppc: Fix non-maskable interrupt while halted
+  [PATCH 20/58] target/ppc: Fix THREAD_SIBLING_FOREACH for multi-socket
+    + Reviewed-by: Glenn Miles <milesg@linux.ibm.com> ([32m✓[0m DKIM/ibm.com)
+  [PATCH 21/58] hw/nvme: fix msix_uninit with exclusive bar
+  [PATCH 22/58] hw/nvme: take a reference on the subsystem on vf realization
+  [PATCH 23/58] hw/openrisc/openrisc_sim: keep serial@90000000 as default
+  [PATCH 24/58] target/riscv: Avoid bad shift in riscv_cpu_do_interrupt()
+  [PATCH 25/58] 9pfs: fix regression regarding CVE-2023-2861
+  [PATCH 26/58] tcg: Reset free_temps before tcg_optimize
+  [PATCH 27/58] tcg/riscv: Fix StoreStore barrier generation
+  [PATCH 28/58] x86/loader: only patch linux kernels
+  [PATCH 29/58] roms: re-add edk2-basetools target
+  [PATCH 30/58] pc-bios: add missing riscv64 descriptor
+  [PATCH 31/58] hw/intc/arm_gicv3_its: Zero initialize local DTEntry etc structs
+  [PATCH 32/58] meson.build: Disallow libnfs v6 to fix the broken macOS build
+  [PATCH 33/58] vhost-user: fix shared object return values
+  [PATCH 34/58] target/i386: Reset TSCs of parked vCPUs too on VM reset
+  [PATCH 35/58] hw/intc/riscv_aplic: Fix APLIC in_clrip and clripnum write emulation
+  [PATCH 36/58] s390x/s390-virtio-ccw: don't crash on weird RAM sizes
+  [PATCH 37/58] config/targets: update aarch64_be-linux-user gdb XML list
+  [PATCH 38/58] target/loongarch: Use actual operand size with vbsrl check
+    + Fixes: df97f338076 ("target/loongarch: Implement xvreplve xvinsve0  xvpickve") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 39/58] docs: Correct release of TCG trace-events removal
+  [PATCH 40/58] target/i386/cpu: Fix notes for CPU models
+  [PATCH 41/58] migration: Add more error handling to analyze-migration.py
+  [PATCH 42/58] migration: Remove unused argument in vmsd_desc_field_end
+  [PATCH 43/58] migration: Fix parsing of s390 stream
+  [PATCH 44/58] s390x: Fix CSS migration
+  [PATCH 45/58] migration: Rename vmstate_info_nullptr
+  [PATCH 46/58] migration: Dump correct JSON format for nullptr replacement
+  [PATCH 47/58] migration: Fix arrays of pointers in JSON writer
+  [PATCH 48/58] multifd: bugfix for migration using compression methods
+  [PATCH 49/58] multifd: bugfix for incorrect migration data with QPL compression
+  [PATCH 50/58] tests/qtest/boot-serial-test: Correct HPPA machine name
+  [PATCH 51/58] backends/cryptodev-vhost-user: Fix local_error leaks
+  [PATCH 52/58] hw/usb/hcd-xhci-pci: Use modulo to select MSI vector as per spec
+  [PATCH 53/58] pci: ensure valid link status bits for downstream ports
+  [PATCH 54/58] pci/msix: Fix msix pba read vector poll end calculation
+  [PATCH 55/58] tests: acpi: whitelist expected blobs
+  [PATCH 56/58] pci: acpi: Windows 'PCI Label Id' bug workaround
+    + Tested-by: Fiona Ebner <f.ebner@proxmox.com>
+  [PATCH 57/58] tests: acpi: update expected blobs
+  [PATCH 58/58] hw/cxl: Fix msix_notify: Assertion `vector < dev->msix_entries_nr`
+---
+Total patches: 58
+---
+Applying: hw/intc/openpic: Avoid taking address of out-of-bounds array index
+Patch failed at 0001 hw/intc/openpic: Avoid taking address of out-of-bounds array index
+error: patch failed: hw/intc/openpic.c:1032
+error: hw/intc/openpic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
