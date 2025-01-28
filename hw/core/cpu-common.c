@@ -219,6 +219,14 @@ static void cpu_common_realizefn(DeviceState *dev, Error **errp)
     /* NOTE: latest generic point where the cpu is fully realized */
 }
 
+static void cpu_common_wire(DeviceState *dev)
+{
+}
+
+static void cpu_common_unwire(DeviceState *dev)
+{
+}
+
 static void cpu_common_unrealizefn(DeviceState *dev)
 {
     CPUState *cpu = CPU(dev);
@@ -311,6 +319,8 @@ static void cpu_common_class_init(ObjectClass *klass, void *data)
     k->gdb_write_register = cpu_common_gdb_write_register;
     set_bit(DEVICE_CATEGORY_CPU, dc->categories);
     dc->realize = cpu_common_realizefn;
+    dc->wire = cpu_common_wire;
+    dc->unwire = cpu_common_unwire;
     dc->unrealize = cpu_common_unrealizefn;
     rc->phases.hold = cpu_common_reset_hold;
     cpu_class_init_props(dc);
