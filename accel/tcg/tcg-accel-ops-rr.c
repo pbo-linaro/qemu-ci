@@ -197,19 +197,20 @@ static void *rr_cpu_thread_fn(void *arg)
     qemu_guest_random_seed_thread_part2(cpu->random_seed);
 
     /* wait for initial kick-off after machine start */
-    while (first_cpu->stopped) {
-        qemu_cond_wait_bql(first_cpu->halt_cond);
+    while (cpu->stopped) {
+        CPUState *iter_cpu;
+
+        qemu_cond_wait_bql(cpu->halt_cond);
 
         /* process any pending work */
-        CPU_FOREACH(cpu) {
-            current_cpu = cpu;
-            qemu_wait_io_event_common(cpu);
+        CPU_FOREACH(iter_cpu) {
+            current_cpu = iter_cpu;
+            qemu_wait_io_event_common(iter_cpu);
         }
     }
 
+    g_assert(first_cpu);
     rr_start_kick_timer();
-
-    cpu = first_cpu;
 
     /* process any pending work */
     cpu->exit_request = 1;
