@@ -214,8 +214,9 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
     const gchar *ignore_stderr;
     g_autofree char *shmem_opts = NULL;
     g_autofree char *shmem_path = NULL;
-    const char *kvm_opts = NULL;
-    const char *arch = qtest_get_arch();
+    const char *accel_args = NULL;
+    const MigrationTestEnv *env = migration_get_env();
+    const char *arch = env->arch;
     const char *memory_size;
     const char *machine_alias, *machine_opts = "";
     g_autofree char *machine = NULL;
@@ -296,8 +297,15 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
             memory_size, shmem_path);
     }
 
-    if (args->use_dirty_ring) {
-        kvm_opts = ",dirty-ring-size=4096";
+    if (env->has_kvm) {
+        if (args->use_dirty_ring) {
+            accel_args = "kvm,dirty-ring-size=4096";
+        } else {
+            accel_args = "kvm";
+        }
+    } else {
+        assert(env->has_tcg);
+        accel_args = "tcg";
     }
 
     if (!qtest_has_machine(machine_alias)) {
@@ -311,14 +319,12 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
 
     g_test_message("Using machine type: %s", machine);
 
-    cmd_source = g_strdup_printf("-accel kvm%s -accel tcg "
-                                 "-machine %s,%s "
+    cmd_source = g_strdup_printf("-machine %s,%s,accel=%s "
                                  "-name source,debug-threads=on "
                                  "-m %s "
                                  "-serial file:%s/src_serial "
                                  "%s %s %s %s",
-                                 kvm_opts ? kvm_opts : "",
-                                 machine, machine_opts,
+                                 machine, machine_opts, accel_args,
                                  memory_size, tmpfs,
                                  arch_opts ? arch_opts : "",
                                  shmem_opts ? shmem_opts : "",
@@ -332,15 +338,13 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
                                      &src_state);
     }
 
-    cmd_target = g_strdup_printf("-accel kvm%s -accel tcg "
-                                 "-machine %s,%s "
+    cmd_target = g_strdup_printf("-machine %s,%s,accel=%s "
                                  "-name target,debug-threads=on "
                                  "-m %s "
                                  "-serial file:%s/dest_serial "
                                  "-incoming %s "
                                  "%s %s %s %s",
-                                 kvm_opts ? kvm_opts : "",
-                                 machine, machine_opts,
+                                 machine, machine_opts, accel_args,
                                  memory_size, tmpfs, uri,
                                  arch_opts ? arch_opts : "",
                                  shmem_opts ? shmem_opts : "",
