@@ -102,7 +102,12 @@ typedef int (*DeviceSyncConfig)(DeviceState *dev, Error **errp);
  * @props: Properties accessing state fields.
  * @realize: Callback function invoked when the #DeviceState:realized
  * property is changed to %true.
+ * @wire: Callback function called after @realize to connect IRQs,
+ * clocks and map memories. Can not fail.
+ * @unwire: Callback function to undo @wire. Called before @unrealize.
+ * Can not fail.
  * @unrealize: Callback function invoked when the #DeviceState:realized
+ * property is changed to %false. Can not fail.
  * property is changed to %false.
  * @sync_config: Callback function invoked when QMP command device-sync-config
  * is called. Should synchronize device configuration from host to guest part
@@ -171,6 +176,8 @@ struct DeviceClass {
      */
     DeviceReset legacy_reset;
     DeviceRealize realize;
+    void (*wire)(DeviceState *dev);
+    void (*unwire)(DeviceState *dev);
     DeviceUnrealize unrealize;
     DeviceSyncConfig sync_config;
 

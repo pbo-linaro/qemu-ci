@@ -554,6 +554,15 @@ static void device_set_realized(Object *obj, bool value, Error **errp)
             }
        }
 
+        if (dc->wire) {
+            if (!dc->unwire) {
+                warn_report_once("wire() without unwire() for type '%s'",
+                                 object_get_typename(OBJECT(dev)));
+            }
+            dc->wire(dev);
+        }
+
+        /* At this point the device is "guest visible". */
        qatomic_store_release(&dev->realized, value);
 
     } else if (!value && dev->realized) {
@@ -573,6 +582,15 @@ static void device_set_realized(Object *obj, bool value, Error **errp)
          */
         smp_wmb();
 
+        if (dc->unwire) {
+            if (!dc->wire) {
+                error_report("disconnect() without connect() for type '%s'",
+                             object_get_typename(OBJECT(dev)));
+                abort();
+            }
+            dc->unwire(dev);
+        }
+
         QLIST_FOREACH(bus, &dev->child_bus, sibling) {
             qbus_unrealize(bus);
         }
@@ -585,8 +603,8 @@ static void device_set_realized(Object *obj, bool value, Error **errp)
         dev->pending_deleted_event = true;
         DEVICE_LISTENER_CALL(unrealize, Reverse, dev);
     }
-
     assert(local_err == NULL);
+
     return;
 
 child_realize_fail:
