@@ -25,6 +25,7 @@
 #include "qemu/cpu-float.h"
 #include "qemu/interval-tree.h"
 #include "hw/registerfields.h"
+#include "hw/hppa/hppa_hardware.h"
 
 #define MMU_ABS_W_IDX     6
 #define MMU_ABS_IDX       7
@@ -232,6 +233,7 @@ typedef struct CPUArchState {
     target_ulong cr[32];     /* control registers */
     target_ulong cr_back[2]; /* back of cr17/cr18 */
     target_ulong shadow[7];  /* shadow registers */
+    target_ulong dr[32];     /* diagnose registers */
 
     /*
      * During unwind of a memory insn, the base register of the address.
@@ -319,27 +321,33 @@ void hppa_translate_code(CPUState *cs, TranslationBlock *tb,
 
 #define CPU_RESOLVING_TYPE TYPE_HPPA_CPU
 
-static inline uint64_t gva_offset_mask(target_ulong psw)
+static inline uint64_t gva_offset_mask(CPUHPPAState *env, target_ulong psw)
 {
-    return (psw & PSW_W
-            ? MAKE_64BIT_MASK(0, 62)
-            : MAKE_64BIT_MASK(0, 32));
+    if (psw & PSW_W) {
+        return (env->dr[2] & HPPA64_DIAG_SPHASH_ENABLE)
+            ? MAKE_64BIT_MASK(0, 62) &
+                ~((uint64_t)HPPA64_PDC_CACHE_RET_SPID_VAL << 48)
+            : MAKE_64BIT_MASK(0, 62);
+    } else {
+        return MAKE_64BIT_MASK(0, 32);
+    }
 }
 
-static inline target_ulong hppa_form_gva_psw(target_ulong psw, uint64_t spc,
-                                             target_ulong off)
+static inline target_ulong hppa_form_gva_psw(CPUHPPAState *env,
+                                             target_ulong psw,
+                                             uint64_t spc, target_ulong off)
 {
 #ifdef CONFIG_USER_ONLY
     return off & gva_offset_mask(psw);
 #else
-    return spc | (off & gva_offset_mask(psw));
+    return spc | (off & gva_offset_mask(env, psw));
 #endif
 }
 
 static inline target_ulong hppa_form_gva(CPUHPPAState *env, uint64_t spc,
                                          target_ulong off)
 {
-    return hppa_form_gva_psw(env->psw, spc, off);
+    return hppa_form_gva_psw(env, env->psw, spc, off);
 }
 
 hwaddr hppa_abs_to_phys_pa2_w0(vaddr addr);

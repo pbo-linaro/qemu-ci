@@ -662,6 +662,11 @@ static void hppa_machine_reset(MachineState *ms, ResetType type)
         cpu_set_pc(cs, firmware_entry);
         cpu[i]->env.psw = PSW_Q;
         cpu[i]->env.gr[5] = CPU_HPA + i * 0x1000;
+
+        /* 64-bit machines start with space-register hashing enabled in %dr2 */
+        if (hppa_is_pa20(&cpu[0]->env)) {
+            cpu[i]->env.dr[2] = HPPA64_DIAG_SPHASH_ENABLE; /* (bit 54) */
+        }
     }
 
     cpu[0]->env.gr[26] = ms->ram_size;

@@ -1577,7 +1577,7 @@ static void form_gva(DisasContext *ctx, TCGv_i64 *pgva, TCGv_i64 *pofs,
     *pofs = ofs;
     *pgva = addr = tcg_temp_new_i64();
     tcg_gen_andi_i64(addr, modify <= 0 ? ofs : base,
-                     gva_offset_mask(ctx->tb_flags));
+                     gva_offset_mask(cpu_env(ctx->cs), ctx->tb_flags));
 #ifndef CONFIG_USER_ONLY
     if (!is_phys) {
         tcg_gen_or_i64(addr, addr, space_select(ctx, sp, base));
@@ -4593,19 +4593,29 @@ static bool trans_diag_getshadowregs_pa1(DisasContext *ctx, arg_empty *a)
     return !ctx->is_pa20 && do_getshadowregs(ctx);
 }
 
-static bool trans_diag_getshadowregs_pa2(DisasContext *ctx, arg_empty *a)
-{
-    return ctx->is_pa20 && do_getshadowregs(ctx);
-}
-
 static bool trans_diag_putshadowregs_pa1(DisasContext *ctx, arg_empty *a)
 {
     return !ctx->is_pa20 && do_putshadowregs(ctx);
 }
 
-static bool trans_diag_putshadowregs_pa2(DisasContext *ctx, arg_empty *a)
+static bool trans_diag_mfdiag(DisasContext *ctx, arg_diag_mfdiag *a)
 {
-    return ctx->is_pa20 && do_putshadowregs(ctx);
+    CHECK_MOST_PRIVILEGED(EXCP_PRIV_OPR);
+    nullify_over(ctx);
+    TCGv_i64 dest = dest_gpr(ctx, a->rt);
+    tcg_gen_ld_i64(dest, tcg_env,
+                       offsetof(CPUHPPAState, dr[a->dr]));
+    save_gpr(ctx, a->rt, dest);
+    return nullify_end(ctx);
+}
+
+static bool trans_diag_mtdiag(DisasContext *ctx, arg_diag_mtdiag *a)
+{
+    CHECK_MOST_PRIVILEGED(EXCP_PRIV_OPR);
+    nullify_over(ctx);
+    tcg_gen_st_i64(load_gpr(ctx, a->r1), tcg_env,
+                        offsetof(CPUHPPAState, dr[a->dr]));
+    return nullify_end(ctx);
 }
 
 static bool trans_diag_unimp(DisasContext *ctx, arg_diag_unimp *a)
