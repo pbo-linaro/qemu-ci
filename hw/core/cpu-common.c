@@ -218,6 +218,8 @@ static void cpu_common_wire(DeviceState *dev)
 {
     CPUState *cpu = CPU(dev);
 
+    QTAILQ_INSERT_TAIL_RCU(&cpus_queue, cpu, node);
+
     if (dev->hotplugged) {
         cpu_synchronize_post_init(cpu);
         cpu_resume(cpu);
@@ -226,6 +228,9 @@ static void cpu_common_wire(DeviceState *dev)
 
 static void cpu_common_unwire(DeviceState *dev)
 {
+    CPUState *cpu = CPU(dev);
+
+    QTAILQ_REMOVE_RCU(&cpus_queue, cpu, node);
 }
 
 static void cpu_common_unrealizefn(DeviceState *dev)
