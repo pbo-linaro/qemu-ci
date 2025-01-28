@@ -983,8 +983,7 @@ void migration_test_add_precopy(MigrationTestEnv *env)
     if (g_test_slow()) {
         migration_test_add("/migration/auto_converge",
                            test_auto_converge);
-        if (g_str_equal(env->arch, "x86_64") &&
-            env->has_kvm && env->has_dirty_ring) {
+        if (g_str_equal(env->arch, "x86_64") && env->has_dirty_ring) {
             migration_test_add("/dirty_limit",
                                test_dirty_limit);
         }
@@ -999,8 +998,7 @@ void migration_test_add_precopy(MigrationTestEnv *env)
                        test_multifd_tcp_no_zero_page);
     migration_test_add("/migration/multifd/tcp/plain/cancel",
                        test_multifd_tcp_cancel);
-    if (g_str_equal(env->arch, "x86_64")
-        && env->has_kvm && env->has_dirty_ring) {
+    if (g_str_equal(env->arch, "x86_64") && env->has_dirty_ring) {
 
         migration_test_add("/migration/dirty_ring",
                            test_precopy_unix_dirty_ring);
