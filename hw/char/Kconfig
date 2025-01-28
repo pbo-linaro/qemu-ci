@@ -78,3 +78,8 @@ config GOLDFISH_TTY
 
 config SHAKTI_UART
     bool
+
+config DIVA_GSP
+    bool
+    depends on PCI
+    select SERIAL
