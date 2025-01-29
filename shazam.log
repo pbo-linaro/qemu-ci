@@ -1,0 +1,48 @@
+Grabbing thread from lore.kernel.org/all/1738161802-172631-1-git-send-email-steven.sistare@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 13 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v1 1/26] migration: cpr helpers
+  [32m✓[0m [PATCH v1 2/26] migration: lower handler priority
+  [32m✓[0m [PATCH v1 3/26] vfio: vfio_find_ram_discard_listener
+  [32m✓[0m [PATCH v1 4/26] vfio/container: register container for cpr
+  [32m✓[0m [PATCH v1 5/26] vfio/container: preserve descriptors
+  [32m✓[0m [PATCH v1 6/26] vfio/container: preserve DMA mappings
+  [32m✓[0m [PATCH v1 7/26] vfio/container: recover from unmap-all-vaddr failure
+  [32m✓[0m [PATCH v1 8/26] pci: skip reset during cpr
+  [32m✓[0m [PATCH v1 9/26] pci: export msix_is_pending
+  [32m✓[0m [PATCH v1 10/26] vfio-pci: refactor for cpr
+  [32m✓[0m [PATCH v1 11/26] vfio-pci: skip reset during cpr
+  [32m✓[0m [PATCH v1 12/26] vfio-pci: preserve MSI
+  [32m✓[0m [PATCH v1 13/26] vfio-pci: preserve INTx
+  [32m✓[0m [PATCH v1 14/26] migration: close kvm after cpr
+  [32m✓[0m [PATCH v1 15/26] migration: cpr_get_fd_param helper
+  [32m✓[0m [PATCH v1 16/26] vfio: return mr from vfio_get_xlat_addr
+  [32m✓[0m [PATCH v1 17/26] vfio: pass ramblock to vfio_container_dma_map
+  [32m✓[0m [PATCH v1 18/26] vfio/iommufd: define iommufd_cdev_make_hwpt
+  [32m✓[0m [PATCH v1 19/26] vfio/iommufd: use IOMMU_IOAS_MAP_FILE
+  [32m✓[0m [PATCH v1 20/26] vfio/iommufd: export iommufd_cdev_get_info_iova_range
+  [32m✓[0m [PATCH v1 21/26] iommufd: change process ioctl
+  [32m✓[0m [PATCH v1 22/26] vfio/iommufd: invariant device name
+  [32m✓[0m [PATCH v1 23/26] vfio/iommufd: register container for cpr
+  [32m✓[0m [PATCH v1 24/26] vfio/iommufd: preserve descriptors
+  [32m✓[0m [PATCH v1 25/26] vfio/iommufd: reconstruct device
+  [32m✓[0m [PATCH v1 26/26] iommufd: preserve DMA mappings
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 26
+---
+Applying: migration: cpr helpers
+Patch failed at 0001 migration: cpr helpers
+error: include/migration/cpr.h: does not exist in index
+error: migration/cpr.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
