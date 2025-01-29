@@ -141,8 +141,4 @@ static inline void target_cpu_clone_regs(CPURISCVState *env, target_ulong newsp)
     env->gpr[xT0] = 0;
 }
 
-static inline void target_cpu_reset(CPUArchState *env)
-{
-}
-
 #endif /* TARGET_ARCH_CPU_H */

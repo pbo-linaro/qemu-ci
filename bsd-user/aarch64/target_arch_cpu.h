@@ -181,9 +181,4 @@ static inline void target_cpu_clone_regs(CPUARMState *env, target_ulong newsp)
     pstate_write(env, 0);
 }
 
-static inline void target_cpu_reset(CPUArchState *env)
-{
-}
-
-
 #endif /* TARGET_ARCH_CPU_H */
