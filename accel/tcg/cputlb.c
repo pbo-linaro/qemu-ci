@@ -61,8 +61,8 @@
 #  define DEBUG_TLB_LOG_GATE 0
 # endif
 #else
-# define DEBUG_TLB_GATE 0
-# define DEBUG_TLB_LOG_GATE 0
+# define DEBUG_TLB_GATE 1
+# define DEBUG_TLB_LOG_GATE 1
 #endif
 
 #define tlb_debug(fmt, ...) do { \
@@ -74,11 +74,8 @@
     } \
 } while (0)
 
-#define assert_cpu_is_self(cpu) do {                              \
-        if (DEBUG_TLB_GATE) {                                     \
-            g_assert(!(cpu)->created || qemu_cpu_is_self(cpu));   \
-        }                                                         \
-    } while (0)
+#define assert_cpu_is_self(cpu)                             \
+    tcg_debug_assert(!(cpu)->created || qemu_cpu_is_self(cpu))
 
 /* run_on_cpu_data.target_ptr should always be big enough for a
  * vaddr even on 32 bit builds
