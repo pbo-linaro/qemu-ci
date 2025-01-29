@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/cover.1738137123.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 193 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/13] acpi/ghes: Prepare to support multiple sources on ghes
+  [32m✓[0m [PATCH v2 2/13] tests/acpi: virt: allow acpi table changes for a new table: HEST
+  [32m✓[0m [PATCH v2 3/13] acpi/ghes: add a firmware file with HEST address
+  [32m✓[0m [PATCH v2 4/13] acpi/ghes: Use HEST table offsets when preparing GHES records
+  [32m✓[0m [PATCH v2 5/13] acpi/generic_event_device: Update GHES migration to cover hest addr
+  [32m✓[0m [PATCH v2 6/13] acpi/generic_event_device: add logic to detect if HEST addr is available
+  [32m✓[0m [PATCH v2 7/13] acpi/ghes: add a notifier to notify when error data is ready
+  [32m✓[0m [PATCH v2 8/13] acpi/ghes: Cleanup the code which gets ghes ged state
+  [32m✓[0m [PATCH v2 9/13] acpi/generic_event_device: add an APEI error device
+  [32m✓[0m [PATCH v2 10/13] arm/virt: Wire up a GED error device for ACPI / GHES
+  [32m✓[0m [PATCH v2 11/13] qapi/acpi-hest: add an interface to do generic CPER error injection
+  [32m✓[0m [PATCH v2 12/13] tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
+  [32m✓[0m [PATCH v2 13/13] scripts/ghes_inject: add a script to generate GHES error inject
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 13
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: acpi/ghes: Prepare to support multiple sources on ghes
+Applying: tests/acpi: virt: allow acpi table changes for a new table: HEST
+Applying: acpi/ghes: add a firmware file with HEST address
+Applying: acpi/ghes: Use HEST table offsets when preparing GHES records
+Applying: acpi/generic_event_device: Update GHES migration to cover hest addr
+Applying: acpi/generic_event_device: add logic to detect if HEST addr is available
+Applying: acpi/ghes: add a notifier to notify when error data is ready
+Applying: acpi/ghes: Cleanup the code which gets ghes ged state
+Applying: acpi/generic_event_device: add an APEI error device
+Applying: arm/virt: Wire up a GED error device for ACPI / GHES
+Applying: qapi/acpi-hest: add an interface to do generic CPER error injection
+Applying: tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
+Patch failed at 0012 tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
+error: DSDT.dsl: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
