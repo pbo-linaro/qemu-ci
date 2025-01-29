@@ -72,6 +72,7 @@ tests_aarch64_system_thorough = [
   'aarch64_virt',
   'aarch64_xlnx_versal',
   'multiprocess',
+  'vmfwupdate',
 ]
 
 tests_alpha_system_thorough = [
@@ -235,6 +236,7 @@ tests_x86_64_system_quick = [
   'virtio_version',
   'x86_cpu_model_versions',
   'vnc',
+  'vmfwupdate',
 ]
 
 tests_x86_64_system_thorough = [

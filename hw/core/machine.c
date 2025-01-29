@@ -34,6 +34,7 @@
 #include "hw/virtio/virtio-pci.h"
 #include "hw/virtio/virtio-net.h"
 #include "hw/virtio/virtio-iommu.h"
+#include "hw/misc/vmfwupdate.h"
 #include "audio/audio.h"
 
 GlobalProperty hw_compat_9_2[] = {
@@ -252,6 +253,7 @@ GlobalProperty hw_compat_2_8[] = {
     { "virtio-pci", "x-pcie-pm-init", "off" },
     { "cirrus-vga", "vgamem_mb", "8" },
     { "isa-cirrus-vga", "vgamem_mb", "8" },
+    {TYPE_VMFWUPDATE, "disable", "1"},
 };
 const size_t hw_compat_2_8_len = G_N_ELEMENTS(hw_compat_2_8);
 
