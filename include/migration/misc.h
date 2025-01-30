@@ -114,5 +114,6 @@ bool migration_block_inactivate(void);
 /* migration/multifd-device-state.c */
 bool multifd_queue_device_state(char *idstr, uint32_t instance_id,
                                 char *data, size_t len);
+bool multifd_device_state_supported(void);
 
 #endif
