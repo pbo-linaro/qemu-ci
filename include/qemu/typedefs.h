@@ -133,5 +133,9 @@ typedef struct IRQState *qemu_irq;
 typedef void (*qemu_irq_handler)(void *opaque, int n, int level);
 typedef bool (*MigrationLoadThread)(void *opaque, bool *should_quit,
                                     Error **errp);
+typedef int (*SaveLiveCompletePrecopyThreadHandler)(char *idstr,
+                                                    uint32_t instance_id,
+                                                    bool *abort_flag,
+                                                    void *opaque);
 
 #endif /* QEMU_TYPEDEFS_H */

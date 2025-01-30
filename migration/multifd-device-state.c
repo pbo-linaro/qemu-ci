@@ -9,11 +9,16 @@
 
 #include "qemu/osdep.h"
 #include "qemu/lockable.h"
+#include "block/thread-pool.h"
 #include "migration/misc.h"
 #include "multifd.h"
 #include "options.h"
 
 static QemuMutex queue_job_mutex;
+
+static ThreadPool *send_threads;
+static int send_threads_ret;
+static bool send_threads_abort;
 
 static MultiFDSendData *device_state_send;
 
@@ -23,10 +28,16 @@ void multifd_device_state_send_setup(void)
 
     assert(!device_state_send);
     device_state_send = multifd_send_data_alloc();
+
+    assert(!send_threads);
+    send_threads = thread_pool_new();
+    send_threads_ret = 0;
+    send_threads_abort = false;
 }
 
 void multifd_device_state_send_cleanup(void)
 {
+    g_clear_pointer(&send_threads, thread_pool_free);
     g_clear_pointer(&device_state_send, multifd_send_data_free);
 
     qemu_mutex_destroy(&queue_job_mutex);
@@ -106,4 +117,76 @@ bool multifd_device_state_supported(void)
 {
     return migrate_multifd() && !migrate_mapped_ram() &&
         migrate_multifd_compression() == MULTIFD_COMPRESSION_NONE;
+}
+
+struct MultiFDDSSaveThreadData {
+    SaveLiveCompletePrecopyThreadHandler hdlr;
+    char *idstr;
+    uint32_t instance_id;
+    void *handler_opaque;
+};
+
+static void multifd_device_state_save_thread_data_free(void *opaque)
+{
+    struct MultiFDDSSaveThreadData *data = opaque;
+
+    g_clear_pointer(&data->idstr, g_free);
+    g_free(data);
+}
+
+static int multifd_device_state_save_thread(void *opaque)
+{
+    struct MultiFDDSSaveThreadData *data = opaque;
+    int ret;
+
+    ret = data->hdlr(data->idstr, data->instance_id, &send_threads_abort,
+                     data->handler_opaque);
+    if (ret && !qatomic_read(&send_threads_ret)) {
+        /*
+         * Racy with the above read but that's okay - which thread error
+         * return we report is purely arbitrary anyway.
+         */
+        qatomic_set(&send_threads_ret, ret);
+    }
+
+    return 0;
+}
+
+void
+multifd_spawn_device_state_save_thread(SaveLiveCompletePrecopyThreadHandler hdlr,
+                                       char *idstr, uint32_t instance_id,
+                                       void *opaque)
+{
+    struct MultiFDDSSaveThreadData *data;
+
+    assert(multifd_device_state_supported());
+
+    assert(!qatomic_read(&send_threads_abort));
+
+    data = g_new(struct MultiFDDSSaveThreadData, 1);
+    data->hdlr = hdlr;
+    data->idstr = g_strdup(idstr);
+    data->instance_id = instance_id;
+    data->handler_opaque = opaque;
+
+    thread_pool_submit_immediate(send_threads,
+                                 multifd_device_state_save_thread,
+                                 data,
+                                 multifd_device_state_save_thread_data_free);
+}
+
+void multifd_abort_device_state_save_threads(void)
+{
+    assert(multifd_device_state_supported());
+
+    qatomic_set(&send_threads_abort, true);
+}
+
+int multifd_join_device_state_save_threads(void)
+{
+    assert(multifd_device_state_supported());
+
+    thread_pool_wait(send_threads);
+
+    return send_threads_ret;
 }
