@@ -1310,6 +1310,7 @@ void multifd_recv_new_channel(QIOChannel *ioc, Error **errp)
     Error *local_err = NULL;
     bool use_packets = multifd_use_packets();
     int id;
+    QIOChannelTLS *ioc_tls;
 
     if (use_packets) {
         id = multifd_recv_initial_packet(ioc, &local_err);
@@ -1336,6 +1337,13 @@ void multifd_recv_new_channel(QIOChannel *ioc, Error **errp)
     }
     p->c = ioc;
     object_ref(OBJECT(ioc));
+
+    ioc_tls = QIO_CHANNEL_TLS(object_dynamic_cast(OBJECT(ioc),
+                                                  TYPE_QIO_CHANNEL_TLS));
+    if (ioc_tls) {
+        /* Multifd send channels do not terminate the TLS session properly */
+        qio_channel_tls_set_premature_eof_okay(ioc_tls, true);
+    }
 
     p->thread_created = true;
     qemu_thread_create(&p->thread, p->name, multifd_recv_thread, p,
