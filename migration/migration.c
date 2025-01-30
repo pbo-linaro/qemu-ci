@@ -2536,6 +2536,8 @@ static int postcopy_start(MigrationState *ms, Error **errp)
         goto fail;
     }
 
+    qemu_savevm_maybe_send_switchover_start(ms->to_dst_file);
+
     /*
      * Cause any non-postcopiable, but iterative devices to
      * send out their final data.
@@ -2718,6 +2720,8 @@ static int migration_completion_precopy(MigrationState *s,
     }
 
     migration_rate_set(RATE_LIMIT_DISABLED);
+
+    qemu_savevm_maybe_send_switchover_start(s->to_dst_file);
 
     /* Inactivate disks except in COLO */
     ret = qemu_savevm_state_complete_precopy(s->to_dst_file, false,
