@@ -133,6 +133,7 @@ typedef struct VFIODevice {
     bool no_mmap;
     bool ram_block_discard_allowed;
     OnOffAuto enable_migration;
+    OnOffAuto migration_load_config_after_iter;
     bool migration_events;
     VFIODeviceOps *ops;
     unsigned int num_irqs;
