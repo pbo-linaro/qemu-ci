@@ -748,6 +748,14 @@ int cpu_asidx_from_attrs(CPUState *cpu, MemTxAttrs attrs);
  */
 bool cpu_virtio_is_big_endian(CPUState *cpu);
 
+/**
+ * cpu_get_phys_bits:
+ * @cpu: CPU
+ *
+ * Return the physical address space width of the CPU @cpu.
+ */
+uint32_t cpu_get_phys_bits(const CPUState *cpu);
+
 #endif /* CONFIG_USER_ONLY */
 
 /**
@@ -1168,6 +1176,7 @@ void cpu_exec_unrealizefn(CPUState *cpu);
 void cpu_exec_reset_hold(CPUState *cpu);
 
 const char *target_name(void);
+uint32_t target_phys_bits(void);
 
 #ifdef COMPILING_PER_TARGET
 
