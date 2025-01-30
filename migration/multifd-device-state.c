@@ -16,11 +16,6 @@ static QemuMutex queue_job_mutex;
 
 static MultiFDSendData *device_state_send;
 
-size_t multifd_device_state_payload_size(void)
-{
-    return sizeof(MultiFDDeviceState_t);
-}
-
 void multifd_device_state_send_setup(void)
 {
     qemu_mutex_init(&queue_job_mutex);
