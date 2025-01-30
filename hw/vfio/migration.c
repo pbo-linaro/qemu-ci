@@ -519,6 +519,12 @@ static bool vfio_precopy_supported(VFIODevice *vbasedev)
     return migration->mig_flags & VFIO_MIGRATION_PRE_COPY;
 }
 
+static bool vfio_multifd_transfer_supported(void)
+{
+    return multifd_device_state_supported() &&
+        migrate_send_switchover_start();
+}
+
 /* ---------------------------------------------------------------------- */
 
 static int vfio_save_prepare(void *opaque, Error **errp)
