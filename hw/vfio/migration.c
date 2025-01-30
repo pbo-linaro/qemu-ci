@@ -300,6 +300,9 @@ typedef struct VFIOStateBuffer {
     size_t len;
 } VFIOStateBuffer;
 
+typedef struct VFIOMultifd {
+} VFIOMultifd;
+
 static void vfio_state_buffer_clear(gpointer data)
 {
     VFIOStateBuffer *lb = data;
@@ -396,6 +399,18 @@ static int vfio_load_device_config_state(QEMUFile *f, void *opaque)
 
     trace_vfio_load_device_config_state_end(vbasedev->name);
     return qemu_file_get_error(f);
+}
+
+static VFIOMultifd *vfio_multifd_new(void)
+{
+    VFIOMultifd *multifd = g_new(VFIOMultifd, 1);
+
+    return multifd;
+}
+
+static void vfio_multifd_free(VFIOMultifd *multifd)
+{
+    g_free(multifd);
 }
 
 static void vfio_migration_cleanup(VFIODevice *vbasedev)
@@ -785,14 +800,47 @@ static void vfio_save_state(QEMUFile *f, void *opaque)
 static int vfio_load_setup(QEMUFile *f, void *opaque, Error **errp)
 {
     VFIODevice *vbasedev = opaque;
+    VFIOMigration *migration = vbasedev->migration;
+    int ret;
 
-    return vfio_migration_set_state(vbasedev, VFIO_DEVICE_STATE_RESUMING,
-                                    vbasedev->migration->device_state, errp);
+    /*
+     * Make a copy of this setting at the start in case it is changed
+     * mid-migration.
+     */
+    if (vbasedev->migration_multifd_transfer == ON_OFF_AUTO_AUTO) {
+        migration->multifd_transfer = vfio_multifd_transfer_supported();
+    } else {
+        migration->multifd_transfer =
+            vbasedev->migration_multifd_transfer == ON_OFF_AUTO_ON;
+    }
+
+    if (migration->multifd_transfer && !vfio_multifd_transfer_supported()) {
+        error_setg(errp,
+                   "%s: Multifd device transfer requested but unsupported in the current config",
+                   vbasedev->name);
+        return -EINVAL;
+    }
+
+    ret = vfio_migration_set_state(vbasedev, VFIO_DEVICE_STATE_RESUMING,
+                                   migration->device_state, errp);
+    if (ret) {
+        return ret;
+    }
+
+    if (migration->multifd_transfer) {
+        assert(!migration->multifd);
+        migration->multifd = vfio_multifd_new();
+    }
+
+    return 0;
 }
 
 static int vfio_load_cleanup(void *opaque)
 {
     VFIODevice *vbasedev = opaque;
+    VFIOMigration *migration = vbasedev->migration;
+
+    g_clear_pointer(&migration->multifd, vfio_multifd_free);
 
     vfio_migration_cleanup(vbasedev);
     trace_vfio_load_cleanup(vbasedev->name);
