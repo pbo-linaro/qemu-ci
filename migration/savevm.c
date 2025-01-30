@@ -2013,7 +2013,9 @@ static void *postcopy_ram_listen_thread(void *opaque)
      * in qemu_file, and thus we must be blocking now.
      */
     qemu_file_set_blocking(f, true);
+    bql_lock();
     load_res = qemu_loadvm_state_main(f, mis);
+    bql_unlock();
 
     /*
      * This is tricky, but, mis->from_src_file can change after it
@@ -2073,7 +2075,9 @@ static void *postcopy_ram_listen_thread(void *opaque)
      * (If something broke then qemu will have to exit anyway since it's
      * got a bad migration state).
      */
+    bql_lock();
     migration_incoming_state_destroy();
+    bql_unlock();
 
     rcu_unregister_thread();
     mis->have_listen_thread = false;
