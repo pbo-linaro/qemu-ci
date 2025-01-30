@@ -147,6 +147,11 @@ qio_channel_tls_new_client(QIOChannel *master,
     return NULL;
 }
 
+void qio_channel_tls_set_premature_eof_okay(QIOChannelTLS *ioc, bool enabled)
+{
+    ioc->premature_eof_okay = enabled;
+}
+
 struct QIOChannelTLSData {
     QIOTask *task;
     GMainContext *context;
@@ -279,6 +284,7 @@ static ssize_t qio_channel_tls_readv(QIOChannel *ioc,
             tioc->session,
             iov[i].iov_base,
             iov[i].iov_len,
+            tioc->premature_eof_okay ||
             qatomic_load_acquire(&tioc->shutdown) & QIO_CHANNEL_SHUTDOWN_READ,
             errp);
         if (ret == QCRYPTO_TLS_SESSION_ERR_BLOCK) {

@@ -49,6 +49,7 @@ struct QIOChannelTLS {
     QCryptoTLSSession *session;
     QIOChannelShutdown shutdown;
     guint hs_ioc_tag;
+    bool premature_eof_okay;
 };
 
 /**
@@ -142,5 +143,15 @@ void qio_channel_tls_handshake(QIOChannelTLS *ioc,
  */
 QCryptoTLSSession *
 qio_channel_tls_get_session(QIOChannelTLS *ioc);
+
+/**
+ * qio_channel_tls_set_premature_eof_okay:
+ * @ioc: the TLS channel object
+ *
+ * Sets whether receiving an EOF without terminating the TLS session properly
+ * by used the other side is considered okay or an error (the
+ * default behaviour).
+ */
+void qio_channel_tls_set_premature_eof_okay(QIOChannelTLS *ioc, bool enabled);
 
 #endif /* QIO_CHANNEL_TLS_H */
