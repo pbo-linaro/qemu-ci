@@ -15,6 +15,7 @@
 #include <linux/vfio.h>
 #include <sys/ioctl.h>
 
+#include "io/channel-buffer.h"
 #include "system/runstate.h"
 #include "hw/vfio/vfio-common.h"
 #include "migration/misc.h"
@@ -457,6 +458,57 @@ static bool vfio_load_state_buffer(void *opaque, char *data, size_t data_size,
     return true;
 }
 
+static int vfio_load_device_config_state(QEMUFile *f, void *opaque);
+
+static int vfio_load_bufs_thread_load_config(VFIODevice *vbasedev)
+{
+    VFIOMigration *migration = vbasedev->migration;
+    VFIOMultifd *multifd = migration->multifd;
+    VFIOStateBuffer *lb;
+    g_autoptr(QIOChannelBuffer) bioc = NULL;
+    QEMUFile *f_out = NULL, *f_in = NULL;
+    uint64_t mig_header;
+    int ret;
+
+    assert(multifd->load_buf_idx == multifd->load_buf_idx_last);
+    lb = vfio_state_buffers_at(&multifd->load_bufs, multifd->load_buf_idx);
+    assert(lb->is_present);
+
+    bioc = qio_channel_buffer_new(lb->len);
+    qio_channel_set_name(QIO_CHANNEL(bioc), "vfio-device-config-load");
+
+    f_out = qemu_file_new_output(QIO_CHANNEL(bioc));
+    qemu_put_buffer(f_out, (uint8_t *)lb->data, lb->len);
+
+    ret = qemu_fflush(f_out);
+    if (ret) {
+        g_clear_pointer(&f_out, qemu_fclose);
+        return ret;
+    }
+
+    qio_channel_io_seek(QIO_CHANNEL(bioc), 0, 0, NULL);
+    f_in = qemu_file_new_input(QIO_CHANNEL(bioc));
+
+    mig_header = qemu_get_be64(f_in);
+    if (mig_header != VFIO_MIG_FLAG_DEV_CONFIG_STATE) {
+        g_clear_pointer(&f_out, qemu_fclose);
+        g_clear_pointer(&f_in, qemu_fclose);
+        return -EINVAL;
+    }
+
+    bql_lock();
+    ret = vfio_load_device_config_state(f_in, vbasedev);
+    bql_unlock();
+
+    g_clear_pointer(&f_out, qemu_fclose);
+    g_clear_pointer(&f_in, qemu_fclose);
+    if (ret < 0) {
+        return ret;
+    }
+
+    return 0;
+}
+
 static VFIOStateBuffer *vfio_load_state_buffer_get(VFIOMultifd *multifd)
 {
     VFIOStateBuffer *lb;
@@ -475,11 +527,6 @@ static VFIOStateBuffer *vfio_load_state_buffer_get(VFIOMultifd *multifd)
     }
 
     return lb;
-}
-
-static int vfio_load_bufs_thread_load_config(VFIODevice *vbasedev)
-{
-    return -EINVAL;
 }
 
 static bool vfio_load_state_buffer_write(VFIODevice *vbasedev,
@@ -1168,6 +1215,8 @@ static int vfio_load_cleanup(void *opaque)
 static int vfio_load_state(QEMUFile *f, void *opaque, int version_id)
 {
     VFIODevice *vbasedev = opaque;
+    VFIOMigration *migration = vbasedev->migration;
+    VFIOMultifd *multifd = migration->multifd;
     int ret = 0;
     uint64_t data;
 
@@ -1179,6 +1228,12 @@ static int vfio_load_state(QEMUFile *f, void *opaque, int version_id)
         switch (data) {
         case VFIO_MIG_FLAG_DEV_CONFIG_STATE:
         {
+            if (migration->multifd_transfer) {
+                error_report("%s: got DEV_CONFIG_STATE but doing multifd transfer",
+                             vbasedev->name);
+                return -EINVAL;
+            }
+
             return vfio_load_device_config_state(f, opaque);
         }
         case VFIO_MIG_FLAG_DEV_SETUP_STATE:
@@ -1221,6 +1276,44 @@ static int vfio_load_state(QEMUFile *f, void *opaque, int version_id)
                     vbasedev->name, ret, strerror(-ret));
             }
 
+            return ret;
+        }
+        case VFIO_MIG_FLAG_DEV_CONFIG_LOAD_READY:
+        {
+            if (!migration->multifd_transfer) {
+                error_report("%s: got DEV_CONFIG_LOAD_READY outside multifd transfer",
+                             vbasedev->name);
+                return -EINVAL;
+            }
+
+            if (!vfio_load_config_after_iter(vbasedev)) {
+                error_report("%s: got DEV_CONFIG_LOAD_READY but was disabled",
+                             vbasedev->name);
+                return -EINVAL;
+            }
+
+            assert(multifd);
+
+            /* The lock order is load_bufs_mutex -> BQL so unlock BQL here first */
+            bql_unlock();
+            WITH_QEMU_LOCK_GUARD(&multifd->load_bufs_mutex) {
+                if (multifd->load_bufs_iter_done) {
+                    /* Can't print error here as we're outside BQL */
+                    ret = -EINVAL;
+                    break;
+                }
+
+                multifd->load_bufs_iter_done = true;
+                qemu_cond_signal(&multifd->load_bufs_iter_done_cond);
+
+                ret = 0;
+            }
+            bql_lock();
+
+            if (ret) {
+                error_report("%s: duplicate DEV_CONFIG_LOAD_READY",
+                             vbasedev->name);
+            }
             return ret;
         }
         default:
