@@ -111,4 +111,8 @@ bool migration_in_bg_snapshot(void);
 bool migration_block_activate(Error **errp);
 bool migration_block_inactivate(void);
 
+/* migration/multifd-device-state.c */
+bool multifd_queue_device_state(char *idstr, uint32_t instance_id,
+                                char *data, size_t len);
+
 #endif
