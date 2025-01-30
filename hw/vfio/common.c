@@ -44,6 +44,8 @@
 #include "migration/qemu-file.h"
 #include "system/tpm.h"
 
+#include "hw/core/cpu.h"
+
 VFIODeviceList vfio_device_list =
     QLIST_HEAD_INITIALIZER(vfio_device_list);
 static QLIST_HEAD(, VFIOAddressSpace) vfio_address_spaces =
@@ -1546,12 +1548,28 @@ retry:
     return info;
 }
 
+static bool vfio_device_check_address_space(VFIODevice *vbasedev, Error **errp)
+{
+    uint32_t cpu_aw_bits = cpu_get_phys_bits(first_cpu);
+    uint32_t iommu_aw_bits = vfio_device_get_aw_bits(vbasedev);
+
+    if (cpu_aw_bits && cpu_aw_bits > iommu_aw_bits) {
+        error_setg(errp, "Host physical address space (%u) is larger than "
+                   "the host IOMMU address space (%u).", cpu_aw_bits,
+                   iommu_aw_bits);
+        vfio_device_error_append(vbasedev, errp);
+        return false;
+    }
+    return true;
+}
+
 bool vfio_attach_device(char *name, VFIODevice *vbasedev,
                         AddressSpace *as, Error **errp)
 {
     const VFIOIOMMUClass *ops =
         VFIO_IOMMU_CLASS(object_class_by_name(TYPE_VFIO_IOMMU_LEGACY));
     HostIOMMUDevice *hiod = NULL;
+    Error *local_err = NULL;
 
     if (vbasedev->iommufd) {
         ops = VFIO_IOMMU_CLASS(object_class_by_name(TYPE_VFIO_IOMMU_IOMMUFD));
@@ -1571,6 +1589,9 @@ bool vfio_attach_device(char *name, VFIODevice *vbasedev,
         return false;
     }
 
+    if (!vfio_device_check_address_space(vbasedev, &local_err)) {
+        warn_report_err(local_err);
+    }
     return true;
 }
 
