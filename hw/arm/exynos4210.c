@@ -393,8 +393,9 @@ static void exynos4210_init_board_irqs(Exynos4210State *s)
             }
         }
         if (irq_id) {
+            irq_id -= GIC_INTERNAL;
             qdev_connect_gpio_out(splitter, splitin,
-                                  qdev_get_gpio_in(extgicdev, irq_id - 32));
+                                  qdev_get_gpio_in(extgicdev, irq_id));
         }
     }
     for (; n < EXYNOS4210_MAX_INT_COMBINER_IN_IRQ; n++) {
@@ -413,6 +414,7 @@ static void exynos4210_init_board_irqs(Exynos4210State *s)
         }
 
         if (irq_id) {
+            irq_id -= GIC_INTERNAL;
             assert(splitcount < EXYNOS4210_NUM_SPLITTERS);
             splitter = DEVICE(&s->splitter[splitcount]);
             qdev_prop_set_uint16(splitter, "num-lines", 2);
@@ -421,7 +423,7 @@ static void exynos4210_init_board_irqs(Exynos4210State *s)
             s->irq_table[n] = qdev_get_gpio_in(splitter, 0);
             qdev_connect_gpio_out(splitter, 0, qdev_get_gpio_in(intcdev, n));
             qdev_connect_gpio_out(splitter, 1,
-                                  qdev_get_gpio_in(extgicdev, irq_id - 32));
+                                  qdev_get_gpio_in(extgicdev, irq_id));
         } else {
             s->irq_table[n] = qdev_get_gpio_in(intcdev, n);
         }
