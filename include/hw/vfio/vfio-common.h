@@ -139,6 +139,7 @@ typedef struct VFIODevice {
     OnOffAuto enable_migration;
     OnOffAuto migration_multifd_transfer;
     OnOffAuto migration_load_config_after_iter;
+    uint64_t migration_max_queued_buffers;
     bool migration_events;
     VFIODeviceOps *ops;
     unsigned int num_irqs;
