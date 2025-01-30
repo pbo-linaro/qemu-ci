@@ -247,6 +247,15 @@ void warn_report_err(Error *err)
     error_free(err);
 }
 
+void warn_report_once_err(Error *err)
+{
+        static bool print_once_;
+        if (!print_once_) {
+            warn_report_err(err);
+            print_once_ = true;
+        }
+}
+
 void error_reportf_err(Error *err, const char *fmt, ...)
 {
     va_list ap;

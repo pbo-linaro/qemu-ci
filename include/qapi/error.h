@@ -449,6 +449,11 @@ void error_free_or_abort(Error **errp);
 void warn_report_err(Error *err);
 
 /*
+ * Convenience function to call warn_report_err() once.
+ */
+void warn_report_once_err(Error *err);
+
+/*
  * Convenience function to error_report() and free @err.
  * The report includes hints added with error_append_hint().
  */
