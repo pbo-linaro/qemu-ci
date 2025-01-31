@@ -264,12 +264,12 @@ static void vfio_irqchip_change(Notifier *notify, void *data)
 static bool vfio_intx_enable(VFIOPCIDevice *vdev, Error **errp)
 {
     uint8_t pin = vfio_pci_read_config(&vdev->pdev, PCI_INTERRUPT_PIN, 1);
+    uint8_t line = vfio_pci_read_config(&vdev->pdev, PCI_INTERRUPT_LINE, 1);
     Error *err = NULL;
     int32_t fd;
     int ret;
 
-
-    if (!pin) {
+    if (!pin || (line == 0xFF)) {
         return true;
     }
 
