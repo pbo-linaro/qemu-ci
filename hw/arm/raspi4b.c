@@ -121,16 +121,13 @@ static void raspi4b_machine_class_init(ObjectClass *oc, void *data)
     mc->init = raspi4b_machine_init;
 }
 
-static const TypeInfo raspi4b_machine_type = {
-    .name           = TYPE_RASPI4B_MACHINE,
-    .parent         = TYPE_RASPI_BASE_MACHINE,
-    .instance_size  = sizeof(Raspi4bMachineState),
-    .class_init     = raspi4b_machine_class_init,
+static const TypeInfo raspi4_machine_types[] = {
+    {
+        .name           = TYPE_RASPI4B_MACHINE,
+        .parent         = TYPE_RASPI_BASE_MACHINE,
+        .instance_size  = sizeof(Raspi4bMachineState),
+        .class_init     = raspi4b_machine_class_init,
+    },
 };
 
-static void raspi4b_machine_register_type(void)
-{
-    type_register_static(&raspi4b_machine_type);
-}
-
-type_init(raspi4b_machine_register_type)
+DEFINE_TYPES(raspi4_machine_types)
