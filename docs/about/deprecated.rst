@@ -257,6 +257,12 @@ Big-Endian variants of MicroBlaze ``petalogix-ml605`` and ``xlnx-zynqmp-pmu`` ma
 Both ``petalogix-ml605`` and ``xlnx-zynqmp-pmu`` were added for little endian
 CPUs. Big endian support is not tested.
 
+ARM ``raspi4b`` machine (since 10.0)
+''''''''''''''''''''''''''''''''''''
+
+This machine has been renamed ``raspi4b-1g`` on 32-bit hosts and ``raspi4b-2g``
+on 64-bit ones.
+
 Backend options
 ---------------
 

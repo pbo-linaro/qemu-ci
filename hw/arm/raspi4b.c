@@ -117,6 +117,7 @@ static void raspi4b_1g_machine_class_init(ObjectClass *oc, void *data)
 
     raspi_machine_class_common_init(mc, rmc->board_rev);
     mc->init = raspi4b_machine_init;
+    mc->alias = "raspi4b";
 }
 #else
 static void raspi4b_2g_machine_class_init(ObjectClass *oc, void *data)
@@ -128,19 +129,20 @@ static void raspi4b_2g_machine_class_init(ObjectClass *oc, void *data)
     rmc->board_rev = 0xb03115; /* Revision 1.5, 2 Gb RAM */
     raspi_machine_class_common_init(mc, rmc->board_rev);
     mc->init = raspi4b_machine_init;
+    mc->alias = "raspi4b";
 }
 #endif
 
 static const TypeInfo raspi4_machine_types[] = {
 #if HOST_LONG_BITS == 32
     {
-        .name           = MACHINE_TYPE_NAME("raspi4b"),
+        .name           = MACHINE_TYPE_NAME("raspi4b-1g"),
         .parent         = TYPE_RASPI4_MACHINE,
         .class_init     = raspi4b_1g_machine_class_init,
     },
 #else
     {
-        .name           = MACHINE_TYPE_NAME("raspi4b"),
+        .name           = MACHINE_TYPE_NAME("raspi4b-2g"),
         .parent         = TYPE_RASPI4_MACHINE,
         .class_init     = raspi4b_2g_machine_class_init,
     },
