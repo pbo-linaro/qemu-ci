@@ -23,8 +23,8 @@
 #include "hw/arm/bcm2838.h"
 #include <libfdt.h>
 
-#define TYPE_RASPI4B_MACHINE MACHINE_TYPE_NAME("raspi4b")
-OBJECT_DECLARE_SIMPLE_TYPE(Raspi4bMachineState, RASPI4B_MACHINE)
+#define TYPE_RASPI4_MACHINE MACHINE_TYPE_NAME("raspi4-base")
+OBJECT_DECLARE_SIMPLE_TYPE(Raspi4bMachineState, RASPI4_MACHINE)
 
 struct Raspi4bMachineState {
     RaspiBaseMachineState parent_obj;
@@ -93,7 +93,7 @@ static void raspi4_modify_dtb(const struct arm_boot_info *info, void *fdt)
 
 static void raspi4b_machine_init(MachineState *machine)
 {
-    Raspi4bMachineState *s = RASPI4B_MACHINE(machine);
+    Raspi4bMachineState *s = RASPI4_MACHINE(machine);
     RaspiBaseMachineState *s_base = RASPI_BASE_MACHINE(machine);
     RaspiBaseMachineClass *mc = RASPI_BASE_MACHINE_GET_CLASS(machine);
     BCM2838State *soc = &s->soc;
@@ -123,11 +123,15 @@ static void raspi4b_machine_class_init(ObjectClass *oc, void *data)
 
 static const TypeInfo raspi4_machine_types[] = {
     {
-        .name           = TYPE_RASPI4B_MACHINE,
+        .name           = MACHINE_TYPE_NAME("raspi4b"),
+        .parent         = TYPE_RASPI4_MACHINE,
+        .class_init     = raspi4b_machine_class_init,
+    }, {
+        .name           = TYPE_RASPI4_MACHINE,
         .parent         = TYPE_RASPI_BASE_MACHINE,
         .instance_size  = sizeof(Raspi4bMachineState),
-        .class_init     = raspi4b_machine_class_init,
-    },
+        .abstract       = true,
+    }
 };
 
 DEFINE_TYPES(raspi4_machine_types)
