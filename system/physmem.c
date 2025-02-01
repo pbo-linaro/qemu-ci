@@ -1692,6 +1692,28 @@ size_t qemu_ram_pagesize_largest(void)
     return largest;
 }
 
+/* Copy RAMBlock information associated to the given ram_addr location */
+bool qemu_ram_block_info_from_addr(ram_addr_t ram_addr,
+                                   struct RAMBlockInfo *b_info)
+{
+    RAMBlock *rb;
+
+    assert(b_info);
+
+    RCU_READ_LOCK_GUARD();
+    rb =  qemu_get_ram_block(ram_addr);
+    if (!rb) {
+        return false;
+    }
+
+    pstrcat(b_info->idstr, sizeof(b_info->idstr), rb->idstr);
+    b_info->offset = rb->offset;
+    b_info->fd = rb->fd;
+    b_info->fd_offset = rb->fd_offset;
+    b_info->page_size = rb->page_size;
+    return true;
+}
+
 static int memory_try_enable_merging(void *addr, size_t len)
 {
     if (!machine_mem_merge(current_machine)) {
