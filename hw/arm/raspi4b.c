@@ -107,7 +107,6 @@ static void raspi4b_machine_init(MachineState *machine)
     raspi_base_machine_init(machine, &soc->parent_obj);
 }
 
-#if HOST_LONG_BITS == 32
 static void raspi4b_1g_machine_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -117,9 +116,12 @@ static void raspi4b_1g_machine_class_init(ObjectClass *oc, void *data)
 
     raspi_machine_class_common_init(mc, rmc->board_rev);
     mc->init = raspi4b_machine_init;
+#if HOST_LONG_BITS == 32
     mc->alias = "raspi4b";
+#endif
 }
-#else
+
+#if HOST_LONG_BITS > 32
 static void raspi4b_2g_machine_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -131,22 +133,21 @@ static void raspi4b_2g_machine_class_init(ObjectClass *oc, void *data)
     mc->init = raspi4b_machine_init;
     mc->alias = "raspi4b";
 }
-#endif
+#endif /* HOST_LONG_BITS > 32 */
 
 static const TypeInfo raspi4_machine_types[] = {
-#if HOST_LONG_BITS == 32
     {
         .name           = MACHINE_TYPE_NAME("raspi4b-1g"),
         .parent         = TYPE_RASPI4_MACHINE,
         .class_init     = raspi4b_1g_machine_class_init,
     },
-#else
+#if HOST_LONG_BITS > 32
     {
         .name           = MACHINE_TYPE_NAME("raspi4b-2g"),
         .parent         = TYPE_RASPI4_MACHINE,
         .class_init     = raspi4b_2g_machine_class_init,
     },
-#endif
+#endif /* HOST_LONG_BITS > 32 */
     {
         .name           = TYPE_RASPI4_MACHINE,
         .parent         = TYPE_RASPI_BASE_MACHINE,
