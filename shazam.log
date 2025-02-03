@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/173856049155.9683.4580810619712230382-0@git.sr.ht/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2] target/riscv: Check ext_zca for misaligned return address of mret/sret.
+  ---
+  [31m✗[0m BADSIG: DKIM/git.sr.ht
+---
+Total patches: 1
+---
+Applying: target/riscv: Check ext_zca for misaligned return address of mret/sret.
+Patch failed at 0001 target/riscv: Check ext_zca for misaligned return address of mret/sret.
+error: patch failed: target/riscv/op_helper.c:328
+error: target/riscv/op_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
