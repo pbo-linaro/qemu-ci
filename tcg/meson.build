@@ -49,4 +49,8 @@ libtcg_system = static_library('tcg_system',
 
 tcg_system = declare_dependency(objects: libtcg_system.extract_all_objects(recursive: false),
                                 dependencies: tcg_ss.dependencies())
-system_ss.add(tcg_system)
+
+specific_ss.add(when: ['CONFIG_SYSTEM_ONLY', 'CONFIG_TCG'], if_true: tcg_system)
+if host_os == 'linux'
+  specific_ss.add(when: 'CONFIG_TCG', if_false: files('perf-stubs.c'))
+endif
