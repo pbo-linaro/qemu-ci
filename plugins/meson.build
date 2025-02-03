@@ -57,8 +57,11 @@ if host_os == 'windows'
     command: dlltool_cmd
   )
 endif
-specific_ss.add(files(
+
+specific_ss.add(when: 'CONFIG_TCG', if_true: files(
   'loader.c',
   'core.c',
   'api.c',
+), if_false: files(
+  'stubs.c'
 ))
