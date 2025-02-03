@@ -25,6 +25,8 @@ endif
 tcg_ss.add(when: libdw, if_true: files('debuginfo.c'))
 if host_os == 'linux'
   tcg_ss.add(files('perf.c'))
+else
+  tcg_ss.add(files('perf-stubs.c'))
 endif
 
 tcg_ss = tcg_ss.apply({})
