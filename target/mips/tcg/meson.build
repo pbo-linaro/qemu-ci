@@ -10,7 +10,7 @@ gen = [
 ]
 
 mips_ss.add(gen)
-mips_ss.add(files(
+mips_ss.add(when: 'CONFIG_TCG', if_true: files(
   'dsp_helper.c',
   'exception.c',
   'fpu_helper.c',
@@ -26,7 +26,7 @@ mips_ss.add(files(
   'vr54xx_helper.c',
   'vr54xx_translate.c',
 ))
-mips_ss.add(when: 'TARGET_MIPS64', if_true: files(
+mips_ss.add(when: ['CONFIG_TCG', 'TARGET_MIPS64'], if_true: files(
   'tx79_translate.c',
   'octeon_translate.c',
   'lcsr_translate.c',
