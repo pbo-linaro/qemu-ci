@@ -194,6 +194,7 @@ tests_ppc_system_thorough = [
   'ppc_40p',
   'ppc_amiga',
   'ppc_bamboo',
+  'ppc_sam460ex',
   'ppc_mac',
   'ppc_mpc8544ds',
   'ppc_tuxrun',
