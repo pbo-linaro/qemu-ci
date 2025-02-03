@@ -34,9 +34,16 @@
 #include "config-host.h"
 #ifdef COMPILING_PER_TARGET
 #include CONFIG_TARGET
+# ifdef CONFIG_TCG_TARGET
+#  undef CONFIG_TCG_TARGET
+# else
+#  undef CONFIG_TCG
+# endif
 #else
 #include "exec/poison.h"
 #endif
+#pragma GCC poison CONFIG_TCG_TARGET
+
 
 /*
  * HOST_WORDS_BIGENDIAN was replaced with HOST_BIG_ENDIAN. Prevent it from

@@ -3270,11 +3270,14 @@ foreach target : target_dirs
 
   target_kconfig = []
   foreach sym: accelerators
-    if sym == 'CONFIG_TCG' or target in accelerator_targets.get(sym, [])
-      config_target += { sym: 'y' }
-      config_all_accel += { sym: 'y' }
-      target_kconfig += [ sym + '=y' ]
+    if sym == 'CONFIG_TCG'
+      config_target += { 'CONFIG_TCG_TARGET': 'y' }
+    elif target not in accelerator_targets.get(sym, [])
+      continue
     endif
+    config_target += { sym: 'y' }
+    config_all_accel += { sym: 'y' }
+    target_kconfig += [ sym + '=y' ]
   endforeach
   if target_kconfig.length() == 0
     if default_targets
