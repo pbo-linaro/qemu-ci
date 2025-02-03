@@ -55,7 +55,7 @@ struct qemu_plugin_parse_arg {
     struct qemu_plugin_desc *curr;
 };
 
-QemuOptsList qemu_plugin_opts = {
+static QemuOptsList qemu_plugin_opts = {
     .name = "plugin",
     .implied_opt_name = "file",
     .head = QTAILQ_HEAD_INITIALIZER(qemu_plugin_opts.head),
@@ -64,6 +64,11 @@ QemuOptsList qemu_plugin_opts = {
         { /* end of list */ }
     },
 };
+
+void qemu_plugin_add_opts(void)
+{
+    qemu_add_opts(&qemu_plugin_opts);
+}
 
 typedef int (*qemu_plugin_install_func_t)(qemu_plugin_id_t, const qemu_info_t *, int, char **);
 

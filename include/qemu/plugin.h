@@ -11,7 +11,6 @@
 #include "qemu/qemu-plugin.h"
 #include "qemu/error-report.h"
 #include "qemu/queue.h"
-#include "qemu/option.h"
 #include "qemu/plugin-event.h"
 #include "qemu/bitmap.h"
 #include "exec/memopidx.h"
@@ -44,13 +43,7 @@ get_plugin_meminfo_rw(qemu_plugin_meminfo_t i)
 }
 
 #ifdef CONFIG_PLUGIN
-extern QemuOptsList qemu_plugin_opts;
-
-static inline void qemu_plugin_add_opts(void)
-{
-    qemu_add_opts(&qemu_plugin_opts);
-}
-
+void qemu_plugin_add_opts(void);
 void qemu_plugin_opt_parse(const char *optstr, QemuPluginList *head);
 int qemu_plugin_load_list(QemuPluginList *head, Error **errp);
 
