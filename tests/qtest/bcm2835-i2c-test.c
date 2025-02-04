@@ -104,7 +104,7 @@ int main(int argc, char **argv)
     }
 
     /* Run I2C tests with TMP105 slaves on all three buses */
-    qtest_start("-M raspi3b "
+    qtest_start("-M raspi,model=3B -m 1g "
                 "-device tmp105,address=0x50,bus=i2c-bus.0 "
                 "-device tmp105,address=0x50,bus=i2c-bus.1 "
                 "-device tmp105,address=0x50,bus=i2c-bus.2");

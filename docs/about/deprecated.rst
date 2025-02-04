@@ -257,6 +257,19 @@ Big-Endian variants of MicroBlaze ``petalogix-ml605`` and ``xlnx-zynqmp-pmu`` ma
 Both ``petalogix-ml605`` and ``xlnx-zynqmp-pmu`` were added for little endian
 CPUs. Big endian support is not tested.
 
+ARM ``raspi0``, ``raspi1ap``, ``raspi2b``, ``raspi3ap``, ``raspi3b`` and ``raspi4b`` machines (since 10.0)
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+The Raspberry Pi machines have been unified under the generic ``raspi`` machine,
+which takes the model as argument.
+
+    - `raspi0`` is now an alias for ``raspi,model=Zero``
+    - `raspi1ap`` is now an alias for ``raspi,model=1A+``
+    - `raspi2b`` is now an alias for ``raspi,model=2B``
+    - `raspi3ap`` is now an alias for ``raspi,model=3A+``
+    - `raspi3b`` is now an alias for ``raspi,model=3B``
+    - `raspi4b`` is now an alias for ``raspi,model=4B``
+
 Backend options
 ---------------
 

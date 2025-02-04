@@ -21,10 +21,9 @@ class Aarch64Raspi3Machine(LinuxKernelTest):
         efi_name = 'RPI_EFI.fd'
         efi_fd = self.archive_extract(self.ASSET_RPI3_UEFI, member=efi_name)
 
-        self.set_machine('raspi3b')
+        self.set_machine('raspi,model=3B -m 1g')
         self.vm.set_console(console_index=1)
-        self.vm.add_args('-cpu', 'cortex-a53',
-                         '-nodefaults',
+        self.vm.add_args('-nodefaults',
                          '-device', f'loader,file={efi_fd},force-raw=true')
         self.vm.launch()
         self.wait_for_console_pattern('version UEFI Firmware v1.15')

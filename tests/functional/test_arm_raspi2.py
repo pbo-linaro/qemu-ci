@@ -39,7 +39,7 @@ class ArmRaspi2Machine(LinuxKernelTest):
         dtb_path = self.archive_extract(self.ASSET_KERNEL_20190215,
                                         member='boot/bcm2709-rpi-2-b.dtb')
 
-        self.set_machine('raspi2b')
+        self.set_machine('raspi,model=2B -m 1g')
         self.vm.set_console()
         kernel_command_line = (self.KERNEL_COMMON_COMMAND_LINE +
                                serial_kernel_cmdline[uart_id] +
@@ -65,7 +65,7 @@ class ArmRaspi2Machine(LinuxKernelTest):
                                         member='boot/bcm2709-rpi-2-b.dtb')
         initrd_path = self.uncompress(self.ASSET_INITRD)
 
-        self.set_machine('raspi2b')
+        self.set_machine('raspi,model=2B -m 1g')
         self.vm.set_console()
         kernel_command_line = (self.KERNEL_COMMON_COMMAND_LINE +
                                'earlycon=pl011,0x3f201000 console=ttyAMA0 '

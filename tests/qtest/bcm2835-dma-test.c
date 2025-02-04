@@ -111,7 +111,7 @@ int main(int argc, char **argv)
     g_test_init(&argc, &argv, NULL);
     qtest_add_func("/bcm2835/dma/test_interrupts",
                    bcm2835_dma_test_interrupts);
-    qtest_start("-machine raspi3b");
+    qtest_start("-machine raspi,model=3B -m 1g");
     ret = g_test_run();
     qtest_end();
     return ret;
