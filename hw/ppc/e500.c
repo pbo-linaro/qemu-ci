@@ -1287,9 +1287,6 @@ static void e500_ccsr_initfn(Object *obj)
 
 static void ppce500_machine_class_init(ObjectClass *oc, void *data)
 {
-    MachineClass *mc = MACHINE_CLASS(oc);
-
-    mc->auto_create_sdcard = true;
 }
 
 static const TypeInfo e500_ccsr_info = {

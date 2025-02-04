@@ -710,7 +710,6 @@ static void HP_B160L_machine_init_class_init(ObjectClass *oc, void *data)
     mc->default_boot_order = "cd";
     mc->default_ram_id = "ram";
     mc->default_nic = "tulip";
-    mc->auto_create_sdcard = true;
 
     nc->nmi_monitor_handler = hppa_nmi;
 }
@@ -747,7 +746,6 @@ static void HP_C3700_machine_init_class_init(ObjectClass *oc, void *data)
     mc->default_boot_order = "cd";
     mc->default_ram_id = "ram";
     mc->default_nic = "tulip";
-    mc->auto_create_sdcard = true;
 
     nc->nmi_monitor_handler = hppa_nmi;
 }
