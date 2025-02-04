@@ -300,20 +300,6 @@ void raspi_base_machine_init(MachineState *machine,
     BlockBackend *blk;
     BusState *bus;
     DeviceState *carddev;
-    uint64_t max_ramsize;
-
-    if (machine->ram_size != ram_size) {
-        char *size_str = size_to_str(ram_size);
-        error_report("Invalid RAM size, should be %s", size_str);
-        g_free(size_str);
-        exit(1);
-    }
-    max_ramsize = ramsize_max(board_rev);
-    if (ram_size > max_ramsize) {
-        g_autofree char *max_ramsize_str = size_to_str(max_ramsize);
-        error_report("At most %s of RAM can be used", max_ramsize_str);
-         exit(1);
-    }
 
     /* FIXME: Remove when we have custom CPU address space support */
     memory_region_add_subregion_overlap(get_system_memory(), 0,
@@ -448,6 +434,115 @@ void raspi_machine_init(MachineState *machine)
     raspi_base_machine_init(machine, BCM283X_BASE(soc), mc->board_rev);
 }
 
+static void raspi_generic_machine_init(MachineState *ms)
+{
+    RaspiMachineState *s = RASPI_MACHINE(ms);
+    RaspiBaseMachineState *s_base = RASPI_BASE_MACHINE(ms);
+    uint32_t board_rev = s_base->board_rev;
+    const char *soc_type = board_soc_type(board_rev);
+    BCM283XBaseState *bsoc;
+    uint64_t ram_size;
+    uint64_t max_ramsize;
+
+    if (!board_rev) {
+        error_report("Missing model");
+        exit(1);
+    }
+
+    ram_size = ROUND_UP(ms->ram_size, 256 * MiB);
+    if (ram_size != ms->ram_size) {
+        g_autofree char *ram_size_str = size_to_str(ms->ram_size);
+        g_autofree char *rounded_size_str = size_to_str(ram_size);
+        warn_report("Invalid RAM size %s, rounding to %s",
+                    ram_size_str, rounded_size_str);
+    }
+    max_ramsize = ramsize_max(board_rev);
+    if (ram_size > max_ramsize) {
+        g_autofree char *max_ramsize_str = size_to_str(max_ramsize);
+        error_report("At most %s of RAM can be used with BCM%s",
+                     max_ramsize_str, soc_type + 3);
+        exit(1);
+    }
+    board_rev = FIELD_DP32(board_rev, REV_CODE, MEMORY_SIZE,
+                           ctz64(ms->ram_size) - 28);
+
+    ms->ram = g_new(MemoryRegion, 1);
+    memory_region_init(ms->ram, OBJECT(ms), "DRAM", ram_size);
+
+    if (board_processor_id(board_rev) == PROCESSOR_ID_BCM2838) {
+        BCM2838State *soc = &s->soc4;
+        bsoc = BCM283X_BASE(soc);
+        object_initialize_child(OBJECT(ms), "soc", soc, soc_type);
+    } else {
+        BCM283XState *soc = &s->soc;
+        bsoc = BCM283X_BASE(soc);
+        object_initialize_child(OBJECT(ms), "soc", soc, soc_type);
+    }
+    raspi_base_machine_init(ms, bsoc, board_rev);
+}
+
+static void raspi_update_board_rev(RaspiBaseMachineState *s)
+{
+    MachineState *ms = MACHINE(s);
+    RaspiProcessorId proc;
+    unsigned model_index;
+
+    s->board_rev = FIELD_DP32(s->board_rev, REV_CODE, STYLE, 1);
+
+    model_index = FIELD_EX32(s->board_rev, REV_CODE, TYPE);
+    proc = types[model_index].proc_id;
+    s->board_rev = FIELD_DP32(s->board_rev, REV_CODE, PROCESSOR, proc);
+
+    ms->smp.max_cpus = soc_property[proc].cores_count;
+}
+
+static void raspi_set_machine_model(Object *obj, const char *value, Error **errp)
+{
+    for (unsigned i = 0; i < ARRAY_SIZE(types); i++) {
+        if (types[i].model && !strcmp(value, types[i].model)) {
+            RaspiBaseMachineState *s = RASPI_BASE_MACHINE(obj);
+
+            s->board_rev = FIELD_DP32(s->board_rev, REV_CODE, TYPE, i);
+
+            return raspi_update_board_rev(s);
+        }
+    }
+    error_setg(errp, "Invalid model");
+}
+
+static char *raspi_get_machine_model(Object *obj, Error **errp)
+{
+    RaspiBaseMachineState *s = RASPI_BASE_MACHINE(obj);
+
+    return g_strdup(types[FIELD_EX32(s->board_rev, REV_CODE, TYPE)].model);
+}
+
+static void raspi_generic_machine_class_init(ObjectClass *oc, void *data)
+{
+    MachineClass *mc = MACHINE_CLASS(oc);
+    RaspiBaseMachineClass *rmc = RASPI_BASE_MACHINE_CLASS(oc);
+
+    rmc->board_rev = FIELD_DP32(0, REV_CODE, STYLE, 1);
+
+    mc->desc = "Raspberry Pi";
+    mc->block_default_type = IF_SD;
+    mc->no_parallel = 1;
+    mc->no_floppy = 1;
+    mc->no_cdrom = 1;
+    mc->default_cpus = 1;
+    mc->min_cpus = 1;
+    mc->max_cpus = 4;
+    mc->default_ram_size = 0;
+    mc->default_ram_id = "DRAM";
+    mc->init = raspi_generic_machine_init;
+
+    object_class_property_add_str(oc, "model",
+                                  raspi_get_machine_model,
+                                  raspi_set_machine_model);
+    object_class_property_set_description(oc, "model", "Set machine model.");
+};
+
+
 void raspi_machine_class_common_init(MachineClass *mc,
                                      uint32_t board_rev)
 {
@@ -533,6 +628,10 @@ static void raspi4b_machine_class_init(ObjectClass *oc, void *data)
 
 static const TypeInfo raspi_machine_types[] = {
     {
+        .name           = MACHINE_TYPE_NAME("raspi"),
+        .parent         = TYPE_RASPI_MACHINE,
+        .class_init     = raspi_generic_machine_class_init,
+    }, {
         .name           = MACHINE_TYPE_NAME("raspi0"),
         .parent         = TYPE_RASPI_MACHINE,
         .class_init     = raspi0_machine_class_init,

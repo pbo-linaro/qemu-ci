@@ -41,7 +41,8 @@ OBJECT_DECLARE_TYPE(RaspiBaseMachineState, RaspiBaseMachineClass,
 struct RaspiBaseMachineState {
     /*< private >*/
     MachineState parent_obj;
-    /*< public >*/
+
+    uint32_t board_rev;
     struct arm_boot_info binfo;
 };
 
