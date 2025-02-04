@@ -38,9 +38,6 @@
 #define TYPE_RASPI_MACHINE  MACHINE_TYPE_NAME("raspi-common")
 OBJECT_DECLARE_SIMPLE_TYPE(RaspiMachineState, RASPI_MACHINE)
 
-#define TYPE_RASPI4B_MACHINE MACHINE_TYPE_NAME("raspi4b")
-OBJECT_DECLARE_SIMPLE_TYPE(Raspi4bMachineState, RASPI4B_MACHINE)
-
 #define SMPBOOT_ADDR    0x300 /* this should leave enough space for ATAGS */
 #define MVBAR_ADDR      0x400 /* secure vectors */
 #define BOARDSETUP_ADDR (MVBAR_ADDR + 0x20) /* board setup code */
@@ -49,15 +46,12 @@ OBJECT_DECLARE_SIMPLE_TYPE(Raspi4bMachineState, RASPI4B_MACHINE)
 #define SPINTABLE_ADDR  0xd8 /* Pi 3 bootloader spintable */
 
 struct RaspiMachineState {
-    /*< private >*/
     RaspiBaseMachineState parent_obj;
-    /*< public >*/
-    BCM283XState soc;
-};
 
-struct Raspi4bMachineState {
-    RaspiBaseMachineState parent_obj;
-    BCM2838State soc;
+    union {
+        BCM283XState soc;
+        BCM2838State soc4;
+    };
 };
 
 /*
@@ -380,10 +374,10 @@ static void raspi4_modify_dtb(const struct arm_boot_info *info, void *fdt)
 
 static void raspi4b_machine_init(MachineState *machine)
 {
-    Raspi4bMachineState *s = RASPI4B_MACHINE(machine);
+    RaspiMachineState *s = RASPI_MACHINE(machine);
     RaspiBaseMachineState *s_base = RASPI_BASE_MACHINE(machine);
     RaspiBaseMachineClass *mc = RASPI_BASE_MACHINE_GET_CLASS(machine);
-    BCM2838State *soc = &s->soc;
+    BCM2838State *soc = &s->soc4;
 
     s_base->binfo.modify_dtb = raspi4_modify_dtb;
     s_base->binfo.board_id = mc->board_rev;
@@ -515,8 +509,7 @@ static const TypeInfo raspi_machine_types[] = {
         .class_init     = raspi3b_machine_class_init,
     }, {
         .name           = MACHINE_TYPE_NAME("raspi4"),
-        .parent         = TYPE_RASPI_BASE_MACHINE,
-        .instance_size  = sizeof(Raspi4bMachineState),
+        .parent         = TYPE_RASPI_MACHINE,
         .class_init     = raspi4b_machine_class_init,
 #endif /* TARGET_AARCH64 */
     }, {
