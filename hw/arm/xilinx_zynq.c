@@ -467,6 +467,7 @@ static void zynq_machine_class_init(ObjectClass *oc, void *data)
     mc->ignore_memory_transaction_failures = true;
     mc->valid_cpu_types = valid_cpu_types;
     mc->default_ram_id = "zynq.ext_ram";
+    mc->no_sdcard = ON_OFF_AUTO_OFF;
     prop = object_class_property_add_str(oc, "boot-mode", NULL,
                                          zynq_set_boot_mode);
     object_class_property_set_description(oc, "boot-mode",
