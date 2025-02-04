@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250204125009.2281315-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/9] target/arm: Apply correct timer offset when calculating deadlines
+  [32m✓[0m [PATCH v3 2/9] target/arm: Don't apply CNTVOFF_EL2 for EL2_VIRT timer
+  [32m✓[0m [PATCH v3 3/9] target/arm: Make CNTPS_* UNDEF from Secure EL1 when Secure EL2 is enabled
+  [32m✓[0m [PATCH v3 4/9] target/arm: Always apply CNTVOFF_EL2 for CNTV_TVAL_EL02 accesses
+  [32m✓[0m [PATCH v3 5/9] target/arm: Refactor handling of timer offset for direct register accesses
+  [32m✓[0m [PATCH v3 6/9] target/arm: Implement SEL2 physical and virtual timers
+  [32m✓[0m [PATCH v3 7/9] target/arm: document the architectural names of our GTIMERs
+  [32m✓[0m [PATCH v3 8/9] hw/arm: enable secure EL2 timers for virt machine
+  [32m✓[0m [PATCH v3 9/9] hw/arm: enable secure EL2 timers for sbsa machine
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: target/arm: Apply correct timer offset when calculating deadlines
+Applying: target/arm: Don't apply CNTVOFF_EL2 for EL2_VIRT timer
+Applying: target/arm: Make CNTPS_* UNDEF from Secure EL1 when Secure EL2 is enabled
+Patch failed at 0003 target/arm: Make CNTPS_* UNDEF from Secure EL1 when Secure EL2 is enabled
+error: patch failed: target/arm/helper.c:2387
+error: target/arm/helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
