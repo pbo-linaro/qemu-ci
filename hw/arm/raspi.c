@@ -445,7 +445,7 @@ static void raspi_generic_machine_init(MachineState *ms)
     uint64_t max_ramsize;
 
     if (!board_rev) {
-        error_report("Missing model");
+        error_report("Missing model, try -M raspi,model=help");
         exit(1);
     }
 
@@ -500,8 +500,33 @@ static void raspi_update_board_rev(RaspiBaseMachineState *s)
     ms->smp.max_cpus = soc_property[proc].cores_count;
 }
 
+static void raspi_list_machine_models(void)
+{
+    printf("Available models (processor):\n");
+
+    for (unsigned i = 0; i < ARRAY_SIZE(types); i++) {
+        const char *soc_type;
+
+        if (!types[i].model) {
+            continue;
+        }
+
+        soc_type = soc_property[types[i].proc_id].type;
+        if (!soc_type) {
+            continue;
+        }
+        printf("- %-10s (BCM%s)\n",
+               types[i].model,
+               soc_property[types[i].proc_id].type + 3);
+    }
+}
+
 static void raspi_set_machine_model(Object *obj, const char *value, Error **errp)
 {
+    if (!strcmp(value, "help")) {
+        raspi_list_machine_models();
+        exit(0);
+    }
     for (unsigned i = 0; i < ARRAY_SIZE(types); i++) {
         if (types[i].model && !strcmp(value, types[i].model)) {
             RaspiBaseMachineState *s = RASPI_BASE_MACHINE(obj);
@@ -512,6 +537,7 @@ static void raspi_set_machine_model(Object *obj, const char *value, Error **errp
         }
     }
     error_setg(errp, "Invalid model");
+    error_append_hint(errp, "Use model=help to list models.\n");
 }
 
 static char *raspi_get_machine_model(Object *obj, Error **errp)
