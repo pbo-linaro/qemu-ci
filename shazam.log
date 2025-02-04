@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250204211407.381505-1-kwolf@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 68 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/16] block: Add 'active' field to BlockDeviceInfo
+  [32m✓[0m [PATCH v3 2/16] block: Allow inactivating already inactive nodes
+  [32m✓[0m [PATCH v3 3/16] block: Inactivate external snapshot overlays when necessary
+  [32m✓[0m [PATCH v3 4/16] migration/block-active: Remove global active flag
+  [32m✓[0m [PATCH v3 5/16] block: Don't attach inactive child to active node
+  [32m✓[0m [PATCH v3 6/16] block: Fix crash on block_resize on inactive node
+  [32m✓[0m [PATCH v3 7/16] block: Add option to create inactive nodes
+  [32m✓[0m [PATCH v3 8/16] block: Add blockdev-set-active QMP command
+  [32m✓[0m [PATCH v3 9/16] block: Support inactive nodes in blk_insert_bs()
+  [32m✓[0m [PATCH v3 10/16] block/export: Don't ignore image activation error in blk_exp_add()
+  [32m✓[0m [PATCH v3 11/16] block: Drain nodes before inactivating them
+  [32m✓[0m [PATCH v3 12/16] block/export: Add option to allow export of inactive nodes
+  [32m✓[0m [PATCH v3 13/16] nbd/server: Support inactive nodes
+    + Reviewed-by: Eric Blake <eblake@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v3 14/16] iotests: Add filter_qtest()
+  [32m✓[0m [PATCH v3 15/16] iotests: Add qsd-migrate case
+  [32m✓[0m [PATCH v3 16/16] iotests: Add (NBD-based) tests for inactive nodes
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 16
+---
+Applying: block: Add 'active' field to BlockDeviceInfo
+Applying: block: Allow inactivating already inactive nodes
+Applying: block: Inactivate external snapshot overlays when necessary
+Applying: migration/block-active: Remove global active flag
+Patch failed at 0004 migration/block-active: Remove global active flag
+error: patch failed: migration/migration.h:553
+error: migration/migration.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
