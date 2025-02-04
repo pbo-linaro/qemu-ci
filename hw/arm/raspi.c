@@ -491,6 +491,10 @@ static void raspi_update_board_rev(RaspiBaseMachineState *s)
 
     model_index = FIELD_EX32(s->board_rev, REV_CODE, TYPE);
     proc = types[model_index].proc_id;
+    if (model_index == 4 && FIELD_EX32(s->board_rev, REV_CODE, REVISION) > 1) {
+        /* 2B rev 1.0 and 1.1 have BCM2836, 1.2+ have BCM2837 */
+        proc = PROCESSOR_ID_BCM2837;
+    }
     s->board_rev = FIELD_DP32(s->board_rev, REV_CODE, PROCESSOR, proc);
 
     ms->smp.max_cpus = soc_property[proc].cores_count;
@@ -517,6 +521,35 @@ static char *raspi_get_machine_model(Object *obj, Error **errp)
     return g_strdup(types[FIELD_EX32(s->board_rev, REV_CODE, TYPE)].model);
 }
 
+static void raspi_set_machine_rev(Object *obj, const char *value, Error **errp)
+{
+    RaspiBaseMachineState *s;
+    int rev;
+
+    if (strlen(value) != 3 || value[0] != '1' || value[1] != '.') {
+        error_setg(errp, "Invalid revision");
+        return;
+    }
+    rev = value[2] - '0';
+    if (rev < 0 || rev > 5) {
+        error_setg(errp, "Invalid revision");
+        return;
+    }
+
+    s = RASPI_BASE_MACHINE(obj);
+    s->board_rev = FIELD_DP32(s->board_rev, REV_CODE, REVISION, rev);
+
+    return raspi_update_board_rev(s);
+}
+
+static char *raspi_get_machine_rev(Object *obj, Error **errp)
+{
+    RaspiBaseMachineState *s = RASPI_BASE_MACHINE(obj);
+
+    return g_strdup_printf("1.%u",
+                           FIELD_EX32(s->board_rev, REV_CODE, REVISION));
+}
+
 static void raspi_generic_machine_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -540,6 +573,12 @@ static void raspi_generic_machine_class_init(ObjectClass *oc, void *data)
                                   raspi_get_machine_model,
                                   raspi_set_machine_model);
     object_class_property_set_description(oc, "model", "Set machine model.");
+    object_class_property_add_str(oc, "revision",
+                                  raspi_get_machine_rev,
+                                  raspi_set_machine_rev);
+    object_class_property_set_description(oc, "revision",
+                                          "Set machine revision. "
+                                          "Valid values are 1.0 to 1.5");
 };
 
 
