@@ -254,10 +254,8 @@ static void setup_boot(MachineState *machine, ARMCPU *cpu,
 }
 
 void raspi_base_machine_init(MachineState *machine,
-                             BCM283XBaseState *soc)
+                             BCM283XBaseState *soc, const uint32_t board_rev)
 {
-    RaspiBaseMachineClass *mc = RASPI_BASE_MACHINE_GET_CLASS(machine);
-    uint32_t board_rev = mc->board_rev;
     uint64_t ram_size = board_ram_size(board_rev);
     uint32_t vcram_base, vcram_size;
     size_t boot_ram_size;
@@ -384,7 +382,7 @@ static void raspi4b_machine_init(MachineState *machine)
 
     object_initialize_child(OBJECT(machine), "soc", soc,
                             board_soc_type(mc->board_rev));
-    raspi_base_machine_init(machine, BCM283X_BASE(soc));
+    raspi_base_machine_init(machine, BCM283X_BASE(soc), mc->board_rev);
 }
 #endif /* TARGET_AARCH64 */
 
@@ -399,7 +397,7 @@ void raspi_machine_init(MachineState *machine)
 
     object_initialize_child(OBJECT(machine), "soc", soc,
                             board_soc_type(mc->board_rev));
-    raspi_base_machine_init(machine, BCM283X_BASE(soc));
+    raspi_base_machine_init(machine, BCM283X_BASE(soc), mc->board_rev);
 }
 
 void raspi_machine_class_common_init(MachineClass *mc,

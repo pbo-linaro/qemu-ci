@@ -58,7 +58,7 @@ void raspi_machine_init(MachineState *machine);
 
 typedef struct BCM283XBaseState BCM283XBaseState;
 void raspi_base_machine_init(MachineState *machine,
-                             BCM283XBaseState *soc);
+                             BCM283XBaseState *soc, const uint32_t board_rev);
 
 void raspi_machine_class_common_init(MachineClass *mc,
                                      uint32_t board_rev);
