@@ -70,6 +70,7 @@ typedef enum RaspiProcessorId {
     PROCESSOR_ID_BCM2836 = 1,
     PROCESSOR_ID_BCM2837 = 2,
     PROCESSOR_ID_BCM2838 = 3,
+    PROCESSOR_ID_BCM2711 = 3,
 } RaspiProcessorId;
 
 static const struct {
@@ -80,6 +81,30 @@ static const struct {
     [PROCESSOR_ID_BCM2836] = {TYPE_BCM2836, BCM283X_NCPUS},
     [PROCESSOR_ID_BCM2837] = {TYPE_BCM2837, BCM283X_NCPUS},
     [PROCESSOR_ID_BCM2838] = {TYPE_BCM2838, BCM283X_NCPUS},
+};
+
+static const struct {
+    RaspiProcessorId proc_id;
+    const char *model;
+} types[] = {
+    {PROCESSOR_ID_BCM2835, "A"},
+    {PROCESSOR_ID_BCM2835, "B"},
+    {PROCESSOR_ID_BCM2835, "A+"},
+    {PROCESSOR_ID_BCM2835, "B+"},
+    {PROCESSOR_ID_BCM2836, "2B"},
+    { },
+    {PROCESSOR_ID_BCM2835, "CM1"},
+    { },
+    {PROCESSOR_ID_BCM2837, "3B"},
+    {PROCESSOR_ID_BCM2835, "Zero"},
+    {PROCESSOR_ID_BCM2837, "CM3"},
+    { },
+    {PROCESSOR_ID_BCM2835, "ZeroW"},
+    {PROCESSOR_ID_BCM2837, "3B+"},
+    {PROCESSOR_ID_BCM2837, "3A+"},
+    { },
+    {PROCESSOR_ID_BCM2837, "CM3+"},
+    {PROCESSOR_ID_BCM2711, "4B"},
 };
 
 uint64_t board_ram_size(uint32_t board_rev)
@@ -110,16 +135,12 @@ static int cores_count(uint32_t board_rev)
 
 static const char *board_type(uint32_t board_rev)
 {
-    static const char *types[] = {
-        "A", "B", "A+", "B+", "2B", "Alpha", "CM1", NULL, "3B", "Zero",
-        "CM3", NULL, "Zero W", "3B+", "3A+", NULL, "CM3+", "4B",
-    };
     assert(FIELD_EX32(board_rev, REV_CODE, STYLE)); /* Only new style */
     int bt = FIELD_EX32(board_rev, REV_CODE, TYPE);
-    if (bt >= ARRAY_SIZE(types) || !types[bt]) {
+    if (bt >= ARRAY_SIZE(types) || !types[bt].model) {
         return "Unknown";
     }
-    return types[bt];
+    return types[bt].model;
 }
 
 static void write_smpboot(ARMCPU *cpu, const struct arm_boot_info *info)
