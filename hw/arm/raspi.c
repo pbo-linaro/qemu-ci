@@ -71,6 +71,7 @@ typedef enum RaspiProcessorId {
     PROCESSOR_ID_BCM2837 = 2,
     PROCESSOR_ID_BCM2838 = 3,
     PROCESSOR_ID_BCM2711 = 3,
+    PROCESSOR_ID_BCM2712 = 4,
 } RaspiProcessorId;
 
 static const struct {
@@ -82,6 +83,7 @@ static const struct {
     [PROCESSOR_ID_BCM2836] = {TYPE_BCM2836, BCM283X_NCPUS,  1 * GiB},
     [PROCESSOR_ID_BCM2837] = {TYPE_BCM2837, BCM283X_NCPUS,  1 * GiB},
     [PROCESSOR_ID_BCM2838] = {TYPE_BCM2838, BCM283X_NCPUS,  8 * GiB},
+    [PROCESSOR_ID_BCM2712] = {NULL,         BCM283X_NCPUS,  16 * GiB},
 };
 
 static const struct {
@@ -106,6 +108,17 @@ static const struct {
     { },
     {PROCESSOR_ID_BCM2837, "CM3+"},
     {PROCESSOR_ID_BCM2711, "4B"},
+    {PROCESSOR_ID_BCM2837, "Zero2W"},
+    {PROCESSOR_ID_BCM2711, "400"},
+
+    {PROCESSOR_ID_BCM2711, "CM4"},
+    {PROCESSOR_ID_BCM2711, "CM4S"},
+    { },
+    {PROCESSOR_ID_BCM2712, "5"},
+    {PROCESSOR_ID_BCM2712, "CM5"},
+    {PROCESSOR_ID_BCM2712, "500"},
+    {PROCESSOR_ID_BCM2712, "CM5lite"},
+    { },
 };
 
 uint64_t board_ram_size(uint32_t board_rev)
