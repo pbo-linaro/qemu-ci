@@ -76,11 +76,12 @@ typedef enum RaspiProcessorId {
 static const struct {
     const char *type;
     int cores_count;
+    uint64_t max_ramsize;
 } soc_property[] = {
-    [PROCESSOR_ID_BCM2835] = {TYPE_BCM2835, 1},
-    [PROCESSOR_ID_BCM2836] = {TYPE_BCM2836, BCM283X_NCPUS},
-    [PROCESSOR_ID_BCM2837] = {TYPE_BCM2837, BCM283X_NCPUS},
-    [PROCESSOR_ID_BCM2838] = {TYPE_BCM2838, BCM283X_NCPUS},
+    [PROCESSOR_ID_BCM2835] = {TYPE_BCM2835, 1,              512 * MiB},
+    [PROCESSOR_ID_BCM2836] = {TYPE_BCM2836, BCM283X_NCPUS,  1 * GiB},
+    [PROCESSOR_ID_BCM2837] = {TYPE_BCM2837, BCM283X_NCPUS,  1 * GiB},
+    [PROCESSOR_ID_BCM2838] = {TYPE_BCM2838, BCM283X_NCPUS,  8 * GiB},
 };
 
 static const struct {
@@ -131,6 +132,11 @@ const char *board_soc_type(uint32_t board_rev)
 static int cores_count(uint32_t board_rev)
 {
     return soc_property[board_processor_id(board_rev)].cores_count;
+}
+
+static uint64_t ramsize_max(uint32_t board_rev)
+{
+    return soc_property[board_processor_id(board_rev)].max_ramsize;
 }
 
 static const char *board_type(uint32_t board_rev)
@@ -294,12 +300,19 @@ void raspi_base_machine_init(MachineState *machine,
     BlockBackend *blk;
     BusState *bus;
     DeviceState *carddev;
+    uint64_t max_ramsize;
 
     if (machine->ram_size != ram_size) {
         char *size_str = size_to_str(ram_size);
         error_report("Invalid RAM size, should be %s", size_str);
         g_free(size_str);
         exit(1);
+    }
+    max_ramsize = ramsize_max(board_rev);
+    if (ram_size > max_ramsize) {
+        g_autofree char *max_ramsize_str = size_to_str(max_ramsize);
+        error_report("At most %s of RAM can be used", max_ramsize_str);
+         exit(1);
     }
 
     /* FIXME: Remove when we have custom CPU address space support */
