@@ -143,6 +143,16 @@ static const char *board_type(uint32_t board_rev)
     return types[bt].model;
 }
 
+static bool is_model_b(uint32_t board_rev)
+{
+    return !!strchr(board_type(board_rev), 'B');
+}
+
+static bool has_enet(uint32_t board_rev)
+{
+    return is_model_b(board_rev);
+}
+
 static void write_smpboot(ARMCPU *cpu, const struct arm_boot_info *info)
 {
     static const ARMInsnFixup smpboot[] = {
@@ -303,6 +313,10 @@ void raspi_base_machine_init(MachineState *machine,
     object_property_set_str(OBJECT(soc), "command-line",
                             machine->kernel_cmdline, &error_abort);
     qdev_realize(DEVICE(soc), NULL, &error_fatal);
+
+    if (has_enet(board_rev)) {
+        /* TODO: model LAN9512 and wire over USB2 */
+    }
 
     /* Create and plug in the SD cards */
     di = drive_get(IF_SD, 0, 0);
