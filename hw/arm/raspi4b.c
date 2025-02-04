@@ -104,7 +104,7 @@ static void raspi4b_machine_init(MachineState *machine)
     object_initialize_child(OBJECT(machine), "soc", soc,
                             board_soc_type(mc->board_rev));
 
-    raspi_base_machine_init(machine, &soc->parent_obj);
+    raspi_base_machine_init(machine, BCM283X_BASE(soc));
 }
 
 static void raspi4b_machine_class_init(ObjectClass *oc, void *data)

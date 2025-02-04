@@ -312,7 +312,7 @@ void raspi_machine_init(MachineState *machine)
 
     object_initialize_child(OBJECT(machine), "soc", soc,
                             board_soc_type(mc->board_rev));
-    raspi_base_machine_init(machine, &soc->parent_obj);
+    raspi_base_machine_init(machine, BCM283X_BASE(soc));
 }
 
 void raspi_machine_class_common_init(MachineClass *mc,
