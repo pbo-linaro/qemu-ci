@@ -1285,10 +1285,6 @@ static void e500_ccsr_initfn(Object *obj)
                        MPC8544_CCSRBAR_SIZE);
 }
 
-static void ppce500_machine_class_init(ObjectClass *oc, void *data)
-{
-}
-
 static const TypeInfo e500_ccsr_info = {
     .name          = TYPE_CCSR,
     .parent        = TYPE_SYS_BUS_DEVICE,
@@ -1302,7 +1298,6 @@ static const TypeInfo ppce500_info = {
     .abstract      = true,
     .instance_size = sizeof(PPCE500MachineState),
     .class_size    = sizeof(PPCE500MachineClass),
-    .class_init    = ppce500_machine_class_init,
 };
 
 static void e500_register_types(void)
