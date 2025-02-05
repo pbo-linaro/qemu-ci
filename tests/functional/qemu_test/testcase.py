@@ -192,7 +192,7 @@ class QemuBaseTest(unittest.TestCase):
                     return False
         return True
 
-    def setUp(self, bin_prefix):
+    def setUp(self):
         if self.qemu_bin is None:
             self.skipTest("QEMU_TEST_QEMU_BINARY env variable is not set")
 
@@ -256,7 +256,7 @@ class QemuBaseTest(unittest.TestCase):
 class QemuUserTest(QemuBaseTest):
 
     def setUp(self):
-        super().setUp('qemu-')
+        super().setUp()
         self._ldpath = []
 
     def add_ldpath(self, ldpath):
@@ -279,7 +279,7 @@ class QemuSystemTest(QemuBaseTest):
     def setUp(self):
         self._vms = {}
 
-        super().setUp('qemu-system-')
+        super().setUp()
 
         console_log = logging.getLogger('console')
         console_log.setLevel(logging.DEBUG)
