@@ -5,6 +5,7 @@
 import importlib
 import os
 import platform
+import sys
 from unittest import skipUnless
 
 from .cmd import which
@@ -118,3 +119,14 @@ def skipIfMissingImports(*args):
 
     return skipUnless(has_imports, 'required import(s) "%s" not installed' %
                                    ", ".join(args))
+
+'''
+Decorator to skip execution of a test on 32-bit targets
+Example:
+
+  @skipIf32BitTarget()
+'''
+def skipIf32BitTarget():
+    enoughBits = sys.maxsize > 2**32
+    return skipUnless(enoughBits,
+                      'Test requires a host with 64-bit address space')

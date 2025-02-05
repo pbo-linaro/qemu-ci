@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-from qemu_test import QemuSystemTest
+from qemu_test import QemuSystemTest, skipIf32BitTarget
 import time
 
 class MemAddrCheck(QemuSystemTest):
@@ -22,6 +22,7 @@ class MemAddrCheck(QemuSystemTest):
 
     # first, lets test some 32-bit processors.
     # for all 32-bit cases, pci64_hole_size is 0.
+    @skipIf32BitTarget()
     def test_phybits_low_pse36(self):
         """
         With pse36 feature ON, a processor has 36 bits of addressing. So it can
@@ -49,6 +50,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_low_pae(self):
         """
         With pae feature ON, a processor has 36 bits of addressing. So it can
@@ -66,6 +68,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_pentium_pse36(self):
         """
         Setting maxmem to 59.5G and making sure that QEMU can start with the
@@ -82,6 +85,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_pentium_pae(self):
         """
         Test is same as above but now with pae cpu feature turned on.
@@ -99,6 +103,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_pentium2(self):
         """
         Pentium2 has 36 bits of addressing, so its same as pentium
@@ -115,6 +120,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_low_nonpse36(self):
         """
         Pentium processor has 32 bits of addressing without pse36 or pae
@@ -135,6 +141,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
     # now lets test some 64-bit CPU cases.
+    @skipIf32BitTarget()
     def test_phybits_low_tcg_q35_70_amd(self):
         """
         For q35 7.1 machines and above, there is a HT window that starts at
@@ -161,6 +168,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_low_tcg_q35_71_amd(self):
         """
         AMD_HT_START is defined to be at 1012 GiB. So for q35 machines
@@ -181,6 +189,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_tcg_q35_70_amd(self):
         """
         Same as q35-7.0 AMD case except that here we check that QEMU can
@@ -197,6 +206,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_tcg_q35_71_amd(self):
         """
         Same as q35-7.1 AMD case except that here we check that QEMU can
@@ -213,6 +223,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_tcg_q35_71_intel(self):
         """
         Same parameters as test_phybits_low_tcg_q35_71_amd() but use
@@ -231,6 +242,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_low_tcg_q35_71_amd_41bits(self):
         """
         AMD processor with 41 bits. Max cpu hw address = 2 TiB.
@@ -255,6 +267,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_tcg_q35_71_amd_41bits(self):
         """
         AMD processor with 41 bits. Max cpu hw address = 2 TiB.
@@ -273,6 +286,7 @@ class MemAddrCheck(QemuSystemTest):
         self.vm.shutdown()
         self.assertNotRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_low_tcg_q35_intel_cxl(self):
         """
         cxl memory window starts after memory device range. Here, we use 1 GiB
@@ -293,6 +307,7 @@ class MemAddrCheck(QemuSystemTest):
         self.assertEqual(self.vm.exitcode(), 1, "QEMU exit code should be 1")
         self.assertRegex(self.vm.get_log(), r'phys-bits too low')
 
+    @skipIf32BitTarget()
     def test_phybits_ok_tcg_q35_intel_cxl(self):
         """
         Same as above but here we do not reserve any cxl memory window. Hence,
