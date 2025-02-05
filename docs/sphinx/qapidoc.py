@@ -2,6 +2,7 @@
 #
 # QEMU qapidoc QAPI file parsing extension
 #
+# Copyright (c) 2024 Red Hat
 # Copyright (c) 2020 Linaro
 #
 # This work is licensed under the terms of the GNU GPLv2 or later.
@@ -53,11 +54,14 @@ from qapi.source import QAPISourceInfo
 from sphinx import addnodes
 from sphinx.directives.code import CodeBlock
 from sphinx.errors import ExtensionError
+from sphinx.util import logging
 from sphinx.util.docutils import switch_source_input
 from sphinx.util.nodes import nested_parse_with_titles
 
 
 __version__ = "1.0"
+
+logger = logging.getLogger(__name__)
 
 
 def dedent(text: str) -> str:
@@ -88,6 +92,10 @@ class Transmogrifier:
         self._curr_ent = None
         self._result = StringList()
         self.indent = 0
+
+    @property
+    def result(self) -> StringList:
+        return self._result
 
     @property
     def entity(self) -> QAPISchemaEntity:
@@ -823,7 +831,43 @@ class QAPIDocDirective(NestedDirective):
         return "qapidoc-%d" % env.new_serialno("qapidoc")
 
     def transmogrify(self, schema) -> nodes.Element:
-        raise NotImplementedError
+        logger.info("Transmogrifying QAPI to rST ...")
+        vis = Transmogrifier(schema)
+        modules = set()
+
+        for doc in schema.docs:
+            module_source = doc.info.fname
+            if module_source not in modules:
+                vis.visit_module(module_source)
+                modules.add(module_source)
+
+            if doc.symbol:
+                ent = schema.lookup_entity(doc.symbol)
+                assert ent
+                vis.visit_entity(ent)
+            else:
+                vis.visit_freeform(doc)
+
+        logger.info("Transmogrification complete.")
+
+        contentnode = nodes.section()
+        content = vis.result
+        titles_allowed = True
+
+        logger.info("Transmogrifier running nested parse ...")
+        with switch_source_input(self.state, content):
+            if titles_allowed:
+                node: nodes.Element = nodes.section()
+                node.document = self.state.document
+                nested_parse_with_titles(self.state, content, contentnode)
+            else:
+                node = nodes.paragraph()
+                node.document = self.state.document
+                self.state.nested_parse(content, 0, contentnode)
+        logger.info("Transmogrifier's nested parse completed.")
+        sys.stdout.flush()
+
+        return contentnode
 
     def legacy(self, schema) -> nodes.Element:
         vis = QAPISchemaGenRSTVisitor(self)
@@ -957,6 +1001,7 @@ class QMPExample(CodeBlock, NestedDirective):
 
 def setup(app):
     """Register qapi-doc directive with Sphinx"""
+    app.setup_extension("qapi-domain")
     app.add_config_value("qapidoc_srctree", None, "env")
     app.add_directive("qapi-doc", QAPIDocDirective)
     app.add_directive("qmp-example", QMPExample)
