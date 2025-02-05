@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250205122712.229151-1-ppandit@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 97 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/5] migration/multifd: move macros to multifd header
+  [32m✓[0m [PATCH v5 2/5] migration: refactor ram_save_target_page functions
+  [32m✓[0m [PATCH v5 3/5] migration: enable multifd and postcopy together
+  [32m✓[0m [PATCH v5 4/5] tests/qtest/migration: add postcopy tests with multifd
+  [32m✓[0m [PATCH v5 5/5] tests/qtest/migration: consolidate set capabilities
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: migration/multifd: move macros to multifd header
+Applying: migration: refactor ram_save_target_page functions
+Patch failed at 0002 migration: refactor ram_save_target_page functions
+error: patch failed: migration/ram.c:446
+error: migration/ram.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
