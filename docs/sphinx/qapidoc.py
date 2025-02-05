@@ -133,6 +133,53 @@ class Transmogrifier:
         self.add_line_raw(f".. qapi:module:: {name}", path, 1)
         self.ensure_blank_line()
 
+    def visit_freeform(self, doc) -> None:
+        # TODO: Once the old qapidoc transformer is deprecated, freeform
+        # sections can be updated to pure rST, and this transformed removed.
+        #
+        # For now, translate our micro-format into rST. Code adapted
+        # from Peter Maydell's freeform().
+
+        assert len(doc.all_sections) == 1, doc.all_sections
+        body = doc.all_sections[0]
+        text = body.text
+        info = doc.info
+
+        if re.match(r"=+ ", text):
+            # Section/subsection heading (if present, will always be the
+            # first line of the block)
+            (heading, _, text) = text.partition("\n")
+            (leader, _, heading) = heading.partition(" ")
+            level = len(leader) + 1  # Implicit +1 for heading in .rST stub
+
+            # https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#sections
+            markers = {
+                1: "#",
+                2: "*",
+                3: "=",
+                4: "-",
+                5: "^",
+                6: '"',
+            }
+            overline = level <= 2
+            marker = markers[level]
+
+            self.ensure_blank_line()
+            # This credits all 2 or 3 lines to the single source line.
+            if overline:
+                self.add_line(marker * len(heading), info)
+            self.add_line(heading, info)
+            self.add_line(marker * len(heading), info)
+            self.ensure_blank_line()
+
+            # Eat blank line(s) and advance info
+            trimmed = text.lstrip("\n")
+            text = trimmed
+            info = info.next_line(len(text) - len(trimmed) + 1)
+
+        self.add_lines(text, info)
+        self.ensure_blank_line()
+
 
 # Disable black auto-formatter until re-enabled:
 # fmt: off
