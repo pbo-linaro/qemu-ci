@@ -74,8 +74,14 @@ def dedent(text: str) -> str:
 
 class Transmogrifier:
     def __init__(self, schema):
+        self._curr_ent = None
         self._result = StringList()
         self.indent = 0
+
+    @property
+    def entity(self) -> QAPISchemaEntity:
+        assert self._curr_ent is not None
+        return self._curr_ent
 
     # General-purpose rST generation functions
 
