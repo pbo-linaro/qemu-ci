@@ -411,9 +411,15 @@ class Transmogrifier:
         # Proposal: decorate the right-hand column with some graphical
         # element to indicate conditional availability?
         assert section.text  # Guaranteed by parser.py
-        assert section.member
 
-        self.generate_field("feat", section.member, section.text, section.info)
+        if section.member:
+            # Normal feature
+            self.generate_field(
+                "feat", section.member, section.text, section.info
+            )
+        else:
+            # Pseudo-feature (OOB)
+            self.add_field("feat", section.name, section.text, section.info)
 
     def visit_returns(self, section: QAPIDoc.Section) -> None:
         assert isinstance(self.entity, QAPISchemaCommand)
