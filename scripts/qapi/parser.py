@@ -678,6 +678,7 @@ class QAPIDoc:
         SINCE = 5
         TODO = 6
         DETAIL = 7
+        META = 8
 
         @staticmethod
         def from_string(kind: str) -> 'QAPIDoc.Kind':
