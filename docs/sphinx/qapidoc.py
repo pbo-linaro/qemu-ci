@@ -410,15 +410,21 @@ class Transmogrifier:
     def visit_returns(self, section: QAPIDoc.Section) -> None:
         assert isinstance(self.entity, QAPISchemaCommand)
         rtype = self.entity.ret_type
-        # q_empty can produce None, but we won't be documenting anything
-        # without an explicit return statement in the doc block, and we
-        # should not have any such explicit statements when there is no
-        # return value.
-        assert rtype
+
+        if not rtype:
+            # Markus prefers q_empty returning commands just say
+            # nothing.  I'd like a "Returns nothing" in the generated
+            # docs because I like explicit to implicit - Users may not
+            # know that commands have an implicit return type and may
+            # wrongly assume that a missing "Returns" statement means
+            # it's undocumented. Well, that's my $0.02.
+            return
 
         typ = self.format_type(rtype)
-        assert section.text  # We don't expect empty returns sections.
-        self.add_field("returns", typ, section.text, section.info)
+        if section.text:
+            self.add_field("returns", typ, section.text, section.info)
+        else:
+            self.add_lines(f":returns-nodesc: {typ}", section.info)
 
     def visit_errors(self, section: QAPIDoc.Section) -> None:
         # FIXME: the formatting for errors may be inconsistent and may
