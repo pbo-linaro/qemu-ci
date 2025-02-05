@@ -1920,6 +1920,8 @@
 #
 # Xen uses this command to notify replication to trigger a checkpoint.
 #
+# Details:
+#
 # .. qmp-example::
 #
 #     -> { "execute": "xen-colo-do-checkpoint" }
@@ -1992,6 +1994,8 @@
 # @migrate-pause:
 #
 # Pause a migration.  Currently it only supports postcopy.
+#
+# Details:
 #
 # .. qmp-example::
 #

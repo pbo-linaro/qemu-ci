@@ -729,6 +729,8 @@
 #
 # Properties for memory-backend-shm objects.
 #
+# Details:
+#
 # This memory backend supports only shared memory, which is the
 # default.
 #
@@ -743,6 +745,8 @@
 # @MemoryBackendEpcProperties:
 #
 # Properties for memory-backend-epc objects.
+#
+# Details:
 #
 # The @merge boolean option is false by default with epc
 #

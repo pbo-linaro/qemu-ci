@@ -104,6 +104,8 @@
 #
 # Returns: list of @YankInstance
 #
+# Details:
+#
 # .. qmp-example::
 #
 #     -> { "execute": "query-yank" }
