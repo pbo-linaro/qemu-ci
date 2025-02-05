@@ -193,10 +193,6 @@ Features
 "cmd-feat2"
    another feature
 
-Note:
-
-  "arg3" is undocumented
-
 
 Returns
 ~~~~~~~
@@ -208,6 +204,10 @@ Errors
 ~~~~~~
 
 some
+
+Note:
+
+  "arg3" is undocumented
 
 Notes:
 
