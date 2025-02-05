@@ -33,7 +33,6 @@ from .uncompress import uncompress
 
 class QemuBaseTest(unittest.TestCase):
 
-    qemu_bin = os.getenv('QEMU_TEST_QEMU_BINARY')
     arch = None
 
     workdir = None
@@ -193,6 +192,7 @@ class QemuBaseTest(unittest.TestCase):
         return True
 
     def setUp(self):
+        self.qemu_bin = os.getenv('QEMU_TEST_QEMU_BINARY')
         if self.qemu_bin is None:
             self.skipTest("QEMU_TEST_QEMU_BINARY env variable is not set")
 
