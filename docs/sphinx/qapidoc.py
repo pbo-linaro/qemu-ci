@@ -25,13 +25,15 @@ The Sphinx documentation on writing extensions is at:
 https://www.sphinx-doc.org/en/master/development/index.html
 """
 
+from collections import defaultdict
 from contextlib import contextmanager
+import enum
 import os
 from pathlib import Path
 import re
 import sys
 import textwrap
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -45,8 +47,10 @@ from qapi.schema import (
     QAPISchemaCommand,
     QAPISchemaEntity,
     QAPISchemaEnumMember,
+    QAPISchemaEvent,
     QAPISchemaFeature,
     QAPISchemaMember,
+    QAPISchemaObjectType,
     QAPISchemaObjectTypeMember,
 )
 from qapi.source import QAPISourceInfo
@@ -75,6 +79,172 @@ def dedent(text: str) -> str:
 
     # Descr started on same line. Dedent line 2+.
     return lines[0] + textwrap.dedent("".join(lines[1:]))
+
+
+class DocRegion(enum.Enum):
+    # The inliner introduces the concept of doc Regions, which are
+    # groupings of zero or more Sections. These regions are used to know
+    # how to combine two lists of Sections.
+    INTRO = 0
+    MEMBER = 1
+    OTHER = 2
+    FEATURE = 3
+    DETAIL = 4
+
+    @staticmethod
+    def categorize(section: QAPIDoc.Section) -> "Optional[DocRegion]":
+        return MAPPING[section.kind]
+
+
+MAPPING = {
+    QAPIDoc.Kind.INTRO: DocRegion.INTRO,
+    QAPIDoc.Kind.MEMBER: DocRegion.MEMBER,
+    QAPIDoc.Kind.FEATURE: DocRegion.FEATURE,
+    QAPIDoc.Kind.RETURNS: DocRegion.OTHER,
+    QAPIDoc.Kind.ERRORS: DocRegion.OTHER,
+    QAPIDoc.Kind.SINCE: None,
+    QAPIDoc.Kind.TODO: None,
+    QAPIDoc.Kind.DETAIL: DocRegion.DETAIL,
+}
+
+
+class InlinerSections:
+
+    def __init__(self, sections):
+        self._sections: List[QAPIDoc.Section] = list(sections)
+        self.partitions: Dict[DocRegion, List[QAPIDoc.Section]] = defaultdict(
+            list
+        )
+        self._modified = False
+
+        self._partition()
+
+    def _partition(self):
+        for section in self._sections:
+            # suppress empty text sections for the purpose of, later,
+            # being able to determine if a collection of doc sections
+            # "has an intro" or "has a details section" or not, which is
+            # helpful later on for some assertions about the inliner.
+            if section.kind in (QAPIDoc.Kind.INTRO, QAPIDoc.Kind.DETAIL):
+                if not section.text:
+                    continue
+
+            region = DocRegion.categorize(section)
+            if region is None:
+                continue
+
+            self.partitions[region].append(section)
+
+    def absorb(self, other: "InlinerSections"):
+        for category, oval in other.partitions.items():
+            val = self.partitions[category]
+            if category == DocRegion.INTRO:
+                # The intro region is not inlined, it is dropped.
+                continue
+
+            # Everything else is prepended.
+            self.partitions[category] = oval + val
+            if oval:
+                self._modified = True
+
+    def __iter__(self):
+        return iter(self._flatten())
+
+    def _flatten(self):
+        # Serialize back into a normal list.
+
+        # If nothing has changed, we don't need to do anything.
+        if not self._modified:
+            return tuple(self._sections)
+
+        # Otherwise, we need to rebuild the sequence.
+        #
+        # FIXME: This function assumes a stricter ordering of regions
+        # within the source docs (see DocRegion); This order is not
+        # currently enforced in parser.py, so this method may shift some
+        # contents around compared to the source.
+        tmp = []
+        for category in DocRegion:
+            tmp.extend(self.partitions[category])
+        self._sections = tmp
+        self._modified = False
+        return tuple(self._sections)
+
+
+def inline(ent: QAPISchemaEntity) -> List[QAPIDoc.Section]:
+    """
+    Return all of an entity's doc sections with inlined sections stitched in.
+
+    First, a given entity's sections are retrieved in full, in source order.
+
+    Next, if this entity has either an argument type (Commands and
+    Events) or an inherited base (Structs, Unions), this function is
+    called recursively on that type to retrieve its sections. These
+    sections are then stitched into the result.
+
+    Lastly, if this entity has any branches, this function is called
+    recursively on each branch type and those sections are stitched into
+    the result.
+
+    STITCH ORDER:
+
+      - Introduction
+      - [Inlined introduction sections are dropped.]
+      - Recursively inlined Members
+      - Members
+      - Recursively inlined Branch members
+      - Other special sections (Errors, Returns)
+      - [There are no cases where we have these sections to inline.]
+      - Recursively inlined Features
+      - Features
+      - Recursively inlined Details
+      - Details
+
+    Intro paragraphs are never stitched into the documentation section
+    list. Members, Features, and Details paragraphs are stitched in
+    *before* the given entity's equivalent regions. Individual sections
+    otherwise appear in source order as they do in the parent or child.
+
+    Branch members are stitched in *after* the member section.
+
+    In the event that a paragraph cannot be determined to be an intro or
+    details type, a warning is emitted. It will be treated as an intro
+    section and dropped from the output. QEMU usually treats Sphinx
+    warnings as fatal, so this warning is usually fatal.
+    """
+
+    def _sections(ent) -> List[QAPIDoc.Section]:
+        return ent.doc.all_sections if ent.doc else []
+
+    def _get_inline_target(
+        ent: QAPISchemaEntity,
+    ) -> Optional[QAPISchemaEntity]:
+        """Get the entity to inline from for a given entity."""
+        if isinstance(ent, (QAPISchemaCommand, QAPISchemaEvent)):
+            return ent.arg_type
+        if isinstance(ent, QAPISchemaObjectType):
+            return ent.base
+        return None
+
+    # Let's do this thing!
+
+    if ent is None:
+        return []
+
+    # Grab all directly documented sections for the entity in question.
+    sections = InlinerSections(_sections(ent))
+
+    # Get inlined sections: this includes everything from the
+    # inlined entity (and anything it inlines, too).
+    inlined = InlinerSections(inline(_get_inline_target(ent)))
+
+    # Now, stitch the results together!
+    sections.absorb(inlined)
+
+    # FIXME: Branches should be handled about here O:-)
+
+    # Return the combined list of sections.
+    return list(sections)
 
 
 class Transmogrifier:
@@ -285,7 +455,7 @@ class Transmogrifier:
         self.ensure_blank_line()
 
     def visit_sections(self, ent: QAPISchemaEntity) -> None:
-        sections = ent.doc.all_sections if ent.doc else []
+        sections = inline(ent)
 
         # Add sections *in the order they are documented*:
         for section in sections:
