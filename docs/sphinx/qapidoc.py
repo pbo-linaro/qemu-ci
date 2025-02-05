@@ -44,6 +44,7 @@ from qapi.parser import QAPIDoc
 from qapi.schema import (
     QAPISchema,
     QAPISchemaArrayType,
+    QAPISchemaBranches,
     QAPISchemaCommand,
     QAPISchemaEntity,
     QAPISchemaEnumMember,
@@ -66,6 +67,20 @@ from sphinx.util.nodes import nested_parse_with_titles
 __version__ = "1.0"
 
 logger = logging.getLogger(__name__)
+
+
+# These classes serve as pseudo-sections that this generator uses to
+# flatten and inline arg sections from multiple entities.
+class BranchStart(QAPIDoc.Section):
+    def __init__(self, key: str, value: str, info: QAPISourceInfo):
+        super().__init__(info, QAPIDoc.Kind.META)
+        self.key = key
+        self.value = value
+
+
+class BranchEnd(QAPIDoc.Section):
+    def __init__(self, info: QAPISourceInfo):
+        super().__init__(info, QAPIDoc.Kind.META)
 
 
 def dedent(text: str) -> str:
@@ -105,6 +120,7 @@ MAPPING = {
     QAPIDoc.Kind.SINCE: None,
     QAPIDoc.Kind.TODO: None,
     QAPIDoc.Kind.DETAIL: DocRegion.DETAIL,
+    QAPIDoc.Kind.META: DocRegion.MEMBER,
 }
 
 
@@ -226,6 +242,15 @@ def inline(ent: QAPISchemaEntity) -> List[QAPIDoc.Section]:
             return ent.base
         return None
 
+    def _variants(ent) -> Optional[QAPISchemaBranches]:
+        if isinstance(ent, QAPISchemaObjectType):
+            return ent.branches
+        return None
+
+    def _memb_filter(sec: QAPIDoc.Section) -> bool:
+        # meta grabs branch start/end markers, too.
+        return sec.kind in (QAPIDoc.Kind.MEMBER, QAPIDoc.Kind.META)
+
     # Let's do this thing!
 
     if ent is None:
@@ -241,7 +266,22 @@ def inline(ent: QAPISchemaEntity) -> List[QAPIDoc.Section]:
     # Now, stitch the results together!
     sections.absorb(inlined)
 
-    # FIXME: Branches should be handled about here O:-)
+    # Now, pick up member sections from branches, if any.
+    # FIXME: Anything other than members are unhandled/ignored here...!
+    branch_sections = []
+    if variants := _variants(ent):
+        for variant in variants.variants:
+            branch_sections.append(
+                BranchStart(
+                    variants.tag_member.name, variant.name, variants.info
+                )
+            )
+            var_sections = inline(variant.type)
+            branch_sections.extend(filter(_memb_filter, var_sections))
+            branch_sections.append(BranchEnd(variants.info))
+
+    # Inject branches *after* the member section.
+    sections.partitions[DocRegion.MEMBER].extend(branch_sections)
 
     # Pseudo-feature: document the OOB property.
     if isinstance(ent, QAPISchemaCommand) and ent.allow_oob:
@@ -485,6 +525,21 @@ class Transmogrifier:
 
         # Add sections *in the order they are documented*:
         for section in sections:
+            if isinstance(section, BranchStart):
+                self.ensure_blank_line()
+                self.add_line(
+                    f".. qapi:branch:: {section.key} {section.value}",
+                    section.info,
+                )
+                self.ensure_blank_line()
+                self.indent += 1
+                continue
+
+            if isinstance(section, BranchEnd):
+                self.ensure_blank_line()
+                self.indent -= 1
+                continue
+
             if section.kind.name in ("INTRO", "DETAIL"):
                 self.visit_paragraph(section)
             elif section.kind == QAPIDoc.Kind.MEMBER:
