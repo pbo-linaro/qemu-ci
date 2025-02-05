@@ -616,6 +616,13 @@ class Transmogrifier:
     def visit_entity(self, ent):
         assert ent is not None
 
+        # Some entities need not be rendered; they are not exposed via
+        # introspection and are only relevant for purposes of
+        # inlining/inheritance. They don't need their own entries and
+        # don't need to be in the index.
+        if not ent.doc_visible:
+            return
+
         try:
             self._curr_ent = ent
             # This line gets credited to the start of the /definition/.
