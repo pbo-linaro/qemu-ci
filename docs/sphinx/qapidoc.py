@@ -30,7 +30,7 @@ from pathlib import Path
 import re
 import sys
 import textwrap
-from typing import List
+from typing import List, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -38,7 +38,14 @@ from docutils.statemachine import StringList, ViewList
 from qapi.error import QAPIError, QAPISemError
 from qapi.gen import QAPISchemaVisitor
 from qapi.parser import QAPIDoc
-from qapi.schema import QAPISchema, QAPISchemaEntity
+from qapi.schema import (
+    QAPISchema,
+    QAPISchemaArrayType,
+    QAPISchemaEntity,
+    QAPISchemaEnumMember,
+    QAPISchemaFeature,
+    QAPISchemaObjectTypeMember,
+)
 from qapi.source import QAPISourceInfo
 
 from sphinx import addnodes
@@ -124,6 +131,25 @@ class Transmogrifier:
             # New blank line is credited to one-after the current last line.
             # +2: correct for zero/one index, then increment by one.
             self.add_line_raw("", fname, line + 2)
+
+    def format_type(self, ent) -> Optional[str]:
+        if isinstance(ent, (QAPISchemaEnumMember, QAPISchemaFeature)):
+            return None
+
+        qapi_type = ent
+        optional = False
+        if isinstance(ent, QAPISchemaObjectTypeMember):
+            qapi_type = ent.type
+            optional = ent.optional
+
+        if isinstance(qapi_type, QAPISchemaArrayType):
+            ret = f"[{qapi_type.element_type.doc_type()}]"
+        else:
+            ret = qapi_type.doc_type()
+        if optional:
+            ret += "?"
+
+        return ret
 
     # Transmogrification helpers
 
