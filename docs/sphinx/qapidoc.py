@@ -243,6 +243,14 @@ def inline(ent: QAPISchemaEntity) -> List[QAPIDoc.Section]:
 
     # FIXME: Branches should be handled about here O:-)
 
+    # Generated "returns" statement.
+    if isinstance(ent, QAPISchemaCommand) and not any(
+        s.kind == QAPIDoc.Kind.RETURNS
+        for s in sections.partitions[DocRegion.OTHER]
+    ):
+        sect = QAPIDoc.Section(ent.info, QAPIDoc.Kind.RETURNS)
+        sections.partitions[DocRegion.OTHER].append(sect)
+
     # Return the combined list of sections.
     return list(sections)
 
