@@ -16,6 +16,7 @@
 #include "qemu/log.h"
 #include "qemu/memalign.h"
 #include "linux-headers/linux/vhost.h"
+#include "exec/ramblock.h"
 
 /**
  * Validate the transport device features that both guests can use with the SVQ
@@ -88,14 +89,31 @@ static bool vhost_svq_translate_addr(const VhostShadowVirtqueue *svq,
     }
 
     for (size_t i = 0; i < num; ++i) {
-        DMAMap needle = {
-            .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
-            .size = iovec[i].iov_len,
-        };
         Int128 needle_last, map_last;
         size_t off;
+        RAMBlock *rb;
+        hwaddr gpa;
+        ram_addr_t offset;
+        const DMAMap *map;
+        DMAMap needle;
 
-        const DMAMap *map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        rb = qemu_ram_block_from_host(iovec[i].iov_base, false, &offset);
+        if (rb) {
+            gpa = rb->offset + offset;
+
+            needle = (DMAMap) {
+                .translated_addr = gpa,
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_tree_find_gpa(svq->iova_tree, &needle);
+        } else {
+            needle = (DMAMap) {
+                .translated_addr = (hwaddr)(uintptr_t)iovec[i].iov_base,
+                .size = iovec[i].iov_len,
+            };
+            map = vhost_iova_tree_find_iova(svq->iova_tree, &needle);
+        }
+
         /*
          * Map cannot be NULL since iova map contains all guest space and
          * qemu already has a physical address mapped
