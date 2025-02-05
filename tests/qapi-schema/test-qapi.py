@@ -15,6 +15,7 @@
 import argparse
 import difflib
 import os
+from pathlib import Path
 import sys
 from io import StringIO
 
@@ -216,6 +217,7 @@ def main(argv):
         (dir_name, base_name) = os.path.split(t)
         dir_name = dir_name or args.dir
         test_name = os.path.splitext(base_name)[0]
+        dir_name = str(Path(dir_name).resolve())
         status |= test_and_diff(test_name, dir_name, args.update)
 
     sys.exit(status)

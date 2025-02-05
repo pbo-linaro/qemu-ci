@@ -17,6 +17,7 @@
 from collections import OrderedDict
 import enum
 import os
+from pathlib import Path
 import re
 from typing import (
     TYPE_CHECKING,
@@ -100,7 +101,7 @@ class QAPISchemaParser:
         self.src = ''
 
         # Lexer state (see `accept` for details):
-        self.info = QAPISourceInfo(self._fname, incl_info)
+        self.info = QAPISourceInfo(str(Path(self._fname).resolve()), incl_info)
         self.tok: Union[None, str] = None
         self.pos = 0
         self.cursor = 0
