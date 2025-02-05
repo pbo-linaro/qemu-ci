@@ -499,7 +499,7 @@ class QAPISchemaParser:
             doc = QAPIDoc(info, symbol)
             self.accept(False)
             line = self.get_doc_line()
-            no_more_args = False
+            have_tagged = False
 
             while line is not None:
                 # Blank lines
@@ -528,10 +528,10 @@ class QAPISchemaParser:
                     if not doc.features:
                         raise QAPIParseError(
                             self, 'feature descriptions expected')
-                    no_more_args = True
+                    have_tagged = True
                 elif match := self._match_at_name_colon(line):
                     # description
-                    if no_more_args:
+                    if have_tagged:
                         raise QAPIParseError(
                             self,
                             "description of '@%s:' follows a section"
@@ -543,7 +543,7 @@ class QAPISchemaParser:
                         if text:
                             doc.append_line(text)
                         line = self.get_doc_indented(doc)
-                    no_more_args = True
+                    have_tagged = True
                 elif match := re.match(
                         r'(Returns|Errors|Since|Notes?|Examples?|TODO)'
                         r'(?!::): *',
@@ -584,14 +584,20 @@ class QAPISchemaParser:
                     if text:
                         doc.append_line(text)
                     line = self.get_doc_indented(doc)
-                    no_more_args = True
+                    have_tagged = True
                 elif line.startswith('='):
                     raise QAPIParseError(
                         self,
                         "unexpected '=' markup in definition documentation")
                 else:
                     # plain paragraph(s)
-                    doc.ensure_untagged_section(self.info)
+                    if have_tagged:
+                        no_more_tags = True
+
+                    # Paragraphs before tagged sections are "intro" paragraphs.
+                    # Any appearing after are "detail" paragraphs.
+                    intro = not have_tagged
+                    doc.ensure_untagged_section(self.info, intro)
                     doc.append_line(line)
                     line = self.get_doc_paragraph(doc)
         else:
@@ -640,21 +646,22 @@ class QAPIDoc:
     """
 
     class Kind(enum.Enum):
-        PLAIN = 0
+        INTRO = 0
         MEMBER = 1
         FEATURE = 2
         RETURNS = 3
         ERRORS = 4
         SINCE = 5
         TODO = 6
+        DETAIL = 7
 
         @staticmethod
         def from_string(kind: str) -> 'QAPIDoc.Kind':
             return QAPIDoc.Kind[kind.upper()]
 
         def text_required(self) -> bool:
-            # Only "plain" sections can be empty
-            return self.value not in (0,)
+            # Only Intro/Detail sections can be empty
+            return self.value not in (0, 7)
 
         def __str__(self) -> str:
             return self.name.title()
@@ -700,7 +707,7 @@ class QAPIDoc:
         self.symbol: Optional[str] = symbol
         # the sections in textual order
         self.all_sections: List[QAPIDoc.Section] = [
-            QAPIDoc.Section(info, QAPIDoc.Kind.PLAIN)
+            QAPIDoc.Section(info, QAPIDoc.Kind.INTRO)
         ]
         # the body section
         self.body: Optional[QAPIDoc.Section] = self.all_sections[0]
@@ -725,8 +732,9 @@ class QAPIDoc:
     def ensure_untagged_section(
         self,
         info: QAPISourceInfo,
+        intro: bool = True,
     ) -> None:
-        kind = QAPIDoc.Kind.PLAIN
+        kind = QAPIDoc.Kind.INTRO if intro else QAPIDoc.Kind.DETAIL
 
         if self.all_sections and self.all_sections[-1].kind == kind:
             # extend current section

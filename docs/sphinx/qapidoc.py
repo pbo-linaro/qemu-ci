@@ -289,7 +289,7 @@ class Transmogrifier:
 
         # Add sections *in the order they are documented*:
         for section in sections:
-            if section.kind == QAPIDoc.Kind.PLAIN:
+            if section.kind.name in ("INTRO", "DETAIL"):
                 self.visit_paragraph(section)
             elif section.kind == QAPIDoc.Kind.MEMBER:
                 self.visit_member(section)
@@ -578,7 +578,7 @@ class QAPISchemaGenRSTVisitor(QAPISchemaVisitor):
                 # Hide TODO: sections
                 continue
 
-            if section.kind == QAPIDoc.Kind.PLAIN:
+            if section.kind.name in ("INTRO", "DETAIL"):
                 # Sphinx cannot handle sectionless titles;
                 # Instead, just append the results to the prior section.
                 container = nodes.container()
