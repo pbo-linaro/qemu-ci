@@ -243,6 +243,12 @@ def inline(ent: QAPISchemaEntity) -> List[QAPIDoc.Section]:
 
     # FIXME: Branches should be handled about here O:-)
 
+    # Pseudo-feature: document the OOB property.
+    if isinstance(ent, QAPISchemaCommand) and ent.allow_oob:
+        feat = QAPIDoc.ArgSection(ent.info, QAPIDoc.Kind.FEATURE, "allow-oob")
+        feat.append_line("This command supports `out-of-band execution`.")
+        sections.partitions[DocRegion.FEATURE].append(feat)
+
     # Generated "returns" statement.
     if isinstance(ent, QAPISchemaCommand) and not any(
         s.kind == QAPIDoc.Kind.RETURNS
