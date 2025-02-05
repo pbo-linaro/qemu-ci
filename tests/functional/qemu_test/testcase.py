@@ -193,7 +193,9 @@ class QemuBaseTest(unittest.TestCase):
         return True
 
     def setUp(self, bin_prefix):
-        self.assertIsNotNone(self.qemu_bin, 'QEMU_TEST_QEMU_BINARY must be set')
+        if self.qemu_bin is None:
+            self.skipTest("QEMU_TEST_QEMU_BINARY env variable is not set")
+
         self.arch = self.qemu_bin.split('-')[-1]
         self.socketdir = None
 
