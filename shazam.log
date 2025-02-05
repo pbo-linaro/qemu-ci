@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20250205040341.2056361-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] tcg: Drop support for two address registers in gen_ldst
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 2/11] tcg: Merge INDEX_op_qemu_*_{a32,a64}_*
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/11] tcg/arm: Drop addrhi from prepare_host_addr
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 4/11] tcg/i386: Drop addrhi from prepare_host_addr
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 5/11] tcg/mips: Drop addrhi from prepare_host_addr
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/11] tcg/ppc: Drop addrhi from prepare_host_addr
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH 7/11] tcg: Replace addr{lo, hi}_reg with addr_reg in TCGLabelQemuLdst
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/11] plugins: Fix qemu_plugin_read_memory_vaddr parameters
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/11] accel/tcg: Fix tlb_set_page_with_attrs, tlb_set_page
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/11] include/exec: Change vaddr to uintptr_t
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/11] include/exec: Use uintptr_t in CPUTLBEntry
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 11
+---
+Applying: tcg: Drop support for two address registers in gen_ldst
+Applying: tcg: Merge INDEX_op_qemu_*_{a32,a64}_*
+Applying: tcg/arm: Drop addrhi from prepare_host_addr
+Applying: tcg/i386: Drop addrhi from prepare_host_addr
+Applying: tcg/mips: Drop addrhi from prepare_host_addr
+Applying: tcg/ppc: Drop addrhi from prepare_host_addr
+Applying: tcg: Replace addr{lo, hi}_reg with addr_reg in TCGLabelQemuLdst
+Applying: plugins: Fix qemu_plugin_read_memory_vaddr parameters
+Applying: accel/tcg: Fix tlb_set_page_with_attrs, tlb_set_page
+Applying: include/exec: Change vaddr to uintptr_t
+Applying: include/exec: Use uintptr_t in CPUTLBEntry
+Patch failed at 0011 include/exec: Use uintptr_t in CPUTLBEntry
+error: patch failed: accel/tcg/cputlb.c:104
+error: accel/tcg/cputlb.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
