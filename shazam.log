@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250206111514.2134895-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Assuming new revision: v2 ([PATCH] rust: pl011: convert pl011_create to safe Rust)
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] rust: pl011: convert pl011_create to safe Rust
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: rust: pl011: convert pl011_create to safe Rust
+Patch failed at 0001 rust: pl011: convert pl011_create to safe Rust
+error: patch failed: rust/hw/char/pl011/src/device.rs:10
+error: rust/hw/char/pl011/src/device.rs: patch does not apply
+error: patch failed: rust/qemu-api/src/sysbus.rs:2
+error: rust/qemu-api/src/sysbus.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
