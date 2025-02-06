@@ -64,7 +64,7 @@ struct igd_device {
 
 static const struct igd_device igd_devices[] = {
     INTEL_SNB_IDS(IGD_DEVICE, 6),
-    INTEL_IVB_IDS(IGD_DEVICE, 6),
+    INTEL_IVB_IDS(IGD_DEVICE, 7),
     INTEL_HSW_IDS(IGD_DEVICE, 7),
     INTEL_VLV_IDS(IGD_DEVICE, 7),
     INTEL_BDW_IDS(IGD_DEVICE, 8),
@@ -73,8 +73,10 @@ static const struct igd_device igd_devices[] = {
     INTEL_BXT_IDS(IGD_DEVICE, 9),
     INTEL_KBL_IDS(IGD_DEVICE, 9),
     INTEL_CFL_IDS(IGD_DEVICE, 9),
+    INTEL_WHL_IDS(IGD_DEVICE, 9),
     INTEL_CML_IDS(IGD_DEVICE, 9),
     INTEL_GLK_IDS(IGD_DEVICE, 9),
+    INTEL_CNL_IDS(IGD_DEVICE, 9),
     INTEL_ICL_IDS(IGD_DEVICE, 11),
     INTEL_EHL_IDS(IGD_DEVICE, 11),
     INTEL_JSL_IDS(IGD_DEVICE, 11),
@@ -86,6 +88,8 @@ static const struct igd_device igd_devices[] = {
     INTEL_RPLS_IDS(IGD_DEVICE, 12),
     INTEL_RPLU_IDS(IGD_DEVICE, 12),
     INTEL_RPLP_IDS(IGD_DEVICE, 12),
+    INTEL_ARL_IDS(IGD_DEVICE, 12),
+    INTEL_MTL_IDS(IGD_DEVICE, 12),
 };
 
 /*
