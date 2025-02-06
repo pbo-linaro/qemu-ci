@@ -15,6 +15,8 @@ class MicroblazeMachine(QemuSystemTest):
 
     timeout = 90
 
+class MicroblazeBigEndianMachine(MicroblazeMachine):
+
     ASSET_IMAGE_BE = Asset(
         ('https://qemu-advcal.gitlab.io/qac-best-of-multiarch/download/'
          'day17.tar.xz'),
