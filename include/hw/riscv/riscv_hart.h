@@ -22,7 +22,7 @@
 #define HW_RISCV_HART_H
 
 #include "hw/sysbus.h"
-#include "target/riscv/cpu.h"
+#include "target/riscv/cpu-qom.h"
 #include "qom/object.h"
 
 #define TYPE_RISCV_HART_ARRAY "riscv.hart_array"
@@ -42,7 +42,7 @@ struct RISCVHartArrayState {
     uint64_t *rnmi_irqvec;
     uint32_t num_rnmi_excpvec;
     uint64_t *rnmi_excpvec;
-    RISCVCPU *harts;
+    ArchCPU *harts;
 };
 
 #endif
