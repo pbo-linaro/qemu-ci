@@ -1,0 +1,95 @@
+Grabbing thread from lore.kernel.org/all/20250206195715.2150758-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 62 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/61] tcg: Add dbase argument to do_dup_store
+  [32m✓[0m [PATCH 2/61] tcg: Add dbase argument to do_dup
+  [32m✓[0m [PATCH 3/61] tcg: Add dbase argument to expand_clr
+  [32m✓[0m [PATCH 4/61] tcg: Add base arguments to check_overlap_[234]
+  [32m✓[0m [PATCH 5/61] tcg: Split out tcg_gen_gvec_2_var
+  [32m✓[0m [PATCH 6/61] tcg: Split out tcg_gen_gvec_3_var
+  [32m✓[0m [PATCH 7/61] tcg: Split out tcg_gen_gvec_mov_var
+  [32m✓[0m [PATCH 8/61] tcg: Split out tcg_gen_gvec_{add,sub}_var
+  [32m✓[0m [PATCH 9/61] target/arm: Introduce FPST_ZA, FPST_ZA_F16
+  [32m✓[0m [PATCH 10/61] target/arm: Use FPST_ZA for sme_fmopa_[hsd]
+  [32m✓[0m [PATCH 11/61] target/arm: Rename zarray to za_state.za
+  [32m✓[0m [PATCH 12/61] target/arm: Add isar_feature_aa64_sme2*
+  [32m✓[0m [PATCH 13/61] target/arm: Add ZT0
+  [32m✓[0m [PATCH 14/61] target/arm: Add zt0_excp_el to DisasContext
+  [32m✓[0m [PATCH 15/61] target/arm: Implement SME2 ZERO ZT0
+  [32m✓[0m [PATCH 16/61] target/arm: Implement SME2 LDR/STR ZT0
+  [32m✓[0m [PATCH 17/61] target/arm: Implement SME2 MOVT
+  [32m✓[0m [PATCH 18/61] target/arm: Split get_tile_rowcol argument tile_index
+  [32m✓[0m [PATCH 19/61] target/arm: Rename MOVA for translate
+  [32m✓[0m [PATCH 20/61] target/arm: Implement SME2 MOVA to/from tile, multiple registers
+  [32m✓[0m [PATCH 21/61] target/arm: Split out get_zarray
+  [32m✓[0m [PATCH 22/61] target/arm: Implement SME2 MOVA to/from array, multiple registers
+  [32m✓[0m [PATCH 23/61] target/arm: Implement SME2 BMOPA
+  [32m✓[0m [PATCH 24/61] target/arm: Implement SME2 SMOPS, UMOPS (2-way)
+  [32m✓[0m [PATCH 25/61] target/arm: Introduce gen_gvec_sve2_sqdmulh
+  [32m✓[0m [PATCH 26/61] target/arm: Implement SME2 Multiple and Single SVE Destructive
+  [32m✓[0m [PATCH 27/61] target/arm: Implement SME2 Multiple Vectors SVE Destructive
+  [32m✓[0m [PATCH 28/61] target/arm: Implement SME2 ADD/SUB (array results, multiple and single vector)
+  [32m✓[0m [PATCH 29/61] target/arm: Implement SME2 ADD/SUB (array results, multiple vectors)
+  [32m✓[0m [PATCH 30/61] target/arm: Pass ZA to helper_sve2_fmlal_zz[zx]w_s
+  [32m✓[0m [PATCH 31/61] target/arm: Implement SME2 FMLAL, BFMLAL
+  [32m✓[0m [PATCH 32/61] target/arm: Implement SME2 FDOT
+  [32m✓[0m [PATCH 33/61] target/arm: Implement SME2 BFDOT
+  [32m✓[0m [PATCH 34/61] target/arm: Implement SME2 FVDOT, BFVDOT
+  [32m✓[0m [PATCH 35/61] target/arm: Rename helper_gvec_*dot_[bh] to *_4[bh]
+  [32m✓[0m [PATCH 36/61] target/arm: Remove helper_gvec_sudot_idx_4b
+  [32m✓[0m [PATCH 37/61] target/arm: Implemement SME2 SDOT, UDOT, USDOT, SUDOT
+  [32m✓[0m [PATCH 38/61] target/arm: Implement SME2 SVDOT, UVDOT, SUVDOT, USVDOT
+  [32m✓[0m [PATCH 39/61] target/arm: Implement SME2 SMLAL, SMLSL, UMLAL, UMLSL
+  [32m✓[0m [PATCH 40/61] target/arm: Implement SME2 SMLALL, SMLSLL, UMLALL, UMLSLL
+  [32m✓[0m [PATCH 41/61] target/arm: Rename gvec_fml[as]_[hs] with _nf_ infix
+  [32m✓[0m [PATCH 42/61] target/arm: Implement SME2 FMLA, FMLS
+  [32m✓[0m [PATCH 43/61] target/arm: Implement SME2 BFMLA, BFMLS
+  [32m✓[0m [PATCH 44/61] target/arm: Implement SME2 FADD, FSUB, BFADD, BFSUB
+  [32m✓[0m [PATCH 45/61] target/arm: Remove CPUARMState.vfp.scratch
+  [32m✓[0m [PATCH 46/61] target/arm: Implement SME2 BFCVT, BFCVTN, FCVT, FCVTN
+  [32m✓[0m [PATCH 47/61] target/arm: Implement SME2 FCVT (widening), FCVTL
+  [32m✓[0m [PATCH 48/61] target/arm: Implement SME2 FCVTZS, FCVTZU
+  [32m✓[0m [PATCH 49/61] target/arm: Implement SME2 SCVTF, UCVTF
+  [32m✓[0m [PATCH 50/61] target/arm: Implement SME2 FRINTN, FRINTP, FRINTM, FRINTA
+  [32m✓[0m [PATCH 51/61] target/arm: Introduce do_[us]sat_[bhs] macros
+  [32m✓[0m [PATCH 52/61] target/arm: Use do_[us]sat_[bhs] in sve_helper.c
+  [32m✓[0m [PATCH 53/61] target/arm: Implement SME2 SQCVT, UQCVT, SQCVTU
+  [32m✓[0m [PATCH 54/61] target/arm: Implement SME2 SUNPK, UUNPK
+  [32m✓[0m [PATCH 55/61] target/arm: Implement SME2 ZIP, UZP (four registers)
+  [32m✓[0m [PATCH 56/61] target/arm: Move do_urshr, do_srshr to vec_internal.h
+  [32m✓[0m [PATCH 57/61] target/arm: Implement SME2 SQRSHR, UQRSHR, SQRSHRN
+  [32m✓[0m [PATCH 58/61] target/arm: Implement SME2 ZIP, UZP (two registers)
+  [32m✓[0m [PATCH 59/61] target/arm: Implement SME2 FCLAMP, SCLAMP, UCLAMP
+  [32m✓[0m [PATCH 60/61] target/arm: Implement SME2 SEL
+  [32m✓[0m [PATCH 61/61] target/arm: Enable FEAT_SME2, FEAT_SME_F16F16, FEAT_SVE_B16B16 on -cpu max
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 61
+---
+Applying: tcg: Add dbase argument to do_dup_store
+Applying: tcg: Add dbase argument to do_dup
+Applying: tcg: Add dbase argument to expand_clr
+Applying: tcg: Add base arguments to check_overlap_[234]
+Applying: tcg: Split out tcg_gen_gvec_2_var
+Applying: tcg: Split out tcg_gen_gvec_3_var
+Applying: tcg: Split out tcg_gen_gvec_mov_var
+Applying: tcg: Split out tcg_gen_gvec_{add,sub}_var
+Applying: target/arm: Introduce FPST_ZA, FPST_ZA_F16
+Patch failed at 0009 target/arm: Introduce FPST_ZA, FPST_ZA_F16
+error: patch failed: target/arm/cpu.h:219
+error: target/arm/cpu.h: patch does not apply
+error: patch failed: target/arm/cpu.c:550
+error: target/arm/cpu.c: patch does not apply
+error: patch failed: target/arm/vfp_helper.c:202
+error: target/arm/vfp_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
