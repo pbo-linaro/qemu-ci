@@ -8,7 +8,7 @@
 #ifndef RISCV_BOOT_OPENSBI_H
 #define RISCV_BOOT_OPENSBI_H
 
-#include "exec/cpu-defs.h"
+#include "exec/hwaddr.h"
 
 /** Expected value of info magic ('OSBI' ascii string in hex) */
 #define FW_DYNAMIC_INFO_MAGIC_VALUE     0x4942534f
@@ -31,15 +31,15 @@ enum sbi_scratch_options {
 /** Representation dynamic info passed by previous booting stage */
 struct fw_dynamic_info {
     /** Info magic */
-    target_long magic;
+    hwaddr magic;
     /** Info version */
-    target_long version;
+    hwaddr version;
     /** Next booting stage address */
-    target_long next_addr;
+    hwaddr next_addr;
     /** Next booting stage mode */
-    target_long next_mode;
+    hwaddr next_mode;
     /** Options for OpenSBI library */
-    target_long options;
+    hwaddr options;
     /**
      * Preferred boot HART id
      *
@@ -55,7 +55,7 @@ struct fw_dynamic_info {
      * stage can set it to -1UL which will force the FW_DYNAMIC firmware
      * to use the relocation lottery mechanism.
      */
-    target_long boot_hart;
+    hwaddr boot_hart;
 };
 
 /** Representation dynamic info passed by previous booting stage */

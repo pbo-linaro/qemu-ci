@@ -21,7 +21,6 @@
 #include "qemu/datadir.h"
 #include "qemu/units.h"
 #include "qemu/error-report.h"
-#include "exec/cpu-defs.h"
 #include "hw/boards.h"
 #include "hw/loader.h"
 #include "hw/riscv/boot.h"
@@ -31,6 +30,7 @@
 #include "system/qtest.h"
 #include "system/kvm.h"
 #include "system/reset.h"
+#include "target/riscv/cpu.h"
 
 #include <libfdt.h>
 
@@ -51,7 +51,7 @@ char *riscv_plic_hart_config_string(int hart_count)
 
     for (i = 0; i < hart_count; i++) {
         CPUState *cs = qemu_get_cpu(i);
-        CPURISCVState *env = &RISCV_CPU(cs)->env;
+        CPURISCVState *env = cpu_env(cs);
 
         if (kvm_enabled()) {
             vals[i] = "S";
@@ -74,8 +74,8 @@ void riscv_boot_info_init(RISCVBootInfo *info, RISCVHartArrayState *harts)
     info->is_32bit = riscv_is_32bit(harts);
 }
 
-target_ulong riscv_calc_kernel_start_addr(RISCVBootInfo *info,
-                                          target_ulong firmware_end_addr) {
+hwaddr riscv_calc_kernel_start_addr(RISCVBootInfo *info,
+                                    hwaddr firmware_end_addr) {
     if (info->is_32bit) {
         return QEMU_ALIGN_UP(firmware_end_addr, 4 * MiB);
     } else {
@@ -133,13 +133,13 @@ char *riscv_find_firmware(const char *firmware_filename,
     return filename;
 }
 
-target_ulong riscv_find_and_load_firmware(MachineState *machine,
-                                          const char *default_machine_firmware,
-                                          hwaddr *firmware_load_addr,
-                                          symbol_fn_t sym_cb)
+hwaddr riscv_find_and_load_firmware(MachineState *machine,
+                                    const char *default_machine_firmware,
+                                    hwaddr *firmware_load_addr,
+                                    symbol_fn_t sym_cb)
 {
     char *firmware_filename;
-    target_ulong firmware_end_addr = *firmware_load_addr;
+    hwaddr firmware_end_addr = *firmware_load_addr;
 
     firmware_filename = riscv_find_firmware(machine->firmware,
                                             default_machine_firmware);
@@ -154,11 +154,11 @@ target_ulong riscv_find_and_load_firmware(MachineState *machine,
     return firmware_end_addr;
 }
 
-target_ulong riscv_load_firmware(const char *firmware_filename,
-                                 hwaddr *firmware_load_addr,
-                                 symbol_fn_t sym_cb)
+hwaddr riscv_load_firmware(const char *firmware_filename,
+                           hwaddr *firmware_load_addr,
+                           symbol_fn_t sym_cb)
 {
-    uint64_t firmware_entry, firmware_end;
+    hwaddr firmware_entry, firmware_end;
     ssize_t firmware_size;
 
     g_assert(firmware_filename != NULL);
@@ -227,7 +227,7 @@ static void riscv_load_initrd(MachineState *machine, RISCVBootInfo *info)
 
 void riscv_load_kernel(MachineState *machine,
                        RISCVBootInfo *info,
-                       target_ulong kernel_start_addr,
+                       hwaddr kernel_start_addr,
                        bool load_initrd,
                        symbol_fn_t sym_cb)
 {
