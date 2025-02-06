@@ -269,6 +269,12 @@ mkdir -p "$output/include/standard-headers/drm"
 cp_portable "$hdrdir/include/drm/drm_fourcc.h" \
             "$output/include/standard-headers/drm"
 
+# Linux does not install the PCI IDs header for i915 devices, so we have to
+# pick it up from the source tree itself.
+mkdir -p "$output/include/standard-headers/drm/intel"
+cp_portable "$linux/include/drm/intel/pciids.h" \
+            "$output/include/standard-headers/drm/intel"
+
 cat <<EOF >$output/include/standard-headers/linux/types.h
 /* For QEMU all types are already defined via osdep.h, so this
  * header does not need to do anything.
