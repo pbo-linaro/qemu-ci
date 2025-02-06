@@ -39,6 +39,7 @@ typedef struct {
 struct RISCVCPUConfig {
 #define BOOL_FIELD(x) bool x;
 #define TYPED_FIELD(type, x) type x;
+#define STRUCT_FIELD(type, x) type x;
 #include "cpu_cfg_fields.h.inc"
 };
 

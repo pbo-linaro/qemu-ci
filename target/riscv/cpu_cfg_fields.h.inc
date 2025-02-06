@@ -4,6 +4,9 @@
 #ifndef TYPED_FIELD
 #define TYPED_FIELD(type, x)
 #endif
+#ifndef STRUCT_FIELD
+#define STRUCT_FIELD(type, x)
+#endif
 
 BOOL_FIELD(ext_zba)
 BOOL_FIELD(ext_zbb)
@@ -160,8 +163,9 @@ TYPED_FIELD(uint16_t, cbop_blocksize)
 TYPED_FIELD(uint16_t, cboz_blocksize)
 
 #ifndef CONFIG_USER_ONLY
-TYPED_FIELD(RISCVSATPMap, satp_mode);
+STRUCT_FIELD(RISCVSATPMap, satp_mode)
 #endif
 
 #undef BOOL_FIELD
 #undef TYPED_FIELD
+#undef STRUCT_FIELD

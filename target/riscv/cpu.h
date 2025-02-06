@@ -519,6 +519,12 @@ struct ArchCPU {
 
 typedef struct RISCVCPUDef {
     RISCVMXL misa_mxl_max;  /* max mxl for this cpu */
+    uint32_t misa_ext;
+    int priv_spec;
+    int32_t vext_spec;
+    int satp_mode32;
+    int satp_mode64;
+    RISCVCPUConfig cfg;
 } RISCVCPUDef;
 
 /**
