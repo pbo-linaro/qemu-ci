@@ -693,7 +693,7 @@ static bool riscv_cpu_validate_profile_satp(RISCVCPU *cpu,
                                             RISCVCPUProfile *profile,
                                             bool send_warn)
 {
-    int satp_max = satp_mode_max_from_map(cpu->cfg.satp_mode.supported);
+    int satp_max = satp_mode_max_from_map(cpu->satp_modes.supported);
 
     if (profile->satp_mode > satp_max) {
         if (send_warn) {
