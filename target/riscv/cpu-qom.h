@@ -55,4 +55,44 @@
 
 OBJECT_DECLARE_CPU_TYPE(RISCVCPU, RISCVCPUClass, RISCV_CPU)
 
+/* Interrupt causes */
+#define IRQ_U_SOFT                         0
+#define IRQ_S_SOFT                         1
+#define IRQ_VS_SOFT                        2
+#define IRQ_M_SOFT                         3
+#define IRQ_U_TIMER                        4
+#define IRQ_S_TIMER                        5
+#define IRQ_VS_TIMER                       6
+#define IRQ_M_TIMER                        7
+#define IRQ_U_EXT                          8
+#define IRQ_S_EXT                          9
+#define IRQ_VS_EXT                         10
+#define IRQ_M_EXT                          11
+#define IRQ_S_GEXT                         12
+#define IRQ_PMU_OVF                        13
+
+#define RV(x) (1UL << (x - 'A'))
+
+/*
+ * Update misa_bits[], misa_ext_info_arr[] and misa_ext_cfgs[]
+ * when adding new MISA bits here.
+ */
+#define RVI RV('I')
+#define RVE RV('E') /* E and I are mutually exclusive */
+#define RVM RV('M')
+#define RVA RV('A')
+#define RVF RV('F')
+#define RVD RV('D')
+#define RVV RV('V')
+#define RVC RV('C')
+#define RVS RV('S')
+#define RVU RV('U')
+#define RVH RV('H')
+#define RVG RV('G')
+#define RVB RV('B')
+
+extern const uint32_t misa_bits[];
+const char *riscv_get_misa_ext_name(uint32_t bit);
+const char *riscv_get_misa_ext_description(uint32_t bit);
+
 #endif /* RISCV_CPU_QOM_H */

@@ -54,30 +54,6 @@ typedef struct CPUArchState CPURISCVState;
  */
 #define RISCV_UW2_ALWAYS_STORE_AMO 1
 
-#define RV(x) ((target_ulong)1 << (x - 'A'))
-
-/*
- * Update misa_bits[], misa_ext_info_arr[] and misa_ext_cfgs[]
- * when adding new MISA bits here.
- */
-#define RVI RV('I')
-#define RVE RV('E') /* E and I are mutually exclusive */
-#define RVM RV('M')
-#define RVA RV('A')
-#define RVF RV('F')
-#define RVD RV('D')
-#define RVV RV('V')
-#define RVC RV('C')
-#define RVS RV('S')
-#define RVU RV('U')
-#define RVH RV('H')
-#define RVG RV('G')
-#define RVB RV('B')
-
-extern const uint32_t misa_bits[];
-const char *riscv_get_misa_ext_name(uint32_t bit);
-const char *riscv_get_misa_ext_description(uint32_t bit);
-
 #define CPU_CFG_OFFSET(_prop) offsetof(struct RISCVCPUConfig, _prop)
 
 typedef struct riscv_cpu_profile {
