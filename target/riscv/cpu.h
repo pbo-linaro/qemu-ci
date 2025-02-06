@@ -525,6 +525,7 @@ typedef struct RISCVCPUDef {
     int satp_mode32;
     int satp_mode64;
     RISCVCPUConfig cfg;
+    bool bare;
 } RISCVCPUDef;
 
 /**
