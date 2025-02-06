@@ -18,6 +18,7 @@
 #include "hw/hw.h"
 #include "hw/nvram/fw_cfg.h"
 #include "pci.h"
+#include "standard-headers/drm/intel/pciids.h"
 #include "trace.h"
 
 /*
@@ -51,6 +52,42 @@
  * headless setup is desired, the OpRegion gets in the way of that.
  */
 
+struct igd_device {
+    const uint32_t device_id;
+    const int gen;
+};
+
+#define IGD_DEVICE(_id, _gen) { \
+    .device_id = (_id), \
+    .gen = (_gen), \
+}
+
+static const struct igd_device igd_devices[] = {
+    INTEL_SNB_IDS(IGD_DEVICE, 6),
+    INTEL_IVB_IDS(IGD_DEVICE, 6),
+    INTEL_HSW_IDS(IGD_DEVICE, 7),
+    INTEL_VLV_IDS(IGD_DEVICE, 7),
+    INTEL_BDW_IDS(IGD_DEVICE, 8),
+    INTEL_CHV_IDS(IGD_DEVICE, 8),
+    INTEL_SKL_IDS(IGD_DEVICE, 9),
+    INTEL_BXT_IDS(IGD_DEVICE, 9),
+    INTEL_KBL_IDS(IGD_DEVICE, 9),
+    INTEL_CFL_IDS(IGD_DEVICE, 9),
+    INTEL_CML_IDS(IGD_DEVICE, 9),
+    INTEL_GLK_IDS(IGD_DEVICE, 9),
+    INTEL_ICL_IDS(IGD_DEVICE, 11),
+    INTEL_EHL_IDS(IGD_DEVICE, 11),
+    INTEL_JSL_IDS(IGD_DEVICE, 11),
+    INTEL_TGL_IDS(IGD_DEVICE, 12),
+    INTEL_RKL_IDS(IGD_DEVICE, 12),
+    INTEL_ADLS_IDS(IGD_DEVICE, 12),
+    INTEL_ADLP_IDS(IGD_DEVICE, 12),
+    INTEL_ADLN_IDS(IGD_DEVICE, 12),
+    INTEL_RPLS_IDS(IGD_DEVICE, 12),
+    INTEL_RPLU_IDS(IGD_DEVICE, 12),
+    INTEL_RPLP_IDS(IGD_DEVICE, 12),
+};
+
 /*
  * This presumes the device is already known to be an Intel VGA device, so we
  * take liberties in which device ID bits match which generation.  This should
@@ -60,42 +97,12 @@
  */
 static int igd_gen(VFIOPCIDevice *vdev)
 {
-    /*
-     * Device IDs for Broxton/Apollo Lake are 0x0a84, 0x1a84, 0x1a85, 0x5a84
-     * and 0x5a85, match bit 11:1 here
-     * Prefix 0x0a is taken by Haswell, this rule should be matched first.
-     */
-    if ((vdev->device_id & 0xffe) == 0xa84) {
-        return 9;
-    }
+    for (int i = 0; i < ARRAY_SIZE(igd_devices); i++) {
+        if (igd_devices[i].device_id != vdev->device_id) {
+            continue;
+        }
 
-    switch (vdev->device_id & 0xff00) {
-    case 0x0100:    /* SandyBridge, IvyBridge */
-        return 6;
-    case 0x0400:    /* Haswell */
-    case 0x0a00:    /* Haswell */
-    case 0x0c00:    /* Haswell */
-    case 0x0d00:    /* Haswell */
-    case 0x0f00:    /* Valleyview/Bay Trail */
-        return 7;
-    case 0x1600:    /* Broadwell */
-    case 0x2200:    /* Cherryview */
-        return 8;
-    case 0x1900:    /* Skylake */
-    case 0x3100:    /* Gemini Lake */
-    case 0x5900:    /* Kaby Lake */
-    case 0x3e00:    /* Coffee Lake */
-    case 0x9B00:    /* Comet Lake */
-        return 9;
-    case 0x8A00:    /* Ice Lake */
-    case 0x4500:    /* Elkhart Lake */
-    case 0x4E00:    /* Jasper Lake */
-        return 11;
-    case 0x9A00:    /* Tiger Lake */
-    case 0x4C00:    /* Rocket Lake */
-    case 0x4600:    /* Alder Lake */
-    case 0xA700:    /* Raptor Lake */
-        return 12;
+        return igd_devices[i].gen;
     }
 
     /*
