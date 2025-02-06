@@ -26,6 +26,7 @@
 #include "qapi/error.h"
 #include "qemu/timer.h"
 
+#include "target/riscv/cpu.h"
 #include "cpu_bits.h"
 #include "riscv-iommu.h"
 #include "riscv-iommu-bits.h"
