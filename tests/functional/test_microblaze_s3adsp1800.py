@@ -62,5 +62,11 @@ class MicroblazeBigEndianMachine(MicroblazeMachine):
     def test_microblaze_s3adsp1800_legacy_be(self):
         self.do_ballerina_be_test('petalogix-s3adsp1800')
 
+    def test_microblaze_s3adsp1800_be(self):
+        self.do_ballerina_be_test('petalogix-s3adsp1800-be')
+
+    def test_microblaze_s3adsp1800_le(self):
+        self.do_xmaton_le_test('petalogix-s3adsp1800-le')
+
 if __name__ == '__main__':
     QemuSystemTest.main()
