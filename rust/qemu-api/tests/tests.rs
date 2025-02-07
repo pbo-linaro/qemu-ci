@@ -139,6 +139,16 @@ fn test_object_new() {
 }
 
 #[test]
+#[allow(clippy::redundant_clone)]
+/// Create, clone and then drop an instance.
+fn test_clone() {
+    init_qom();
+    let p = DummyState::new();
+    assert_eq!(p.clone().typename(), "dummy");
+    drop(p);
+}
+
+#[test]
 /// Try invoking a method on an object.
 fn test_typename() {
     init_qom();
