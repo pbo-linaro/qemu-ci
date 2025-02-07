@@ -29,7 +29,6 @@ use qemu_api::c_str;
 
 mod device;
 mod device_class;
-mod memory_ops;
 
 pub use device::pl011_create;
 

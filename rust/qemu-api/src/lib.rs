@@ -18,6 +18,7 @@ pub mod c_str;
 pub mod callbacks;
 pub mod cell;
 pub mod irq;
+pub mod memory;
 pub mod module;
 pub mod offset_of;
 pub mod qdev;
