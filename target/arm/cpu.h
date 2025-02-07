@@ -30,6 +30,7 @@
 #include "qapi/qapi-types-common.h"
 #include "target/arm/multiprocessing.h"
 #include "target/arm/gtimer.h"
+#include "target/arm/cpu-sysregs.h"
 
 #ifdef TARGET_AARCH64
 #define KVM_HAVE_MCE_INJECTION 1
@@ -832,6 +833,46 @@ typedef struct {
     uint32_t map, init, supported;
 } ARMVQMap;
 
+static inline uint64_t _get_idreg(uint64_t *idregs, uint32_t index)
+{
+    return idregs[index];
+}
+
+static inline void _set_idreg(uint64_t *idregs, uint32_t index, uint64_t value)
+{
+    idregs[index] = value;
+}
+
+/* REG is ID_XXX */
+#define FIELD_DP64_IDREG(ARRAY, REG, FIELD, VALUE)              \
+{                                                             \
+    uint64_t regval = _get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX);   \
+        regval = FIELD_DP64(regval, REG, FIELD, VALUE);                 \
+    _set_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX, regval);             \
+}
+
+#define FIELD_DP32_IDREG(ARRAY, REG, FIELD, VALUE)              \
+{                                                             \
+uint64_t regval = _get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX);       \
+regval = FIELD_DP32(regval, REG, FIELD, VALUE);               \
+_set_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX, regval);                 \
+}
+
+#define FIELD_EX64_IDREG(ARRAY, REG, FIELD)                     \
+FIELD_EX64(_get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX), REG, FIELD)  \
+
+#define FIELD_EX32_IDREG(ARRAY, REG, FIELD)                     \
+FIELD_EX32(_get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX), REG, FIELD)  \
+
+#define FIELD_SEX64_IDREG(ARRAY, REG, FIELD)                     \
+FIELD_SEX64(_get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX), REG, FIELD)  \
+
+#define SET_IDREG(ARRAY, REG, VALUE)                            \
+_set_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX, VALUE)
+
+#define GET_IDREG(ARRAY, REG)                                   \
+_get_idreg((uint64_t *)ARRAY, REG ## _EL1_IDX)
+
 /**
  * ARMCPU:
  * @env: #CPUARMState
@@ -1040,6 +1081,7 @@ struct ArchCPU {
         uint64_t id_aa64zfr0;
         uint64_t id_aa64smfr0;
         uint64_t reset_pmcr_el0;
+        uint64_t idregs[NUM_ID_IDX];
     } isar;
     uint64_t midr;
     uint32_t revidr;
