@@ -490,6 +490,32 @@ void multifd_send_shutdown(void)
         return;
     }
 
+    for (i = 0; i < migrate_multifd_channels(); i++) {
+        MultiFDSendParams *p = &multifd_send_state->params[i];
+
+        /* thread_created implies the TLS handshake has succeeded */
+        if (p->tls_thread_created && p->thread_created) {
+            Error *local_err = NULL;
+            /*
+             * The destination expects the TLS session to always be
+             * properly terminated. This helps to detect a premature
+             * termination in the middle of the stream.  Note that
+             * older QEMUs always break the connection on the source
+             * and the destination always sees
+             * GNUTLS_E_PREMATURE_TERMINATION.
+             */
+            migration_tls_channel_end(p->c, &local_err);
+
+            if (local_err) {
+                /*
+                 * The above can fail with broken pipe due to a
+                 * previous migration error, ignore the error.
+                 */
+                assert(migration_has_failed(migrate_get_current()));
+            }
+        }
+    }
+
     multifd_send_terminate_threads();
 
     for (i = 0; i < migrate_multifd_channels(); i++) {
@@ -1141,7 +1167,13 @@ static void *multifd_recv_thread(void *opaque)
 
             ret = qio_channel_read_all_eof(p->c, (void *)p->packet,
                                            p->packet_len, &local_err);
-            if (ret == 0 || ret == -1) {   /* 0: EOF  -1: Error */
+            if (!ret) {
+                /* EOF */
+                assert(!local_err);
+                break;
+            }
+
+            if (ret == -1) {
                 break;
             }
 
