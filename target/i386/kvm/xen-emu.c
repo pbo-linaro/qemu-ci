@@ -108,15 +108,11 @@ static inline int kvm_copy_to_gva(CPUState *cs, uint64_t gva, void *buf,
     return kvm_gva_rw(cs, gva, buf, sz, true);
 }
 
-int kvm_xen_init(KVMState *s, uint32_t hypercall_msr)
+int kvm_xen_init(KVMState *s)
 {
     const int required_caps = KVM_XEN_HVM_CONFIG_HYPERCALL_MSR |
         KVM_XEN_HVM_CONFIG_INTERCEPT_HCALL | KVM_XEN_HVM_CONFIG_SHARED_INFO;
-    struct kvm_xen_hvm_config cfg = {
-        .msr = hypercall_msr,
-        .flags = KVM_XEN_HVM_CONFIG_INTERCEPT_HCALL,
-    };
-    int xen_caps, ret;
+    int xen_caps;
 
     xen_caps = kvm_check_extension(s, KVM_CAP_XEN_HVM);
     if (required_caps & ~xen_caps) {
@@ -130,20 +126,6 @@ int kvm_xen_init(KVMState *s, uint32_t hypercall_msr)
             .u.xen_version = s->xen_version,
         };
         (void)kvm_vm_ioctl(s, KVM_XEN_HVM_SET_ATTR, &ha);
-
-        cfg.flags |= KVM_XEN_HVM_CONFIG_EVTCHN_SEND;
-    }
-
-    ret = kvm_vm_ioctl(s, KVM_XEN_HVM_CONFIG, &cfg);
-    if (ret < 0) {
-        error_report("kvm: Failed to enable Xen HVM support: %s",
-                     strerror(-ret));
-        return ret;
-    }
-
-    /* If called a second time, don't repeat the rest of the setup. */
-    if (s->xen_caps) {
-        return 0;
     }
 
     /*
@@ -185,10 +167,14 @@ int kvm_xen_init(KVMState *s, uint32_t hypercall_msr)
     return 0;
 }
 
-int kvm_xen_init_vcpu(CPUState *cs)
+int kvm_xen_init_vcpu(CPUState *cs, uint32_t hypercall_msr)
 {
     X86CPU *cpu = X86_CPU(cs);
     CPUX86State *env = &cpu->env;
+    struct kvm_xen_hvm_config cfg = {
+        .msr = hypercall_msr,
+        .flags = KVM_XEN_HVM_CONFIG_INTERCEPT_HCALL,
+    };
     int err;
 
     /*
@@ -207,6 +193,22 @@ int kvm_xen_init_vcpu(CPUState *cs)
         err = kvm_vcpu_ioctl(cs, KVM_XEN_VCPU_SET_ATTR, &va);
         if (err) {
             error_report("kvm: Failed to set Xen vCPU ID attribute: %s",
+                         strerror(-err));
+            return err;
+        }
+
+        cfg.flags |= KVM_XEN_HVM_CONFIG_EVTCHN_SEND;
+    }
+
+    /*
+     * This is a per-KVM setting, but hyperv_enabled() can't be used
+     * when kvm_xen_init() is called from kvm_arch_init(), so do it
+     * when the BSP is initialized.
+     */
+    if (cs->cpu_index == 0) {
+        err = kvm_vm_ioctl(cs->kvm_state, KVM_XEN_HVM_CONFIG, &cfg);
+        if (err) {
+            error_report("kvm: Failed to enable Xen HVM support: %s",
                          strerror(-err));
             return err;
         }

@@ -2129,6 +2129,8 @@ int kvm_arch_init_vcpu(CPUState *cs)
     if (cs->kvm_state->xen_version) {
 #ifdef CONFIG_XEN_EMU
         struct kvm_cpuid_entry2 *xen_max_leaf;
+        uint32_t hypercall_msr =
+            hyperv_enabled(cpu) ? XEN_HYPERCALL_MSR_HYPERV : XEN_HYPERCALL_MSR;
 
         memcpy(signature, "XenVMMXenVMM", 12);
 
@@ -2150,13 +2152,7 @@ int kvm_arch_init_vcpu(CPUState *cs)
         c->function = kvm_base + XEN_CPUID_HVM_MSR;
         /* Number of hypercall-transfer pages */
         c->eax = 1;
-        /* Hypercall MSR base address */
-        if (hyperv_enabled(cpu)) {
-            c->ebx = XEN_HYPERCALL_MSR_HYPERV;
-            kvm_xen_init(cs->kvm_state, c->ebx);
-        } else {
-            c->ebx = XEN_HYPERCALL_MSR;
-        }
+        c->ebx = hypercall_msr;
         c->ecx = 0;
         c->edx = 0;
 
@@ -2194,7 +2190,7 @@ int kvm_arch_init_vcpu(CPUState *cs)
             }
         }
 
-        r = kvm_xen_init_vcpu(cs);
+        r = kvm_xen_init_vcpu(cs, hypercall_msr);
         if (r) {
             return r;
         }
@@ -3245,9 +3241,7 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
             error_report("kvm: Xen support only available in PC machine");
             return -ENOTSUP;
         }
-        /* hyperv_enabled() doesn't work yet. */
-        uint32_t msr = XEN_HYPERCALL_MSR;
-        ret = kvm_xen_init(s, msr);
+        ret = kvm_xen_init(s);
         if (ret < 0) {
             return ret;
         }
