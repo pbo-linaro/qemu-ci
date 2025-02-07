@@ -237,7 +237,8 @@ static void coroutine_fn vh_co_entry(void *opaque)
          * Only RAPL MSR in rapl-msr-index.h is allowed
          */
         r = qio_channel_read_all_eof(QIO_CHANNEL(client->ioc),
-                                     (char *) &request, sizeof(request), &local_err);
+                                     (char *) &request, sizeof(request), 0,
+                                     &local_err);
         if (r <= 0) {
             break;
         }

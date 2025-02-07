@@ -190,7 +190,7 @@ vu_message_read(VuDev *vu_dev, int conn_fd, VhostUserMsg *vmsg)
         .iov_len = vmsg->size,
     };
     if (vmsg->size) {
-        rc = qio_channel_readv_all_eof(ioc, &iov_payload, 1, &local_err);
+        rc = qio_channel_readv_all_eof(ioc, &iov_payload, 1, 0, &local_err);
         if (rc != 1) {
             if (local_err) {
                 error_report_err(local_err);

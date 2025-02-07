@@ -113,9 +113,11 @@ ssize_t qio_channel_writev_full(QIOChannel *ioc,
 int coroutine_mixed_fn qio_channel_readv_all_eof(QIOChannel *ioc,
                                                  const struct iovec *iov,
                                                  size_t niov,
+                                                 int flags,
                                                  Error **errp)
 {
-    return qio_channel_readv_full_all_eof(ioc, iov, niov, NULL, NULL, errp);
+    return qio_channel_readv_full_all_eof(ioc, iov, niov, NULL, NULL, flags,
+                                          errp);
 }
 
 int coroutine_mixed_fn qio_channel_readv_all(QIOChannel *ioc,
@@ -130,6 +132,7 @@ int coroutine_mixed_fn qio_channel_readv_full_all_eof(QIOChannel *ioc,
                                                       const struct iovec *iov,
                                                       size_t niov,
                                                       int **fds, size_t *nfds,
+                                                      int flags,
                                                       Error **errp)
 {
     int ret = -1;
@@ -155,7 +158,7 @@ int coroutine_mixed_fn qio_channel_readv_full_all_eof(QIOChannel *ioc,
     while ((nlocal_iov > 0) || local_fds) {
         ssize_t len;
         len = qio_channel_readv_full(ioc, local_iov, nlocal_iov, local_fds,
-                                     local_nfds, 0, errp);
+                                     local_nfds, flags, errp);
         if (len == QIO_CHANNEL_ERR_BLOCK) {
             if (qemu_in_coroutine()) {
                 qio_channel_yield(ioc, G_IO_IN);
@@ -222,7 +225,8 @@ int coroutine_mixed_fn qio_channel_readv_full_all(QIOChannel *ioc,
                                                   int **fds, size_t *nfds,
                                                   Error **errp)
 {
-    int ret = qio_channel_readv_full_all_eof(ioc, iov, niov, fds, nfds, errp);
+    int ret = qio_channel_readv_full_all_eof(ioc, iov, niov, fds, nfds, 0,
+                                             errp);
 
     if (ret == 0) {
         error_setg(errp, "Unexpected end-of-file before all data were read");
@@ -329,10 +333,11 @@ ssize_t qio_channel_write(QIOChannel *ioc,
 int coroutine_mixed_fn qio_channel_read_all_eof(QIOChannel *ioc,
                                                 char *buf,
                                                 size_t buflen,
+                                                int flags,
                                                 Error **errp)
 {
     struct iovec iov = { .iov_base = buf, .iov_len = buflen };
-    return qio_channel_readv_all_eof(ioc, &iov, 1, errp);
+    return qio_channel_readv_all_eof(ioc, &iov, 1, flags, errp);
 }
 
 

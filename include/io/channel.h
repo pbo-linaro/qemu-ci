@@ -298,6 +298,7 @@ ssize_t qio_channel_writev_full(QIOChannel *ioc,
  * @ioc: the channel object
  * @iov: the array of memory regions to read data into
  * @niov: the length of the @iov array
+ * @flags: read flags (QIO_CHANNEL_READ_FLAG_*)
  * @errp: pointer to a NULL-initialized error object
  *
  * Read data from the IO channel, storing it in the
@@ -321,6 +322,7 @@ ssize_t qio_channel_writev_full(QIOChannel *ioc,
 int coroutine_mixed_fn qio_channel_readv_all_eof(QIOChannel *ioc,
                                                  const struct iovec *iov,
                                                  size_t niov,
+                                                 int flags,
                                                  Error **errp);
 
 /**
@@ -442,6 +444,7 @@ ssize_t qio_channel_write(QIOChannel *ioc,
  * @ioc: the channel object
  * @buf: the memory region to read data into
  * @buflen: the number of bytes to @buf
+ * @flags: read flags (QIO_CHANNEL_READ_FLAG_*)
  * @errp: pointer to a NULL-initialized error object
  *
  * Reads @buflen bytes into @buf, possibly blocking or (if the
@@ -457,6 +460,7 @@ ssize_t qio_channel_write(QIOChannel *ioc,
 int coroutine_mixed_fn qio_channel_read_all_eof(QIOChannel *ioc,
                                                 char *buf,
                                                 size_t buflen,
+                                                int flags,
                                                 Error **errp);
 
 /**
@@ -885,6 +889,7 @@ void qio_channel_set_aio_fd_handler(QIOChannel *ioc,
  * @niov: the length of the @iov array
  * @fds: an array of file handles to read
  * @nfds: number of file handles in @fds
+ * @flags: read flags (QIO_CHANNEL_READ_FLAG_*)
  * @errp: pointer to a NULL-initialized error object
  *
  *
@@ -903,6 +908,7 @@ int coroutine_mixed_fn qio_channel_readv_full_all_eof(QIOChannel *ioc,
                                                       const struct iovec *iov,
                                                       size_t niov,
                                                       int **fds, size_t *nfds,
+                                                      int flags,
                                                       Error **errp);
 
 /**

@@ -1166,7 +1166,7 @@ static void *multifd_recv_thread(void *opaque)
             }
 
             ret = qio_channel_read_all_eof(p->c, (void *)p->packet,
-                                           p->packet_len, &local_err);
+                                           p->packet_len, 0, &local_err);
             if (!ret) {
                 /* EOF */
                 assert(!local_err);
