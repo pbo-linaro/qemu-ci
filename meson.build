@@ -4069,6 +4069,7 @@ if have_rust
     'MigrationPriority',
     'QEMUChrEvent',
     'QEMUClockType',
+    'ResetType',
     'device_endian',
     'module_init_type',
   ]
