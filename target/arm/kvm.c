@@ -246,6 +246,36 @@ static bool kvm_arm_pauth_supported(void)
             kvm_check_extension(kvm_state, KVM_CAP_ARM_PTRAUTH_GENERIC));
 }
 
+/* read a 32b sysreg value and store it in the idregs */
+static int get_host_cpu_reg32(int fd, ARMHostCPUFeatures *ahcf, ARMSysRegs sysreg)
+{
+    int index = get_sysreg_idx(sysreg);
+    uint64_t *reg;
+    int ret;
+
+    if (index < 0) {
+        return -ERANGE;
+    }
+    reg = &ahcf->isar.idregs[index];
+    ret = read_sys_reg32(fd, (uint32_t *)reg, idregs_sysreg_to_kvm_reg(sysreg));
+    return ret;
+}
+
+/* read a 64b sysreg value and store it in the idregs */
+static int get_host_cpu_reg64(int fd, ARMHostCPUFeatures *ahcf, ARMSysRegs sysreg)
+{
+    int index = get_sysreg_idx(sysreg);
+    uint64_t *reg;
+    int ret;
+
+    if (index < 0) {
+        return -ERANGE;
+    }
+    reg = &ahcf->isar.idregs[index];
+    ret = read_sys_reg64(fd, reg, idregs_sysreg_to_kvm_reg(sysreg));
+    return ret;
+}
+
 static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
 {
     /* Identify the feature bits corresponding to the host CPU, and
