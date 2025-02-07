@@ -142,7 +142,7 @@ bool cpu_exec_realizefn(CPUState *cpu, Error **errp)
     }
 
     /* Wait until cpu initialization complete before exposing cpu. */
-    cpu_list_add(cpu);
+    cpu_auto_assign_cpu_index(cpu);
 
 #ifdef CONFIG_USER_ONLY
     assert(qdev_get_vmsd(DEVICE(cpu)) == NULL ||

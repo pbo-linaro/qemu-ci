@@ -71,15 +71,7 @@ int cpu_get_free_index(void)
     return max_cpu_index;
 }
 
-CPUTailQ cpus_queue = QTAILQ_HEAD_INITIALIZER(cpus_queue);
-static unsigned int cpu_list_generation_id;
-
-unsigned int cpu_list_generation_id_get(void)
-{
-    return cpu_list_generation_id;
-}
-
-void cpu_list_add(CPUState *cpu)
+void cpu_auto_assign_cpu_index(CPUState *cpu)
 {
     static bool cpu_index_auto_assigned;
 
@@ -91,6 +83,19 @@ void cpu_list_add(CPUState *cpu)
     } else {
         assert(!cpu_index_auto_assigned);
     }
+}
+
+CPUTailQ cpus_queue = QTAILQ_HEAD_INITIALIZER(cpus_queue);
+static unsigned int cpu_list_generation_id;
+
+unsigned int cpu_list_generation_id_get(void)
+{
+    return cpu_list_generation_id;
+}
+
+void cpu_list_add(CPUState *cpu)
+{
+    QEMU_LOCK_GUARD(&qemu_cpu_list_lock);
     QTAILQ_INSERT_TAIL_RCU(&cpus_queue, cpu, node);
     cpu_list_generation_id++;
 }

@@ -751,6 +751,12 @@ bool cpu_virtio_is_big_endian(CPUState *cpu);
 #endif /* CONFIG_USER_ONLY */
 
 /**
+ * cpu_auto_assign_cpu_index:
+ * @cpu: The CPU to be assigned a cpu_index
+ */
+void cpu_auto_assign_cpu_index(CPUState *cpu);
+
+/**
  * cpu_list_add:
  * @cpu: The CPU to be added to the list of CPUs.
  */
