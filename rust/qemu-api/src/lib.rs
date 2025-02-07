@@ -17,6 +17,7 @@ pub mod bitops;
 pub mod c_str;
 pub mod callbacks;
 pub mod cell;
+pub mod chardev;
 pub mod irq;
 pub mod memory;
 pub mod module;

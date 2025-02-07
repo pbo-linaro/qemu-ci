@@ -15,6 +15,7 @@ use qemu_api::{
         sysbus_mmio_map, sysbus_realize, CharBackend, Chardev, QEMUChrEvent,
         CHR_IOCTL_SERIAL_SET_BREAK,
     },
+    chardev::Chardev,
     c_str, impl_vmstate_forward,
     irq::InterruptSource,
     memory::{hwaddr, MemoryRegion, MemoryRegionOps, MemoryRegionOpsBuilder},
