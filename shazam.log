@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250208-virtio-v5-0-4376cb218c0f@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 27 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/4] qapi: Do not consume a value if failed
+  [32m✓[0m [PATCH v5 2/4] qapi: Accept bool for OnOffAuto and OnOffSplit
+  [32m✓[0m [PATCH v5 3/4] qdev-properties: Add DEFINE_PROP_ON_OFF_AUTO_BIT64()
+  [32m✓[0m [PATCH v5 4/4] virtio: Convert feature properties to OnOffAuto
+  ---
+  [32m✓[0m Signed: DKIM/daynix-com.20230601.gappssmtp.com (From: akihiko.odaki@daynix.com)
+---
+Total patches: 4
+---
+ Base: using specified base-commit 7433709a147706ad7d1956b15669279933d0f82b
+Applying: qapi: Do not consume a value if failed
+Applying: qapi: Accept bool for OnOffAuto and OnOffSplit
+Applying: qdev-properties: Add DEFINE_PROP_ON_OFF_AUTO_BIT64()
+Applying: virtio: Convert feature properties to OnOffAuto
+Patch failed at 0004 virtio: Convert feature properties to OnOffAuto
+error: patch failed: hw/core/machine.c:38
+error: hw/core/machine.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
