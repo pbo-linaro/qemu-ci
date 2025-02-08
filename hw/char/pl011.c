@@ -251,11 +251,15 @@ static gboolean pl011_xmit(void *do_not_use, GIOCondition cond, void *opaque)
 {
     PL011State *s = opaque;
     int bytes_consumed;
-    uint8_t data;
+    uint8_t buf[PL011_FIFO_DEPTH];
     uint32_t count;
 
     count = fifo8_num_used(&s->xmit_fifo);
     trace_pl011_fifo_tx_xmit_used(count);
+    if (count < 1) {
+        /* FIFO empty */
+        return G_SOURCE_REMOVE;
+    }
 
     if (!qemu_chr_fe_backend_connected(&s->chr)) {
         /* Instant drain the fifo when there's no back-end. */
@@ -263,18 +267,28 @@ static gboolean pl011_xmit(void *do_not_use, GIOCondition cond, void *opaque)
         return G_SOURCE_REMOVE;
     }
 
-    data = fifo8_pop(&s->xmit_fifo);
-    bytes_consumed = 1;
+    count = fifo8_peek_buf(&s->xmit_fifo, buf, fifo8_num_used(&s->xmit_fifo));
+    trace_pl011_fifo_tx_xmit_peek(count);
 
-    /*
-     * XXX this blocks entire thread. Rewrite to use
-     * qemu_chr_fe_write and background I/O callbacks
-     */
-    qemu_chr_fe_write_all(&s->chr, &data, bytes_consumed);
+    /* Transmit as much data as we can. */
+    bytes_consumed = qemu_chr_fe_write(&s->chr, buf, count);
     trace_pl011_fifo_tx_xmit_consumed(bytes_consumed);
+    if (bytes_consumed < 0) {
+        /* Error in back-end: drain the fifo. */
+        pl011_drain_tx(s);
+        return G_SOURCE_REMOVE;
+    }
+
+    /* Pop the data we could transmit. */
+    fifo8_drop(&s->xmit_fifo, bytes_consumed);
     s->int_level |= INT_TX;
 
     pl011_update(s);
+
+    if (!fifo8_is_empty(&s->xmit_fifo)) {
+        /* Reschedule another transmission if we couldn't transmit all. */
+        return G_SOURCE_CONTINUE;
+    }
 
     return G_SOURCE_REMOVE;
 }
@@ -300,6 +314,10 @@ static void pl011_write_txdata(PL011State *s, uint8_t data)
     trace_pl011_fifo_tx_put(data);
     pl011_loopback_tx(s, data);
     fifo8_push(&s->xmit_fifo, data);
+    if (pl011_is_tx_fifo_full(s)) {
+        s->flags |= PL011_FLAG_TXFF;
+    }
+
     pl011_xmit(NULL, G_IO_OUT, s);
 }
 
@@ -649,6 +667,11 @@ static int pl011_post_load(void *opaque, int version_id)
          */
         s->read_fifo[0] = s->read_fifo[s->read_pos];
         s->read_pos = 0;
+    }
+
+    if (!fifo8_is_empty(&s->xmit_fifo)) {
+        /* Reschedule another transmission */
+        qemu_chr_fe_add_watch(&s->chr, G_IO_OUT | G_IO_HUP, pl011_xmit, s);
     }
 
     s->ibrd &= IBRD_MASK;
