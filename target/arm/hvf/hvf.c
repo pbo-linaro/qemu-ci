@@ -1876,6 +1876,11 @@ static void hvf_sync_vtimer(CPUState *cpu)
     }
 }
 
+static inline uint64_t sign_extend(uint64_t value, uint32_t bits)
+{
+    return (uint64_t)((int64_t)(value << (64 - bits)) >> (64 - bits));
+}
+
 int hvf_vcpu_exec(CPUState *cpu)
 {
     ARMCPU *arm_cpu = ARM_CPU(cpu);
@@ -1971,6 +1976,7 @@ int hvf_vcpu_exec(CPUState *cpu)
         bool isv = syndrome & ARM_EL_ISV;
         bool iswrite = (syndrome >> 6) & 1;
         bool s1ptw = (syndrome >> 7) & 1;
+        bool sse = (syndrome >> 21) & 1;
         uint32_t sas = (syndrome >> 22) & 3;
         uint32_t len = 1 << sas;
         uint32_t srt = (syndrome >> 16) & 0x1f;
@@ -1998,6 +2004,9 @@ int hvf_vcpu_exec(CPUState *cpu)
             address_space_read(&address_space_memory,
                                hvf_exit->exception.physical_address,
                                MEMTXATTRS_UNSPECIFIED, &val, len);
+            if (sse && len != sizeof(uint64_t)) {
+                val = sign_extend(val, len * 8);
+            }
             hvf_set_reg(cpu, srt, val);
         }
 
