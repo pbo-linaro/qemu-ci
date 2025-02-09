@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250209033233.53853-1-j@getutm.app/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC 1/4] cpu-exec: support single-step without debug
+  [PATCH RFC 2/4] cpu-target: support emulation from non-TCG accels
+  [PATCH RFC 3/4] hvf: arm: emulate instruction when ISV=0
+  [PATCH RFC 4/4] hw/arm/virt: enable VGA
+---
+Total patches: 4
+---
+Applying: cpu-exec: support single-step without debug
+Applying: cpu-target: support emulation from non-TCG accels
+Applying: hvf: arm: emulate instruction when ISV=0
+Patch failed at 0003 hvf: arm: emulate instruction when ISV=0
+error: patch failed: target/arm/hvf/hvf.c:1881
+error: target/arm/hvf/hvf.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
