@@ -170,7 +170,7 @@ struct CPUClass {
     void (*disas_set_info)(CPUState *cpu, disassemble_info *info);
 
     const char *deprecation_note;
-    struct AccelCPUClass *accel_cpu;
+    const struct AccelCPUClass *accel_cpu;
 
     /* when system emulation is not available, this pointer is NULL */
     const struct SysemuCPUOps *sysemu_ops;

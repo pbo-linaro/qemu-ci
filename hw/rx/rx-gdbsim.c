@@ -158,7 +158,7 @@ static void rx_gdbsim_init(MachineState *machine)
     }
 }
 
-static void rx_gdbsim_class_init(ObjectClass *oc, void *data)
+static void rx_gdbsim_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -168,7 +168,7 @@ static void rx_gdbsim_class_init(ObjectClass *oc, void *data)
     mc->default_ram_id = "ext-sdram";
 }
 
-static void rx62n7_class_init(ObjectClass *oc, void *data)
+static void rx62n7_class_init(ObjectClass *oc, const void *data)
 {
     RxGdbSimMachineClass *rxc = RX_GDBSIM_MACHINE_CLASS(oc);
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -178,7 +178,7 @@ static void rx62n7_class_init(ObjectClass *oc, void *data)
     mc->desc = "gdb simulator (R5F562N7 MCU and external RAM)";
 };
 
-static void rx62n8_class_init(ObjectClass *oc, void *data)
+static void rx62n8_class_init(ObjectClass *oc, const void *data)
 {
     RxGdbSimMachineClass *rxc = RX_GDBSIM_MACHINE_CLASS(oc);
     MachineClass *mc = MACHINE_CLASS(oc);

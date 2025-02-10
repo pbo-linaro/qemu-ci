@@ -342,7 +342,7 @@ static void ppc405_init(MachineState *machine)
     }
 }
 
-static void ppc405_machine_class_init(ObjectClass *oc, void *data)
+static void ppc405_machine_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -452,7 +452,7 @@ static void ref405ep_fpga_realize(DeviceState *dev, Error **errp)
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->iomem);
 }
 
-static void ref405ep_fpga_class_init(ObjectClass *oc, void *data)
+static void ref405ep_fpga_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -496,7 +496,7 @@ static void ref405ep_init(MachineState *machine)
     sysbus_mmio_map(s, 0, PPC405EP_NVRAM_BASE);
 }
 
-static void ref405ep_class_init(ObjectClass *oc, void *data)
+static void ref405ep_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 

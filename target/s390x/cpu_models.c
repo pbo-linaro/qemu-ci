@@ -920,7 +920,7 @@ void s390_cpu_model_class_register_props(ObjectClass *oc)
 }
 
 #ifdef CONFIG_KVM
-static void s390_host_cpu_model_class_init(ObjectClass *oc, void *data)
+static void s390_host_cpu_model_class_init(ObjectClass *oc, const void *data)
 {
     S390CPUClass *xcc = S390_CPU_CLASS(oc);
 
@@ -929,7 +929,7 @@ static void s390_host_cpu_model_class_init(ObjectClass *oc, void *data)
 }
 #endif
 
-static void s390_base_cpu_model_class_init(ObjectClass *oc, void *data)
+static void s390_base_cpu_model_class_init(ObjectClass *oc, const void *data)
 {
     S390CPUClass *xcc = S390_CPU_CLASS(oc);
 
@@ -940,7 +940,7 @@ static void s390_base_cpu_model_class_init(ObjectClass *oc, void *data)
     xcc->desc = xcc->cpu_def->desc;
 }
 
-static void s390_cpu_model_class_init(ObjectClass *oc, void *data)
+static void s390_cpu_model_class_init(ObjectClass *oc, const void *data)
 {
     S390CPUClass *xcc = S390_CPU_CLASS(oc);
 
@@ -950,7 +950,7 @@ static void s390_cpu_model_class_init(ObjectClass *oc, void *data)
     xcc->desc = xcc->cpu_def->desc;
 }
 
-static void s390_qemu_cpu_model_class_init(ObjectClass *oc, void *data)
+static void s390_qemu_cpu_model_class_init(ObjectClass *oc, const void *data)
 {
     S390CPUClass *xcc = S390_CPU_CLASS(oc);
 
@@ -959,7 +959,7 @@ static void s390_qemu_cpu_model_class_init(ObjectClass *oc, void *data)
                                 qemu_hw_version());
 }
 
-static void s390_max_cpu_model_class_init(ObjectClass *oc, void *data)
+static void s390_max_cpu_model_class_init(ObjectClass *oc, const void *data)
 {
     S390CPUClass *xcc = S390_CPU_CLASS(oc);
 

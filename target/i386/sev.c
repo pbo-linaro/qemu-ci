@@ -2045,7 +2045,7 @@ static void sev_common_set_kernel_hashes(Object *obj, bool value, Error **errp)
 }
 
 static void
-sev_common_class_init(ObjectClass *oc, void *data)
+sev_common_class_init(ObjectClass *oc, const void *data)
 {
     ConfidentialGuestSupportClass *klass = CONFIDENTIAL_GUEST_SUPPORT_CLASS(oc);
 
@@ -2140,7 +2140,7 @@ static void sev_guest_set_legacy_vm_type(Object *obj, Visitor *v,
 }
 
 static void
-sev_guest_class_init(ObjectClass *oc, void *data)
+sev_guest_class_init(ObjectClass *oc, const void *data)
 {
     SevCommonStateClass *klass = SEV_COMMON_CLASS(oc);
     X86ConfidentialGuestClass *x86_klass = X86_CONFIDENTIAL_GUEST_CLASS(oc);
@@ -2394,7 +2394,7 @@ sev_snp_guest_set_host_data(Object *obj, const char *value, Error **errp)
 }
 
 static void
-sev_snp_guest_class_init(ObjectClass *oc, void *data)
+sev_snp_guest_class_init(ObjectClass *oc, const void *data)
 {
     SevCommonStateClass *klass = SEV_COMMON_CLASS(oc);
     X86ConfidentialGuestClass *x86_klass = X86_CONFIDENTIAL_GUEST_CLASS(oc);

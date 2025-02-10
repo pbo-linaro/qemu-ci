@@ -406,7 +406,7 @@ static void realview_pbx_a9_init(MachineState *machine)
     realview_init(machine, BOARD_PBX_A9);
 }
 
-static void realview_eb_class_init(ObjectClass *oc, void *data)
+static void realview_eb_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -425,7 +425,7 @@ static const TypeInfo realview_eb_type = {
     .class_init = realview_eb_class_init,
 };
 
-static void realview_eb_mpcore_class_init(ObjectClass *oc, void *data)
+static void realview_eb_mpcore_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -445,7 +445,7 @@ static const TypeInfo realview_eb_mpcore_type = {
     .class_init = realview_eb_mpcore_class_init,
 };
 
-static void realview_pb_a8_class_init(ObjectClass *oc, void *data)
+static void realview_pb_a8_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -463,7 +463,7 @@ static const TypeInfo realview_pb_a8_type = {
     .class_init = realview_pb_a8_class_init,
 };
 
-static void realview_pbx_a9_class_init(ObjectClass *oc, void *data)
+static void realview_pbx_a9_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 

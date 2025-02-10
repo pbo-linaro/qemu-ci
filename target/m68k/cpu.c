@@ -563,7 +563,7 @@ static const TCGCPUOps m68k_tcg_ops = {
 #endif /* !CONFIG_USER_ONLY */
 };
 
-static void m68k_cpu_class_init(ObjectClass *c, void *data)
+static void m68k_cpu_class_init(ObjectClass *c, const void *data)
 {
     M68kCPUClass *mcc = M68K_CPU_CLASS(c);
     CPUClass *cc = CPU_CLASS(c);
@@ -592,7 +592,7 @@ static void m68k_cpu_class_init(ObjectClass *c, void *data)
     cc->tcg_ops = &m68k_tcg_ops;
 }
 
-static void m68k_cpu_class_init_cf_core(ObjectClass *c, void *data)
+static void m68k_cpu_class_init_cf_core(ObjectClass *c, const void *data)
 {
     CPUClass *cc = CPU_CLASS(c);
 
@@ -607,7 +607,7 @@ static void m68k_cpu_class_init_cf_core(ObjectClass *c, void *data)
         .class_init = m68k_cpu_class_init_cf_core    \
     }
 
-static void m68k_cpu_class_init_m68k_core(ObjectClass *c, void *data)
+static void m68k_cpu_class_init_m68k_core(ObjectClass *c, const void *data)
 {
     CPUClass *cc = CPU_CLASS(c);
 

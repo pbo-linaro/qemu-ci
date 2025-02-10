@@ -76,7 +76,7 @@ static void loongarch_ipi_realize(DeviceState *dev, Error **errp)
     }
 }
 
-static void loongarch_ipi_class_init(ObjectClass *klass, void *data)
+static void loongarch_ipi_class_init(ObjectClass *klass, const void *data)
 {
     LoongsonIPICommonClass *licc = LOONGSON_IPI_COMMON_CLASS(klass);
     LoongarchIPIClass *lic = LOONGARCH_IPI_CLASS(klass);

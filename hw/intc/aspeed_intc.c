@@ -316,7 +316,7 @@ static void aspeed_intc_realize(DeviceState *dev, Error **errp)
     }
 }
 
-static void aspeed_intc_class_init(ObjectClass *klass, void *data)
+static void aspeed_intc_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -336,7 +336,7 @@ static const TypeInfo aspeed_intc_info = {
     .abstract = true,
 };
 
-static void aspeed_2700_intc_class_init(ObjectClass *klass, void *data)
+static void aspeed_2700_intc_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     AspeedINTCClass *aic = ASPEED_INTC_CLASS(klass);

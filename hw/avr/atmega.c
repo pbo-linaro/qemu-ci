@@ -360,7 +360,7 @@ static const Property atmega_props[] = {
                        xtal_freq_hz, 0),
 };
 
-static void atmega_class_init(ObjectClass *oc, void *data)
+static void atmega_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -370,7 +370,7 @@ static void atmega_class_init(ObjectClass *oc, void *data)
     dc->user_creatable = false;
 }
 
-static void atmega168_class_init(ObjectClass *oc, void *data)
+static void atmega168_class_init(ObjectClass *oc, const void *data)
 {
     AtmegaMcuClass *amc = ATMEGA_MCU_CLASS(oc);
 
@@ -385,7 +385,7 @@ static void atmega168_class_init(ObjectClass *oc, void *data)
     amc->dev = dev168_328;
 };
 
-static void atmega328_class_init(ObjectClass *oc, void *data)
+static void atmega328_class_init(ObjectClass *oc, const void *data)
 {
     AtmegaMcuClass *amc = ATMEGA_MCU_CLASS(oc);
 
@@ -400,7 +400,7 @@ static void atmega328_class_init(ObjectClass *oc, void *data)
     amc->dev = dev168_328;
 };
 
-static void atmega1280_class_init(ObjectClass *oc, void *data)
+static void atmega1280_class_init(ObjectClass *oc, const void *data)
 {
     AtmegaMcuClass *amc = ATMEGA_MCU_CLASS(oc);
 
@@ -415,7 +415,7 @@ static void atmega1280_class_init(ObjectClass *oc, void *data)
     amc->dev = dev1280_2560;
 };
 
-static void atmega2560_class_init(ObjectClass *oc, void *data)
+static void atmega2560_class_init(ObjectClass *oc, const void *data)
 {
     AtmegaMcuClass *amc = ATMEGA_MCU_CLASS(oc);
 

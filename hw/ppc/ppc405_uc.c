@@ -114,7 +114,7 @@ static void ppc405_pob_realize(DeviceState *dev, Error **errp)
     ppc4xx_dcr_register(dcr, POB0_BESR1, pob, &dcr_read_pob, &dcr_write_pob);
 }
 
-static void ppc405_pob_class_init(ObjectClass *oc, void *data)
+static void ppc405_pob_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -191,7 +191,7 @@ static void ppc405_opba_realize(DeviceState *dev, Error **errp)
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->io);
 }
 
-static void ppc405_opba_class_init(ObjectClass *oc, void *data)
+static void ppc405_opba_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -297,7 +297,7 @@ static void ppc405_dma_realize(DeviceState *dev, Error **errp)
     ppc4xx_dcr_register(dcr, DMA0_POL, dma, &dcr_read_dma, &dcr_write_dma);
 }
 
-static void ppc405_dma_class_init(ObjectClass *oc, void *data)
+static void ppc405_dma_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -336,7 +336,7 @@ static void ppc405_gpio_realize(DeviceState *dev, Error **errp)
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->io);
 }
 
-static void ppc405_gpio_class_init(ObjectClass *oc, void *data)
+static void ppc405_gpio_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -487,7 +487,7 @@ static void ppc405_ocm_realize(DeviceState *dev, Error **errp)
     ppc4xx_dcr_register(dcr, OCM0_DSACNTL, ocm, &dcr_read_ocm, &dcr_write_ocm);
 }
 
-static void ppc405_ocm_class_init(ObjectClass *oc, void *data)
+static void ppc405_ocm_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -721,7 +721,7 @@ static void ppc405_gpt_finalize(Object *obj)
     }
 }
 
-static void ppc405_gpt_class_init(ObjectClass *oc, void *data)
+static void ppc405_gpt_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -969,7 +969,7 @@ static const Property ppc405_cpc_properties[] = {
     DEFINE_PROP_UINT32("sys-clk", Ppc405CpcState, sysclk, 0),
 };
 
-static void ppc405_cpc_class_init(ObjectClass *oc, void *data)
+static void ppc405_cpc_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 
@@ -1158,7 +1158,7 @@ static void ppc405_soc_realize(DeviceState *dev, Error **errp)
     /* Uses UIC IRQs 9, 15, 17 */
 }
 
-static void ppc405_soc_class_init(ObjectClass *oc, void *data)
+static void ppc405_soc_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 

@@ -774,7 +774,7 @@ static void vexpress_a9_instance_init(Object *obj)
     vms->virt = false;
 }
 
-static void vexpress_class_init(ObjectClass *oc, void *data)
+static void vexpress_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
@@ -792,7 +792,7 @@ static void vexpress_class_init(ObjectClass *oc, void *data)
                                           "Security Extensions (TrustZone)");
 }
 
-static void vexpress_a9_class_init(ObjectClass *oc, void *data)
+static void vexpress_a9_class_init(ObjectClass *oc, const void *data)
 {
     static const char * const valid_cpu_types[] = {
         ARM_CPU_TYPE_NAME("cortex-a9"),
@@ -807,7 +807,7 @@ static void vexpress_a9_class_init(ObjectClass *oc, void *data)
     vmc->daughterboard = &a9_daughterboard;
 }
 
-static void vexpress_a15_class_init(ObjectClass *oc, void *data)
+static void vexpress_a15_class_init(ObjectClass *oc, const void *data)
 {
     static const char * const valid_cpu_types[] = {
         ARM_CPU_TYPE_NAME("cortex-a15"),

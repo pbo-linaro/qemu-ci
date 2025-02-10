@@ -172,7 +172,7 @@ static const MemoryRegionOps pnv_homer_power8_pba_ops = {
     .endianness = DEVICE_BIG_ENDIAN,
 };
 
-static void pnv_homer_power8_class_init(ObjectClass *klass, void *data)
+static void pnv_homer_power8_class_init(ObjectClass *klass, const void *data)
 {
     PnvHomerClass *homer = PNV_HOMER_CLASS(klass);
 
@@ -315,7 +315,7 @@ static const MemoryRegionOps pnv_homer_power9_pba_ops = {
     .endianness = DEVICE_BIG_ENDIAN,
 };
 
-static void pnv_homer_power9_class_init(ObjectClass *klass, void *data)
+static void pnv_homer_power9_class_init(ObjectClass *klass, const void *data)
 {
     PnvHomerClass *homer = PNV_HOMER_CLASS(klass);
 
@@ -378,7 +378,7 @@ static const MemoryRegionOps pnv_homer_power10_pba_ops = {
     .endianness = DEVICE_BIG_ENDIAN,
 };
 
-static void pnv_homer_power10_class_init(ObjectClass *klass, void *data)
+static void pnv_homer_power10_class_init(ObjectClass *klass, const void *data)
 {
     PnvHomerClass *homer = PNV_HOMER_CLASS(klass);
 
@@ -416,7 +416,7 @@ static const Property pnv_homer_properties[] = {
     DEFINE_PROP_LINK("chip", PnvHomer, chip, TYPE_PNV_CHIP, PnvChip *),
 };
 
-static void pnv_homer_class_init(ObjectClass *klass, void *data)
+static void pnv_homer_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
