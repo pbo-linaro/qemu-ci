@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250210093632.3274012-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 9 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/7] hw/intc/loongarch_ipi: Add basic hotplug framework
+  [PATCH v2 2/7] hw/intc/loongarch_ipi: Implment cpu hotplug interface
+  [PATCH v2 3/7] hw/intc/loongarch_ipi: Notify ipi object when cpu is plugged
+  [PATCH v2 4/7] hw/intc/loongarch_extioi: Move gpio irq initial to common code
+  [PATCH v2 5/7] hw/intc/loongarch_extioi: Add basic hotplug framework
+  [PATCH v2 6/7] hw/intc/loongarch_extioi: Implment cpu hotplug interface
+  [PATCH v2 7/7] hw/intc/loongarch_extioi: Use cpu plug notification
+---
+Total patches: 7
+---
+Applying: hw/intc/loongarch_ipi: Add basic hotplug framework
+Applying: hw/intc/loongarch_ipi: Implment cpu hotplug interface
+Applying: hw/intc/loongarch_ipi: Notify ipi object when cpu is plugged
+Patch failed at 0003 hw/intc/loongarch_ipi: Notify ipi object when cpu is plugged
+error: patch failed: hw/loongarch/virt.c:325
+error: hw/loongarch/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
