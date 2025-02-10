@@ -1278,7 +1278,8 @@ static void smmuv3_range_inval(SMMUState *s, Cmd *cmd, SMMUStage stage)
 }
 
 static gboolean
-smmuv3_invalidate_ste(gpointer key, gpointer value, gpointer user_data)
+smmuv3_hash_remove_by_sid_range(gpointer key, gpointer value,
+                                gpointer user_data)
 {
     SMMUDevice *sdev = (SMMUDevice *)key;
     uint32_t sid = smmu_get_sid(sdev);
@@ -1373,7 +1374,8 @@ static int smmuv3_cmdq_consume(SMMUv3State *s)
             sid_range.end = sid_range.start + mask;
 
             trace_smmuv3_cmdq_cfgi_ste_range(sid_range.start, sid_range.end);
-            g_hash_table_foreach_remove(bs->configs, smmuv3_invalidate_ste,
+            g_hash_table_foreach_remove(bs->configs,
+                                        smmuv3_hash_remove_by_sid_range,
                                         &sid_range);
             break;
         }
