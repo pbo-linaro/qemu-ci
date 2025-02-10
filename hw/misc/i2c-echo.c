@@ -147,7 +147,7 @@ static void i2c_echo_realize(DeviceState *dev, Error **errp)
     return;
 }
 
-static void i2c_echo_class_init(ObjectClass *oc, void *data)
+static void i2c_echo_class_init(ObjectClass *oc, const void *data)
 {
     I2CSlaveClass *sc = I2C_SLAVE_CLASS(oc);
     DeviceClass *dc = DEVICE_CLASS(oc);

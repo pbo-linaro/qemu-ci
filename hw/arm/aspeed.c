@@ -1225,7 +1225,7 @@ static void aspeed_machine_ast2600_class_emmc_init(ObjectClass *oc)
                                           "Set or unset boot from EMMC");
 }
 
-static void aspeed_machine_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1241,7 +1241,8 @@ static void aspeed_machine_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_props_init(oc);
 }
 
-static void aspeed_machine_palmetto_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_palmetto_class_init(ObjectClass *oc,
+                                               const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1257,7 +1258,8 @@ static void aspeed_machine_palmetto_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_quanta_q71l_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_quanta_q71l_class_init(ObjectClass *oc,
+                                                  const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1274,7 +1276,7 @@ static void aspeed_machine_quanta_q71l_class_init(ObjectClass *oc, void *data)
 }
 
 static void aspeed_machine_supermicrox11_bmc_class_init(ObjectClass *oc,
-                                                        void *data)
+                                                        const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1292,7 +1294,7 @@ static void aspeed_machine_supermicrox11_bmc_class_init(ObjectClass *oc,
 }
 
 static void aspeed_machine_supermicro_x11spi_bmc_class_init(ObjectClass *oc,
-                                                            void *data)
+                                                            const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1309,7 +1311,8 @@ static void aspeed_machine_supermicro_x11spi_bmc_class_init(ObjectClass *oc,
     aspeed_machine_class_init_cpus_defaults(mc);
 }
 
-static void aspeed_machine_ast2500_evb_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_ast2500_evb_class_init(ObjectClass *oc,
+                                                  const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1325,7 +1328,8 @@ static void aspeed_machine_ast2500_evb_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_yosemitev2_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_yosemitev2_class_init(ObjectClass *oc,
+                                                 const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1342,7 +1346,8 @@ static void aspeed_machine_yosemitev2_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_romulus_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_romulus_class_init(ObjectClass *oc,
+                                              const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1358,7 +1363,8 @@ static void aspeed_machine_romulus_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_tiogapass_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_tiogapass_class_init(ObjectClass *oc,
+                                                const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1375,7 +1381,8 @@ static void aspeed_machine_tiogapass_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_sonorapass_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_sonorapass_class_init(ObjectClass *oc,
+                                                 const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1391,7 +1398,8 @@ static void aspeed_machine_sonorapass_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_witherspoon_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_witherspoon_class_init(ObjectClass *oc,
+                                                  const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1407,7 +1415,8 @@ static void aspeed_machine_witherspoon_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_ast2600_evb_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_ast2600_evb_class_init(ObjectClass *oc,
+                                                  const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1428,7 +1437,7 @@ static void aspeed_machine_ast2600_evb_class_init(ObjectClass *oc, void *data)
     aspeed_machine_ast2600_class_emmc_init(oc);
 };
 
-static void aspeed_machine_g220a_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_g220a_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1445,7 +1454,8 @@ static void aspeed_machine_g220a_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_fp5280g2_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_fp5280g2_class_init(ObjectClass *oc,
+                                               const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1462,7 +1472,7 @@ static void aspeed_machine_fp5280g2_class_init(ObjectClass *oc, void *data)
     aspeed_machine_class_init_cpus_defaults(mc);
 };
 
-static void aspeed_machine_rainier_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_rainier_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1483,7 +1493,7 @@ static void aspeed_machine_rainier_class_init(ObjectClass *oc, void *data)
 
 #define FUJI_BMC_RAM_SIZE ASPEED_RAM_SIZE(2 * GiB)
 
-static void aspeed_machine_fuji_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_fuji_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1504,7 +1514,8 @@ static void aspeed_machine_fuji_class_init(ObjectClass *oc, void *data)
 
 #define BLETCHLEY_BMC_RAM_SIZE ASPEED_RAM_SIZE(2 * GiB)
 
-static void aspeed_machine_bletchley_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_bletchley_class_init(ObjectClass *oc,
+                                                const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1548,7 +1559,7 @@ static void fby35_reset(MachineState *state, ResetType type)
     object_property_set_bool(OBJECT(gpio), "gpioB5", false, &error_fatal);
 }
 
-static void aspeed_machine_fby35_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_fby35_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1625,7 +1636,7 @@ static void ast1030_evb_i2c_init(AspeedMachineState *bmc)
 }
 
 static void aspeed_minibmc_machine_ast1030_evb_class_init(ObjectClass *oc,
-                                                          void *data)
+                                                          const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1654,7 +1665,8 @@ static void ast2700_evb_i2c_init(AspeedMachineState *bmc)
                             TYPE_TMP105, 0x4d);
 }
 
-static void aspeed_machine_ast2700_evb_class_init(ObjectClass *oc, void *data)
+static void aspeed_machine_ast2700_evb_class_init(ObjectClass *oc,
+                                                  const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1675,7 +1687,7 @@ static void aspeed_machine_ast2700_evb_class_init(ObjectClass *oc, void *data)
 #endif
 
 static void aspeed_machine_qcom_dc_scm_v1_class_init(ObjectClass *oc,
-                                                     void *data)
+                                                     const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);
@@ -1694,7 +1706,7 @@ static void aspeed_machine_qcom_dc_scm_v1_class_init(ObjectClass *oc,
 };
 
 static void aspeed_machine_qcom_firework_class_init(ObjectClass *oc,
-                                                    void *data)
+                                                    const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
     AspeedMachineClass *amc = ASPEED_MACHINE_CLASS(oc);

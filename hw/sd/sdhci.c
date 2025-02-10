@@ -1616,7 +1616,7 @@ static void sdhci_sysbus_unrealize(DeviceState *dev)
     }
 }
 
-static void sdhci_sysbus_class_init(ObjectClass *klass, void *data)
+static void sdhci_sysbus_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -1629,7 +1629,7 @@ static void sdhci_sysbus_class_init(ObjectClass *klass, void *data)
 
 /* --- qdev bus master --- */
 
-static void sdhci_bus_class_init(ObjectClass *klass, void *data)
+static void sdhci_bus_class_init(ObjectClass *klass, const void *data)
 {
     SDBusClass *sbc = SD_BUS_CLASS(klass);
 

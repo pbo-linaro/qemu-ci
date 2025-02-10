@@ -112,7 +112,7 @@ static const Property mpcore_rirq_properties[] = {
     DEFINE_PROP_UINT32("num-cpu", mpcore_rirq_state, num_cpu, 1),
 };
 
-static void mpcore_rirq_class_init(ObjectClass *klass, void *data)
+static void mpcore_rirq_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 

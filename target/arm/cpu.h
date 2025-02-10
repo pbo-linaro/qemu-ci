@@ -1119,7 +1119,7 @@ struct ArchCPU {
 typedef struct ARMCPUInfo {
     const char *name;
     void (*initfn)(Object *obj);
-    void (*class_init)(ObjectClass *oc, void *data);
+    void (*class_init)(ObjectClass *oc, const void *data);
 } ARMCPUInfo;
 
 /**

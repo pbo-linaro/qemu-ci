@@ -208,7 +208,7 @@ static const TCGCPUOps rx_tcg_ops = {
 #endif /* !CONFIG_USER_ONLY */
 };
 
-static void rx_cpu_class_init(ObjectClass *klass, void *data)
+static void rx_cpu_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     CPUClass *cc = CPU_CLASS(klass);

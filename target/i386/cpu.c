@@ -5562,7 +5562,7 @@ static void max_x86_cpu_realize(DeviceState *dev, Error **errp)
     x86_cpu_realizefn(dev, errp);
 }
 
-static void max_x86_cpu_class_init(ObjectClass *oc, void *data)
+static void max_x86_cpu_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     X86CPUClass *xcc = X86_CPU_CLASS(oc);
@@ -6561,7 +6561,7 @@ static const gchar *x86_gdb_arch_name(CPUState *cs)
 #endif
 }
 
-static void x86_cpu_cpudef_class_init(ObjectClass *oc, void *data)
+static void x86_cpu_cpudef_class_init(ObjectClass *oc, const void *data)
 {
     const X86CPUModel *model = data;
     X86CPUClass *xcc = X86_CPU_CLASS(oc);
@@ -8711,7 +8711,7 @@ static const struct SysemuCPUOps i386_sysemu_ops = {
 };
 #endif
 
-static void x86_cpu_common_class_init(ObjectClass *oc, void *data)
+static void x86_cpu_common_class_init(ObjectClass *oc, const void *data)
 {
     X86CPUClass *xcc = X86_CPU_CLASS(oc);
     CPUClass *cc = CPU_CLASS(oc);
@@ -8809,7 +8809,7 @@ static const TypeInfo x86_cpu_type_info = {
 };
 
 /* "base" CPU model, used by query-cpu-model-expansion */
-static void x86_cpu_base_class_init(ObjectClass *oc, void *data)
+static void x86_cpu_base_class_init(ObjectClass *oc, const void *data)
 {
     X86CPUClass *xcc = X86_CPU_CLASS(oc);
 

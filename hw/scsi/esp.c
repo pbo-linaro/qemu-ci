@@ -1571,7 +1571,7 @@ static const VMStateDescription vmstate_sysbus_esp_scsi = {
     }
 };
 
-static void sysbus_esp_class_init(ObjectClass *klass, void *data)
+static void sysbus_esp_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -1597,7 +1597,7 @@ static void esp_init(Object *obj)
     fifo8_create(&s->cmdfifo, ESP_CMDFIFO_SZ);
 }
 
-static void esp_class_init(ObjectClass *klass, void *data)
+static void esp_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 

@@ -2155,7 +2155,7 @@ static void init_proc_405(CPUPPCState *env)
     SET_WDT_PERIOD(16, 20, 24, 28);
 }
 
-POWERPC_FAMILY(405)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(405)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2223,7 +2223,7 @@ static void init_proc_440EP(CPUPPCState *env)
     SET_WDT_PERIOD(20, 24, 28, 32);
 }
 
-POWERPC_FAMILY(440EP)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(440EP)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2262,7 +2262,7 @@ POWERPC_FAMILY(440EP)(ObjectClass *oc, void *data)
                  POWERPC_FLAG_DE | POWERPC_FLAG_BUS_CLK;
 }
 
-POWERPC_FAMILY(460EX)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(460EX)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2317,7 +2317,7 @@ static void init_proc_440GP(CPUPPCState *env)
     SET_WDT_PERIOD(20, 24, 28, 32);
 }
 
-POWERPC_FAMILY(440GP)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(440GP)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2387,7 +2387,7 @@ static void init_proc_440x5(CPUPPCState *env)
     SET_WDT_PERIOD(20, 24, 28, 32);
 }
 
-POWERPC_FAMILY(440x5)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(440x5)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2423,7 +2423,7 @@ POWERPC_FAMILY(440x5)(ObjectClass *oc, void *data)
                  POWERPC_FLAG_DE | POWERPC_FLAG_BUS_CLK;
 }
 
-POWERPC_FAMILY(440x5wDFPU)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(440x5wDFPU)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2472,7 +2472,7 @@ static void init_proc_MPC5xx(CPUPPCState *env)
     /* XXX: TODO: allocate internal IRQ controller */
 }
 
-POWERPC_FAMILY(MPC5xx)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(MPC5xx)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2515,7 +2515,7 @@ static void init_proc_MPC8xx(CPUPPCState *env)
     /* XXX: TODO: allocate internal IRQ controller */
 }
 
-POWERPC_FAMILY(MPC8xx)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(MPC8xx)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2566,7 +2566,7 @@ static void init_proc_G2(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(G2)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(G2)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2605,7 +2605,7 @@ POWERPC_FAMILY(G2)(ObjectClass *oc, void *data)
                  POWERPC_FLAG_BE | POWERPC_FLAG_BUS_CLK;
 }
 
-POWERPC_FAMILY(G2LE)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(G2LE)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -2748,7 +2748,7 @@ static void init_proc_e200(CPUPPCState *env)
     /* XXX: TODO: allocate internal IRQ controller */
 }
 
-POWERPC_FAMILY(e200)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e200)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3036,7 +3036,7 @@ static void init_proc_e500v1(CPUPPCState *env)
     init_proc_e500(env, fsl_e500v1);
 }
 
-POWERPC_FAMILY(e500v1)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e500v1)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3080,7 +3080,7 @@ static void init_proc_e500v2(CPUPPCState *env)
     init_proc_e500(env, fsl_e500v2);
 }
 
-POWERPC_FAMILY(e500v2)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e500v2)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3124,7 +3124,7 @@ static void init_proc_e500mc(CPUPPCState *env)
     init_proc_e500(env, fsl_e500mc);
 }
 
-POWERPC_FAMILY(e500mc)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e500mc)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3171,7 +3171,7 @@ static void init_proc_e5500(CPUPPCState *env)
     init_proc_e500(env, fsl_e5500);
 }
 
-POWERPC_FAMILY(e5500)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e5500)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3220,7 +3220,7 @@ static void init_proc_e6500(CPUPPCState *env)
     init_proc_e500(env, fsl_e6500);
 }
 
-POWERPC_FAMILY(e6500)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e6500)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3283,7 +3283,7 @@ static void init_proc_603(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(603)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(603)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3323,7 +3323,7 @@ POWERPC_FAMILY(603)(ObjectClass *oc, void *data)
                  POWERPC_FLAG_BE | POWERPC_FLAG_BUS_CLK;
 }
 
-POWERPC_FAMILY(603E)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(603E)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3369,7 +3369,7 @@ static void init_proc_e300(CPUPPCState *env)
     register_e300_sprs(env);
 }
 
-POWERPC_FAMILY(e300)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e300)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3425,7 +3425,7 @@ static void init_proc_604(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(604)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(604)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3471,7 +3471,7 @@ static void init_proc_604E(CPUPPCState *env)
     register_604e_sprs(env);
 }
 
-POWERPC_FAMILY(604E)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(604E)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3528,7 +3528,7 @@ static void init_proc_740(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(740)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(740)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3594,7 +3594,7 @@ static void init_proc_750(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(750)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(750)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3741,7 +3741,7 @@ static void init_proc_750cl(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(750cl)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(750cl)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3849,7 +3849,7 @@ static void init_proc_750cx(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(750cx)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(750cx)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3922,7 +3922,7 @@ static void init_proc_750fx(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(750fx)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(750fx)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -3995,7 +3995,7 @@ static void init_proc_750gx(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(750gx)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(750gx)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4055,7 +4055,7 @@ static void init_proc_745(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(745)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(745)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4101,7 +4101,7 @@ static void init_proc_755(CPUPPCState *env)
     register_755_sprs(env);
 }
 
-POWERPC_FAMILY(755)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(755)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4168,7 +4168,7 @@ static void init_proc_7400(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7400)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7400)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4248,7 +4248,7 @@ static void init_proc_7410(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7410)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7410)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4349,7 +4349,7 @@ static void init_proc_7440(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7440)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7440)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4472,7 +4472,7 @@ static void init_proc_7450(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7450)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7450)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4602,7 +4602,7 @@ static void init_proc_7445(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7445)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7445)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4734,7 +4734,7 @@ static void init_proc_7455(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7455)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7455)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -4886,7 +4886,7 @@ static void init_proc_7457(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(7457)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(7457)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -5021,7 +5021,7 @@ static void init_proc_e600(CPUPPCState *env)
     ppc6xx_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(e600)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(e600)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -5966,7 +5966,7 @@ static void init_proc_970(CPUPPCState *env)
     ppc970_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(970)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(970)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6041,7 +6041,7 @@ static void init_proc_power5plus(CPUPPCState *env)
     ppc970_irq_init(env_archcpu(env));
 }
 
-POWERPC_FAMILY(POWER5P)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER5P)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6147,7 +6147,7 @@ static bool ppc_pvr_match_power7(PowerPCCPUClass *pcc, uint32_t pvr, bool best)
     return true;
 }
 
-POWERPC_FAMILY(POWER7)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER7)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6311,7 +6311,7 @@ static bool ppc_pvr_match_power8(PowerPCCPUClass *pcc, uint32_t pvr, bool best)
     return true;
 }
 
-POWERPC_FAMILY(POWER8)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER8)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6509,7 +6509,7 @@ static bool ppc_pvr_match_power9(PowerPCCPUClass *pcc, uint32_t pvr, bool best)
     return false;
 }
 
-POWERPC_FAMILY(POWER9)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER9)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6606,7 +6606,7 @@ static bool ppc_pvr_match_power10(PowerPCCPUClass *pcc, uint32_t pvr, bool best)
     return false;
 }
 
-POWERPC_FAMILY(POWER10)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER10)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -6666,7 +6666,7 @@ static bool ppc_pvr_match_power11(PowerPCCPUClass *pcc, uint32_t pvr, bool best)
     return false;
 }
 
-POWERPC_FAMILY(POWER11)(ObjectClass *oc, void *data)
+POWERPC_FAMILY(POWER11)(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
@@ -7452,7 +7452,7 @@ static const TCGCPUOps ppc_tcg_ops = {
 };
 #endif /* CONFIG_TCG */
 
-static void ppc_cpu_class_init(ObjectClass *oc, void *data)
+static void ppc_cpu_class_init(ObjectClass *oc, const void *data)
 {
     PowerPCCPUClass *pcc = POWERPC_CPU_CLASS(oc);
     CPUClass *cc = CPU_CLASS(oc);

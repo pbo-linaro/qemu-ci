@@ -330,7 +330,7 @@ static const TCGCPUOps hexagon_tcg_ops = {
     .restore_state_to_opc = hexagon_restore_state_to_opc,
 };
 
-static void hexagon_cpu_class_init(ObjectClass *c, void *data)
+static void hexagon_cpu_class_init(ObjectClass *c, const void *data)
 {
     HexagonCPUClass *mcc = HEXAGON_CPU_CLASS(c);
     CPUClass *cc = CPU_CLASS(c);

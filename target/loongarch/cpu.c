@@ -909,7 +909,7 @@ static int64_t loongarch_cpu_get_arch_id(CPUState *cs)
 }
 #endif
 
-static void loongarch_cpu_class_init(ObjectClass *c, void *data)
+static void loongarch_cpu_class_init(ObjectClass *c, const void *data)
 {
     LoongArchCPUClass *lacc = LOONGARCH_CPU_CLASS(c);
     CPUClass *cc = CPU_CLASS(c);
@@ -947,7 +947,7 @@ static const gchar *loongarch32_gdb_arch_name(CPUState *cs)
     return "loongarch32";
 }
 
-static void loongarch32_cpu_class_init(ObjectClass *c, void *data)
+static void loongarch32_cpu_class_init(ObjectClass *c, const void *data)
 {
     CPUClass *cc = CPU_CLASS(c);
 
@@ -960,7 +960,7 @@ static const gchar *loongarch64_gdb_arch_name(CPUState *cs)
     return "loongarch64";
 }
 
-static void loongarch64_cpu_class_init(ObjectClass *c, void *data)
+static void loongarch64_cpu_class_init(ObjectClass *c, const void *data)
 {
     CPUClass *cc = CPU_CLASS(c);
 

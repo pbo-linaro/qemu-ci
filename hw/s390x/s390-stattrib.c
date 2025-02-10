@@ -307,7 +307,7 @@ static int qemu_s390_get_active(S390StAttribState *sa)
     return sa->migration_enabled;
 }
 
-static void qemu_s390_stattrib_class_init(ObjectClass *oc, void *data)
+static void qemu_s390_stattrib_class_init(ObjectClass *oc, const void *data)
 {
     S390StAttribClass *sa_cl = S390_STATTRIB_CLASS(oc);
     DeviceClass *dc = DEVICE_CLASS(oc);
@@ -364,7 +364,7 @@ static const Property s390_stattrib_props[] = {
     DEFINE_PROP_BOOL("migration-enabled", S390StAttribState, migration_enabled, true),
 };
 
-static void s390_stattrib_class_init(ObjectClass *oc, void *data)
+static void s390_stattrib_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 

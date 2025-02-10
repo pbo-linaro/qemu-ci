@@ -590,7 +590,8 @@ static const VMStateDescription vmstate_designware_pcie_root = {
     }
 };
 
-static void designware_pcie_root_class_init(ObjectClass *klass, void *data)
+static void designware_pcie_root_class_init(ObjectClass *klass,
+                                            const void *data)
 {
     PCIDeviceClass *k = PCI_DEVICE_CLASS(klass);
     DeviceClass *dc = DEVICE_CLASS(klass);
@@ -730,7 +731,8 @@ static const VMStateDescription vmstate_designware_pcie_host = {
     }
 };
 
-static void designware_pcie_host_class_init(ObjectClass *klass, void *data)
+static void designware_pcie_host_class_init(ObjectClass *klass,
+                                            const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(klass);

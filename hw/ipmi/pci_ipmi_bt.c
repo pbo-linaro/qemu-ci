@@ -108,7 +108,7 @@ static void *pci_ipmi_bt_get_backend_data(IPMIInterface *ii)
     return &pik->bt;
 }
 
-static void pci_ipmi_bt_class_init(ObjectClass *oc, void *data)
+static void pci_ipmi_bt_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
     PCIDeviceClass *pdc = PCI_DEVICE_CLASS(oc);

@@ -464,7 +464,7 @@ static const Property macio_ide_properties[] = {
     DEFINE_PROP_UINT32("addr", MACIOIDEState, addr, -1),
 };
 
-static void macio_ide_class_init(ObjectClass *oc, void *data)
+static void macio_ide_class_init(ObjectClass *oc, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(oc);
 

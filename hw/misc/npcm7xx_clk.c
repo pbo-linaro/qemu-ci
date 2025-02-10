@@ -1009,7 +1009,7 @@ static const VMStateDescription vmstate_npcm7xx_clk = {
     },
 };
 
-static void npcm7xx_clk_pll_class_init(ObjectClass *klass, void *data)
+static void npcm7xx_clk_pll_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -1017,7 +1017,7 @@ static void npcm7xx_clk_pll_class_init(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_npcm7xx_clk_pll;
 }
 
-static void npcm7xx_clk_sel_class_init(ObjectClass *klass, void *data)
+static void npcm7xx_clk_sel_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -1025,7 +1025,7 @@ static void npcm7xx_clk_sel_class_init(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_npcm7xx_clk_sel;
 }
 
-static void npcm7xx_clk_divider_class_init(ObjectClass *klass, void *data)
+static void npcm7xx_clk_divider_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
@@ -1033,7 +1033,7 @@ static void npcm7xx_clk_divider_class_init(ObjectClass *klass, void *data)
     dc->vmsd = &vmstate_npcm7xx_clk_divider;
 }
 
-static void npcm7xx_clk_class_init(ObjectClass *klass, void *data)
+static void npcm7xx_clk_class_init(ObjectClass *klass, const void *data)
 {
     ResettableClass *rc = RESETTABLE_CLASS(klass);
     DeviceClass *dc = DEVICE_CLASS(klass);
