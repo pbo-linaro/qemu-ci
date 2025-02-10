@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250210030051.2562726-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 34 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/10] i386/fw_cfg: move hpet_cfg definition to hpet.c
+  [32m✓[0m [PATCH v2 2/10] rust/qdev: add the macro to define bit property
+  [32m✓[0m [PATCH v2 3/10] rust/irq: Add a helper to convert [InterruptSource] to pointer
+  [32m✓[0m [PATCH v2 4/10] rust: add bindings for gpio_{in|out} initialization
+  [32m✓[0m [PATCH v2 5/10] rust: add bindings for memattrs
+  [32m✓[0m [PATCH v2 6/10] rust: add bindings for timer
+  [32m✓[0m [PATCH v2 7/10] rust/timer/hpet: define hpet_fw_cfg
+  [32m✓[0m [PATCH v2 8/10] rust/timer/hpet: add basic HPET timer and HPETState
+  [32m✓[0m [PATCH v2 9/10] rust/timer/hpet: add qom and qdev APIs support
+  [32m✓[0m [PATCH v2 10/10] i386: enable rust hpet for pc when rust is enabled
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 10
+---
+Applying: i386/fw_cfg: move hpet_cfg definition to hpet.c
+Patch failed at 0001 i386/fw_cfg: move hpet_cfg definition to hpet.c
+error: patch failed: hw/i386/fw_cfg.c:153
+error: hw/i386/fw_cfg.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
