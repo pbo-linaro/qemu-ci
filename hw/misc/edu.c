@@ -431,7 +431,7 @@ static void edu_class_init(ObjectClass *class, const void *data)
 
 static void pci_edu_register_types(void)
 {
-    static InterfaceInfo interfaces[] = {
+    static const InterfaceInfo interfaces[] = {
         { INTERFACE_CONVENTIONAL_PCI_DEVICE },
         { },
     };

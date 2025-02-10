@@ -2487,7 +2487,7 @@ typedef struct MegasasInfo {
     const VMStateDescription *vmsd;
     const Property *props;
     size_t props_count;
-    InterfaceInfo *interfaces;
+    const InterfaceInfo *interfaces;
 } MegasasInfo;
 
 static struct MegasasInfo megasas_devices[] = {
@@ -2504,7 +2504,7 @@ static struct MegasasInfo megasas_devices[] = {
         .vmsd = &vmstate_megasas_gen1,
         .props = megasas_properties_gen1,
         .props_count = ARRAY_SIZE(megasas_properties_gen1),
-        .interfaces = (InterfaceInfo[]) {
+        .interfaces = (const InterfaceInfo[]) {
             { INTERFACE_CONVENTIONAL_PCI_DEVICE },
             { },
         },
@@ -2521,7 +2521,7 @@ static struct MegasasInfo megasas_devices[] = {
         .vmsd = &vmstate_megasas_gen2,
         .props = megasas_properties_gen2,
         .props_count = ARRAY_SIZE(megasas_properties_gen2),
-        .interfaces = (InterfaceInfo[]) {
+        .interfaces = (const InterfaceInfo[]) {
             { INTERFACE_PCIE_DEVICE },
             { }
         },
