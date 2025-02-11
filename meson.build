@@ -3640,6 +3640,7 @@ qom_ss = ss.source_set()
 system_ss = ss.source_set()
 specific_fuzz_ss = ss.source_set()
 specific_ss = ss.source_set()
+rust_block_ss = ss.source_set()
 rust_devices_ss = ss.source_set()
 stub_ss = ss.source_set()
 trace_ss = ss.source_set()
@@ -4209,7 +4210,11 @@ foreach target : target_dirs
   arch_deps += target_specific.dependencies()
 
   if have_rust and target_type == 'system'
-    target_rust = rust_devices_ss.apply(config_target, strict: false)
+    target_rust_ss = ss.source_set()
+    target_rust_ss.add_all(rust_block_ss)
+    target_rust_ss.add_all(rust_devices_ss)
+
+    target_rust = target_rust_ss.apply(config_target, strict: false)
     crates = []
     foreach dep : target_rust.dependencies()
       crates += dep.get_variable('crate')
@@ -4349,15 +4354,38 @@ if xkbcommon.found()
 endif
 
 if have_tools
+  tools_deps = []
+  if have_rust
+    tools_rust = rust_block_ss.apply({})
+    crates = []
+    foreach dep : tools_rust.dependencies()
+      crates += dep.get_variable('crate')
+    endforeach
+    if crates.length() > 0
+      rlib_rs = custom_target('rust_tools.rs',
+                              output: 'rust_tools.rs',
+                              command: [rust_root_crate, crates],
+                              capture: true,
+                              build_by_default: true,
+                              build_always_stale: true)
+      rlib = static_library('rust_tools',
+                            rlib_rs,
+                            dependencies: tools_rust.dependencies(),
+                            override_options: ['rust_std=2021', 'build.rust_std=2021'],
+                            rust_abi: 'c')
+      tools_deps += declare_dependency(link_whole: [rlib])
+    endif
+  endif
+
   qemu_img = executable('qemu-img', [files('qemu-img.c'), hxdep],
              link_args: '@block.syms', link_depends: block_syms,
-             dependencies: [authz, block, crypto, io, qom, qemuutil], install: true)
+             dependencies: tools_deps + [authz, block, crypto, io, qom, qemuutil], install: true)
   qemu_io = executable('qemu-io', files('qemu-io.c'),
              link_args: '@block.syms', link_depends: block_syms,
-             dependencies: [block, qemuutil], install: true)
+             dependencies: tools_deps + [block, qemuutil], install: true)
   qemu_nbd = executable('qemu-nbd', files('qemu-nbd.c'),
                link_args: '@block.syms', link_depends: block_syms,
-               dependencies: [blockdev, qemuutil, selinux],
+               dependencies: tools_deps + [blockdev, qemuutil, selinux],
                install: true)
 
   subdir('storage-daemon')
