@@ -4045,6 +4045,7 @@ if have_rust
     '--with-derive-default',
     '--no-layout-tests',
     '--no-prepend-enum-name',
+    '--allowlist-item', 'EINVAL|EIO',
     '--allowlist-file', meson.project_source_root() + '/include/.*',
     '--allowlist-file', meson.project_source_root() + '/.*',
     '--allowlist-file', meson.project_build_root() + '/.*'

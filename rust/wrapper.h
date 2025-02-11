@@ -53,3 +53,7 @@ typedef enum memory_order {
 #include "chardev/char-fe.h"
 #include "qapi/error.h"
 #include "chardev/char-serial.h"
+#include "block/block.h"
+#include "block/block_int.h"
+#include "block/qdict.h"
+#include "qapi/qapi-visit-block-core.h"
