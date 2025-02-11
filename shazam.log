@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20250210221830.69129-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 24 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 34 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/10] target: Set disassemble_info::endian value for little-endian targets
+  [32m✓[0m [PATCH v3 2/10] target: Set disassemble_info::endian value for big-endian targets
+  [32m✓[0m [PATCH v3 3/10] target/arm: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 4/10] target/microblaze: Set disassemble_info::endian value in disas_set_info
+  [32m✓[0m [PATCH v3 5/10] target/mips: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 6/10] target/ppc: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 7/10] target/riscv: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 8/10] target/sh4: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 9/10] target/xtensa: Set disassemble_info::endian value in disas_set_info()
+  [32m✓[0m [PATCH v3 10/10] disas: Remove target_words_bigendian() call in initialize_debug_target()
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 10
+---
+Applying: target: Set disassemble_info::endian value for little-endian targets
+Applying: target: Set disassemble_info::endian value for big-endian targets
+Applying: target/arm: Set disassemble_info::endian value in disas_set_info()
+Applying: target/microblaze: Set disassemble_info::endian value in disas_set_info
+Applying: target/mips: Set disassemble_info::endian value in disas_set_info()
+Applying: target/ppc: Set disassemble_info::endian value in disas_set_info()
+Applying: target/riscv: Set disassemble_info::endian value in disas_set_info()
+Applying: target/sh4: Set disassemble_info::endian value in disas_set_info()
+Applying: target/xtensa: Set disassemble_info::endian value in disas_set_info()
+Applying: disas: Remove target_words_bigendian() call in initialize_debug_target()
+Patch failed at 0010 disas: Remove target_words_bigendian() call in initialize_debug_target()
+error: patch failed: disas/disas-common.c:61
+error: disas/disas-common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
