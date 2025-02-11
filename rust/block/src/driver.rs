@@ -2,11 +2,6 @@
 // Author(s): Kevin Wolf <kwolf@redhat.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-// All of this is unused until the first block driver is added
-#![allow(dead_code)]
-#![allow(unused_macros)]
-#![allow(unused_imports)]
-
 use crate::{IoBuffer, SizedIoBuffer};
 use qemu_api::bindings;
 use qemu_api::futures::qemu_co_run_future;

@@ -1,3 +1,4 @@
+mod bochs;
 mod driver;
 mod iobuffer;
 
