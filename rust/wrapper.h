@@ -57,3 +57,4 @@ typedef enum memory_order {
 #include "block/block_int.h"
 #include "block/qdict.h"
 #include "qapi/qapi-visit-block-core.h"
+#include "qemu/coroutine-rust.h"

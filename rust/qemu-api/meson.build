@@ -18,6 +18,7 @@ sources_core = [
   'src/callbacks.rs',
   'src/cell.rs',
   'src/c_str.rs',
+  'src/futures.rs',
   'src/module.rs',
   'src/offset_of.rs',
   'src/prelude.rs',
