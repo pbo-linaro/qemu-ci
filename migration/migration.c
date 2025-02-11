@@ -2986,7 +2986,9 @@ fail:
         error_free(local_err);
     }
 
-    migrate_set_state(&s->state, s->state, MIGRATION_STATUS_FAILED);
+    if (s->state != MIGRATION_STATUS_CANCELLING) {
+        migrate_set_state(&s->state, s->state, MIGRATION_STATUS_FAILED);
+    }
 }
 
 /**
