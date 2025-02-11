@@ -4094,10 +4094,17 @@ if have_rust
   # this case you must pass the path to `clang` and `libclang` to your build
   # command invocation using the environment variables CLANG_PATH and
   # LIBCLANG_PATH
-  bindings_rs = rust.bindgen(
+  bindings_rs_tools = rust.bindgen(
     input: 'rust/wrapper.h',
+    output: 'bindings_tools.inc.rs',
+    include_directories: include_directories('.', 'include'),
+    bindgen_version: ['>=0.60.0'],
+    args: bindgen_args,
+    )
+  bindings_rs_system = rust.bindgen(
+    input: 'rust/wrapper-system.h',
     dependencies: common_ss.all_dependencies(),
-    output: 'bindings.inc.rs',
+    output: 'bindings_system.inc.rs',
     include_directories: include_directories('.', 'include'),
     bindgen_version: ['>=0.60.0'],
     args: bindgen_args,

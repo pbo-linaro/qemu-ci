@@ -18,12 +18,16 @@ pub mod bitops;
 pub mod c_str;
 pub mod callbacks;
 pub mod cell;
+#[cfg(feature = "system")]
 pub mod irq;
 pub mod module;
 pub mod offset_of;
+#[cfg(feature = "system")]
 pub mod qdev;
 pub mod qom;
+#[cfg(feature = "system")]
 pub mod sysbus;
+#[cfg(feature = "system")]
 pub mod vmstate;
 pub mod zeroable;
 

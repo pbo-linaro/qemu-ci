@@ -17,6 +17,8 @@ pub use crate::qom::ObjectType;
 
 pub use crate::qom_isa;
 
+#[cfg(feature="system")]
 pub use crate::sysbus::SysBusDeviceMethods;
 
+#[cfg(feature="system")]
 pub use crate::vmstate::VMState;

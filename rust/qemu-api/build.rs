@@ -16,7 +16,13 @@ fn main() -> Result<()> {
     let path = env::var("MESON_BUILD_ROOT")
         .unwrap_or_else(|_| format!("{}/src", env!("CARGO_MANIFEST_DIR")));
 
-    let file = format!("{}/bindings.inc.rs", path);
+    let basename = if cfg!(feature = "system") {
+        "bindings_system.inc.rs"
+    } else {
+        "bindings_tools.inc.rs"
+    };
+
+    let file = format!("{}/{}", path, basename);
     let file = Path::new(&file);
     if !Path::new(&file).exists() {
         panic!(concat!(
@@ -31,7 +37,7 @@ fn main() -> Result<()> {
     }
 
     let out_dir = env::var("OUT_DIR").unwrap();
-    let dest_path = format!("{}/bindings.inc.rs", out_dir);
+    let dest_path = format!("{}/{}", out_dir, basename);
     let dest_path = Path::new(&dest_path);
     if dest_path.symlink_metadata().is_ok() {
         remove_file(dest_path)?;

@@ -56,6 +56,7 @@ pub unsafe trait Zeroable: Default {
 /// ## Differences with `core::mem::zeroed`
 ///
 /// `const_zero` zeroes padding bits, while `core::mem::zeroed` doesn't
+#[allow(unused)]
 macro_rules! const_zero {
     // This macro to produce a type-generic zero constant is taken from the
     // const_zero crate (v0.1.1):
@@ -77,6 +78,7 @@ macro_rules! const_zero {
 }
 
 /// A wrapper to implement the `Zeroable` trait through the `const_zero` macro.
+#[allow(unused)]
 macro_rules! impl_zeroable {
     ($type:ty) => {
         unsafe impl Zeroable for $type {
@@ -86,6 +88,7 @@ macro_rules! impl_zeroable {
 }
 
 // bindgen does not derive Default here
+#[cfg(feature = "system")]
 #[allow(clippy::derivable_impls)]
 impl Default for crate::bindings::VMStateFlags {
     fn default() -> Self {
@@ -93,10 +96,17 @@ impl Default for crate::bindings::VMStateFlags {
     }
 }
 
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::Property__bindgen_ty_1);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::Property);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::VMStateFlags);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::VMStateField);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::VMStateDescription);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::MemoryRegionOps__bindgen_ty_1);
+#[cfg(feature = "system")]
 impl_zeroable!(crate::bindings::MemoryRegionOps__bindgen_ty_2);

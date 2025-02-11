@@ -12,9 +12,10 @@ _libpl011_rs = static_library(
   dependencies: [
     bilge_dep,
     bilge_impl_dep,
-    qemu_api,
+    qemu_api_system,
     qemu_api_macros,
   ],
+  rust_dependency_map: {'qemu_api_system': 'qemu_api'},
 )
 
 rust_devices_ss.add(when: 'CONFIG_X_PL011_RUST', if_true: [declare_dependency(

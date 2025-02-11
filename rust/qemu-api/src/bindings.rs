@@ -15,15 +15,23 @@
     clippy::missing_safety_doc
 )]
 
-#[cfg(MESON)]
-include!("bindings.inc.rs");
+#[cfg(all(MESON, not(feature="system")))]
+include!("bindings_tools.inc.rs");
+#[cfg(all(MESON, feature="system"))]
+include!("bindings_system.inc.rs");
 
-#[cfg(not(MESON))]
-include!(concat!(env!("OUT_DIR"), "/bindings.inc.rs"));
+#[cfg(all(not(MESON), not(feature="system")))]
+include!(concat!(env!("OUT_DIR"), "/bindings_tools.inc.rs"));
+#[cfg(all(not(MESON), feature="system"))]
+include!(concat!(env!("OUT_DIR"), "/bindings_system.inc.rs"));
 
 unsafe impl Send for Property {}
 unsafe impl Sync for Property {}
 unsafe impl Sync for TypeInfo {}
+
+#[cfg(feature="system")]
 unsafe impl Sync for VMStateDescription {}
+#[cfg(feature="system")]
 unsafe impl Sync for VMStateField {}
+#[cfg(feature="system")]
 unsafe impl Sync for VMStateInfo {}
