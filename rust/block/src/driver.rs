@@ -6,7 +6,7 @@ use crate::{IoBuffer, SizedIoBuffer};
 use qemu_api::bindings;
 use qemu_api::futures::qemu_co_run_future;
 use std::cmp::min;
-use std::ffi::c_void;
+use std::ffi::{c_void, CStr};
 use std::io::{self, Error, ErrorKind};
 use std::mem::MaybeUninit;
 use std::ptr;
@@ -64,6 +64,16 @@ pub trait BlockDriver {
         opts: &Self::Options,
         errp: *mut *mut bindings::Error,
     ) -> std::os::raw::c_int;
+
+    /// Returns the image format probing priority of this block driver for disk images starting
+    /// with the byte sequence in `buf`. Probing selects the driver that returns the highest
+    /// number.
+    ///
+    /// If the driver doesn't support images starting with `buf`, 0 is returned.
+    fn probe(buf: &[u8], filename: &str) -> u16 {
+        let _ = (buf, filename);
+        0
+    }
 
     /// Returns the size of the image in bytes
     fn size(&self) -> u64;
@@ -153,6 +163,19 @@ impl BdrvChild {
                 .await?;
             Ok(buf.assume_init())
         }
+    }
+}
+
+#[doc(hidden)]
+pub unsafe extern "C" fn bdrv_probe<D: BlockDriver>(
+    buf: *const u8,
+    buf_size: std::os::raw::c_int,
+    filename: *const std::os::raw::c_char,
+) -> std::os::raw::c_int {
+    let buf = unsafe { std::slice::from_raw_parts(buf, buf_size as usize) };
+    match unsafe { CStr::from_ptr(filename) }.to_str() {
+        Ok(filename) => D::probe(buf, filename).into(),
+        Err(_) => 0,
     }
 }
 
@@ -266,6 +289,7 @@ macro_rules! block_driver {
                 ::qemu_api::bindings::BlockDriver {
                     format_name: ::qemu_api::c_str!($fmtname).as_ptr(),
                     instance_size: ::std::mem::size_of::<$typ>() as i32,
+                    bdrv_probe: Some($crate::driver::bdrv_probe::<$typ>),
                     bdrv_open: Some($crate::driver::bdrv_open::<$typ>),
                     bdrv_close: Some($crate::driver::bdrv_close::<$typ>),
                     bdrv_co_preadv_part: Some($crate::driver::bdrv_co_preadv_part::<$typ>),

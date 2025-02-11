@@ -186,6 +186,26 @@ impl BochsImage {
 impl BlockDriver for BochsImage {
     type Options = bindings::BlockdevOptionsGenericFormat;
 
+    fn probe(buf: &[u8], _filename: &str) -> u16 {
+        let header = match BochsHeader::from_byte_slice(buf) {
+            Some(header) => header,
+            None => return 0,
+        };
+
+        if header.magic != HEADER_MAGIC
+            || header.imgtype != HEADER_TYPE_REDOLOG
+            || header.subtype != HEADER_SUBTYPE_GROWING
+        {
+            return 0;
+        }
+
+        // This driver is better than the C one which returns 100, give it priority
+        match header.version {
+            HEADER_VERSION | HEADER_V1 => 200,
+            _ => 0,
+        }
+    }
+
     unsafe fn parse_options(
         v: &mut bindings::Visitor,
         opts: &mut *mut Self::Options,
