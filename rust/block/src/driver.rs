@@ -9,10 +9,45 @@
 
 use crate::{IoBuffer, SizedIoBuffer};
 use qemu_api::bindings;
+use qemu_api::futures::qemu_co_run_future;
+use std::cmp::min;
 use std::ffi::c_void;
 use std::io::{self, Error, ErrorKind};
 use std::mem::MaybeUninit;
 use std::ptr;
+
+/// A request to a block driver
+pub enum Request {
+    Read { offset: u64, len: u64 },
+}
+
+/// The target for a number of guest blocks, e.g. a location in a child node or the information
+/// that the described blocks are unmapped.
+// FIXME Actually use node
+#[allow(dead_code)]
+pub enum MappingTarget {
+    /// The described blocks are unallocated. Reading from them yields zeros.
+    Unmapped,
+
+    /// The described blocks are stored in a child node.
+    Data {
+        /// Child node in which the data is stored
+        node: (),
+
+        /// Offset in the child node at which the data is stored
+        offset: u64,
+    },
+}
+
+/// A mapping for a number of contiguous guest blocks
+pub struct Mapping {
+    /// Offset of the mapped blocks from the perspective of the guest
+    pub offset: u64,
+    /// Length of the mapping in bytes
+    pub len: u64,
+    /// Where the data for the described blocks is stored
+    pub target: MappingTarget,
+}
 
 /// A trait for writing block drivers.
 ///
@@ -37,6 +72,11 @@ pub trait BlockDriver {
 
     /// Returns the size of the image in bytes
     fn size(&self) -> u64;
+
+    /// Returns the mapping for the first part of `req`. If the returned mapping is shorter than
+    /// the request, the function can be called again with a shortened request to get the mapping
+    /// for the remaining part.
+    async fn map(&self, req: &Request) -> io::Result<Mapping>;
 }
 
 /// Represents the connection between a parent and its child node.
@@ -161,6 +201,65 @@ pub unsafe extern "C" fn bdrv_close<D: BlockDriver>(bs: *mut bindings::BlockDriv
     }
 }
 
+#[doc(hidden)]
+pub unsafe extern "C" fn bdrv_co_preadv_part<D: BlockDriver>(
+    bs: *mut bindings::BlockDriverState,
+    offset: i64,
+    bytes: i64,
+    qiov: *mut bindings::QEMUIOVector,
+    mut qiov_offset: usize,
+    flags: bindings::BdrvRequestFlags,
+) -> std::os::raw::c_int {
+    let s = unsafe { &mut *((*bs).opaque as *mut D) };
+
+    let mut offset = offset as u64;
+    let mut bytes = bytes as u64;
+
+    while bytes > 0 {
+        let req = Request::Read { offset, len: bytes };
+        let mapping = match qemu_co_run_future(s.map(&req)) {
+            Ok(mapping) => mapping,
+            Err(e) => {
+                return e
+                    .raw_os_error()
+                    .unwrap_or(-(bindings::EIO as std::os::raw::c_int))
+            }
+        };
+
+        let mapping_offset = offset - mapping.offset;
+        let cur_bytes = min(bytes, mapping.len - mapping_offset);
+
+        match mapping.target {
+            MappingTarget::Unmapped => unsafe {
+                bindings::qemu_iovec_memset(qiov, qiov_offset, 0, cur_bytes.try_into().unwrap());
+            },
+            MappingTarget::Data {
+                node: _,
+                offset: target_offset,
+            } => unsafe {
+                // TODO Support using child nodes other than bs->file
+                let ret = bindings::bdrv_co_preadv_part(
+                    (*bs).file,
+                    (target_offset + mapping_offset) as i64,
+                    cur_bytes as i64,
+                    qiov,
+                    qiov_offset,
+                    flags,
+                );
+                if ret < 0 {
+                    return ret;
+                }
+            },
+        }
+
+        offset += cur_bytes;
+        qiov_offset += cur_bytes as usize;
+        bytes -= cur_bytes;
+    }
+
+    0
+}
+
 /// Declare a format block driver. This macro is meant to be used at the top level.
 ///
 /// `typ` is a type implementing the [`BlockDriver`] trait to handle the image format with the
@@ -174,6 +273,7 @@ macro_rules! block_driver {
                     instance_size: ::std::mem::size_of::<$typ>() as i32,
                     bdrv_open: Some($crate::driver::bdrv_open::<$typ>),
                     bdrv_close: Some($crate::driver::bdrv_close::<$typ>),
+                    bdrv_co_preadv_part: Some($crate::driver::bdrv_co_preadv_part::<$typ>),
                     bdrv_child_perm: Some(::qemu_api::bindings::bdrv_default_perms),
                     is_format: true,
                     ..::qemu_api::zeroable::Zeroable::ZERO
