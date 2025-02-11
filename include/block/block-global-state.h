@@ -100,6 +100,10 @@ bdrv_open_blockdev_ref(BlockdevRef *ref, Error **errp);
 BlockDriverState * coroutine_fn no_co_wrapper
 bdrv_co_open_blockdev_ref(BlockdevRef *ref, Error **errp);
 
+BlockDriverState * no_coroutine_fn
+bdrv_open_blockdev_ref_file(BlockdevRef *ref, BlockDriverState *parent,
+                            Error **errp);
+
 int bdrv_set_backing_hd(BlockDriverState *bs, BlockDriverState *backing_hd,
                         Error **errp);
 int GRAPH_WRLOCK

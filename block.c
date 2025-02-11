@@ -3847,7 +3847,11 @@ int bdrv_open_file_child(const char *filename,
  * TODO Future callers may need to specify parent/child_class in order for
  * option inheritance to work. Existing callers use it for the root node.
  */
-BlockDriverState *bdrv_open_blockdev_ref(BlockdevRef *ref, Error **errp)
+static BlockDriverState * no_coroutine_fn
+bdrv_open_blockdev_ref_common(BlockdevRef *ref, BlockDriverState *parent,
+                              const BdrvChildClass *child_class,
+                              BdrvChildRole child_role, bool parse_filename,
+                              Error **errp)
 {
     BlockDriverState *bs = NULL;
     QObject *obj = NULL;
@@ -3880,12 +3884,32 @@ BlockDriverState *bdrv_open_blockdev_ref(BlockdevRef *ref, Error **errp)
 
     }
 
-    bs = bdrv_open_inherit(NULL, reference, qdict, 0, NULL, NULL, 0, false,
-                           errp);
+    bs = bdrv_open_inherit(NULL, reference, qdict, 0, parent, child_class,
+                           child_role, parse_filename, errp);
     obj = NULL;
     qobject_unref(obj);
     visit_free(v);
     return bs;
+}
+
+BlockDriverState *bdrv_open_blockdev_ref_file(BlockdevRef *ref,
+                                              BlockDriverState *parent,
+                                              Error **errp)
+{
+    BdrvChildRole role;
+
+    /* commit_top and mirror_top don't use this function */
+    assert(!parent->drv->filtered_child_is_backing);
+    role = parent->drv->is_filter ?
+        (BDRV_CHILD_FILTERED | BDRV_CHILD_PRIMARY) : BDRV_CHILD_IMAGE;
+
+    return bdrv_open_blockdev_ref_common(ref, parent, &child_of_bds, role,
+                                         true, errp);
+}
+
+BlockDriverState *bdrv_open_blockdev_ref(BlockdevRef *ref, Error **errp)
+{
+    return bdrv_open_blockdev_ref_common(ref, NULL, NULL, 0, false, errp);
 }
 
 static BlockDriverState *bdrv_append_temp_snapshot(BlockDriverState *bs,
