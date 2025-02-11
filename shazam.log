@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250211030834.3276732-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/7] hw/loongarch/virt: Add CPU topology support
+  [PATCH v5 2/7] hw/loongarch/virt: Add topo properties on CPU object
+  [PATCH v5 3/7] hw/loongarch/virt: Add basic cpu plug interface framework
+  [PATCH v5 4/7] hw/loongarch/virt: Implement cpu unplug interface
+  [PATCH v5 5/7] hw/loongarch/virt: Implement cpu plug interface
+  [PATCH v5 6/7] hw/loongarch/virt: Update the ACPI table for hotplug cpu
+  [PATCH v5 7/7] hw/loongarch/virt: Enable cpu hotplug feature on virt machine
+---
+Total patches: 7
+---
+Applying: hw/loongarch/virt: Add CPU topology support
+Applying: hw/loongarch/virt: Add topo properties on CPU object
+Applying: hw/loongarch/virt: Add basic cpu plug interface framework
+Applying: hw/loongarch/virt: Implement cpu unplug interface
+Applying: hw/loongarch/virt: Implement cpu plug interface
+Patch failed at 0005 hw/loongarch/virt: Implement cpu plug interface
+error: patch failed: hw/loongarch/virt.c:679
+error: hw/loongarch/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
