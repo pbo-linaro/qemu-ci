@@ -1,0 +1,15 @@
+[package]
+name = "block"
+version = "0.1.0"
+edition = "2021"
+authors = ["Kevin Wolf <kwolf@redhat.com>"]
+license = "GPL-2.0-or-later"
+readme = "README.md"
+description = "Block backends for QEMU"
+repository = "https://gitlab.com/qemu-project/qemu/"
+publish = false
+keywords = []
+categories = []
+
+[dependencies]
+qemu_api = { path = "../qemu-api" }
