@@ -764,10 +764,11 @@ static bool trans_lbuea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_load(dc, arg->rd, addr, MO_UB, MMU_NOMMU_IDX, false);
+    gen_helper_lbuea(reg_for_write(dc, arg->rd), tcg_env, addr);
+    return true;
 #endif
 }
 
@@ -795,10 +796,14 @@ static bool trans_lhuea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_load(dc, arg->rd, addr, MO_TEUW, MMU_NOMMU_IDX, false);
+    if ((dc->tb_flags & MSR_EE) && dc->cfg->unaligned_exceptions) {
+        record_unaligned_ess(dc, arg->rd, MO_16, false);
+    }
+    gen_helper_lhuea(reg_for_write(dc, arg->rd), tcg_env, addr);
+    return true;
 #endif
 }
 
@@ -826,10 +831,14 @@ static bool trans_lwea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_load(dc, arg->rd, addr, MO_TEUL, MMU_NOMMU_IDX, false);
+    if ((dc->tb_flags & MSR_EE) && dc->cfg->unaligned_exceptions) {
+        record_unaligned_ess(dc, arg->rd, MO_32, false);
+    }
+    gen_helper_lwea(reg_for_write(dc, arg->rd), tcg_env, addr);
+    return true;
 #endif
 }
 
@@ -914,10 +923,11 @@ static bool trans_sbea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_store(dc, arg->rd, addr, MO_UB, MMU_NOMMU_IDX, false);
+    gen_helper_sbea(tcg_env, reg_for_read(dc, arg->rd), addr);
+    return true;
 #endif
 }
 
@@ -945,10 +955,14 @@ static bool trans_shea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_store(dc, arg->rd, addr, MO_TEUW, MMU_NOMMU_IDX, false);
+    if ((dc->tb_flags & MSR_EE) && dc->cfg->unaligned_exceptions) {
+        record_unaligned_ess(dc, arg->rd, MO_16, true);
+    }
+    gen_helper_shea(tcg_env, reg_for_read(dc, arg->rd), addr);
+    return true;
 #endif
 }
 
@@ -976,10 +990,14 @@ static bool trans_swea(DisasContext *dc, arg_typea *arg)
         return true;
     }
 #ifdef CONFIG_USER_ONLY
-    return true;
+    g_assert_not_reached();
 #else
     TCGv addr = compute_ldst_addr_ea(dc, arg->ra, arg->rb);
-    return do_store(dc, arg->rd, addr, MO_TEUL, MMU_NOMMU_IDX, false);
+    if ((dc->tb_flags & MSR_EE) && dc->cfg->unaligned_exceptions) {
+        record_unaligned_ess(dc, arg->rd, MO_32, true);
+    }
+    gen_helper_swea(tcg_env, reg_for_read(dc, arg->rd), addr);
+    return true;
 #endif
 }
 

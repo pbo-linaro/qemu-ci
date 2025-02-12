@@ -25,6 +25,7 @@
 #include "qemu/host-utils.h"
 #include "exec/exec-all.h"
 #include "exec/cpu_ldst.h"
+#include "exec/memory.h"
 #include "fpu/softfloat.h"
 
 void helper_put(uint32_t id, uint32_t ctrl, uint32_t data)
@@ -441,5 +442,103 @@ void mb_cpu_transaction_failed(CPUState *cs, hwaddr physaddr, vaddr addr,
 {
     mb_transaction_failed_internal(cs, physaddr, addr, size,
                                    access_type, retaddr);
+}
+
+uint32_t HELPER(lbuea)(CPUMBState *env, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+    uint8_t ret;
+
+    ret = address_space_ldub(cs->as, ea, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 1, MMU_DATA_LOAD, ra);
+    }
+    return ret;
+}
+
+uint32_t HELPER(lhuea)(CPUMBState *env, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+    uint16_t ret;
+
+    if (unlikely(ea & 1)
+        && (env->msr & MSR_EE)
+        && env_archcpu(env)->cfg.unaligned_exceptions) {
+        mb_unaligned_access_internal(cs, ea, MMU_DATA_LOAD, ra);
+    }
+    ret = address_space_lduw(cs->as, ea, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 2, MMU_DATA_LOAD, ra);
+    }
+    return ret;
+}
+
+uint32_t HELPER(lwea)(CPUMBState *env, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+    uint32_t ret;
+
+    if (unlikely(ea & 3)
+        && (env->msr & MSR_EE)
+        && env_archcpu(env)->cfg.unaligned_exceptions) {
+        mb_unaligned_access_internal(cs, ea, MMU_DATA_LOAD, ra);
+    }
+    ret = address_space_ldl(cs->as, ea, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 4, MMU_DATA_LOAD, ra);
+    }
+    return ret;
+}
+
+void HELPER(sbea)(CPUMBState *env, uint32_t data, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+
+    address_space_stb(cs->as, ea, data, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 1, MMU_DATA_STORE, ra);
+    }
+}
+
+void HELPER(shea)(CPUMBState *env, uint32_t data, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+
+    if (unlikely(ea & 1)
+        && (env->msr & MSR_EE)
+        && env_archcpu(env)->cfg.unaligned_exceptions) {
+        mb_unaligned_access_internal(cs, ea, MMU_DATA_STORE, ra);
+    }
+    address_space_stw(cs->as, ea, data, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 2, MMU_DATA_STORE, ra);
+    }
+}
+
+void HELPER(swea)(CPUMBState *env, uint32_t data, uint64_t ea)
+{
+    CPUState *cs = env_cpu(env);
+    uintptr_t ra = GETPC();
+    MemTxResult txres;
+
+    if (unlikely(ea & 3)
+        && (env->msr & MSR_EE)
+        && env_archcpu(env)->cfg.unaligned_exceptions) {
+        mb_unaligned_access_internal(cs, ea, MMU_DATA_STORE, ra);
+    }
+    address_space_stl(cs->as, ea, data, MEMTXATTRS_UNSPECIFIED, &txres);
+    if (unlikely(txres != MEMTX_OK)) {
+        mb_transaction_failed_internal(cs, ea, ea, 4, MMU_DATA_STORE, ra);
+    }
 }
 #endif
