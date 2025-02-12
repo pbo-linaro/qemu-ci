@@ -4826,6 +4826,13 @@ summary_info += {'libdw':             libdw}
 if host_os == 'freebsd'
   summary_info += {'libinotify-kqueue': inotify}
 endif
+if host_os == 'darwin'
+  summary_info += {'Hypervisor support': hvf}
+  summary_info += {'CoreFoundation support': coref}
+  summary_info += {'IOKit support': iokit}
+  summary_info += {'ParavirtualizedGraphics support': pvg}
+  summary_info += {'Metal support': metal}
+endif
 summary(summary_info, bool_yn: true, section: 'Dependencies')
 
 if host_arch == 'unknown'
