@@ -268,20 +268,20 @@ bool mb_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
 
 #endif /* !CONFIG_USER_ONLY */
 
-void mb_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
-                                MMUAccessType access_type,
-                                int mmu_idx, uintptr_t retaddr)
+G_NORETURN
+void mb_unaligned_access_internal(CPUState *cs, uint64_t addr,
+                                  MMUAccessType access_type, uintptr_t retaddr)
 {
-    MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);
+    CPUMBState *env = cpu_env(cs);
     uint32_t esr, iflags;
 
     /* Recover the pc and iflags from the corresponding insn_start.  */
     cpu_restore_state(cs, retaddr);
-    iflags = cpu->env.iflags;
+    iflags = env->iflags;
 
     qemu_log_mask(CPU_LOG_INT,
-                  "Unaligned access addr=" TARGET_FMT_lx " pc=%x iflags=%x\n",
-                  (target_ulong)addr, cpu->env.pc, iflags);
+                  "Unaligned access addr=0x%" PRIx64 " pc=%x iflags=%x\n",
+                  addr, env->pc, iflags);
 
     esr = ESR_EC_UNALIGNED_DATA;
     if (likely(iflags & ESR_ESS_FLAG)) {
@@ -290,8 +290,15 @@ void mb_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
         qemu_log_mask(LOG_UNIMP, "Unaligned access without ESR_ESS_FLAG\n");
     }
 
-    cpu->env.ear = addr;
-    cpu->env.esr = esr;
+    env->ear = addr;
+    env->esr = esr;
     cs->exception_index = EXCP_HW_EXCP;
     cpu_loop_exit(cs);
+}
+
+void mb_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
+                                MMUAccessType access_type,
+                                int mmu_idx, uintptr_t retaddr)
+{
+    mb_unaligned_access_internal(cs, addr, access_type, retaddr);
 }
