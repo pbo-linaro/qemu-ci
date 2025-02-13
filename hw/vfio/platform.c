@@ -674,6 +674,29 @@ static void vfio_platform_class_init(ObjectClass *klass, void *data)
     set_bit(DEVICE_CATEGORY_MISC, dc->categories);
     /* Supported by TYPE_VIRT_MACHINE */
     dc->user_creatable = true;
+
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "host",
+                                          "Host device name of assigned device");
+    object_class_property_set_description(klass, /* 2.6 */
+                                          "sysfsdev",
+                                          "Host sysfs path of assigned device");
+    object_class_property_set_description(klass, /* 2.4 and 2.5 */
+                                          "x-no-mmap",
+                                          "Disable MMAP for device. Allows to trace MMIO accesses");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "mmap-timeout-ms",
+                                          "Timeout value in milliseconds to re-enable BAR mapping");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-irqfd",
+                                          "Use irqfd for IRQ handling");
+
+#ifdef CONFIG_IOMMUFD
+    object_class_property_set_description(klass, /* 9.0 */
+                                          "iommufd",
+                                          "Set host IOMMUFD backend device ");
+#endif
+
 }
 
 static const TypeInfo vfio_platform_dev_info = {
