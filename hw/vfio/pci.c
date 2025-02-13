@@ -3433,6 +3433,108 @@ static void vfio_pci_dev_class_init(ObjectClass *klass, void *data)
     pdc->exit = vfio_exitfn;
     pdc->config_read = vfio_pci_read_config;
     pdc->config_write = vfio_pci_write_config;
+
+    object_class_property_set_description(klass, /* 1.2 */
+                                          "host",
+                                          "Host PCI address [domain:]<bus:slot.function> of assigned device");
+    object_class_property_set_description(klass, /* 8.0 */
+                                          "vf-token",
+                                          "Add support for VF token among PF and VFs (Linux 5.7+)");
+    object_class_property_set_description(klass, /* 2.5 */
+                                          "sysfsdev",
+                                          "Host sysfs path of assigned device");
+    object_class_property_set_description(klass, /* 5.2 */
+                                          "x-pre-copy-dirty-page-tracking",
+                                          "Disable dirty pages tracking during iterative phase");
+    object_class_property_set_description(klass, /* 9.0 */
+                                          "x-device-dirty-page-tracking",
+                                          "Disable device dirty page tracking and use container-based dirty page tracking");
+    object_class_property_set_description(klass, /* 2.11 */
+                                          "display",
+                                          "Add display support");
+    object_class_property_set_description(klass, /* 3.1 */
+                                          "xres",
+                                          "Set X display resolution the vgpu should use");
+    object_class_property_set_description(klass, /* 3.1 */
+                                          "yres",
+                                          "Set Y display resolution the vgpu should use");
+    object_class_property_set_description(klass, /* 1.2 */
+                                          "x-intx-mmap-timeout-ms",
+                                          "Timeout value in milliseconds to re-enable BAR mapping when under "
+                                          "INTx interrupts. Improves performance");
+    object_class_property_set_description(klass, /* 1.4 */
+                                          "x-vga",
+                                          "Add support for VGA MMIO and I/O port access");
+    object_class_property_set_description(klass, /* 2.2 */
+                                          "x-req",
+                                          "Add device request notification support (Linux 4.0+)");
+    object_class_property_set_description(klass, /* 2.6 */
+                                          "x-igd-opregion",
+                                          "Add IGD OpRegion support for (headless system)");
+    object_class_property_set_description(klass, /* 5.2, 8.0 non-experimetal */
+                                          "enable-migration",
+                                          "Enale device migration. Also requires a host VFIO PCI variant "
+                                          "driver with migration support enabled");
+    object_class_property_set_description(klass, /* 9.0 */
+                                          "migration-events",
+                                          "Emit VFIO migration QAPI event when a VFIO device changes its migration "
+                                          "state. For management applications");
+    object_class_property_set_description(klass, /* 2.2 and 2.4 */
+                                          "x-no-mmap",
+                                          "Disable MMAP for device. Allows to trace MMIO accesses");
+    object_class_property_set_description(klass, /* 3.0 */
+                                          "x-balloon-allowed",
+                                          "Allow devices to opt-in for ballooning");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-no-kvm-intx",
+                                          "Bypass INTx interrupts. Allows interrupt tracing");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-no-kvm-msi",
+                                          "Bypass MSI interrupts. Allows interrupt tracing");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-no-kvm-msix",
+                                          "Bypass MSIx interrupts. Allows interrupt tracing");
+    object_class_property_set_description(klass, /* 2.11 */
+                                          "x-no-geforce-quirks",
+                                          "Disable GeForce quirks (for NVIDIA Quadro/GRID/Tesla). Improves performance");
+    object_class_property_set_description(klass, /* 2.12 */
+                                          "x-no-kvm-ioeventfd",
+                                          "Disable ioeventfd quirk (NVIDIA)");
+    object_class_property_set_description(klass, /* 2.12 */
+                                          "x-no-vfio-ioeventfd",
+                                          "Enable ioeventfd quirks to be handled by VFIO directly. Improves performance");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-pci-vendor-id",
+                                          "Set emulated PCI Vendor ID. Allows testing quirks");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-pci-device-id",
+                                          "Set emulated PCI device ID. Allows testing quirks");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-pci-sub-vendor-id",
+                                          "Set emulated PCI Sub-vendor ID");
+    object_class_property_set_description(klass, /* 2.4 */
+                                          "x-pci-sub-device-id",
+                                          "Set emulated PCI Sub-device ID");
+    object_class_property_set_description(klass, /* 2.6 (See c4c45e943e51) */
+                                          "x-igd-gms",
+                                          "Add Intel graphics legacy mode device assignment support. "
+                                          "Assign 00:02.0 from the host to 00:02.0 in the VM");
+    object_class_property_set_description(klass, /* 2.10 */
+                                          "x-nv-gpudirect-clique",
+                                          "Add NVIDIA GPUDirect Cliques support");
+    object_class_property_set_description(klass, /* 2.11 */
+                                          "x-msix-relocation",
+                                          "Allow relocating MSI-X MMIO on systems which page size is larger "
+                                          "than the PCI spec recommendation. Mostly for sPAPR");
+#ifdef CONFIG_IOMMUFD
+    object_class_property_set_description(klass, /* 8.2 */
+                                          "iommufd",
+                                          "Set host IOMMUFD backend device ");
+#endif
+    object_class_property_set_description(klass, /* 9.0 */
+                                          "skip-vsc-check",
+                                          "Skip config space check for Vendor Specific Capability. Useful for "
+                                          "NVIDIA vGPU driver migration");
 }
 
 static const TypeInfo vfio_pci_dev_info = {
