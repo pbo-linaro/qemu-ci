@@ -1437,7 +1437,9 @@ static void riscv_init_max_cpu_extensions(Object *obj)
      */
     if (cpu->cfg.ext_smrnmi) {
         isa_ext_update_enabled(cpu, CPU_CFG_OFFSET(ext_smrnmi), false);
+#ifndef CONFIG_USER_ONLY
         qemu_log("Smrnmi is disabled in the 'max' type CPU\n");
+#endif
     }
 
     /*
@@ -1447,7 +1449,9 @@ static void riscv_init_max_cpu_extensions(Object *obj)
      */
     if (cpu->cfg.ext_smdbltrp) {
         isa_ext_update_enabled(cpu, CPU_CFG_OFFSET(ext_smdbltrp), false);
+#ifndef CONFIG_USER_ONLY
         qemu_log("Smdbltrp is disabled in the 'max' type CPU\n");
+#endif
     }
 }
 
