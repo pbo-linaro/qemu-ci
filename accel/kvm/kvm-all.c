@@ -512,6 +512,8 @@ static int do_kvm_destroy_vcpu(CPUState *cpu)
         goto err;
     }
 
+    s->coalesced_mmio_ring = NULL;
+
     if (cpu->kvm_dirty_gfns) {
         ret = munmap(cpu->kvm_dirty_gfns, s->kvm_dirty_ring_bytes);
         if (ret < 0) {
