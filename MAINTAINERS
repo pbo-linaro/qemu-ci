@@ -2957,6 +2957,7 @@ M: Fabiano Rosas <farosas@suse.de>
 R: Steve Sistare <steven.sistare@oracle.com>
 S: Supported
 F: hw/vfio/cpr*
+F: include/hw/vfio/vfio-cpr.h
 F: include/migration/cpr.h
 F: migration/cpr*
 F: tests/qtest/migration/cpr*

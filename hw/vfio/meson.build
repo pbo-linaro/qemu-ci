@@ -5,13 +5,14 @@ vfio_ss.add(files(
   'container-base.c',
   'container.c',
   'migration.c',
-  'cpr.c',
 ))
 vfio_ss.add(when: 'CONFIG_PSERIES', if_true: files('spapr.c'))
 vfio_ss.add(when: 'CONFIG_IOMMUFD', if_true: files(
   'iommufd.c',
 ))
 vfio_ss.add(when: 'CONFIG_VFIO_PCI', if_true: files(
+  'cpr.c',
+  'cpr-legacy.c',
   'display.c',
   'pci-quirks.c',
   'pci.c',
