@@ -133,6 +133,8 @@ static int vfio_legacy_dma_unmap(const VFIOContainerBase *bcontainer,
     int ret;
     Error *local_err = NULL;
 
+    assert(!container->cpr.reused);
+
     if (iotlb && vfio_devices_all_dirty_tracking_started(bcontainer)) {
         if (!vfio_devices_all_device_dirty_tracking(bcontainer) &&
             bcontainer->dirty_pages_supported) {
@@ -688,8 +690,17 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
     }
     group_was_added = true;
 
-    bcontainer->listener = vfio_memory_listener;
-    memory_listener_register(&bcontainer->listener, bcontainer->space->as);
+    /*
+     * If reused, register the listener later, after all state that may
+     * affect regions and mapping boundaries has been cpr load'ed.  Later,
+     * the listener will invoke its callback on each flat section and call
+     * dma_map to supply the new vaddr, and the calls will match the mappings
+     * remembered by the kernel.
+     */
+    if (!cpr_reused) {
+        bcontainer->listener = vfio_memory_listener;
+        memory_listener_register(&bcontainer->listener, bcontainer->space->as);
+    }
 
     if (bcontainer->error) {
         error_propagate_prepend(errp, bcontainer->error,
