@@ -596,14 +596,14 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
 
     bcontainer->initialized = true;
 
+    if (!vfio_cpr_register_container(bcontainer, errp)) {
+        goto err_listener_register;
+    }
+
 found_container:
     ret = ioctl(devfd, VFIO_DEVICE_GET_INFO, &dev_info);
     if (ret) {
         error_setg_errno(errp, errno, "error getting device info");
-        goto err_listener_register;
-    }
-
-    if (!vfio_cpr_register_container(bcontainer, errp)) {
         goto err_listener_register;
     }
 
@@ -629,6 +629,7 @@ found_container:
     return true;
 
 err_listener_register:
+    vfio_cpr_unregister_container(bcontainer);
     iommufd_cdev_ram_block_discard_disable(false);
 err_discard_disable:
     iommufd_cdev_detach_container(vbasedev, container);
