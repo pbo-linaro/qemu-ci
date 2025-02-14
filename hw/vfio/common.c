@@ -1501,6 +1501,14 @@ int vfio_kvm_device_del_fd(int fd, Error **errp)
     return 0;
 }
 
+void vfio_kvm_device_close(void)
+{
+    if (vfio_kvm_device_fd != -1) {
+        close(vfio_kvm_device_fd);
+        vfio_kvm_device_fd = -1;
+    }
+}
+
 VFIOAddressSpace *vfio_get_address_space(AddressSpace *as)
 {
     VFIOAddressSpace *space;
