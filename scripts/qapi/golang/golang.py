@@ -229,6 +229,12 @@ func (s *{type_name}) UnmarshalJSON(data []byte) error {{
 }}
 """
 
+TEMPLATE_EVENT = """
+type Event interface {{
+{methods}
+}}
+"""
+
 
 # Takes the documentation object of a specific type and returns
 # that type's documentation and its member's docs.
@@ -1003,13 +1009,16 @@ def generate_template_alternate(
     return "\n" + content
 
 
-def generate_template_event(events: dict[str, Tuple[str, str]]) -> str:
+def generate_template_event(events: dict[str, Tuple[str, str]]) -> (str, str):
     content = ""
+    methods = ""
     for name in sorted(events):
         type_name, gocode = events[name]
+        methods += f"\t{type_name}({type_name}, time.Time) error\n"
         content += gocode
 
-    return content
+    iface = string_to_code(TEMPLATE_EVENT.format(methods=methods[:-1]))
+    return content, iface
 
 
 def generate_content_from_dict(data: dict[str, str]) -> str:
@@ -1065,6 +1074,9 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             "struct": ["encoding/json"],
             "union": ["encoding/json", "errors", "fmt"],
         }
+        interfaces = {
+            "event": ["time"],
+        }
 
         self.schema: QAPISchema
         self.events: dict[str, Tuple[str, str]] = {}
@@ -1079,6 +1091,9 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
 
         self.types = dict.fromkeys(types, "")
         self.types_import = types
+
+        self.interfaces = dict.fromkeys(interfaces, "")
+        self.interface_imports = interfaces
 
     def visit_begin(self, schema: QAPISchema) -> None:
         self.schema = schema
@@ -1100,6 +1115,12 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
                 continue
             self.docmap[doc.symbol] = doc
 
+        for qapitype, imports in self.interface_imports.items():
+            self.interfaces[qapitype] = TEMPLATE_GENERATED_HEADER[1:].format(
+                package_name=self.golang_package_name
+            )
+            self.interfaces[qapitype] += generate_template_imports(imports)
+
         for qapitype, imports in self.types_import.items():
             self.types[qapitype] = TEMPLATE_GENERATED_HEADER[1:].format(
                 package_name=self.golang_package_name
@@ -1114,7 +1135,10 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         self.types["alternate"] += generate_content_from_dict(self.alternates)
         self.types["struct"] += generate_content_from_dict(self.structs)
         self.types["union"] += generate_content_from_dict(self.unions)
-        self.types["event"] += generate_template_event(self.events)
+
+        evtype, eviface = generate_template_event(self.events)
+        self.types["event"] += evtype
+        self.interfaces["event"] += eviface
 
     def visit_object_type(
         self,
@@ -1314,6 +1338,14 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         # Types to be generated
         for qapitype, content in self.types.items():
             gofile = f"gen_type_{qapitype}.go"
+            pathname = os.path.join(targetpath, gofile)
+
+            with open(pathname, "w", encoding="utf8") as outfile:
+                outfile.write(content)
+
+        # Interfaces to be generated
+        for qapitype, content in self.interfaces.items():
+            gofile = f"gen_iface_{qapitype}.go"
             pathname = os.path.join(targetpath, gofile)
 
             with open(pathname, "w", encoding="utf8") as outfile:
