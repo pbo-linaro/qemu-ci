@@ -32,6 +32,7 @@ struct IOMMUFDBackend {
     /*< protected >*/
     int fd;            /* /dev/iommu file descriptor */
     bool owned;        /* is the /dev/iommu opened internally */
+    bool cpr_reused;   /* fd is reused after CPR */
     uint32_t users;
 
     /*< public >*/

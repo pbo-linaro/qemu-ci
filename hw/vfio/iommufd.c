@@ -25,6 +25,7 @@
 #include "qemu/cutils.h"
 #include "qemu/chardev_open.h"
 #include "migration/blocker.h"
+#include "migration/cpr.h"
 #include "pci.h"
 #include "exec/ram_addr.h"
 
@@ -502,13 +503,18 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
         VFIO_IOMMU_CLASS(object_class_by_name(TYPE_VFIO_IOMMU_IOMMUFD));
 
     if (vbasedev->fd < 0) {
-        devfd = iommufd_cdev_getfd(vbasedev->sysfsdev, errp);
+        devfd = cpr_find_fd(vbasedev->name, 0);
+        vbasedev->cpr.reused = (devfd >= 0);
+        if (!vbasedev->cpr.reused) {
+            devfd = iommufd_cdev_getfd(vbasedev->sysfsdev, errp);
+        }
         if (devfd < 0) {
             return false;
         }
         vbasedev->fd = devfd;
     } else {
         devfd = vbasedev->fd;
+        /* reused was set in iommufd_backend_set_fd */
     }
 
     if (!iommufd_cdev_connect_and_bind(vbasedev, errp)) {
@@ -624,6 +630,7 @@ found_container:
     QLIST_INSERT_HEAD(&bcontainer->device_list, vbasedev, container_next);
     QLIST_INSERT_HEAD(&vfio_device_list, vbasedev, global_next);
     vfio_iommufd_cpr_register_device(vbasedev);
+    cpr_resave_fd(vbasedev->name, 0, devfd);
 
     trace_iommufd_cdev_device_info(vbasedev->name, devfd, vbasedev->num_irqs,
                                    vbasedev->num_regions, vbasedev->flags);
@@ -666,6 +673,7 @@ static void iommufd_cdev_detach(VFIODevice *vbasedev)
 
     migrate_del_blocker(&vbasedev->cpr.id_blocker);
     vfio_iommufd_cpr_unregister_device(vbasedev);
+    cpr_delete_fd(vbasedev->name, 0);
     iommufd_cdev_unbind_and_disconnect(vbasedev);
     close(vbasedev->fd);
 }
