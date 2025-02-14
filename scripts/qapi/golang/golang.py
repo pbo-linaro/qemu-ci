@@ -316,7 +316,7 @@ def qapi_to_go_type_name(name: str, meta: Optional[str] = None) -> str:
     name += "".join(word.title() for word in words[1:])
 
     # Handle specific meta suffix
-    types = ["event"]
+    types = ["event", "command"]
     if meta in types:
         name = name[:-3] if name.endswith("Arg") else name
         name += meta.title().replace(" ", "")
@@ -1009,6 +1009,15 @@ def generate_template_alternate(
     return "\n" + content
 
 
+def generate_template_command(commands: dict[str, Tuple[str, str]]) -> str:
+    content = ""
+    for name in sorted(commands):
+        type_name, gocode = commands[name]
+        content += gocode
+
+    return content
+
+
 def generate_template_event(events: dict[str, Tuple[str, str]]) -> (str, str):
     content = ""
     methods = ""
@@ -1069,6 +1078,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         # Map each qapi type to the necessary Go imports
         types = {
             "alternate": ["encoding/json", "errors", "fmt"],
+            "command": [],
             "enum": [],
             "event": [],
             "struct": ["encoding/json"],
@@ -1080,6 +1090,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
 
         self.schema: QAPISchema
         self.events: dict[str, Tuple[str, str]] = {}
+        self.commands: dict[str, Tuple[str, str]] = {}
         self.golang_package_name = "qapi"
         self.duplicate = list(gofiles)
         self.enums: dict[str, str] = {}
@@ -1139,6 +1150,8 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         evtype, eviface = generate_template_event(self.events)
         self.types["event"] += evtype
         self.interfaces["event"] += eviface
+
+        self.types["command"] += generate_template_command(self.commands)
 
     def visit_object_type(
         self,
@@ -1286,7 +1299,42 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         allow_preconfig: bool,
         coroutine: bool,
     ) -> None:
-        pass
+        assert name == info.defn_name
+        assert name not in self.commands
+
+        type_name = qapi_to_go_type_name(name, info.defn_meta)
+
+        doc = self.docmap.get(name, None)
+        type_doc, _ = qapi_to_golang_struct_docs(doc)
+
+        content = ""
+        if boxed or not arg_type or not qapi_name_is_object(arg_type.name):
+            args: List[dict[str:str]] = []
+            if arg_type:
+                args.append(
+                    {
+                        "name": f"{arg_type.name}",
+                    }
+                )
+            content += string_to_code(
+                generate_struct_type(type_name, type_doc=type_doc, args=args)
+            )
+        else:
+            assert isinstance(arg_type, QAPISchemaObjectType)
+            content += string_to_code(
+                qapi_to_golang_struct(
+                    self,
+                    name,
+                    arg_type.info,
+                    arg_type.ifcond,
+                    arg_type.features,
+                    arg_type.base,
+                    arg_type.members,
+                    arg_type.branches,
+                )
+            )
+
+        self.commands[name] = (type_name, content)
 
     def visit_event(
         self,
