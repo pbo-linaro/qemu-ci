@@ -298,6 +298,7 @@ static bool iommufd_cdev_detach_ioas_hwpt(VFIODevice *vbasedev, Error **errp)
 static void iommufd_cdev_set_hwpt(VFIODevice *vbasedev, VFIOIOASHwpt *hwpt)
 {
     vbasedev->hwpt = hwpt;
+    vbasedev->cpr.hwpt_id = hwpt->hwpt_id;
     vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
     QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
 }
@@ -321,6 +322,24 @@ static VFIOIOASHwpt *iommufd_cdev_make_hwpt(VFIODevice *vbasedev,
     container->bcontainer.dirty_pages_supported |=
                                 vbasedev->iommu_dirty_tracking;
     return hwpt;
+}
+
+void iommufd_cdev_rebuild_hwpt(VFIODevice *vbasedev,
+                               VFIOIOMMUFDContainer *container)
+{
+    VFIOIOASHwpt *hwpt;
+    int hwpt_id = vbasedev->cpr.hwpt_id;
+
+    trace_iommufd_cdev_rebuild_hwpt(container->be->fd, hwpt_id);
+
+    QLIST_FOREACH(hwpt, &container->hwpt_list, next) {
+        if (hwpt->hwpt_id == hwpt_id) {
+            iommufd_cdev_set_hwpt(vbasedev, hwpt);
+            return;
+        }
+    }
+    hwpt = iommufd_cdev_make_hwpt(vbasedev, container, hwpt_id);
+    iommufd_cdev_set_hwpt(vbasedev, hwpt);
 }
 
 static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
