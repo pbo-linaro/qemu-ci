@@ -16,6 +16,7 @@
 #include "chardev/char-fe.h"
 #include "qapi/error.h"
 #include "qapi/qapi-commands-net.h"
+#include "qapi/qapi-events-char.h"
 #include "qemu/config-file.h"
 #include "qemu/error-report.h"
 #include "qemu/option.h"
@@ -271,6 +272,7 @@ static void chr_closed_bh(void *opaque)
     if (err) {
         error_report_err(err);
     }
+    qapi_event_send_netdev_vhost_user_disconnected(name);
 }
 
 static void net_vhost_user_event(void *opaque, QEMUChrEvent event)
@@ -278,6 +280,7 @@ static void net_vhost_user_event(void *opaque, QEMUChrEvent event)
     const char *name = opaque;
     NetClientState *ncs[MAX_QUEUE_NUM];
     NetVhostUserState *s;
+    ChardevInfo info;
     Chardev *chr;
     Error *err = NULL;
     int queues;
@@ -300,6 +303,10 @@ static void net_vhost_user_event(void *opaque, QEMUChrEvent event)
                                          net_vhost_user_watch, s);
         qmp_set_link(name, true, &err);
         s->started = true;
+        info.label = chr->label;
+        info.filename = chr->filename;
+        info.frontend_open = chr->be && chr->be->fe_is_open;
+        qapi_event_send_netdev_vhost_user_connected(name, &info);
         break;
     case CHR_EVENT_CLOSED:
         /* a close event may happen during a read/write, but vhost
