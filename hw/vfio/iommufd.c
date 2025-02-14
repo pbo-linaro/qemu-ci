@@ -287,6 +287,34 @@ static bool iommufd_cdev_detach_ioas_hwpt(VFIODevice *vbasedev, Error **errp)
     return true;
 }
 
+static void iommufd_cdev_set_hwpt(VFIODevice *vbasedev, VFIOIOASHwpt *hwpt)
+{
+    vbasedev->hwpt = hwpt;
+    vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
+    QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
+}
+
+static VFIOIOASHwpt *iommufd_cdev_make_hwpt(VFIODevice *vbasedev,
+                                            VFIOIOMMUFDContainer *container,
+                                            uint32_t hwpt_id)
+{
+    VFIOIOASHwpt *hwpt = g_malloc0(sizeof(*hwpt));
+    uint32_t flags = 0;
+
+    if (vbasedev->hiod->caps.hw_caps & IOMMU_HW_CAP_DIRTY_TRACKING) {
+        flags = IOMMU_HWPT_ALLOC_DIRTY_TRACKING;
+    }
+
+    hwpt->hwpt_id = hwpt_id;
+    hwpt->hwpt_flags = flags;
+    QLIST_INIT(&hwpt->device_list);
+
+    QLIST_INSERT_HEAD(&container->hwpt_list, hwpt, next);
+    container->bcontainer.dirty_pages_supported |=
+                                vbasedev->iommu_dirty_tracking;
+    return hwpt;
+}
+
 static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
                                          VFIOIOMMUFDContainer *container,
                                          Error **errp)
@@ -316,13 +344,10 @@ static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
 
             return false;
         } else {
-            vbasedev->hwpt = hwpt;
-            QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
-            vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
+            iommufd_cdev_set_hwpt(vbasedev, hwpt);
             return true;
         }
     }
-
     /*
      * This is quite early and VFIO Migration state isn't yet fully
      * initialized, thus rely only on IOMMU hardware capabilities as to
@@ -341,24 +366,15 @@ static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
         return false;
     }
 
-    hwpt = g_malloc0(sizeof(*hwpt));
-    hwpt->hwpt_id = hwpt_id;
-    hwpt->hwpt_flags = flags;
-    QLIST_INIT(&hwpt->device_list);
-
-    ret = iommufd_cdev_attach_ioas_hwpt(vbasedev, hwpt->hwpt_id, errp);
+    ret = iommufd_cdev_attach_ioas_hwpt(vbasedev, hwpt_id, errp);
     if (ret) {
-        iommufd_backend_free_id(container->be, hwpt->hwpt_id);
-        g_free(hwpt);
+        iommufd_backend_free_id(container->be, hwpt_id);
         return false;
     }
 
-    vbasedev->hwpt = hwpt;
-    vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
-    QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
-    QLIST_INSERT_HEAD(&container->hwpt_list, hwpt, next);
-    container->bcontainer.dirty_pages_supported |=
-                                vbasedev->iommu_dirty_tracking;
+    hwpt = iommufd_cdev_make_hwpt(vbasedev, container, hwpt_id);
+    iommufd_cdev_set_hwpt(vbasedev, hwpt);
+
     if (container->bcontainer.dirty_pages_supported &&
         !vbasedev->iommu_dirty_tracking) {
         warn_report("IOMMU instance for device %s doesn't support dirty tracking",
