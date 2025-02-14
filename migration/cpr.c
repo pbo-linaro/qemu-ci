@@ -95,6 +95,39 @@ int cpr_find_fd(const char *name, int id)
     trace_cpr_find_fd(name, id, fd);
     return fd;
 }
+
+void cpr_resave_fd(const char *name, int id, int fd)
+{
+    CprFd *elem = find_fd(&cpr_state.fds, name, id);
+    int old_fd = elem ? elem->fd : -1;
+
+    if (old_fd < 0) {
+        cpr_save_fd(name, id, fd);
+    } else if (old_fd != fd) {
+        error_setg(&error_fatal,
+                   "internal error: cpr fd '%s' id %d value %d "
+                   "already saved with a different value %d",
+                   name, id, fd, old_fd);
+    }
+}
+
+int cpr_open_fd(const char *path, int flags, const char *name, int id,
+                bool *reused, Error **errp)
+{
+    int fd = cpr_find_fd(name, id);
+
+    if (reused) {
+        *reused = (fd >= 0);
+    }
+    if (fd < 0) {
+        fd = qemu_open(path, flags, errp);
+        if (fd >= 0) {
+            cpr_save_fd(name, id, fd);
+        }
+    }
+    return fd;
+}
+
 /*************************************************************************/
 #define CPR_STATE "CprState"
 
@@ -126,6 +159,11 @@ MigMode cpr_get_incoming_mode(void)
 void cpr_set_incoming_mode(MigMode mode)
 {
     incoming_mode = mode;
+}
+
+bool cpr_is_incoming(void)
+{
+    return incoming_mode != MIG_MODE_NONE;
 }
 
 int cpr_state_save(MigrationChannel *channel, Error **errp)
@@ -221,4 +259,10 @@ void cpr_state_close(void)
         qemu_fclose(cpr_state_file);
         cpr_state_file = NULL;
     }
+}
+
+bool cpr_needed_for_reuse(void *opaque)
+{
+    MigMode mode = migrate_mode();
+    return mode == MIG_MODE_CPR_TRANSFER;
 }
