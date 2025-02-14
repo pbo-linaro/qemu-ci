@@ -280,6 +280,9 @@ void vfio_reset_bytes_transferred(void);
 bool vfio_device_state_is_running(VFIODevice *vbasedev);
 bool vfio_device_state_is_precopy(VFIODevice *vbasedev);
 
+int vfio_legacy_dma_map(const VFIOContainerBase *bcontainer, hwaddr iova,
+                        ram_addr_t size, void *vaddr, bool readonly);
+
 #ifdef CONFIG_LINUX
 int vfio_get_region_info(VFIODevice *vbasedev, int index,
                          struct vfio_region_info **info);
