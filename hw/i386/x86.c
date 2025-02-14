@@ -357,10 +357,18 @@ static int x86_kvm_type(MachineState *ms, const char *vm_type)
     return kvm_enabled() ? kvm_get_vm_type(ms) : 0;
 }
 
+static uint64_t mr_bios_size_x86(MachineState *ms)
+{
+    X86MachineState *x86ms = X86_MACHINE(ms);
+    return memory_region_size(&x86ms->bios);
+}
+
 static void x86_machine_initfn(Object *obj)
 {
+    MachineState *ms = MACHINE(obj);
     X86MachineState *x86ms = X86_MACHINE(obj);
 
+    ms->mr_bios_size = mr_bios_size_x86;
     x86ms->smm = ON_OFF_AUTO_AUTO;
     x86ms->acpi = ON_OFF_AUTO_AUTO;
     x86ms->pit = ON_OFF_AUTO_AUTO;

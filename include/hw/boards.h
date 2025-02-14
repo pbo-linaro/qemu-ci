@@ -441,6 +441,7 @@ struct MachineState {
     SmpCache smp_cache;
     struct NVDIMMState *nvdimms_state;
     struct NumaState *numa_state;
+    uint64_t (*mr_bios_size)(MachineState *ms);
 };
 
 /*

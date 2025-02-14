@@ -53,6 +53,7 @@
 #include "hw/usb.h"
 #include "hw/i386/intel_iommu.h"
 #include "hw/net/ne2000-isa.h"
+#include "hw/misc/vmfwupdate.h"
 #include "hw/virtio/virtio-iommu.h"
 #include "hw/virtio/virtio-md-pci.h"
 #include "hw/i386/kvm/xen_overlay.h"
@@ -1719,10 +1720,64 @@ static void pc_machine_initfn(Object *obj)
     qemu_add_machine_init_done_notifier(&pcms->machine_done);
 }
 
+static void handle_vmfwupd_reset(MachineState *machine,
+                                 ResetType type, VMFwUpdateState *vmfw)
+{
+    X86MachineState *x86ms = X86_MACHINE(machine);
+    void *biosmem = memory_region_get_ram_ptr(&x86ms->bios);
+    uint64_t bios_size = memory_region_size(&x86ms->bios);
+
+    if (type != RESET_TYPE_COLD) {
+        return;
+    }
+
+    if (vmfw->disable) {
+        return;
+    }
+
+    if (!vmfw->fw_blob.bios_paddr) {
+        return;
+    }
+
+    if (!vmfw->fw_blob.bios_size) {
+        return;
+    }
+
+    g_assert(!(vmfw->fw_blob.bios_size % 65536));
+    g_assert(vmfw->fw_blob.bios_size <= vmfw->plat_bios_size);
+
+    /*
+     * bios memory region initialization will need to be performed here
+     * if bios_size < vfw->plat_bios_size. We may need to call
+     * memory_region_init_ram() or memory_region_init_ram_guest_memfd()
+     * to initialize a new bios memory region.
+     */
+
+    /*
+     * Read new BIOS from guest RAM into the BIOS region.
+     */
+    cpu_physical_memory_read(vmfw->fw_blob.bios_paddr,
+                             biosmem + bios_size - vmfw->fw_blob.bios_size,
+                             vmfw->fw_blob.bios_size);
+    x86_firmware_configure(0x100000000ULL - vmfw->fw_blob.bios_size,
+                           biosmem, vmfw->fw_blob.bios_size);
+}
+
 static void pc_machine_reset(MachineState *machine, ResetType type)
 {
     CPUState *cs;
     X86CPU *cpu;
+    VMFwUpdateState *vmfw = vmfwupdate_find();
+
+    /*
+     * When vmfwupdate device is present, handle reset actions for
+     * this firmware update device. The reset operations are
+     * defined in the device specification document. See
+     * docs/specs/vmfwupdate.rst.
+     */
+    if (vmfw) {
+        handle_vmfwupd_reset(machine, type, vmfw);
+    }
 
     qemu_devices_reset(type);
 
