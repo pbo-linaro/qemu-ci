@@ -99,12 +99,26 @@ void vfio_iommufd_cpr_unregister_container(VFIOIOMMUFDContainer *container)
     migration_remove_notifier(&bcontainer->cpr_reboot_notifier);
 }
 
+static int vfio_device_post_load(void *opaque, int version_id)
+{
+    VFIODevice *vbasedev = opaque;
+    Error *err = NULL;
+
+    if (!vfio_device_hiod_realize(vbasedev, &err)) {
+        error_report_err(err);
+        return false;
+    }
+    return true;
+}
+
 static const VMStateDescription vfio_device_vmstate = {
     .name = "vfio-iommufd-device",
     .version_id = 0,
     .minimum_version_id = 0,
+    .post_load = vfio_device_post_load,
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
+        VMSTATE_INT32(devid, VFIODevice),
         VMSTATE_END_OF_LIST()
     }
 };

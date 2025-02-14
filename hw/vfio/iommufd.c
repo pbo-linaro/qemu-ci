@@ -536,7 +536,8 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
      * FD to be connected and having a devid to be able to successfully call
      * iommufd_backend_get_device_info().
      */
-    if (!vfio_device_hiod_realize(vbasedev, errp)) {
+    if (!vbasedev->cpr.reused &&
+        !vfio_device_hiod_realize(vbasedev, errp)) {
         goto err_alloc_ioas;
     }
 
