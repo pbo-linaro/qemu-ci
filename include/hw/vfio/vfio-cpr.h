@@ -27,6 +27,7 @@ typedef struct VFIODeviceCPR {
 struct VFIOContainer;
 struct VFIOGroup;
 struct VFIOContainerBase;
+struct VFIOPCIDevice;
 
 int vfio_cpr_reboot_notifier(NotifierWithReturn *notifier, MigrationEvent *e,
                              Error **errp);
@@ -43,6 +44,13 @@ void vfio_cpr_giommu_remap(struct VFIOContainerBase *bcontainer,
 
 bool vfio_cpr_register_ram_discard_listener(
     struct VFIOContainerBase *bcontainer, MemoryRegionSection *section);
+
+void vfio_cpr_save_vector_fd(struct VFIOPCIDevice *vdev, const char *name,
+                             int nr, int fd);
+int vfio_cpr_load_vector_fd(struct VFIOPCIDevice *vdev, const char *name,
+                            int nr);
+void vfio_cpr_delete_vector_fd(struct VFIOPCIDevice *vdev, const char *name,
+                               int nr);
 
 extern const VMStateDescription vfio_cpr_pci_vmstate;
 #endif
