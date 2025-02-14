@@ -30,6 +30,7 @@ struct VFIOGroup;
 struct VFIOContainerBase;
 struct VFIOPCIDevice;
 struct VFIODevice;
+struct VFIOIOMMUFDContainer;
 
 int vfio_cpr_reboot_notifier(NotifierWithReturn *notifier, MigrationEvent *e,
                              Error **errp);
@@ -37,6 +38,13 @@ int vfio_cpr_reboot_notifier(NotifierWithReturn *notifier, MigrationEvent *e,
 bool vfio_legacy_cpr_register_container(struct VFIOContainer *container,
                                         Error **errp);
 void vfio_legacy_cpr_unregister_container(struct VFIOContainer *container);
+
+bool vfio_iommufd_cpr_register_container(struct VFIOIOMMUFDContainer *container,
+                                         Error **errp);
+void vfio_iommufd_cpr_unregister_container(
+    struct VFIOIOMMUFDContainer *container);
+void vfio_iommufd_cpr_register_device(struct VFIODevice *vbasedev);
+void vfio_iommufd_cpr_unregister_device(struct VFIODevice *vbasedev);
 
 bool vfio_cpr_container_match(struct VFIOContainer *container,
                               struct VFIOGroup *group, int *fd);

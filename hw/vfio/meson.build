@@ -13,6 +13,7 @@ vfio_ss.add(when: 'CONFIG_IOMMUFD', if_true: files(
 vfio_ss.add(when: 'CONFIG_VFIO_PCI', if_true: files(
   'cpr.c',
   'cpr-legacy.c',
+  'cpr-iommufd.c',
   'display.c',
   'pci-quirks.c',
   'pci.c',
