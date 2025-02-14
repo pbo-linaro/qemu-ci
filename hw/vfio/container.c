@@ -587,9 +587,12 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
 {
     VFIOContainer *container;
     VFIOContainerBase *bcontainer;
-    int ret, fd;
+    int ret, fd = -1;
     VFIOAddressSpace *space;
-    VFIOIOMMUClass *vioc;
+    VFIOIOMMUClass *vioc = NULL;
+    bool new_container = false;
+    bool group_was_added = false;
+    bool discard_disabled = false;
 
     space = vfio_get_address_space(as);
 
@@ -608,35 +611,37 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
 
     fd = qemu_open("/dev/vfio/vfio", O_RDWR, errp);
     if (fd < 0) {
-        goto put_space_exit;
+        goto fail;
     }
 
     ret = ioctl(fd, VFIO_GET_API_VERSION);
     if (ret != VFIO_API_VERSION) {
         error_setg(errp, "supported vfio version: %d, "
                    "reported version: %d", VFIO_API_VERSION, ret);
-        goto close_fd_exit;
+        goto fail;
     }
 
     container = vfio_create_container(fd, group, errp);
     if (!container) {
-        goto close_fd_exit;
+        goto fail;
     }
+    new_container = true;
     bcontainer = &container->bcontainer;
 
     if (!vfio_cpr_register_container(bcontainer, errp)) {
-        goto free_container_exit;
+        goto fail;
     }
 
     if (!vfio_attach_discard_disable(container, group, errp)) {
-        goto unregister_container_exit;
+        goto fail;
     }
+    discard_disabled = true;
 
     vioc = VFIO_IOMMU_GET_CLASS(bcontainer);
     assert(vioc->setup);
 
     if (!vioc->setup(bcontainer, errp)) {
-        goto enable_discards_exit;
+        goto fail;
     }
 
     vfio_kvm_device_add_group(group);
@@ -645,6 +650,7 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
 
     group->container = container;
     QLIST_INSERT_HEAD(&container->group_list, group, container_next);
+    group_was_added = true;
 
     bcontainer->listener = vfio_memory_listener;
     memory_listener_register(&bcontainer->listener, bcontainer->space->as);
@@ -652,35 +658,34 @@ static bool vfio_connect_container(VFIOGroup *group, AddressSpace *as,
     if (bcontainer->error) {
         error_propagate_prepend(errp, bcontainer->error,
             "memory listener initialization failed: ");
-        goto listener_release_exit;
+        goto fail;
     }
 
     bcontainer->initialized = true;
 
     return true;
-listener_release_exit:
-    QLIST_REMOVE(group, container_next);
-    vfio_kvm_device_del_group(group);
+
+fail:
     memory_listener_unregister(&bcontainer->listener);
-    if (vioc->release) {
+
+    if (group_was_added) {
+        QLIST_REMOVE(group, container_next);
+        vfio_kvm_device_del_group(group);
+    }
+    if (vioc && vioc->release) {
         vioc->release(bcontainer);
     }
-
-enable_discards_exit:
-    vfio_ram_block_discard_disable(container, false);
-
-unregister_container_exit:
-    vfio_cpr_unregister_container(bcontainer);
-
-free_container_exit:
-    object_unref(container);
-
-close_fd_exit:
-    close(fd);
-
-put_space_exit:
+    if (discard_disabled) {
+        vfio_ram_block_discard_disable(container, false);
+    }
+    if (new_container) {
+        vfio_cpr_unregister_container(bcontainer);
+        object_unref(container);
+    }
+    if (fd >= 0) {
+        close(fd);
+    }
     vfio_put_address_space(space);
-
     return false;
 }
 
