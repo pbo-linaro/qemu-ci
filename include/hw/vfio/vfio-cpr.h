@@ -22,12 +22,14 @@ typedef struct VFIOContainerCPR {
 typedef struct VFIODeviceCPR {
     bool reused;
     Error *mdev_blocker;
+    Error *id_blocker;
 } VFIODeviceCPR;
 
 struct VFIOContainer;
 struct VFIOGroup;
 struct VFIOContainerBase;
 struct VFIOPCIDevice;
+struct VFIODevice;
 
 int vfio_cpr_reboot_notifier(NotifierWithReturn *notifier, MigrationEvent *e,
                              Error **errp);
@@ -53,4 +55,6 @@ void vfio_cpr_delete_vector_fd(struct VFIOPCIDevice *vdev, const char *name,
                                int nr);
 
 extern const VMStateDescription vfio_cpr_pci_vmstate;
+
+bool vfio_cpr_set_device_name(struct VFIODevice *vbasedev, Error **errp);
 #endif

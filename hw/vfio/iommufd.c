@@ -24,6 +24,7 @@
 #include "system/reset.h"
 #include "qemu/cutils.h"
 #include "qemu/chardev_open.h"
+#include "migration/blocker.h"
 #include "pci.h"
 #include "exec/ram_addr.h"
 
@@ -661,6 +662,7 @@ static void iommufd_cdev_detach(VFIODevice *vbasedev)
     iommufd_cdev_container_destroy(container);
     vfio_put_address_space(space);
 
+    migrate_del_blocker(&vbasedev->cpr.id_blocker);
     iommufd_cdev_unbind_and_disconnect(vbasedev);
     close(vbasedev->fd);
 }
