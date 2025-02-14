@@ -43,4 +43,6 @@ void vfio_cpr_giommu_remap(struct VFIOContainerBase *bcontainer,
 
 bool vfio_cpr_register_ram_discard_listener(
     struct VFIOContainerBase *bcontainer, MemoryRegionSection *section);
+
+extern const VMStateDescription vfio_cpr_pci_vmstate;
 #endif
