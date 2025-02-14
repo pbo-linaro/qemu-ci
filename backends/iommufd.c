@@ -209,6 +209,10 @@ int iommufd_backend_map_file_dma(IOMMUFDBackend *be, uint32_t ioas_id,
         .length = size,
     };
 
+    if (be->cpr_reused) {
+        return 0;
+    }
+
     if (!readonly) {
         map.flags |= IOMMU_IOAS_MAP_WRITEABLE;
     }
@@ -239,6 +243,10 @@ int iommufd_backend_unmap_dma(IOMMUFDBackend *be, uint32_t ioas_id,
         .iova = iova,
         .length = size,
     };
+
+    if (be->cpr_reused) {
+        return 0;
+    }
 
     ret = ioctl(fd, IOMMU_IOAS_UNMAP, &unmap);
     /*
