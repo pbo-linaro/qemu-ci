@@ -262,9 +262,6 @@ int vfio_kvm_device_add_fd(int fd, Error **errp);
 int vfio_kvm_device_del_fd(int fd, Error **errp);
 void vfio_kvm_device_close(void);
 
-bool vfio_cpr_register_container(VFIOContainerBase *bcontainer, Error **errp);
-void vfio_cpr_unregister_container(VFIOContainerBase *bcontainer);
-
 void iommufd_cdev_rebuild_hwpt(VFIODevice *vbasedev,
                                VFIOIOMMUFDContainer *container);
 bool iommufd_cdev_get_info_iova_range(VFIOIOMMUFDContainer *container,
