@@ -235,6 +235,20 @@ type Event interface {{
 }}
 """
 
+TEMPLATE_COMMAND = """
+// Synchronous interface of all available commands
+type Commands interface {{
+{methods}
+}}
+
+{callbacks}
+
+// Asynchronous interface of all available commands
+type CommandsAsync interface {{
+{async_methods}
+}}
+"""
+
 
 # Takes the documentation object of a specific type and returns
 # that type's documentation and its member's docs.
@@ -1009,13 +1023,37 @@ def generate_template_alternate(
     return "\n" + content
 
 
-def generate_template_command(commands: dict[str, Tuple[str, str]]) -> str:
+def generate_template_command(
+    commands: dict[str, Tuple[str, str, str]]
+) -> (str, str):
     content = ""
+    methods = ""
+    async_methods = ""
+    callbacks = ""
+
     for name in sorted(commands):
-        type_name, gocode = commands[name]
+        type_name, gocode, retarg = commands[name]
         content += gocode
 
-    return content
+        name = type_name[:-7]
+        cbname = f"{name}Complete"
+        syncret = "error"
+        cbarg = "error"
+        if retarg != "":
+            cbarg = f"{retarg}, error"
+            syncret = f"({retarg}, error)"
+        methods += f"\t{name}({type_name}) {syncret}\n"
+        async_methods += f"\t{name}({type_name}, {cbname}) error\n"
+        callbacks += f"type {cbname} func({cbarg})\n"
+
+    iface = string_to_code(
+        TEMPLATE_COMMAND.format(
+            methods=methods[:-1],
+            callbacks=callbacks[:-1],
+            async_methods=async_methods[:-1],
+        )
+    )
+    return content, iface
 
 
 def generate_template_event(events: dict[str, Tuple[str, str]]) -> (str, str):
@@ -1085,12 +1123,13 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
             "union": ["encoding/json", "errors", "fmt"],
         }
         interfaces = {
+            "command": [],
             "event": ["time"],
         }
 
         self.schema: QAPISchema
         self.events: dict[str, Tuple[str, str]] = {}
-        self.commands: dict[str, Tuple[str, str]] = {}
+        self.commands: dict[str, Tuple[str, str, str]] = {}
         self.golang_package_name = "qapi"
         self.duplicate = list(gofiles)
         self.enums: dict[str, str] = {}
@@ -1151,7 +1190,9 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         self.types["event"] += evtype
         self.interfaces["event"] += eviface
 
-        self.types["command"] += generate_template_command(self.commands)
+        cmdtype, cmdiface = generate_template_command(self.commands)
+        self.types["command"] += cmdtype
+        self.interfaces["command"] += cmdiface
 
     def visit_object_type(
         self,
@@ -1334,7 +1375,10 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
                 )
             )
 
-        self.commands[name] = (type_name, content)
+        retarg = ""
+        if ret_type:
+            retarg = qapi_schema_type_to_go_type(ret_type.name)
+        self.commands[name] = (type_name, content, retarg)
 
     def visit_event(
         self,
