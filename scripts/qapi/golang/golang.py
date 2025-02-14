@@ -291,7 +291,7 @@ def qapi_to_field_name_enum(name: str) -> str:
     return name.title().replace("-", "")
 
 
-def qapi_to_go_type_name(name: str) -> str:
+def qapi_to_go_type_name(name: str, meta: Optional[str] = None) -> str:
     # We want to keep CamelCase for Golang types. We want to avoid removing
     # already set CameCase names while fixing uppercase ones, eg:
     # 1) q_obj_SocketAddress_base -> SocketAddressBase
@@ -308,6 +308,12 @@ def qapi_to_go_type_name(name: str) -> str:
         name = name.title()
 
     name += "".join(word.title() for word in words[1:])
+
+    # Handle specific meta suffix
+    types = ["event"]
+    if meta in types:
+        name = name[:-3] if name.endswith("Arg") else name
+        name += meta.title().replace(" ", "")
 
     return name
 
@@ -818,7 +824,8 @@ def qapi_to_golang_struct(
                 fields.append(field)
                 with_nullable = True if nullable else with_nullable
 
-    type_name = qapi_to_go_type_name(name)
+    type_name = qapi_to_go_type_name(name, info.defn_meta)
+
     content = string_to_code(
         generate_struct_type(
             type_name, type_doc=type_doc, args=fields, indent=indent
@@ -996,6 +1003,15 @@ def generate_template_alternate(
     return "\n" + content
 
 
+def generate_template_event(events: dict[str, Tuple[str, str]]) -> str:
+    content = ""
+    for name in sorted(events):
+        type_name, gocode = events[name]
+        content += gocode
+
+    return content
+
+
 def generate_content_from_dict(data: dict[str, str]) -> str:
     content = ""
 
@@ -1045,11 +1061,13 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         types = {
             "alternate": ["encoding/json", "errors", "fmt"],
             "enum": [],
+            "event": [],
             "struct": ["encoding/json"],
             "union": ["encoding/json", "errors", "fmt"],
         }
 
         self.schema: QAPISchema
+        self.events: dict[str, Tuple[str, str]] = {}
         self.golang_package_name = "qapi"
         self.duplicate = list(gofiles)
         self.enums: dict[str, str] = {}
@@ -1096,6 +1114,7 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         self.types["alternate"] += generate_content_from_dict(self.alternates)
         self.types["struct"] += generate_content_from_dict(self.structs)
         self.types["union"] += generate_content_from_dict(self.unions)
+        self.types["event"] += generate_template_event(self.events)
 
     def visit_object_type(
         self,
@@ -1254,7 +1273,31 @@ class QAPISchemaGenGolangVisitor(QAPISchemaVisitor):
         arg_type: Optional[QAPISchemaObjectType],
         boxed: bool,
     ) -> None:
-        pass
+        assert name == info.defn_name
+        assert name not in self.events
+        type_name = qapi_to_go_type_name(name, info.defn_meta)
+
+        if isinstance(arg_type, QAPISchemaObjectType):
+            content = string_to_code(
+                qapi_to_golang_struct(
+                    self,
+                    name,
+                    info,
+                    arg_type.ifcond,
+                    arg_type.features,
+                    arg_type.base,
+                    arg_type.members,
+                    arg_type.branches,
+                )
+            )
+        else:
+            doc = self.docmap.get(name, None)
+            type_doc, _ = qapi_to_golang_struct_docs(doc)
+            content = string_to_code(
+                generate_struct_type(type_name, type_doc=type_doc)
+            )
+
+        self.events[name] = (type_name, content)
 
     def write(self, outdir: str) -> None:
         godir = "go"
