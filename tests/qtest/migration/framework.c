@@ -469,6 +469,10 @@ static int migrate_postcopy_prepare(QTestState **from_ptr,
     args->caps[MIGRATION_CAPABILITY_POSTCOPY_BLOCKTIME] = true;
     args->caps[MIGRATION_CAPABILITY_POSTCOPY_RAM] = true;
     set_migration_capabilities(from, to, args);
+    if (args->caps[MIGRATION_CAPABILITY_MULTIFD]) {
+        migrate_set_parameter_int(from, "multifd-channels", 8);
+        migrate_set_parameter_int(to, "multifd-channels", 8);
+    }
 
     migrate_ensure_non_converge(from);
     migrate_prepare_for_dirty_mem(from);
