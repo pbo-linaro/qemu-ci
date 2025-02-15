@@ -118,6 +118,15 @@ struct TCGLabel {
     QSIMPLEQ_ENTRY(TCGLabel) next;
 };
 
+typedef struct TCGData {
+    struct TCGData *next;
+    tcg_insn_unit *label;
+    intptr_t addend;
+    int rtype;
+    unsigned nlong;
+    tcg_target_ulong data[];
+} TCGData;
+
 typedef struct TCGPool {
     struct TCGPool *next;
     int size;
@@ -392,10 +401,13 @@ struct TCGContext {
     /* Track which vCPU triggers events */
     CPUState *cpu;                      /* *_trans */
 
-    /* These structures are private to tcg-target.c.inc.  */
+    /* load store slow path emitted at the end of translation blocks */
     QSIMPLEQ_HEAD(, TCGLabelQemuLdst) ldst_labels;
-    struct TCGLabelPoolData *pool_labels;
 
+    /* labled constant data emitted at the end of translation blocks */
+    TCGData *pool_data;
+
+    /* labeled exit request emitted at the end of translation blocks */
     TCGLabel *exitreq_label;
 
 #ifdef CONFIG_PLUGIN

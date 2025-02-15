@@ -72,6 +72,6 @@ typedef enum {
 } TCGReg;
 
 #define HAVE_TCG_QEMU_TB_EXEC
-#define TCG_TARGET_NEED_POOL_LABELS
+#define TCG_TARGET_NEED_POOL_DATA
 
 #endif /* TCG_TARGET_H */

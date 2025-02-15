@@ -657,38 +657,29 @@ static TCGLabelQemuLdst *new_ldst_label(TCGContext *s)
 }
 
 /*
- * Allocate new constant pool entries.
+ * Create new constant pool data and insert into the pool.
  */
 
-typedef struct TCGLabelPoolData {
-    struct TCGLabelPoolData *next;
-    tcg_insn_unit *label;
-    intptr_t addend;
-    int rtype;
-    unsigned nlong;
-    tcg_target_ulong data[];
-} TCGLabelPoolData;
-
-static TCGLabelPoolData *new_pool_alloc(TCGContext *s, int nlong, int rtype,
-                                        tcg_insn_unit *label, intptr_t addend)
+static void new_pool_data(TCGContext *s, int rtype, tcg_insn_unit *label,
+                          intptr_t addend, int nlong, ...)
 {
-    TCGLabelPoolData *n = tcg_malloc(sizeof(TCGLabelPoolData)
-                                     + sizeof(tcg_target_ulong) * nlong);
+    TCGData *n, *i, **pp;
+    va_list ap;
+
+    n = tcg_malloc(sizeof(TCGData) + sizeof(tcg_target_ulong) * nlong);
 
     n->label = label;
     n->addend = addend;
     n->rtype = rtype;
     n->nlong = nlong;
-    return n;
-}
 
-static void new_pool_insert(TCGContext *s, TCGLabelPoolData *n)
-{
-    TCGLabelPoolData *i, **pp;
-    int nlong = n->nlong;
+    va_start(ap, nlong);
+    for(size_t l = 0; l < nlong; l++) {
+        n->data[l] = va_arg(ap, tcg_target_ulong);
+    }
 
     /* Insertion sort on the pool.  */
-    for (pp = &s->pool_labels; (i = *pp) != NULL; pp = &i->next) {
+    for (pp = &s->pool_data; (i = *pp) != NULL; pp = &i->next) {
         if (nlong > i->nlong) {
             break;
         }
@@ -708,9 +699,7 @@ __attribute__((unused))
 static void new_pool_label(TCGContext *s, tcg_target_ulong d, int rtype,
                            tcg_insn_unit *label, intptr_t addend)
 {
-    TCGLabelPoolData *n = new_pool_alloc(s, 1, rtype, label, addend);
-    n->data[0] = d;
-    new_pool_insert(s, n);
+    new_pool_data(s, rtype, label, addend, 1, d);
 }
 
 /* For v64 or v128, depending on the host.  */
@@ -719,10 +708,7 @@ static void new_pool_l2(TCGContext *s, int rtype, tcg_insn_unit *label,
                         intptr_t addend, tcg_target_ulong d0,
                         tcg_target_ulong d1)
 {
-    TCGLabelPoolData *n = new_pool_alloc(s, 2, rtype, label, addend);
-    n->data[0] = d0;
-    n->data[1] = d1;
-    new_pool_insert(s, n);
+    new_pool_data(s, rtype, label, addend, 2, d0, d1);
 }
 
 /* For v128 or v256, depending on the host.  */
@@ -732,12 +718,7 @@ static void new_pool_l4(TCGContext *s, int rtype, tcg_insn_unit *label,
                         tcg_target_ulong d1, tcg_target_ulong d2,
                         tcg_target_ulong d3)
 {
-    TCGLabelPoolData *n = new_pool_alloc(s, 4, rtype, label, addend);
-    n->data[0] = d0;
-    n->data[1] = d1;
-    n->data[2] = d2;
-    n->data[3] = d3;
-    new_pool_insert(s, n);
+    new_pool_data(s, rtype, label, addend, 4, d0, d1, d2, d3);
 }
 
 /* For v256, for 32-bit host.  */
@@ -749,16 +730,7 @@ static void new_pool_l8(TCGContext *s, int rtype, tcg_insn_unit *label,
                         tcg_target_ulong d5, tcg_target_ulong d6,
                         tcg_target_ulong d7)
 {
-    TCGLabelPoolData *n = new_pool_alloc(s, 8, rtype, label, addend);
-    n->data[0] = d0;
-    n->data[1] = d1;
-    n->data[2] = d2;
-    n->data[3] = d3;
-    n->data[4] = d4;
-    n->data[5] = d5;
-    n->data[6] = d6;
-    n->data[7] = d7;
-    new_pool_insert(s, n);
+    new_pool_data(s, rtype, label, addend, 8, d0, d1, d2, d3, d4, d5, d6, d7);
 }
 
 /*
@@ -792,8 +764,8 @@ static int tcg_out_ldst_finalize(TCGContext *s)
 
 static int tcg_out_pool_finalize(TCGContext *s)
 {
-    TCGLabelPoolData *p = s->pool_labels;
-    TCGLabelPoolData *l = NULL;
+    TCGData *p = s->pool_data;
+    TCGData *l = NULL;
     void *a;
 
     if (p == NULL) {
@@ -1598,15 +1570,15 @@ void tcg_prologue_init(void)
     tcg_qemu_tb_exec = (tcg_prologue_fn *)tcg_splitwx_to_rx(s->code_ptr);
 #endif
 
-#ifdef TCG_TARGET_NEED_POOL_LABELS
-    s->pool_labels = NULL;
+#ifdef TCG_TARGET_NEED_POOL_DATA
+    s->pool_data = NULL;
 #endif
 
     qemu_thread_jit_write();
     /* Generate the prologue.  */
     tcg_target_qemu_prologue(s);
 
-#ifdef TCG_TARGET_NEED_POOL_LABELS
+#ifdef TCG_TARGET_NEED_POOL_DATA
     /* Allow the prologue to put e.g. guest_base into a pool entry.  */
     {
         int result = tcg_out_pool_finalize(s);
@@ -6407,7 +6379,7 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb, uint64_t pc_start)
     s->data_gen_ptr = NULL;
 
     QSIMPLEQ_INIT(&s->ldst_labels);
-    s->pool_labels = NULL;
+    s->pool_data = NULL;
 
     start_words = s->insn_start_words;
     s->gen_insn_data =
