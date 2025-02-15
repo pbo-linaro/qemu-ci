@@ -24,6 +24,7 @@
 #include "exec/exec-all.h"
 #include "exec/page-protection.h"
 #include "exec/translation-block.h"
+#include "exec/cpu_ldst.h"
 #include "hw/loader.h"
 #include "fpu/softfloat.h"
 #include "tcg/debug-assert.h"
@@ -77,7 +78,8 @@ static void rx_cpu_reset_hold(Object *obj, ResetType type)
     CPUState *cs = CPU(obj);
     RXCPUClass *rcc = RX_CPU_GET_CLASS(obj);
     CPURXState *env = cpu_env(cs);
-    uint32_t *resetvec;
+    uint32_t *resetvec_p;
+    vaddr resetvec;
 
     if (rcc->parent_phases.hold) {
         rcc->parent_phases.hold(obj, type);
@@ -85,11 +87,23 @@ static void rx_cpu_reset_hold(Object *obj, ResetType type)
 
     memset(env, 0, offsetof(CPURXState, end_reset_fields));
 
-    resetvec = rom_ptr(0xfffffffc, 4);
-    if (resetvec) {
-        /* In the case of kernel, it is ignored because it is not set. */
-        env->pc = ldl_p(resetvec);
+    /*
+     * During the first reset phase, the memory dispatching hook
+     * hasn't been set, so we can't fetch the reset vector from
+     * memory. After that, the ROM image will have been discarded, so
+     * we can't fetch the reset vector from there. So we have two
+     * paths here.
+     */
+    resetvec_p = rom_ptr_for_as(cs->as, 0xfffffffc, 4);
+    if (resetvec_p)
+        resetvec = ldl_p(resetvec_p);
+    else {
+        process_queued_cpu_work(cs);
+        resetvec = cpu_ldl_data(env, 0xfffffffc);
     }
+    if (resetvec)
+        env->pc = resetvec;
+
     rx_cpu_unpack_psw(env, 0, 1);
     env->regs[0] = env->isp = env->usp = 0;
     env->fpsw = 0;
