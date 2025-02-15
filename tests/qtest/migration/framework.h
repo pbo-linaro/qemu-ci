@@ -12,6 +12,7 @@
 #define TEST_FRAMEWORK_H
 
 #include "libqtest.h"
+#include <qapi/qapi-types-migration.h>
 
 #define FILE_TEST_FILENAME "migfile"
 #define FILE_TEST_OFFSET 0x1000
@@ -207,8 +208,9 @@ typedef struct {
 
     /* Postcopy specific fields */
     void *postcopy_data;
-    bool postcopy_preempt;
     PostcopyRecoveryFailStage postcopy_recovery_fail_stage;
+
+    bool caps[MIGRATION_CAPABILITY__MAX];
 } MigrateCommon;
 
 void wait_for_serial(const char *side);

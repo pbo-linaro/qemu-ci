@@ -375,9 +375,9 @@ static void test_postcopy_tls_psk(void)
 static void test_postcopy_preempt_tls_psk(void)
 {
     MigrateCommon args = {
-        .postcopy_preempt = true,
         .start_hook = migrate_hook_start_tls_psk_match,
         .end_hook = migrate_hook_end_tls_psk,
+        .caps[MIGRATION_CAPABILITY_POSTCOPY_PREEMPT] = true,
     };
 
     test_postcopy_common(&args);
@@ -397,9 +397,9 @@ static void test_postcopy_recovery_tls_psk(void)
 static void test_postcopy_preempt_all(void)
 {
     MigrateCommon args = {
-        .postcopy_preempt = true,
         .start_hook = migrate_hook_start_tls_psk_match,
         .end_hook = migrate_hook_end_tls_psk,
+        .caps[MIGRATION_CAPABILITY_POSTCOPY_PREEMPT] = true,
     };
 
     test_postcopy_recovery_common(&args);
@@ -631,6 +631,7 @@ static void test_multifd_tcp_tls_psk_match(void)
         .listen_uri = "defer",
         .start_hook = migrate_hook_start_multifd_tcp_tls_psk_match,
         .end_hook = migrate_hook_end_tls_psk,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -645,6 +646,7 @@ static void test_multifd_tcp_tls_psk_mismatch(void)
         .start_hook = migrate_hook_start_multifd_tcp_tls_psk_mismatch,
         .end_hook = migrate_hook_end_tls_psk,
         .result = MIG_TEST_FAIL,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -656,6 +658,7 @@ static void test_multifd_tcp_tls_x509_default_host(void)
         .listen_uri = "defer",
         .start_hook = migrate_hook_start_multifd_tls_x509_default_host,
         .end_hook = migrate_hook_end_tls_x509,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -666,6 +669,7 @@ static void test_multifd_tcp_tls_x509_override_host(void)
         .listen_uri = "defer",
         .start_hook = migrate_hook_start_multifd_tls_x509_override_host,
         .end_hook = migrate_hook_end_tls_x509,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -693,6 +697,7 @@ static void test_multifd_tcp_tls_x509_mismatch_host(void)
         .start_hook = migrate_hook_start_multifd_tls_x509_mismatch_host,
         .end_hook = migrate_hook_end_tls_x509,
         .result = MIG_TEST_FAIL,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -703,6 +708,7 @@ static void test_multifd_tcp_tls_x509_allow_anon_client(void)
         .listen_uri = "defer",
         .start_hook = migrate_hook_start_multifd_tls_x509_allow_anon_client,
         .end_hook = migrate_hook_end_tls_x509,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
@@ -717,6 +723,7 @@ static void test_multifd_tcp_tls_x509_reject_anon_client(void)
         .start_hook = migrate_hook_start_multifd_tls_x509_reject_anon_client,
         .end_hook = migrate_hook_end_tls_x509,
         .result = MIG_TEST_FAIL,
+        .caps[MIGRATION_CAPABILITY_MULTIFD] = true,
     };
     test_precopy_common(&args);
 }
