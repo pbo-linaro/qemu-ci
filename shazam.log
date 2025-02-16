@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/3cca4eb3-09d1-4467-81fd-27a5bfe19a3e@csclub.uwaterloo.ca/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] bcm2838: Add GIC-400 timer interupt connections
+  ---
+  [32m✓[0m Signed: DKIM/csclub.uwaterloo.ca
+---
+Total patches: 1
+---
+Applying: bcm2838: Add GIC-400 timer interupt connections
+Patch failed at 0001 bcm2838: Add GIC-400 timer interupt connections
+error: corrupt patch at line 19
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
