@@ -1,0 +1,345 @@
+Grabbing thread from lore.kernel.org/all/20250216231012.2808572-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 163 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Server returned an error: 414
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/162] tcg: Add all_outop[]
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 2/162] tcg: Remove INDEX_op_ext{8,16,32}*
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 3/162] tcg: Merge INDEX_op_mov_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 4/162] tcg: Convert add to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 5/162] tcg: Merge INDEX_op_add_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 6/162] tcg: Convert and to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 7/162] tcg: Merge INDEX_op_and_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 8/162] tcg/optimize: Fold andc with immediate to and
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 9/162] tcg/optimize: Emit add r, r, -1 in fold_setcond_tst_pow2
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 10/162] tcg: Convert andc to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 11/162] tcg: Merge INDEX_op_andc_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 12/162] tcg: Convert or to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 13/162] tcg: Merge INDEX_op_or_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 14/162] tcg/optimize: Fold orc with immediate to or
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 15/162] tcg: Convert orc to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 16/162] tcg: Merge INDEX_op_orc_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 17/162] tcg: Convert xor to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 18/162] tcg: Merge INDEX_op_xor_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 19/162] tcg/optimize: Fold eqv with immediate to xor
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 20/162] tcg: Convert eqv to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 21/162] tcg: Merge INDEX_op_eqv_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 22/162] tcg: Convert nand to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 23/162] tcg: Merge INDEX_op_nand_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 24/162] tcg/loongarch64: Do not accept constant argument to nor
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 25/162] tcg: Convert nor to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 26/162] tcg: Merge INDEX_op_nor_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 27/162] tcg/arm: Fix constraints for sub
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 28/162] tcg: Convert sub to TCGOutOpSubtract
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 29/162] tcg: Merge INDEX_op_sub_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 30/162] tcg: Convert neg to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 31/162] tcg: Merge INDEX_op_neg_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 32/162] tcg: Convert not to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 33/162] tcg: Merge INDEX_op_not_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 34/162] tcg: Convert mul to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 35/162] tcg: Merge INDEX_op_mul_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 36/162] tcg: Convert muluh to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 37/162] tcg: Merge INDEX_op_muluh_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 38/162] tcg: Convert mulsh to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 39/162] tcg: Merge INDEX_op_mulsh_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 40/162] tcg: Convert div to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 41/162] tcg: Merge INDEX_op_div_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 42/162] tcg: Convert divu to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 43/162] tcg: Merge INDEX_op_divu_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 44/162] tcg: Convert div2 to TCGOutOpDivRem
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 45/162] tcg: Merge INDEX_op_div2_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 46/162] tcg: Convert divu2 to TCGOutOpDivRem
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 47/162] tcg: Merge INDEX_op_divu2_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 48/162] tcg: Convert rem to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 49/162] tcg: Merge INDEX_op_rem_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 50/162] tcg: Convert remu to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 51/162] tcg: Merge INDEX_op_remu_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 52/162] tcg: Convert shl to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 53/162] tcg: Merge INDEX_op_shl_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 54/162] tcg: Convert shr to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 55/162] tcg: Merge INDEX_op_shr_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 56/162] tcg: Convert sar to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 57/162] tcg: Merge INDEX_op_sar_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 58/162] tcg: Do not require both rotr and rotl from the backend
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 59/162] tcg: Convert rotl, rotr to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 60/162] tcg: Merge INDEX_op_rot{l,r}_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 61/162] tcg: Convert clz to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 62/162] tcg: Merge INDEX_op_clz_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 63/162] tcg: Convert ctz to TCGOutOpBinary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 64/162] tcg: Merge INDEX_op_ctz_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 65/162] tcg: Convert ctpop to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 66/162] tcg: Merge INDEX_op_ctpop_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 67/162] tcg: Convert muls2 to TCGOutOpMul2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 68/162] tcg: Merge INDEX_op_muls2_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 69/162] tcg: Convert mulu2 to TCGOutOpMul2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 70/162] tcg: Merge INDEX_op_mulu2_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 71/162] tcg/loongarch64: Support negsetcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 72/162] tcg/mips: Support negsetcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 73/162] tcg/tci: Support negsetcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 74/162] tcg: Remove TCG_TARGET_HAS_negsetcond_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 75/162] tcg: Convert setcond, negsetcond to TCGOutOpSetcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 76/162] tcg: Merge INDEX_op_{neg}setcond_{i32,i64}`
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 77/162] tcg: Convert brcond to TCGOutOpBrcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 78/162] tcg: Merge INDEX_op_brcond_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 79/162] tcg: Convert movcond to TCGOutOpMovcond
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 80/162] tcg: Merge INDEX_op_movcond_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 81/162] tcg/ppc: Drop fallback constant loading in tcg_out_cmp
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 82/162] tcg/arm: Expand arguments to tcg_out_cmp2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 83/162] tcg/ppc: Expand arguments to tcg_out_cmp2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 84/162] tcg: Convert brcond2_i32 to TCGOutOpBrcond2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 85/162] tcg: Convert setcond2_i32 to TCGOutOpSetcond2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 86/162] tcg: Convert bswap16 to TCGOutOpBswap
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 87/162] tcg: Merge INDEX_op_bswap16_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 88/162] tcg: Convert bswap32 to TCGOutOpBswap
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 89/162] tcg: Merge INDEX_op_bswap32_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 90/162] tcg: Convert bswap64 to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 91/162] tcg: Rename INDEX_op_bswap64_i64 to INDEX_op_bswap64
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 92/162] tcg: Convert extract to TCGOutOpExtract
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 93/162] tcg: Merge INDEX_op_extract_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 94/162] tcg: Convert sextract to TCGOutOpExtract
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 95/162] tcg: Merge INDEX_op_sextract_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 96/162] tcg: Convert ext_i32_i64 to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 97/162] tcg: Convert extu_i32_i64 to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 98/162] tcg: Convert extrl_i64_i32 to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 99/162] tcg: Convert extrh_i64_i32 to TCGOutOpUnary
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 100/162] tcg: Convert deposit to TCGOutOpDeposit
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 101/162] tcg/aarch64: Improve deposit
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 102/162] tcg: Merge INDEX_op_deposit_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 103/162] tcg: Convert extract2 to TCGOutOpExtract2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 104/162] tcg: Merge INDEX_op_extract2_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 105/162] tcg: Expand fallback add2 with 32-bit operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 106/162] tcg: Expand fallback sub2 with 32-bit operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 107/162] tcg: Do not default add2/sub2_i32 for 32-bit hosts
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 108/162] tcg/mips: Drop support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 109/162] tcg/riscv: Drop support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 110/162] tcg: Move i into each for loop in liveness_pass_1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 111/162] tcg: Sink def, nb_iargs, nb_oargs loads in liveness_pass_1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 112/162] tcg: Add add/sub with carry opcodes and infrastructure
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 113/162] tcg: Add TCGOutOp structures for add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 114/162] tcg/optimize: Handle add/sub with carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 115/162] tcg/optimize: With two const operands, prefer 0 in arg1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 116/162] tcg: Use add carry opcodes to expand add2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 117/162] tcg: Use sub carry opcodes to expand sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 118/162] tcg/i386: Honor carry_live in tcg_out_movi
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 119/162] tcg/i386: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 120/162] tcg/i386: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 121/162] tcg/i386: Special case addci r, 0, 0
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 122/162] tcg: Add tcg_gen_addcio_{i32,i64,tl}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 123/162] target/arm: Use tcg_gen_addcio_* for ADCS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 124/162] target/hppa: Use tcg_gen_addcio_i64
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 125/162] target/microblaze: Use tcg_gen_addcio_i32
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 126/162] target/openrisc: Use tcg_gen_addcio_* for ADDC
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 127/162] target/ppc: Use tcg_gen_addcio_tl for ADD and SUBF
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 128/162] target/s390x: Use tcg_gen_addcio_i64 for op_addc64
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 129/162] target/sh4: Use tcg_gen_addcio_i32 for addc
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 130/162] target/sparc: Use tcg_gen_addcio_tl for gen_op_addcc_int
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 131/162] target/tricore: Use tcg_gen_addcio_i32 for gen_addc_CC
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 132/162] tcg/aarch64: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 133/162] tcg/aarch64: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 134/162] tcg/arm: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 135/162] tcg/arm: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 136/162] tcg/ppc: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 137/162] tcg/ppc: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 138/162] tcg/s390x: Honor carry_live in tcg_out_movi
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 139/162] tcg/s390: Add TCG_CT_CONST_N32
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 140/162] tcg/s390x: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 141/162] tcg/s390x: Use ADD LOGICAL WITH SIGNED IMMEDIATE
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 142/162] tcg/s390x: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 143/162] tcg/sparc64: Hoist tcg_cond_to_bcond lookup out of tcg_out_movcc
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 144/162] tcg/sparc64: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 145/162] tcg/sparc64: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 146/162] tcg/tci: Implement add/sub carry opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 147/162] tcg/tci: Remove support for add2/sub2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 148/162] tcg: Remove add2/sub2 opcodes
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 149/162] tcg: Formalize tcg_out_mb
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 150/162] tcg: Formalize tcg_out_br
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 151/162] tcg: Formalize tcg_out_goto_ptr
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 152/162] tcg: Assign TCGOP_TYPE in liveness_pass_2
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 153/162] tcg: Convert ld to TCGOutOpLoad
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 154/162] tcg: Merge INDEX_op_ld*_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 155/162] tcg: Convert st to TCGOutOpStore
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 156/162] tcg: Merge INDEX_op_st*_{i32,i64}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 157/162] tcg: Stash MemOp size in TCGOP_FLAGS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 158/162] tcg: Remove INDEX_op_qemu_st8_*
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 159/162] tcg: Merge INDEX_op_{ld,st}_{i32,i64,i128}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 160/162] tcg: Convert qemu_ld{2} to TCGOutOpLoad{2}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 161/162] tcg: Convert qemu_st{2} to TCGOutOpLdSt{2}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 162/162] tcg: Remove tcg_out_op
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 162
+---
+Applying: tcg: Add all_outop[]
+Applying: tcg: Remove INDEX_op_ext{8,16,32}*
+Patch failed at 0002 tcg: Remove INDEX_op_ext{8,16,32}*
+error: patch failed: tcg/loongarch64/tcg-target.c.inc:2237
+error: tcg/loongarch64/tcg-target.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
