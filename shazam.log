@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20250216204421.3560012-1-sjg@chromium.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 29 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/28] x86: Expand x86_64 early memory
+  [32m✓[0m [PATCH v2 2/28] x86: qemu: Switch to bochs display
+  [32m✓[0m [PATCH v2 3/28] x86: qemu: Enable dhrystone
+  [32m✓[0m [PATCH v2 4/28] x86: qemu: Avoid accessing BSS too early
+  [32m✓[0m [PATCH v2 5/28] x86: Drop mpspec from the SPL build
+  [32m✓[0m [PATCH v2 6/28] x86: Add some log categories
+  [32m✓[0m [PATCH v2 7/28] x86: Drop use of CONFIG_REALMODE_DEBUG
+  [32m✓[0m [PATCH v2 8/28] x86: Avoid clearing the VESA display
+  [32m✓[0m [PATCH v2 9/28] x86: Add 64-bit entries to the GDT
+  [32m✓[0m [PATCH v2 10/28] x86: Use defines for the cache flags
+  [32m✓[0m [PATCH v2 11/28] x86: spl: Drop duplicate CPU init
+  [32m✓[0m [PATCH v2 12/28] x86: Drop the message about features missing in 64-bit
+  [32m✓[0m [PATCH v2 13/28] x86: Include stdbool.h in interrupt header
+  [32m✓[0m [PATCH v2 14/28] x86: Tidy up the GDT size in start/16.S
+  [32m✓[0m [PATCH v2 15/28] x86: Disable paging before changing to long mode
+  [32m✓[0m [PATCH v2 16/28] x86: Use the same GDT when jumping to long mode
+  [32m✓[0m [PATCH v2 17/28] x86: Use a simple jump into long mode
+  [32m✓[0m [PATCH v2 18/28] x86: Rename the _D dirty flag
+  [32m✓[0m [PATCH v2 19/28] x86: Support CPU functions in long mode
+  [32m✓[0m [PATCH v2 20/28] x86: Tidy up address size in MTRR calculations
+  [32m✓[0m [PATCH v2 21/28] Add a 64-bit version of is_power_of_2()
+  [32m✓[0m [PATCH v2 22/28] x86: Support MTRRs of 4GB on 32-bit machines
+  [32m✓[0m [PATCH v2 23/28] x86: emulation: Set an MTRR for the RAM
+  [32m✓[0m [PATCH v2 24/28] scripts: Expand a few options
+  [32m✓[0m [PATCH v2 25/28] test/py: Add a helper to send characters
+  [32m✓[0m [PATCH v2 26/28] test/py: Allow tests to be filtered by role
+  [32m✓[0m [PATCH v2 27/28] RFC: test/py: Deal with timeouts
+  [32m✓[0m [PATCH v2 28/28] test: Add a test for booting Ubuntu 24.04
+  ---
+  [32m✓[0m Signed: DKIM/chromium.org
+---
+Total patches: 28
+---
+Applying: x86: Expand x86_64 early memory
+Patch failed at 0001 x86: Expand x86_64 early memory
+error: configs/qemu-x86_64_defconfig: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
