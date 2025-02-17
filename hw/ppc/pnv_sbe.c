@@ -216,6 +216,18 @@ struct proc_dump_area {
     __be32  act_size;      /* Actual data size */
 } __packed;
 
+static bool is_next_boot_mpipl;
+
+bool pnv_sbe_is_mpipl_boot(void)
+{
+    return is_next_boot_mpipl;
+}
+
+void pnv_sbe_reset_is_next_boot_mpipl(void)
+{
+    is_next_boot_mpipl = false;
+}
+
 static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
 {
     val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
@@ -334,10 +346,8 @@ static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
             /* Save processor state */
             pnv_mpipl_save_proc_regs();
 
-            /*
-             * TODO: Pass `mpipl` node in device tree to signify next
-             * boot is an MPIPL boot
-             */
+            /* Mark next boot as Memory-preserving boot */
+            is_next_boot_mpipl = true;
 
             /* Then do a guest reset */
             /*

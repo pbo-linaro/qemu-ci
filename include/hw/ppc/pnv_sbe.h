@@ -56,4 +56,8 @@ struct PnvSBEClass {
 /* Helper to access stashed SKIBOOT_BASE */
 bool pnv_sbe_mpipl_skiboot_base(void);
 
+/* Helpers to know if next boot is MPIPL boot */
+bool pnv_sbe_is_mpipl_boot(void);
+void pnv_sbe_reset_is_next_boot_mpipl(void);
+
 #endif /* PPC_PNV_SBE_H */
