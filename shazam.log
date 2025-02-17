@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250217130610.18313-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 42 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] accel/accel-cpu-target.h: Include missing 'cpu.h' header
+  [32m✓[0m [PATCH 2/5] accel/tcg: Include missing bswap headers in user-exec.c
+  [32m✓[0m [PATCH 3/5] accel/tcg: Take mmap lock in the whole cpu_memory_rw_debug() function
+  [32m✓[0m [PATCH 4/5] accel/tcg: Avoid using lock_user() in cpu_memory_rw_debug()
+  [32m✓[0m [PATCH 5/5] accel/tcg: Move cpu_memory_rw_debug() user implementation to user-exec.c
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 5
+---
+Applying: accel/accel-cpu-target.h: Include missing 'cpu.h' header
+Patch failed at 0001 accel/accel-cpu-target.h: Include missing 'cpu.h' header
+error: include/accel/accel-cpu-target.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
