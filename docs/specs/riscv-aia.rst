@@ -25,11 +25,16 @@ When running KVM:
 - no m-mode is provided, so there is no m-mode APLIC or IMSIC emulation regardless of
   the AIA mode chosen
 - with "aia=aplic", s-mode APLIC will be emulated by userspace
-- with "aia=aplic-imsic" there are two possibilities.  If no additional KVM option
-  is provided there will be no APLIC or IMSIC emulation in userspace, and the virtual
-  machine will use the provided in-kernel APLIC and IMSIC controllers.  If the user
-  chooses to use the irqchip in split mode via "-accel kvm,kernel-irqchip=split",
-  s-mode APLIC will be emulated while using the s-mode IMSIC from the irqchip
+- with "aia=aplic-imsic" there are three possibilities.
+    - If no additional KVM option is provided there will be no APLIC or IMSIC emulation
+      in userspace, and the virtual machine will use the provided in-kernel APLIC and
+      IMSIC controllers.
+    - If the user chooses to use the irqchip in split mode via
+      "-accel kvm,kernel-irqchip=split", s-mode APLIC will be emulated while using
+      the s-mode IMSIC from the irqchip.
+    - If the user disables the in-kernel irqchip via "-accel kvm,kernel-irqchip=off",
+      both s-mode APLIC and IMSIC controller will be emulated.
+
 
 The following table summarizes how the AIA and accelerator options defines what
 we will emulate in userspace:
@@ -75,9 +80,16 @@ we will emulate in userspace:
      - in-kernel
      - in-kernel
    * - kvm
-     - irqchip=split
+     - kernel-irqchip=split
      - aplic-imsic
      - n/a
      - n/a
      - emul
      - in-kernel
+   * - kvm
+     - kernel-irqchip=off
+     - aplic-imsic
+     - n/a
+     - n/a
+     - emul
+     - emul
