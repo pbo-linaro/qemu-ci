@@ -5,8 +5,8 @@ The QEMU Aspeed machines model BMCs of various OpenPOWER systems and
 Aspeed evaluation boards. They are based on different releases of the
 Aspeed SoC : the AST2400 integrating an ARM926EJ-S CPU (400MHz), the
 AST2500 with an ARM1176JZS CPU (800MHz), the AST2600
-with dual cores ARM Cortex-A7 CPUs (1.2GHz) and more recently the AST2700
-with quad cores ARM Cortex-A35 64 bits CPUs (1.6GHz)
+with dual cores Arm Cortex-A7 CPUs (1.2GHz) and more recently the AST2700
+with quad cores Arm Cortex-A35 64 bits CPUs (1.6GHz)
 
 The SoC comes with RAM, Gigabit ethernet, USB, SD/MMC, USB, SPI, I2C,
 etc.
@@ -275,7 +275,7 @@ Aspeed minibmc family boards (``ast1030-evb``)
 
 The QEMU Aspeed machines model mini BMCs of various Aspeed evaluation
 boards. They are based on different releases of the
-Aspeed SoC : the AST1030 integrating an ARM Cortex M4F CPU (200MHz).
+Aspeed SoC : the AST1030 integrating an Arm Cortex M4F CPU (200MHz).
 
 The SoC comes with SRAM, SPI, I2C, etc.
 

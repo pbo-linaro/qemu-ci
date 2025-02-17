@@ -29,7 +29,7 @@ QEMU xilinx-zynq-a9 board supports following devices:
 
 Running
 """""""
-Direct Linux boot of a generic ARM upstream Linux kernel:
+Direct Linux boot of a generic Arm upstream Linux kernel:
 
 .. code-block:: bash
 

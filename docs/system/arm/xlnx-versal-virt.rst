@@ -19,12 +19,12 @@ limitations. Currently, we support the following cores and devices:
 
 Implemented CPU cores:
 
-- 2 ACPUs (ARM Cortex-A72)
+- 2 ACPUs (Arm Cortex-A72)
 
 Implemented devices:
 
-- Interrupt controller (ARM GICv3)
-- 2 UARTs (ARM PL011)
+- Interrupt controller (Arm GICv3)
+- 2 UARTs (Arm PL011)
 - An RTC (Versal built-in)
 - 2 GEMs (Cadence MACB Ethernet MACs)
 - 8 ADMA (Xilinx zDMA) channels
@@ -70,7 +70,7 @@ provides EL3 firmware to handle PSCI.
 
 A few examples:
 
-Direct Linux boot of a generic ARM64 upstream Linux kernel:
+Direct Linux boot of a generic Arm64 upstream Linux kernel:
 
 .. code-block:: bash
 
@@ -95,7 +95,7 @@ Direct Linux boot of PetaLinux 2019.2:
       -device virtio-rng-device,bus=virtio-mmio-bus.0,rng=rng0 \
       -object rng-random,filename=/dev/urandom,id=rng0
 
-Boot PetaLinux 2019.2 via ARM Trusted Firmware (2018.3 because the 2019.2
+Boot PetaLinux 2019.2 via Arm Trusted Firmware (2018.3 because the 2019.2
 version of ATF tries to configure the CCI which we don't model) and U-boot:
 
 .. code-block:: bash
@@ -149,7 +149,7 @@ Run the following at the U-Boot prompt:
   fdt set /chosen/dom0 reg <0x00000000 0x40000000 0x0 0x03100000>
   booti 30000000 - 20000000
 
-Boot Linux as Dom0 on Xen via ARM Trusted Firmware and U-Boot:
+Boot Linux as Dom0 on Xen via Arm Trusted Firmware and U-Boot:
 
 .. code-block:: bash
 
