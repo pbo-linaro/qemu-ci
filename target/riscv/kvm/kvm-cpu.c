@@ -1798,9 +1798,9 @@ void kvm_riscv_set_irq(RISCVCPU *cpu, int irq, int level)
     }
 }
 
-static int aia_mode;
+static int imsic_mode;
 
-static const char *kvm_aia_mode_str(uint64_t mode)
+static const char *kvm_imsic_mode_str(uint64_t mode)
 {
     switch (mode) {
     case KVM_DEV_RISCV_AIA_MODE_EMUL:
@@ -1813,19 +1813,19 @@ static const char *kvm_aia_mode_str(uint64_t mode)
     };
 }
 
-static char *riscv_get_kvm_aia(Object *obj, Error **errp)
+static char *riscv_get_kvm_imsic(Object *obj, Error **errp)
 {
-    return g_strdup(kvm_aia_mode_str(aia_mode));
+    return g_strdup(kvm_imsic_mode_str(imsic_mode));
 }
 
-static void riscv_set_kvm_aia(Object *obj, const char *val, Error **errp)
+static void riscv_set_kvm_imsic(Object *obj, const char *val, Error **errp)
 {
     if (!strcmp(val, "emul")) {
-        aia_mode = KVM_DEV_RISCV_AIA_MODE_EMUL;
+        imsic_mode = KVM_DEV_RISCV_AIA_MODE_EMUL;
     } else if (!strcmp(val, "hwaccel")) {
-        aia_mode = KVM_DEV_RISCV_AIA_MODE_HWACCEL;
+        imsic_mode = KVM_DEV_RISCV_AIA_MODE_HWACCEL;
     } else if (!strcmp(val, "auto")) {
-        aia_mode = KVM_DEV_RISCV_AIA_MODE_AUTO;
+        imsic_mode = KVM_DEV_RISCV_AIA_MODE_AUTO;
     } else {
         error_setg(errp, "Invalid KVM AIA mode");
         error_append_hint(errp, "Valid values are emul, hwaccel, and auto.\n");
@@ -1834,13 +1834,15 @@ static void riscv_set_kvm_aia(Object *obj, const char *val, Error **errp)
 
 void kvm_arch_accel_class_init(ObjectClass *oc)
 {
-    object_class_property_add_str(oc, "riscv-aia", riscv_get_kvm_aia,
-                                  riscv_set_kvm_aia);
-    object_class_property_set_description(oc, "riscv-aia",
-        "Set KVM AIA mode. Valid values are 'emul', 'hwaccel' and 'auto'. "
-        "Changing KVM AIA modes relies on host support. Defaults to 'auto' "
-        "if the host supports it");
-    object_property_set_default_str(object_class_property_find(oc, "riscv-aia"),
+    object_class_property_add_str(oc, "riscv-imsic", riscv_get_kvm_imsic,
+                                  riscv_set_kvm_imsic);
+    object_class_property_set_description(oc, "riscv-imsic",
+        "Set KVM IMSIC mode. Valid values are 'emul', 'hwaccel' and 'auto'. "
+        "Changing KVM IMSIC modes relies on host support. Defaults to 'auto' "
+        "if the host supports it. This property only takes effect when the "
+        "kernel-irqchip=on|split when using AIA MSI.");
+    object_property_set_default_str(object_class_property_find(oc,
+                                                               "riscv-imsic"),
                                     "auto");
 }
 
@@ -1851,7 +1853,7 @@ void kvm_riscv_aia_create(MachineState *machine, uint64_t group_shift,
 {
     int ret, i;
     int aia_fd = -1;
-    uint64_t default_aia_mode;
+    uint64_t default_imsic_mode;
     uint64_t socket_count = riscv_socket_count(machine);
     uint64_t max_hart_per_socket = 0;
     uint64_t socket, base_hart, hart_count, socket_imsic_base, imsic_addr;
@@ -1867,24 +1869,24 @@ void kvm_riscv_aia_create(MachineState *machine, uint64_t group_shift,
 
     ret = kvm_device_access(aia_fd, KVM_DEV_RISCV_AIA_GRP_CONFIG,
                             KVM_DEV_RISCV_AIA_CONFIG_MODE,
-                            &default_aia_mode, false, NULL);
+                            &default_imsic_mode, false, NULL);
     if (ret < 0) {
-        error_report("KVM AIA: failed to get current KVM AIA mode");
+        error_report("KVM AIA: failed to get current KVM IMSIC mode");
         exit(1);
     }
 
-    if (default_aia_mode != aia_mode) {
+    if (default_imsic_mode != imsic_mode) {
         ret = kvm_device_access(aia_fd, KVM_DEV_RISCV_AIA_GRP_CONFIG,
                                 KVM_DEV_RISCV_AIA_CONFIG_MODE,
-                                &aia_mode, true, NULL);
+                                &imsic_mode, true, NULL);
         if (ret < 0) {
-            warn_report("KVM AIA: failed to set KVM AIA mode '%s', using "
+            warn_report("KVM AIA: failed to set KVM IMSIC mode '%s', using "
                         "default host mode '%s'",
-                        kvm_aia_mode_str(aia_mode),
-                        kvm_aia_mode_str(default_aia_mode));
+                        kvm_imsic_mode_str(imsic_mode),
+                        kvm_imsic_mode_str(default_imsic_mode));
 
-            /* failed to change AIA mode, use default */
-            aia_mode = default_aia_mode;
+            /* failed to change IMSIC mode, use default */
+            imsic_mode = default_imsic_mode;
         }
     }
 
