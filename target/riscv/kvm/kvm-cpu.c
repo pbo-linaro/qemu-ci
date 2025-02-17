@@ -1624,6 +1624,31 @@ static int kvm_riscv_handle_sbi(CPUState *cs, struct kvm_run *run)
 }
 
 /* User-space CSR emulation */
+static int kvm_riscv_emu_sireg_ctx_load(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(siselect), env->siselect);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1), env->siprio[0]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1h), env->siprio[8]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2), env->siprio[16]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2h), env->siprio[24]);
+
+    return 0;
+}
+
+static int kvm_riscv_emu_sireg_ctx_put(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1), env->siprio[0]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1h), env->siprio[8]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2), env->siprio[16]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2h), env->siprio[24]);
+
+    return 0;
+}
+
 struct kvm_riscv_emu_csr_data {
     target_ulong csr_num;
     int (*context_load)(CPUState *cs);
@@ -1632,6 +1657,8 @@ struct kvm_riscv_emu_csr_data {
 
 struct kvm_riscv_emu_csr_data kvm_riscv_emu_csr_data[] = {
     { CSR_SEED, NULL, NULL },
+    { CSR_SIREG, kvm_riscv_emu_sireg_ctx_load, kvm_riscv_emu_sireg_ctx_put },
+    { CSR_STOPEI, NULL, NULL },
 };
 
 static int kvm_riscv_handle_csr(CPUState *cs, struct kvm_run *run)
