@@ -84,6 +84,119 @@
 
 static uint64_t mpipl_skiboot_base = 0x30000000 /*default SKIBOOT_BASE*/;
 
+/* Following offsets are copied from Skiboot source code */
+/* Use 768 bytes for SPIRAH */
+#define SPIRAH_OFF      0x00010000
+#define SPIRAH_SIZE     0x300
+
+/* Use 256 bytes for processor dump area */
+#define PROC_DUMP_AREA_OFF  (SPIRAH_OFF + SPIRAH_SIZE)
+#define PROC_DUMP_AREA_SIZE 0x100
+
+#define PROCIN_OFF      (PROC_DUMP_AREA_OFF + PROC_DUMP_AREA_SIZE)
+#define PROCIN_SIZE     0x800
+
+/* Offsets of MDST and MDDT tables from skiboot base */
+#define MDST_TABLE_OFF      (PROCIN_OFF + PROCIN_SIZE)
+#define MDST_TABLE_SIZE     0x400
+
+#define MDDT_TABLE_OFF      (MDST_TABLE_OFF + MDST_TABLE_SIZE)
+#define MDDT_TABLE_SIZE     0x400
+
+#define CPU_CTL_OFF         (MDDT_TABLE_OFF + MDDT_TABLE_SIZE)
+#define CPU_CTL_SIZE        0x2000
+
+/* MPIPL reserved regions (offset by skiboot_base to access) */
+#define MDST_TABLE_BASE     (mpipl_skiboot_base + MDST_TABLE_OFF)
+#define MDDT_TABLE_BASE     (mpipl_skiboot_base + MDDT_TABLE_OFF)
+#define PROC_DUMP_AREA_BASE (mpipl_skiboot_base + PROC_DUMP_AREA_OFF)
+
+#define __packed             __attribute__((packed))
+
+/* Metadata to capture before triggering MPIPL */
+struct mpipl_metadata {
+    /* Crashing PIR is required to create OPAL dump */
+    uint32_t    crashing_pir;
+    /* Kernel expects OPAL to presrve tag and pass it back via OPAL API */
+    uint64_t    kernel_tag;
+    /* Post MPIPL kernel boot memory size */
+    uint64_t    boot_mem_size;
+} __packed;
+
+/* Structure version */
+#define OPAL_MPIPL_VERSION  0x01
+
+/* Preserved memory details */
+struct opal_mpipl_region {
+    __be64  src;
+    __be64  dest;
+    __be64  size;
+};
+
+struct opal_mpipl_fadump {
+    uint8_t version;
+    uint8_t reserved[7];
+    __be32  crashing_pir;    /* OPAL crashing CPU PIR */
+    __be32  cpu_data_version;
+    __be32  cpu_data_size;
+    __be32  region_cnt;
+    struct  opal_mpipl_region *region;
+};
+
+/*
+ * This is our dump result table after MPIPL. Hostboot will write to this
+ * memory after moving memory content from source to destination memory.
+ */
+#define MDRT_TABLE_BASE        (mpipl_skiboot_base + 0x01c00000)
+#define MDRT_TABLE_SIZE        0x00008000
+
+/*
+ * This is our dump metadata area. We will use this memory to save metadata
+ * (like crashing CPU details, payload tags) before triggering MPIPL.
+ */
+#define DUMP_METADATA_AREA_BASE    (mpipl_skiboot_base + 0x01c08000)
+#define DUMP_METADATA_AREA_SIZE    0x8000
+
+/*
+ *  Memory Dump Source Table
+ *
+ * Format of this table is same as Memory Dump Source Table (MDST)
+ * defined in HDAT spec.
+ */
+struct mdst_table {
+    __be64  addr;
+    uint8_t data_region;    /* DUMP_REGION_* */
+    uint8_t dump_type;    /* DUMP_TYPE_* */
+    __be16  reserved;
+    __be32  size;
+} __packed;
+
+/* Memory dump destination table (MDDT) */
+struct mddt_table {
+    __be64  addr;
+    uint8_t data_region;
+    uint8_t dump_type;
+    __be16  reserved;
+    __be32  size;
+} __packed;
+
+/*
+ * Memory dump result table (MDRT)
+ *
+ * List of the memory ranges that have been included in the dump. This table is
+ * filled by hostboot and passed to OPAL on second boot. OPAL/payload will use
+ * this table to extract the dump.
+ */
+struct mdrt_table {
+    __be64  src_addr;
+    __be64  dest_addr;
+    uint8_t data_region;
+    uint8_t dump_type;  /* unused */
+    __be16  reserved;   /* unused */
+    __be32  size;
+    __be64  padding;    /* unused */
+} __packed;
+
 static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
 {
     val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
