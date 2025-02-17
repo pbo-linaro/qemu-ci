@@ -1623,26 +1623,72 @@ static int kvm_riscv_handle_sbi(CPUState *cs, struct kvm_run *run)
     return ret;
 }
 
+/* User-space CSR emulation */
+struct kvm_riscv_emu_csr_data {
+    target_ulong csr_num;
+    int (*context_load)(CPUState *cs);
+    int (*context_put)(CPUState *cs);
+};
+
+struct kvm_riscv_emu_csr_data kvm_riscv_emu_csr_data[] = {
+    { CSR_SEED, NULL, NULL },
+};
+
 static int kvm_riscv_handle_csr(CPUState *cs, struct kvm_run *run)
 {
+    CPURISCVState *env = cpu_env(cs);
     target_ulong csr_num = run->riscv_csr.csr_num;
     target_ulong new_value = run->riscv_csr.new_value;
     target_ulong write_mask = run->riscv_csr.write_mask;
-    int ret = 0;
+    struct kvm_riscv_emu_csr_data *emu_csr_data = NULL;
+    target_ulong ret_value;
+    RISCVException ret_excp;
+    int i, ret;
 
-    switch (csr_num) {
-    case CSR_SEED:
-        run->riscv_csr.ret_value = riscv_new_csr_seed(new_value, write_mask);
-        break;
-    default:
-        qemu_log_mask(LOG_UNIMP,
-                      "%s: un-handled CSR EXIT for CSR %lx\n",
-                      __func__, csr_num);
-        ret = -1;
-        break;
+    for (i = 0; i < ARRAY_SIZE(kvm_riscv_emu_csr_data); i++) {
+        if (csr_num == kvm_riscv_emu_csr_data[i].csr_num) {
+            emu_csr_data = &kvm_riscv_emu_csr_data[i];
+
+            break;
+        }
     }
 
-    return ret;
+    if (!emu_csr_data) {
+        qemu_log_mask(LOG_UNIMP,
+                      "%s: un-handled CSR EXIT for CSR %s\n",
+                      __func__, riscv_get_csr_name(csr_num));
+
+        return -1;
+    }
+
+    if (emu_csr_data->context_load) {
+        ret = emu_csr_data->context_load(cs);
+        if (ret) {
+            goto handle_failed;
+        }
+    }
+
+    ret_excp = riscv_csrrw(env, csr_num, &ret_value, new_value, write_mask);
+    if (ret_excp != RISCV_EXCP_NONE) {
+        goto handle_failed;
+    }
+    run->riscv_csr.ret_value = ret_value;
+
+    if (emu_csr_data->context_put) {
+        ret = emu_csr_data->context_put(cs);
+        if (ret) {
+            goto handle_failed;
+        }
+    }
+
+    return 0;
+
+handle_failed:
+    qemu_log_mask(LOG_UNIMP,
+                  "%s: failed to handle CSR EXIT for CSR %s\n",
+                  __func__, riscv_get_csr_name(csr_num));
+
+    return -1;
 }
 
 static bool kvm_riscv_handle_debug(CPUState *cs)
