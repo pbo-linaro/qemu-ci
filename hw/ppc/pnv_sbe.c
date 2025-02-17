@@ -21,6 +21,8 @@
 #include "qapi/error.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
+#include "system/cpus.h"
+#include "system/runstate.h"
 #include "hw/irq.h"
 #include "hw/qdev-properties.h"
 #include "hw/ppc/pnv.h"
@@ -80,6 +82,15 @@
 #define SBE_CONTROL_REG_S0              PPC_BIT(14)
 #define SBE_CONTROL_REG_S1              PPC_BIT(15)
 
+static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
+{
+    val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
+    sbe->host_doorbell = val;
+
+    trace_pnv_sbe_reg_set_host_doorbell(val);
+    qemu_set_irq(sbe->psi_irq, !!val);
+}
+
 struct sbe_msg {
     uint64_t reg[4];
 };
@@ -104,6 +115,7 @@ static uint64_t pnv_sbe_power9_xscom_ctrl_read(void *opaque, hwaddr addr,
 static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
                                        uint64_t val, unsigned size)
 {
+    PnvSBE *sbe = opaque;
     uint32_t offset = addr >> 3;
 
     trace_pnv_sbe_xscom_ctrl_write(addr, val);
@@ -113,6 +125,35 @@ static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
         switch (val) {
         case SBE_CONTROL_REG_S0:
             qemu_log_mask(LOG_UNIMP, "SBE: S0 Interrupt triggered\n");
+
+            pnv_sbe_set_host_doorbell(sbe, sbe->host_doorbell | SBE_HOST_RESPONSE_MASK);
+
+            /*
+             * Looks like, SBE stops clocks for all cores in S0.
+             * See 'stopClocksS0' in SBE source code.
+             * Nearest equivalent in QEMU seems to be 'pause_all_vcpus'
+             */
+            pause_all_vcpus();
+
+            /*
+             * TODO: Pass `mpipl` node in device tree to signify next
+             * boot is an MPIPL boot
+             */
+
+            /* Then do a guest reset */
+            /*
+             * Requirement:
+             * This guest reset should not clear the memory (which is
+             * the case when this is merged)
+             */
+            qemu_system_reset_request(SHUTDOWN_CAUSE_GUEST_RESET);
+
+            /*
+             * XXX: Does SBE really do system reset or only stop
+             * clocks ? OPAL seems to think that control will not come
+             * to it after it has triggered S0 interrupt.
+             */
+
             break;
         case SBE_CONTROL_REG_S1:
             qemu_log_mask(LOG_UNIMP, "SBE: S1 Interrupt triggered\n");
@@ -137,15 +178,6 @@ static const MemoryRegionOps pnv_sbe_power9_xscom_ctrl_ops = {
     .impl.max_access_size = 8,
     .endianness = DEVICE_BIG_ENDIAN,
 };
-
-static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
-{
-    val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
-    sbe->host_doorbell = val;
-
-    trace_pnv_sbe_reg_set_host_doorbell(val);
-    qemu_set_irq(sbe->psi_irq, !!val);
-}
 
 /* SBE Target Type */
 #define SBE_TARGET_TYPE_PROC            0x00
