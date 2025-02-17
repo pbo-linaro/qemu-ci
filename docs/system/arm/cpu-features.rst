@@ -204,11 +204,49 @@ the list of KVM vCPU features and their descriptions.
   the guest scheduler behavior and/or be exposed to the guest
   userspace.
 
-TCG vCPU Features
-=================
+"PAuth" (Pointer Authentication)
+================================
 
-TCG vCPU features are CPU features that are specific to TCG.
-Below is the list of TCG vCPU features and their descriptions.
+PAuth (Pointer Authentication) is a security feature in software that
+was introduced in Armv8.3-A.  It aims to protect against ROP
+(return-oriented programming) attacks.
+
+KVM
+---
+
+``pauth``
+
+  Enable or disable ``FEAT_Pauth``.  No other properties can be
+  controlled.
+
+  The host CPU will define the PAC (pointer authentication
+  code) cryptographic algorithm.
+
+  There are different "levels" of PAuth support.  The host CPU
+  definition will define that level (e.g. PAuth, EPAC, PAuth2, FPAC,
+  FPACCOMBINE, etc).  Refer to the Arm architecture extension documents
+  for details about the description of these features.
+
+Live migration and PAuth
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The level of PAuth support depends on which Arm architecture a given CPU
+supports (e.g. Armv8.3 vs. Armv8.6).  This gradation in PAuth support
+has implications for live migration.  For example, to be able to
+live-migrate from host-A (with Armv8.3) to host-B (with Arm v8.6):
+
+  - the source and destination hosts must "agree" on (a) the PAC
+    signature algorithm, and (b) all the sub-features of PAuth; or
+
+  - the alternative (and less desirable) option is to turn off PAuth
+    off on both source and destination — this is generally not
+    recommended, as PAuth is a security feature.
+
+TCG
+---
+
+For TCG, along with ``pauth``, it is possible to control a few other
+properties of PAuth:
 
 ``pauth``
   Enable or disable ``FEAT_Pauth`` entirely.
