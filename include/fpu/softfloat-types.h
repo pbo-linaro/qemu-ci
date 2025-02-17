@@ -349,6 +349,16 @@ typedef enum __attribute__((__packed__)) {
      * and using them as inputs to a float op will raise Invalid.
      */
     floatx80_unnormal_valid = 8,
+    /*
+     * If the exponent is 0 and the Integer bit is set, Intel call
+     * this a "pseudo-denormal"; x86 supports that only on input
+     * (treating them as denormals). m68k calls these a type of
+     * normalized number, and may both input and output them.
+     * TODO: currently we only support "handle on both input and
+     * output" or "don't handle and don't generate".
+     * floatx80_invalid_encoding() will always accept them.
+     */
+    floatx80_pseudo_denormal_output_valid = 16,
 } FloatX80Behaviour;
 
 /*
