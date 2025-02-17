@@ -197,6 +197,25 @@ struct mdrt_table {
     __be64  padding;    /* unused */
 } __packed;
 
+/*
+ * Processor Dump Area
+ *
+ * This contains the information needed for having processor
+ * state captured during a platform dump.
+ */
+struct proc_dump_area {
+    __be32  thread_size;    /* Size of each thread register entry */
+#define PROC_DUMP_AREA_FORMAT_P9    0x1    /* P9 format */
+    uint8_t version;
+    uint8_t reserved[11];
+    __be64  alloc_addr;    /* Destination memory to place register data */
+    __be32  reserved2;
+    __be32  alloc_size;    /* Allocated size */
+    __be64  dest_addr;     /* Destination address */
+    __be32  reserved3;
+    __be32  act_size;      /* Actual data size */
+} __packed;
+
 static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
 {
     val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
@@ -281,6 +300,11 @@ static void pnv_mpipl_preserve_mem(void)
     cpu_physical_memory_write(MDRT_TABLE_BASE, mdrt, MDRT_TABLE_SIZE);
 }
 
+static void pnv_mpipl_save_proc_regs(void)
+{
+    /* TODO: modify PROC_DUMP_AREA_BASE */
+}
+
 static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
                                        uint64_t val, unsigned size)
 {
@@ -306,6 +330,9 @@ static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
 
             /* Preserve the memory locations registered for MPIPL */
             pnv_mpipl_preserve_mem();
+
+            /* Save processor state */
+            pnv_mpipl_save_proc_regs();
 
             /*
              * TODO: Pass `mpipl` node in device tree to signify next
