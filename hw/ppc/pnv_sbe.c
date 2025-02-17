@@ -82,6 +82,8 @@
 #define SBE_CONTROL_REG_S0              PPC_BIT(14)
 #define SBE_CONTROL_REG_S1              PPC_BIT(15)
 
+static uint64_t mpipl_skiboot_base = 0x30000000 /*default SKIBOOT_BASE*/;
+
 static void pnv_sbe_set_host_doorbell(PnvSBE *sbe, uint64_t val)
 {
     val &= SBE_HOST_RESPONSE_MASK; /* Is this right? What does HW do? */
@@ -279,6 +281,29 @@ static void do_sbe_msg(PnvSBE *sbe)
         if (ctrl_flags & CONTROL_TIMER_STOP) {
             trace_pnv_sbe_cmd_timer_stop();
             timer_del(sbe->timer);
+        }
+        break;
+    case SBE_CMD_STASH_MPIPL_CONFIG:
+        /* key = sbe->mbox[1] */
+        switch (sbe->mbox[1]) {
+        case SBE_STASH_KEY_SKIBOOT_BASE:
+            mpipl_skiboot_base = sbe->mbox[2];
+            qemu_log_mask(LOG_UNIMP,
+                "Stashing skiboot base: 0x%lx\n", mpipl_skiboot_base);
+
+            /*
+             * Set the response register.
+             *
+             * Currently setting the same sequence number in
+             * response as we got in the request.
+             */
+            sbe->mbox[4] = sbe->mbox[0];    /* sequence number */
+            pnv_sbe_set_host_doorbell(sbe,
+                    sbe->host_doorbell | SBE_HOST_RESPONSE_WAITING);
+
+            break;
+        default:
+            qemu_log_mask(LOG_UNIMP, "SBE Unimplemented command: 0x%x\n", cmd);
         }
         break;
     default:

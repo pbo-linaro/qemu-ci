@@ -53,4 +53,7 @@ struct PnvSBEClass {
     const MemoryRegionOps *xscom_mbox_ops;
 };
 
+/* Helper to access stashed SKIBOOT_BASE */
+bool pnv_sbe_mpipl_skiboot_base(void);
+
 #endif /* PPC_PNV_SBE_H */
