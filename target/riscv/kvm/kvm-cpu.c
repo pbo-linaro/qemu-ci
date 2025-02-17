@@ -132,6 +132,9 @@ static uint64_t kvm_riscv_vector_reg_id(RISCVCPU *cpu,
 #define RISCV_GENERAL_CSR_REG(name) \
     (KVM_REG_RISCV_CSR_GENERAL | KVM_REG_RISCV_CSR_REG(name))
 
+#define RISCV_AIA_CSR_REG(name) \
+    (KVM_REG_RISCV_CSR_AIA | KVM_REG_RISCV_CSR_AIA_REG(name))
+
 #define KVM_RISCV_GET_CSR(cs, env, idx, reg) \
     do { \
         int _ret = kvm_get_one_reg(cs, RISCV_CSR_REG(env, idx), &reg); \
@@ -641,9 +644,50 @@ static int kvm_riscv_put_regs_general_csr(CPUState *cs)
     return 0;
 }
 
+static int kvm_riscv_get_regs_aia_csr(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+    uint64_t mask = MAKE_64BIT_MASK(32, 32);
+    uint64_t val;
+
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(siselect), env->siselect);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1), env->siprio[0]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1h), env->siprio[8]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2), env->siprio[16]);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2h), env->siprio[24]);
+
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(sieh), val);
+    env->sie = set_field(env->sie, mask, val);
+    KVM_RISCV_GET_CSR(cs, env, RISCV_AIA_CSR_REG(siph), val);
+    riscv_cpu_update_mip(env, mask, val);
+
+    return 0;
+}
+
+static int kvm_riscv_put_regs_aia_csr(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+    uint64_t mask = MAKE_64BIT_MASK(32, 32);
+    uint64_t val;
+
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(siselect), env->siselect);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1), env->siprio[0]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio1h), env->siprio[8]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2), env->siprio[16]);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(iprio2h), env->siprio[24]);
+
+    val = get_field(env->sie, mask);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(sieh), val);
+    val = get_field(env->mip, mask);
+    KVM_RISCV_SET_CSR(cs, env, RISCV_AIA_CSR_REG(siph), val);
+
+    return 0;
+}
+
 static int kvm_riscv_get_regs_csr(CPUState *cs)
 {
     kvm_riscv_get_regs_general_csr(cs);
+    kvm_riscv_get_regs_aia_csr(cs);
 
     return 0;
 }
@@ -651,6 +695,7 @@ static int kvm_riscv_get_regs_csr(CPUState *cs)
 static int kvm_riscv_put_regs_csr(CPUState *cs)
 {
     kvm_riscv_put_regs_general_csr(cs);
+    kvm_riscv_put_regs_aia_csr(cs);
 
     return 0;
 }
