@@ -8,53 +8,18 @@ This is the main entry point for generating C code from the QAPI schema.
 """
 
 import argparse
+from importlib import import_module
 import sys
-from typing import Optional
 
-from .commands import gen_commands
-from .common import must_match
 from .error import QAPIError
-from .events import gen_events
-from .features import gen_features
-from .introspect import gen_introspect
-from .schema import QAPISchema
-from .types import gen_types
-from .visit import gen_visit
+from .backend import invalid_prefix_char
 
 
-def invalid_prefix_char(prefix: str) -> Optional[str]:
-    match = must_match(r'([A-Za-z_.-][A-Za-z0-9_.-]*)?', prefix)
-    if match.end() != len(prefix):
-        return prefix[match.end()]
-    return None
-
-
-def generate(schema_file: str,
-             output_dir: str,
-             prefix: str,
-             unmask: bool = False,
-             builtins: bool = False,
-             gen_tracing: bool = False) -> None:
-    """
-    Generate C code for the given schema into the target directory.
-
-    :param schema_file: The primary QAPI schema file.
-    :param output_dir: The output directory to store generated code.
-    :param prefix: Optional C-code prefix for symbol names.
-    :param unmask: Expose non-ABI names through introspection?
-    :param builtins: Generate code for built-in types?
-
-    :raise QAPIError: On failures.
-    """
-    assert invalid_prefix_char(prefix) is None
-
-    schema = QAPISchema(schema_file)
-    gen_types(schema, output_dir, prefix, builtins)
-    gen_features(schema, output_dir, prefix)
-    gen_visit(schema, output_dir, prefix, builtins)
-    gen_commands(schema, output_dir, prefix, gen_tracing)
-    gen_events(schema, output_dir, prefix)
-    gen_introspect(schema, output_dir, prefix, unmask)
+def import_class_from_string(path):
+    module_path, _, class_name = path.rpartition('.')
+    mod = import_module(module_path)
+    klass = getattr(mod, class_name)
+    return klass
 
 
 def main() -> int:
@@ -77,6 +42,8 @@ def main() -> int:
     parser.add_argument('-u', '--unmask-non-abi-names', action='store_true',
                         dest='unmask',
                         help="expose non-ABI names in introspection")
+    parser.add_argument('-k', '--backend', default="qapi.backend.QAPICBackend",
+                        help="Python module name for code generator")
 
     # Option --suppress-tracing exists so we can avoid solving build system
     # problems.  TODO Drop it when we no longer need it.
@@ -92,13 +59,15 @@ def main() -> int:
         print(f"{sys.argv[0]}: {msg}", file=sys.stderr)
         return 1
 
+    backendclass = import_class_from_string(args.backend)
     try:
-        generate(args.schema,
-                 output_dir=args.output_dir,
-                 prefix=args.prefix,
-                 unmask=args.unmask,
-                 builtins=args.builtins,
-                 gen_tracing=not args.suppress_tracing)
+        backend = backendclass()
+        backend.run(args.schema,
+                    output_dir=args.output_dir,
+                    prefix=args.prefix,
+                    unmask=args.unmask,
+                    builtins=args.builtins,
+                    gen_tracing=not args.suppress_tracing)
     except QAPIError as err:
         print(err, file=sys.stderr)
         return 1
