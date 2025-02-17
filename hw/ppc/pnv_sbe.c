@@ -227,6 +227,60 @@ static uint64_t pnv_sbe_power9_xscom_ctrl_read(void *opaque, hwaddr addr,
     return val;
 }
 
+static void pnv_mpipl_preserve_mem(void)
+{
+    /* Get access to metadata */
+    struct mpipl_metadata *metadata = malloc(DUMP_METADATA_AREA_SIZE);
+    struct mdst_table *mdst = malloc(MDST_TABLE_SIZE);
+    struct mddt_table *mddt = malloc(MDDT_TABLE_SIZE);
+    struct mdrt_table *mdrt = malloc(MDRT_TABLE_SIZE);
+    __be64 source_addr, dest_addr, bytes_to_copy;
+    uint8_t *copy_buffer;
+
+    cpu_physical_memory_read(DUMP_METADATA_AREA_BASE, metadata, DUMP_METADATA_AREA_SIZE);
+    cpu_physical_memory_read(MDST_TABLE_BASE, mdst, MDST_TABLE_SIZE);
+    cpu_physical_memory_read(MDDT_TABLE_BASE, mddt, MDDT_TABLE_SIZE);
+
+    /* HRMOR_BIT copied from skiboot */
+    #define HRMOR_BIT (1ul << 63)
+
+    for (int i = 0;; ++i) {
+        /* NOTE: Assuming uninitialised will be all zeroes */
+        if ((mdst[i].addr == 0) && (mdst[i].size == 0)) {
+            break;
+        }
+
+        if (mdst[i].size != mddt[i].size) {
+            qemu_log_mask(LOG_TRACE,
+                    "Warning: Invalid entry, size mismatch in MDST & MDDT\n");
+            continue;
+        }
+
+        if (mdst[i].data_region != mddt[i].data_region) {
+            qemu_log_mask(LOG_TRACE,
+                    "Warning: Invalid entry, region mismatch in MDST & MDDT\n");
+            continue;
+        }
+
+        mdrt[i].src_addr = mdst[i].addr;
+        mdrt[i].dest_addr = mddt[i].addr;
+        mdrt[i].size = mdst[i].size;
+        mdrt[i].data_region = mdst[i].data_region;
+
+        source_addr = cpu_to_be64(mdst[i].addr) & ~HRMOR_BIT;
+        dest_addr = cpu_to_be64(mddt[i].addr) & ~HRMOR_BIT;
+        bytes_to_copy = cpu_to_be32(mddt[i].size);
+
+        /* XXX: Am i assuming we are in big endian mode ? */
+        copy_buffer = malloc(bytes_to_copy);
+        cpu_physical_memory_read(source_addr, copy_buffer, bytes_to_copy);
+        cpu_physical_memory_write(dest_addr,  copy_buffer, bytes_to_copy);
+        free(copy_buffer);
+    }
+
+    cpu_physical_memory_write(MDRT_TABLE_BASE, mdrt, MDRT_TABLE_SIZE);
+}
+
 static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
                                        uint64_t val, unsigned size)
 {
@@ -249,6 +303,9 @@ static void pnv_sbe_power9_xscom_ctrl_write(void *opaque, hwaddr addr,
              * Nearest equivalent in QEMU seems to be 'pause_all_vcpus'
              */
             pause_all_vcpus();
+
+            /* Preserve the memory locations registered for MPIPL */
+            pnv_mpipl_preserve_mem();
 
             /*
              * TODO: Pass `mpipl` node in device tree to signify next
