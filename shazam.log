@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250218182019.111467-1-kwolf@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 43 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/11] rust: Build separate qemu_api_tools and qemu_api_system
+  [32m✓[0m [PATCH v2 2/11] meson: Add rust_block_ss and link tools with it
+  [32m✓[0m [PATCH v2 3/11] rust: Add some block layer bindings
+  [32m✓[0m [PATCH v2 4/11] rust/qemu-api: Add wrappers to run futures in QEMU
+  [32m✓[0m [PATCH v2 5/11] rust/block: Add empty crate
+  [32m✓[0m [PATCH v2 6/11] rust/block: Add I/O buffer traits
+  [32m✓[0m [PATCH v2 7/11] block: Add bdrv_open_blockdev_ref_file()
+  [32m✓[0m [PATCH v2 8/11] rust/block: Add driver module
+  [32m✓[0m [PATCH v2 9/11] rust/block: Add read support for block drivers
+  [32m✓[0m [PATCH v2 10/11] bochs-rs: Add bochs block driver reimplementation in Rust
+  [32m✓[0m [PATCH v2 11/11] rust/block: Add format probing
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 11
+---
+Applying: rust: Build separate qemu_api_tools and qemu_api_system
+Patch failed at 0001 rust: Build separate qemu_api_tools and qemu_api_system
+error: patch failed: rust/qemu-api/meson.build:12
+error: rust/qemu-api/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/src/lib.rs:20
+error: rust/qemu-api/src/lib.rs: patch does not apply
+error: patch failed: rust/qemu-api/src/prelude.rs:11
+error: rust/qemu-api/src/prelude.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
