@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20250218152744.228335-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] tests/functional: Provide a proper name for the VMs in the replay tests
+  [32m✓[0m [PATCH 2/14] tests/functional: Convert the xtensa replay test to the functional framework
+  [32m✓[0m [PATCH 3/14] tests/functional: Convert the sparc replay avocado test
+  [32m✓[0m [PATCH 4/14] tests/functional: Convert the 32-bit ppc replay avocado tests
+  [32m✓[0m [PATCH 5/14] tests/functional: Convert the or1k replay avocado tests
+  [32m✓[0m [PATCH 6/14] tests/functional: Convert the ppc64 replay avocado tests
+  [32m✓[0m [PATCH 7/14] tests/functional: Convert the microblaze replay avocado tests
+  [32m✓[0m [PATCH 8/14] tests/functional: Convert the m68k replay avocado tests
+  [32m✓[0m [PATCH 9/14] tests/functional: Convert the arm replay avocado tests
+  [32m✓[0m [PATCH 10/14] tests/functional: Convert the alpha replay avocado tests
+  [32m✓[0m [PATCH 11/14] tests/functional: Convert the s390x replay avocado tests
+  [32m✓[0m [PATCH 12/14] tests/functional: Convert the aarch64 replay avocado tests
+  [32m✓[0m [PATCH 13/14] tests/functional: Convert the x86_64 replay avocado tests
+  [32m✓[0m [PATCH 14/14] tests/functional: Convert the i386 replay avocado test
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: tests/functional: Provide a proper name for the VMs in the replay tests
+Applying: tests/functional: Convert the xtensa replay test to the functional framework
+Applying: tests/functional: Convert the sparc replay avocado test
+Applying: tests/functional: Convert the 32-bit ppc replay avocado tests
+Applying: tests/functional: Convert the or1k replay avocado tests
+Applying: tests/functional: Convert the ppc64 replay avocado tests
+Patch failed at 0006 tests/functional: Convert the ppc64 replay avocado tests
+error: patch failed: tests/functional/meson.build:215
+error: tests/functional/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
