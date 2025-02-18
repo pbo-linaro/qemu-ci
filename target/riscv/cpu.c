@@ -1706,6 +1706,11 @@ const RISCVCPUMultiExtConfig riscv_cpu_extensions[] = {
     MULTI_EXT_CFG_BOOL("zvksc", ext_zvksc, false),
     MULTI_EXT_CFG_BOOL("zvksg", ext_zvksg, false),
 
+    /*
+     * KVM can turn it on/off. For TCG this is always
+     * enabled if priv_ver >= 1.11.
+     */
+    MULTI_EXT_CFG_BOOL("ziccrse", ext_ziccrse, true),
     { },
 };
 

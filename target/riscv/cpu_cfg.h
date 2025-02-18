@@ -155,6 +155,9 @@ struct RISCVCPUConfig {
     bool ext_ssstateen;
     bool ext_sha;
 
+    /* Always enabled for TCG, KVM wants to switch it on/off */
+    bool ext_ziccrse;
+
     /*
      * Always 'true' booleans for named features
      * TCG always implement/can't be user disabled,
