@@ -63,7 +63,7 @@ test('rust-qemu-api-integration',
         rust_args: ['--test'],
         install: false,
         dependencies: [qemu_api, qemu_api_macros],
-        link_whole: [rust_qemu_api_objs, libqemuutil]),
+        link_with: [rust_qemu_api_objs, libqemuutil]),
     args: [
         '--test', '--test-threads', '1',
         '--format', 'pretty',
