@@ -99,6 +99,105 @@ static void test_precopy_unix_dirty_ring(void)
     test_precopy_common(&args);
 }
 
+static int new_rdma_link(char *buffer) {
+    // Copied from blktests
+    const char *script =
+        "#!/bin/bash\n"
+        "\n"
+        "get_ipv4_addr() {\n"
+        "    ip -4 -o addr show dev \"$1\" |\n"
+        "    sed -n 's/.*[[:blank:]]inet[[:blank:]]*\\([^[:blank:]/]*\\).*/\\1/p'\n"
+        "}\n"
+        "\n"
+        "has_soft_rdma() {\n"
+        "    rdma link | grep -q \" netdev $1[[:blank:]]*\\$\"\n"
+        "}\n"
+        "\n"
+        "start_soft_rdma() {\n"
+        "    local type\n"
+        "\n"
+        "    modprobe rdma_rxe || return $?\n"
+        "    type=rxe\n"
+        "    (\n"
+        "        cd /sys/class/net &&\n"
+        "        for i in *; do\n"
+        "            [ -e \"$i\" ] || continue\n"
+        "            [ \"$i\" = \"lo\" ] && continue\n"
+        "            [ \"$(<$i/addr_len)\" = 6 ] || continue\n"
+        "            [ \"$(<$i/carrier)\" = 1 ] || continue\n"
+        "            has_soft_rdma \"$i\" && break\n"
+        "            rdma link add \"${i}_$type\" type $type netdev \"$i\" && break\n"
+        "        done\n"
+        "        has_soft_rdma \"$i\" && echo $i\n"
+        "    )\n"
+        "}\n"
+        "\n"
+        "rxe_link=$(start_soft_rdma)\n"
+        "[[ \"$rxe_link\" ]] && get_ipv4_addr $rxe_link\n";
+
+    char script_filename[] = "/tmp/temp_scriptXXXXXX";
+    int fd = mkstemp(script_filename);
+    if (fd == -1) {
+        perror("Failed to create temporary file");
+        return 1;
+    }
+
+    FILE *fp = fdopen(fd, "w");
+    if (fp == NULL) {
+        perror("Failed to open file stream");
+        close(fd);
+        return 1;
+    }
+    fprintf(fp, "%s", script);
+    fclose(fp);
+
+    if (chmod(script_filename, 0700) == -1) {
+        perror("Failed to set execute permission");
+        return 1;
+    }
+
+    FILE *pipe = popen(script_filename, "r");
+    if (pipe == NULL) {
+        perror("Failed to run script");
+        return 1;
+    }
+
+    int idx = 0;
+    while (fgets(buffer + idx, 128 - idx, pipe) != NULL) {
+        idx += strlen(buffer);
+    }
+    if (buffer[idx - 1] == '\n')
+        buffer[idx - 1] = 0;
+
+    int status = pclose(pipe);
+    if (status == -1) {
+        perror("Error reported by pclose()");
+    } else if (!WIFEXITED(status)) {
+        printf("Script did not terminate normally\n");
+    }
+
+    remove(script_filename);
+
+    return 0;
+}
+
+static void test_precopy_rdma_plain(void)
+{
+    char buffer[128] = {};
+
+    if (new_rdma_link(buffer))
+        return;
+
+    g_autofree char *uri = g_strdup_printf("rdma:%s:7777", buffer);
+
+    MigrateCommon args = {
+        .listen_uri = uri,
+        .connect_uri = uri,
+    };
+
+    test_precopy_common(&args);
+}
+
 static void test_precopy_tcp_plain(void)
 {
     MigrateCommon args = {
@@ -1124,6 +1223,10 @@ static void migration_test_add_precopy_smoke(MigrationTestEnv *env)
                        test_multifd_tcp_uri_none);
     migration_test_add("/migration/multifd/tcp/plain/cancel",
                        test_multifd_tcp_cancel);
+#ifdef CONFIG_RDMA
+    migration_test_add("/migration/precopy/rdma/plain",
+                       test_precopy_rdma_plain);
+#endif
 }
 
 void migration_test_add_precopy(MigrationTestEnv *env)
