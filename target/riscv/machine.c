@@ -375,6 +375,18 @@ static const VMStateDescription vmstate_ssp = {
     }
 };
 
+static bool riscv_validate_misa_mxl(void *opaque, int version_id)
+{
+    RISCVCPU *cpu = RISCV_CPU(opaque);
+    CPURISCVState *env = &cpu->env;
+    RISCVCPUClass *mcc = RISCV_CPU_GET_CLASS(cpu);
+    uint32_t misa_mxl_saved = env->misa_mxl;
+
+    /* Preserve misa_mxl even if the migration stream corrupted it  */
+    env->misa_mxl = mcc->misa_mxl_max;
+    return misa_mxl_saved == mcc->misa_mxl_max;
+}
+
 const VMStateDescription vmstate_riscv_cpu = {
     .name = "cpu",
     .version_id = 10,
@@ -394,6 +406,7 @@ const VMStateDescription vmstate_riscv_cpu = {
         VMSTATE_UINTTL(env.priv_ver, RISCVCPU),
         VMSTATE_UINTTL(env.vext_ver, RISCVCPU),
         VMSTATE_UINT32(env.misa_mxl, RISCVCPU),
+        VMSTATE_VALIDATE("MXL must match", riscv_validate_misa_mxl),
         VMSTATE_UINT32(env.misa_ext, RISCVCPU),
         VMSTATE_UNUSED(4),
         VMSTATE_UINT32(env.misa_ext_mask, RISCVCPU),
