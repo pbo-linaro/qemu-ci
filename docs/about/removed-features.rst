@@ -969,6 +969,11 @@ MIPS "Trap-and-Emulate" KVM support (removed in 8.0)
 The MIPS "Trap-and-Emulate" KVM host and guest support was removed
 from Linux in 2021, and is not supported anymore by QEMU either.
 
+Xen on 32-bit ARM hosts (removed in 10.0)
+'''''''''''''''''''''''''''''''''''''''''
+
+Untested for more than 4 years.
+
 System emulator machines
 ------------------------
 
