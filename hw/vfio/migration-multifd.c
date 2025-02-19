@@ -53,6 +53,7 @@ typedef struct VFIOMultifd {
     QemuMutex load_bufs_mutex; /* Lock order: this lock -> BQL */
     uint32_t load_buf_idx;
     uint32_t load_buf_idx_last;
+    uint32_t load_buf_queued_pending_buffers;
 } VFIOMultifd;
 
 static void vfio_state_buffer_clear(gpointer data)
@@ -120,6 +121,15 @@ static bool vfio_load_state_buffer_insert(VFIODevice *vbasedev,
     }
 
     assert(packet->idx >= multifd->load_buf_idx);
+
+    multifd->load_buf_queued_pending_buffers++;
+    if (multifd->load_buf_queued_pending_buffers >
+        vbasedev->migration_max_queued_buffers) {
+        error_setg(errp,
+                   "queuing state buffer %" PRIu32 " would exceed the max of %" PRIu64,
+                   packet->idx, vbasedev->migration_max_queued_buffers);
+        return false;
+    }
 
     lb->data = g_memdup2(&packet->data, packet_total_size - sizeof(*packet));
     lb->len = packet_total_size - sizeof(*packet);
@@ -374,6 +384,9 @@ static bool vfio_load_bufs_thread(void *opaque, bool *should_quit, Error **errp)
             goto ret_signal;
         }
 
+        assert(multifd->load_buf_queued_pending_buffers > 0);
+        multifd->load_buf_queued_pending_buffers--;
+
         if (multifd->load_buf_idx == multifd->load_buf_idx_last - 1) {
             trace_vfio_load_state_device_buffer_end(vbasedev->name);
         }
@@ -408,6 +421,7 @@ VFIOMultifd *vfio_multifd_new(void)
 
     multifd->load_buf_idx = 0;
     multifd->load_buf_idx_last = UINT32_MAX;
+    multifd->load_buf_queued_pending_buffers = 0;
     qemu_cond_init(&multifd->load_bufs_buffer_ready_cond);
 
     multifd->load_bufs_thread_running = false;
