@@ -90,6 +90,26 @@ class Aarch64VirtGPUMachine(QemuSystemTest):
         exec_command_and_wait_for_pattern(self, full_cmd, weston_pattern)
 
     @skipIfMissingCommands('zstd')
+    def test_aarch64_virt_with_virgl_gpu(self):
+
+        self.require_device('virtio-gpu-gl-pci')
+
+        gpu_device = "virtio-gpu-gl-pci"
+        weston_cmd = "glmark2-wayland -b:duration=1.0"
+        weston_pattern = "glmark2 Score"
+        self._run_virt_gpu_test(gpu_device, weston_cmd, weston_pattern)
+
+    @skipIfMissingCommands('zstd')
+    def test_aarch64_virt_with_virgl_blobs_gpu(self):
+
+        self.require_device('virtio-gpu-gl-pci')
+
+        gpu_device = "virtio-gpu-gl-pci,hostmem=4G,blob=on"
+        weston_cmd = "glmark2-wayland -b:duration=1.0"
+        weston_pattern = "glmark2 Score"
+        self._run_virt_gpu_test(gpu_device, weston_cmd, weston_pattern)
+
+    @skipIfMissingCommands('zstd')
     def test_aarch64_virt_with_vulkan_gpu(self):
 
         self.require_device('virtio-gpu-gl-pci')
