@@ -468,6 +468,16 @@ class QEMUMachine:
             # that exception. However, we still want to clean up.
             raise
 
+    def get_command_arguments(self, command) -> List[str]:
+        """
+        Return a list of arguments used with one kind of command
+        """
+        args = []
+        for index, element in enumerate(self._args):
+            if element == command:
+                args += [self._args[index + 1]]
+        return args
+
     def _launch(self) -> None:
         """
         Launch the VM and establish a QMP connection

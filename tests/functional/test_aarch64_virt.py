@@ -180,6 +180,8 @@ class Aarch64VirtMachine(QemuSystemTest):
                          f"file.filename={image_path}")
         self.vm.add_args("-snapshot")
 
+        self.check_required_devices()
+
         try:
             self.vm.launch()
         except VMLaunchFailure as excp:

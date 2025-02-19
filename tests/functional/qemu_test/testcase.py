@@ -335,6 +335,14 @@ class QemuSystemTest(QemuBaseTest):
         if help.find(devicename) < 0:
             self.skipTest('no support for device ' + devicename)
 
+    def check_required_devices(self):
+        """
+        Check the devices requested on the command line are available
+        in the binary. To be used before the VM launch() call.
+        """
+        for device in self.vm.get_command_arguments('-device'):
+            self.require_device(device.split(',')[0])
+
     def _new_vm(self, name, *args):
         vm = QEMUMachine(self.qemu_bin,
                          name=name,
