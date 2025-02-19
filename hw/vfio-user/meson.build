@@ -1,5 +1,6 @@
 vfio_user_ss = ss.source_set()
 vfio_user_ss.add(files(
+  'common.c',
   'container.c',
   'pci.c',
 ))
