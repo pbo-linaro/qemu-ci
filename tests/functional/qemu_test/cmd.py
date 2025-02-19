@@ -14,6 +14,12 @@
 import logging
 import os
 import os.path
+import platform
+
+def dso_suffix():
+    '''Return the dynamic libraries suffix for the current platform'''
+    DSO_SUFFIXES = { 'Linux': 'so', 'Darwin': 'dylib', 'Windows': 'dll' }
+    return DSO_SUFFIXES[platform.system()]
 
 
 def which(tool):
