@@ -22,4 +22,7 @@ bool vfio_multifd_transfer_enabled(VFIODevice *vbasedev);
 
 bool vfio_multifd_transfer_setup(VFIODevice *vbasedev, Error **errp);
 
+bool vfio_load_state_buffer(void *opaque, char *data, size_t data_size,
+                            Error **errp);
+
 #endif

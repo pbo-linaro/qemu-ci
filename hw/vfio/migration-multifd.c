@@ -42,6 +42,11 @@ typedef struct VFIOStateBuffer {
 } VFIOStateBuffer;
 
 typedef struct VFIOMultifd {
+    VFIOStateBuffers load_bufs;
+    QemuCond load_bufs_buffer_ready_cond;
+    QemuMutex load_bufs_mutex; /* Lock order: this lock -> BQL */
+    uint32_t load_buf_idx;
+    uint32_t load_buf_idx_last;
 } VFIOMultifd;
 
 static void vfio_state_buffer_clear(gpointer data)
@@ -87,15 +92,113 @@ static VFIOStateBuffer *vfio_state_buffers_at(VFIOStateBuffers *bufs, guint idx)
     return &g_array_index(bufs->array, VFIOStateBuffer, idx);
 }
 
+static bool vfio_load_state_buffer_insert(VFIODevice *vbasedev,
+                                          VFIODeviceStatePacket *packet,
+                                          size_t packet_total_size,
+                                          Error **errp)
+{
+    VFIOMigration *migration = vbasedev->migration;
+    VFIOMultifd *multifd = migration->multifd;
+    VFIOStateBuffer *lb;
+
+    vfio_state_buffers_assert_init(&multifd->load_bufs);
+    if (packet->idx >= vfio_state_buffers_size_get(&multifd->load_bufs)) {
+        vfio_state_buffers_size_set(&multifd->load_bufs, packet->idx + 1);
+    }
+
+    lb = vfio_state_buffers_at(&multifd->load_bufs, packet->idx);
+    if (lb->is_present) {
+        error_setg(errp, "state buffer %" PRIu32 " already filled",
+                   packet->idx);
+        return false;
+    }
+
+    assert(packet->idx >= multifd->load_buf_idx);
+
+    lb->data = g_memdup2(&packet->data, packet_total_size - sizeof(*packet));
+    lb->len = packet_total_size - sizeof(*packet);
+    lb->is_present = true;
+
+    return true;
+}
+
+bool vfio_load_state_buffer(void *opaque, char *data, size_t data_size,
+                            Error **errp)
+{
+    VFIODevice *vbasedev = opaque;
+    VFIOMigration *migration = vbasedev->migration;
+    VFIOMultifd *multifd = migration->multifd;
+    VFIODeviceStatePacket *packet = (VFIODeviceStatePacket *)data;
+
+    /*
+     * Holding BQL here would violate the lock order and can cause
+     * a deadlock once we attempt to lock load_bufs_mutex below.
+     */
+    assert(!bql_locked());
+
+    if (!vfio_multifd_transfer_enabled(vbasedev)) {
+        error_setg(errp,
+                   "got device state packet but not doing multifd transfer");
+        return false;
+    }
+
+    assert(multifd);
+
+    if (data_size < sizeof(*packet)) {
+        error_setg(errp, "packet too short at %zu (min is %zu)",
+                   data_size, sizeof(*packet));
+        return false;
+    }
+
+    if (packet->version != VFIO_DEVICE_STATE_PACKET_VER_CURRENT) {
+        error_setg(errp, "packet has unknown version %" PRIu32,
+                   packet->version);
+        return false;
+    }
+
+    if (packet->idx == UINT32_MAX) {
+        error_setg(errp, "packet has too high idx");
+        return false;
+    }
+
+    trace_vfio_load_state_device_buffer_incoming(vbasedev->name, packet->idx);
+
+    QEMU_LOCK_GUARD(&multifd->load_bufs_mutex);
+
+    /* config state packet should be the last one in the stream */
+    if (packet->flags & VFIO_DEVICE_STATE_CONFIG_STATE) {
+        multifd->load_buf_idx_last = packet->idx;
+    }
+
+    if (!vfio_load_state_buffer_insert(vbasedev, packet, data_size, errp)) {
+        return false;
+    }
+
+    qemu_cond_signal(&multifd->load_bufs_buffer_ready_cond);
+
+    return true;
+}
+
 VFIOMultifd *vfio_multifd_new(void)
 {
     VFIOMultifd *multifd = g_new(VFIOMultifd, 1);
+
+    vfio_state_buffers_init(&multifd->load_bufs);
+
+    qemu_mutex_init(&multifd->load_bufs_mutex);
+
+    multifd->load_buf_idx = 0;
+    multifd->load_buf_idx_last = UINT32_MAX;
+    qemu_cond_init(&multifd->load_bufs_buffer_ready_cond);
 
     return multifd;
 }
 
 void vfio_multifd_free(VFIOMultifd *multifd)
 {
+    qemu_cond_destroy(&multifd->load_bufs_buffer_ready_cond);
+    qemu_mutex_destroy(&multifd->load_bufs_mutex);
+
     g_free(multifd);
 }
 
