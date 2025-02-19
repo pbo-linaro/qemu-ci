@@ -828,6 +828,19 @@ static bool hiod_iommufd_vfio_realize(HostIOMMUDevice *hiod, void *opaque,
     return true;
 }
 
+static bool hiod_iommufd_vfio_realize_late(HostIOMMUDevice *hiod, void *opaque,
+                                           Error **errp)
+{
+    VFIODevice *vdev = opaque;
+    HostIOMMUDeviceIOMMUFD *idev = HOST_IOMMU_DEVICE_IOMMUFD(hiod);
+
+    idev->iommufd = vdev->iommufd;
+    idev->devid = vdev->devid;
+    idev->hwpt_id = vdev->hwpt->hwpt_id;
+
+    return true;
+}
+
 static GList *
 hiod_iommufd_vfio_get_iova_ranges(HostIOMMUDevice *hiod)
 {
@@ -852,6 +865,7 @@ static void hiod_iommufd_vfio_class_init(ObjectClass *oc, void *data)
     HostIOMMUDeviceClass *hiodc = HOST_IOMMU_DEVICE_CLASS(oc);
 
     hiodc->realize = hiod_iommufd_vfio_realize;
+    hiodc->realize_late = hiod_iommufd_vfio_realize_late;
     hiodc->get_iova_ranges = hiod_iommufd_vfio_get_iova_ranges;
     hiodc->get_page_size_mask = hiod_iommufd_vfio_get_page_size_mask;
 };
