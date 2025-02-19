@@ -22,8 +22,11 @@ bool vfio_multifd_transfer_enabled(VFIODevice *vbasedev);
 
 bool vfio_multifd_transfer_setup(VFIODevice *vbasedev, Error **errp);
 
+bool vfio_load_config_after_iter(VFIODevice *vbasedev);
 bool vfio_load_state_buffer(void *opaque, char *data, size_t data_size,
                             Error **errp);
+
+int vfio_load_state_config_load_ready(VFIODevice *vbasedev);
 
 void vfio_multifd_emit_dummy_eos(VFIODevice *vbasedev, QEMUFile *f);
 
