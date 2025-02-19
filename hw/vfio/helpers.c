@@ -184,7 +184,8 @@ void vfio_region_write(void *opaque, hwaddr addr,
         break;
     }
 
-    ret = vbasedev->io->region_write(vbasedev, region->nr, addr, size, &buf);
+    ret = vbasedev->io->region_write(vbasedev, region->nr, addr, size, &buf,
+                                     region->post_wr);
     if (ret != size) {
         error_report("%s(%s:region%d+0x%"HWADDR_PRIx", 0x%"PRIx64
                      ",%d) failed: %s",
@@ -365,12 +366,13 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
     region->size = info->size;
     region->fd_offset = info->offset;
     region->nr = index;
+    region->post_wr = false;
+
     if (vbasedev->regfds != NULL) {
         region->fd = vbasedev->regfds[index];
     } else {
         region->fd = vbasedev->fd;
     }
-
 
     if (region->size) {
         region->mem = g_new0(MemoryRegion, 1);
@@ -837,7 +839,7 @@ static int vfio_io_region_read(VFIODevice *vbasedev, uint8_t index, off_t off,
 }
 
 static int vfio_io_region_write(VFIODevice *vbasedev, uint8_t index, off_t off,
-                                uint32_t size, void *data)
+                                uint32_t size, void *data, bool post)
 {
     struct vfio_region_info *info = vbasedev->regions[index];
     int ret;
