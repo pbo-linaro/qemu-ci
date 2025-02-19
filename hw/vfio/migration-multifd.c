@@ -41,6 +41,9 @@ typedef struct VFIOStateBuffer {
     size_t len;
 } VFIOStateBuffer;
 
+typedef struct VFIOMultifd {
+} VFIOMultifd;
+
 static void vfio_state_buffer_clear(gpointer data)
 {
     VFIOStateBuffer *lb = data;
@@ -84,8 +87,38 @@ static VFIOStateBuffer *vfio_state_buffers_at(VFIOStateBuffers *bufs, guint idx)
     return &g_array_index(bufs->array, VFIOStateBuffer, idx);
 }
 
+VFIOMultifd *vfio_multifd_new(void)
+{
+    VFIOMultifd *multifd = g_new(VFIOMultifd, 1);
+
+    return multifd;
+}
+
+void vfio_multifd_free(VFIOMultifd *multifd)
+{
+    g_free(multifd);
+}
+
 bool vfio_multifd_transfer_supported(void)
 {
     return multifd_device_state_supported() &&
         migrate_send_switchover_start();
+}
+
+bool vfio_multifd_transfer_enabled(VFIODevice *vbasedev)
+{
+    return false;
+}
+
+bool vfio_multifd_transfer_setup(VFIODevice *vbasedev, Error **errp)
+{
+    if (vfio_multifd_transfer_enabled(vbasedev) &&
+        !vfio_multifd_transfer_supported()) {
+        error_setg(errp,
+                   "%s: Multifd device transfer requested but unsupported in the current config",
+                   vbasedev->name);
+        return false;
+    }
+
+    return true;
 }

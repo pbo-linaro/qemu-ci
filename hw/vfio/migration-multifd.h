@@ -12,6 +12,14 @@
 
 #include "hw/vfio/vfio-common.h"
 
+typedef struct VFIOMultifd VFIOMultifd;
+
+VFIOMultifd *vfio_multifd_new(void);
+void vfio_multifd_free(VFIOMultifd *multifd);
+
 bool vfio_multifd_transfer_supported(void);
+bool vfio_multifd_transfer_enabled(VFIODevice *vbasedev);
+
+bool vfio_multifd_transfer_setup(VFIODevice *vbasedev, Error **errp);
 
 #endif
