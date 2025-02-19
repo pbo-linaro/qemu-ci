@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250219175941.135390-1-eric.auger@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/2] hw/vfio: Introduce vfio_is_dma_map_allowed() callback
+  [32m✓[0m [PATCH RFC 2/2] hw/vfio/pci: Prevents BARs from being dma mapped in d3hot state
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: hw/vfio: Introduce vfio_is_dma_map_allowed() callback
+Applying: hw/vfio/pci: Prevents BARs from being dma mapped in d3hot state
+Patch failed at 0002 hw/vfio/pci: Prevents BARs from being dma mapped in d3hot state
+error: patch failed: hw/vfio/common.c:555
+error: hw/vfio/common.c: patch does not apply
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:137: new blank line at EOF.
++
+error: patch failed: hw/vfio/trace-events:121
+error: hw/vfio/trace-events: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
