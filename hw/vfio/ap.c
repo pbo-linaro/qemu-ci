@@ -162,6 +162,8 @@ static void vfio_ap_realize(DeviceState *dev, Error **errp)
         return;
     }
 
+    vbasedev->use_regfds = false;
+
     if (!vfio_attach_device(vbasedev->name, vbasedev,
                             &address_space_memory, errp)) {
         goto error;
