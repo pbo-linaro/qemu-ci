@@ -102,7 +102,7 @@ static int vfio_user_dma_map(const VFIOContainerBase *bcontainer, hwaddr iova,
      * vaddr enters as a QEMU process address; make it either a file offset
      * for mapped areas or leave as 0.
      */
-    if (fd != -1) {
+    if (fd != -1 && !(container->proxy->flags & VFIO_PROXY_NO_MMAP)) {
         msgp->offset = qemu_ram_block_host_offset(mrp->ram_block, vaddr);
     }
 
