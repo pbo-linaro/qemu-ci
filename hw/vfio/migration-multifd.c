@@ -83,3 +83,9 @@ static VFIOStateBuffer *vfio_state_buffers_at(VFIOStateBuffers *bufs, guint idx)
 {
     return &g_array_index(bufs->array, VFIOStateBuffer, idx);
 }
+
+bool vfio_multifd_transfer_supported(void)
+{
+    return multifd_device_state_supported() &&
+        migrate_send_switchover_start();
+}
