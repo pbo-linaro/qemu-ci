@@ -460,11 +460,26 @@ bool vfio_multifd_transfer_supported(void)
 
 bool vfio_multifd_transfer_enabled(VFIODevice *vbasedev)
 {
-    return false;
+    VFIOMigration *migration = vbasedev->migration;
+
+    return migration->multifd_transfer;
 }
 
 bool vfio_multifd_transfer_setup(VFIODevice *vbasedev, Error **errp)
 {
+    VFIOMigration *migration = vbasedev->migration;
+
+    /*
+     * Make a copy of this setting at the start in case it is changed
+     * mid-migration.
+     */
+    if (vbasedev->migration_multifd_transfer == ON_OFF_AUTO_AUTO) {
+        migration->multifd_transfer = vfio_multifd_transfer_supported();
+    } else {
+        migration->multifd_transfer =
+            vbasedev->migration_multifd_transfer == ON_OFF_AUTO_ON;
+    }
+
     if (vfio_multifd_transfer_enabled(vbasedev) &&
         !vfio_multifd_transfer_supported()) {
         error_setg(errp,
