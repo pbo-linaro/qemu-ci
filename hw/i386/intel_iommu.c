@@ -39,6 +39,7 @@
 #include "kvm/kvm_i386.h"
 #include "migration/vmstate.h"
 #include "trace.h"
+#include "system/iommufd.h"
 
 /* context entry operations */
 #define VTD_CE_GET_RID2PASID(ce) \
@@ -4344,6 +4345,39 @@ static bool vtd_check_hiod(IntelIOMMUState *s, HostIOMMUDevice *hiod,
     if (!s->flts) {
         /* All checks requested by VTD stage-2 translation pass */
         return true;
+    }
+
+    /* Remaining checks are all stage-1 translation specific */
+    if (!object_dynamic_cast(OBJECT(hiod), TYPE_HOST_IOMMU_DEVICE_IOMMUFD)) {
+        error_setg(errp, "Need IOMMUFD backend when x-flts=on");
+        return false;
+    }
+
+    ret = hiodc->get_cap(hiod, HOST_IOMMU_DEVICE_CAP_IOMMU_TYPE, errp);
+    if (ret < 0) {
+        return false;
+    }
+    if (ret != HOST_IOMMU_DEVICE_IOMMU_HW_INFO_TYPE_INTEL_VTD) {
+        error_setg(errp, "Incompatible host platform IOMMU type %d", ret);
+        return false;
+    }
+
+    ret = hiodc->get_cap(hiod, HOST_IOMMU_DEVICE_CAP_NESTING, errp);
+    if (ret < 0) {
+        return false;
+    }
+    if (ret != 1) {
+        error_setg(errp, "Host IOMMU doesn't support nested translation");
+        return false;
+    }
+
+    ret = hiodc->get_cap(hiod, HOST_IOMMU_DEVICE_CAP_FS1GP, errp);
+    if (ret < 0) {
+        return false;
+    }
+    if (s->fs1gp && ret != 1) {
+        error_setg(errp, "Stage-1 1GB huge page is unsupported by host IOMMU");
+        return false;
     }
 
     error_setg(errp, "host device is uncompatible with stage-1 translation");
