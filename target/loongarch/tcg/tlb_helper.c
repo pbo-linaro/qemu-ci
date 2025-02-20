@@ -218,6 +218,12 @@ void helper_tlbsrch(CPULoongArchState *env)
 {
     int index, match;
 
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
+
     if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
         match = loongarch_tlb_search(env, env->CSR_TLBREHI, &index);
     } else {
@@ -238,6 +244,12 @@ void helper_tlbrd(CPULoongArchState *env)
     LoongArchTLB *tlb;
     int index;
     uint8_t tlb_ps, tlb_e;
+
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
 
     index = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, INDEX);
     tlb = &env->tlb[index];
@@ -272,6 +284,12 @@ void helper_tlbrd(CPULoongArchState *env)
 void helper_tlbwr(CPULoongArchState *env)
 {
     int index = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, INDEX);
+
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
 
     invalidate_tlb(env, index);
 
@@ -325,6 +343,11 @@ void helper_tlbclr(CPULoongArchState *env)
     LoongArchTLB *tlb;
     int i, index;
     uint16_t csr_asid, tlb_asid, tlb_g;
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
 
     csr_asid = FIELD_EX64(env->CSR_ASID, CSR_ASID, ASID);
     index = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, INDEX);
@@ -358,6 +381,12 @@ void helper_tlbflush(CPULoongArchState *env)
 {
     int i, index;
 
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
+
     index = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, INDEX);
 
     if (index < LOONGARCH_STLB) {
@@ -380,6 +409,12 @@ void helper_tlbflush(CPULoongArchState *env)
 
 void helper_invtlb_all(CPULoongArchState *env)
 {
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
+
     for (int i = 0; i < LOONGARCH_TLB_MAX; i++) {
         env->tlb[i].tlb_misc = FIELD_DP64(env->tlb[i].tlb_misc,
                                           TLB_MISC, E, 0);
@@ -389,6 +424,12 @@ void helper_invtlb_all(CPULoongArchState *env)
 
 void helper_invtlb_all_g(CPULoongArchState *env, uint32_t g)
 {
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
+
     for (int i = 0; i < LOONGARCH_TLB_MAX; i++) {
         LoongArchTLB *tlb = &env->tlb[i];
         uint8_t tlb_g = FIELD_EX64(tlb->tlb_entry0, TLBENTRY, G);
@@ -403,6 +444,12 @@ void helper_invtlb_all_g(CPULoongArchState *env, uint32_t g)
 void helper_invtlb_all_asid(CPULoongArchState *env, target_ulong info)
 {
     uint16_t asid = info & R_CSR_ASID_ASID_MASK;
+
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
 
     for (int i = 0; i < LOONGARCH_TLB_MAX; i++) {
         LoongArchTLB *tlb = &env->tlb[i];
@@ -420,6 +467,12 @@ void helper_invtlb_page_asid(CPULoongArchState *env, target_ulong info,
                              target_ulong addr)
 {
     uint16_t asid = info & 0x3ff;
+
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+       return;
+    }
 
     for (int i = 0; i < LOONGARCH_TLB_MAX; i++) {
         LoongArchTLB *tlb = &env->tlb[i];
@@ -449,6 +502,11 @@ void helper_invtlb_page_asid_or_g(CPULoongArchState *env,
                                   target_ulong info, target_ulong addr)
 {
     uint16_t asid = info & 0x3ff;
+    uint8_t pg = FIELD_EX64(env->CSR_CRMD, CSR_CRMD, PG);
+
+    if (!pg) {
+        return;
+    }
 
     for (int i = 0; i < LOONGARCH_TLB_MAX; i++) {
         LoongArchTLB *tlb = &env->tlb[i];

@@ -17,6 +17,60 @@
 #include "hw/irq.h"
 #include "cpu-csr.h"
 
+
+void check_tlb_ps(CPULoongArchState *env)
+{
+    for (int i=0; i < LOONGARCH_TLB_MAX; i++)
+    {
+        LoongArchTLB*tlb =&env->tlb[i];
+        uint8_t tlb_ps;
+        if(i >= LOONGARCH_STLB) {
+            tlb_ps = FIELD_EX64(tlb->tlb_misc,TLB_MISC,PS);
+            if (tlb_ps < 12) {
+                tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, 12);
+            }
+        } else {
+            tlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
+            if (tlb_ps < 12) {
+               env->CSR_STLBPS= FIELD_DP64(env->CSR_STLBPS, CSR_STLBPS, PS, 12);
+           }
+       }
+    }
+}
+
+target_ulong helper_csrwr_crmd(CPULoongArchState *env, target_ulong val)
+{
+    uint8_t pg,old_pg;
+    int64_t old_v = env->CSR_CRMD;
+
+    pg = FIELD_EX64(val, CSR_CRMD, PG);
+    old_pg = FIELD_EX64(old_v, CSR_CRMD,PG);
+    if (pg&& !old_pg) {
+        check_tlb_ps(env);
+    }
+    env->CSR_CRMD = val;
+    return old_v;
+}
+
+target_ulong helper_csrwr_stlbps(CPULoongArchState *env, target_ulong val)
+{
+    uint8_t tlb_ps;
+    int64_t old_v = env->CSR_STLBPS;
+
+    /*
+     * The real hardware only supports the min tlb_ps is 12
+     * tlb_ps=0 may cause undefined-behavior.
+     */
+    tlb_ps = FIELD_EX64(val, CSR_STLBPS, PS);
+    if (tlb_ps  < 12) {
+        qemu_log_mask(LOG_GUEST_ERROR,
+                      "Attempted set ps %d\n",tlb_ps);
+        val = FIELD_DP64(val, CSR_STLBPS, PS, 12);
+    }
+    env->CSR_STLBPS = val;
+    return old_v;
+}
+
 target_ulong helper_csrrd_pgd(CPULoongArchState *env)
 {
     int64_t v;
@@ -99,7 +153,7 @@ target_ulong helper_csrwr_ticlr(CPULoongArchState *env, target_ulong val)
 
 target_ulong helper_csrwr_pwcl(CPULoongArchState *env, target_ulong val)
 {
-    int shift;
+    int shift, ptbase;
     int64_t old_v = env->CSR_PWCL;
 
     /*
@@ -107,10 +161,16 @@ target_ulong helper_csrwr_pwcl(CPULoongArchState *env, target_ulong val)
      * treated as illegal.
      */
     shift = FIELD_EX64(val, CSR_PWCL, PTEWIDTH);
+    ptbase = FIELD_EX64(val, CSR_PWCL, PTBASE);
     if (shift) {
         qemu_log_mask(LOG_GUEST_ERROR,
                       "Attempted set pte width with %d bit\n", 64 << shift);
         val = FIELD_DP64(val, CSR_PWCL, PTEWIDTH, 0);
+    }
+    if (ptbase < 12) {
+         qemu_log_mask(LOG_GUEST_ERROR,
+                      "Attrmpted set ptbase 2^%d\n", ptbase);
+         val = FIELD_DP64(val, CSR_PWCL, PTBASE, 12);
     }
 
     env->CSR_PWCL = val;
