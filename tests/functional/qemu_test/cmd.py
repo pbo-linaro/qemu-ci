@@ -15,7 +15,6 @@ import logging
 import os
 import os.path
 
-
 def which(tool):
     """ looks up the full path for @tool, returns None if not found
         or if @tool does not have executable permissions.
