@@ -610,7 +610,7 @@ static int kvm_riscv_get_regs_csr(CPUState *cs)
     CPURISCVState *env = &RISCV_CPU(cs)->env;
 
     KVM_RISCV_GET_CSR(cs, env, sstatus, env->mstatus);
-    KVM_RISCV_GET_CSR(cs, env, sie, env->mie);
+    KVM_RISCV_GET_CSR(cs, env, sie, env->sie);
     KVM_RISCV_GET_CSR(cs, env, stvec, env->stvec);
     KVM_RISCV_GET_CSR(cs, env, sscratch, env->sscratch);
     KVM_RISCV_GET_CSR(cs, env, sepc, env->sepc);
@@ -627,7 +627,7 @@ static int kvm_riscv_put_regs_csr(CPUState *cs)
     CPURISCVState *env = &RISCV_CPU(cs)->env;
 
     KVM_RISCV_SET_CSR(cs, env, sstatus, env->mstatus);
-    KVM_RISCV_SET_CSR(cs, env, sie, env->mie);
+    KVM_RISCV_SET_CSR(cs, env, sie, env->sie);
     KVM_RISCV_SET_CSR(cs, env, stvec, env->stvec);
     KVM_RISCV_SET_CSR(cs, env, sscratch, env->sscratch);
     KVM_RISCV_SET_CSR(cs, env, sepc, env->sepc);
