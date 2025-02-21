@@ -1939,7 +1939,7 @@ static int ram_save_target_page(RAMState *rs, PageSearchStatus *pss)
     int res;
 
     /* Hand over to RDMA first */
-    if (migrate_rdma() && !migration_in_postcopy()) {
+    if (migrate_rdma()) {
         res = rdma_control_save_page(pss->pss_channel, pss->block->offset,
                                      offset, TARGET_PAGE_SIZE);
 
