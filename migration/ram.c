@@ -1155,18 +1155,19 @@ static bool control_save_page(PageSearchStatus *pss,
 {
     int ret;
 
-    ret = rdma_control_save_page(pss->pss_channel, pss->block->offset, offset,
-                                 TARGET_PAGE_SIZE);
-    if (ret == RAM_SAVE_CONTROL_NOT_SUPP) {
-        return false;
-    }
+    if (migrate_rdma() && !migration_in_postcopy()) {
+        ret = rdma_control_save_page(pss->pss_channel, pss->block->offset,
+                                     offset, TARGET_PAGE_SIZE);
 
-    if (ret == RAM_SAVE_CONTROL_DELAYED) {
-        *pages = 1;
+        if (ret == RAM_SAVE_CONTROL_DELAYED) {
+            *pages = 1;
+        } else {
+            *pages = ret;
+        }
         return true;
     }
-    *pages = ret;
-    return true;
+
+    return false;
 }
 
 /*
