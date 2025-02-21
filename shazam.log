@@ -1,0 +1,89 @@
+Grabbing thread from lore.kernel.org/all/cover.1740140520.git.mst@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 42 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 751 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/41] docs/about: Change notes on x86 machine type deprecation into a general one
+  [32m✓[0m [PATCH 2/41] hw/net: Fix NULL dereference with software RSS
+  [32m✓[0m [PATCH 3/41] hw/ppc/spapr_pci: Do not create DT for disabled PCI device
+  [32m✓[0m [PATCH 4/41] hw/ppc/spapr_pci: Do not reject VFs created after a PF
+  [32m✓[0m [PATCH 5/41] s390x/pci: Avoid creating zpci for VFs
+  [32m✓[0m [PATCH 6/41] s390x/pci: Allow plugging SR-IOV devices
+  [32m✓[0m [PATCH 7/41] s390x/pci: Check for multifunction after device realization
+  [32m✓[0m [PATCH 8/41] pcie_sriov: Do not manually unrealize
+  [32m✓[0m [PATCH 9/41] pcie_sriov: Ensure VF addr does not overflow
+  [32m✓[0m [PATCH 10/41] pcie_sriov: Reuse SR-IOV VF device instances
+  [32m✓[0m [PATCH 11/41] pcie_sriov: Release VFs failed to realize
+  [32m✓[0m [PATCH 12/41] pcie_sriov: Remove num_vfs from PCIESriovPF
+  [32m✓[0m [PATCH 13/41] pcie_sriov: Register VFs after migration
+  [32m✓[0m [PATCH 14/41] qtest/libqos/pci: Do not write to PBA memory
+  [32m✓[0m [PATCH 15/41] hw/pci/msix: Warn on PBA writes
+  [32m✓[0m [PATCH 16/41] hw/pci: Assert a bar is not registered multiple times
+  [32m✓[0m [PATCH 17/41] hw/i386/pc: Fix crash that occurs when introspecting TYPE_PC_MACHINE machines
+  [32m✓[0m [PATCH 18/41] hw/i386/microvm: Fix crash that occurs when introspecting the microvm machine
+  [32m✓[0m [PATCH 19/41] tests/qtest/vhost-user-test: Use modern virtio for vhost-user tests
+  [32m✓[0m [PATCH 20/41] hw/cxl: Introduce CXL_T3_MSIX_VECTOR enumeration
+  [32m✓[0m [PATCH 21/41] hw/mem/cxl_type3: Add paired msix_uninit_exclusive_bar() call
+  [32m✓[0m [PATCH 22/41] hw/mem/cxl_type3: Fix special_ops memory leak on msix_init_exclusive_bar() failure
+  [32m✓[0m [PATCH 23/41] hw/mem/cxl_type3: Ensure errp is set on realization failure
+  [32m✓[0m [PATCH 24/41] mem/cxl_type3: support 3, 6, 12 and 16 interleave ways
+  [32m✓[0m [PATCH 25/41] hw/virtio: reset virtio balloon stats on machine reset
+  [32m✓[0m [PATCH 26/41] amd_iommu: Use correct DTE field for interrupt passthrough
+  [32m✓[0m [PATCH 27/41] amd_iommu: Use correct bitmask to set capability BAR
+  [32m✓[0m [PATCH 28/41] vhost-iova-tree: Implement an IOVA-only tree
+  [32m✓[0m [PATCH 29/41] vhost-iova-tree, svq: Implement GPA->IOVA & partial IOVA->HVA trees
+  [32m✓[0m [PATCH 30/41] vhost-iova-tree: Update documentation
+  [32m✓[0m [PATCH 31/41] cryptodev/vhost: allocate CryptoDevBackendVhost using g_mem0()
+    + Acked-by: zhenwei pi <pizhenwei@bytedance.com> ([31m✗[0m DKIM/bytedance.com)
+  [32m✓[0m [PATCH 32/41] MAINTAINERS: add more files to `vhost`
+  [32m✓[0m [PATCH 33/41] vdpa: Fix endian bugs in shadow virtqueue
+  [32m✓[0m [PATCH 34/41] hw/virtio/virtio-nsm: Respond with correct length
+  [32m✓[0m [PATCH 35/41] net: vhost-user: add QAPI events to report connection state
+  [32m✓[0m [PATCH 36/41] vhost-user-snd: correct the calculation of config_size
+  [32m✓[0m [PATCH 37/41] hw/virtio/virtio-iommu: Migrate to 3-phase reset
+    + Acked-by: Jason Wang <jasowang@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 38/41] hw/i386/intel-iommu: Migrate to 3-phase reset
+    + Acked-by: Jason Wang <jasowang@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 39/41] hw/arm/smmuv3: Move reset to exit phase
+  [32m✓[0m [PATCH 40/41] hw/vfio/common: Add a trace point in vfio_reset_handler
+  [32m✓[0m [PATCH 41/41] docs/devel/reset: Document reset expectations for DMA and IOMMU
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 41
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Tested-by: Vikrant Garg <vikrant1garg@gmail.com>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: docs/about: Change notes on x86 machine type deprecation into a general one
+Applying: hw/net: Fix NULL dereference with software RSS
+Applying: hw/ppc/spapr_pci: Do not create DT for disabled PCI device
+Applying: hw/ppc/spapr_pci: Do not reject VFs created after a PF
+Applying: s390x/pci: Avoid creating zpci for VFs
+Applying: s390x/pci: Allow plugging SR-IOV devices
+Applying: s390x/pci: Check for multifunction after device realization
+Applying: pcie_sriov: Do not manually unrealize
+Applying: pcie_sriov: Ensure VF addr does not overflow
+Applying: pcie_sriov: Reuse SR-IOV VF device instances
+Applying: pcie_sriov: Release VFs failed to realize
+Applying: pcie_sriov: Remove num_vfs from PCIESriovPF
+Applying: pcie_sriov: Register VFs after migration
+Applying: qtest/libqos/pci: Do not write to PBA memory
+Applying: hw/pci/msix: Warn on PBA writes
+Applying: hw/pci: Assert a bar is not registered multiple times
+Applying: hw/i386/pc: Fix crash that occurs when introspecting TYPE_PC_MACHINE machines
+Applying: hw/i386/microvm: Fix crash that occurs when introspecting the microvm machine
+Applying: tests/qtest/vhost-user-test: Use modern virtio for vhost-user tests
+Patch failed at 0019 tests/qtest/vhost-user-test: Use modern virtio for vhost-user tests
+error: patch failed: tests/qtest/vhost-user-test.c:1043
+error: tests/qtest/vhost-user-test.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
