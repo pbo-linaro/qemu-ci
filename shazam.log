@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20250221170342.63591-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/15] rust: add IsA bounds to QOM implementation traits
+  [32m✓[0m [PATCH 2/15] rust: add SysBusDeviceImpl
+  [32m✓[0m [PATCH 3/15] rust: qom: add ObjectImpl::CLASS_INIT
+  [32m✓[0m [PATCH 4/15] rust: pl011, qemu_api tests: do not use ClassInitImpl
+  [32m✓[0m [PATCH 5/15] rust: qom: get rid of ClassInitImpl
+  [32m✓[0m [PATCH 6/15] rust: cell: add wrapper for FFI types
+  [32m✓[0m [PATCH 7/15] rust: qemu_api_macros: add Wrapper derive macro
+  [32m✓[0m [PATCH 8/15] rust: timer: wrap QEMUTimer with Opaque<>
+  [32m✓[0m [PATCH 9/15] rust: irq: wrap IRQState with Opaque<>
+  [32m✓[0m [PATCH 10/15] rust: qom: wrap Object with Opaque<>
+  [32m✓[0m [PATCH 11/15] rust: qdev: wrap Clock and DeviceState with Opaque<>
+  [32m✓[0m [PATCH 12/15] rust: sysbus: wrap SysBusDevice with Opaque<>
+  [32m✓[0m [PATCH 13/15] rust: memory: wrap MemoryRegion with Opaque<>
+  [32m✓[0m [PATCH 14/15] rust: chardev: wrap Chardev with Opaque<>
+  [32m✓[0m [PATCH 15/15] rust: bindings: remove more unnecessary Send/Sync impls
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 15
+---
+Applying: rust: add IsA bounds to QOM implementation traits
+Applying: rust: add SysBusDeviceImpl
+Applying: rust: qom: add ObjectImpl::CLASS_INIT
+Applying: rust: pl011, qemu_api tests: do not use ClassInitImpl
+Patch failed at 0004 rust: pl011, qemu_api tests: do not use ClassInitImpl
+error: patch failed: rust/qemu-api/tests/tests.rs:13
+error: rust/qemu-api/tests/tests.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
