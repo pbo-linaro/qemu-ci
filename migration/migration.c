@@ -251,6 +251,10 @@ migration_capabilities_and_transport_compatible(MigrationAddress *addr,
             error_setg(errp, "RDMA and multifd can't be used together");
             return false;
         }
+        if (migrate_postcopy_ram()) {
+            error_setg(errp, "RDMA and postcopy-ram can't be used together");
+            return false;
+        }
     }
 
     return true;
