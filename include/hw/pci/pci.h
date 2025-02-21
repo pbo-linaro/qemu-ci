@@ -447,6 +447,21 @@ bool pci_device_set_iommu_device(PCIDevice *dev, HostIOMMUDevice *hiod,
 void pci_device_unset_iommu_device(PCIDevice *dev);
 
 /**
+ * pci_iommu_init_iotlb_notifier: initialize an IOMMU notifier
+ *
+ * This function is used by devices before registering an IOTLB notifier
+ *
+ * @dev: the device
+ * @pasid: the pasid of the address space to watch
+ * @n: the notifier to initialize
+ * @fn: the callback to be installed
+ * @opaque: user pointer that can be used to store a state
+ */
+bool pci_iommu_init_iotlb_notifier(PCIDevice *dev, uint32_t pasid,
+                                   IOMMUNotifier *n, IOMMUNotify fn,
+                                   void *opaque);
+
+/**
  * pci_setup_iommu: Initialize specific IOMMU handlers for a PCIBus
  *
  * Let PCI host bridges define specific operations.
