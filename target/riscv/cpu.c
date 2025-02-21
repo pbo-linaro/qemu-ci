@@ -1047,6 +1047,11 @@ static void riscv_cpu_reset_hold(Object *obj, ResetType type)
         mcc->parent_phases.hold(obj, type);
     }
 #ifndef CONFIG_USER_ONLY
+    if (kvm_enabled()) {
+        kvm_riscv_reset_vcpu(cpu);
+        return;
+    }
+
     env->misa_mxl = mcc->misa_mxl_max;
     env->priv = PRV_M;
     env->mstatus &= ~(MSTATUS_MIE | MSTATUS_MPRV);
@@ -1142,10 +1147,6 @@ static void riscv_cpu_reset_hold(Object *obj, ResetType type)
     if (cpu->cfg.ext_smrnmi) {
         env->rnmip = 0;
         env->mnstatus = set_field(env->mnstatus, MNSTATUS_NMIE, false);
-    }
-
-    if (kvm_enabled()) {
-        kvm_riscv_reset_vcpu(cpu);
     }
 #endif
 }
