@@ -2070,7 +2070,7 @@ typedef struct CPUArchState {
 #endif
 #if defined(CONFIG_HVF)
     HVFX86LazyFlags hvf_lflags;
-    void *hvf_mmio_buf;
+    void *mmio_buf;
 #endif
 
     uint64_t mcg_cap;
