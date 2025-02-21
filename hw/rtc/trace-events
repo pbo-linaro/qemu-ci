@@ -35,3 +35,14 @@ m48txx_nvram_mem_write(uint32_t addr, uint32_t value) "mem write addr:0x%04x val
 # goldfish_rtc.c
 goldfish_rtc_read(uint64_t addr, uint64_t value) "addr 0x%02" PRIx64 " value 0x%08" PRIx64
 goldfish_rtc_write(uint64_t addr, uint64_t value) "addr 0x%02" PRIx64 " value 0x%08" PRIx64
+
+# pcf8563_rtc.c
+pcf8563_rtc_write_data(uint8_t data) "data: 0x%x"
+pcf8563_rtc_write_addr(uint8_t addr) "register address: 0x%x"
+pcf8563_rtc_read(uint8_t addr, uint8_t data) "addr: 0x%x, data: 0x%x"
+pcf8563_rtc_event(uint8_t event) "Event: 0x%x"
+pcf8563_rtc_init(void)
+pcf8563_rtc_reset(void)
+pcf8563_rtc_set_time(void)
+pcf8563_rtc_get_time(void)
+pcf8563_rtc_set_alarm(void)
