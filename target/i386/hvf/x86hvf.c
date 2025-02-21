@@ -24,7 +24,7 @@
 #include "vmcs.h"
 #include "cpu.h"
 #include "x86_descr.h"
-#include "x86_decode.h"
+#include "x86-insn-emul/x86_decode.h"
 #include "system/hw_accel.h"
 
 #include "hw/i386/apic_internal.h"
