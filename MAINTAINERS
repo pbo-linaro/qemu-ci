@@ -831,6 +831,7 @@ F: hw/pci-host/fsl_imx8m_phy.c
 F: include/hw/arm/fsl-imx8mp.h
 F: include/hw/misc/imx8mp_*.h
 F: include/hw/pci-host/fsl_imx8m_phy.h
+F: pc-bios/imx8mp*
 F: docs/system/arm/imx8mp-evk.rst
 
 MPS2 / MPS3
