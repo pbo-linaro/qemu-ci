@@ -27,6 +27,7 @@
 #include "exec/exec-all.h"
 #include "exec/tb-flush.h"
 #include "system/cpu-timers.h"
+#include "system/kvm.h"
 #include "qemu/guest-random.h"
 #include "qapi/error.h"
 #include <stdbool.h>
@@ -42,6 +43,11 @@ void riscv_set_csr_ops(int csrno, riscv_csr_operations *ops)
     csr_ops[csrno & (CSR_TABLE_SIZE - 1)] = *ops;
 }
 
+static bool riscv_has_ext_s(CPURISCVState *env)
+{
+    return riscv_has_ext(env, RVS) || kvm_enabled();
+}
+
 /* Predicates */
 #if !defined(CONFIG_USER_ONLY)
 RISCVException smstateen_acc_ok(CPURISCVState *env, int index, uint64_t bit)
@@ -52,7 +58,7 @@ RISCVException smstateen_acc_ok(CPURISCVState *env, int index, uint64_t bit)
         return RISCV_EXCP_NONE;
     }
 
-    if (!(env->mstateen[index] & bit)) {
+    if (!kvm_enabled() && !(env->mstateen[index] & bit)) {
         return RISCV_EXCP_ILLEGAL_INST;
     }
 
@@ -66,7 +72,7 @@ RISCVException smstateen_acc_ok(CPURISCVState *env, int index, uint64_t bit)
         }
     }
 
-    if (env->priv == PRV_U && riscv_has_ext(env, RVS)) {
+    if (env->priv == PRV_U && riscv_has_ext_s(env)) {
         if (!(env->sstateen[index] & bit)) {
             return RISCV_EXCP_ILLEGAL_INST;
         }
@@ -326,7 +332,7 @@ static RISCVException csrind_or_aia_any(CPURISCVState *env, int csrno)
 
 static RISCVException smode(CPURISCVState *env, int csrno)
 {
-    if (riscv_has_ext(env, RVS)) {
+    if (riscv_has_ext_s(env)) {
         return RISCV_EXCP_NONE;
     }
 
