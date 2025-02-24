@@ -673,6 +673,9 @@ class QAPIDoc:
             # section text without tag
             self.text = ''
 
+        def __repr__(self) -> str:
+            return f"<QAPIDoc.Section kind={self.kind!r} text={self.text!r}>"
+
         def append_line(self, line: str) -> None:
             self.text += line + '\n'
 
@@ -686,6 +689,12 @@ class QAPIDoc:
             super().__init__(info, kind)
             self.name = name
             self.member: Optional['QAPISchemaMember'] = None
+
+        def __repr__(self) -> str:
+            return (
+                f"<QAPIDoc.ArgSection kind={self.kind!r} "
+                f"name={self.name!r} text={self.text!r}>"
+            )
 
         def connect(self, member: 'QAPISchemaMember') -> None:
             self.member = member
