@@ -39,7 +39,7 @@ typedef struct SCLPEventsBus {
 struct SCLPEventFacility {
     SysBusDevice parent_obj;
     SCLPEventsBus sbus;
-    SCLPEvent quiesce, cpu_hotplug;
+    SCLPEvent quiesce, cpu_hotplug, cpi;
     /* guest's receive mask */
     union {
         uint32_t receive_mask_pieces[2];
@@ -436,6 +436,10 @@ static void init_event_facility(Object *obj)
     object_initialize_child(obj, TYPE_SCLP_CPU_HOTPLUG,
                             &event_facility->cpu_hotplug,
                             TYPE_SCLP_CPU_HOTPLUG);
+
+    object_initialize_child(obj, TYPE_SCLP_CPI,
+                            &event_facility->cpi,
+                            TYPE_SCLP_CPI);
 }
 
 static void realize_event_facility(DeviceState *dev, Error **errp)
@@ -449,6 +453,12 @@ static void realize_event_facility(DeviceState *dev, Error **errp)
     if (!qdev_realize(DEVICE(&event_facility->cpu_hotplug),
                       BUS(&event_facility->sbus), errp)) {
         qdev_unrealize(DEVICE(&event_facility->quiesce));
+        return;
+    }
+    if (!qdev_realize(DEVICE(&event_facility->cpi),
+                      BUS(&event_facility->sbus), errp)) {
+        qdev_unrealize(DEVICE(&event_facility->quiesce));
+        qdev_unrealize(DEVICE(&event_facility->cpu_hotplug));
         return;
     }
 }
