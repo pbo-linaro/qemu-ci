@@ -491,4 +491,12 @@ static inline void cpu_get_tb_cpu_state(CPULoongArchState *env, vaddr *pc,
 
 void loongarch_cpu_post_init(Object *obj);
 
+#ifdef CONFIG_USER_ONLY
+static inline void kvm_loongarch_cpu_post_init(LoongArchCPU *cpu)
+{
+}
+#else
+void kvm_loongarch_cpu_post_init(LoongArchCPU *cpu);
+#endif
+
 #endif /* LOONGARCH_CPU_H */
