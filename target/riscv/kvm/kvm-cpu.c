@@ -135,6 +135,9 @@ static uint64_t kvm_riscv_vector_reg_id(RISCVCPU *cpu,
 #define RISCV_AIA_CSR_REG(name) \
     (KVM_REG_RISCV_CSR_AIA | KVM_REG_RISCV_CSR_AIA_REG(name))
 
+#define RISCV_SMSTATEEN_CSR_REG(name) \
+    (KVM_REG_RISCV_CSR_SMSTATEEN | KVM_REG_RISCV_CSR_SMSTATEEN_REG(name))
+
 #define KVM_RISCV_GET_CSR(cs, env, idx, reg) \
     do { \
         int _ret = kvm_get_one_reg(cs, RISCV_CSR_REG(env, idx), &reg); \
@@ -684,10 +687,31 @@ static int kvm_riscv_put_regs_aia_csr(CPUState *cs)
     return 0;
 }
 
+static int kvm_riscv_get_regs_smstateen_csr(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+
+    KVM_RISCV_GET_CSR(cs, env,
+                      RISCV_SMSTATEEN_CSR_REG(sstateen0), env->sstateen[0]);
+
+    return 0;
+}
+
+static int kvm_riscv_put_regs_smstateen_csr(CPUState *cs)
+{
+    CPURISCVState *env = &RISCV_CPU(cs)->env;
+
+    KVM_RISCV_SET_CSR(cs, env,
+                      RISCV_SMSTATEEN_CSR_REG(sstateen0), env->sstateen[0]);
+
+    return 0;
+}
+
 static int kvm_riscv_get_regs_csr(CPUState *cs)
 {
     kvm_riscv_get_regs_general_csr(cs);
     kvm_riscv_get_regs_aia_csr(cs);
+    kvm_riscv_get_regs_smstateen_csr(cs);
 
     return 0;
 }
@@ -696,6 +720,7 @@ static int kvm_riscv_put_regs_csr(CPUState *cs)
 {
     kvm_riscv_put_regs_general_csr(cs);
     kvm_riscv_put_regs_aia_csr(cs);
+    kvm_riscv_put_regs_smstateen_csr(cs);
 
     return 0;
 }
