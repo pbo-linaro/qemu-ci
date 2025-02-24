@@ -426,15 +426,8 @@ void vfio_probe_igd_bar0_quirk(VFIOPCIDevice *vdev, int nr)
     VFIOConfigMirrorQuirk *ggc_mirror, *bdsm_mirror;
     int gen;
 
-    /*
-     * This must be an Intel VGA device at address 00:02.0 for us to even
-     * consider enabling legacy mode. Some driver have dependencies on the PCI
-     * bus address.
-     */
     if (!vfio_pci_is(vdev, PCI_VENDOR_ID_INTEL, PCI_ANY_ID) ||
-        !vfio_is_vga(vdev) || nr != 0 ||
-        &vdev->pdev != pci_find_device(pci_device_root_bus(&vdev->pdev),
-                                       0, PCI_DEVFN(0x2, 0))) {
+        !vfio_is_vga(vdev) || nr != 0) {
         return;
     }
 
@@ -482,24 +475,15 @@ void vfio_probe_igd_bar0_quirk(VFIOPCIDevice *vdev, int nr)
     QLIST_INSERT_HEAD(&vdev->bars[nr].quirks, bdsm_quirk, next);
 }
 
-bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev,
-                                 Error **errp G_GNUC_UNUSED)
+bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev, Error **errp)
 {
     int gen;
     uint64_t gms_size;
     uint64_t *bdsm_size;
     uint32_t gmch;
-    Error *err = NULL;
 
-    /*
-     * This must be an Intel VGA device at address 00:02.0 for us to even
-     * consider enabling legacy mode.  The vBIOS has dependencies on the
-     * PCI bus address.
-     */
     if (!vfio_pci_is(vdev, PCI_VENDOR_ID_INTEL, PCI_ANY_ID) ||
-        !vfio_is_vga(vdev) ||
-        &vdev->pdev != pci_find_device(pci_device_root_bus(&vdev->pdev),
-                                       0, PCI_DEVFN(0x2, 0))) {
+        !vfio_is_vga(vdev)) {
         return true;
     }
 
@@ -510,23 +494,19 @@ bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev,
      */
     gen = igd_gen(vdev);
     if (gen == -1) {
-        error_report("IGD device %s is unsupported in legacy mode, "
-                     "try SandyBridge or newer", vdev->vbasedev.name);
         return true;
     }
 
     /* Setup OpRegion access */
-    if (!vfio_pci_igd_setup_opregion(vdev, &err)) {
-        error_append_hint(&err, "IGD legacy mode disabled\n");
-        error_report_err(err);
-        return true;
+    if ((vdev->features & VFIO_FEATURE_ENABLE_IGD_OPREGION) &&
+        !vfio_pci_igd_setup_opregion(vdev, errp)) {
+        return false;
     }
 
     /* Setup LPC bridge / Host bridge PCI IDs */
-    if (!vfio_pci_igd_setup_lpc_bridge(vdev, &err)) {
-        error_append_hint(&err, "IGD legacy mode disabled\n");
-        error_report_err(err);
-        return true;
+    if ((vdev->features & VFIO_FEATURE_ENABLE_IGD_LPC) &&
+        !vfio_pci_igd_setup_lpc_bridge(vdev, errp)) {
+        return false;
     }
 
     gmch = vfio_pci_read_config(&vdev->pdev, IGD_GMCH, 4);

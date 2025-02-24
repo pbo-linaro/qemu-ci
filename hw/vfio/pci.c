@@ -3136,15 +3136,6 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
         vfio_bar_quirk_setup(vdev, i);
     }
 
-#ifdef CONFIG_VFIO_IGD
-    if (!vdev->igd_opregion &&
-        vdev->features & VFIO_FEATURE_ENABLE_IGD_OPREGION) {
-        if (!vfio_pci_igd_setup_opregion(vdev, errp)) {
-            goto out_unset_idev;
-        }
-    }
-#endif
-
     /* QEMU emulates all of MSI & MSIX */
     if (pdev->cap_present & QEMU_PCI_CAP_MSIX) {
         memset(vdev->emulated_config_bits + pdev->msix_cap, 0xff,
@@ -3363,6 +3354,8 @@ static const Property vfio_pci_dev_properties[] = {
                     VFIO_FEATURE_ENABLE_REQ_BIT, true),
     DEFINE_PROP_BIT("x-igd-opregion", VFIOPCIDevice, features,
                     VFIO_FEATURE_ENABLE_IGD_OPREGION_BIT, false),
+    DEFINE_PROP_BIT("x-igd-lpc", VFIOPCIDevice, features,
+                    VFIO_FEATURE_ENABLE_IGD_LPC_BIT, false),
     DEFINE_PROP_ON_OFF_AUTO("enable-migration", VFIOPCIDevice,
                             vbasedev.enable_migration, ON_OFF_AUTO_AUTO),
     DEFINE_PROP_BOOL("migration-events", VFIOPCIDevice,
