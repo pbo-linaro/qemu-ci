@@ -129,12 +129,14 @@ The following machine-specific options are supported:
   MSIs. When not specified, this option is assumed to be "none" which selects
   SiFive PLIC to handle wired interrupts.
 
-  This option also interacts with '-accel kvm'.  When using "aia=aplic-imsic"
-  with KVM, it is possible to set the use of the kernel irqchip in split mode
+  This option also interacts with '-accel kvm', when using "aia=aplic-imsic"
+  with KVM.  It is possible to set the use of the kernel irqchip in split mode
   by using "-accel kvm,kernel-irqchip=split".  In this case the ``virt`` machine
   will emulate the APLIC controller instead of using the APLIC controller from
-  the irqchip.  See :ref:`riscv-aia` for more details on all available AIA
-  modes.
+  the in-kernel irqchip. Or the kernel irqchip can be disabled by using
+  "-accel kvm,kernel-irqchip=off". In this case the ``virt`` machine will
+  emulate the APLIC and IMSIC controller in user-space instead of using in-kernel
+  irqchip.  See :ref:`riscv-aia` for more details on all available AIA modes.
 
 - aia-guests=nnn
 
