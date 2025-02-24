@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20250224230640.2665206-1-sjg@chromium.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 45 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 13 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/44] x86: Expand x86_64 early memory
+  [32m✓[0m [PATCH v3 2/44] x86: qemu: Switch to bochs display
+  [32m✓[0m [PATCH v3 3/44] x86: qemu: Enable dhrystone
+  [32m✓[0m [PATCH v3 4/44] x86: qemu: Avoid accessing BSS too early
+  [32m✓[0m [PATCH v3 5/44] x86: Drop mpspec from the SPL build
+  [32m✓[0m [PATCH v3 6/44] x86: Add some log categories
+  [32m✓[0m [PATCH v3 7/44] x86: Drop use of CONFIG_REALMODE_DEBUG
+  [32m✓[0m [PATCH v3 8/44] x86: Avoid clearing the VESA display
+  [32m✓[0m [PATCH v3 9/44] x86: Add 64-bit entries to the GDT
+  [32m✓[0m [PATCH v3 10/44] x86: Use defines for the cache flags
+  [32m✓[0m [PATCH v3 11/44] x86: spl: Drop duplicate CPU init
+  [32m✓[0m [PATCH v3 12/44] x86: Drop the message about features missing in 64-bit
+  [32m✓[0m [PATCH v3 13/44] x86: Include stdbool.h in interrupt header
+  [32m✓[0m [PATCH v3 14/44] x86: Tidy up the GDT size in start/16.S
+  [32m✓[0m [PATCH v3 15/44] x86: Disable paging before changing to long mode
+  [32m✓[0m [PATCH v3 16/44] x86: Use the same GDT when jumping to long mode
+  [32m✓[0m [PATCH v3 17/44] x86: Use a simple jump into long mode
+  [32m✓[0m [PATCH v3 18/44] x86: Rename the _D dirty flag
+  [32m✓[0m [PATCH v3 19/44] x86: Support CPU functions in long mode
+  [32m✓[0m [PATCH v3 20/44] x86: Add functions to convert between mtrr size and mask
+  [32m✓[0m [PATCH v3 21/44] x86: Update mtrr command to support 64-bit values
+  [32m✓[0m [PATCH v3 22/44] x86: Update cpuid_eax et al to work on amd64
+  [32m✓[0m [PATCH v3 23/44] x86: Correct msr operation on amd64
+  [32m✓[0m [PATCH v3 24/44] x86: Allow adding non-aligned size for MTRR
+  [32m✓[0m [PATCH v3 25/44] x86: emulation: Set an MTRR for the RAM
+  [32m✓[0m [PATCH v3 26/44] x86: qemu: Support environment and cat command
+  [32m✓[0m [PATCH v3 27/44] test/py: Correct sizing of created disks
+  [32m✓[0m [PATCH v3 28/44] test/py: Add a helper to send characters
+  [32m✓[0m [PATCH v3 29/44] test/py: Allow tests to be filtered by role
+  [32m✓[0m [PATCH v3 30/44] x86: e820: Add a function to dump the e820 table
+  [32m✓[0m [PATCH v3 31/44] x86: Add a new API for e820
+  [32m✓[0m [PATCH v3 32/44] x86: qemu: Use the new e820 API
+  [32m✓[0m [PATCH v3 33/44] x86: emulation: Support BLOBLIST_TABLES properly
+  [32m✓[0m [PATCH v3 34/44] x86: Support a 64-bit ramdisk address
+  [32m✓[0m [PATCH v3 35/44] acpi: Mark struct acpi_rsdp as packed
+  [32m✓[0m [PATCH v3 36/44] boot: Consider non-bootable partitions
+  [32m✓[0m [PATCH v3 37/44] boot: Handle running out of labels
+  [32m✓[0m [PATCH v3 38/44] boot: Support IO UARTs for earlycon and console
+  [32m✓[0m [PATCH v3 39/44] sandbox: acpi: Correct mapping in FADT
+  [32m✓[0m [PATCH v3 40/44] acpi: Add a checksum to the DMAR table
+  [32m✓[0m [PATCH v3 41/44] test: acpi: Correct memory leaks
+  [32m✓[0m [PATCH v3 42/44] acpi: Support checking checksums
+  [32m✓[0m [PATCH v3 43/44] RFC: test/py: Deal with timeouts
+  [32m✓[0m [PATCH v3 44/44] test: Add a test for booting Ubuntu 24.04
+  ---
+  [32m✓[0m Signed: DKIM/chromium.org
+---
+Total patches: 44
+---
+Applying: x86: Expand x86_64 early memory
+Patch failed at 0001 x86: Expand x86_64 early memory
+error: configs/qemu-x86_64_defconfig: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
