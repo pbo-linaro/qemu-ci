@@ -906,8 +906,14 @@ extern const bool valid_vm_1_10_32[], valid_vm_1_10_64[];
 void riscv_get_csr_ops(int csrno, riscv_csr_operations *ops);
 void riscv_set_csr_ops(int csrno, riscv_csr_operations *ops);
 
-void riscv_cpu_register_gdb_regs_for_features(CPUState *cs);
+static inline const char *riscv_get_csr_name(int csr_no)
+{
+    g_assert(csr_no > 0 && csr_no < CSR_TABLE_SIZE);
 
+    return csr_ops[csr_no].name;
+}
+
+void riscv_cpu_register_gdb_regs_for_features(CPUState *cs);
 target_ulong riscv_new_csr_seed(target_ulong new_value,
                                 target_ulong write_mask);
 
