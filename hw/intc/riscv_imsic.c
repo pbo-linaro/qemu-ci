@@ -375,12 +375,21 @@ static void riscv_imsic_realize(DeviceState *dev, Error **errp)
 
     /* Force select AIA feature and setup CSR read-modify-write callback */
     if (env) {
-        if (!imsic->mmode) {
-            rcpu->cfg.ext_ssaia = true;
-            riscv_cpu_set_geilen(env, imsic->num_pages - 1);
+        if (kvm_enabled()) {
+            if (!rcpu->cfg.ext_ssaia) {
+                error_report("Host machine doesn't support AIA extension. "
+                             "Do not use IMSIC as interrupt controller.");
+                exit(1);
+            }
         } else {
-            rcpu->cfg.ext_smaia = true;
+            if (!imsic->mmode) {
+                rcpu->cfg.ext_ssaia = true;
+                riscv_cpu_set_geilen(env, imsic->num_pages - 1);
+            } else {
+                rcpu->cfg.ext_smaia = true;
+            }
         }
+
         riscv_cpu_set_aia_ireg_rmw_fn(env, (imsic->mmode) ? PRV_M : PRV_S,
                                       riscv_imsic_rmw, imsic);
     }
