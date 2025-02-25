@@ -269,6 +269,13 @@ Use ``Sun-UltraSparc-IIIi-plus`` and ``Sun-UltraSparc-IV-plus`` instead.
 System emulator machines
 ------------------------
 
+Versioned machine types (aarch64, arm, i386, m68k, ppc, ppc64, s390x, x86_64)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+In accordance with our versioned machine type deprecation policy, all machine
+types with version |VER_MACHINE_DEPRECATION_VERSION|, or older, have been
+deprecated.
+
 Arm ``virt`` machine ``dtb-kaslr-seed`` property (since 7.1)
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
