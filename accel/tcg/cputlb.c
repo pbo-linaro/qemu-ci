@@ -417,6 +417,17 @@ void tlb_flush(CPUState *cpu)
     tlb_flush_by_mmuidx(cpu, ALL_MMUIDX_BITS);
 }
 
+void tlb_flush_other_cpu(CPUState *cpu)
+{
+    if (qemu_cpu_is_self(cpu)) {
+        tlb_flush(cpu);
+    } else {
+        async_run_on_cpu(cpu,
+                         tlb_flush_by_mmuidx_async_work,
+                         RUN_ON_CPU_HOST_INT(ALL_MMUIDX_BITS));
+    }
+}
+
 void tlb_flush_by_mmuidx_all_cpus_synced(CPUState *src_cpu, uint16_t idxmap)
 {
     const run_on_cpu_func fn = tlb_flush_by_mmuidx_async_work;

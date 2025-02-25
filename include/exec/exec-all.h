@@ -64,12 +64,24 @@ void tlb_flush_page_all_cpus_synced(CPUState *src, vaddr addr);
  * tlb_flush:
  * @cpu: CPU whose TLB should be flushed
  *
- * Flush the entire TLB for the specified CPU. Most CPU architectures
- * allow the implementation to drop entries from the TLB at any time
- * so this is generally safe. If more selective flushing is required
- * use one of the other functions for efficiency.
+ * Flush the entire TLB for the specified current CPU.
+ *
+ * Most CPU architectures allow the implementation to drop entries
+ * from the TLB at any time so this is generally safe. If more
+ * selective flushing is required use one of the other functions for
+ * efficiency.
  */
 void tlb_flush(CPUState *cpu);
+/**
+ * tlb_flush_other_cpu:
+ * @cpu: CPU whose TLB should be flushed
+ *
+ * Flush the entire TLB for a specified CPU. For cross vCPU flushes
+ * you shuld be using a more selective function. This is really only
+ * used for flushing CPUs being reset from outside their current
+ * context.
+ */
+void tlb_flush_other_cpu(CPUState *cpu);
 /**
  * tlb_flush_all_cpus_synced:
  * @cpu: src CPU of the flush
