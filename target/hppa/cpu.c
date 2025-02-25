@@ -168,6 +168,14 @@ void hppa_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
 
     cpu_loop_exit(cs);
 }
+
+static void hppa_clear_ptlbe(CPUState *cpu, run_on_cpu_data opaque)
+{
+    CPUHPPAState *env = (CPUHPPAState *) opaque.host_ptr;
+    hppa_ptlbe(env);
+}
+
+
 #endif /* CONFIG_USER_ONLY */
 
 static void hppa_cpu_realizefn(DeviceState *dev, Error **errp)
@@ -191,7 +199,7 @@ static void hppa_cpu_realizefn(DeviceState *dev, Error **errp)
 
         cpu->alarm_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL,
                                         hppa_cpu_alarm_timer, cpu);
-        hppa_ptlbe(&cpu->env);
+        async_run_on_cpu(cs, hppa_clear_ptlbe, RUN_ON_CPU_HOST_PTR(&cpu->env));
     }
 #endif
 
