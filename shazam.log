@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250225-la32-fixes1-v2-0-8ec68ada3dd5@flygoat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 64 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/9] target/loongarch: Enable rotr.w/rotri.w for LoongArch32
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 2/9] target/loongarch: Fix address generation for gen_sc
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 3/9] target/loongarch: Fix PGD CSR for LoongArch32
+  [32m✓[0m [PATCH v2 4/9] target/loongarch: Perform sign extension for IOCSR reads
+  [32m✓[0m [PATCH v2 5/9] target/loongarch: Use target_ulong for iocsrrd helper results
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 6/9] target/loongarch: Fix some modifiers for log formatting
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 7/9] target/loongarch: Use target_ulong for CSR helpers
+  [32m✓[0m [PATCH v2 8/9] target/loongarch: Fix load type for gen_ll
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 9/9] target/loongarch: Introduce max32 CPU type
+  ---
+  [32m✓[0m Signed: DKIM/flygoat.com
+---
+Total patches: 9
+---
+ Base: using specified base-commit 65cb7129f4160c7e07a0da107f888ec73ae96776
+Applying: target/loongarch: Enable rotr.w/rotri.w for LoongArch32
+Applying: target/loongarch: Fix address generation for gen_sc
+Applying: target/loongarch: Fix PGD CSR for LoongArch32
+Applying: target/loongarch: Perform sign extension for IOCSR reads
+Applying: target/loongarch: Use target_ulong for iocsrrd helper results
+Patch failed at 0005 target/loongarch: Use target_ulong for iocsrrd helper results
+error: patch failed: target/loongarch/helper.h:104
+error: target/loongarch/helper.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
