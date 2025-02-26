@@ -1119,7 +1119,7 @@ static void s390_pcihost_plug(HotplugHandler *hotplug_dev, DeviceState *dev,
                     if (rc) {
                         error_setg(errp, "Plug failed for zPCI device in "
                                    "interpretation mode: %d", rc);
-                        return;
+                        goto pbdev_cleanup;
                     }
                 } else {
                     trace_s390_pcihost("zPCI interpretation missing");
@@ -1150,7 +1150,7 @@ static void s390_pcihost_plug(HotplugHandler *hotplug_dev, DeviceState *dev,
         if (s390_pci_msix_init(pbdev) && !pbdev->interp) {
             error_setg(errp, "MSI-X support is mandatory "
                        "in the S390 architecture");
-            return;
+            goto pbdev_cleanup;
         }
 
         if (dev->hotplugged) {
@@ -1168,6 +1168,23 @@ static void s390_pcihost_plug(HotplugHandler *hotplug_dev, DeviceState *dev,
     } else {
         g_assert_not_reached();
     }
+
+    return;
+
+ pbdev_cleanup:
+    DeviceState *bdev = DEVICE(pbdev);
+
+    if (pbdev->shutdown_notifier.notify) {
+        notifier_remove(&pbdev->shutdown_notifier);
+    }
+    if (pbdev->iommu->dma_limit) {
+        s390_pci_end_dma_count(s, pbdev->iommu->dma_limit);
+    }
+    s390_pci_iommu_free(s, pci_get_bus(pbdev->pdev), pbdev->pdev->devfn);
+    QTAILQ_REMOVE(&s->zpci_devs, pbdev, link);
+    g_hash_table_remove(s->zpci_table, &pbdev->idx);
+    object_unparent(OBJECT(bdev));
+    qdev_unrealize(bdev);
 }
 
 static void s390_pcihost_unplug(HotplugHandler *hotplug_dev, DeviceState *dev,
