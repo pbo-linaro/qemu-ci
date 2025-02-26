@@ -1147,6 +1147,12 @@ static void s390_pcihost_plug(HotplugHandler *hotplug_dev, DeviceState *dev,
             pbdev->forwarding_assist = false;
         }
 
+        if (pbdev->pft == ZPCI_PFT_ISM && !pbdev->interp) {
+            error_setg(errp, "zPCI interpretation is required for ISM device "
+                       "passthrough");
+            goto pbdev_cleanup;
+        }
+
         if (s390_pci_msix_init(pbdev) && !pbdev->interp) {
             error_setg(errp, "MSI-X support is mandatory "
                        "in the S390 architecture");
