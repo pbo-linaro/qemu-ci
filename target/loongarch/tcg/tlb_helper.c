@@ -118,6 +118,7 @@ static void invalidate_tlb_entry(CPULoongArchState *env, int index)
     target_ulong addr, mask, pagesize;
     uint8_t tlb_ps;
     LoongArchTLB *tlb = &env->tlb[index];
+    uint8_t default_ps = ctz32(env->CSR_PRCFG2);
 
     int mmu_idx = cpu_mmu_index(env_cpu(env), false);
     uint8_t tlb_v0 = FIELD_EX64(tlb->tlb_entry0, TLBENTRY, V);
@@ -126,8 +127,16 @@ static void invalidate_tlb_entry(CPULoongArchState *env, int index)
 
     if (index >= LOONGARCH_STLB) {
         tlb_ps = FIELD_EX64(tlb->tlb_misc, TLB_MISC, PS);
+	if (tlb_ps < default_ps) {
+            tlb_ps = default_ps;
+            tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, tlb_ps);
+	}
     } else {
         tlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
+	if(tlb_ps < default_ps) {
+            tlb_ps = default_ps;
+	    env->CSR_STLBPS = FIELD_DP64(env->CSR_STLBPS, CSR_STLBPS, PS, tlb_ps);
+	}
     }
     pagesize = MAKE_64BIT_MASK(tlb_ps, 1);
     mask = MAKE_64BIT_MASK(0, tlb_ps + 1);
@@ -166,9 +175,14 @@ static void fill_tlb_entry(CPULoongArchState *env, int index)
     uint64_t lo0, lo1, csr_vppn;
     uint16_t csr_asid;
     uint8_t csr_ps;
+    uint8_t default_ps = ctz32(env->CSR_PRCFG2);
 
     if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
         csr_ps = FIELD_EX64(env->CSR_TLBREHI, CSR_TLBREHI, PS);
+        if (csr_ps < default_ps) {
+           csr_ps = default_ps;
+           env->CSR_TLBREHI = FIELD_DP64(env->CSR_TLBREHI, CSR_TLBREHI, PS, csr_ps);
+        }
         if (is_la64(env)) {
             csr_vppn = FIELD_EX64(env->CSR_TLBREHI, CSR_TLBREHI_64, VPPN);
         } else {
@@ -178,6 +192,10 @@ static void fill_tlb_entry(CPULoongArchState *env, int index)
         lo1 = env->CSR_TLBRELO1;
     } else {
         csr_ps = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, PS);
+        if (csr_ps < default_ps) {
+           csr_ps = default_ps;
+            env->CSR_TLBIDX = FIELD_DP64(env->CSR_TLBIDX, CSR_TLBIDX, PS, csr_ps);
+        }
         if (is_la64(env)) {
             csr_vppn = FIELD_EX64(env->CSR_TLBEHI, CSR_TLBEHI_64, VPPN);
         } else {
@@ -187,8 +205,10 @@ static void fill_tlb_entry(CPULoongArchState *env, int index)
         lo1 = env->CSR_TLBELO1;
     }
 
-    if (csr_ps == 0) {
-        qemu_log_mask(CPU_LOG_MMU, "page size is 0\n");
+    /*check */
+    if (csr_ps  < default_ps) {
+        qemu_log_mask(CPU_LOG_MMU, "page size < 12\n");
+        csr_ps = default_ps;
     }
 
     /* Only MTLB has the ps fields */
@@ -289,16 +309,29 @@ void helper_tlbfill(CPULoongArchState *env)
     uint64_t address, entryhi;
     int index, set, stlb_idx;
     uint16_t pagesize, stlb_ps;
+    uint8_t default_ps = ctz32(env->CSR_PRCFG2);
 
     if (FIELD_EX64(env->CSR_TLBRERA, CSR_TLBRERA, ISTLBR)) {
         entryhi = env->CSR_TLBREHI;
         pagesize = FIELD_EX64(env->CSR_TLBREHI, CSR_TLBREHI, PS);
+        if (pagesize < default_ps){
+            pagesize = default_ps;
+            env->CSR_TLBREHI =FIELD_DP64(env->CSR_TLBREHI,CSR_TLBREHI,PS, pagesize);
+        }
     } else {
         entryhi = env->CSR_TLBEHI;
         pagesize = FIELD_EX64(env->CSR_TLBIDX, CSR_TLBIDX, PS);
+	if (pagesize < default_ps){
+            pagesize = default_ps;
+            env->CSR_TLBIDX =FIELD_DP64(env->CSR_TLBIDX, CSR_TLBIDX, PS,pagesize);
+	}
     }
 
     stlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
+    if (stlb_ps < default_ps) {
+         stlb_ps = default_ps;
+         env->CSR_STLBPS = FIELD_DP64(env->CSR_STLBPS,  CSR_STLBPS, PS ,stlb_ps);
+    }
 
     if (pagesize == stlb_ps) {
         /* Only write into STLB bits [47:13] */
@@ -427,11 +460,20 @@ void helper_invtlb_page_asid(CPULoongArchState *env, target_ulong info,
         uint16_t tlb_asid = FIELD_EX64(tlb->tlb_misc, TLB_MISC, ASID);
         uint64_t vpn, tlb_vppn;
         uint8_t tlb_ps, compare_shift;
+	uint8_t default_ps = ctz32(env->CSR_PRCFG2);
 
         if (i >= LOONGARCH_STLB) {
             tlb_ps = FIELD_EX64(tlb->tlb_misc, TLB_MISC, PS);
+	    if(tlb_ps < default_ps) {
+	        tlb_ps = default_ps;
+                tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, tlb_ps);
+	    }
         } else {
             tlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
+	    if(tlb_ps < default_ps) {
+	       tlb_ps = default_ps;
+	       env->CSR_STLBPS = FIELD_DP64(env->CSR_STLBPS, CSR_STLBPS, PS, tlb_ps);
+	    }
         }
         tlb_vppn = FIELD_EX64(tlb->tlb_misc, TLB_MISC, VPPN);
         vpn = (addr & TARGET_VIRT_MASK) >> (tlb_ps + 1);
@@ -456,11 +498,20 @@ void helper_invtlb_page_asid_or_g(CPULoongArchState *env,
         uint16_t tlb_asid = FIELD_EX64(tlb->tlb_misc, TLB_MISC, ASID);
         uint64_t vpn, tlb_vppn;
         uint8_t tlb_ps, compare_shift;
+	uint8_t default_ps = ctz32(env->CSR_PRCFG2);
 
         if (i >= LOONGARCH_STLB) {
             tlb_ps = FIELD_EX64(tlb->tlb_misc, TLB_MISC, PS);
+	    if (tlb_ps < default_ps) {
+	         tlb_ps = default_ps;
+	         tlb->tlb_misc = FIELD_DP64(tlb->tlb_misc, TLB_MISC, PS, tlb_ps);
+	    }
         } else {
             tlb_ps = FIELD_EX64(env->CSR_STLBPS, CSR_STLBPS, PS);
+	    if(tlb_ps < default_ps) {
+	       tlb_ps =  default_ps;
+	       env->CSR_STLBPS = FIELD_DP64(env->CSR_STLBPS, CSR_STLBPS, PS, tlb_ps);
+	    }
         }
         tlb_vppn = FIELD_EX64(tlb->tlb_misc, TLB_MISC, VPPN);
         vpn = (addr & TARGET_VIRT_MASK) >> (tlb_ps + 1);

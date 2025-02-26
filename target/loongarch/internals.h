@@ -43,6 +43,8 @@ enum {
     TLBRET_PE = 7,
 };
 
+void check_tlb_ps(CPULoongArchState *env);
+
 extern const VMStateDescription vmstate_loongarch_cpu;
 
 void loongarch_cpu_set_irq(void *opaque, int irq, int level);
