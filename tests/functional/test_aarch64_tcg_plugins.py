@@ -13,10 +13,11 @@
 
 import tempfile
 import mmap
+import os
 import re
 
 from qemu.machine.machine import VMLaunchFailure
-from qemu_test import LinuxKernelTest, Asset
+from qemu_test import LinuxKernelTest, Asset, dso_suffix
 
 
 class PluginKernelBase(LinuxKernelTest):
@@ -62,6 +63,10 @@ class PluginKernelNormal(PluginKernelBase):
         ('https://storage.tuxboot.com/20230331/arm64/Image'),
         'ce95a7101a5fecebe0fe630deee6bd97b32ba41bc8754090e9ad8961ea8674c7')
 
+    def plugin_file(self, plugin_name):
+        sfx = dso_suffix()
+        return os.path.join('tests', 'tcg', 'plugins', f'{plugin_name}.{sfx}')
+
     def test_aarch64_virt_insn(self):
         self.set_machine('virt')
         self.cpu='cortex-a53'
@@ -74,7 +79,7 @@ class PluginKernelNormal(PluginKernelBase):
                                                  suffix=".log")
 
         self.run_vm(kernel_path, kernel_command_line,
-                    "tests/tcg/plugins/libinsn.so", plugin_log.name,
+                    self.plugin_file('libinsn'), plugin_log.name,
                     console_pattern)
 
         with plugin_log as lf, \
@@ -100,7 +105,7 @@ class PluginKernelNormal(PluginKernelBase):
                                                  suffix=".log")
 
         self.run_vm(kernel_path, kernel_command_line,
-                    "tests/tcg/plugins/libinsn.so", plugin_log.name,
+                    self.plugin_file('libinsn'), plugin_log.name,
                     console_pattern,
                     args=('-icount', 'shift=1'))
 
