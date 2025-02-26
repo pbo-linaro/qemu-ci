@@ -9,14 +9,16 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-import logging
-
 from qemu.machine.machine import VMLaunchFailure
 
 from qemu_test import QemuSystemTest, Asset
 from qemu_test import exec_command, exec_command_and_wait_for_pattern
 from qemu_test import wait_for_console_pattern
 from qemu_test import skipIfMissingCommands
+
+from re import search
+from subprocess import check_output
+
 
 class Aarch64VirtGPUMachine(QemuSystemTest):
     KERNEL_COMMON_COMMAND_LINE = 'printk.time=0 '
@@ -110,9 +112,15 @@ class Aarch64VirtGPUMachine(QemuSystemTest):
         self._run_virt_gpu_test(gpu_device, weston_cmd, weston_pattern)
 
     @skipIfMissingCommands('zstd')
+    @skipIfMissingCommands('vulkaninfo')
     def test_aarch64_virt_with_vulkan_gpu(self):
 
         self.require_device('virtio-gpu-gl-pci')
+
+        vk_info = check_output(["vulkaninfo", "--summary"], encoding="utf-8")
+
+        if search(r"driverID\s+=\s+DRIVER_ID_NVIDIA_PROPRIETARY", vk_info):
+            self.skipTest("Test skipped on NVIDIA proprietary driver")
 
         gpu_device = "virtio-gpu-gl-pci,hostmem=4G,blob=on,venus=on"
         weston_cmd = "vkmark -b:duration=1.0"
