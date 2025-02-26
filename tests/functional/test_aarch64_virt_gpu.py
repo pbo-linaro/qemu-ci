@@ -39,12 +39,7 @@ class Aarch64VirtGPUMachine(QemuSystemTest):
         'rootfs.ext4.zstd',
         '792da7573f5dc2913ddb7c638151d4a6b2d028a4cb2afb38add513c1924bdad4')
 
-    @skipIfMissingCommands('zstd')
-    def test_aarch64_virt_with_vulkan_gpu(self):
-        # This tests boots with a buildroot test image that contains
-        # vkmark and other GPU exercising tools. We run a headless
-        # weston that nevertheless still exercises the virtio-gpu
-        # backend.
+    def _run_virt_gpu_test(self, gpu_device,  weston_cmd, weston_pattern):
 
         self.set_machine('virt')
         self.require_accelerator("tcg")
@@ -62,10 +57,10 @@ class Aarch64VirtGPUMachine(QemuSystemTest):
                          '-kernel', kernel_path,
                          '-append', kernel_command_line)
         self.vm.add_args("-smp", "2", "-m", "2048")
-        self.vm.add_args("-device",
-                         "virtio-gpu-gl-pci,hostmem=4G,blob=on,venus=on")
-        self.vm.add_args("-display", "egl-headless")
-        self.vm.add_args("-display", "dbus,gl=on")
+        self.vm.add_args("-device", gpu_device)
+        for opt in ["egl-headless", "dbus,gl=on"]:
+            self.vm.add_args("-display", opt)
+
         self.vm.add_args("-device", "virtio-blk-device,drive=hd0")
         self.vm.add_args("-blockdev",
                          "driver=raw,file.driver=file,"
@@ -91,12 +86,15 @@ class Aarch64VirtGPUMachine(QemuSystemTest):
         self.wait_for_console_pattern('buildroot login:')
         exec_command(self, 'root')
         exec_command(self, 'export XDG_RUNTIME_DIR=/tmp')
-        exec_command_and_wait_for_pattern(self,
-                                          "weston -B headless "
-                                          "--renderer gl "
-                                          "--shell kiosk "
-                                          "-- vkmark -b:duration=1.0",
-                                          "vkmark Score")
+        full_cmd = f"weston -B headless --renderer gl --shell kiosk -- {weston_cmd}"
+        exec_command_and_wait_for_pattern(self, full_cmd, weston_pattern)
+
+    @skipIfMissingCommands('zstd')
+    def test_aarch64_virt_with_vulkan_gpu(self):
+        gpu_device = "virtio-gpu-gl-pci,hostmem=4G,blob=on,venus=on"
+        weston_cmd = "vkmark -b:duration=1.0"
+        weston_pattern = "vkmark Score"
+        self._run_virt_gpu_test(gpu_device, weston_cmd, weston_pattern)
 
 if __name__ == '__main__':
     QemuSystemTest.main()
