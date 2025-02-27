@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250227164538.814576-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] rust: chardev: provide basic bindings to character devices
+  [32m✓[0m [PATCH 2/5] rust: pl011: move register definitions out of lib.rs
+  [32m✓[0m [PATCH 3/5] rust: pl011: clean up visibilities of callbacks
+  [32m✓[0m [PATCH 4/5] rust: pl011: switch to safe chardev operation
+  [32m✓[0m [PATCH 5/5] rust: pl011: pass around registers::Data
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: rust: chardev: provide basic bindings to character devices
+Patch failed at 0001 rust: chardev: provide basic bindings to character devices
+error: patch failed: rust/qemu-api/src/chardev.rs:3
+error: rust/qemu-api/src/chardev.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
