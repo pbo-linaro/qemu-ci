@@ -250,6 +250,10 @@ struct CPUArchState {
     target_ulong excp_uw2;
     /* sw check code for sw check exception */
     target_ulong sw_check_code;
+
+    /* ZKR state */
+    bool zkr_csr_is_read;
+
 #ifdef CONFIG_USER_ONLY
     uint32_t elf_flags;
 #endif
