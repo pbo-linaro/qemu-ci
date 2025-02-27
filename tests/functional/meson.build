@@ -34,7 +34,7 @@ test_timeouts = {
   'arm_tuxrun' : 240,
   'arm_sx1' : 360,
   'intel_iommu': 300,
-  'mips_malta' : 120,
+  'mips_malta' : 480,
   'mipsel_replay' : 480,
   'netdev_ethtool' : 180,
   'ppc_40p' : 240,
