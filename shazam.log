@@ -1,0 +1,64 @@
+Grabbing thread from lore.kernel.org/all/cover.1740653898.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 22 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 300 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/21] tests/acpi: virt: add an empty HEST file
+  [32m✓[0m [PATCH v5 2/21] tests/qtest/bios-tables-test: extend to also check HEST table
+  [32m✓[0m [PATCH v5 3/21] tests/acpi: virt: update HEST file with its current data
+  [32m✓[0m [PATCH v5 4/21] acpi/ghes: Cleanup the code which gets ghes ged state
+  [32m✓[0m [PATCH v5 5/21] acpi/ghes: prepare to change the way HEST offsets are calculated
+  [32m✓[0m [PATCH v5 6/21] acpi/ghes: add a firmware file with HEST address
+  [32m✓[0m [PATCH v5 7/21] acpi/ghes: Use HEST table offsets when preparing GHES records
+  [32m✓[0m [PATCH v5 8/21] acpi/ghes: don't hard-code the number of sources for HEST table
+  [32m✓[0m [PATCH v5 9/21] acpi/ghes: add a notifier to notify when error data is ready
+  [32m✓[0m [PATCH v5 10/21] acpi/ghes: create an ancillary acpi_ghes_get_state() function
+  [32m✓[0m [PATCH v5 11/21] acpi/generic_event_device: Update GHES migration to cover hest addr
+  [32m✓[0m [PATCH v5 12/21] acpi/generic_event_device: add logic to detect if HEST addr is available
+  [32m✓[0m [PATCH v5 13/21] acpi/generic_event_device: add an APEI error device
+  [32m✓[0m [PATCH v5 14/21] tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+  [32m✓[0m [PATCH v5 15/21] arm/virt: Wire up a GED error device for ACPI / GHES
+  [32m✓[0m [PATCH v5 16/21] qapi/acpi-hest: add an interface to do generic CPER error injection
+  [32m✓[0m [PATCH v5 17/21] tests/acpi: virt: update HEST table to accept two sources
+  [32m✓[0m [PATCH v5 18/21] tests/acpi: virt: and update DSDT table to add the new GED device
+  [32m✓[0m [PATCH v5 19/21] docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
+  [32m✓[0m [PATCH v5 20/21] acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
+  [32m✓[0m [PATCH v5 21/21] scripts/ghes_inject: add a script to generate GHES error inject
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 21
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tests/acpi: virt: add an empty HEST file
+Applying: tests/qtest/bios-tables-test: extend to also check HEST table
+Applying: tests/acpi: virt: update HEST file with its current data
+Applying: acpi/ghes: Cleanup the code which gets ghes ged state
+Applying: acpi/ghes: prepare to change the way HEST offsets are calculated
+Applying: acpi/ghes: add a firmware file with HEST address
+Applying: acpi/ghes: Use HEST table offsets when preparing GHES records
+Applying: acpi/ghes: don't hard-code the number of sources for HEST table
+Applying: acpi/ghes: add a notifier to notify when error data is ready
+Applying: acpi/ghes: create an ancillary acpi_ghes_get_state() function
+Applying: acpi/generic_event_device: Update GHES migration to cover hest addr
+Applying: acpi/generic_event_device: add logic to detect if HEST addr is available
+Applying: acpi/generic_event_device: add an APEI error device
+Applying: tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+Applying: arm/virt: Wire up a GED error device for ACPI / GHES
+Applying: qapi/acpi-hest: add an interface to do generic CPER error injection
+Applying: tests/acpi: virt: update HEST table to accept two sources
+Patch failed at 0017 tests/acpi: virt: update HEST table to accept two sources
+error: corrupt patch at line 113
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
