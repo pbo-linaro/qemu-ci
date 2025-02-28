@@ -18,7 +18,9 @@
 #include "qemu/osdep.h" /* Needs to be included before isa.h */
 #include "hw/isa/isa.h"
 #include "hw/qdev-properties.h"
+#include "include/hw/boards.h"
 #include "qom/object.h"
+#include "target/i386/cpu.h"
 
 #define TYPE_RDT "rdt"
 #define RDT_NUM_RMID_PROP "rmids"
@@ -71,6 +73,16 @@ struct RDTState {
 struct RDTStateClass {
 };
 
+static inline int16_t cache_ids_contain(uint32_t current_ids[],
+                                        uint16_t size, uint32_t id) {
+    for (int i = 0; i < size; i++) {
+        if (current_ids[i] == id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 OBJECT_DEFINE_TYPE(RDTState, rdt, RDT, ISA_DEVICE);
 
 static Property rdt_properties[] = {
@@ -81,8 +93,75 @@ static void rdt_init(Object *obj)
 {
 }
 
+static void rdt_realize(DeviceState *dev, Error **errp) {
+    RDTState *rdtDev = RDT(dev);
+    MachineState *ms = MACHINE(qdev_get_machine());
+    rdtDev->rdtInstances = NULL;
+    rdtDev->l3_caches = 0;
+    uint32_t *cache_ids_found = g_malloc(sizeof(uint32_t) * 256);
+    uint32_t cache_ids_size = 0;
+
+    /* Iterate over all CPUs and set RDT state */
+    for (int i = 0; i < ms->possible_cpus->len; i++) {
+        X86CPU *x86_cpu = X86_CPU(ms->possible_cpus->cpus[i].cpu);
+        X86CPUTopoInfo topo_info = x86_cpu->env.topo_info;
+
+        uint32_t num_threads_sharing = apicid_pkg_offset(&topo_info);
+        uint32_t index_msb = 32 - clz32(num_threads_sharing);
+        uint32_t l3_id = x86_cpu->apic_id & ~((1 << index_msb) - 1);
+
+        int16_t pos = cache_ids_contain(cache_ids_found,
+                                        cache_ids_size, l3_id);
+        /*
+         * If we find a core that shares a new L3 cache,
+         * initialize the relevant per-L3 state.
+         * */
+        if (pos == -1) {
+            cache_ids_size++;
+            pos = cache_ids_size - 1;
+            cache_ids_found[pos] = l3_id;
+
+            rdtDev->rdtInstances = g_realloc(rdtDev->rdtInstances,
+                                             sizeof(RDTStatePerL3Cache) *
+                                             cache_ids_size);
+            rdtDev->l3_caches++;
+            RDTStatePerL3Cache *rdt = &rdtDev->rdtInstances[pos];
+            rdt->rdtstate = rdtDev;
+            rdt->monitors = g_malloc(sizeof(RDTMonitor) * rdtDev->rmids);
+            rdt->rdtstate->allocations = g_malloc(sizeof(RDTAllocation) *
+                                                  rdtDev->rmids);
+            rdt->monitors->count_local = 0;
+            rdt->monitors->count_remote = 0;
+            rdt->monitors->count_l3 = 0;
+            memset(rdt->msr_L2_ia32_mask_n, 0xF,
+                   sizeof(rdt->msr_L2_ia32_mask_n));
+            memset(rdt->msr_L3_ia32_mask_n, 0xF,
+                   sizeof(rdt->msr_L3_ia32_mask_n));
+            memset(rdt->ia32_L2_qos_ext_bw_thrtl_n, 0xF,
+                   sizeof(rdt->ia32_L2_qos_ext_bw_thrtl_n));
+            qemu_mutex_init(&rdt->rdtstate->allocations->lock);
+            qemu_mutex_init(&rdt->lock);
+        }
+
+        x86_cpu->rdtStatePerL3Cache = &rdtDev->rdtInstances[pos];
+        x86_cpu->rdtPerCore = g_malloc(sizeof(RDTStatePerCore));
+
+        qemu_mutex_init(&x86_cpu->rdtPerCore->lock);
+    }
+}
+
 static void rdt_finalize(Object *obj)
 {
+    RDTState *rdt = RDT(obj);
+    MachineState *ms = MACHINE(qdev_get_machine());
+
+    for (int i = 0; i < ms->possible_cpus->len; i++) {
+        RDTStatePerL3Cache *rdtInstance = &rdt->rdtInstances[i];
+        g_free(rdtInstance->monitors);
+        g_free(rdtInstance->rdtstate->allocations);
+    }
+
+    g_free(rdt->rdtInstances);
 }
 
 static void rdt_class_init(ObjectClass *klass, void *data)
@@ -92,6 +171,7 @@ static void rdt_class_init(ObjectClass *klass, void *data)
     dc->hotpluggable = false;
     dc->desc = "RDT";
     dc->user_creatable = true;
+    dc->realize = rdt_realize;
 
     device_class_set_props(dc, rdt_properties);
 }
