@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250228092729.543097-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/6] uefi-test-tools:: Add LoongArch64 support
+  [PATCH 2/6] tests/data/uefi-boot-images: Add ISO image for LoongArch system
+  [PATCH 3/6] tests/qtest/bios-tables-test: Add basic testing for LoongArch64
+  [PATCH 4/6] tests/acpi: Add empty ACPI data files for LoongArch64
+  [PATCH 5/6] tests/acpi: Fill acpi table data for LoongArch
+  [PATCH 6/6] tests/qtest: Enable bios-tables-test for LoongArch
+---
+Total patches: 6
+---
+ Base: using specified base-commit b69801dd6b1eb4d107f7c2f643adf0a4e3ec9124
+Applying: uefi-test-tools:: Add LoongArch64 support
+Applying: tests/data/uefi-boot-images: Add ISO image for LoongArch system
+Patch failed at 0002 tests/data/uefi-boot-images: Add ISO image for LoongArch system
+error: corrupt binary patch at line 200: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
