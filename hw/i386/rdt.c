@@ -22,8 +22,16 @@
 #include "qom/object.h"
 #include "target/i386/cpu.h"
 
+/* RDT Monitoring Event Codes */
+#define RDT_EVENT_L3_OCCUPANCY 1
+#define RDT_EVENT_L3_REMOTE_BW 2
+#define RDT_EVENT_L3_LOCAL_BW 3
+
 #define TYPE_RDT "rdt"
 #define RDT_NUM_RMID_PROP "rmids"
+
+#define QM_CTR_ERROR        (1ULL << 63)
+#define QM_CTR_UNAVAILABLE  (1ULL << 62)
 
 OBJECT_DECLARE_TYPE(RDTState, RDTStateClass, RDT);
 
@@ -72,6 +80,143 @@ struct RDTState {
 
 struct RDTStateClass {
 };
+
+bool rdt_associate_rmid_cos(uint64_t msr_ia32_pqr_assoc)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdtStatePerL3Cache = cpu->rdtStatePerL3Cache;
+    RDTStatePerCore *rdtPerCore = cpu->rdtPerCore;
+    RDTAllocation *alloc;
+
+    uint32_t cos_id = (msr_ia32_pqr_assoc & 0xffff0000) >> 16;
+    uint32_t rmid = msr_ia32_pqr_assoc & 0xffff;
+
+    if (cos_id > RDT_MAX_L3_MASK_COUNT || cos_id > RDT_MAX_L2_MASK_COUNT ||
+        cos_id > RDT_MAX_MBA_THRTL_COUNT || rmid > rdt_max_rmid(rdtStatePerL3Cache)) {
+        return false;
+    }
+
+    qemu_mutex_lock(&rdtPerCore->lock);
+    qemu_mutex_lock(&rdtStatePerL3Cache->lock);
+
+    rdtPerCore->active_rmid = rmid;
+
+    alloc = &rdtStatePerL3Cache->rdtstate->allocations[rmid];
+
+    alloc->active_cos = cos_id;
+
+    qemu_mutex_unlock(&rdtStatePerL3Cache->lock);
+    qemu_mutex_unlock(&rdtPerCore->lock);
+
+    return true;
+}
+
+uint32_t rdt_read_l3_mask(uint32_t pos)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    return rdt->msr_L3_ia32_mask_n[pos];
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+uint32_t rdt_read_l2_mask(uint32_t pos)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    return rdt->msr_L2_ia32_mask_n[pos];
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+uint32_t rdt_read_mba_thrtl(uint32_t pos)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    return rdt->ia32_L2_qos_ext_bw_thrtl_n[pos];
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+void rdt_write_msr_l3_mask(uint32_t pos, uint32_t val)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    rdt->msr_L3_ia32_mask_n[pos] = val;
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+void rdt_write_msr_l2_mask(uint32_t pos, uint32_t val)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    rdt->msr_L2_ia32_mask_n[pos] = val;
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+void rdt_write_mba_thrtl(uint32_t pos, uint32_t val)
+{
+    X86CPU *cpu = X86_CPU(current_cpu);
+    RDTStatePerL3Cache *rdt = cpu->rdtStatePerL3Cache;
+
+    qemu_mutex_lock(&rdt->lock);
+    rdt->ia32_L2_qos_ext_bw_thrtl_n[pos] = val;
+    qemu_mutex_unlock(&rdt->lock);
+}
+
+uint32_t rdt_max_rmid(RDTStatePerL3Cache *rdt)
+{
+    RDTState *rdtdev = rdt->rdtstate;
+    return rdtdev->rmids - 1;
+}
+
+uint64_t rdt_read_event_count(RDTStatePerL3Cache *rdtInstance,
+                              uint32_t rmid, uint32_t event_id)
+{
+    RDTMonitor *mon;
+    RDTState *rdt = rdtInstance->rdtstate;
+
+    uint32_t count_l3 = 0;
+    uint32_t count_local = 0;
+    uint32_t count_remote = 0;
+
+    if (!rdt) {
+        return 0;
+    }
+
+    qemu_mutex_lock(&rdtInstance->lock);
+
+    for (int i = 0; i < rdt->l3_caches; i++) {
+        rdtInstance = &rdt->rdtInstances[i];
+        if (rmid >= rdtInstance->rdtstate->rmids) {
+            return QM_CTR_ERROR;
+        }
+        mon = &rdtInstance->monitors[rmid];
+        count_l3 += mon->count_l3;
+        count_local += mon->count_local;
+        count_remote += mon->count_remote;
+    }
+
+    qemu_mutex_unlock(&rdtInstance->lock);
+
+    switch (event_id) {
+    case RDT_EVENT_L3_OCCUPANCY:
+        return count_l3 == 0 ? QM_CTR_UNAVAILABLE : count_l3;
+    case RDT_EVENT_L3_REMOTE_BW:
+        return count_remote == 0 ? QM_CTR_UNAVAILABLE : count_remote;
+    case RDT_EVENT_L3_LOCAL_BW:
+        return count_local == 0 ? QM_CTR_UNAVAILABLE : count_local;
+    default:
+        return QM_CTR_ERROR;
+    }
+}
 
 static inline int16_t cache_ids_contain(uint32_t current_ids[],
                                         uint16_t size, uint32_t id) {
