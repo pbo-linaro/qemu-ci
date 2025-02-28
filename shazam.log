@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250228170434.317306-1-anisinha@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] hw/i386/ovmf: check if ovmf is supported before calling ovmf parsing code
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: hw/i386/ovmf: check if ovmf is supported before calling ovmf parsing code
+Patch failed at 0001 hw/i386/ovmf: check if ovmf is supported before calling ovmf parsing code
+error: patch failed: hw/i386/pc_sysfw.c:278
+error: hw/i386/pc_sysfw.c: patch does not apply
+error: patch failed: hw/i386/pc_sysfw_ovmf.c:36
+error: hw/i386/pc_sysfw_ovmf.c: patch does not apply
+error: patch failed: include/hw/i386/pc.h:212
+error: include/hw/i386/pc.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
