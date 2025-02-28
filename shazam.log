@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20250228102747.867770-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 104 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/22] target/riscv: Declare RISCVCPUClass::misa_mxl_max as RISCVMXL
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 2/22] target/riscv: Convert misa_mxl_max using GLib macros
+  [32m✓[0m [PATCH 3/22] target/riscv: introduce RISCVCPUDef
+  [32m✓[0m [PATCH 4/22] target/riscv: store RISCVCPUDef struct directly in the class
+  [32m✓[0m [PATCH 5/22] target/riscv: merge riscv_cpu_class_init with the class_base function
+  [32m✓[0m [PATCH 6/22] target/riscv: move RISCVCPUConfig fields to a header file
+  [32m✓[0m [PATCH 7/22] target/riscv: add more RISCVCPUDef fields
+  [32m✓[0m [PATCH 8/22] target/riscv: convert abstract CPU classes to RISCVCPUDef
+  [32m✓[0m [PATCH 9/22] target/riscv: do not make RISCVCPUConfig fields conditional
+  [32m✓[0m [PATCH 10/22] target/riscv: convert profile CPU models to RISCVCPUDef
+  [32m✓[0m [PATCH 11/22] target/riscv: convert bare CPU models to RISCVCPUDef
+  [32m✓[0m [PATCH 12/22] target/riscv: convert dynamic CPU models to RISCVCPUDef
+  [32m✓[0m [PATCH 13/22] target/riscv: convert SiFive E CPU models to RISCVCPUDef
+  [32m✓[0m [PATCH 14/22] target/riscv: convert ibex CPU models to RISCVCPUDef
+  [32m✓[0m [PATCH 15/22] target/riscv: convert SiFive U models to RISCVCPUDef
+  [32m✓[0m [PATCH 16/22] target/riscv: th: make CSR insertion test a bit more intuitive
+  [32m✓[0m [PATCH 17/22] target/riscv: generalize custom CSR functionality
+  [32m✓[0m [PATCH 18/22] target/riscv: convert TT C906 to RISCVCPUDef
+  [32m✓[0m [PATCH 19/22] target/riscv: convert TT Ascalon to RISCVCPUDef
+  [32m✓[0m [PATCH 20/22] target/riscv: convert Ventana V1 to RISCVCPUDef
+  [32m✓[0m [PATCH 21/22] target/riscv: convert Xiangshan Nanhu to RISCVCPUDef
+  [32m✓[0m [PATCH 22/22] target/riscv: remove .instance_post_init
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 22
+---
+Applying: target/riscv: Declare RISCVCPUClass::misa_mxl_max as RISCVMXL
+Applying: target/riscv: Convert misa_mxl_max using GLib macros
+Applying: target/riscv: introduce RISCVCPUDef
+Patch failed at 0003 target/riscv: introduce RISCVCPUDef
+error: patch failed: target/riscv/cpu.c:3057
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
