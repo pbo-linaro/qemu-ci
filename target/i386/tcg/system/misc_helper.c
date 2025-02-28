@@ -25,6 +25,7 @@
 #include "exec/address-spaces.h"
 #include "exec/exec-all.h"
 #include "tcg/helper-tcg.h"
+#include "hw/i386/rdt.h"
 #include "hw/i386/apic.h"
 
 void helper_outb(CPUX86State *env, uint32_t port, uint32_t data)
@@ -293,6 +294,47 @@ void helper_wrmsr(CPUX86State *env)
         env->msr_bndcfgs = val;
         cpu_sync_bndcs_hflags(env);
         break;
+#ifdef CONFIG_RDT
+    case MSR_IA32_QM_EVTSEL:
+        env->msr_ia32_qm_evtsel = val;
+        break;
+    case MSR_IA32_PQR_ASSOC:
+        env->msr_ia32_pqr_assoc = val;
+
+        if (!rdt_associate_rmid_cos(val))
+            goto error;
+        break;
+    case MSR_IA32_L3_CBM_BASE ... MSR_IA32_L3_MASKS_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L3_CBM_BASE;
+
+        if (pos > CPUID_10_1_EDX_COS_MAX) {
+            goto error;
+        }
+        rdt_write_msr_l3_mask(pos, val);
+        break;
+    }
+    case MSR_IA32_L2_CBM_BASE ... MSR_IA32_L2_CBM_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L2_CBM_BASE;
+
+        if (pos > CPUID_10_2_EDX_COS_MAX) {
+            goto error;
+        }
+        rdt_write_msr_l2_mask(pos, val);
+        break;
+    }
+    case MSR_IA32_L2_QOS_Ext_BW_Thrtl_BASE ... MSR_IA32_L2_QOS_Ext_BW_Thrtl_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L2_QOS_Ext_BW_Thrtl_BASE;
+
+        if (pos > CPUID_10_3_EDX_COS_MAX) {
+            goto error;
+        }
+        rdt_write_mba_thrtl(pos, val);
+        break;
+    }
+#endif
     case MSR_APIC_START ... MSR_APIC_END: {
         int ret;
         int index = (uint32_t)env->regs[R_ECX] - MSR_APIC_START;
@@ -471,6 +513,49 @@ void helper_rdmsr(CPUX86State *env)
         val = cpu_x86_get_msr_core_thread_count(x86_cpu);
         break;
     }
+#ifdef CONFIG_RDT
+    case MSR_IA32_QM_CTR:
+        val = rdt_read_event_count(x86_cpu->rdtPerNode,
+                                   (env->msr_ia32_qm_evtsel >> 32) & 0xff,
+                                   env->msr_ia32_qm_evtsel & 0xff);
+        break;
+    case MSR_IA32_QM_EVTSEL:
+        val = env->msr_ia32_qm_evtsel;
+        break;
+    case MSR_IA32_PQR_ASSOC:
+        val = env->msr_ia32_pqr_assoc;
+        break;
+    case MSR_IA32_L3_CBM_BASE ... MSR_IA32_L3_MASKS_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L3_CBM_BASE;
+
+        if (pos >= CPUID_10_1_EDX_COS_MAX) {
+            raise_exception_err_ra(env, EXCP0D_GPF, 0, GETPC());
+        }
+        val = rdt_read_l3_mask(pos);
+        break;
+    }
+    case MSR_IA32_L2_CBM_BASE ... MSR_IA32_L2_CBM_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L2_CBM_BASE;
+
+        if (pos >= CPUID_10_2_EDX_COS_MAX) {
+            raise_exception_err_ra(env, EXCP0D_GPF, 0, GETPC());
+        }
+        val = rdt_read_l2_mask(pos);
+        break;
+    }
+    case MSR_IA32_L2_QOS_Ext_BW_Thrtl_BASE ... MSR_IA32_L2_QOS_Ext_BW_Thrtl_END:
+    {
+        uint32_t pos = (uint32_t)env->regs[R_ECX] - MSR_IA32_L2_QOS_Ext_BW_Thrtl_BASE;
+
+        if (pos >= CPUID_10_3_EDX_COS_MAX) {
+            raise_exception_err_ra(env, EXCP0D_GPF, 0, GETPC());
+        }
+        val = rdt_read_mba_thrtl(pos);
+        break;
+    }
+#endif
     case MSR_APIC_START ... MSR_APIC_END: {
         int ret;
         int index = (uint32_t)env->regs[R_ECX] - MSR_APIC_START;

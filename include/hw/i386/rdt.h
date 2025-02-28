@@ -29,6 +29,10 @@
 #define RDT_MAX_L2_MASK_COUNT      63
 #define RDT_MAX_MBA_THRTL_COUNT    63
 
+#define CPUID_10_1_EDX_COS_MAX          RDT_MAX_L3_MASK_COUNT
+#define CPUID_10_2_EDX_COS_MAX          RDT_MAX_L2_MASK_COUNT
+#define CPUID_10_3_EDX_COS_MAX          RDT_MAX_MBA_THRTL_COUNT
+
 typedef struct RDTState RDTState;
 typedef struct RDTStatePerL3Cache RDTStatePerL3Cache;
 typedef struct RDTStatePerCore RDTStatePerCore;
