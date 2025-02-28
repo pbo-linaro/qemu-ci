@@ -361,6 +361,7 @@ static inline uint32_t multifd_ram_page_count(void)
 
 void multifd_ram_save_setup(void);
 void multifd_ram_save_cleanup(void);
+int multifd_send_flush(void);
 int multifd_ram_flush_and_sync(QEMUFile *f);
 bool multifd_ram_sync_per_round(void);
 bool multifd_ram_sync_per_section(void);

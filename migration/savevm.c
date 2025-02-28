@@ -37,6 +37,7 @@
 #include "migration/register.h"
 #include "migration/global_state.h"
 #include "migration/channel-block.h"
+#include "multifd.h"
 #include "ram.h"
 #include "qemu-file.h"
 #include "savevm.h"
@@ -90,6 +91,7 @@ enum qemu_vm_cmd {
     MIG_CMD_ENABLE_COLO,       /* Enable COLO */
     MIG_CMD_POSTCOPY_RESUME,   /* resume postcopy on dest */
     MIG_CMD_RECV_BITMAP,       /* Request for recved bitmap on dst */
+    MIG_CMD_MULTIFD_RECV_SYNC, /* Sync multifd recv_x and main threads */
     MIG_CMD_MAX
 };
 
@@ -109,6 +111,7 @@ static struct mig_cmd_args {
     [MIG_CMD_POSTCOPY_RESUME]  = { .len =  0, .name = "POSTCOPY_RESUME" },
     [MIG_CMD_PACKAGED]         = { .len =  4, .name = "PACKAGED" },
     [MIG_CMD_RECV_BITMAP]      = { .len = -1, .name = "RECV_BITMAP" },
+    [MIG_CMD_MULTIFD_RECV_SYNC] = { .len = 0, .name = "MULTIFD_RECV_SYNC" },
     [MIG_CMD_MAX]              = { .len = -1, .name = "MAX" },
 };
 
@@ -1199,6 +1202,12 @@ void qemu_savevm_send_recv_bitmap(QEMUFile *f, char *block_name)
     memcpy(buf + 1, block_name, len);
 
     qemu_savevm_command_send(f, MIG_CMD_RECV_BITMAP, len + 1, (uint8_t *)buf);
+}
+
+void qemu_savevm_send_multifd_recv_sync(QEMUFile *f)
+{
+    /* TBD: trace_savevm_send_multifd_recv_sync(); */
+    qemu_savevm_command_send(f, MIG_CMD_MULTIFD_RECV_SYNC, 0, NULL);
 }
 
 bool qemu_savevm_state_blocked(Error **errp)
@@ -2478,6 +2487,10 @@ static int loadvm_process_command(QEMUFile *f)
 
     case MIG_CMD_RECV_BITMAP:
         return loadvm_handle_recv_bitmap(mis, len);
+
+    case MIG_CMD_MULTIFD_RECV_SYNC:
+        multifd_recv_sync_main();
+        break;
 
     case MIG_CMD_ENABLE_COLO:
         return loadvm_process_enable_colo(mis);

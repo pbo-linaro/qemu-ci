@@ -3401,6 +3401,9 @@ static MigIterateState migration_iteration_run(MigrationState *s)
     if (!in_postcopy && must_precopy <= s->threshold_size
         && can_switchover && qatomic_read(&s->start_postcopy)) {
         if (migrate_multifd()) {
+            multifd_send_flush();
+            multifd_send_sync_main(MULTIFD_SYNC_LOCAL);
+            qemu_savevm_send_multifd_recv_sync(s->to_dst_file);
             multifd_send_shutdown();
         }
         if (postcopy_start(s, &local_err)) {

@@ -1265,6 +1265,7 @@ static void *multifd_recv_thread(void *opaque)
 
     rcu_unregister_thread();
     trace_multifd_recv_thread_end(p->id, p->packets_recved);
+    qemu_sem_post(&multifd_recv_state->sem_sync);
 
     return NULL;
 }

@@ -334,7 +334,7 @@ retry:
      * After flush, always retry.
      */
     if (pages->block != block || multifd_queue_full(pages)) {
-        if (!multifd_send(&multifd_ram_send)) {
+        if (multifd_send_flush() < 0) {
             return false;
         }
         goto retry;
@@ -387,6 +387,18 @@ bool multifd_ram_sync_per_round(void)
     return !migrate_multifd_flush_after_each_section();
 }
 
+int multifd_send_flush(void)
+{
+    if (!multifd_payload_empty(multifd_ram_send)) {
+        if (!multifd_send(&multifd_ram_send)) {
+            error_report("%s: multifd_send fail", __func__);
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 int multifd_ram_flush_and_sync(QEMUFile *f)
 {
     MultiFDSyncReq req;
@@ -396,11 +408,8 @@ int multifd_ram_flush_and_sync(QEMUFile *f)
         return 0;
     }
 
-    if (!multifd_payload_empty(multifd_ram_send)) {
-        if (!multifd_send(&multifd_ram_send)) {
-            error_report("%s: multifd_send fail", __func__);
-            return -1;
-        }
+    if ((ret = multifd_send_flush()) < 0) {
+        return ret;
     }
 
     /* File migrations only need to sync with threads */
