@@ -117,7 +117,9 @@ bool loongarch_tlb_search(CPULoongArchState *env, target_ulong vaddr,
                 *index = i * 256 + stlb_idx;
                 return true;
             }
-        }
+        } else {
+	    continue;
+	}
     }
 
     /* Search MTLB */
@@ -136,7 +138,9 @@ bool loongarch_tlb_search(CPULoongArchState *env, target_ulong vaddr,
                 *index = i;
                 return true;
             }
-        }
+        } else {
+	    continue;
+	}
     }
     return false;
 }
