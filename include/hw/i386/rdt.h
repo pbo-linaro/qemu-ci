@@ -29,8 +29,31 @@
 #define RDT_MAX_L2_MASK_COUNT      63
 #define RDT_MAX_MBA_THRTL_COUNT    63
 
+/* RDT L3 Cache Monitoring Technology */
+#define CPUID_F_0_EDX_L3               (1U << 1)
+#define CPUID_F_1_EDX_L3_OCCUPANCY     (1U << 0)
+#define CPUID_F_1_EDX_L3_TOTAL_BW      (1U << 1)
+#define CPUID_F_1_EDX_L3_LOCAL_BW      (1U << 2)
+
+/* RDT Cache Allocation Technology */
+#define CPUID_10_0_EBX_L3_CAT           (1U << 1)
+#define CPUID_10_0_EBX_L2_CAT           (1U << 2)
+#define CPUID_10_0_EBX_MBA              (1U << 3)
+
+/* RDT L3 Allocation features */
+#define CPUID_10_1_EAX_CBM_LENGTH       0xf
+#define CPUID_10_1_EBX_CBM              0x0
+#define CPUID_10_1_ECX_CDP              0x0 /* to enable, it would be (1U << 2) */
 #define CPUID_10_1_EDX_COS_MAX          RDT_MAX_L3_MASK_COUNT
+
+/* RDT L2 Allocation features*/
+#define CPUID_10_2_EAX_CBM_LENGTH       0xf
+#define CPUID_10_2_EBX_CBM              0x0
 #define CPUID_10_2_EDX_COS_MAX          RDT_MAX_L2_MASK_COUNT
+
+/* RDT MBA features */
+#define CPUID_10_3_EAX_THRTL_MAX        89
+#define CPUID_10_3_ECX_LINEAR_RESPONSE (1U << 2)
 #define CPUID_10_3_EDX_COS_MAX          RDT_MAX_MBA_THRTL_COUNT
 
 typedef struct RDTState RDTState;
