@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/CAJSP0QUk77GViTBgBpfYH-AbAmQ5aUwi0K6UTH9iv%3D1mVb0Wbw@mail.gmail.com/t.mbox.gz
+Analyzing 2 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Kubernetes gitlab-runner jobs cannot be scheduled
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: Kubernetes gitlab-runner jobs cannot be scheduled
+Patch failed at 0001 Kubernetes gitlab-runner jobs cannot be scheduled
+error: tmp/deployed.yaml: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
