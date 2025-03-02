@@ -1196,9 +1196,6 @@ static AddressSpace *riscv_iommu_space(RISCVIOMMUState *s, uint32_t devid)
 {
     RISCVIOMMUSpace *as;
 
-    /* FIXME: PCIe bus remapping for attached endpoints. */
-    devid |= s->bus << 8;
-
     QLIST_FOREACH(as, &s->spaces, list) {
         if (as->devid == devid) {
             break;
@@ -2196,9 +2193,6 @@ static MemTxResult riscv_iommu_trap_write(void *opaque, hwaddr addr,
         return MEMTX_ACCESS_ERROR;
     }
 
-    /* FIXME: PCIe bus remapping for attached endpoints. */
-    devid |= s->bus << 8;
-
     ctx = riscv_iommu_ctx(s, devid, 0, &ref);
     if (ctx == NULL) {
         res = MEMTX_ACCESS_ERROR;
@@ -2401,7 +2395,6 @@ void riscv_iommu_reset(RISCVIOMMUState *s)
 static const Property riscv_iommu_properties[] = {
     DEFINE_PROP_UINT32("version", RISCVIOMMUState, version,
         RISCV_IOMMU_SPEC_DOT_VER),
-    DEFINE_PROP_UINT32("bus", RISCVIOMMUState, bus, 0x0),
     DEFINE_PROP_UINT32("ioatc-limit", RISCVIOMMUState, iot_limit,
         LIMIT_CACHE_IOT),
     DEFINE_PROP_BOOL("intremap", RISCVIOMMUState, enable_msi, TRUE),
