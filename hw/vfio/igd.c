@@ -189,7 +189,7 @@ static bool vfio_pci_igd_opregion_init(VFIOPCIDevice *vdev,
     return true;
 }
 
-bool vfio_pci_igd_setup_opregion(VFIOPCIDevice *vdev, Error **errp)
+static bool vfio_pci_igd_setup_opregion(VFIOPCIDevice *vdev, Error **errp)
 {
     g_autofree struct vfio_region_info *opregion = NULL;
     int ret;
@@ -557,15 +557,19 @@ bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev, Error **errp)
             return false;
         }
 
-        /* Setup OpRegion access */
-        if (!vfio_pci_igd_setup_opregion(vdev, errp)) {
-            return false;
-        }
+        /* Enable OpRegion quirk */
+        vdev->features |= VFIO_FEATURE_ENABLE_IGD_OPREGION;
 
         /* Setup LPC bridge / Host bridge PCI IDs */
         if (!vfio_pci_igd_setup_lpc_bridge(vdev, errp)) {
             return false;
         }
+    }
+
+    /* Setup OpRegion access */
+    if ((vdev->features & VFIO_FEATURE_ENABLE_IGD_OPREGION) &&
+        !vfio_pci_igd_setup_opregion(vdev, errp)) {
+        return false;
     }
 
     /*
