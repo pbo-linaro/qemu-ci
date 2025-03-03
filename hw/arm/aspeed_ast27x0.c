@@ -330,16 +330,23 @@ static void aspeed_soc_ast2700_init(Object *obj)
     object_initialize_child(obj, "scu", &s->scu, TYPE_ASPEED_2700_SCU);
     qdev_prop_set_uint32(DEVICE(&s->scu), "silicon-rev",
                          sc->silicon_rev);
+    /*
+     * There is one hw-strap1 register in the SCU (CPU DIE) and another
+     * hw-strap1 register in the SCUIO (IO DIE). To reuse the current design
+     * of hw-strap, hw-strap1 is assigned to the SCU and sets the value in the
+     * SCU hw-strap1 register, while hw-strap2 is assigned to the SCUIO and
+     * sets the value in the SCUIO hw-strap1 register.
+     */
     object_property_add_alias(obj, "hw-strap1", OBJECT(&s->scu),
                               "hw-strap1");
-    object_property_add_alias(obj, "hw-strap2", OBJECT(&s->scu),
-                              "hw-strap2");
     object_property_add_alias(obj, "hw-prot-key", OBJECT(&s->scu),
                               "hw-prot-key");
 
     object_initialize_child(obj, "scuio", &s->scuio, TYPE_ASPEED_2700_SCUIO);
     qdev_prop_set_uint32(DEVICE(&s->scuio), "silicon-rev",
                          sc->silicon_rev);
+    object_property_add_alias(obj, "hw-strap2", OBJECT(&s->scuio),
+                                  "hw-strap1");
 
     snprintf(typename, sizeof(typename), "aspeed.fmc-%s", socname);
     object_initialize_child(obj, "fmc", &s->fmc, typename);
