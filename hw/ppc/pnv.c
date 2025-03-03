@@ -966,7 +966,24 @@ static void pnv_init(MachineState *machine)
         exit(EXIT_FAILURE);
     }
 
-    memory_region_add_subregion(get_system_memory(), 0, machine->ram);
+    if (machine->ram) {
+        memory_region_add_subregion(get_system_memory(), 0, machine->ram);
+    } else if (machine->numa_state) {
+        for (i = 0; i < machine->numa_state->num_nodes; i++) {
+            MemoryRegion *mr = machine->numa_state->nodes[i].node_mr;
+
+            /*
+             * powernv uses numa_mem_align_shift to derive the base RAM address
+             * for each chip addr = Chip Number << shift.
+             */
+            chip_ram_start = (uint64_t)i << mc->numa_mem_align_shift;
+            if (!mr) {
+                continue;
+            }
+            memory_region_add_subregion(get_system_memory(), chip_ram_start,
+                                        mr);
+        }
+    }
 
     /*
      * Create our simple PNOR device
@@ -1100,20 +1117,30 @@ static void pnv_init(MachineState *machine)
         exit(1);
     }
 
+    chip_ram_start = 0;
     pnv->chips = g_new0(PnvChip *, pnv->num_chips);
     for (i = 0; i < pnv->num_chips; i++) {
         char chip_name[32];
         Object *chip = OBJECT(qdev_new(chip_typename));
-        uint64_t chip_ram_size =  pnv_chip_get_ram_size(pnv, i);
+        uint64_t chip_ram_size;
 
         pnv->chips[i] = PNV_CHIP(chip);
+
+        if (machine->numa_state) {
+            chip_ram_start = (uint64_t)i << mc->numa_mem_align_shift;
+            chip_ram_size = machine->numa_state->nodes[i].node_mem;
+        } else {
+            chip_ram_size =  pnv_chip_get_ram_size(pnv, i);
+        }
 
         /* Distribute RAM among the chips  */
         object_property_set_int(chip, "ram-start", chip_ram_start,
                                 &error_fatal);
         object_property_set_int(chip, "ram-size", chip_ram_size,
                                 &error_fatal);
-        chip_ram_start += chip_ram_size;
+        if (!machine->numa_state) {
+            chip_ram_start += chip_ram_size;
+        }
 
         snprintf(chip_name, sizeof(chip_name), "chip[%d]", i);
         object_property_add_child(OBJECT(pnv), chip_name, chip);
@@ -2680,6 +2707,7 @@ static void pnv_machine_power8_class_init(ObjectClass *oc, void *data)
 
     mc->desc = "IBM PowerNV (Non-Virtualized) POWER8";
     mc->default_cpu_type = POWERPC_CPU_TYPE_NAME("power8_v2.0");
+    mc->numa_mem_align_shift = 42;
     compat_props_add(mc->compat_props, phb_compat, G_N_ELEMENTS(phb_compat));
 
     xic->icp_get = pnv_icp_get;
@@ -2709,6 +2737,7 @@ static void pnv_machine_power9_class_init(ObjectClass *oc, void *data)
 
     mc->desc = "IBM PowerNV (Non-Virtualized) POWER9";
     mc->default_cpu_type = POWERPC_CPU_TYPE_NAME("power9_v2.2");
+    mc->numa_mem_align_shift = 42;
     compat_props_add(mc->compat_props, phb_compat, G_N_ELEMENTS(phb_compat));
 
     xfc->match_nvt = pnv_match_nvt;
@@ -2747,6 +2776,7 @@ static void pnv_machine_p10_common_class_init(ObjectClass *oc, void *data)
     };
 
     mc->default_cpu_type = POWERPC_CPU_TYPE_NAME("power10_v2.0");
+    mc->numa_mem_align_shift = 44;
     compat_props_add(mc->compat_props, phb_compat, G_N_ELEMENTS(phb_compat));
 
     mc->alias = "powernv";
@@ -2951,6 +2981,7 @@ static void pnv_machine_class_init(ObjectClass *oc, void *data)
 
     mc->numa_mem_supported = true;
     mc->auto_enable_numa = true;
+    mc->numa_skip_ram_container = true;
 
     mc->cpu_index_to_instance_props = pnv_cpu_index_to_props;
     mc->get_default_cpu_node_id = pnv_get_default_cpu_node_id;
