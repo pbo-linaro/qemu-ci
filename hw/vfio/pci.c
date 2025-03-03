@@ -3354,6 +3354,8 @@ static const Property vfio_pci_dev_properties[] = {
                     VFIO_FEATURE_ENABLE_REQ_BIT, true),
     DEFINE_PROP_BIT("x-igd-opregion", VFIOPCIDevice, features,
                     VFIO_FEATURE_ENABLE_IGD_OPREGION_BIT, false),
+    DEFINE_PROP_BIT("x-igd-lpc", VFIOPCIDevice, features,
+                    VFIO_FEATURE_ENABLE_IGD_LPC_BIT, false),
     DEFINE_PROP_BIT("x-igd-legacy-mode", VFIOPCIDevice, features,
                     VFIO_FEATURE_ENABLE_IGD_LEGACY_MODE_BIT, true),
     DEFINE_PROP_ON_OFF_AUTO("enable-migration", VFIOPCIDevice,

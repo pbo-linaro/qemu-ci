@@ -557,13 +557,9 @@ bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev, Error **errp)
             return false;
         }
 
-        /* Enable OpRegion quirk */
+        /* Enable OpRegion and LPC brige quirk */
         vdev->features |= VFIO_FEATURE_ENABLE_IGD_OPREGION;
-
-        /* Setup LPC bridge / Host bridge PCI IDs */
-        if (!vfio_pci_igd_setup_lpc_bridge(vdev, errp)) {
-            return false;
-        }
+        vdev->features |= VFIO_FEATURE_ENABLE_IGD_LPC;
     }
 
     /* Setup OpRegion access */
@@ -571,6 +567,12 @@ bool vfio_probe_igd_config_quirk(VFIOPCIDevice *vdev, Error **errp)
         !vfio_pci_igd_setup_opregion(vdev, errp)) {
         return false;
     }
+
+    /* Setup LPC bridge / Host bridge PCI IDs */
+    if ((vdev->features & VFIO_FEATURE_ENABLE_IGD_LPC) &&
+        !vfio_pci_igd_setup_lpc_bridge(vdev, errp)) {
+        return false;
+     }
 
     /*
      * Allow user to override dsm size using x-igd-gms option, in multiples of
