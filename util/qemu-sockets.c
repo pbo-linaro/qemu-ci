@@ -220,12 +220,6 @@ static int inet_listen_saddr(InetSocketAddress *saddr,
     int saved_errno = 0;
     bool socket_created = false;
 
-    if (saddr->keep_alive) {
-        error_setg(errp, "keep-alive option is not supported for passive "
-                   "sockets");
-        return -1;
-    }
-
     memset(&ai,0, sizeof(ai));
     ai.ai_flags = AI_PASSIVE;
     if (saddr->has_numeric && saddr->numeric) {
@@ -344,6 +338,19 @@ listen_failed:
     return -1;
 
 listen_ok:
+    if (saddr->keep_alive) {
+        int val = 1;
+        int ret = setsockopt(slisten, SOL_SOCKET, SO_KEEPALIVE,
+                             &val, sizeof(val));
+
+        if (ret < 0) {
+            error_setg_errno(errp, errno, "Unable to set KEEPALIVE");
+            close(slisten);
+            slisten = -1;
+            goto exit;
+        }
+    }
+exit:
     freeaddrinfo(res);
     return slisten;
 }
