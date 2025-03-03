@@ -46,6 +46,41 @@
             '*default-value': 'any' } }
 
 ##
+# @ObjectPropertyValue:
+#
+# @name: the name of the property
+#
+# @type: the type of the property, as described in @ObjectPropertyInfo
+#
+# @value: the value of the property
+#
+# @error: error message if value cannot be fetched
+#
+# Since 10.0
+##
+{ 'struct': 'ObjectPropertyValue',
+  'data': { 'name': 'str',
+            'type': 'str',
+            '*value': 'any',
+            '*error': 'str' } }
+
+##
+# @ObjectNode:
+#
+# @name: the name of the node
+#
+# @children: child nodes
+#
+# @properties: properties of the node
+#
+# Since 10.0
+##
+{ 'struct': 'ObjectNode',
+  'data': { 'name': 'str',
+            'children': [ 'ObjectNode' ],
+            'properties': [ 'ObjectPropertyValue' ] }}
+
+##
 # @qom-list:
 #
 # This command will list any properties of a object given a path in
@@ -123,6 +158,30 @@
 { 'command': 'qom-get',
   'data': { 'path': 'str', 'property': 'str' },
   'returns': 'any',
+  'allow-preconfig': true }
+
+##
+# @qom-tree-get:
+#
+# This command returns a tree of objects and their properties,
+# rooted at the specified path.
+#
+# @path: The absolute or partial path within the object model, as
+#     described in @qom-get
+#
+# Errors:
+#     - If path is not valid or is ambiguous, returns an error.
+#     - If a property cannot be read, returns an error message in the
+#       corresponding @ObjectPropertyValue.
+#
+# Returns: A tree of @ObjectNode.  Each node contains its name, list
+#     of properties, and list of child nodes.
+#
+# Since 10.0
+##
+{ 'command': 'qom-tree-get',
+  'data': { 'path': 'str' },
+  'returns': 'ObjectNode',
   'allow-preconfig': true }
 
 ##
