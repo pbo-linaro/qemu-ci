@@ -1082,18 +1082,6 @@ static void pnv_init(MachineState *machine)
         exit(1);
     }
 
-    if (pnv->big_core) {
-        /*
-         * powernv models PnvCore as a SMT4 core. Big-core requires 2xPnvCore
-         * per core, so adjust topology here. pnv_dt_core() processor
-         * device-tree and TCG SMT code make the 2 cores appear as one big core
-         * from software point of view. pnv pervasive models and xscoms tend to
-         * see the big core as 2 small core halves.
-         */
-        machine->smp.cores *= 2;
-        machine->smp.threads /= 2;
-    }
-
     if (!is_power_of_2(machine->smp.threads)) {
         error_report("Cannot support %d threads/core on a powernv "
                      "machine because it must be a power of 2",
@@ -2865,6 +2853,87 @@ static void pnv_nmi(NMIState *n, int cpu_index, Error **errp)
     }
 }
 
+/* find cpu slot in machine->possible_cpus by core_id */
+static CPUArchId *pnv_find_cpu_slot(MachineState *ms, uint32_t id, int *idx)
+{
+    int index = id / ms->smp.threads;
+
+    if (index >= ms->possible_cpus->len) {
+        return NULL;
+    }
+    if (idx) {
+        *idx = index;
+    }
+    return &ms->possible_cpus->cpus[index];
+}
+
+static CpuInstanceProperties
+pnv_cpu_index_to_props(MachineState *machine, unsigned cpu_index)
+{
+    CPUArchId *core_slot;
+    MachineClass *mc = MACHINE_GET_CLASS(machine);
+
+    /* make sure possible_cpu are intialized */
+    mc->possible_cpu_arch_ids(machine);
+    /* get CPU core slot containing thread that matches cpu_index */
+    core_slot = pnv_find_cpu_slot(machine, cpu_index, NULL);
+    assert(core_slot);
+    return core_slot->props;
+}
+
+static const CPUArchIdList *pnv_possible_cpu_arch_ids(MachineState *machine)
+{
+    PnvMachineState *pnv = PNV_MACHINE(machine);
+    MachineClass *mc = MACHINE_GET_CLASS(machine);
+    unsigned int smp_cpus = machine->smp.cpus;
+    unsigned int smp_threads;
+    int max_cores;
+    int i;
+
+    if (pnv->big_core && !machine->possible_cpus) {
+        /*
+         * powernv models PnvCore as a SMT4 core. Big-core requires 2xPnvCore
+         * per core, so adjust topology here the first time it is called.
+         * pnv_dt_core() processor device-tree and TCG SMT code make the 2
+         * cores appear as one big core from software point of view. pnv
+         * pervasive models and xscoms tend to see the big core as 2 small core
+         * halves.
+         */
+        machine->smp.cores *= 2;
+        machine->smp.threads /= 2;
+    }
+
+    smp_threads = machine->smp.threads;
+    max_cores = machine->smp.max_cpus / smp_threads;
+
+    if (!mc->has_hotpluggable_cpus) {
+        max_cores = QEMU_ALIGN_UP(smp_cpus, smp_threads) / smp_threads;
+    }
+    if (machine->possible_cpus) {
+        assert(machine->possible_cpus->len == max_cores);
+        return machine->possible_cpus;
+    }
+
+    machine->possible_cpus = g_malloc0(sizeof(CPUArchIdList) +
+                             sizeof(CPUArchId) * max_cores);
+    machine->possible_cpus->len = max_cores;
+    for (i = 0; i < machine->possible_cpus->len; i++) {
+        int core_id = i * smp_threads;
+
+        machine->possible_cpus->cpus[i].type = machine->cpu_type;
+        machine->possible_cpus->cpus[i].vcpus_count = smp_threads;
+        machine->possible_cpus->cpus[i].arch_id = core_id;
+        machine->possible_cpus->cpus[i].props.has_core_id = true;
+        machine->possible_cpus->cpus[i].props.core_id = core_id;
+    }
+    return machine->possible_cpus;
+}
+
+static int64_t pnv_get_default_cpu_node_id(const MachineState *ms, int idx)
+{
+    return idx / ms->smp.cores % ms->numa_state->num_nodes;
+}
+
 static void pnv_machine_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -2879,6 +2948,14 @@ static void pnv_machine_class_init(ObjectClass *oc, void *data)
     mc->block_default_type = IF_IDE;
     mc->no_parallel = 1;
     mc->default_boot_order = NULL;
+
+    mc->numa_mem_supported = true;
+    mc->auto_enable_numa = true;
+
+    mc->cpu_index_to_instance_props = pnv_cpu_index_to_props;
+    mc->get_default_cpu_node_id = pnv_get_default_cpu_node_id;
+    mc->possible_cpu_arch_ids = pnv_possible_cpu_arch_ids;
+
     /*
      * RAM defaults to less than 2048 for 32-bit hosts, and large
      * enough to fit the maximum initrd size at it's load address
