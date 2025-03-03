@@ -623,19 +623,46 @@ static void complete_init_numa_distance(MachineState *ms)
     }
 }
 
-static void numa_init_memdev_container(MachineState *ms, MemoryRegion *ram)
+/*
+ * Consume all NUMA memory backends and store the regions in NodeInfo.node_mr.
+ */
+static void numa_init_memdev(MachineState *ms)
 {
     int i;
-    uint64_t addr = 0;
 
     for (i = 0; i < ms->numa_state->num_nodes; i++) {
-        uint64_t size = ms->numa_state->nodes[i].node_mem;
         HostMemoryBackend *backend = ms->numa_state->nodes[i].node_memdev;
         if (!backend) {
             continue;
         }
         MemoryRegion *seg = machine_consume_memdev(ms, backend);
-        memory_region_add_subregion(ram, addr, seg);
+        ms->numa_state->nodes[i].node_mr = seg;
+    }
+}
+
+/*
+ * Consume all NUMA memory backends as with numa_init_memdev, packing them
+ * densely into a MachineState.ram "container" region.
+ */
+static void numa_init_memdev_container(MachineState *ms)
+{
+    int i;
+    MachineClass *mc = MACHINE_GET_CLASS(ms);
+    uint64_t addr = 0;
+
+    ms->ram = g_new(MemoryRegion, 1);
+    memory_region_init(ms->ram, OBJECT(ms), mc->default_ram_id,
+                       ms->ram_size);
+
+    numa_init_memdev(ms);
+
+    for (i = 0; i < ms->numa_state->num_nodes; i++) {
+        uint64_t size = ms->numa_state->nodes[i].node_mem;
+        MemoryRegion *seg = ms->numa_state->nodes[i].node_mr;
+        if (!seg) {
+            continue;
+        }
+        memory_region_add_subregion(ms->ram, addr, seg);
         addr += size;
     }
 }
@@ -706,10 +733,11 @@ void numa_complete_configuration(MachineState *ms)
                              " properties are mutually exclusive");
                 exit(1);
             }
-            ms->ram = g_new(MemoryRegion, 1);
-            memory_region_init(ms->ram, OBJECT(ms), mc->default_ram_id,
-                               ms->ram_size);
-            numa_init_memdev_container(ms, ms->ram);
+            if (mc->numa_skip_ram_container) {
+                numa_init_memdev(ms);
+            } else {
+                numa_init_memdev_container(ms);
+            }
         }
         /* QEMU needs at least all unique node pair distances to build
          * the whole NUMA distance table. QEMU treats the distance table

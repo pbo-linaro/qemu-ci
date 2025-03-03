@@ -38,6 +38,7 @@ enum {
 typedef struct NodeInfo {
     uint64_t node_mem;
     struct HostMemoryBackend *node_memdev;
+    MemoryRegion *node_mr;
     bool present;
     bool has_cpu;
     bool has_gi;

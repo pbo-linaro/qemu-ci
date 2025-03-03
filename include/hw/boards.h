@@ -233,6 +233,11 @@ typedef struct {
  *    is not needed.
  * @numa_mem_supported:
  *    true if '--numa node.mem' option is supported and false otherwise
+ * @numa_skip_ram_container:
+ *    If false, numa memory init creates the MachineState.ram memory region
+ *    with all numa node regions packed densely within it. If true, the .ram
+ *    region is not created. Machines can use this e.g., to place NUMA
+ *    regions sparsely within the address space.
  * @hotplug_allowed:
  *    If the hook is provided, then it'll be called for each device
  *    hotplug to check whether the device hotplug is allowed.  Return
@@ -311,6 +316,7 @@ struct MachineClass {
     bool nvdimm_supported;
     bool numa_mem_supported;
     bool auto_enable_numa;
+    bool numa_skip_ram_container;
     bool cpu_cluster_has_numa_boundary;
     SMPCompatProps smp_props;
     const char *default_ram_id;
