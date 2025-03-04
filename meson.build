@@ -363,7 +363,7 @@ endforeach
 
 qemu_common_flags = [
   '-D_GNU_SOURCE', '-D_FILE_OFFSET_BITS=64', '-D_LARGEFILE_SOURCE',
-  '-fno-strict-aliasing', '-fno-common', '-fwrapv' ]
+  '-fno-strict-aliasing', '-fno-common', '-fwrapv']
 qemu_cflags = []
 qemu_ldflags = []
 
@@ -4589,7 +4589,10 @@ if have_rust
   summary_info += {'bindgen':         bindgen.full_path()}
   summary_info += {'bindgen version': bindgen.version()}
 endif
-option_cflags = (get_option('debug') ? ['-g'] : [])
+option_cflags = []
+if get_option('debug')
+  option_cflags += [get_option('split_debug') ? ['-gsplit-dwarf'] : ['-g']]
+endif
 if get_option('optimization') != 'plain'
   option_cflags += ['-O' + get_option('optimization')]
 endif
