@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/cover.1741094512.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/3] acpi/ghes: move use_hest_addr out of acpi_build_hest()
+  [32m✓[0m [PATCH RFC 2/3] hw/i186: add support for HEST table with SCI
+  [32m✓[0m [PATCH RFC 3/3] Add a GED device for RAS notification
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 3
+---
+Applying: acpi/ghes: move use_hest_addr out of acpi_build_hest()
+Patch failed at 0001 acpi/ghes: move use_hest_addr out of acpi_build_hest()
+error: patch failed: hw/acpi/ghes.c:243
+error: hw/acpi/ghes.c: patch does not apply
+error: patch failed: hw/arm/virt-acpi-build.c:964
+error: hw/arm/virt-acpi-build.c: patch does not apply
+error: patch failed: include/hw/acpi/ghes.h:73
+error: include/hw/acpi/ghes.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
