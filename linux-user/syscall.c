@@ -9120,16 +9120,16 @@ static void risc_hwprobe_fill_pairs(CPURISCVState *env,
 
 static int cpu_set_valid(abi_long arg3, abi_long arg4)
 {
-    int ret, i, tmp;
+    int ret, i;
     size_t host_mask_size, target_mask_size;
     unsigned long *host_mask;
 
     /*
      * cpu_set_t represent CPU masks as bit masks of type unsigned long *.
-     * arg3 contains the cpu count.
+     * arg3 contains the size of the cpu mask.
      */
-    tmp = (8 * sizeof(abi_ulong));
-    target_mask_size = ((arg3 + tmp - 1) / tmp) * sizeof(abi_ulong);
+    target_mask_size = (arg3 + (sizeof(abi_ulong) - 1)) &
+                       ~(sizeof(abi_ulong) - 1);
     host_mask_size = (target_mask_size + (sizeof(*host_mask) - 1)) &
                      ~(sizeof(*host_mask) - 1);
 
