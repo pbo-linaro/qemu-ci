@@ -801,6 +801,7 @@ static const SaveVMHandlers savevm_vfio_handlers = {
     .load_setup = vfio_load_setup,
     .load_cleanup = vfio_load_cleanup,
     .load_state = vfio_load_state,
+    .load_state_buffer = vfio_multifd_load_state_buffer,
     .switchover_ack_needed = vfio_switchover_ack_needed,
 };
 
