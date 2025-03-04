@@ -100,6 +100,8 @@ PCI devices (other than virtio):
   PCI UFS device (``-device ufs``)
 1b36:0014
   PCI RISC-V IOMMU device
+1b36:0015
+  PCI AMD IOMMU device (``-device amd-iommu``)
 
 All these devices are documented in :doc:`index`.
 
