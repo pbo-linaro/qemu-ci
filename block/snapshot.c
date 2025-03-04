@@ -296,14 +296,20 @@ int bdrv_snapshot_goto(BlockDriverState *bs,
         bdrv_graph_wrunlock();
 
         ret = bdrv_snapshot_goto(fallback_bs, snapshot_id, errp);
+        if (ret < 0) {
+            bdrv_unref(fallback_bs);
+            bs->drv = NULL;
+            /* A bdrv_snapshot_goto() error takes precedence */
+            error_propagate(errp, local_err);
+            return ret;
+        }
         open_ret = drv->bdrv_open(bs, options, bs->open_flags, &local_err);
         qobject_unref(options);
         if (open_ret < 0) {
             bdrv_unref(fallback_bs);
             bs->drv = NULL;
-            /* A bdrv_snapshot_goto() error takes precedence */
             error_propagate(errp, local_err);
-            return ret < 0 ? ret : open_ret;
+            return open_ret;
         }
 
         /*
