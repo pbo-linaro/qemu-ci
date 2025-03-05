@@ -13,6 +13,7 @@
 #include "qemu/osdep.h"
 
 #include "qemu/main-loop.h"
+#include "qemu/arch_info.h"
 #include "tests/qtest/libqtest.h"
 #include "tests/qtest/libqos/pci.h"
 #include "tests/qtest/libqos/pci-pc.h"
@@ -145,11 +146,11 @@ static void i440fx_fuzz_qos(QTestState *s,
     pciconfig_fuzz_qos(s, bus, Data, Size);
 }
 
-static const char *i440fx_qtest_argv = TARGET_NAME " -machine accel=qtest"
+static const char *i440fx_qtest_argv = " -machine accel=qtest"
                                        " -m 0 -display none";
 static GString *i440fx_argv(FuzzTarget *t)
 {
-    return g_string_new(i440fx_qtest_argv);
+    return g_string_append(g_string_new(target_name()), i440fx_qtest_argv);
 }
 
 

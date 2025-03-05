@@ -18,6 +18,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/units.h"
+#include "qemu/arch_info.h"
 #include "qapi/error.h"
 #include "exec/memory.h"
 #include "qemu/main-loop.h"
@@ -83,8 +84,8 @@ static GString *qos_build_main_args(void)
         test_arg = test_node->u.test.before(cmd_line, test_arg);
     }
     /* Prepend the arguments that we need */
-    g_string_prepend(cmd_line,
-            TARGET_NAME " -display none -machine accel=qtest -m 64 ");
+    g_string_prepend(cmd_line, target_name());
+    g_string_prepend(cmd_line, " -display none -machine accel=qtest -m 64 ");
     return cmd_line;
 }
 

@@ -17,6 +17,7 @@
 
 #include "qemu/cutils.h"
 #include "qemu/datadir.h"
+#include "qemu/arch_info.h"
 #include "system/system.h"
 #include "system/qtest.h"
 #include "system/runstate.h"
@@ -34,8 +35,6 @@ typedef struct FuzzTargetState {
 } FuzzTargetState;
 
 typedef QSLIST_HEAD(, FuzzTargetState) FuzzTargetList;
-
-static const char *fuzz_arch = TARGET_NAME;
 
 static FuzzTargetList *fuzz_target_list;
 static FuzzTarget *fuzz_target;
@@ -61,7 +60,7 @@ void fuzz_reset(QTestState *s)
 static QTestState *qtest_setup(void)
 {
     qtest_server_set_send_handler(&qtest_client_inproc_recv, &fuzz_qts);
-    return qtest_inproc_init(&fuzz_qts, false, fuzz_arch,
+    return qtest_inproc_init(&fuzz_qts, false, target_name(),
             &qtest_server_inproc_recv);
 }
 

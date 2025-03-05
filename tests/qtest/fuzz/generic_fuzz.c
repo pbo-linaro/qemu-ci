@@ -12,10 +12,10 @@
 
 #include "qemu/osdep.h"
 #include "qemu/range.h"
+#include "qemu/arch_info.h"
 
 #include <wordexp.h>
 
-#include "hw/core/cpu.h"
 #include "tests/qtest/libqtest.h"
 #include "tests/qtest/libqos/pci-pc.h"
 #include "fuzz.h"
@@ -914,7 +914,7 @@ static size_t generic_fuzz_crossover(const uint8_t *data1, size_t size1, const
 
 static GString *generic_fuzz_cmdline(FuzzTarget *t)
 {
-    GString *cmd_line = g_string_new(TARGET_NAME);
+    GString *cmd_line = g_string_new(target_name());
     if (!getenv("QEMU_FUZZ_ARGS")) {
         usage();
     }
