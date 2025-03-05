@@ -1,0 +1,92 @@
+Grabbing thread from lore.kernel.org/all/20250305015307.1463560-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 60 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 259 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/59] target/riscv/csr.c: fix deadcode in rmw_xireg()
+  [32m✓[0m [PATCH 2/59] target/riscv/csr.c: fix 'ret' deadcode in rmw_xireg()
+  [32m✓[0m [PATCH 3/59] target/riscv/csr.c: fix deadcode in rmw_xiregi()
+  [32m✓[0m [PATCH 4/59] target/riscv/csr.c: fix deadcode in aia_smode32()
+  [32m✓[0m [PATCH 5/59] target/riscv/cpu_helper.c: fix bad_shift in riscv_cpu_interrupt()
+  [32m✓[0m [PATCH 6/59] target/riscv: rvv: Fix unexpected behavior of vector reduction instructions when vl is 0
+  [32m✓[0m [PATCH 7/59] target/riscv: rvv: Fix incorrect vlen comparison in prop_vlen_set
+  [32m✓[0m [PATCH 8/59] target/riscv/debug.c: use wp size = 4 for 32-bit CPUs
+  [32m✓[0m [PATCH 9/59] target/riscv: throw debug exception before page fault
+  [32m✓[0m [PATCH 10/59] hw/intc/riscv_aplic: Remove redundant "hart_idx" masking
+  [32m✓[0m [PATCH 11/59] target/riscv: add ssu64xl
+  [32m✓[0m [PATCH 12/59] target/riscv: use RVB in RVA22U64
+  [32m✓[0m [PATCH 13/59] target/riscv: add profile u_parent and s_parent
+  [32m✓[0m [PATCH 14/59] target/riscv: change priv_ver check in validate_profile()
+  [32m✓[0m [PATCH 15/59] target/riscv: add RVA23U64 profile
+  [32m✓[0m [PATCH 16/59] target/riscv: add RVA23S64 profile
+  [32m✓[0m [PATCH 17/59] hw/riscv/riscv-iommu: Remove redundant struct members
+  [32m✓[0m [PATCH 18/59] hw/riscv/riscv-iommu-bits: Remove duplicate definitions
+  [32m✓[0m [PATCH 19/59] goldfish_rtc: Fix tick_offset migration
+  [32m✓[0m [PATCH 20/59] hw/riscv/virt: Add serial alias in DTB
+  [32m✓[0m [PATCH 21/59] MAINTAINERS: Remove Bin Meng from RISC-V maintainers
+  [32m✓[0m [PATCH 22/59] target/riscv: Remove obsolete sfence.vm instruction
+  [32m✓[0m [PATCH 23/59] target/riscv: Add Control Transfer Records CSR definitions.
+  [32m✓[0m [PATCH 24/59] target/riscv: Add support for Control Transfer Records extension CSRs.
+  [32m✓[0m [PATCH 25/59] target/riscv: Add support to record CTR entries.
+  [32m✓[0m [PATCH 26/59] target/riscv: Add CTR sctrclr instruction.
+  [32m✓[0m [PATCH 27/59] target/riscv: machine: Add Control Transfer Record state description
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 28/59] target/riscv: log guest errors when reserved bits are set in PTEs
+  [32m✓[0m [PATCH 29/59] disas/riscv: Fix minor whitespace issues
+  [32m✓[0m [PATCH 30/59] disas/riscv: Add missing Sdtrig CSRs
+  [32m✓[0m [PATCH 31/59] target/riscv: Fix the hpmevent mask
+  [32m✓[0m [PATCH 32/59] target/riscv: Mask out upper sscofpmf bits during validation
+  [32m✓[0m [PATCH 33/59] target/riscv: remove warnings about Smdbltrp/Smrnmi being disabled
+  [32m✓[0m [PATCH 34/59] target/riscv: Add support to access ctrsource, ctrtarget, ctrdata regs.
+  [32m✓[0m [PATCH 35/59] target/riscv: Respect mseccfg.RLB bit for TOR mode PMP entry
+  [32m✓[0m [PATCH 36/59] linux-headers: Update to Linux v6.14-rc3
+  [32m✓[0m [PATCH 37/59] target/riscv/cpu.c: create flag for ziccrse
+  [32m✓[0m [PATCH 38/59] target/riscv/kvm: add extensions after 6.14-rc3 update
+  [32m✓[0m [PATCH 39/59] hw/riscv/riscv-iommu.h: add missing headers
+  [32m✓[0m [PATCH 40/59] hw/riscv/riscv-iommu-bits.h: HPM bits
+  [32m✓[0m [PATCH 41/59] hw/riscv/riscv-iommu: add riscv-iommu-hpm file
+  [32m✓[0m [PATCH 42/59] hw/riscv/riscv-iommu: add riscv_iommu_hpm_incr_ctr()
+  [32m✓[0m [PATCH 43/59] hw/riscv/riscv-iommu: instantiate hpm_timer
+  [32m✓[0m [PATCH 44/59] hw/riscv/riscv-iommu: add IOCOUNTINH mmio writes
+  [32m✓[0m [PATCH 45/59] hw/riscv/riscv-iommu: add IOHPMCYCLES mmio write
+  [32m✓[0m [PATCH 46/59] hw/riscv/riscv-iommu: add hpm events mmio write
+  [32m✓[0m [PATCH 47/59] hw/riscv/riscv-iommu.c: add RISCV_IOMMU_CAP_HPM cap
+  [32m✓[0m [PATCH 48/59] hw/riscv: add IOMMU HPM trace events
+  [32m✓[0m [PATCH 49/59] docs/specs/riscv-iommu.rst: add HPM support info
+  [32m✓[0m [PATCH 50/59] target/riscv/kvm: Add some exts support
+  [32m✓[0m [PATCH 51/59] binfmt: Shuffle things around
+  [32m✓[0m [PATCH 52/59] binfmt: Normalize host CPU architecture
+  [32m✓[0m [PATCH 53/59] binfmt: Add --ignore-family option
+  [32m✓[0m [PATCH 54/59] hw/intc/imsic: refine the IMSIC realize
+  [32m✓[0m [PATCH 55/59] hw/intc/aplic: refine the APLIC realize
+  [32m✓[0m [PATCH 56/59] hw/intc/aplic: refine kvm_msicfgaddr
+  [32m✓[0m [PATCH 57/59] target/riscv/cpu: remove unneeded !kvm_enabled() check
+  [32m✓[0m [PATCH 58/59] target/riscv/kvm: add kvm_riscv_reset_regs_csr()
+  [32m✓[0m [PATCH 59/59] target/riscv/kvm: add missing KVM CSRs
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 59
+---
+Applying: target/riscv/csr.c: fix deadcode in rmw_xireg()
+Applying: target/riscv/csr.c: fix 'ret' deadcode in rmw_xireg()
+Applying: target/riscv/csr.c: fix deadcode in rmw_xiregi()
+Applying: target/riscv/csr.c: fix deadcode in aia_smode32()
+Applying: target/riscv/cpu_helper.c: fix bad_shift in riscv_cpu_interrupt()
+Applying: target/riscv: rvv: Fix unexpected behavior of vector reduction instructions when vl is 0
+Applying: target/riscv: rvv: Fix incorrect vlen comparison in prop_vlen_set
+Applying: target/riscv/debug.c: use wp size = 4 for 32-bit CPUs
+Applying: target/riscv: throw debug exception before page fault
+Applying: hw/intc/riscv_aplic: Remove redundant "hart_idx" masking
+Applying: target/riscv: add ssu64xl
+Patch failed at 0011 target/riscv: add ssu64xl
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/RHCT' without full index line
+error: tests/data/acpi/riscv64/virt/RHCT: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
