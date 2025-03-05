@@ -24,4 +24,4 @@
 #include "qemu/osdep.h"
 #include "system/arch_init.h"
 
-const uint32_t arch_type = QEMU_ARCH;
+const uint32_t arch_type = BIT(QEMU_ARCH_BIT);
