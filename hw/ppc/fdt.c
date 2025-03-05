@@ -8,18 +8,20 @@
  */
 
 #include "qemu/osdep.h"
+#include "qemu/legacy_binary_info.h"
 #include "target/ppc/cpu.h"
 #include "target/ppc/mmu-hash64.h"
 
 #include "hw/ppc/fdt.h"
 
-#if defined(TARGET_PPC64)
 size_t ppc_create_page_sizes_prop(PowerPCCPU *cpu, uint32_t *prop,
                                   size_t maxsize)
 {
     size_t maxcells = maxsize / sizeof(uint32_t);
     int i, j, count;
     uint32_t *p = prop;
+
+    assert(legacy_binary_is_64bit());
 
     for (i = 0; i < PPC_PAGE_SIZES_MAX_SZ; i++) {
         PPCHash64SegmentPageSizes *sps = &cpu->hash64_opts->sps[i];
@@ -46,4 +48,3 @@ size_t ppc_create_page_sizes_prop(PowerPCCPU *cpu, uint32_t *prop,
 
     return (p - prop) * sizeof(uint32_t);
 }
-#endif
