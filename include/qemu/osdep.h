@@ -50,6 +50,8 @@
  */
 #pragma GCC poison TARGET_WORDS_BIGENDIAN
 
+#pragma GCC poison TARGET_NAME
+
 #include "qemu/compiler.h"
 
 /* Older versions of C++ don't get definitions of various macros from

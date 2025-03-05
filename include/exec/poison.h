@@ -34,7 +34,6 @@
 #pragma GCC poison TARGET_XTENSA
 
 #pragma GCC poison TARGET_HAS_BFLT
-#pragma GCC poison TARGET_NAME
 #pragma GCC poison TARGET_SUPPORTS_MTTCG
 #pragma GCC poison TARGET_BIG_ENDIAN
 #pragma GCC poison BSWAP_NEEDED
