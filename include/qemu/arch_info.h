@@ -1,5 +1,5 @@
-#ifndef QEMU_ARCH_INIT_H
-#define QEMU_ARCH_INIT_H
+#ifndef QEMU_ARCH_INFO_H
+#define QEMU_ARCH_INFO_H
 
 #include "qemu/bitops.h"
 

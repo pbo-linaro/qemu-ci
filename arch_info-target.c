@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 #include "qemu/osdep.h"
-#include "system/arch_init.h"
+#include "qemu/arch_info.h"
 
 bool qemu_arch_available(unsigned qemu_arch_mask)
 {

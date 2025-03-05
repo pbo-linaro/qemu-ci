@@ -3766,7 +3766,7 @@ if have_block
 endif
 
 common_ss.add(files('cpu-common.c'))
-specific_ss.add(files('cpu-target.c'))
+specific_ss.add(files('cpu-target.c', 'arch_info-target.c'))
 
 subdir('system')
 
