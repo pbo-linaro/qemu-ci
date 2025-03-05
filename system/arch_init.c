@@ -25,20 +25,6 @@
 #include "qemu/module.h"
 #include "system/arch_init.h"
 
-#ifdef TARGET_SPARC
-int graphic_width = 1024;
-int graphic_height = 768;
-int graphic_depth = 8;
-#elif defined(TARGET_M68K)
-int graphic_width = 800;
-int graphic_height = 600;
-int graphic_depth = 8;
-#else
-int graphic_width = 800;
-int graphic_height = 600;
-int graphic_depth = 32;
-#endif
-
 const uint32_t arch_type = QEMU_ARCH;
 
 void qemu_init_arch_modules(void)
