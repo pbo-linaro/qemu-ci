@@ -25,6 +25,7 @@
 #include "qemu/help-texts.h"
 #include "qemu/units.h"
 #include "qemu/accel.h"
+#include "qemu/arch_info.h"
 #include "qemu-version.h"
 #include <machine/trap.h>
 
@@ -150,9 +151,11 @@ void cpu_loop(CPUArchState *env)
 
 static void usage(void)
 {
-    printf("qemu-" TARGET_NAME " version " QEMU_FULL_VERSION
+    const char *target = target_name();
+
+    printf("qemu-%s version " QEMU_FULL_VERSION
            "\n" QEMU_COPYRIGHT "\n"
-           "usage: qemu-" TARGET_NAME " [options] program [arguments...]\n"
+           "usage: qemu-%s [options] program [arguments...]\n"
            "BSD CPU emulator (compiled for %s emulation)\n"
            "\n"
            "Standard options:\n"
@@ -188,7 +191,7 @@ static void usage(void)
            "\n"
            QEMU_HELP_BOTTOM "\n"
            ,
-           TARGET_NAME,
+           target, target, target,
            interp_prefix,
            target_dflssiz);
     exit(1);

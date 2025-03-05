@@ -21,6 +21,7 @@
 #include "qemu/help-texts.h"
 #include "qemu/units.h"
 #include "qemu/accel.h"
+#include "qemu/arch_info.h"
 #include "qemu-version.h"
 #include <sys/syscall.h>
 #include <sys/resource.h>
@@ -432,8 +433,8 @@ static void handle_arg_strace(const char *arg)
 
 static void handle_arg_version(const char *arg)
 {
-    printf("qemu-" TARGET_NAME " version " QEMU_FULL_VERSION
-           "\n" QEMU_COPYRIGHT "\n");
+    printf("qemu-%s version " QEMU_FULL_VERSION
+           "\n" QEMU_COPYRIGHT "\n", target_name());
     exit(EXIT_SUCCESS);
 }
 
@@ -543,14 +544,15 @@ static const struct qemu_argument arg_table[] = {
 static void usage(int exitcode)
 {
     const struct qemu_argument *arginfo;
+    const char *target = target_name();
     int maxarglen;
     int maxenvlen;
 
-    printf("usage: qemu-" TARGET_NAME " [options] program [arguments...]\n"
-           "Linux CPU emulator (compiled for " TARGET_NAME " emulation)\n"
+    printf("usage: qemu-%s [options] program [arguments...]\n"
+           "Linux CPU emulator (compiled for %s emulation)\n"
            "\n"
            "Options and associated environment variables:\n"
-           "\n");
+           "\n", target, target);
 
     /* Calculate column widths. We must always have at least enough space
      * for the column header.
