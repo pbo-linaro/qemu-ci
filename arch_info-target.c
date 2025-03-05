@@ -24,6 +24,11 @@
 #include "qemu/osdep.h"
 #include "qemu/arch_info.h"
 
+const char *target_name(void)
+{
+    return TARGET_NAME;
+}
+
 bool qemu_arch_available(unsigned qemu_arch_mask)
 {
     return qemu_arch_mask & BIT(QEMU_ARCH_BIT);
