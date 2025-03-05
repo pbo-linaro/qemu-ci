@@ -1,0 +1,81 @@
+Grabbing thread from lore.kernel.org/all/20250305034610.960147-1-jsnow@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 58 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 246 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/57] do-not-merge
+  [32m✓[0m [PATCH 2/57] qapi: shush pylint up
+  [32m✓[0m [PATCH 3/57] docs/sphinx: create QAPI domain extension stub
+  [32m✓[0m [PATCH 4/57] docs/sphinx: add compat.py module and nested_parse helper
+  [32m✓[0m [PATCH 5/57] docs/qapi-domain: add qapi:module directive
+  [32m✓[0m [PATCH 6/57] docs/qapi-domain: add QAPI domain object registry
+  [32m✓[0m [PATCH 7/57] docs/qapi-domain: add QAPI index
+  [32m✓[0m [PATCH 8/57] docs/qapi-domain: add resolve_any_xref()
+  [32m✓[0m [PATCH 9/57] docs/qapi-domain: add QAPI xref roles
+  [32m✓[0m [PATCH 10/57] docs/qapi-domain: add compatibility node classes
+  [32m✓[0m [PATCH 11/57] docs/qapi-domain: add qapi:command directive
+  [32m✓[0m [PATCH 12/57] docs/qapi-domain: add :since: directive option
+  [32m✓[0m [PATCH 13/57] docs/qapi-domain: add "Arguments:" field lists
+  [32m✓[0m [PATCH 14/57] docs/qapi-domain: add "Features:" field lists
+  [32m✓[0m [PATCH 15/57] docs/qapi-domain: add "Errors:" field lists
+  [32m✓[0m [PATCH 16/57] docs/qapi-domain: add "Returns:" field lists
+  [32m✓[0m [PATCH 17/57] docs/qapi-domain: add qapi:enum directive
+  [32m✓[0m [PATCH 18/57] docs/qapi-domain: add qapi:alternate directive
+  [32m✓[0m [PATCH 19/57] docs/qapi-domain: add qapi:event directive
+  [32m✓[0m [PATCH 20/57] docs/qapi-domain: add qapi:object directive
+  [32m✓[0m [PATCH 21/57] docs/qapi-domain: add :deprecated: directive option
+  [32m✓[0m [PATCH 22/57] docs/qapi-domain: add :unstable: directive option
+  [32m✓[0m [PATCH 23/57] docs/qapi-domain: add :ifcond: directive option
+  [32m✓[0m [PATCH 24/57] docs/qapi-domain: add warnings for malformed field lists
+  [32m✓[0m [PATCH 25/57] docs/qapi-domain: add type cross-refs to field lists
+  [32m✓[0m [PATCH 26/57] docs/qapi-domain: add CSS styling
+  [32m✓[0m [PATCH 27/57] docs/qapi-domain: add XREF compatibility goop for Sphinx < 4.1
+  [32m✓[0m [PATCH 28/57] docs/qapi-domain: warn when QAPI domain xrefs fail to resolve
+  [32m✓[0m [PATCH 29/57] docs/qapi-domain: Fix error context reporting in Sphinx 5.x and 6.x
+  [32m✓[0m [PATCH 30/57] qapi/parser: adjust info location for doc body section
+  [32m✓[0m [PATCH 31/57] qapi: expand tags to all doc sections
+  [32m✓[0m [PATCH 32/57] qapi/schema: add __repr__ to QAPIDoc.Section
+  [32m✓[0m [PATCH 33/57] docs/qapidoc: add transmogrifier stub
+  [32m✓[0m [PATCH 34/57] docs/qapidoc: split old implementation into qapidoc_legacy.py
+  [32m✓[0m [PATCH 35/57] docs/qapidoc: Fix static typing on qapidoc.py
+  [32m✓[0m [PATCH 36/57] do-not-merge
+  [32m✓[0m [PATCH 37/57] docs/qapidoc: add transmogrifier class stub
+  [32m✓[0m [PATCH 38/57] docs/qapidoc: add visit_module() method
+  [32m✓[0m [PATCH 39/57] qapi/source: allow multi-line QAPISourceInfo advancing
+  [32m✓[0m [PATCH 40/57] docs/qapidoc: add visit_freeform() method
+  [32m✓[0m [PATCH 41/57] docs/qapidoc: add preamble() method
+  [32m✓[0m [PATCH 42/57] docs/qapidoc: add visit_paragraph() method
+  [32m✓[0m [PATCH 43/57] docs/qapidoc: add visit_errors() method
+  [32m✓[0m [PATCH 44/57] docs/qapidoc: add format_type() method
+  [32m✓[0m [PATCH 45/57] docs/qapidoc: add add_field() and generate_field() helper methods
+  [32m✓[0m [PATCH 46/57] docs/qapidoc: add visit_feature() method
+  [32m✓[0m [PATCH 47/57] docs/qapidoc: prepare to record entity being transmogrified
+  [32m✓[0m [PATCH 48/57] docs/qapidoc: add visit_returns() method
+  [32m✓[0m [PATCH 49/57] docs/qapidoc: add visit_member() method
+  [32m✓[0m [PATCH 50/57] docs/qapidoc: add visit_sections() method
+  [32m✓[0m [PATCH 51/57] docs/qapidoc: add visit_entity()
+  [32m✓[0m [PATCH 52/57] docs/qapidoc: implement transmogrify() method
+  [32m✓[0m [PATCH 53/57] docs: disambiguate cross-references
+  [32m✓[0m [PATCH 54/57] docs/qapidoc: add transmogrifier test document
+  [32m✓[0m [PATCH 55/57] docs/qapidoc: process @foo into ``foo``
+  [32m✓[0m [PATCH 56/57] docs/qapidoc: add intermediate output debugger
+  [32m✓[0m [PATCH 57/57] docs/qapidoc: Add "the members of" pointers
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 57
+---
+Applying: do-not-merge
+Applying: qapi: shush pylint up
+Patch failed at 0002 qapi: shush pylint up
+error: scripts/qapi/backend.py: does not exist in index
+error: patch failed: scripts/qapi/main.py:31
+error: scripts/qapi/main.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
