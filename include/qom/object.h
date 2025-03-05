@@ -476,6 +476,7 @@ struct TypeInfo
 {
     const char *name;
     const char *parent;
+    bool (*registerable)(void);
 
     size_t instance_size;
     size_t instance_align;

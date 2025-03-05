@@ -168,6 +168,10 @@ static TypeImpl *type_register_internal(const TypeInfo *info)
         fprintf(stderr, "Registering '%s' with illegal type name\n", info->name);
         abort();
     }
+    if (info->registerable && !info->registerable()) {
+        trace_object_register_skipped(info->name);
+        return NULL;
+    }
 
     ti = type_new(info);
 
