@@ -1,0 +1,45 @@
+Grabbing thread from lore.kernel.org/all/20250305153929.43687-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/18] hw/xen/hvm: Fix Aarch64 typo
+  [32m✓[0m [PATCH RFC 2/18] hw/vfio/common: Get target page size using runtime helpers
+  [32m✓[0m [PATCH RFC 3/18] include: Poison TARGET_PHYS_ADDR_SPACE_BITS definition
+  [32m✓[0m [PATCH RFC 4/18] qemu: Introduce 'qemu/legacy_binary_info.h'
+  [32m✓[0m [PATCH RFC 5/18] qemu: Introduce legacy_binary_is_64bit() helper
+  [32m✓[0m [PATCH RFC 6/18] hw/mips/mipssim: Replace TARGET_MIPS64 by legacy_binary_is_64bit()
+  [32m✓[0m [PATCH RFC 7/18] hw/mips/malta: Replace TARGET_MIPS64 by legacy_binary_is_64bit()
+  [32m✓[0m [PATCH RFC 8/18] hw/i386: Inline TARGET_DEFAULT_CPU_TYPE definition
+  [32m✓[0m [PATCH RFC 9/18] hw/ppc/mac: Replace TARGET_PPC64 by legacy_binary_is_64bit()
+  [32m✓[0m [PATCH RFC 10/18] qemu: Introduce legacy_binary_is_big_endian() helper
+  [32m✓[0m [PATCH RFC 11/18] hw/mips/jazz: Replace TARGET_BIG_ENDIAN by legacy_binary_is_big_endian
+  [32m✓[0m [PATCH RFC 12/18] hw/mips/mipssim: Use legacy_binary_is_big_endian()
+  [32m✓[0m [PATCH RFC 13/18] hw/xtensa/sim: Replace TARGET_BIG_ENDIAN by legacy_binary_is_big_endian
+  [32m✓[0m [PATCH RFC 14/18] hw/xtensa/xtfpga: Check endianness via legacy_binary_is_big_endian()
+  [32m✓[0m [PATCH RFC 15/18] hw/microblaze/petalogix_ml605_mmu: Use legacy_binary_is_big_endian()
+  [32m✓[0m [PATCH RFC 16/18] hw/microblaze/petalogix_s3adsp1800_mmu: Use legacy_binary_is_big_endian
+  [32m✓[0m [PATCH RFC 17/18] meson: Allow symlinking system emulation binaries
+  [32m✓[0m [PATCH RFC 18/18] configs/targets: Merge qemu-system-microblaze{el} binaries
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: hw/xen/hvm: Fix Aarch64 typo
+Applying: hw/vfio/common: Get target page size using runtime helpers
+Applying: include: Poison TARGET_PHYS_ADDR_SPACE_BITS definition
+Applying: qemu: Introduce 'qemu/legacy_binary_info.h'
+Patch failed at 0004 qemu: Introduce 'qemu/legacy_binary_info.h'
+error: patch failed: meson.build:3767
+error: meson.build: patch does not apply
+error: patch failed: system/vl.c:28
+error: system/vl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
