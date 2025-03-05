@@ -46,6 +46,6 @@ typedef enum QemuArchBit {
 #define QEMU_ARCH_LOONGARCH     BIT(QEMU_ARCH_BIT_LOONGARCH)
 #define QEMU_ARCH_ALL           -1
 
-extern const uint32_t arch_type;
+bool qemu_arch_available(unsigned qemu_arch_mask);
 
 #endif
