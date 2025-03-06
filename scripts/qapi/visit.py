@@ -205,6 +205,29 @@ out_obj:
 
 
 def gen_visit_enum(name: str) -> str:
+    if name in ('OnOffAuto', 'OnOffSplit'):
+        return mcgen('''
+
+bool visit_type_%(c_name)s(Visitor *v, const char *name,
+                 %(c_name)s *obj, Error **errp)
+{
+    bool b;
+    int i;
+
+    if (v->type == VISITOR_INPUT && visit_type_bool(v, name, &b, NULL)) {
+        *obj = b ? %(on)s : %(off)s;
+        return true;
+    }
+
+    b = visit_type_enum(v, name, &i, &%(c_name)s_lookup, errp);
+    *obj = i;
+
+    return b;
+}
+''',
+                     c_name=c_name(name),
+                     on=c_enum_const(name, 'on'), off=c_enum_const(name, 'off'))
+
     return mcgen('''
 
 bool visit_type_%(c_name)s(Visitor *v, const char *name,
@@ -355,6 +378,7 @@ class QAPISchemaGenVisitVisitor(QAPISchemaModularCVisitor):
         self._genc.preamble_add(mcgen('''
 #include "qemu/osdep.h"
 #include "qapi/error.h"
+#include "qapi/visitor-impl.h"
 #include "%(visit)s.h"
 #include "%(prefix)sqapi-features.h"
 ''',
