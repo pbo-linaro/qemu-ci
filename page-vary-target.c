@@ -37,5 +37,7 @@ void finalize_target_page_bits(void)
 {
 #ifdef TARGET_PAGE_BITS_VARY
     finalize_target_page_bits_common(TARGET_PAGE_BITS_MIN);
+#else
+    finalize_target_page_bits_common(TARGET_PAGE_BITS);
 #endif
 }
