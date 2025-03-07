@@ -2628,11 +2628,16 @@ static const PCIIOMMUOps riscv_iommu_ops = {
 void riscv_iommu_pci_setup_iommu(RISCVIOMMUState *iommu, PCIBus *bus,
         Error **errp)
 {
-    if (bus->iommu_ops &&
-        bus->iommu_ops->get_address_space == riscv_iommu_find_as) {
-        /* Allow multiple IOMMUs on the same PCIe bus, link known devices */
-        RISCVIOMMUState *last = (RISCVIOMMUState *)bus->iommu_opaque;
-        QLIST_INSERT_AFTER(last, iommu, iommus);
+    if (bus->iommu_ops) {
+        if (bus->iommu_ops->get_address_space == riscv_iommu_find_as) {
+            /* Allow multiple IOMMUs on the same PCIe bus, link known devices */
+            RISCVIOMMUState *last = (RISCVIOMMUState *)bus->iommu_opaque;
+            QLIST_INSERT_AFTER(last, iommu, iommus);
+        } else {
+            /* The bus has an ATU. Set its downsteam memory region. */
+            AddressSpace *as = riscv_iommu_space(iommu, 0);
+            pci_setup_iommu_downstream_mr(bus, as->root);
+        }
     } else if (!bus->iommu_ops && !bus->iommu_opaque) {
         pci_setup_iommu(bus, &riscv_iommu_ops, iommu);
     } else {
