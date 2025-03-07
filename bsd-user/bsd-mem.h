@@ -372,7 +372,7 @@ static inline abi_long do_bsd_shmat(int shmid, abi_ulong shmaddr, int shmflg)
         } else {
             abi_ulong mmap_start;
 
-            mmap_start = mmap_find_vma(0, shm_info.shm_segsz);
+            mmap_start = mmap_find_vma(0, shm_info.shm_segsz, 0 /* FIXME??? */);
 
             if (mmap_start == -1) {
                 return -TARGET_ENOMEM;
