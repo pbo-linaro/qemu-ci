@@ -38,4 +38,7 @@ int graphic_height = 600;
 int graphic_depth = 32;
 #endif
 
-const uint32_t arch_type = QEMU_ARCH;
+bool qemu_arch_available(unsigned qemu_arch_mask)
+{
+    return qemu_arch_mask & QEMU_ARCH;
+}
