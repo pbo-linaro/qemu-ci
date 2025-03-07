@@ -445,6 +445,15 @@ bool pci_device_set_iommu_device(PCIDevice *dev, HostIOMMUDevice *hiod,
 void pci_device_unset_iommu_device(PCIDevice *dev);
 
 /**
+ * pci_setup_iommu_downstream_mr: Designate a downstream memory region
+ * for a PCIBus
+ *
+ * @bus: the #PCIBus being updated.
+ * @mr: the designated memory region.
+ */
+void pci_setup_iommu_downstream_mr(PCIBus *bus, MemoryRegion *mr);
+
+/**
  * pci_setup_iommu: Initialize specific IOMMU handlers for a PCIBus
  *
  * Let PCI host bridges define specific operations.

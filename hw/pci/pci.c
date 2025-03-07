@@ -2947,6 +2947,14 @@ void pci_device_unset_iommu_device(PCIDevice *dev)
     }
 }
 
+void pci_setup_iommu_downstream_mr(PCIBus *bus, MemoryRegion *mr)
+{
+    assert(bus->iommu_ops);
+    assert(bus->iommu_ops->set_downstream_mr);
+
+    bus->iommu_ops->set_downstream_mr(bus->iommu_opaque, mr);
+}
+
 void pci_setup_iommu(PCIBus *bus, const PCIIOMMUOps *ops, void *opaque)
 {
     /*
