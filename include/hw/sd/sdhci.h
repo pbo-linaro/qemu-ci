@@ -117,6 +117,26 @@ typedef struct SDHCIClass {
     uint32_t quirks;
     uint64_t iomem_size;
 
+    /* Default reset values */
+    struct {
+        uint32_t sdmasysad;
+
+        uint16_t blksize;
+        uint16_t blkcnt;
+
+        uint32_t prnsts;
+
+        uint8_t  hostctl1;
+        uint8_t  pwrcon;
+        uint8_t  blkgap;
+        uint8_t  wakcon;
+
+        uint16_t clkcon;
+        uint8_t  timeoutcon;
+
+        uint16_t norintstsen;
+        uint16_t errintstsen;
+    } reset;
     /* Read-only registers */
     struct {
         uint64_t capareg;
