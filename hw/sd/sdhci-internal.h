@@ -70,7 +70,7 @@
 /* R/W Buffer Data Register 0x0 */
 #define SDHC_BDATA                     0x20
 
-/* R/ROC Present State Register 0x000A0000 */
+/* R/ROC Present State Register */
 #define SDHC_PRNSTS                    0x24
 #define SDHC_CMD_INHIBIT               0x00000001
 #define SDHC_DATA_INHIBIT              0x00000002
@@ -88,7 +88,7 @@ FIELD(SDHC_PRNSTS, CMD_LVL,            24, 1);
 #define TRANSFERRING_DATA(x)           \
     ((x) & (SDHC_DOING_READ | SDHC_DOING_WRITE))
 
-/* R/W Host control Register 0x0 */
+/* R/W Host control Register */
 #define SDHC_HOSTCTL                   0x28
 #define SDHC_CTRL_LED                  0x01
 #define SDHC_CTRL_DATATRANSFERWIDTH    0x02 /* SD mode only */
@@ -104,17 +104,17 @@ FIELD(SDHC_PRNSTS, CMD_LVL,            24, 1);
 #define SDHC_CTRL_CDTEST_INS           0x40
 #define SDHC_CTRL_CDTEST_EN            0x80
 
-/* R/W Power Control Register 0x0 */
+/* R/W Power Control Register */
 #define SDHC_PWRCON                    0x29
 #define SDHC_POWER_ON                  (1 << 0)
 FIELD(SDHC_PWRCON, BUS_VOLTAGE,        1, 3);
 
-/* R/W Block Gap Control Register 0x0 */
+/* R/W Block Gap Control Register */
 #define SDHC_BLKGAP                    0x2A
 #define SDHC_STOP_AT_GAP_REQ           0x01
 #define SDHC_CONTINUE_REQ              0x02
 
-/* R/W WakeUp Control Register 0x0 */
+/* R/W WakeUp Control Register */
 #define SDHC_WAKCON                    0x2B
 #define SDHC_WKUP_ON_INS               (1 << 1)
 #define SDHC_WKUP_ON_RMV               (1 << 2)
@@ -128,17 +128,17 @@ FIELD(SDHC_PWRCON, BUS_VOLTAGE,        1, 3);
 #define SDHC_CLOCK_IS_ON(x)            \
     (((x) & SDHC_CLOCK_CHK_MASK) == SDHC_CLOCK_CHK_MASK)
 
-/* R/W Timeout Control Register 0x0 */
+/* R/W Timeout Control Register */
 #define SDHC_TIMEOUTCON                0x2E
 FIELD(SDHC_TIMEOUTCON, COUNTER,        0, 4);
 
-/* R/W Software Reset Register 0x0 */
+/* R/W Software Reset Register */
 #define SDHC_SWRST                     0x2F
 #define SDHC_RESET_ALL                 0x01
 #define SDHC_RESET_CMD                 0x02
 #define SDHC_RESET_DATA                0x04
 
-/* ROC/RW1C Normal Interrupt Status Register 0x0 */
+/* ROC/RW1C Normal Interrupt Status Register */
 #define SDHC_NORINTSTS                 0x30
 #define SDHC_NIS_ERR                   0x8000
 #define SDHC_NIS_CMDCMP                0x0001
@@ -151,7 +151,7 @@ FIELD(SDHC_TIMEOUTCON, COUNTER,        0, 4);
 #define SDHC_NIS_REMOVE                0x0080
 #define SDHC_NIS_CARDINT               0x0100
 
-/* ROC/RW1C Error Interrupt Status Register 0x0 */
+/* ROC/RW1C Error Interrupt Status Register */
 #define SDHC_ERRINTSTS                 0x32
 #define SDHC_EIS_CMDTIMEOUT            0x0001
 #define SDHC_EIS_BLKGAP                0x0004
@@ -159,7 +159,7 @@ FIELD(SDHC_TIMEOUTCON, COUNTER,        0, 4);
 #define SDHC_EIS_CMD12ERR              0x0100
 #define SDHC_EIS_ADMAERR               0x0200
 
-/* R/W Normal Interrupt Status Enable Register 0x0 */
+/* R/W Normal Interrupt Status Enable Register */
 #define SDHC_NORINTSTSEN               0x34
 #define SDHC_NISEN_CMDCMP              0x0001
 #define SDHC_NISEN_TRSCMP              0x0002
@@ -170,7 +170,7 @@ FIELD(SDHC_TIMEOUTCON, COUNTER,        0, 4);
 #define SDHC_NISEN_REMOVE              0x0080
 #define SDHC_NISEN_CARDINT             0x0100
 
-/* R/W Error Interrupt Status Enable Register 0x0 */
+/* R/W Error Interrupt Status Enable Register */
 #define SDHC_ERRINTSTSEN               0x36
 #define SDHC_EISEN_CMDTIMEOUT          0x0001
 #define SDHC_EISEN_BLKGAP              0x0004
@@ -205,7 +205,7 @@ FIELD(SDHC_HOSTCTL2, VERSION4,        12, 1); /* since v4 */
 FIELD(SDHC_HOSTCTL2, ASYNC_INT,       14, 1);
 FIELD(SDHC_HOSTCTL2, PRESET_ENA,      15, 1);
 
-/* HWInit Capabilities Register 0x05E80080 */
+/* HWInit Capabilities Register */
 #define SDHC_CAPAB                     0x40
 FIELD(SDHC_CAPAB, TOCLKFREQ,           0, 6);
 FIELD(SDHC_CAPAB, TOUNIT,              7, 1);
