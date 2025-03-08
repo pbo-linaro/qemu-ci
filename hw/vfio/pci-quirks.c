@@ -11,7 +11,6 @@
  */
 
 #include "qemu/osdep.h"
-#include CONFIG_DEVICES
 #include "exec/memop.h"
 #include "qemu/units.h"
 #include "qemu/log.h"
@@ -1213,10 +1212,10 @@ void vfio_bar_quirk_setup(VFIOPCIDevice *vdev, int nr)
     vfio_probe_nvidia_bar5_quirk(vdev, nr);
     vfio_probe_nvidia_bar0_quirk(vdev, nr);
     vfio_probe_rtl8168_bar2_quirk(vdev, nr);
-#ifdef CONFIG_VFIO_IGD
-    vfio_probe_igd_bar0_quirk(vdev, nr);
-    vfio_probe_igd_bar4_quirk(vdev, nr);
-#endif
+    if (vfio_igd_builtin()) {
+        vfio_probe_igd_bar0_quirk(vdev, nr);
+        vfio_probe_igd_bar4_quirk(vdev, nr);
+    }
 }
 
 void vfio_bar_quirk_exit(VFIOPCIDevice *vdev, int nr)

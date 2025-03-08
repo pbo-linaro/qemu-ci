@@ -13,6 +13,7 @@
 #define HW_VFIO_VFIO_PCI_QUIRKS_H
 
 #include "qemu/osdep.h"
+#include "qom/object.h"
 #include "exec/memop.h"
 
 /*
@@ -70,5 +71,10 @@ typedef struct VFIOConfigMirrorQuirk {
 extern const MemoryRegionOps vfio_generic_mirror_quirk;
 
 #define TYPE_VFIO_PCI_IGD_LPC_BRIDGE "vfio-pci-igd-lpc-bridge"
+
+static inline bool vfio_igd_builtin(void)
+{
+    return type_is_registered(TYPE_VFIO_PCI_IGD_LPC_BRIDGE);
+}
 
 #endif /* HW_VFIO_VFIO_PCI_QUIRKS_H */
