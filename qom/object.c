@@ -100,6 +100,11 @@ static TypeImpl *type_table_lookup(const char *name)
     return g_hash_table_lookup(type_table_get(), name);
 }
 
+bool type_is_registered(const char *typename)
+{
+    return !!type_table_lookup(typename);
+}
+
 static TypeImpl *type_new(const TypeInfo *info)
 {
     TypeImpl *ti = g_malloc0(sizeof(*ti));

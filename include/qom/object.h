@@ -899,6 +899,14 @@ Type type_register_static(const TypeInfo *info);
 void type_register_static_array(const TypeInfo *infos, int nr_infos);
 
 /**
+ * type_is_registered:
+ * @typename: The @typename to check.
+ *
+ * Returns: %true if @typename has been registered, %false otherwise.
+ */
+bool type_is_registered(const char *typename);
+
+/**
  * DEFINE_TYPES:
  * @type_array: The array containing #TypeInfo structures to register
  *
