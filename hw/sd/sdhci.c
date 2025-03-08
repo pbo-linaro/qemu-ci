@@ -1443,20 +1443,10 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     ERRP_GUARD();
     SDHCIClass *sc = SYSBUS_SDHCI_GET_CLASS(s);
 
-    s->io_ops = sc->io_ops ?: &sdhci_mmio_le_ops;
-    switch (s->endianness) {
-    case DEVICE_LITTLE_ENDIAN:
-        /* s->io_ops is little endian by default */
-        break;
-    case DEVICE_BIG_ENDIAN:
-        if (s->io_ops != &sdhci_mmio_le_ops) {
-            error_setg(errp, "SD controller doesn't support big endianness");
-            return;
-        }
-        s->io_ops = &sdhci_mmio_be_ops;
-        break;
-    default:
-        error_setg(errp, "Incorrect endianness");
+    s->io_ops = sc->io_ops ?: (s->endianness == DEVICE_BIG_ENDIAN ?
+                               &sdhci_mmio_be_ops : &sdhci_mmio_le_ops);
+    if (s->io_ops->endianness != s->endianness) {
+        error_setg(errp, "Invalid endianness for SD controller");
         return;
     }
 
