@@ -69,4 +69,6 @@ typedef struct VFIOConfigMirrorQuirk {
 
 extern const MemoryRegionOps vfio_generic_mirror_quirk;
 
+#define TYPE_VFIO_PCI_IGD_LPC_BRIDGE "vfio-pci-igd-lpc-bridge"
+
 #endif /* HW_VFIO_VFIO_PCI_QUIRKS_H */
