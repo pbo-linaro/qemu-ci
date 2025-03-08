@@ -25,6 +25,7 @@
 #ifndef SDHCI_H
 #define SDHCI_H
 
+#include "qapi/qapi-types-common.h"
 #include "hw/pci/pci_device.h"
 #include "hw/sysbus.h"
 #include "hw/sd/sd.h"
@@ -95,7 +96,7 @@ struct SDHCIState {
 
     /* Configurable properties */
     bool pending_insert_quirk; /* Quirk for Raspberry Pi card insert int */
-    uint8_t endianness;
+    EndianMode endianness;
     uint8_t sd_spec_version;
     uint8_t uhs_mode;
     /*

@@ -1437,7 +1437,12 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     const char *class_name = object_get_typename(OBJECT(s));
     unsigned ops_index;
 
-    ops_index = s->endianness == DEVICE_BIG_ENDIAN ? 1 : 0;
+    if (s->endianness == ENDIAN_MODE_UNSPECIFIED) {
+        error_setg(errp, "%s property 'endianness'"
+                         " must be set to 'big' or 'little'", class_name);
+        return;
+    }
+    ops_index = s->endianness == ENDIAN_MODE_BIG ? 1 : 0;
 
     s->io_ops = sc->io_ops ?: &sdhci_mmio_ops[ops_index];
     if (s->io_ops->endianness != sdhci_mmio_ops[ops_index].endianness) {

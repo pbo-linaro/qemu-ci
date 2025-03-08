@@ -32,7 +32,7 @@ static void sdhci_pci_realize(PCIDevice *dev, Error **errp)
     SDHCIState *s = PCI_SDHCI(dev);
 
     sdhci_initfn(s);
-    qdev_prop_set_uint8(DEVICE(dev), "endianness", DEVICE_LITTLE_ENDIAN);
+    qdev_prop_set_enum(DEVICE(dev), "endianness", ENDIAN_MODE_LITTLE);
     sdhci_common_realize(s, errp);
     if (*errp) {
         return;
