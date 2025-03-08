@@ -63,4 +63,10 @@ bool iommufd_backend_get_dirty_bitmap(IOMMUFDBackend *be, uint32_t hwpt_id,
                                       Error **errp);
 
 #define TYPE_HOST_IOMMU_DEVICE_IOMMUFD TYPE_HOST_IOMMU_DEVICE "-iommufd"
+
+static inline bool iommufd_builtin(void)
+{
+    return type_is_registered(TYPE_IOMMUFD_BACKEND);
+}
+
 #endif

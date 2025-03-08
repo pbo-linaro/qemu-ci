@@ -88,7 +88,7 @@ Step 2: configure QEMU
 ----------------------
 
 Interactions with the ``/dev/iommu`` are abstracted by a new iommufd
-object (compiled in with the ``CONFIG_IOMMUFD`` option).
+object (which availability can be checked at runtime using ``iommufd_builtin()``).
 
 Any QEMU device (e.g. VFIO device) wishing to use ``/dev/iommu`` must
 be linked with an iommufd object. It gets a new optional property
