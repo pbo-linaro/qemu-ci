@@ -113,6 +113,7 @@ typedef struct SDHCIClass {
     };
 
     uint32_t quirks;
+    uint64_t iomem_size;
 } SDHCIClass;
 
 /*
