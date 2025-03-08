@@ -107,6 +107,13 @@ struct SDHCIState {
 };
 typedef struct SDHCIState SDHCIState;
 
+typedef struct SDHCIClass {
+    union {
+        PCIDeviceClass pci_parent_class;
+        SysBusDeviceClass sbd_parent_class;
+    };
+} SDHCIClass;
+
 /*
  * Controller does not provide transfer-complete interrupt when not
  * busy.
@@ -123,6 +130,8 @@ DECLARE_INSTANCE_CHECKER(SDHCIState, PCI_SDHCI,
 #define TYPE_SYSBUS_SDHCI "generic-sdhci"
 DECLARE_INSTANCE_CHECKER(SDHCIState, SYSBUS_SDHCI,
                          TYPE_SYSBUS_SDHCI)
+DECLARE_CLASS_CHECKERS(SDHCIClass, SYSBUS_SDHCI,
+                       TYPE_SYSBUS_SDHCI)
 
 #define TYPE_IMX_USDHC "imx-usdhc"
 
