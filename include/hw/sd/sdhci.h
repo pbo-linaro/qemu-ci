@@ -115,6 +115,11 @@ typedef struct SDHCIClass {
     const MemoryRegionOps *io_ops;
     uint32_t quirks;
     uint64_t iomem_size;
+
+    /* Read-only registers */
+    struct {
+        uint64_t capareg;
+    } ro;
 } SDHCIClass;
 
 /*
