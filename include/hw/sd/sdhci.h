@@ -95,7 +95,6 @@ struct SDHCIState {
 
     /* Configurable properties */
     bool pending_insert_quirk; /* Quirk for Raspberry Pi card insert int */
-    uint32_t quirks;
     uint8_t endianness;
     uint8_t sd_spec_version;
     uint8_t uhs_mode;
@@ -112,6 +111,8 @@ typedef struct SDHCIClass {
         PCIDeviceClass pci_parent_class;
         SysBusDeviceClass sbd_parent_class;
     };
+
+    uint32_t quirks;
 } SDHCIClass;
 
 /*
