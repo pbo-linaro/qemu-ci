@@ -1443,6 +1443,8 @@ void sdhci_uninitfn(SDHCIState *s)
 void sdhci_common_realize(SDHCIState *s, Error **errp)
 {
     ERRP_GUARD();
+    SDHCIClass *sc = SYSBUS_SDHCI_GET_CLASS(s);
+    const char *class_name = object_get_typename(OBJECT(s));
 
     switch (s->endianness) {
     case DEVICE_LITTLE_ENDIAN:
@@ -1468,8 +1470,9 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     s->buf_maxsz = sdhci_get_fifolen(s);
     s->fifo_buffer = g_malloc0(s->buf_maxsz);
 
-    memory_region_init_io(&s->iomem, OBJECT(s), s->io_ops, s, "sdhci",
-                          SDHC_REGISTERS_MAP_SIZE);
+    assert(sc->iomem_size >= SDHC_REGISTERS_MAP_SIZE);
+    memory_region_init_io(&s->iomem, OBJECT(s), s->io_ops, s, class_name,
+                          sc->iomem_size);
 }
 
 void sdhci_common_unrealize(SDHCIState *s)
@@ -1621,10 +1624,13 @@ static void sdhci_sysbus_unrealize(DeviceState *dev)
 static void sdhci_sysbus_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    SDHCIClass *sc = SYSBUS_SDHCI_CLASS(klass);
 
     device_class_set_props(dc, sdhci_sysbus_properties);
     dc->realize = sdhci_sysbus_realize;
     dc->unrealize = sdhci_sysbus_unrealize;
+
+    sc->iomem_size = SDHC_REGISTERS_MAP_SIZE;
 
     sdhci_common_class_init(klass, data);
 }
