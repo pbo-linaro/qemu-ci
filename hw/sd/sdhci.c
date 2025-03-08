@@ -1372,30 +1372,22 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
                        value >> shift, value >> shift);
 }
 
-static const MemoryRegionOps sdhci_mmio_le_ops = {
-    .read = sdhci_read,
-    .write = sdhci_write,
-    .valid = {
-        .min_access_size = 1,
-        .max_access_size = 4,
-        .unaligned = false
+static const MemoryRegionOps sdhci_mmio_ops[2] = {
+    [0 ... 1] = {
+        .read = sdhci_read,
+        .write = sdhci_write,
+        .impl = {
+            .min_access_size = 4,
+            .max_access_size = 4,
+        },
+        .valid = {
+            .min_access_size = 1,
+            .max_access_size = 4,
+            .unaligned = false
+        },
     },
-    .endianness = DEVICE_LITTLE_ENDIAN,
-};
-
-static const MemoryRegionOps sdhci_mmio_be_ops = {
-    .read = sdhci_read,
-    .write = sdhci_write,
-    .impl = {
-        .min_access_size = 4,
-        .max_access_size = 4,
-    },
-    .valid = {
-        .min_access_size = 1,
-        .max_access_size = 4,
-        .unaligned = false
-    },
-    .endianness = DEVICE_BIG_ENDIAN,
+    [0].endianness = DEVICE_LITTLE_ENDIAN,
+    [1].endianness = DEVICE_BIG_ENDIAN,
 };
 
 static void sdhci_init_readonly_registers(SDHCIState *s, Error **errp)
@@ -1443,10 +1435,12 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     ERRP_GUARD();
     SDHCIClass *sc = SYSBUS_SDHCI_GET_CLASS(s);
     const char *class_name = object_get_typename(OBJECT(s));
+    unsigned ops_index;
 
-    s->io_ops = sc->io_ops ?: (s->endianness == DEVICE_BIG_ENDIAN ?
-                               &sdhci_mmio_be_ops : &sdhci_mmio_le_ops);
-    if (s->io_ops->endianness != s->endianness) {
+    ops_index = s->endianness == DEVICE_BIG_ENDIAN ? 1 : 0;
+
+    s->io_ops = sc->io_ops ?: &sdhci_mmio_ops[ops_index];
+    if (s->io_ops->endianness != sdhci_mmio_ops[ops_index].endianness) {
         error_setg(errp, "Invalid endianness for SD controller");
         return;
     }
