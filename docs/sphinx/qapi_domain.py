@@ -14,11 +14,13 @@ from typing import (
     NamedTuple,
     Optional,
     Tuple,
+    cast,
 )
 
 from docutils import nodes
 
-from sphinx.addnodes import pending_xref
+from sphinx.addnodes import desc_signature, pending_xref
+from sphinx.directives import ObjectDescription
 from sphinx.domains import (
     Domain,
     Index,
@@ -28,7 +30,7 @@ from sphinx.domains import (
 from sphinx.locale import _, __
 from sphinx.roles import XRefRole
 from sphinx.util import logging
-from sphinx.util.nodes import make_refnode
+from sphinx.util.nodes import make_id, make_refnode
 
 
 if TYPE_CHECKING:
@@ -94,6 +96,65 @@ class QAPIXRefRole(XRefRole):
             title = target.split(".")[-1]
 
         return title, target
+
+
+Signature = str
+
+
+class QAPIDescription(ObjectDescription[Signature]):
+    """
+    Generic QAPI description.
+
+    Abstract class, not instantiated directly.
+    """
+
+    def handle_signature(self, sig: str, signode: desc_signature) -> Signature:
+        # Do nothing. The return value here is the "name" of the entity
+        # being documented; for QAPI, this is the same as the
+        # "signature", which is just a name.
+
+        # Normally this method must also populate signode with nodes to
+        # render the signature; here we do nothing instead.
+        return sig
+
+    def get_index_text(self, name: Signature) -> Tuple[str, str]:
+        """Return the text for the index entry of the object."""
+
+        # NB: this is used for the global index, not the QAPI index.
+        return ("single", f"{name} (QMP {self.objtype})")
+
+    def add_target_and_index(
+        self, name: Signature, sig: str, signode: desc_signature
+    ) -> None:
+        # name is the return value of handle_signature.
+        # sig is the original, raw text argument to handle_signature.
+        # For QAPI, these are identical, currently.
+
+        assert self.objtype
+
+        # If we're documenting a module, don't include the module as
+        # part of the FQN.
+        modname = ""
+        if self.objtype != "module":
+            modname = self.options.get(
+                "module", self.env.ref_context.get("qapi:module")
+            )
+        fullname = (modname + "." if modname else "") + name
+
+        node_id = make_id(self.env, self.state.document, self.objtype, fullname)
+        signode["ids"].append(node_id)
+
+        self.state.document.note_explicit_target(signode)
+        domain = cast(QAPIDomain, self.env.get_domain("qapi"))
+        domain.note_object(fullname, self.objtype, node_id, location=signode)
+
+        if "no-index-entry" not in self.options:
+            arity, indextext = self.get_index_text(name)
+            assert self.indexnode is not None
+            if indextext:
+                self.indexnode["entries"].append(
+                    (arity, indextext, node_id, "", None)
+                )
 
 
 class QAPIIndex(Index):
