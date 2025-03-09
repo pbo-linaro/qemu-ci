@@ -24,7 +24,13 @@ from typing import (
 from docutils import nodes
 from docutils.parsers.rst import directives
 
-from compat import KeywordNode, SpaceNode
+from compat import (
+    CompatField,
+    CompatGroupedField,
+    CompatTypedField,
+    KeywordNode,
+    SpaceNode,
+)
 from sphinx import addnodes
 from sphinx.addnodes import desc_signature, pending_xref
 from sphinx.directives import ObjectDescription
@@ -37,7 +43,6 @@ from sphinx.domains import (
 from sphinx.locale import _, __
 from sphinx.roles import XRefRole
 from sphinx.util import logging
-from sphinx.util.docfields import Field, GroupedField, TypedField
 from sphinx.util.nodes import make_id, make_refnode
 
 
@@ -228,7 +233,7 @@ class QAPIObject(QAPIDescription):
 
     doc_field_types = [
         # :feat name: descr
-        GroupedField(
+        CompatGroupedField(
             "feature",
             label=_("Features"),
             names=("feat",),
@@ -429,7 +434,7 @@ class QAPICommand(QAPIObject):
     doc_field_types.extend(
         [
             # :arg TypeName ArgName: descr
-            TypedField(
+            CompatTypedField(
                 "argument",
                 label=_("Arguments"),
                 names=("arg",),
@@ -437,14 +442,14 @@ class QAPICommand(QAPIObject):
                 can_collapse=False,
             ),
             # :error: descr
-            Field(
+            CompatField(
                 "error",
                 label=_("Errors"),
                 names=("error", "errors"),
                 has_arg=False,
             ),
             # :returns TypeName: descr
-            GroupedField(
+            CompatGroupedField(
                 "returnvalue",
                 label=_("Return"),
                 rolename="type",
@@ -462,7 +467,7 @@ class QAPIEnum(QAPIObject):
     doc_field_types.extend(
         [
             # :value name: descr
-            GroupedField(
+            CompatGroupedField(
                 "value",
                 label=_("Values"),
                 names=("value",),
@@ -479,7 +484,7 @@ class QAPIAlternate(QAPIObject):
     doc_field_types.extend(
         [
             # :alt type name: descr
-            TypedField(
+            CompatTypedField(
                 "alternative",
                 label=_("Alternatives"),
                 names=("alt",),
@@ -497,7 +502,7 @@ class QAPIObjectWithMembers(QAPIObject):
     doc_field_types.extend(
         [
             # :member type name: descr
-            TypedField(
+            CompatTypedField(
                 "member",
                 label=_("Members"),
                 names=("memb",),
