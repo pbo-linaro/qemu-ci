@@ -2,6 +2,9 @@
 QAPI domain extension.
 """
 
+# The best laid plans of mice and men, ...
+# pylint: disable=too-many-lines
+
 from __future__ import annotations
 
 from typing import (
@@ -115,6 +118,28 @@ class QAPIXRefRole(XRefRole):
             title = target.split(".")[-1]
 
         return title, target
+
+    def result_nodes(
+        self,
+        document: nodes.document,
+        env: BuildEnvironment,
+        node: Element,
+        is_ref: bool,
+    ) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+
+        # node here is the pending_xref node (or whatever nodeclass was
+        # configured at XRefRole class instantiation time).
+        results: List[nodes.Node] = [node]
+
+        if node.get("qapi:array"):
+            results.insert(0, nodes.literal("[", "["))
+            results.append(nodes.literal("]", "]"))
+
+        if node.get("qapi:optional"):
+            results.append(nodes.Text(", "))
+            results.append(nodes.emphasis("?", "optional"))
+
+        return results, []
 
 
 # Alias for the return of handle_signature(), which is used in several places.
@@ -408,6 +433,7 @@ class QAPICommand(QAPIObject):
                 "argument",
                 label=_("Arguments"),
                 names=("arg",),
+                typerolename="type",
                 can_collapse=False,
             ),
             # :error: descr
@@ -421,6 +447,7 @@ class QAPICommand(QAPIObject):
             GroupedField(
                 "returnvalue",
                 label=_("Return"),
+                rolename="type",
                 names=("return",),
                 can_collapse=True,
             ),
@@ -456,6 +483,7 @@ class QAPIAlternate(QAPIObject):
                 "alternative",
                 label=_("Alternatives"),
                 names=("alt",),
+                typerolename="type",
                 can_collapse=False,
             ),
         ]
@@ -473,6 +501,7 @@ class QAPIObjectWithMembers(QAPIObject):
                 "member",
                 label=_("Members"),
                 names=("memb",),
+                typerolename="type",
                 can_collapse=False,
             ),
         ]
