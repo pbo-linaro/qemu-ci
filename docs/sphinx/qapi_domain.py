@@ -296,6 +296,13 @@ class QAPICommand(QAPIObject):
                 names=("error", "errors"),
                 has_arg=False,
             ),
+            # :returns TypeName: descr
+            GroupedField(
+                "returnvalue",
+                label=_("Return"),
+                names=("return",),
+                can_collapse=True,
+            ),
         ]
     )
 
