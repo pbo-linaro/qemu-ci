@@ -1393,17 +1393,6 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
 static const MemoryRegionOps sdhci_mmio_le_ops = {
     .read = sdhci_read,
     .write = sdhci_write,
-    .valid = {
-        .min_access_size = 1,
-        .max_access_size = 4,
-        .unaligned = false
-    },
-    .endianness = DEVICE_LITTLE_ENDIAN,
-};
-
-static const MemoryRegionOps sdhci_mmio_be_ops = {
-    .read = sdhci_read,
-    .write = sdhci_write,
     .impl = {
         .min_access_size = 4,
         .max_access_size = 4,
@@ -1413,7 +1402,7 @@ static const MemoryRegionOps sdhci_mmio_be_ops = {
         .max_access_size = 4,
         .unaligned = false
     },
-    .endianness = DEVICE_BIG_ENDIAN,
+    .endianness = DEVICE_LITTLE_ENDIAN,
 };
 
 static void sdhci_init_readonly_registers(SDHCIState *s, Error **errp)
@@ -1467,23 +1456,6 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     SDHCIClass *sc = s->sc;
     const char *class_name = object_get_typename(OBJECT(s));
 
-    s->io_ops = sc->io_ops ?: &sdhci_mmio_le_ops;
-    switch (s->endianness) {
-    case DEVICE_LITTLE_ENDIAN:
-        /* s->io_ops is little endian by default */
-        break;
-    case DEVICE_BIG_ENDIAN:
-        if (s->io_ops != &sdhci_mmio_le_ops) {
-            error_setg(errp, "SD controller doesn't support big endianness");
-            return;
-        }
-        s->io_ops = &sdhci_mmio_be_ops;
-        break;
-    default:
-        error_setg(errp, "Incorrect endianness");
-        return;
-    }
-
     sdhci_init_readonly_registers(s, errp);
     if (*errp) {
         return;
@@ -1493,7 +1465,7 @@ void sdhci_common_realize(SDHCIState *s, Error **errp)
     s->fifo_buffer = g_malloc0(s->buf_maxsz);
 
     assert(sc->iomem_size >= SDHC_REGISTERS_MAP_SIZE);
-    memory_region_init_io(&s->iomem, OBJECT(s), s->io_ops, s, class_name,
+    memory_region_init_io(&s->iomem, OBJECT(s), sc->io_ops, s, class_name,
                           sc->iomem_size);
 }
 
@@ -1578,6 +1550,7 @@ void sdhci_common_class_init(ObjectClass *klass, const void *data)
     dc->vmsd = &sdhci_vmstate;
     device_class_set_legacy_reset(dc, sdhci_poweron_reset);
 
+    sc->io_ops = &sdhci_mmio_le_ops;
     sc->iomem_size = SDHC_REGISTERS_MAP_SIZE;
 }
 
