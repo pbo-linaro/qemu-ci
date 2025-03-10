@@ -766,16 +766,23 @@ out:
     return err;
 }
 
-static int local_fstat(FsContext *fs_ctx, int fid_type,
-                       V9fsFidOpenState *fs, struct stat *stbuf)
+static int local_fid_fd(int fid_type, V9fsFidOpenState *fs)
 {
-    int err, fd;
+    int fd;
 
     if (fid_type == P9_FID_DIR) {
         fd = dirfd(fs->dir.stream);
     } else {
         fd = fs->fd;
     }
+
+    return fd;
+}
+
+static int local_fstat(FsContext *fs_ctx, int fid_type,
+                       V9fsFidOpenState *fs, struct stat *stbuf)
+{
+    int err, fd = local_fid_fd(fid_type, fs);
 
     err = fstat(fd, stbuf);
     if (err) {
@@ -1167,13 +1174,7 @@ out:
 static int local_fsync(FsContext *ctx, int fid_type,
                        V9fsFidOpenState *fs, int datasync)
 {
-    int fd;
-
-    if (fid_type == P9_FID_DIR) {
-        fd = dirfd(fs->dir.stream);
-    } else {
-        fd = fs->fd;
-    }
+    int fd = local_fid_fd(fid_type, fs);
 
     if (datasync) {
         return qemu_fdatasync(fd);
