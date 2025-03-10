@@ -274,7 +274,7 @@ static void sdhci_set_readonly(DeviceState *dev, bool level)
 {
     SDHCIState *s = (SDHCIState *)dev;
 
-    if (s->wp_inverted) {
+    if (s->quirks & BIT(SDHCI_QUIRK_INVERTED_WRITE_PROTECT)) {
         level = !level;
     }
 
@@ -1555,12 +1555,12 @@ void sdhci_common_class_init(ObjectClass *klass, const void *data)
 
 static const Property sdhci_sysbus_properties[] = {
     DEFINE_SDHCI_COMMON_PROPERTIES(SDHCIState),
+    DEFINE_PROP_BIT("wp-inverted-quirk", SDHCIState, quirks,
+                    SDHCI_QUIRK_INVERTED_WRITE_PROTECT, false),
     DEFINE_PROP_BOOL("pending-insert-quirk", SDHCIState, pending_insert_quirk,
                      false),
     DEFINE_PROP_LINK("dma", SDHCIState,
                      dma_mr, TYPE_MEMORY_REGION, MemoryRegion *),
-    DEFINE_PROP_BOOL("wp-inverted", SDHCIState,
-                     wp_inverted, false),
 };
 
 static void sdhci_sysbus_init(Object *obj)

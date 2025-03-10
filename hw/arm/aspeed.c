@@ -412,7 +412,7 @@ static void aspeed_machine_init(MachineState *machine)
     if (amc->sdhci_wp_inverted) {
         for (i = 0; i < bmc->soc->sdhci.num_slots; i++) {
             object_property_set_bool(OBJECT(&bmc->soc->sdhci.slots[i]),
-                                     "wp-inverted", true, &error_abort);
+                                     "wp-inverted-quirk", true, &error_abort);
         }
     }
     if (machine->kernel_filename) {

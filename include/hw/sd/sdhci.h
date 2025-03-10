@@ -30,7 +30,14 @@
 #include "hw/sd/sd.h"
 #include "qom/object.h"
 
-/* SD/MMC host controller state */
+/*
+ * SD/MMC host controller state
+ *
+ * QEMU interface:
+ *  + QOM property "wp-inverted-quirk" inverts the Write Protect pin
+ *    polarity (by default the polarity is active low for detecting SD
+ *    card to be protected).
+ */
 struct SDHCIState {
     /*< private >*/
     union {
@@ -99,11 +106,6 @@ struct SDHCIState {
     uint8_t endianness;
     uint8_t sd_spec_version;
     uint8_t uhs_mode;
-    /*
-     * Write Protect pin default active low for detecting SD card
-     * to be protected. Set wp_inverted to invert the signal.
-     */
-    bool wp_inverted;
 };
 typedef struct SDHCIState SDHCIState;
 
@@ -114,6 +116,8 @@ typedef struct SDHCIState SDHCIState;
 enum {
     /* Controller does not provide transfer-complete interrupt when not busy. */
     SDHCI_QUIRK_NO_BUSY_IRQ                     = 14,
+    /* Controller reports inverted write-protect state */
+    SDHCI_QUIRK_INVERTED_WRITE_PROTECT          = 16,
 };
 
 #define TYPE_PCI_SDHCI "sdhci-pci"
