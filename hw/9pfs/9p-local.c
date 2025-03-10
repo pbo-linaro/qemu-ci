@@ -1046,6 +1046,14 @@ static int local_truncate(FsContext *ctx, V9fsPath *fs_path, off_t size)
     return ret;
 }
 
+static int local_ftruncate(FsContext *ctx, int fid_type, V9fsFidOpenState *fs,
+                           off_t size)
+{
+    int fd = local_fid_fd(fid_type, fs);
+
+    return ftruncate(fd, size);
+}
+
 static int local_chown(FsContext *fs_ctx, V9fsPath *fs_path, FsCred *credp)
 {
     char *dirpath = g_path_get_dirname(fs_path->data);
@@ -1619,4 +1627,5 @@ FileOperations local_ops = {
     .renameat  = local_renameat,
     .unlinkat = local_unlinkat,
     .has_valid_handle = local_has_valid_handle,
+    .ftruncate = local_ftruncate,
 };

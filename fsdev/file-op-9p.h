@@ -165,6 +165,8 @@ struct FileOperations {
                     V9fsPath *newdir, const char *new_name);
     int (*unlinkat)(FsContext *ctx, V9fsPath *dir, const char *name, int flags);
     bool (*has_valid_handle)(int fid_type, V9fsFidOpenState *fs);
+    int (*ftruncate)(FsContext *ctx, int fid_type, V9fsFidOpenState *fs,
+                     off_t size);
 };
 
 #endif
