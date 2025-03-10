@@ -1,0 +1,72 @@
+Grabbing thread from lore.kernel.org/all/dcfc04cc1a50655650dbac8398e2742ada84ee39.1741611079.git.maciej.szmigiero@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v6: 37 patches
+Analyzing 90 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 471 code-review messages
+Will use the latest revision: v6
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v6 1/36] migration: Clarify that {load, save}_cleanup handlers can run without setup
+  [PATCH v6 2/36] thread-pool: Remove thread_pool_submit() function
+  [PATCH v6 3/36] thread-pool: Rename AIO pool functions to *_aio() and data types to *Aio
+  [PATCH v6 4/36] thread-pool: Implement generic (non-AIO) pool support
+  [PATCH v6 5/36] migration: Add MIG_CMD_SWITCHOVER_START and its load handler
+  [PATCH v6 6/36] migration: Add qemu_loadvm_load_state_buffer() and its handler
+  [PATCH v6 7/36] migration: postcopy_ram_listen_thread() should take BQL for some calls
+    + Acked-by: Peter Xu <peterx@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 8/36] error: define g_autoptr() cleanup function for the Error type
+  [PATCH v6 9/36] migration: Add thread pool of optional load threads
+  [PATCH v6 10/36] migration/multifd: Split packet into header and RAM data
+  [PATCH v6 11/36] migration/multifd: Device state transfer support - receive side
+  [PATCH v6 12/36] migration/multifd: Make multifd_send() thread safe
+  [PATCH v6 13/36] migration/multifd: Add an explicit MultiFDSendData destructor
+  [PATCH v6 14/36] migration/multifd: Device state transfer support - send side
+  [PATCH v6 15/36] migration/multifd: Make MultiFDSendData a struct
+    + Acked-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  [PATCH v6 16/36] migration/multifd: Add multifd_device_state_supported()
+  [PATCH v6 17/36] migration: Add save_live_complete_precopy_thread handler
+    + Reviewed-by: Peter Xu <peterx@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 18/36] vfio/migration: Add load_device_config_state_start trace event
+  [PATCH v6 19/36] vfio/migration: Convert bytes_transferred counter to atomic
+  [PATCH v6 20/36] vfio/migration: Add vfio_add_bytes_transferred()
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 21/36] vfio/migration: Move migration channel flags to vfio-common.h header file
+  [PATCH v6 22/36] vfio/migration: Multifd device state transfer support - basic types
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 23/36] vfio/migration: Multifd device state transfer - add support checking function
+  [PATCH v6 24/36] vfio/migration: Multifd setup/cleanup functions and associated VFIOMultifd
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 25/36] vfio/migration: Setup and cleanup multifd transfer in these general methods
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 26/36] vfio/migration: Multifd device state transfer support - received buffers queuing
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 27/36] vfio/migration: Multifd device state transfer support - load thread
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 28/36] migration/qemu-file: Define g_autoptr() cleanup function for QEMUFile
+  [PATCH v6 29/36] vfio/migration: Multifd device state transfer support - config loading support
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 30/36] vfio/migration: Multifd device state transfer support - send side
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 31/36] vfio/migration: Add x-migration-multifd-transfer VFIO property
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 32/36] vfio/migration: Make x-migration-multifd-transfer VFIO property mutable
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH v6 33/36] hw/core/machine: Add compat for x-migration-multifd-transfer VFIO property
+  [PATCH v6 34/36] vfio/migration: Max in-flight VFIO device state buffer count limit
+  [PATCH v6 35/36] vfio/migration: Add x-migration-load-config-after-iter VFIO property
+  [PATCH v6 36/36] vfio/migration: Update VFIO migration documentation
+---
+Total patches: 36
+---
+Applying: migration: Clarify that {load, save}_cleanup handlers can run without setup
+Patch failed at 0001 migration: Clarify that {load, save}_cleanup handlers can run without setup
+error: patch failed: include/migration/register.h:69
+error: include/migration/register.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
