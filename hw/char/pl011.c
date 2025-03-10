@@ -61,6 +61,9 @@ DeviceState *pl011_create(hwaddr addr, qemu_irq irq, Chardev *chr)
 /* Data Register, UARTDR */
 #define DR_BE   (1 << 10)
 
+/* Receive Status Register/Error Clear Register, UARTRSR/UARTECR */
+#define RSR_OE  (1 << 3)
+
 /* Interrupt status bits in UARTRIS, UARTMIS, UARTIMSC */
 #define INT_OE (1 << 10)
 #define INT_BE (1 << 9)
@@ -155,6 +158,18 @@ static inline unsigned pl011_get_fifo_depth(PL011State *s)
 {
     /* Note: FIFO depth is expected to be power-of-2 */
     return pl011_is_fifo_enabled(s) ? PL011_FIFO_DEPTH : 1;
+}
+
+static bool pl011_is_tx_fifo_full(PL011State *s)
+{
+    bool fifo_enabled = pl011_is_fifo_enabled(s);
+    bool tx_fifo_full = fifo_enabled
+                        ? fifo8_is_full(&s->xmit_fifo)
+                        : !fifo8_is_empty(&s->xmit_fifo);
+
+    trace_pl011_fifo_tx_is_full(fifo_enabled ? "FIFO" : "CHAR", tx_fifo_full);
+
+    return tx_fifo_full;
 }
 
 static inline void pl011_reset_rx_fifo(PL011State *s)
@@ -273,6 +288,13 @@ static void pl011_write_txdata(PL011State *s, uint8_t data)
     if (!(s->cr & CR_TXE)) {
         qemu_log_mask(LOG_GUEST_ERROR,
                       "PL011 data written to disabled TX UART\n");
+    }
+
+    if (pl011_is_tx_fifo_full(s)) {
+        /* The FIFO is already full. Content remains valid. */
+        trace_pl011_fifo_tx_overrun();
+        s->rsr |= RSR_OE;
+        return;
     }
 
     trace_pl011_fifo_tx_put(data);
