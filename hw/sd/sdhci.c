@@ -320,7 +320,7 @@ static void sdhci_poweron_reset(DeviceState *dev)
 
     sdhci_reset(s);
 
-    if (s->pending_insert_quirk) {
+    if (s->quirks & BIT(SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET)) {
         s->pending_insert_state = true;
     }
 }
@@ -1307,7 +1307,7 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
          * appears when first enabled after power on
          */
         if ((s->norintstsen & SDHC_NISEN_INSERT) && s->pending_insert_state) {
-            assert(s->pending_insert_quirk);
+            assert(s->quirks & BIT(SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET));
             s->norintsts |= SDHC_NIS_INSERT;
             s->pending_insert_state = false;
         }
@@ -1557,8 +1557,8 @@ static const Property sdhci_sysbus_properties[] = {
     DEFINE_SDHCI_COMMON_PROPERTIES(SDHCIState),
     DEFINE_PROP_BIT("wp-inverted-quirk", SDHCIState, quirks,
                     SDHCI_QUIRK_INVERTED_WRITE_PROTECT, false),
-    DEFINE_PROP_BOOL("pending-insert-quirk", SDHCIState, pending_insert_quirk,
-                     false),
+    DEFINE_PROP_BIT("pending-insert-quirk", SDHCIState, quirks,
+                    SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET, false),
     DEFINE_PROP_LINK("dma", SDHCIState,
                      dma_mr, TYPE_MEMORY_REGION, MemoryRegion *),
 };

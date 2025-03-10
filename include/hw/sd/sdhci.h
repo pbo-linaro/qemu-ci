@@ -34,6 +34,8 @@
  * SD/MMC host controller state
  *
  * QEMU interface:
+ *  + QOM property "pending-insert-quirk" re-enables pending "card inserted"
+ *    IRQ after reset (used by the Raspberry Pi controllers).
  *  + QOM property "wp-inverted-quirk" inverts the Write Protect pin
  *    polarity (by default the polarity is active low for detecting SD
  *    card to be protected).
@@ -101,7 +103,6 @@ struct SDHCIState {
     /* RO Host Controller Version Register always reads as 0x2401 */
 
     /* Configurable properties */
-    bool pending_insert_quirk; /* Quirk for Raspberry Pi card insert int */
     uint32_t quirks;
     uint8_t endianness;
     uint8_t sd_spec_version;
@@ -118,6 +119,8 @@ enum {
     SDHCI_QUIRK_NO_BUSY_IRQ                     = 14,
     /* Controller reports inverted write-protect state */
     SDHCI_QUIRK_INVERTED_WRITE_PROTECT          = 16,
+    /* Controller losing signal/interrupt enable states after reset */
+    SDHCI_QUIRK_RESTORE_IRQS_AFTER_RESET        = 19,
 };
 
 #define TYPE_PCI_SDHCI "sdhci-pci"
