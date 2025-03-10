@@ -30,6 +30,8 @@
 #include "hw/sd/sd.h"
 #include "qom/object.h"
 
+typedef struct SDHCIClass SDHCIClass;
+
 /*
  * SD/MMC host controller state
  *
@@ -41,13 +43,12 @@
  *    card to be protected).
  */
 struct SDHCIState {
-    /*< private >*/
     union {
         PCIDevice pcidev;
         SysBusDevice busdev;
     };
 
-    /*< public >*/
+    SDHCIClass *sc;
     SDBus sdbus;
     MemoryRegion iomem;
     AddressSpace sysbus_dma_as;
@@ -110,6 +111,13 @@ struct SDHCIState {
 };
 typedef struct SDHCIState SDHCIState;
 
+struct SDHCIClass {
+    union {
+        PCIDeviceClass pci_parent_class;
+        SysBusDeviceClass sbd_parent_class;
+    };
+};
+
 /*
  * NOTE: This definition is taken out of Linux kernel and so the
  * original bit number is preserved
@@ -126,10 +134,11 @@ enum {
 #define TYPE_PCI_SDHCI "sdhci-pci"
 DECLARE_INSTANCE_CHECKER(SDHCIState, PCI_SDHCI,
                          TYPE_PCI_SDHCI)
+DECLARE_CLASS_CHECKERS(SDHCIClass, PCI_SDHCI,
+                       TYPE_PCI_SDHCI)
 
 #define TYPE_SYSBUS_SDHCI "generic-sdhci"
-DECLARE_INSTANCE_CHECKER(SDHCIState, SYSBUS_SDHCI,
-                         TYPE_SYSBUS_SDHCI)
+OBJECT_DECLARE_TYPE(SDHCIState, SDHCIClass, SYSBUS_SDHCI)
 
 #define TYPE_IMX_USDHC "imx-usdhc"
 

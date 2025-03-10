@@ -1419,6 +1419,8 @@ static void sdhci_init_readonly_registers(SDHCIState *s, Error **errp)
 
 void sdhci_initfn(SDHCIState *s)
 {
+    s->sc = (SDHCIClass *)object_get_class(OBJECT(s)); /* Cache QOM parent */
+
     qbus_init(&s->sdbus, sizeof(s->sdbus), TYPE_SDHCI_BUS, DEVICE(s), "sd-bus");
 
     s->insert_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL,
@@ -1960,6 +1962,7 @@ static const TypeInfo sdhci_types[] = {
         .instance_size = sizeof(SDHCIState),
         .instance_init = sdhci_sysbus_init,
         .instance_finalize = sdhci_sysbus_finalize,
+        .class_size = sizeof(SDHCIClass),
         .class_init = sdhci_sysbus_class_init,
     },
     {
