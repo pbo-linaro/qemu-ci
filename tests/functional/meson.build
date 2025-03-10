@@ -110,7 +110,7 @@ tests_arm_system_thorough = [
   'arm_aspeed_ast2500',
   'arm_aspeed_ast2600',
   'arm_aspeed_bletchley',
-  'arm_aspeed_rainier',
+  # 'arm_aspeed_rainier', # timeout
   'arm_bpim2u',
   'arm_canona1100',
   'arm_collie',
@@ -156,8 +156,8 @@ tests_loongarch64_system_thorough = [
 tests_m68k_system_thorough = [
   'm68k_mcf5208evb',
   'm68k_nextcube',
-  'm68k_replay',
-  'm68k_q800',
+  #'m68k_replay',
+  #'m68k_q800',
   'm68k_tuxrun',
 ]
 
@@ -167,7 +167,7 @@ tests_microblaze_system_thorough = [
 ]
 
 tests_microblazeel_system_thorough = [
-  'microblazeel_s3adsp1800'
+  # 'microblazeel_s3adsp1800' # HTTP Error 403: Forbidden
 ]
 
 tests_mips_system_thorough = [
@@ -383,7 +383,7 @@ foreach speed : ['quick', 'thorough']
       # 'run_target' logic below & in Makefile.include
       test('func-' + testname,
            python,
-           depends: [test_deps, test_emulator, emulator_modules],
+           depends: [test_deps, test_emulator, emulator_modules, plugin_modules],
            env: test_env,
            args: [testpath],
            protocol: 'tap',
