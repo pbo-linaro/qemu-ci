@@ -480,8 +480,9 @@ static void pl011_write(void *opaque, hwaddr offset,
         pl011_trace_baudrate_change(s);
         break;
     case 11: /* UARTLCR_H */
-        /* Reset the FIFO state on FIFO enable or disable */
         if ((s->lcr ^ value) & LCR_FEN) {
+            /* Reset the FIFO state on FIFO enable or disable */
+            trace_pl011_fifo_enable(value & LCR_FEN);
             pl011_reset_rx_fifo(s);
             pl011_reset_tx_fifo(s);
         }
