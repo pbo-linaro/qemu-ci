@@ -20,8 +20,9 @@
 #define IN_PAGE_VARY 1
 
 #include "qemu/osdep.h"
-#include "exec/page-vary.h"
 #include "exec/exec-all.h"
+#include "exec/page-vary.h"
+#include "exec/target_page.h"
 
 bool set_preferred_target_page_bits(int bits)
 {
