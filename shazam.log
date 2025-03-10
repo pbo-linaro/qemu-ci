@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250308205141.3219333-1-adityag@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 81 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/8] ppc/pnv: Add HOMER for POWER11
+  [32m✓[0m [PATCH v5 2/8] ppc/pnv: Add a LPC controller for POWER11
+  [32m✓[0m [PATCH v5 3/8] ppc/pnv: Add OCC for Power11
+  [32m✓[0m [PATCH v5 4/8] ppc/pnv: Add a PSI bridge model for Power11
+  [32m✓[0m [PATCH v5 5/8] ppc/pnv: Add SBE model for Power11
+  [32m✓[0m [PATCH v5 6/8] ppc/pnv: Add ChipTOD model for Power11
+  [32m✓[0m [PATCH v5 7/8] ppc/pnv: Add a Power11 Pnv11Chip, and a Power11 Machine
+  [32m✓[0m [PATCH v5 8/8] ppc/pnv: Update skiboot to support Power11
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: adityag@linux.ibm.com)
+---
+Total patches: 8
+---
+Applying: ppc/pnv: Add HOMER for POWER11
+Applying: ppc/pnv: Add a LPC controller for POWER11
+Applying: ppc/pnv: Add OCC for Power11
+Applying: ppc/pnv: Add a PSI bridge model for Power11
+Applying: ppc/pnv: Add SBE model for Power11
+Applying: ppc/pnv: Add ChipTOD model for Power11
+Applying: ppc/pnv: Add a Power11 Pnv11Chip, and a Power11 Machine
+Applying: ppc/pnv: Update skiboot to support Power11
+Patch failed at 0008 ppc/pnv: Update skiboot to support Power11
+error: corrupt binary patch at line 31297: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
