@@ -10,6 +10,7 @@
 #include "qemu/osdep.h"
 #include "hw/acpi/vmgenid.h"
 #include "hw/boards.h"
+#include "hw/core/sysemu-cpu-ops.h"
 #include "hw/intc/intc.h"
 #include "hw/mem/memory-device.h"
 #include "qapi/error.h"
@@ -405,4 +406,16 @@ GuidInfo *qmp_query_vm_generation_id(Error **errp)
     info = g_malloc0(sizeof(*info));
     info->guid = qemu_uuid_unparse_strdup(&vms->guid);
     return info;
+}
+
+void qmp_dump_skeys(const char *filename, Error **errp)
+{
+    CPUState *cpu = first_cpu; /* FIXME */
+
+    if (!cpu->cc->sysemu_ops->qmp_dump_skeys) {
+        error_setg(errp, "Storage keys information not available"
+                         " for this architecture");
+        return;
+    }
+    cpu->cc->sysemu_ops->qmp_dump_skeys(filename, errp);
 }
