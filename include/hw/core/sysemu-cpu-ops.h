@@ -47,6 +47,12 @@ typedef struct SysemuCPUOps {
      *       a memory access with the specified memory transaction attributes.
      */
     int (*asidx_from_attrs)(CPUState *cpu, MemTxAttrs attrs);
+
+    /**
+     * @qmp_dump_skeys: Callback to dump guest's storage keys to @filename.
+     */
+    void (*qmp_dump_skeys)(const char *filename, Error **errp);
+
     /**
      * @get_crash_info: Callback for reporting guest crash information in
      * GUEST_PANICKED events.

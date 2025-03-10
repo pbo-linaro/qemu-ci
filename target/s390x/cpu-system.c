@@ -38,6 +38,7 @@
 #include "system/system.h"
 #include "system/tcg.h"
 #include "hw/core/sysemu-cpu-ops.h"
+#include "hw/s390x/storage-keys.h"
 
 bool s390_cpu_has_work(CPUState *cs)
 {
@@ -179,6 +180,7 @@ static const struct SysemuCPUOps s390_sysemu_ops = {
     .get_phys_page_debug = s390_cpu_get_phys_page_debug,
     .get_crash_info = s390_cpu_get_crash_info,
     .write_elf64_note = s390_cpu_write_elf64_note,
+    .qmp_dump_skeys = s390_qmp_dump_skeys,
     .legacy_vmsd = &vmstate_s390_cpu,
 };
 
