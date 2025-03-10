@@ -2798,6 +2798,42 @@ static inline void address_space_stb_cached(MemoryRegionCache *cache,
     }
 }
 
+static inline uint16_t address_space_lduw_cached(MemoryRegionCache *cache,
+    hwaddr addr, MemTxAttrs attrs, MemTxResult *result)
+{
+    return address_space_lduw_cached_slow(cache, addr, attrs, result);
+}
+
+static inline void address_space_stw_cached(MemoryRegionCache *cache,
+    hwaddr addr, uint16_t val, MemTxAttrs attrs, MemTxResult *result)
+{
+    address_space_stw_cached_slow(cache, addr, val, attrs, result);
+}
+
+static inline uint32_t address_space_ldl_cached(MemoryRegionCache *cache,
+    hwaddr addr, MemTxAttrs attrs, MemTxResult *result)
+{
+    return address_space_ldl_cached_slow(cache, addr, attrs, result);
+}
+
+static inline void address_space_stl_cached(MemoryRegionCache *cache,
+    hwaddr addr, uint32_t val, MemTxAttrs attrs, MemTxResult *result)
+{
+    address_space_stl_cached_slow(cache, addr, val, attrs, result);
+}
+
+static inline uint64_t address_space_ldq_cached(MemoryRegionCache *cache,
+    hwaddr addr, MemTxAttrs attrs, MemTxResult *result)
+{
+    return address_space_ldq_cached_slow(cache, addr, attrs, result);
+}
+
+static inline void address_space_stq_cached(MemoryRegionCache *cache,
+    hwaddr addr, uint64_t val, MemTxAttrs attrs, MemTxResult *result)
+{
+    address_space_stq_cached_slow(cache, addr, val, attrs, result);
+}
+
 #define ENDIANNESS   _le
 #include "exec/memory_ldst_cached.h.inc"
 
