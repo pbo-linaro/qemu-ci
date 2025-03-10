@@ -226,8 +226,9 @@ static void pl011_loopback_tx(PL011State *s, uint32_t value)
     pl011_fifo_rx_put(s, value);
 }
 
-static void pl011_xmit(PL011State *s)
+static gboolean pl011_xmit_cb(void *do_not_use, GIOCondition cond, void *opaque)
 {
+    PL011State *s = opaque;
     int bytes_consumed;
     uint8_t buf[PL011_FIFO_DEPTH];
     uint32_t count;
@@ -254,6 +255,13 @@ static void pl011_xmit(PL011State *s)
     }
 
     pl011_update(s);
+
+    return G_SOURCE_REMOVE;
+}
+
+static void pl011_xmit(PL011State *s)
+{
+    (void)pl011_xmit_cb(NULL, G_IO_OUT, s);
 }
 
 static void pl011_write_txdata(PL011State *s, uint8_t data)
@@ -628,6 +636,11 @@ static int pl011_post_load(void *opaque, int version_id)
          */
         s->read_fifo[0] = s->read_fifo[s->read_pos];
         s->read_pos = 0;
+    }
+
+    if (!fifo8_is_empty(&s->xmit_fifo)) {
+        /* Reschedule another transmission */
+        qemu_chr_fe_add_watch(&s->chr, G_IO_OUT | G_IO_HUP, pl011_xmit_cb, s);
     }
 
     s->ibrd &= IBRD_MASK;
