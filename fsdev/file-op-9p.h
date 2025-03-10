@@ -167,6 +167,8 @@ struct FileOperations {
     bool (*has_valid_handle)(int fid_type, V9fsFidOpenState *fs);
     int (*ftruncate)(FsContext *ctx, int fid_type, V9fsFidOpenState *fs,
                      off_t size);
+    int (*futimens)(FsContext *ctx, int fid_type, V9fsFidOpenState *fs,
+                    const struct timespec *times);
 };
 
 #endif
