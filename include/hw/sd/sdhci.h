@@ -171,6 +171,8 @@ DECLARE_CLASS_CHECKERS(SDHCIClass, PCI_SDHCI,
 #define TYPE_SYSBUS_SDHCI "generic-sdhci"
 OBJECT_DECLARE_TYPE(SDHCIState, SDHCIClass, SYSBUS_SDHCI)
 
+#define TYPE_FSL_ESDHC "fsl-esdhc"
+
 #define TYPE_IMX_USDHC "imx-usdhc"
 
 #define TYPE_S3C_SDHCI "s3c-sdhci"
