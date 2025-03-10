@@ -73,6 +73,7 @@ static bool sdhci_check_capab_freq_range(SDHCIState *s, const char *desc,
 
 static void sdhci_check_capareg(SDHCIState *s, Error **errp)
 {
+    SDHCIClass *sc = s->sc;
     uint64_t msk = s->capareg;
     uint32_t val;
     bool y;
@@ -207,6 +208,11 @@ static void sdhci_check_capareg(SDHCIState *s, Error **errp)
     if (msk) {
         qemu_log_mask(LOG_UNIMP,
                       "SDHCI: unknown CAPAB mask: 0x%016" PRIx64 "\n", msk);
+    }
+    msk = sc->ro.capareg & ~s->capareg;
+    if (msk) {
+        qemu_log_mask(LOG_UNIMP,
+                      "SDHCI: ignored CAPAB mask: 0x%016" PRIx64 "\n", msk);
     }
 }
 
@@ -1407,7 +1413,9 @@ static void sdhci_init_readonly_registers(SDHCIState *s, Error **errp)
         error_setg(errp, "Only Spec v2/v3 are supported");
         return;
     }
-    s->version = (SDHC_HCVER_VENDOR << 8) | (s->sd_spec_version - 1);
+    s->version = s->sc->ro.version
+                 ?: (SDHC_HCVER_VENDOR << 8) | (s->sd_spec_version - 1);
+    s->maxcurr = s->sc->ro.maxcurr;
 
     sdhci_check_capareg(s, errp);
     if (*errp) {
