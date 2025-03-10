@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20250310081837.13123-1-chenyi.qiang@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/7] memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+  [32m✓[0m [PATCH v3 2/7] memory: Change memory_region_set_ram_discard_manager() to return the result
+  [32m✓[0m [PATCH v3 3/7] memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+  [32m✓[0m [PATCH v3 4/7] memory-attribute-manager: Introduce MemoryAttributeManager to manage RAMBLock with guest_memfd
+  [32m✓[0m [PATCH v3 5/7] memory-attribute-manager: Introduce a callback to notify the shared/private state change
+  [32m✓[0m [PATCH v3 6/7] memory: Attach MemoryAttributeManager to guest_memfd-backed RAMBlocks
+  [32m✓[0m [PATCH v3 7/7] RAMBlock: Make guest_memfd require coordinate discard
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 7
+---
+Applying: memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+Applying: memory: Change memory_region_set_ram_discard_manager() to return the result
+Applying: memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+Applying: memory-attribute-manager: Introduce MemoryAttributeManager to manage RAMBLock with guest_memfd
+Applying: memory-attribute-manager: Introduce a callback to notify the shared/private state change
+Applying: memory: Attach MemoryAttributeManager to guest_memfd-backed RAMBlocks
+Applying: RAMBlock: Make guest_memfd require coordinate discard
+Patch failed at 0007 RAMBlock: Make guest_memfd require coordinate discard
+error: patch failed: system/physmem.c:1872
+error: system/physmem.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
