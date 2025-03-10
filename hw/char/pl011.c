@@ -258,6 +258,10 @@ static gboolean pl011_xmit_cb(void *do_not_use, GIOCondition cond, void *opaque)
 
     count = fifo8_num_used(&s->xmit_fifo);
     trace_pl011_fifo_tx_xmit_used(count);
+    if (count < 1) {
+        /* FIFO empty */
+        return G_SOURCE_REMOVE;
+    }
 
     if (!qemu_chr_fe_backend_connected(&s->chr)) {
         /* Instant drain the fifo when there's no back-end. */
@@ -265,15 +269,23 @@ static gboolean pl011_xmit_cb(void *do_not_use, GIOCondition cond, void *opaque)
         return G_SOURCE_REMOVE;
     }
 
-    buf[0] = fifo8_pop(&s->xmit_fifo);
-    bytes_consumed = 1;
+    count = fifo8_peek_buf(&s->xmit_fifo, buf, fifo8_num_used(&s->xmit_fifo));
+    trace_pl011_fifo_tx_xmit_peek(count);
 
-    /*
-     * XXX this blocks entire thread. Rewrite to use
-     * qemu_chr_fe_write and background I/O callbacks
-     */
-    qemu_chr_fe_write_all(&s->chr, buf, bytes_consumed);
+    /* Transmit as much data as we can. */
+    bytes_consumed = qemu_chr_fe_write(&s->chr, buf, count);
     trace_pl011_fifo_tx_xmit_consumed(bytes_consumed);
+    if (bytes_consumed < 0) {
+        /* Error in back-end: drain the fifo. */
+        pl011_drain_tx(s);
+        return G_SOURCE_REMOVE;
+    } else if (bytes_consumed == 0) {
+        /* Couldn't send anything, try again later */
+        return G_SOURCE_CONTINUE;
+    }
+
+    /* Pop the data we could transmit. */
+    fifo8_drop(&s->xmit_fifo, bytes_consumed);
     s->int_level |= INT_TX;
     s->flags &= ~PL011_FLAG_TXFF;
 
@@ -283,6 +295,11 @@ static gboolean pl011_xmit_cb(void *do_not_use, GIOCondition cond, void *opaque)
     }
 
     pl011_update(s);
+
+    if (!emptied_fifo) {
+        /* Reschedule another transmission if we couldn't transmit all. */
+        return G_SOURCE_CONTINUE;
+    }
 
     return G_SOURCE_REMOVE;
 }
@@ -313,7 +330,9 @@ static void pl011_write_txdata(PL011State *s, uint8_t data)
     trace_pl011_fifo_tx_put(data);
     pl011_loopback_tx(s, data);
     fifo8_push(&s->xmit_fifo, data);
-    s->flags |= PL011_FLAG_TXFF;
+    if (pl011_is_tx_fifo_full(s)) {
+        s->flags |= PL011_FLAG_TXFF;
+    }
     s->flags &= ~PL011_FLAG_TXFE;
 
     pl011_xmit(s);
