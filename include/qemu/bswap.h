@@ -1,12 +1,24 @@
 #ifndef BSWAP_H
 #define BSWAP_H
 
+#include <stdbool.h>
+
 #undef  bswap16
 #define bswap16(_x) __builtin_bswap16(_x)
 #undef  bswap32
 #define bswap32(_x) __builtin_bswap32(_x)
 #undef  bswap64
 #define bswap64(_x) __builtin_bswap64(_x)
+
+/**
+ * target_words_bigendian:
+ * Returns true if the (default) endianness of the target is big endian,
+ * false otherwise.
+ * Common code should normally never need to know about the endianness of the
+ * target, so please do *not* use this function unless you know very well
+ * what you are doing!
+ */
+bool target_words_bigendian(void);
 
 static inline uint32_t bswap24(uint32_t x)
 {
