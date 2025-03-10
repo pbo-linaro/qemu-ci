@@ -355,11 +355,11 @@ static void flatview_simplify(FlatView *view)
 
 static bool memory_region_big_endian(MemoryRegion *mr)
 {
-#if TARGET_BIG_ENDIAN
-    return mr->ops->endianness != DEVICE_LITTLE_ENDIAN;
-#else
-    return mr->ops->endianness == DEVICE_BIG_ENDIAN;
-#endif
+    if (target_words_bigendian()) {
+        return mr->ops->endianness != DEVICE_LITTLE_ENDIAN;
+    } else {
+        return mr->ops->endianness == DEVICE_BIG_ENDIAN;
+    }
 }
 
 static void adjust_endianness(MemoryRegion *mr, uint64_t *data, MemOp op)
@@ -2584,7 +2584,11 @@ void memory_region_add_eventfd(MemoryRegion *mr,
     unsigned i;
 
     if (size) {
-        adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_TE);
+        if (target_words_bigendian()) {
+            adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_BE);
+        } else {
+            adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_LE);
+        }
     }
     memory_region_transaction_begin();
     for (i = 0; i < mr->ioeventfd_nb; ++i) {
@@ -2619,7 +2623,11 @@ void memory_region_del_eventfd(MemoryRegion *mr,
     unsigned i;
 
     if (size) {
-        adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_TE);
+        if (target_words_bigendian()) {
+            adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_BE);
+        } else {
+            adjust_endianness(mr, &mrfd.data, size_memop(size) | MO_LE);
+        }
     }
     memory_region_transaction_begin();
     for (i = 0; i < mr->ioeventfd_nb; ++i) {
