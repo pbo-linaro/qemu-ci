@@ -295,6 +295,7 @@ static void sdhci_set_readonly(DeviceState *dev, bool level)
 static void sdhci_reset(SDHCIState *s)
 {
     DeviceState *dev = DEVICE(s);
+    SDHCIClass *sc = s->sc;
 
     timer_del(s->insert_timer);
     timer_del(s->transfer_timer);
@@ -305,6 +306,19 @@ static void sdhci_reset(SDHCIState *s)
      * initialization
      */
     memset(&s->sdmasysad, 0, (uintptr_t)&s->capareg - (uintptr_t)&s->sdmasysad);
+
+    s->sdmasysad = sc->reset.sdmasysad;
+    s->blksize = sc->reset.blksize;
+    s->blkcnt = sc->reset.blkcnt;
+    s->prnsts = sc->reset.prnsts;
+    s->hostctl1 = sc->reset.hostctl1;
+    s->pwrcon = sc->reset.pwrcon;
+    s->blkgap = sc->reset.blkgap;
+    s->wakcon = sc->reset.wakcon;
+    s->clkcon = sc->reset.clkcon;
+    s->timeoutcon = sc->reset.timeoutcon;
+    s->norintstsen = sc->reset.norintstsen;
+    s->errintstsen = sc->reset.errintstsen;
 
     /* Reset other state based on current card insertion/readonly status */
     sdhci_set_inserted(dev, sdbus_get_inserted(&s->sdbus));
