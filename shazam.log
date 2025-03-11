@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250311141045.66620-1-shameerali.kolothum.thodi@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC v2 1/20] backends/iommufd: Introduce iommufd_backend_alloc_viommu
+  [PATCH RFC v2 2/20] backends/iommufd: Introduce iommufd_vdev_alloc
+  [PATCH RFC v2 3/20] hw/arm/smmuv3-accel: Add initial infrastructure for smmuv3-accel device
+  [PATCH RFC v2 4/20] hw/arm/virt: Add support for smmuv3-accel
+  [PATCH RFC v2 5/20] hw/arm/smmuv3-accel: Associate a pxb-pcie bus
+  [PATCH RFC v2 6/20] hw/arm/smmu-common: Factor out common helper functions and export
+  [PATCH RFC v2 7/20] hw/arm/smmu-common: Introduce callbacks for PCIIOMMUOps
+  [PATCH RFC v2 8/20] hw/arm/smmuv3-accel: Provide get_address_space callback
+  [PATCH RFC v2 9/20] hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+  [PATCH RFC v2 10/20] hw/arm/smmuv3-accel: Support nested STE install/uninstall support
+  [PATCH RFC v2 11/20] hw/arm/smmuv3-accel: Allocate a vDEVICE object for device
+  [PATCH RFC v2 12/20] hw/arm/smmuv3-accel: Return sysmem if stage-1 is bypassed
+  [PATCH RFC v2 13/20] hw/arm/smmuv3-accel: Introduce helpers to batch and issue cache invalidations
+  [PATCH RFC v2 14/20] hw/arm/smmuv3: Install nested ste for CFGI_STE
+  [PATCH RFC v2 15/20] hw/arm/smmuv3: Forward invalidation commands to hw
+  [PATCH RFC v2 16/20] hw/arm/smmuv3-accel: Read host SMMUv3 device info
+  [PATCH RFC v2 17/20] hw/arm/smmuv3: Check idr registers for STE_S1CDMAX and STE_S1STALLD
+  [PATCH RFC v2 18/20] hw/arm/smmu-common: Bypass emulated IOTLB for a accel SMMUv3
+  [PATCH RFC v2 19/20] hw/arm/virt-acpi-build: Update IORT with multiple smmuv3-accel nodes
+  [PATCH RFC v2 20/20] hw/arm/smmuv3-accel: Enable smmuv3-accel creation
+---
+Total patches: 20
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_viommu
+Patch failed at 0001 backends/iommufd: Introduce iommufd_backend_alloc_viommu
+error: patch failed: backends/iommufd.c:341
+error: backends/iommufd.c: patch does not apply
+error: patch failed: backends/trace-events:19
+error: backends/trace-events: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
