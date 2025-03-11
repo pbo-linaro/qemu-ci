@@ -335,15 +335,17 @@ static void luring_deferred_fn(void *opaque)
  *
  */
 static int luring_do_submit(int fd, LuringAIOCB *luringcb, LuringState *s,
-                            uint64_t offset, int type)
+                            uint64_t offset, int type, BdrvRequestFlags flags)
 {
     int ret;
     struct io_uring_sqe *sqes = &luringcb->sqeq;
+    int luring_flags;
 
     switch (type) {
     case QEMU_AIO_WRITE:
-        io_uring_prep_writev(sqes, fd, luringcb->qiov->iov,
-                             luringcb->qiov->niov, offset);
+        luring_flags = (flags & BDRV_REQ_FUA) ? RWF_DSYNC : 0;
+        io_uring_prep_writev2(sqes, fd, luringcb->qiov->iov,
+                              luringcb->qiov->niov, offset, luring_flags);
         break;
     case QEMU_AIO_ZONE_APPEND:
         io_uring_prep_writev(sqes, fd, luringcb->qiov->iov,
@@ -380,7 +382,8 @@ static int luring_do_submit(int fd, LuringAIOCB *luringcb, LuringState *s,
 }
 
 int coroutine_fn luring_co_submit(BlockDriverState *bs, int fd, uint64_t offset,
-                                  QEMUIOVector *qiov, int type)
+                                  QEMUIOVector *qiov, int type,
+                                  BdrvRequestFlags flags)
 {
     int ret;
     AioContext *ctx = qemu_get_current_aio_context();
@@ -393,7 +396,7 @@ int coroutine_fn luring_co_submit(BlockDriverState *bs, int fd, uint64_t offset,
     };
     trace_luring_co_submit(bs, s, &luringcb, fd, offset, qiov ? qiov->size : 0,
                            type);
-    ret = luring_do_submit(fd, &luringcb, s, offset, type);
+    ret = luring_do_submit(fd, &luringcb, s, offset, type, flags);
 
     if (ret < 0) {
         return ret;

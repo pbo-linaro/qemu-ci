@@ -17,6 +17,7 @@
 #define QEMU_RAW_AIO_H
 
 #include "block/aio.h"
+#include "block/block-common.h"
 #include "qemu/iov.h"
 
 /* AIO request types */
@@ -58,9 +59,11 @@ void laio_cleanup(LinuxAioState *s);
 
 /* laio_co_submit: submit I/O requests in the thread's current AioContext. */
 int coroutine_fn laio_co_submit(int fd, uint64_t offset, QEMUIOVector *qiov,
-                                int type, uint64_t dev_max_batch);
+                                int type, BdrvRequestFlags flags,
+                                uint64_t dev_max_batch);
 
 bool laio_has_fdsync(int);
+bool laio_has_fua(void);
 void laio_detach_aio_context(LinuxAioState *s, AioContext *old_context);
 void laio_attach_aio_context(LinuxAioState *s, AioContext *new_context);
 #endif
@@ -71,7 +74,8 @@ void luring_cleanup(LuringState *s);
 
 /* luring_co_submit: submit I/O requests in the thread's current AioContext. */
 int coroutine_fn luring_co_submit(BlockDriverState *bs, int fd, uint64_t offset,
-                                  QEMUIOVector *qiov, int type);
+                                  QEMUIOVector *qiov, int type,
+                                  BdrvRequestFlags flags);
 void luring_detach_aio_context(LuringState *s, AioContext *old_context);
 void luring_attach_aio_context(LuringState *s, AioContext *new_context);
 #endif
