@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20250311162824.199721-1-cohuck@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 19 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/14] arm/cpu: Add sysreg definitions in cpu-sysregs.h
+  [32m✓[0m [PATCH v3 2/14] arm/kvm: add accessors for storing host features into idregs
+  [32m✓[0m [PATCH v3 3/14] arm/cpu: Store aa64isar0/aa64zfr0 into the idregs arrays
+  [32m✓[0m [PATCH v3 4/14] arm/cpu: Store aa64isar1/2 into the idregs array
+  [32m✓[0m [PATCH v3 5/14] arm/cpu: Store aa64pfr0/1 into the idregs array
+  [32m✓[0m [PATCH v3 6/14] arm/cpu: Store aa64mmfr0-3 into the idregs array
+  [32m✓[0m [PATCH v3 7/14] arm/cpu: Store aa64dfr0/1 into the idregs array
+  [32m✓[0m [PATCH v3 8/14] arm/cpu: Store aa64smfr0 into the idregs array
+  [32m✓[0m [PATCH v3 9/14] arm/cpu: Store id_isar0-7 into the idregs array
+  [32m✓[0m [PATCH v3 10/14] arm/cpu: Store id_pfr0/1/2 into the idregs array
+  [32m✓[0m [PATCH v3 11/14] arm/cpu: Store id_dfr0/1 into the idregs array
+  [32m✓[0m [PATCH v3 12/14] arm/cpu: Store id_mmfr0-5 into the idregs array
+  [32m✓[0m [PATCH v3 13/14] arm/cpu: Add sysreg generation scripts
+  [32m✓[0m [PATCH v3 14/14] arm/cpu: switch to a generated cpu-sysregs.h.inc
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: arm/cpu: Add sysreg definitions in cpu-sysregs.h
+Applying: arm/kvm: add accessors for storing host features into idregs
+Applying: arm/cpu: Store aa64isar0/aa64zfr0 into the idregs arrays
+Applying: arm/cpu: Store aa64isar1/2 into the idregs array
+Applying: arm/cpu: Store aa64pfr0/1 into the idregs array
+Applying: arm/cpu: Store aa64mmfr0-3 into the idregs array
+Patch failed at 0006 arm/cpu: Store aa64mmfr0-3 into the idregs array
+error: patch failed: target/arm/hvf/hvf.c:898
+error: target/arm/hvf/hvf.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
