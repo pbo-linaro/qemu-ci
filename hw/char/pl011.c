@@ -85,7 +85,6 @@ DeviceState *pl011_create(hwaddr addr, qemu_irq irq, Chardev *chr)
 #define CR_OUT1     (1 << 12)
 #define CR_RTS      (1 << 11)
 #define CR_DTR      (1 << 10)
-#define CR_RXE      (1 << 9)
 #define CR_TXE      (1 << 8)
 #define CR_LBE      (1 << 7)
 #define CR_UARTEN   (1 << 0)
@@ -490,16 +489,9 @@ static int pl011_can_receive(void *opaque)
     unsigned fifo_depth = pl011_get_fifo_depth(s);
     unsigned fifo_available = fifo_depth - s->read_count;
 
-    if (!(s->cr & CR_UARTEN)) {
-        qemu_log_mask(LOG_GUEST_ERROR,
-                      "PL011 receiving data on disabled UART\n");
-    }
-    if (!(s->cr & CR_RXE)) {
-        qemu_log_mask(LOG_GUEST_ERROR,
-                      "PL011 receiving data on disabled RX UART\n");
-    }
-    trace_pl011_can_receive(s->lcr, s->read_count, fifo_depth, fifo_available);
+    /* Should check enable and return 0? */
 
+    trace_pl011_can_receive(s->lcr, s->read_count, fifo_depth, fifo_available);
     return fifo_available;
 }
 
