@@ -736,6 +736,14 @@ static void fs_use_after_unlink(void *obj, void *data,
         .data = buf
     }).count;
     g_assert_cmpint(count, ==, write_count);
+
+    /* truncate file to (arbitrarily chosen) size 2001 */
+    tsetattr({
+        .client = v9p, .fid = fid_file, .attr = (v9fs_attr) {
+            .valid = P9_SETATTR_SIZE,
+            .size = 2001
+        }
+     });
 }
 
 static void cleanup_9p_local_driver(void *data)
