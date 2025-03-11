@@ -174,13 +174,10 @@ class Asset:
                 try:
                     asset.fetch()
                 except HTTPError as e:
-                    # Treat 404 as fatal, since it is highly likely to
-                    # indicate a broken test rather than a transient
-                    # server or networking problem
-                    if e.code == 404:
-                        raise
-
                     log.debug(f"HTTP error {e.code} from {asset.url} " +
+                              "skipping asset precache")
+                except:
+                    log.debug(f"Error from {asset.url} " +
                               "skipping asset precache")
 
         log.removeHandler(handler)
