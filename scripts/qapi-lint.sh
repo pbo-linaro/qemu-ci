@@ -35,7 +35,7 @@ if [[ -f ../docs/sphinx/qapi_domain.py ]]; then
     pushd ../docs/sphinx
 
     set -x
-    mypy --strict $files
+    PYTHONPATH=../../scripts/ mypy --follow-untyped-imports --strict $files qapidoc.py
     flake8 --max-line-length=79 $files qapidoc.py
     isort -c $files qapidoc.py
     black --line-length 79 --check $files qapidoc.py
