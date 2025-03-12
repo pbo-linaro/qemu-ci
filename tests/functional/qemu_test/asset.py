@@ -116,7 +116,10 @@ class Asset:
         self.log.info("Downloading %s to %s...", self.url, self.cache_file)
         tmp_cache_file = self.cache_file.with_suffix(".download")
 
-        for retries in range(3):
+        for retries in range(4):
+            if retries == 3:
+                raise Exception("Retries exceeded downloading %s", self.url)
+
             try:
                 with tmp_cache_file.open("xb") as dst:
                     with urllib.request.urlopen(self.url) as resp:
