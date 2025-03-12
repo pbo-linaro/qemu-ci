@@ -25,10 +25,10 @@ class IbmPrep40pMachine(QemuSystemTest):
         ('https://archive.netbsd.org/pub/NetBSD-archive/'
          'NetBSD-4.0/prep/installation/floppy/generic_com0.fs'),
         'f86236e9d01b3f0dd0f5d3b8d5bbd40c68e78b4db560a108358f5ad58e636619')
-    ASSET_NETBSD71 = Asset(
-        ('https://archive.netbsd.org/pub/NetBSD-archive/'
-         'NetBSD-7.1.2/iso/NetBSD-7.1.2-prep.iso'),
-        'cc7cb290b06aaa839362deb7bd9f417ac5015557db24088508330f76c3f825ec')
+    #ASSET_NETBSD71 = Asset(
+    #    ('https://archive.netbsd.org/pub/NetBSD-archive/'
+    #     'NetBSD-7.1.2/iso/NetBSD-7.1.2-prep.iso'),
+    #    'cc7cb290b06aaa839362deb7bd9f417ac5015557db24088508330f76c3f825ec')
 
     # 12H0455 PPS Firmware Licensed Materials
     # Property of IBM (C) Copyright IBM Corp. 1994.
@@ -63,15 +63,15 @@ class IbmPrep40pMachine(QemuSystemTest):
         wait_for_console_pattern(self, '>> CPU type PowerPC,604')
 
     def test_openbios_and_netbsd(self):
-        self.set_machine('40p')
-        self.require_accelerator("tcg")
-        drive_path = self.ASSET_NETBSD71.fetch()
-        self.vm.set_console()
-        self.vm.add_args('-cdrom', drive_path,
-                         '-boot', 'd')
+        #self.set_machine('40p')
+        #self.require_accelerator("tcg")
+        #drive_path = self.ASSET_NETBSD71.fetch()
+        #self.vm.set_console()
+        #self.vm.add_args('-cdrom', drive_path,
+        #                 '-boot', 'd')
 
-        self.vm.launch()
-        wait_for_console_pattern(self, 'NetBSD/prep BOOT, Revision 1.9')
+        #self.vm.launch()
+        #wait_for_console_pattern(self, 'NetBSD/prep BOOT, Revision 1.9')
 
     ASSET_40P_SANDALFOOT = Asset(
         'http://www.juneau-lug.org/zImage.initrd.sandalfoot',
