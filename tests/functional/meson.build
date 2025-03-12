@@ -103,7 +103,7 @@ tests_aarch64_system_thorough = [
   'aarch64_tcg_plugins',
   'aarch64_tuxrun',
   'aarch64_virt',
-  'aarch64_virt_gpu',
+  # 'aarch64_virt_gpu', # missing vulkaninfo in container
   'aarch64_xen',
   'aarch64_xlnx_versal',
   'multiprocess',
