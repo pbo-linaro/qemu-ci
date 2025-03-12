@@ -146,6 +146,15 @@ The following machine-specific options are supported:
 
   Enables the riscv-iommu-sys platform device. Defaults to 'off'.
 
+- iopmp=[on|off]
+
+  When this option is "on", IOPMP devices are added to machine. IOPMP checks
+  memory transcations in system memory. This option is assumed to be "off". To
+  enable the CPU to perform transactions with a specified RRID, use the CPU
+  option "-cpu <cpu>,iopmp=true,iopmp_rrid=<rrid>"
+
+  See :ref:`riscv-iopmp` for configurations of IOPMP
+
 Running Linux kernel
 --------------------
 
