@@ -7,9 +7,22 @@ eBPF RSS virtio-net support
 RSS(Receive Side Scaling) is used to distribute network packets to guest virtqueues
 by calculating packet hash. Usually every queue is processed then by a specific guest CPU core.
 
-For now there are 2 RSS implementations in qemu:
-- 'in-qemu' RSS (functions if qemu receives network packets, i.e. vhost=off)
-- eBPF RSS (can function with also with vhost=on)
+For now there are 3 RSS implementations in qemu:
+1. Peer RSS
+2. eBPF RSS
+3. 'In-QEMU' RSS
+
+'In-QEMU' RSS is incompatible with vhost since the packets are not routed to
+QEMU. eBPF RSS requires Linux 5.8+. Peer RSS requires the peer to implement RSS.
+Currently QEMU can use the RSS implementation of vDPA and Linux's TUN module
+with the following patch applied:
+https://lore.kernel.org/r/20240915-rss-v3-0-c630015db082@daynix.com/
+
+eBPF RSS does not support hash reporting. Peer RSS may support limited hash
+types.
+
+virtio-net automatically chooses the RSS implementation to use. Peer RSS is
+the most preferred, and 'in-QEMU' RSS is the least.
 
 eBPF support (CONFIG_EBPF) is enabled by 'configure' script.
 To enable eBPF RSS support use './configure --enable-bpf'.
@@ -49,9 +62,6 @@ eBPF RSS turned on by different combinations of vhost-net, vitrio-net and tap co
 
         tap,vhost=on & virtio-net-pci,rss=on,hash=on
 
-If CONFIG_EBPF is not set then only 'in-qemu' RSS is supported.
-Also 'in-qemu' RSS, as a fallback, is used if the eBPF program failed to load or set to TUN.
-
 RSS eBPF program
 ----------------
 
@@ -67,7 +77,6 @@ Prerequisites to recompile the eBPF program (regenerate ebpf/rss.bpf.skeleton.h)
         $ make -f Makefile.ebpf
 
 Current eBPF RSS implementation uses 'bounded loops' with 'backward jump instructions' which present in the last kernels.
-Overall eBPF RSS works on kernels 5.8+.
 
 eBPF RSS implementation
 -----------------------
