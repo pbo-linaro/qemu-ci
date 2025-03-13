@@ -27,7 +27,7 @@
 #include "qapi/error.h"
 #include "qapi/qapi-events-vfio.h"
 #include "exec/ramlist.h"
-#include "exec/ram_addr.h"
+#include "system/ram_addr.h"
 #include "pci.h"
 #include "trace.h"
 #include "hw/hw.h"
