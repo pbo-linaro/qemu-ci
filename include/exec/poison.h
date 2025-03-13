@@ -67,4 +67,9 @@
 #pragma GCC poison CONFIG_WHPX
 #pragma GCC poison CONFIG_XEN
 
+#ifndef COMPILING_SYSTEM_VS_USER
+#pragma GCC poison CONFIG_USER_ONLY
+#pragma GCC poison CONFIG_SOFTMMU
+#endif
+
 #endif
