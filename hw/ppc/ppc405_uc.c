@@ -36,7 +36,7 @@
 #include "qemu/timer.h"
 #include "system/reset.h"
 #include "system/system.h"
-#include "exec/address-spaces.h"
+#include "system/address-spaces.h"
 #include "hw/intc/ppc-uic.h"
 #include "trace.h"
 

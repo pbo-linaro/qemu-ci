@@ -15,7 +15,7 @@
 #include <linux/kvm.h>
 #endif
 #include "system/kvm.h"
-#include "exec/address-spaces.h"
+#include "system/address-spaces.h"
 
 #include "hw/vfio/vfio-common.h"
 #include "hw/hw.h"
