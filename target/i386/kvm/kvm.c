@@ -2772,7 +2772,7 @@ static void *kvm_msr_energy_thread(void *data)
                  */
                 if (thd_stat[j].pkg_id == i) {
                     pkg_stat[i].e_start =
-                    vmsr_read_msr(MSR_PKG_ENERGY_STATUS,
+                    vmsr_read_msr(s->msr_energy.msr_value_addr,
                                   thd_stat[j].cpu_id,
                                   thd_stat[j].thread_id,
                                   s->msr_energy.sioc);
@@ -2796,7 +2796,7 @@ static void *kvm_msr_energy_thread(void *data)
                  */
                 if (thd_stat[j].pkg_id == i) {
                     pkg_stat[i].e_end =
-                    vmsr_read_msr(MSR_PKG_ENERGY_STATUS,
+                    vmsr_read_msr(s->msr_energy.msr_value_addr,
                                   thd_stat[j].cpu_id,
                                   thd_stat[j].thread_id,
                                   s->msr_energy.sioc);
@@ -2936,12 +2936,23 @@ static int kvm_msr_energy_thread_init(KVMState *s, MachineState *ms)
 
     /*
      * Sanity check
-     * 1. Host cpu must be Intel cpu
+     * 1. Host cpu must be Intel or AMD cpu
      * 2. RAPL must be enabled on the Host
      */
-    if (!is_host_cpu_intel()) {
+    if (is_host_cpu_intel()) {
+        r->msr_value_addr = MSR_PKG_ENERGY_STATUS;
+        r->msr_unit_addr  = MSR_RAPL_POWER_UNIT;
+        r->msr_limit_addr = MSR_PKG_POWER_LIMIT;
+        r->msr_info_addr  = MSR_PKG_POWER_INFO;
+    } else if (is_host_cpu_amd()) {
+        r->msr_value_addr = MSR_AMD_PKG_ENERGY_STATUS;
+        r->msr_unit_addr  = MSR_AMD_RAPL_POWER_UNIT;
+        /* The following MSR are not available on AMD CPU */
+        r->msr_limit_addr = 0;
+        r->msr_info_addr  = 0;
+    } else {
         error_report("The RAPL feature can only be enabled on hosts "
-                     "with Intel CPU models");
+                     "with Intel or AMD CPU models");
         return -1;
     }
 
@@ -3008,15 +3019,20 @@ static int kvm_msr_energy_thread_init(KVMState *s, MachineState *ms)
     }
 
     /* Those MSR values should not change */
-    r->msr_unit  = vmsr_read_msr(MSR_RAPL_POWER_UNIT, 0, r->pid,
+    r->msr_unit  = vmsr_read_msr(r->msr_unit_addr, 0, r->pid,
                                     s->msr_energy.sioc);
-    r->msr_limit = vmsr_read_msr(MSR_PKG_POWER_LIMIT, 0, r->pid,
-                                    s->msr_energy.sioc);
-    r->msr_info  = vmsr_read_msr(MSR_PKG_POWER_INFO, 0, r->pid,
-                                    s->msr_energy.sioc);
-    if (r->msr_unit == 0 || r->msr_limit == 0 || r->msr_info == 0) {
-        error_report("can't read any virtual msr");
+
+    if (r->msr_unit == 0) {
+        error_report("Can't read Unit info virtual msr");
         return -1;
+    }
+
+    /* Only Intel CPU expose those MSR */
+    if (!r->msr_limit_addr == 0 || !r->msr_info_addr == 0) {
+        r->msr_limit = vmsr_read_msr(r->msr_limit_addr, 0, r->pid,
+                                        s->msr_energy.sioc);
+        r->msr_info  = vmsr_read_msr(r->msr_info_addr, 0, r->pid,
+                                        s->msr_energy.sioc);
     }
 
     qemu_thread_create(&r->msr_thr, "kvm-msr",
@@ -3164,35 +3180,52 @@ static int kvm_vm_enable_energy_msrs(KVMState *s)
     int ret;
 
     if (s->msr_energy.enable == true) {
-        ret = kvm_filter_msr(s, MSR_RAPL_POWER_UNIT,
-                             kvm_rdmsr_rapl_power_unit, NULL);
-        if (ret < 0) {
-            error_report("Could not install MSR_RAPL_POWER_UNIT handler: %s",
-                         strerror(-ret));
-            return ret;
-        }
+        if (is_host_cpu_intel()) {
+            ret = kvm_filter_msr(s, MSR_RAPL_POWER_UNIT,
+                                 kvm_rdmsr_rapl_power_unit, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL POWER UNIT handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
 
-        ret = kvm_filter_msr(s, MSR_PKG_POWER_LIMIT,
-                             kvm_rdmsr_pkg_power_limit, NULL);
-        if (ret < 0) {
-            error_report("Could not install MSR_PKG_POWER_LIMIT handler: %s",
-                         strerror(-ret));
-            return ret;
-        }
+            ret = kvm_filter_msr(s, MSR_PKG_POWER_LIMIT,
+                                 kvm_rdmsr_pkg_power_limit, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL POWER LIMIT handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
 
-        ret = kvm_filter_msr(s, MSR_PKG_POWER_INFO,
-                             kvm_rdmsr_pkg_power_info, NULL);
-        if (ret < 0) {
-            error_report("Could not install MSR_PKG_POWER_INFO handler: %s",
-                         strerror(-ret));
-            return ret;
-        }
-        ret = kvm_filter_msr(s, MSR_PKG_ENERGY_STATUS,
-                             kvm_rdmsr_pkg_energy_status, NULL);
-        if (ret < 0) {
-            error_report("Could not install MSR_PKG_ENERGY_STATUS handler: %s",
-                         strerror(-ret));
-            return ret;
+            ret = kvm_filter_msr(s, MSR_PKG_POWER_INFO,
+                                 kvm_rdmsr_pkg_power_info, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL POWER INFO handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
+            ret = kvm_filter_msr(s, MSR_PKG_ENERGY_STATUS,
+                                 kvm_rdmsr_pkg_energy_status, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL ENERGY STATUS handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
+        } else if (is_host_cpu_amd()) {
+            ret = kvm_filter_msr(s, MSR_AMD_RAPL_POWER_UNIT,
+                                 kvm_rdmsr_rapl_power_unit, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL POWER UNIT handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
+            ret = kvm_filter_msr(s, MSR_AMD_PKG_ENERGY_STATUS,
+                                 kvm_rdmsr_pkg_energy_status, NULL);
+            if (ret < 0) {
+                error_report("Could not install RAPL ENERGY STATUS handler: %s",
+                             strerror(-ret));
+                return ret;
+            }
         }
     }
     return 0;

@@ -76,6 +76,10 @@ struct KVMMsrEnergy {
     X86CPUTopoInfo guest_topo_info;
     KVMHostTopoInfo host_topo;
     const CPUArchIdList *guest_cpu_list;
+    uint64_t msr_value_addr;
+    uint64_t msr_unit_addr;
+    uint64_t msr_limit_addr;
+    uint64_t msr_info_addr;
     uint64_t *msr_value;
     uint64_t msr_unit;
     uint64_t msr_limit;

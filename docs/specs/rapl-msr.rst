@@ -20,10 +20,14 @@ At the moment the following MSRs are involved:
 
 .. code:: C
 
+    // Intel CPU
     #define MSR_RAPL_POWER_UNIT             0x00000606
     #define MSR_PKG_POWER_LIMIT             0x00000610
     #define MSR_PKG_ENERGY_STATUS           0x00000611
     #define MSR_PKG_POWER_INFO              0x00000614
+    // AMD CPU
+    #define MSR_AMD_RAPL_POWER_UNIT         0xc0010299
+    #define MSR_AMD_PKG_ENERGY_STATUS       0xc001029b
 
 The ``*_POWER_UNIT``, ``*_POWER_LIMIT``, ``*_POWER INFO`` are part of the RAPL
 spec and specify the power limit of the package, provide range of parameter(min
@@ -32,18 +36,18 @@ counter to calculate the power. Those MSRs are populated once at the beginning
 by reading the host CPU MSRs and are given back to the guest 1:1 when
 requested.
 
-The MSR_PKG_ENERGY_STATUS is a counter; it represents the total amount of
+The ``*_PKG_ENERGY_STATUS`` is a counter; it represents the total amount of
 energy consumed since the last time the register was cleared. If you multiply
 it with the UNIT provided above you'll get the power in micro-joules. This
 counter is always increasing and it increases more or less faster depending on
 the consumption of the package. This counter is supposed to overflow at some
 point.
 
-Each core belonging to the same Package reading the MSR_PKG_ENERGY_STATUS (i.e
-"rdmsr 0x611") will retrieve the same value. The value represents the energy
-for the whole package. Whatever Core reading it will get the same value and a
-core that belongs to PKG-0 will not be able to get the value of PKG-1 and
-vice-versa.
+Each core belonging to the same Package reading the ``*_PKG_ENERGY_STATUS`` (i.e
+"rdmsr 0x611" for Intel CPU) will retrieve the same value. The value represents
+the energy for the whole package. Whatever Core reading it will get the same
+value and a core that belongs to PKG-0 will not be able to get the value of
+PKG-1 and vice-versa.
 
 High level implementation
 -------------------------
@@ -146,9 +150,6 @@ See the qemu-pr-helper documentation or manpage for further details.
 Current Limitations
 -------------------
 
-- Works only on Intel host CPUs because AMD CPUs are using different MSR
-  addresses.
-
-- Only the Package Power-Plane (MSR_PKG_ENERGY_STATUS) is reported at the
+- Only the Package Power-Plane (``*_PKG_ENERGY_STATUS``) is reported at the
   moment.
 

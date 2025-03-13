@@ -26,3 +26,7 @@
 #define MSR_PKG_POWER_LIMIT             0x00000610
 #define MSR_PKG_ENERGY_STATUS           0x00000611
 #define MSR_PKG_POWER_INFO              0x00000614
+
+/* AMD Specific RAPL MSR */
+#define MSR_AMD_RAPL_POWER_UNIT         0xc0010299
+#define MSR_AMD_PKG_ENERGY_STATUS       0xc001029b

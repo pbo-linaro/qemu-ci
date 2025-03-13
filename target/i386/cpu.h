@@ -420,6 +420,8 @@ typedef enum X86Seg {
 #define MSR_ARCH_LBR_FROM_0             0x00001500
 #define MSR_ARCH_LBR_TO_0               0x00001600
 #define MSR_ARCH_LBR_INFO_0             0x00001200
+#define MSR_AMD_RAPL_POWER_UNIT         0xc0010299
+#define MSR_AMD_PKG_ENERGY_STATUS       0xc001029b
 
 #define FEATURE_CONTROL_LOCKED                    (1<<0)
 #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX  (1ULL << 1)

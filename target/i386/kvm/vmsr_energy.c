@@ -37,6 +37,16 @@ bool is_host_cpu_intel(void)
     return g_str_equal(vendor, CPUID_VENDOR_INTEL);
 }
 
+bool is_host_cpu_amd(void)
+{
+    int family, model, stepping;
+    char vendor[CPUID_VENDOR_SZ + 1];
+
+    host_cpu_vendor_fms(vendor, &family, &model, &stepping);
+
+    return g_str_equal(vendor, CPUID_VENDOR_AMD);
+}
+
 int is_rapl_enabled(void)
 {
     const char *path = "/sys/class/powercap/intel-rapl/enabled";

@@ -48,6 +48,15 @@
 
 #define MSR_PATH_TEMPLATE "/dev/cpu/%u/msr"
 
+/* Constants for Intel and AMD vendor IDs */
+#define INTEL_VENDOR_ID_EBX 0x756e6547
+#define INTEL_VENDOR_ID_ECX 0x6c65746e
+#define INTEL_VENDOR_ID_EDX 0x49656e69
+
+#define AMD_VENDOR_ID_EBX 0x68747541
+#define AMD_VENDOR_ID_ECX 0x444d4163
+#define AMD_VENDOR_ID_EDX 0x69746e65
+
 static char *socket_path;
 static char *pidfile;
 static enum { RUNNING, TERMINATE, TERMINATING } state;
@@ -69,27 +78,29 @@ static void compute_default_paths(void)
     pidfile = g_build_filename(state, "run", "qemu-vmsr-helper.pid", NULL);
 }
 
-static int is_intel_processor(void)
+static void get_cpu_vendor_ids(uint32_t *ebx, uint32_t *ecx, uint32_t *edx)
 {
-    int result;
-    int ebx, ecx, edx;
-
-    /* Execute CPUID instruction with eax=0 (basic identification) */
     asm volatile (
         "cpuid"
-        : "=b" (ebx), "=c" (ecx), "=d" (edx)
+        : "=b" (*ebx), "=c" (*ecx), "=d" (*edx)
         : "a" (0)
     );
+}
 
-    /*
-     *  Check if processor is "GenuineIntel"
-     *  0x756e6547 = "Genu"
-     *  0x49656e69 = "ineI"
-     *  0x6c65746e = "ntel"
-     */
-    result = (ebx == 0x756e6547) && (edx == 0x49656e69) && (ecx == 0x6c65746e);
+static int is_intel_processor(void)
+{
+    uint32_t ebx, ecx, edx;
+    get_cpu_vendor_ids(&ebx, &ecx, &edx);
+    return (ebx == INTEL_VENDOR_ID_EBX) && (ecx == INTEL_VENDOR_ID_ECX)
+        && (edx == INTEL_VENDOR_ID_EDX);
+}
 
-    return result;
+static int is_amd_processor(void)
+{
+    uint32_t ebx, ecx, edx;
+    get_cpu_vendor_ids(&ebx, &ecx, &edx);
+    return (ebx == AMD_VENDOR_ID_EBX) && (ecx == AMD_VENDOR_ID_ECX)
+        && (edx == AMD_VENDOR_ID_EDX);
 }
 
 static int is_rapl_enabled(void)
@@ -137,6 +148,8 @@ static bool is_msr_allowed(uint32_t reg)
     case MSR_PKG_POWER_LIMIT:
     case MSR_PKG_ENERGY_STATUS:
     case MSR_PKG_POWER_INFO:
+    case MSR_AMD_RAPL_POWER_UNIT:
+    case MSR_AMD_PKG_ENERGY_STATUS:
         return true;
     default:
         return false;
@@ -369,11 +382,11 @@ int main(int argc, char **argv)
 
     /*
      * Sanity check
-     * 1. cpu must be Intel cpu
+     * 1. cpu must be Intel or AMD cpu
      * 2. RAPL must be enabled
      */
-    if (!is_intel_processor()) {
-        error_report("error: CPU is not INTEL cpu");
+    if (!is_intel_processor() && !is_amd_processor()) {
+        error_report("error: CPU is neither INTEL nor AMD cpu");
         exit(EXIT_FAILURE);
     }
 

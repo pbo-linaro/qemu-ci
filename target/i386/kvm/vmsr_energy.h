@@ -95,5 +95,6 @@ double vmsr_get_ratio(uint64_t e_delta,
                       unsigned int maxticks);
 void vmsr_init_topo_info(X86CPUTopoInfo *topo_info, const MachineState *ms);
 bool is_host_cpu_intel(void);
+bool is_host_cpu_amd(void);
 int is_rapl_enabled(void);
 #endif /* VMSR_ENERGY_H */
