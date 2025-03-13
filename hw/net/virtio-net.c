@@ -1712,7 +1712,11 @@ static size_t receive_header(VirtIONet *n, struct virtio_net_hdr *hdr,
 {
     size_t hdr_len = n->guest_hdr_len;
 
-    memcpy(hdr, buf, sizeof(struct virtio_net_hdr));
+    memcpy(hdr, buf,
+           n->rss_data.populate_hash &&
+           n->rss_data.enabled && !n->rss_data.enabled_software_rss ?
+           sizeof(struct virtio_net_hdr_v1_hash) :
+           sizeof(struct virtio_net_hdr));
 
     *buf_offset = n->host_hdr_len;
     work_around_broken_dhclient(hdr, &hdr_len, buf, buf_size, buf_offset);
@@ -3111,11 +3115,13 @@ static uint64_t virtio_net_get_features(VirtIODevice *vdev, uint64_t features,
     }
 
     if (!get_vhost_net(nc->peer)) {
-        if (!use_own_hash) {
-            virtio_clear_feature(&features, VIRTIO_NET_F_HASH_REPORT);
-            virtio_clear_feature(&features, VIRTIO_NET_F_RSS);
-        } else if (virtio_has_feature(features, VIRTIO_NET_F_RSS)) {
-            virtio_net_load_ebpf(n, errp);
+        if (!use_peer_hash) {
+            if (!use_own_hash) {
+                virtio_clear_feature(&features, VIRTIO_NET_F_HASH_REPORT);
+                virtio_clear_feature(&features, VIRTIO_NET_F_RSS);
+            } else if (virtio_has_feature(features, VIRTIO_NET_F_RSS)) {
+                virtio_net_load_ebpf(n, errp);
+            }
         }
 
         return features;
