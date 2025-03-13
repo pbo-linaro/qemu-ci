@@ -221,6 +221,11 @@ void tap_fd_set_vnet_hdr_len(int fd, int len)
 {
 }
 
+void tap_fd_set_vnet_hash(int fd, const NetVnetHash *hash)
+{
+    g_assert_not_reached();
+}
+
 int tap_fd_set_vnet_le(int fd, int is_le)
 {
     return -EINVAL;

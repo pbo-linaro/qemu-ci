@@ -205,6 +205,11 @@ void tap_fd_set_vnet_hdr_len(int fd, int len)
     }
 }
 
+void tap_fd_set_vnet_hash(int fd, const NetVnetHash *hash)
+{
+    assert(!ioctl(fd, TUNSETVNETHASH, hash));
+}
+
 int tap_fd_set_vnet_le(int fd, int is_le)
 {
     int arg = is_le ? 1 : 0;

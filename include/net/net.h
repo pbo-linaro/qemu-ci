@@ -35,6 +35,20 @@ typedef struct NICConf {
     int32_t bootindex;
 } NICConf;
 
+#define NET_VNET_HASH_REPORT 1
+#define NET_VNET_HASH_RSS 2
+
+typedef struct NetVnetHash {
+    uint16_t flags;
+    uint8_t pad[2];
+    uint32_t types;
+} NetVnetHash;
+
+typedef struct NetVnetHashRss {
+    uint16_t indirection_table_mask;
+    uint16_t unclassified_queue;
+} NetVnetHashRss;
+
 #define DEFINE_NIC_PROPERTIES(_state, _conf)                            \
     DEFINE_PROP_MACADDR("mac",   _state, _conf.macaddr),                \
     DEFINE_PROP_NETDEV("netdev", _state, _conf.peers)
@@ -61,6 +75,7 @@ typedef void (SetOffload)(NetClientState *, int, int, int, int, int, int, int);
 typedef int (GetVnetHdrLen)(NetClientState *);
 typedef void (SetVnetHdrLen)(NetClientState *, int);
 typedef bool (GetVnetHashSupportedTypes)(NetClientState *, uint32_t *);
+typedef void (SetVnetHash)(NetClientState *, const NetVnetHash *);
 typedef int (SetVnetLE)(NetClientState *, bool);
 typedef int (SetVnetBE)(NetClientState *, bool);
 typedef struct SocketReadState SocketReadState;
@@ -91,6 +106,7 @@ typedef struct NetClientInfo {
     SetVnetLE *set_vnet_le;
     SetVnetBE *set_vnet_be;
     GetVnetHashSupportedTypes *get_vnet_hash_supported_types;
+    SetVnetHash *set_vnet_hash;
     NetAnnounce *announce;
     SetSteeringEBPF *set_steering_ebpf;
     NetCheckPeerType *check_peer_type;
@@ -192,6 +208,7 @@ void qemu_set_offload(NetClientState *nc, int csum, int tso4, int tso6,
 int qemu_get_vnet_hdr_len(NetClientState *nc);
 void qemu_set_vnet_hdr_len(NetClientState *nc, int len);
 bool qemu_get_vnet_hash_supported_types(NetClientState *nc, uint32_t *types);
+void qemu_set_vnet_hash(NetClientState *nc, const NetVnetHash *hash);
 int qemu_set_vnet_le(NetClientState *nc, bool is_le);
 int qemu_set_vnet_be(NetClientState *nc, bool is_be);
 void qemu_macaddr_default_if_unset(MACAddr *macaddr);

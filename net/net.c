@@ -582,6 +582,11 @@ bool qemu_get_vnet_hash_supported_types(NetClientState *nc, uint32_t *types)
     return nc->info->get_vnet_hash_supported_types(nc, types);
 }
 
+void qemu_set_vnet_hash(NetClientState *nc, const NetVnetHash *hash)
+{
+    nc->info->set_vnet_hash(nc, hash);
+}
+
 int qemu_set_vnet_le(NetClientState *nc, bool is_le)
 {
 #if HOST_BIG_ENDIAN
