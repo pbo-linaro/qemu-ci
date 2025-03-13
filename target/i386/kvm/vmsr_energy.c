@@ -19,6 +19,7 @@
 #include "hw/boards.h"
 #include "cpu.h"
 #include "host-cpu.h"
+#include "trace.h"
 
 char *vmsr_compute_default_paths(void)
 {
@@ -280,7 +281,7 @@ void vmsr_read_thread_stat(pid_t pid,
 
     FILE *file = fopen(path, "r");
     if (file == NULL) {
-        error_report("Error opening %s", path_name);
+        trace_vmsr_read_thread_stat(path_name);
         return;
     }
 
