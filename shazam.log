@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250313044312.189276-1-jsnow@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] docs/qapi_domain: isolate TYPE_CHECKING imports
+  [32m✓[0m [PATCH 2/11] docs/qapi-domain: always store fully qualified name in signode
+  [32m✓[0m [PATCH 3/11] docs/qapi_domain: add namespace support to FQN
+  [32m✓[0m [PATCH 4/11] docs/qapi-domain: add :namespace: override option
+  [32m✓[0m [PATCH 5/11] docs/qapi-domain: add qapi:namespace directive
+  [32m✓[0m [PATCH 6/11] docs/qapidoc: add :namespace: option to qapi-doc directive
+  [32m✓[0m [PATCH 7/11] docs/qapi_domain: add namespace support to cross-references
+  [32m✓[0m [PATCH 8/11] docs/qapi-domain: add namespaced index support
+  [32m✓[0m [PATCH 9/11] docs: add QAPI namespace "QMP" to qemu-qmp-ref
+  [32m✓[0m [PATCH 10/11] docs: disambiguate references in qapi-domain.rst
+  [32m✓[0m [PATCH 11/11] docs: enable transmogrifier for QSD and QGA
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 11
+---
+Applying: docs/qapi_domain: isolate TYPE_CHECKING imports
+Patch failed at 0001 docs/qapi_domain: isolate TYPE_CHECKING imports
+error: docs/sphinx/qapi_domain.py: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
