@@ -22,7 +22,6 @@
 #include "exec/page-protection.h"
 #include "exec/cpu-common.h"
 #include "exec/cpu-interrupt.h"
-#include "exec/memory.h"
 #include "exec/tswap.h"
 #include "hw/core/cpu.h"
 
@@ -66,7 +65,7 @@
 /* MMU memory access macros */
 
 #if !defined(CONFIG_USER_ONLY)
-
+#include "system/memory.h"
 #include "exec/hwaddr.h"
 
 #define SUFFIX
