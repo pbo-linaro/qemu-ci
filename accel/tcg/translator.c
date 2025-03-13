@@ -13,6 +13,7 @@
 #include "qemu/error-report.h"
 #include "exec/exec-all.h"
 #include "exec/cpu-ldst-common.h"
+#include "exec/cpu-mmu-index.h"
 #include "exec/translator.h"
 #include "exec/plugin-gen.h"
 #include "tcg/tcg-op-common.h"
