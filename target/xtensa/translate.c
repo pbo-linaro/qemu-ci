@@ -2241,13 +2241,16 @@ static uint32_t test_exceptions_simcall(DisasContext *dc,
                                         const OpcodeArg arg[],
                                         const uint32_t par[])
 {
-    bool is_semi = semihosting_enabled(dc->cring != 0);
-#ifdef CONFIG_USER_ONLY
-    bool ill = true;
-#else
+    bool ill = true, is_semi = false;
+
+#ifndef CONFIG_USER_ONLY
     /* Between RE.2 and RE.3 simcall opcode's become nop for the hardware. */
-    bool ill = dc->config->hw_version <= 250002 && !is_semi;
+    ill = dc->config->hw_version <= 250002 && !is_semi;
 #endif
+#ifdef CONFIG_SEMIHOSTING
+    is_semi = semihosting_enabled(dc->cring != 0);
+#endif
+
     if (ill || !is_semi) {
         qemu_log_mask(LOG_GUEST_ERROR, "SIMCALL but semihosting is disabled\n");
     }
