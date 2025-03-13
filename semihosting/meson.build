@@ -15,5 +15,7 @@ system_ss.add(when: ['CONFIG_SEMIHOSTING'], if_true: files(
   'stubs-system.c',
 ))
 
+user_ss.add(when: 'CONFIG_SEMIHOSTING', if_true: files('user.c'))
+
 specific_ss.add(when: ['CONFIG_ARM_COMPATIBLE_SEMIHOSTING'],
 		if_true: files('arm-compat-semi.c'))
