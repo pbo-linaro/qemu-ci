@@ -23,8 +23,11 @@ system_ss.add(files(
   'runstate.c',
   'tpm-hmp-cmds.c',
   'vl.c',
-  'watchpoint.c',
 ), sdl, libpmem, libdaxctl)
+
+libsystem_ss.add(files(
+  'watchpoint.c',
+))
 
 if have_tpm
   system_ss.add(files('tpm.c'))
