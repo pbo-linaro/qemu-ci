@@ -601,8 +601,10 @@ if get_option('tsan')
   qemu_ldflags = ['-fsanitize=thread'] + qemu_ldflags
 endif
 
-if get_option('debug') and get_option('split_debug')
-  qemu_cflags += '-gsplit-dwarf'
+if host_os != 'windows'
+  if get_option('debug') and get_option('split_debug')
+    qemu_cflags += '-gsplit-dwarf'
+  endif
 endif
 
 # Detect support for PT_GNU_RELRO + DT_BIND_NOW.
