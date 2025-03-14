@@ -868,21 +868,24 @@ static void virt_cpu_pre_plug(HotplugHandler *hotplug_dev,
             error_setg(&err,
                        "Invalid thread-id %u specified, must be in range 1:%u",
                        cpu->thread_id, ms->smp.threads - 1);
-            goto out;
+            error_propagate(errp, err);
+            return;
         }
 
         if ((cpu->core_id < 0) || (cpu->core_id >= ms->smp.cores)) {
             error_setg(&err,
                        "Invalid core-id %u specified, must be in range 1:%u",
                        cpu->core_id, ms->smp.cores - 1);
-            goto out;
+            error_propagate(errp, err);
+            return;
         }
 
         if ((cpu->socket_id < 0) || (cpu->socket_id >= ms->smp.sockets)) {
             error_setg(&err,
                        "Invalid socket-id %u specified, must be in range 1:%u",
                        cpu->socket_id, ms->smp.sockets - 1);
-            goto out;
+            error_propagate(errp, err);
+            return;
         }
 
         topo.socket_id = cpu->socket_id;
@@ -895,7 +898,8 @@ static void virt_cpu_pre_plug(HotplugHandler *hotplug_dev,
                        "cpu(id%d=%d:%d:%d) with arch-id %" PRIu64 " exists",
                        cs->cpu_index, cpu->socket_id, cpu->core_id,
                        cpu->thread_id, cpu_slot->arch_id);
-            goto out;
+            error_propagate(errp, err);
+            return;
         }
     } else {
         /* For cold-add cpu, find empty cpu slot */
@@ -912,10 +916,6 @@ static void virt_cpu_pre_plug(HotplugHandler *hotplug_dev,
     cpu->phy_id = cpu_slot->arch_id;
     cs->cpu_index = cpu_slot - ms->possible_cpus->cpus;
     numa_cpu_pre_plug(cpu_slot, dev, &err);
-out:
-    if (err) {
-        error_propagate(errp, err);
-    }
 }
 
 static void virt_cpu_unplug_request(HotplugHandler *hotplug_dev,
@@ -935,9 +935,7 @@ static void virt_cpu_unplug_request(HotplugHandler *hotplug_dev,
     }
 
     hotplug_handler_unplug_request(HOTPLUG_HANDLER(lvms->acpi_ged), dev, &err);
-    if (err) {
-        error_propagate(errp, err);
-    }
+    error_propagate(errp, err);
 }
 
 static void virt_cpu_unplug(HotplugHandler *hotplug_dev,
@@ -1001,9 +999,8 @@ static void virt_cpu_plug(HotplugHandler *hotplug_dev,
 
     if (lvms->acpi_ged) {
         hotplug_handler_plug(HOTPLUG_HANDLER(lvms->acpi_ged), dev, &err);
-        if (err) {
-            error_propagate(errp, err);
-        }
+        error_propagate(errp, err);
+        return;
     }
 
     return;
