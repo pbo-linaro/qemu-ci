@@ -1,0 +1,48 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.17-20250315101625@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 28 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 672 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/27] linux-user: Do not define struct sched_attr if libc headers do
+  [PATCH 2/27] ui/sdl2: reenable the SDL2 Windows keyboard hook procedure
+  [PATCH 3/27] hw/net/smc91c111: Ignore attempt to pop from empty RX fifo
+  [PATCH 4/27] target/sparc: Fix gdbstub incorrectly handling registers f32-f62
+  [PATCH 5/27] target/arm: Report correct syndrome for UNDEFINED CNTPS_*_EL1 from EL2 and NS EL1
+  [PATCH 6/27] target/arm: Report correct syndrome for UNDEFINED S1E2 AT ops at EL3
+  [PATCH 7/27] target/arm: Report correct syndrome for UNDEFINED LOR sysregs when NS=0
+  [PATCH 8/27] target/arm: Make CP_ACCESS_TRAPs to AArch32 EL3 be Monitor traps
+  [PATCH 9/27] hw/intc/arm_gicv3_cpuif: Don't downgrade monitor traps for AArch32 EL3
+  [PATCH 10/27] Kconfig: Extract CONFIG_USB_CHIPIDEA from CONFIG_IMX
+  [PATCH 11/27] amd_iommu: Use correct DTE field for interrupt passthrough
+  [PATCH 12/27] hw/i386/amd_iommu: Explicit use of AMDVI_BASE_ADDR in amdvi_init
+  [PATCH 13/27] amd_iommu: Use correct bitmask to set capability BAR
+  [PATCH 14/27] cryptodev/vhost: allocate CryptoDevBackendVhost using g_mem0()
+    + Acked-by: zhenwei pi <pizhenwei@bytedance.com> ([31m✗[0m DKIM/bytedance.com)
+  [PATCH 15/27] vdpa: Fix endian bugs in shadow virtqueue
+  [PATCH 16/27] target/riscv: rvv: Fix unexpected behavior of vector reduction instructions when vl is 0
+  [PATCH 17/27] target/riscv/debug.c: use wp size = 4 for 32-bit CPUs
+  [PATCH 18/27] target/riscv: throw debug exception before page fault
+  [PATCH 19/27] goldfish_rtc: Fix tick_offset migration
+  [PATCH 20/27] block/qed: fix use-after-free by nullifying timer pointer after free
+  [PATCH 21/27] hw/gpio: npcm7xx: fixup out-of-bounds access
+  [PATCH 22/27] ppc/pnv/occ: Fix common area sensor offsets
+  [PATCH 23/27] hw/net/smc91c111: Sanitize packet numbers
+  [PATCH 24/27] hw/net/smc91c111: Sanitize packet length on tx
+  [PATCH 25/27] hw/net/smc91c111: Don't allow data register access to overrun buffer
+  [PATCH 26/27] block: Zero block driver state before reopening
+  [PATCH 27/27] docs: Rename default-configs to configs
+---
+Total patches: 27
+---
+Applying: linux-user: Do not define struct sched_attr if libc headers do
+Patch failed at 0001 linux-user: Do not define struct sched_attr if libc headers do
+error: patch failed: linux-user/syscall.c:352
+error: linux-user/syscall.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
