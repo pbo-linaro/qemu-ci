@@ -1,0 +1,64 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-8.2.10-20250315104136@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 43 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 800 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/42] linux-user: Do not define struct sched_attr if libc headers do
+  [PATCH 2/42] qmp: update vhost-user protocol feature maps
+    + Signed-off-by: Jonah Palmer <jonah.palmer@oracle.com> ([32m✓[0m DKIM/oracle.com)
+  [PATCH 3/42] gitlab-ci.d/cirrus: Update the FreeBSD job to v14.2
+  [PATCH 4/42] ui/sdl2: reenable the SDL2 Windows keyboard hook procedure
+  [PATCH 5/42] hw/net/smc91c111: Ignore attempt to pop from empty RX fifo
+  [PATCH 6/42] target/sparc: Fix gdbstub incorrectly handling registers f32-f62
+  [PATCH 7/42] linux-user: Honor elf alignment when placing images
+  [PATCH 8/42] elfload: Fix alignment when unmapping excess reservation
+  [PATCH 9/42] target/arm: Report correct syndrome for UNDEFINED CNTPS_*_EL1 from EL2 and NS EL1
+  [PATCH 10/42] target/arm: Report correct syndrome for UNDEFINED AT ops with wrong NSE, NS
+  [PATCH 11/42] target/arm: Report correct syndrome for UNDEFINED S1E2 AT ops at EL3
+  [PATCH 12/42] target/arm: Report correct syndrome for UNDEFINED LOR sysregs when NS=0
+  [PATCH 13/42] target/arm: Make CP_ACCESS_TRAPs to AArch32 EL3 be Monitor traps
+  [PATCH 14/42] hw/intc/arm_gicv3_cpuif: Don't downgrade monitor traps for AArch32 EL3
+  [PATCH 15/42] target/arm: Honour SDCR.TDCC and SCR.TERR in AArch32 EL3 non-Monitor modes
+  [PATCH 16/42] Kconfig: Extract CONFIG_USB_CHIPIDEA from CONFIG_IMX
+  [PATCH 17/42] amd_iommu: Use correct DTE field for interrupt passthrough
+  [PATCH 18/42] amd_iommu: Use correct bitmask to set capability BAR
+  [PATCH 19/42] cryptodev/vhost: allocate CryptoDevBackendVhost using g_mem0()
+    + Acked-by: zhenwei pi <pizhenwei@bytedance.com> ([31m✗[0m DKIM/bytedance.com)
+  [PATCH 20/42] vdpa: Fix endian bugs in shadow virtqueue
+  [PATCH 21/42] target/loongarch/gdbstub: Fix gdbstub incorrectly handling some registers
+  [PATCH 22/42] target/arm/hvf: sign extend the data for a load operation when SSE=1
+  [PATCH 23/42] target/riscv: rvv: Fix unexpected behavior of vector reduction instructions when vl is 0
+  [PATCH 24/42] target/riscv/debug.c: use wp size = 4 for 32-bit CPUs
+  [PATCH 25/42] target/riscv: throw debug exception before page fault
+  [PATCH 26/42] goldfish_rtc: Fix tick_offset migration
+  [PATCH 27/42] block/qed: fix use-after-free by nullifying timer pointer after free
+  [PATCH 28/42] docs/about/build-platforms: Correct minimum supported Python version
+  [PATCH 29/42] hw/gpio: npcm7xx: fixup out-of-bounds access
+  [PATCH 30/42] target/arm: Correct LDRD atomicity and fault behaviour
+  [PATCH 31/42] target/arm: Correct STRD atomicity
+  [PATCH 32/42] util/qemu-timer.c: Don't warp timer from timerlist_rearm()
+  [PATCH 33/42] net: parameterize the removing client from nc list
+  [PATCH 34/42] net: move backend cleanup to NIC cleanup
+  [PATCH 35/42] ppc/pnv/occ: Fix common area sensor offsets
+  [PATCH 36/42] hw/net/smc91c111: Sanitize packet numbers
+  [PATCH 37/42] hw/net/smc91c111: Sanitize packet length on tx
+  [PATCH 38/42] hw/net/smc91c111: Don't allow data register access to overrun buffer
+  [PATCH 39/42] hw/xen/hvm: Fix Aarch64 typo
+  [PATCH 40/42] block: Zero block driver state before reopening
+  [PATCH 41/42] docs: Rename default-configs to configs
+  [PATCH 42/42] ui/cocoa: Temporarily ignore annoying deprecated declaration warnings
+---
+Total patches: 42
+---
+Applying: linux-user: Do not define struct sched_attr if libc headers do
+Patch failed at 0001 linux-user: Do not define struct sched_attr if libc headers do
+error: patch failed: linux-user/syscall.c:358
+error: linux-user/syscall.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
