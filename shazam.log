@@ -1,0 +1,77 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.2.3-20250315091645@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 52 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 685 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/51] target/arm: Report correct syndrome for UNDEFINED CNTPS_*_EL1 from EL2 and NS EL1
+  [PATCH 2/51] target/arm: Report correct syndrome for UNDEFINED AT ops with wrong NSE, NS
+  [PATCH 3/51] target/arm: Report correct syndrome for UNDEFINED S1E2 AT ops at EL3
+  [PATCH 4/51] target/arm: Report correct syndrome for UNDEFINED LOR sysregs when NS=0
+  [PATCH 5/51] target/arm: Make CP_ACCESS_TRAPs to AArch32 EL3 be Monitor traps
+  [PATCH 6/51] hw/intc/arm_gicv3_cpuif: Don't downgrade monitor traps for AArch32 EL3
+  [PATCH 7/51] target/arm: Honour SDCR.TDCC and SCR.TERR in AArch32 EL3 non-Monitor modes
+  [PATCH 8/51] target/arm: Correct errors in WFI/WFE trapping
+  [PATCH 9/51] Kconfig: Extract CONFIG_USB_CHIPIDEA from CONFIG_IMX
+  [PATCH 10/51] hw/net: Fix NULL dereference with software RSS
+  [PATCH 11/51] hw/i386/pc: Fix crash that occurs when introspecting TYPE_PC_MACHINE machines
+  [PATCH 12/51] hw/i386/microvm: Fix crash that occurs when introspecting the microvm machine
+  [PATCH 13/51] amd_iommu: Use correct DTE field for interrupt passthrough
+  [PATCH 14/51] amd_iommu: Use correct bitmask to set capability BAR
+  [PATCH 15/51] cryptodev/vhost: allocate CryptoDevBackendVhost using g_mem0()
+    + Acked-by: zhenwei pi <pizhenwei@bytedance.com> ([31m✗[0m DKIM/bytedance.com)
+  [PATCH 16/51] vdpa: Fix endian bugs in shadow virtqueue
+  [PATCH 17/51] hw/virtio/virtio-nsm: Respond with correct length
+  [PATCH 18/51] vhost-user-snd: correct the calculation of config_size
+  [PATCH 19/51] target/loongarch/gdbstub: Fix gdbstub incorrectly handling some registers
+  [PATCH 20/51] physmem: replace assertion with error
+  [PATCH 21/51] target/arm/hvf: Disable SME feature
+  [PATCH 22/51] target/arm/hvf: sign extend the data for a load operation when SSE=1
+  [PATCH 23/51] target/riscv: rvv: Fix unexpected behavior of vector reduction instructions when vl is 0
+  [PATCH 24/51] target/riscv: rvv: Fix incorrect vlen comparison in prop_vlen_set
+  [PATCH 25/51] target/riscv/debug.c: use wp size = 4 for 32-bit CPUs
+  [PATCH 26/51] target/riscv: throw debug exception before page fault
+  [PATCH 27/51] goldfish_rtc: Fix tick_offset migration
+  [PATCH 28/51] block/qed: fix use-after-free by nullifying timer pointer after free
+  [PATCH 29/51] docs/about/build-platforms: Correct minimum supported Python version
+  [PATCH 30/51] hw/gpio: npcm7xx: fixup out-of-bounds access
+  [PATCH 31/51] target/arm: Apply correct timer offset when calculating deadlines
+  [PATCH 32/51] target/arm: Don't apply CNTVOFF_EL2 for EL2_VIRT timer
+  [PATCH 33/51] target/arm: Make CNTPS_* UNDEF from Secure EL1 when Secure EL2 is enabled
+  [PATCH 34/51] target/arm: Always apply CNTVOFF_EL2 for CNTV_TVAL_EL02 accesses
+  [PATCH 35/51] target/arm: Refactor handling of timer offset for direct register accesses
+  [PATCH 36/51] target/arm: Implement SEL2 physical and virtual timers
+  [PATCH 37/51] hw/arm: enable secure EL2 timers for virt machine
+  [PATCH 38/51] hw/arm: enable secure EL2 timers for sbsa machine
+  [PATCH 39/51] target/arm: Correct LDRD atomicity and fault behaviour
+  [PATCH 40/51] target/arm: Correct STRD atomicity
+  [PATCH 41/51] util/qemu-timer.c: Don't warp timer from timerlist_rearm()
+  [PATCH 42/51] net: parameterize the removing client from nc list
+  [PATCH 43/51] net: move backend cleanup to NIC cleanup
+  [PATCH 44/51] xen: No need to flush the mapcache for grants
+  [PATCH 45/51] ppc/pnv/occ: Fix common area sensor offsets
+  [PATCH 46/51] hw/net/smc91c111: Sanitize packet numbers
+  [PATCH 47/51] hw/net/smc91c111: Sanitize packet length on tx
+  [PATCH 48/51] hw/net/smc91c111: Don't allow data register access to overrun buffer
+  [PATCH 49/51] hw/xen/hvm: Fix Aarch64 typo
+  [PATCH 50/51] block: Zero block driver state before reopening
+  [PATCH 51/51] docs: Rename default-configs to configs
+---
+Total patches: 51
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Tested-by: Vikrant Garg <vikrant1garg@gmail.com>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/arm: Report correct syndrome for UNDEFINED CNTPS_*_EL1 from EL2 and NS EL1
+Patch failed at 0001 target/arm: Report correct syndrome for UNDEFINED CNTPS_*_EL1 from EL2 and NS EL1
+error: patch failed: target/arm/helper.c:2652
+error: target/arm/helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
