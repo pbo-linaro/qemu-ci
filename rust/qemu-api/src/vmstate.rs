@@ -197,7 +197,7 @@ pub const fn vmstate_varray_flag<T: VMState>(_: PhantomData<T>) -> VMStateFlags 
 /// and [`impl_vmstate_forward!`](crate::impl_vmstate_forward) help with this.
 #[macro_export]
 macro_rules! vmstate_of {
-    ($struct_name:ty, $field_name:ident $(, [0 .. $num:ident $(* $factor:expr)?])? $(,)?) => {
+    ($struct_name:ty, $field_name:ident $(, [0 .. $num:ident $(* $factor:expr)?])? $(, version = $version:expr)? $(,)?) => {
         $crate::bindings::VMStateField {
             name: ::core::concat!(::core::stringify!($field_name), "\0")
                 .as_bytes()
@@ -211,6 +211,7 @@ macro_rules! vmstate_of {
                 $struct_name,
                 $field_name
             )),
+            $(version_id: $version,)?
             ..$crate::call_func_with_field!(
                 $crate::vmstate::vmstate_base,
                 $struct_name,
@@ -442,7 +443,7 @@ macro_rules! vmstate_unused {
 #[doc(alias = "VMSTATE_STRUCT")]
 #[macro_export]
 macro_rules! vmstate_struct {
-    ($struct_name:ty, $field_name:ident $(, [0 .. $num:ident $(* $factor:expr)?])?, $vmsd:ident, $type:ty $(,)?) => {
+    ($struct_name:ty, $field_name:ident $(, [0 .. $num:ident $( * $factor:expr)? ])?, $vmsd:ident, $type:ty $(, version = $version:expr)? $(,)?) => {
         $crate::bindings::VMStateField {
             name: ::core::concat!(::core::stringify!($field_name), "\0")
                 .as_bytes()
@@ -455,6 +456,7 @@ macro_rules! vmstate_struct {
             size: ::core::mem::size_of::<$type>(),
             flags: $crate::bindings::VMStateFlags::VMS_STRUCT,
             vmsd: &$vmsd,
+            $(version_id: $version,)?
             ..$crate::zeroable::Zeroable::ZERO
          } $(.with_varray_flag_unchecked(
                   $crate::call_func_with_field!(
