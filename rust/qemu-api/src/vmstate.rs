@@ -27,10 +27,8 @@
 use core::{marker::PhantomData, mem, ptr::NonNull};
 use std::os::raw::{c_int, c_void};
 
-pub use crate::bindings::{VMStateDescription, VMStateField};
-use crate::{
-    bindings::VMStateFlags, callbacks::FnCall, prelude::*, qom::Owned, zeroable::Zeroable,
-};
+pub use crate::bindings::{VMStateDescription, VMStateField, VMStateFlags};
+use crate::{callbacks::FnCall, prelude::*, qom::Owned, zeroable::Zeroable};
 
 /// This macro is used to call a function with a generic argument bound
 /// to the type of a field.  The function must take a
