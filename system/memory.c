@@ -25,7 +25,6 @@
 #include "qom/object.h"
 #include "trace.h"
 
-#include "exec/memory-internal.h"
 #include "exec/ram_addr.h"
 #include "system/kvm.h"
 #include "system/runstate.h"
@@ -34,6 +33,8 @@
 #include "hw/boards.h"
 #include "migration/vmstate.h"
 #include "exec/address-spaces.h"
+
+#include "memory-internal.h"
 
 //#define DEBUG_UNASSIGNED
 
