@@ -1864,6 +1864,10 @@ if test "$skip_meson" = no; then
       { test "$host_os" = linux || test "$host_os" = "windows"; }; then
       echo 'werror = true' >> $cross
   fi
+  if test -e "$source_path/.git" && test "$host_os" != "windows"; then
+      echo 'split_debug = true' >> $cross
+  fi
+
   echo "[project options]" >> $cross
   if test "$SMBD" != ''; then
     echo "smbd = $(meson_quote "$SMBD")" >> $cross
