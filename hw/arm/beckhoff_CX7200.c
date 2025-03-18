@@ -47,6 +47,9 @@ OBJECT_DECLARE_SIMPLE_TYPE(CX7200MachineState, CX7200_MACHINE)
 /* board base frequency: 33.333333 MHz */
 #define PS_CLK_FREQUENCY (100 * 1000 * 1000 / 3)
 
+#define PERIPHCLK_PERIOD 2
+#define PS7_CPU_CLK_FREQUENCY 720000000
+
 #define NUM_SPI_FLASHES 0
 #define NUM_QSPI_FLASHES 1
 #define NUM_QSPI_BUSSES 1
@@ -254,6 +257,13 @@ static void beckhoff_cx7200_init(MachineState *machine)
 
     dev = qdev_new(TYPE_A9MPCORE_PRIV);
     qdev_prop_set_uint32(dev, "num-cpu", smp_cpus);
+    A9MPPrivState *a9mp_priv_state = A9MPCORE_PRIV(dev);
+    a9mp_priv_state->gtimer.cpu_clk_freq_hz = PS7_CPU_CLK_FREQUENCY;
+    a9mp_priv_state->gtimer.periphclk_period = PERIPHCLK_PERIOD;
+    a9mp_priv_state->mptimer.clk_freq_hz = PS7_CPU_CLK_FREQUENCY;
+    a9mp_priv_state->mptimer.periphclk_period = PERIPHCLK_PERIOD;
+    a9mp_priv_state->wdt.clk_freq_hz = PS7_CPU_CLK_FREQUENCY;
+    a9mp_priv_state->wdt.periphclk_period = PERIPHCLK_PERIOD;
     busdev = SYS_BUS_DEVICE(dev);
     sysbus_realize_and_unref(busdev, &error_fatal);
     sysbus_mmio_map(busdev, 0, MPCORE_PERIPHBASE);
