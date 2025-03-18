@@ -27,6 +27,7 @@
 #include "hw/timer/arm_mptimer.h"
 #include "migration/vmstate.h"
 #include "qapi/error.h"
+#include "qemu/error-report.h"
 #include "qemu/module.h"
 #include "hw/core/cpu.h"
 
@@ -61,8 +62,16 @@ static inline void timerblock_update_irq(TimerBlock *tb)
 /* Return conversion factor from mpcore timer ticks to qemu timer ticks.  */
 static inline uint32_t timerblock_scale(TimerBlock *tb, uint32_t control)
 {
+    /*
+     * Referring to the ARM-Cortex-A9 MPCore TRM
+     * 
+     * The arm mp timer relies on the PERIPHCLK as its clock source.
+     * The PERIPHCLK clock period must be configured as a multiple of the
+     * main clock CLK. The conversion from the qemu clock (1GHz) to arm mp
+     * timer ticks can be calculated like this:
+     */
     uint64_t prescale = (((control >> 8) & 0xff) + 1);
-    uint64_t ret = NANOSECONDS_PER_SECOND * prescale * 10;
+    uint64_t ret = NANOSECONDS_PER_SECOND * prescale * tb->periphclk_period;
     return (uint32_t) (ret / tb->freq_hz);
 }
 
@@ -273,6 +282,12 @@ static void arm_mptimer_realize(DeviceState *dev, Error **errp)
     for (i = 0; i < s->num_cpu; i++) {
         TimerBlock *tb = &s->timerblock[i];
         tb->freq_hz = s->clk_freq_hz;
+        if (s->periphclk_period < 2) {
+            error_report("Invalid periphclk-period (%lu), must be >= 2",
+                         s->periphclk_period);
+            exit(1);
+        }
+        tb->periphclk_period = s->periphclk_period;
         tb->timer = ptimer_init(timerblock_tick, tb, PTIMER_POLICY);
         sysbus_init_irq(sbd, &tb->irq);
         memory_region_init_io(&tb->iomem, OBJECT(s), &timerblock_ops, tb,
@@ -288,6 +303,7 @@ static const VMStateDescription vmstate_timerblock = {
     .fields = (const VMStateField[]) {
         VMSTATE_UINT32(control, TimerBlock),
         VMSTATE_UINT64(freq_hz, TimerBlock),
+        VMSTATE_UINT64(periphclk_period, TimerBlock),
         VMSTATE_UINT32(status, TimerBlock),
         VMSTATE_PTIMER(timer, TimerBlock),
         VMSTATE_END_OF_LIST()
@@ -309,6 +325,8 @@ static const Property arm_mptimer_properties[] = {
     DEFINE_PROP_UINT64("clk-freq", ARMMPTimerState, clk_freq_hz,
                        NANOSECONDS_PER_SECOND),
     DEFINE_PROP_UINT32("num-cpu", ARMMPTimerState, num_cpu, 0),
+    DEFINE_PROP_UINT64("periphclk-period", ARMMPTimerState,
+                       periphclk_period, 10),
 };
 
 static void arm_mptimer_class_init(ObjectClass *klass, void *data)
