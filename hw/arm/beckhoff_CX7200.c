@@ -130,6 +130,17 @@ static void gem_init(uint32_t base, qemu_irq irq)
     sysbus_connect_irq(s, 0, irq);
 }
 
+static void ccat_init(uint32_t base)
+{
+    DeviceState *dev;
+    SysBusDevice *busdev;
+
+    dev = qdev_new("beckhoff-ccat");
+    busdev = SYS_BUS_DEVICE(dev);
+    sysbus_realize_and_unref(busdev, &error_fatal);
+    sysbus_mmio_map(busdev, 0, base);
+}
+
 static inline int beckhoff_cx7200_init_spi_flashes(uint32_t base_addr,
                                         qemu_irq irq, bool is_qspi, int unit0)
 {
@@ -312,6 +323,8 @@ static void beckhoff_cx7200_init(MachineState *machine)
                           pic[70 - IRQ_OFFSET], pic[71 - IRQ_OFFSET], NULL);
 
     gem_init(0xE000C000, pic[77 - IRQ_OFFSET]);
+
+    ccat_init(0x40000000);
 
     /*
      * Compatible with:
