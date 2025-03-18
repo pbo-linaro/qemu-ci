@@ -138,6 +138,11 @@ static void xlnx_zynq_devcfg_update_ixr(XlnxZynqDevcfg *s)
     qemu_set_irq(s->irq, ~s->regs[R_INT_MASK] & s->regs[R_INT_STS]);
 }
 
+static void slcr_reset (DeviceState *dev) {
+    XlnxZynqDevcfg *s = XLNX_ZYNQ_DEVCFG(dev);
+    s->regs[R_INT_STS] |= R_INT_STS_PCFG_DONE_MASK;
+}
+
 static void xlnx_zynq_devcfg_reset(DeviceState *dev)
 {
     XlnxZynqDevcfg *s = XLNX_ZYNQ_DEVCFG(dev);
@@ -373,6 +378,8 @@ static void xlnx_zynq_devcfg_init(Object *obj)
     SysBusDevice *sbd = SYS_BUS_DEVICE(obj);
     XlnxZynqDevcfg *s = XLNX_ZYNQ_DEVCFG(obj);
     RegisterInfoArray *reg_array;
+
+    s->slcr_reset_handler = slcr_reset;
 
     sysbus_init_irq(sbd, &s->irq);
 

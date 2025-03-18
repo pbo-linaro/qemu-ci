@@ -56,6 +56,7 @@ struct XlnxZynqDevcfg {
     uint8_t dma_cmd_fifo_num;
 
     bool is_initialized;
+    void (*slcr_reset_handler) (DeviceState *dev);
 
     uint32_t regs[XLNX_ZYNQ_DEVCFG_R_MAX];
     RegisterInfo regs_info[XLNX_ZYNQ_DEVCFG_R_MAX];

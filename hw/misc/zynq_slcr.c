@@ -26,6 +26,7 @@
 #include "qom/object.h"
 #include "hw/qdev-properties.h"
 #include "qapi/error.h"
+#include "hw/dma/xlnx-zynq-devcfg.h"
 
 #ifndef ZYNQ_SLCR_ERR_DEBUG
 #define ZYNQ_SLCR_ERR_DEBUG 0
@@ -575,6 +576,21 @@ static void zynq_slcr_write(void *opaque, hwaddr offset,
     case R_UART_CLK_CTRL:
         zynq_slcr_compute_clocks(s);
         zynq_slcr_propagate_clocks(s);
+        break;
+    case R_FPGA_RST_CTRL:
+        if (val == 0) {
+            Object *devcfgObject =
+                    object_resolve_type_unambiguous("xlnx.ps7-dev-cfg", NULL);
+            if (!devcfgObject) {
+                break;
+            }
+            DeviceState *devcfg = OBJECT_CHECK(DeviceState, devcfgObject,
+                                               "xlnx.ps7-dev-cfg");
+            XlnxZynqDevcfg *zynqdevcfg = XLNX_ZYNQ_DEVCFG(devcfg);
+            if (zynqdevcfg) {
+                zynqdevcfg->slcr_reset_handler(devcfg);
+            }
+        }
         break;
     }
 }
