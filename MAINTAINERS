@@ -720,6 +720,13 @@ F: hw/arm/b-l475e-iot01a.c
 F: hw/display/dm163.c
 F: tests/qtest/dm163-test.c
 
+Beckhoff CX7200
+R: Corvin Köhne <c.koehne@beckhoff.com>
+L: qemu-arm@nongnu.org
+S: Supported
+F: hw/arm/beckhoff_CX7200.c
+F: hw/misc/beckhoff_ccat.c
+
 Exynos
 M: Igor Mitsyanko <i.mitsyanko@gmail.com>
 M: Peter Maydell <peter.maydell@linaro.org>
