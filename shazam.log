@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20250318045125.759259-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/13] exec/cpu-all: restrict BSWAP_NEEDED to target specific code
+  [32m✓[0m [PATCH 2/13] exec/cpu-all: restrict compile time assert to target specific code
+  [32m✓[0m [PATCH 3/13] exec/target_page: runtime defintion for TARGET_PAGE_BITS_MIN
+  [32m✓[0m [PATCH 4/13] exec/cpu-all: allow to include specific cpu
+  [32m✓[0m [PATCH 5/13] target/arm/cpu: move KVM_HAVE_MCE_INJECTION to kvm-all.c file directly
+  [32m✓[0m [PATCH 6/13] exec/poison: KVM_HAVE_MCE_INJECTION can now be poisoned
+  [32m✓[0m [PATCH 7/13] target/arm/cpu: always define kvm related registers
+  [32m✓[0m [PATCH 8/13] target/arm/cpu: flags2 is always uint64_t
+  [32m✓[0m [PATCH 9/13] target/arm/cpu: define ARM_MAX_VQ once for aarch32 and aarch64
+  [32m✓[0m [PATCH 10/13] target/arm/cpu: define same set of registers for aarch32 and aarch64
+  [32m✓[0m [PATCH 11/13] target/arm/cpu: remove inline stubs for aarch32 emulation
+  [32m✓[0m [PATCH 12/13] meson: add common hw files
+  [32m✓[0m [PATCH 13/13] hw/arm/boot: make compilation unit hw common
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 13
+---
+Applying: exec/cpu-all: restrict BSWAP_NEEDED to target specific code
+Patch failed at 0001 exec/cpu-all: restrict BSWAP_NEEDED to target specific code
+error: patch failed: include/exec/cpu-all.h:34
+error: include/exec/cpu-all.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
