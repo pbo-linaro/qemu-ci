@@ -55,6 +55,8 @@ struct XlnxZynqDevcfg {
     XlnxZynqDevcfgDMACmd dma_cmd_fifo[XLNX_ZYNQ_DEVCFG_DMA_CMD_FIFO_LEN];
     uint8_t dma_cmd_fifo_num;
 
+    bool is_initialized;
+
     uint32_t regs[XLNX_ZYNQ_DEVCFG_R_MAX];
     RegisterInfo regs_info[XLNX_ZYNQ_DEVCFG_R_MAX];
 };

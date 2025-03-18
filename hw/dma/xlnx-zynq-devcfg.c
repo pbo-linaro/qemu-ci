@@ -143,9 +143,11 @@ static void xlnx_zynq_devcfg_reset(DeviceState *dev)
     XlnxZynqDevcfg *s = XLNX_ZYNQ_DEVCFG(dev);
     int i;
 
+    s->is_initialized = false;
     for (i = 0; i < XLNX_ZYNQ_DEVCFG_R_MAX; ++i) {
         register_reset(&s->regs_info[i]);
     }
+    s->is_initialized = true;
 }
 
 static void xlnx_zynq_devcfg_dma_go(XlnxZynqDevcfg *s)
@@ -221,7 +223,9 @@ static void r_unlock_post_write(RegisterInfo *reg, uint64_t val)
 {
     XlnxZynqDevcfg *s = XLNX_ZYNQ_DEVCFG(reg->opaque);
     const char *device_prefix = object_get_typename(OBJECT(s));
-
+    if (!s->is_initialized) {
+        return;
+    }
     if (val == R_UNLOCK_MAGIC) {
         DB_PRINT("successful unlock\n");
         s->regs[R_CTRL] |= R_CTRL_PCAP_PR_MASK;
