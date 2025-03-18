@@ -76,6 +76,7 @@ struct A9GTimerState {
 
     MemoryRegion iomem;
     /* static props */
+    uint64_t cpu_clk_freq_hz;
     uint32_t num_cpu;
 
     QEMUTimer *timer;
