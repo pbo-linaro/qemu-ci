@@ -28,7 +28,6 @@
 #include "hw/loader.h"
 #include "hw/adc/zynq-xadc.h"
 #include "hw/ssi/ssi.h"
-#include "hw/usb/chipidea.h"
 #include "qemu/error-report.h"
 #include "hw/sd/sdhci.h"
 #include "hw/char/cadence_uart.h"
@@ -279,9 +278,6 @@ static void beckhoff_cx7200_init(MachineState *machine)
                                          false, n);
     n = beckhoff_cx7200_init_spi_flashes(0xE000D000, pic[51 - IRQ_OFFSET],
                                          true, n);
-
-    sysbus_create_simple(TYPE_CHIPIDEA, 0xE0002000, pic[53 - IRQ_OFFSET]);
-    sysbus_create_simple(TYPE_CHIPIDEA, 0xE0003000, pic[76 - IRQ_OFFSET]);
 
     dev = qdev_new(TYPE_CADENCE_UART);
     busdev = SYS_BUS_DEVICE(dev);
