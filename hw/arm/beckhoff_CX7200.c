@@ -48,12 +48,9 @@ OBJECT_DECLARE_SIMPLE_TYPE(CX7200MachineState, CX7200_MACHINE)
 /* board base frequency: 33.333333 MHz */
 #define PS_CLK_FREQUENCY (100 * 1000 * 1000 / 3)
 
-#define NUM_SPI_FLASHES 4
-#define NUM_QSPI_FLASHES 2
-#define NUM_QSPI_BUSSES 2
-
-#define FLASH_SIZE (64 * 1024 * 1024)
-#define FLASH_SECTOR_SIZE (128 * 1024)
+#define NUM_SPI_FLASHES 0
+#define NUM_QSPI_FLASHES 1
+#define NUM_QSPI_BUSSES 1
 
 #define IRQ_OFFSET 32 /* pic interrupts start from index 32 */
 
@@ -164,7 +161,7 @@ static inline int beckhoff_cx7200_init_spi_flashes(uint32_t base_addr,
 
         for (j = 0; j < num_ss; ++j) {
             DriveInfo *dinfo = drive_get(IF_MTD, 0, unit++);
-            flash_dev = qdev_new("n25q128");
+            flash_dev = qdev_new("is25lp016d");
             if (dinfo) {
                 qdev_prop_set_drive_err(flash_dev, "drive",
                                         blk_by_legacy_dinfo(dinfo),
@@ -241,15 +238,6 @@ static void beckhoff_cx7200_init(MachineState *machine)
     memory_region_init_ram(ocm_ram, NULL, "zynq.ocm_ram", 256 * KiB,
                            &error_fatal);
     memory_region_add_subregion(address_space_mem, 0xFFFC0000, ocm_ram);
-
-    DriveInfo *dinfo = drive_get(IF_PFLASH, 0, 0);
-
-    /* AMD */
-    pflash_cfi02_register(0xe2000000, "zynq.pflash", FLASH_SIZE,
-                          dinfo ? blk_by_legacy_dinfo(dinfo) : NULL,
-                          FLASH_SECTOR_SIZE, 1,
-                          1, 0x0066, 0x0022, 0x0000, 0x0000, 0x0555, 0x2aa,
-                          0);
 
     /* Create the main clock source, and feed slcr with it */
     cx7200_machine->ps_clk = CLOCK(object_new(TYPE_CLOCK));
