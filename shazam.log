@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20250318213209.2579218-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 43 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 115 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/42] accel/tcg: Build user-exec-stub.c once
+  [32m✓[0m [PATCH v2 2/42] accel/tcg: Build plugin-gen.c once
+  [32m✓[0m [PATCH v2 3/42] accel/tcg: Fix cpu_ld*_code_mmu for user mode
+  [32m✓[0m [PATCH v2 4/42] include/exec: Use vaddr for *_mmu guest memory access routines
+  [32m✓[0m [PATCH v2 5/42] include/exec: Split out cpu-ldst-common.h
+  [32m✓[0m [PATCH v2 6/42] include/exec: Split out cpu-mmu-index.h
+  [32m✓[0m [PATCH v2 7/42] include/exec: Inline *_mmuidx_ra memory operations
+  [32m✓[0m [PATCH v2 8/42] include/exec: Inline *_data_ra memory operations
+  [32m✓[0m [PATCH v2 9/42] include/exec: Inline *_data memory operations
+  [32m✓[0m [PATCH v2 10/42] include/exec: Inline *_code memory operations
+  [32m✓[0m [PATCH v2 11/42] accel/tcg: Perform aligned atomic reads in translator_ld
+  [32m✓[0m [PATCH v2 12/42] accel/tcg: Use cpu_ld*_code_mmu in translator.c
+  [32m✓[0m [PATCH v2 13/42] accel/tcg: Implement translator_ld*_end
+  [32m✓[0m [PATCH v2 14/42] accel/tcg: Remove mmap_lock/unlock from watchpoint.c
+  [32m✓[0m [PATCH v2 15/42] include/exec: Split out mmap-lock.h
+  [32m✓[0m [PATCH v2 16/42] include/system: Move exec/memory.h to system/memory.h
+  [32m✓[0m [PATCH v2 17/42] include/system: Move exec/address-spaces.h to system/address-spaces.h
+  [32m✓[0m [PATCH v2 18/42] include/system: Move exec/ioport.h to system/ioport.h
+  [32m✓[0m [PATCH v2 19/42] include/system: Move exec/ram_addr.h to system/ram_addr.h
+  [32m✓[0m [PATCH v2 20/42] include/system: Move exec/ramblock.h to system/ramblock.h
+  [32m✓[0m [PATCH v2 21/42] accel/tcg: Remove unnecesary inclusion of memory-internal.h in cputlb.c
+  [32m✓[0m [PATCH v2 22/42] exec: Restrict memory-internal.h to system/
+  [32m✓[0m [PATCH v2 23/42] meson: Introduce top-level libuser_ss and libsystem_ss
+  [32m✓[0m [PATCH v2 24/42] gdbstub: Move syscalls.c out of common_ss
+  [32m✓[0m [PATCH v2 25/42] accel/tcg: Use libuser_ss and libsystem_ss
+  [32m✓[0m [PATCH v2 26/42] semihosting: Move user-only implementation out-of-line
+  [32m✓[0m [PATCH v2 27/42] target/mips: Restrict semihosting tests to system mode
+  [32m✓[0m [PATCH v2 28/42] target/xtensa: Restrict semihosting tests to system mode
+  [32m✓[0m [PATCH v2 29/42] include/exec: Split out watchpoint.h
+  [32m✓[0m [PATCH v2 30/42] hw/core: Move unconditional files to libsystem_ss, libuser_ss
+  [32m✓[0m [PATCH v2 31/42] system: Move most files to libsystem_ss
+  [32m✓[0m [PATCH v2 32/42] plugins: Move api.c, core.c to libuser_ss, libsystem_ss
+  [32m✓[0m [PATCH v2 33/42] include/exec: Drop ifndef CONFIG_USER_ONLY from cpu-common.h
+  [32m✓[0m [PATCH v2 34/42] include/hw/core: Drop ifndef CONFIG_USER_ONLY from cpu.h
+  [32m✓[0m [PATCH v2 35/42] include/hw/intc: Remove ifndef CONFIG_USER_ONLY from armv7m_nvic.h
+  [32m✓[0m [PATCH v2 36/42] include/hw/s390x: Remove ifndef CONFIG_USER_ONLY in css.h
+  [32m✓[0m [PATCH v2 37/42] include/exec: Split out icount.h
+  [32m✓[0m [PATCH v2 38/42] include/exec: Protect icount_enabled from poisoned symbols
+  [32m✓[0m [PATCH v2 39/42] include/system: Remove ifndef CONFIG_USER_ONLY in qtest.h
+  [32m✓[0m [PATCH v2 40/42] include/qemu: Remove ifndef CONFIG_USER_ONLY from accel.h
+  [32m✓[0m [PATCH v2 41/42] target/riscv: Remove ifndef CONFIG_USER_ONLY from cpu_cfg.h
+  [32m✓[0m [PATCH v2 42/42] meson: Only allow CONFIG_USER_ONLY from certain source sets
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 42
+---
+Applying: accel/tcg: Build user-exec-stub.c once
+Applying: accel/tcg: Build plugin-gen.c once
+Applying: accel/tcg: Fix cpu_ld*_code_mmu for user mode
+Applying: include/exec: Use vaddr for *_mmu guest memory access routines
+Applying: include/exec: Split out cpu-ldst-common.h
+Applying: include/exec: Split out cpu-mmu-index.h
+Applying: include/exec: Inline *_mmuidx_ra memory operations
+Applying: include/exec: Inline *_data_ra memory operations
+Applying: include/exec: Inline *_data memory operations
+Applying: include/exec: Inline *_code memory operations
+Applying: accel/tcg: Perform aligned atomic reads in translator_ld
+Applying: accel/tcg: Use cpu_ld*_code_mmu in translator.c
+Applying: accel/tcg: Implement translator_ld*_end
+Applying: accel/tcg: Remove mmap_lock/unlock from watchpoint.c
+Applying: include/exec: Split out mmap-lock.h
+Applying: include/system: Move exec/memory.h to system/memory.h
+Patch failed at 0016 include/system: Move exec/memory.h to system/memory.h
+error: patch failed: include/exec/ram_addr.h:26
+error: include/exec/ram_addr.h: patch does not apply
+error: patch failed: system/ioport.c:27
+error: system/ioport.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
