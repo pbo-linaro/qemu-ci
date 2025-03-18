@@ -225,4 +225,7 @@ config XLNX_VERSAL_TRNG
 config DDR_CTRLR
     bool
 
+config BECKHOFF_CCAT
+    bool
+
 source macio/Kconfig
