@@ -4419,6 +4419,42 @@ static int ram_resume_prepare(MigrationState *s, void *opaque)
     return 0;
 }
 
+static bool ram_save_postcopy_prepare(QEMUFile *f, void *opaque, Error **errp)
+{
+    int ret;
+
+    if (migrate_multifd()) {
+        /*
+         * When multifd is enabled, source QEMU needs to make sure all the
+         * pages queued before postcopy starts to be flushed.
+         *
+         * Meanwhile, the load of these pages must happen before switching
+         * to postcopy.  It's because loading of guest pages (so far) in
+         * multifd recv threads is still non-atomic, so the load cannot
+         * happen with vCPUs running on destination side.
+         *
+         * This flush and sync will guarantee those pages loaded _before_
+         * postcopy starts on destination. The rational is, this happens
+         * before VM stops (and before source QEMU sends all the rest of
+         * the postcopy messages).  So when the destination QEMU received
+         * the postcopy messages, it must have received the sync message on
+         * the main channel (either RAM_SAVE_FLAG_MULTIFD_FLUSH, or
+         * RAM_SAVE_FLAG_EOS), and such message should have guaranteed all
+         * previous guest pages queued in the multifd channels to be
+         * completely loaded.
+         */
+        ret = multifd_ram_flush_and_sync(f);
+        if (ret < 0) {
+            error_setg(errp, "%s: multifd flush and sync failed", __func__);
+            return false;
+        }
+    }
+
+    qemu_put_be64(f, RAM_SAVE_FLAG_EOS);
+
+    return true;
+}
+
 void postcopy_preempt_shutdown_file(MigrationState *s)
 {
     qemu_put_be64(s->postcopy_qemufile_src, RAM_SAVE_FLAG_EOS);
@@ -4438,6 +4474,7 @@ static SaveVMHandlers savevm_ram_handlers = {
     .load_setup = ram_load_setup,
     .load_cleanup = ram_load_cleanup,
     .resume_prepare = ram_resume_prepare,
+    .save_postcopy_prepare = ram_save_postcopy_prepare,
 };
 
 static void ram_mig_ram_block_resized(RAMBlockNotifier *n, void *host,
