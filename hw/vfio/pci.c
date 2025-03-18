@@ -261,6 +261,25 @@ static void vfio_irqchip_change(Notifier *notify, void *data)
     vfio_intx_update(vdev, &vdev->intx.route);
 }
 
+static bool vfio_check_intx_available(VFIOPCIDevice *vdev)
+{
+    uint8_t pin = vfio_pci_read_config(&vdev->pdev, PCI_INTERRUPT_PIN, 1);
+    struct vfio_irq_info irq_info = { .argsz = sizeof(irq_info),
+                                      .index = VFIO_PCI_INTX_IRQ_INDEX};
+
+    if (!pin) {
+        return false;
+    }
+
+    if (ioctl(vdev->vbasedev.fd,
+              VFIO_DEVICE_GET_IRQ_INFO, &irq_info) < 0) {
+        warn_report("VFIO_DEVICE_GET_IRQ_INFO failed to query INTx");
+        return false;
+    }
+
+    return (irq_info.count != 0);
+}
+
 static bool vfio_intx_enable(VFIOPCIDevice *vdev, Error **errp)
 {
     uint8_t pin = vfio_pci_read_config(&vdev->pdev, PCI_INTERRUPT_PIN, 1);
@@ -268,8 +287,7 @@ static bool vfio_intx_enable(VFIOPCIDevice *vdev, Error **errp)
     int32_t fd;
     int ret;
 
-
-    if (!pin) {
+    if (!vfio_check_intx_available(vdev)) {
         return true;
     }
 
@@ -3151,7 +3169,7 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
                vdev->msi_cap_size);
     }
 
-    if (vfio_pci_read_config(&vdev->pdev, PCI_INTERRUPT_PIN, 1)) {
+    if (vfio_check_intx_available(vdev)) {
         vdev->intx.mmap_timer = timer_new_ms(QEMU_CLOCK_VIRTUAL,
                                                   vfio_intx_mmap_enable, vdev);
         pci_device_set_intx_routing_notifier(&vdev->pdev,
