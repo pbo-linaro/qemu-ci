@@ -141,6 +141,17 @@ static void ccat_init(uint32_t base)
     sysbus_mmio_map(busdev, 0, base);
 }
 
+static void ddr_ctrl_init(uint32_t base)
+{
+    DeviceState *dev;
+    SysBusDevice *busdev;
+
+    dev = qdev_new("zynq.ddr-ctlr");
+    busdev = SYS_BUS_DEVICE(dev);
+    sysbus_realize_and_unref(busdev, &error_fatal);
+    sysbus_mmio_map(busdev, 0, base);
+}
+
 static inline int beckhoff_cx7200_init_spi_flashes(uint32_t base_addr,
                                         qemu_irq irq, bool is_qspi, int unit0)
 {
@@ -325,6 +336,8 @@ static void beckhoff_cx7200_init(MachineState *machine)
     gem_init(0xE000C000, pic[77 - IRQ_OFFSET]);
 
     ccat_init(0x40000000);
+
+    ddr_ctrl_init(0xF8006000);
 
     /*
      * Compatible with:
