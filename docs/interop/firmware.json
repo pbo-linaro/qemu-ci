@@ -214,13 +214,16 @@
 #                  PL011 UART. @verbose-static is mutually exclusive
 #                  with @verbose-dynamic.
 #
+# @qemu-vars: The firmware expects qemu to provide an efi variable
+#             store, via "uefi-vars-sysbus" or "uefi-vars-x64" device.
+#
 # Since: 3.0
 ##
 { 'enum' : 'FirmwareFeature',
   'data' : [ 'acpi-s3', 'acpi-s4',
              'amd-sev', 'amd-sev-es', 'amd-sev-snp',
              'intel-tdx',
-             'enrolled-keys', 'requires-smm', 'secure-boot',
+             'enrolled-keys', 'requires-smm', 'secure-boot', 'qemu-vars',
              'verbose-dynamic', 'verbose-static' ] }
 
 ##
