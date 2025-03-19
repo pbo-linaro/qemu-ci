@@ -38,6 +38,20 @@
 # define TARGET_PAGE_BITS_MIN  10
 #endif /* !CONFIG_USER_ONLY */
 
+/* ARM-specific extra insn start words:
+ * 1: Conditional execution bits
+ * 2: Partial exception syndrome for data aborts
+ */
+#define TARGET_INSN_START_EXTRA_WORDS 2
+
+/* The 2nd extra word holding syndrome info for data aborts does not use
+ * the upper 6 bits nor the lower 13 bits. We mask and shift it down to
+ * help the sleb128 encoder do a better job.
+ * When restoring the CPU state, we shift it back up.
+ */
+#define ARM_INSN_START_WORD2_MASK ((1 << 26) - 1)
+#define ARM_INSN_START_WORD2_SHIFT 13
+
 /* ARM processors have a weak memory model */
 #define TCG_GUEST_DEFAULT_MO      (0)
 
