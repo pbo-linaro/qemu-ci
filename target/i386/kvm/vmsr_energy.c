@@ -285,7 +285,6 @@ void vmsr_read_thread_stat(pid_t pid,
     }
 
     fclose(file);
-    return;
 }
 
 /* Read QEMU stat task folder to retrieve all QEMU threads ID */
