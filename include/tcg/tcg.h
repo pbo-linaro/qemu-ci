@@ -609,6 +609,8 @@ static inline void tcg_set_insn_start_param(TCGOp *op, int arg, uint64_t v)
     }
 }
 
+void tcg_gen_insn_start(uint64_t pc, uint64_t a1, uint64_t a2);
+
 /* The last op that was emitted.  */
 static inline TCGOp *tcg_last_op(void)
 {
