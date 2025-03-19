@@ -30,7 +30,6 @@
 #endif
 #include "qemu/log.h"
 #ifdef CONFIG_TCG
-#include "tcg/insn-start-words.h"
 #include "tcg/tcg.h"
 #endif
 

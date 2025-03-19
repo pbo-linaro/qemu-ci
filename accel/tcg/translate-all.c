@@ -65,10 +65,11 @@
 #include "internal-common.h"
 #include "internal-target.h"
 #include "tcg/perf.h"
-#include "tcg/insn-start-words.h"
 #include "tcg/tcg-op.h"
 
 TBContext tb_ctx;
+
+#define TARGET_INSN_START_WORDS     (1 + TARGET_INSN_START_EXTRA_WORDS)
 
 /*
  * Encode VAL as a signed leb128 sequence at P.
