@@ -131,19 +131,20 @@ static int encode_search(TranslationBlock *tb, uint8_t *block)
     uint8_t *highwater = tcg_ctx->code_gen_highwater;
     uint64_t *insn_data = tcg_ctx->gen_insn_data;
     uint16_t *insn_end_off = tcg_ctx->gen_insn_end_off;
+    unsigned insn_start_words = tcg_ctx->insn_start_words;
     uint8_t *p = block;
     int i, j, n;
 
     for (i = 0, n = tb->icount; i < n; ++i) {
         uint64_t prev, curr;
 
-        for (j = 0; j < TARGET_INSN_START_WORDS; ++j) {
+        for (j = 0; j < insn_start_words; ++j) {
             if (i == 0) {
                 prev = (!(tb_cflags(tb) & CF_PCREL) && j == 0 ? tb->pc : 0);
             } else {
-                prev = insn_data[(i - 1) * TARGET_INSN_START_WORDS + j];
+                prev = insn_data[(i - 1) * insn_start_words + j];
             }
-            curr = insn_data[i * TARGET_INSN_START_WORDS + j];
+            curr = insn_data[i * insn_start_words + j];
             p = encode_sleb128(p, curr - prev);
         }
         prev = (i == 0 ? 0 : insn_end_off[i - 1]);
@@ -167,6 +168,7 @@ static int cpu_unwind_data_from_tb(TranslationBlock *tb, uintptr_t host_pc,
 {
     uintptr_t iter_pc = (uintptr_t)tb->tc.ptr;
     const uint8_t *p = tb->tc.ptr + tb->tc.size;
+    unsigned insn_start_words = tcg_ctx->insn_start_words;
     int i, j, num_insns = tb->icount;
 
     host_pc -= GETPC_ADJ;
@@ -175,7 +177,7 @@ static int cpu_unwind_data_from_tb(TranslationBlock *tb, uintptr_t host_pc,
         return -1;
     }
 
-    memset(data, 0, sizeof(uint64_t) * TARGET_INSN_START_WORDS);
+    memset(data, 0, sizeof(uint64_t) * insn_start_words);
     if (!(tb_cflags(tb) & CF_PCREL)) {
         data[0] = tb->pc;
     }
@@ -185,7 +187,7 @@ static int cpu_unwind_data_from_tb(TranslationBlock *tb, uintptr_t host_pc,
      * at which the end of the insn exceeds host_pc.
      */
     for (i = 0; i < num_insns; ++i) {
-        for (j = 0; j < TARGET_INSN_START_WORDS; ++j) {
+        for (j = 0; j < insn_start_words; ++j) {
             data[j] += decode_sleb128(&p);
         }
         iter_pc += decode_sleb128(&p);
@@ -443,6 +445,7 @@ TranslationBlock *tb_gen_code(CPUState *cpu,
         if (logfile) {
             int code_size, data_size;
             const tcg_target_ulong *rx_data_gen_ptr;
+            unsigned insn_start_words = tcg_ctx->insn_start_words;
             size_t chunk_start;
             int insn = 0;
 
@@ -460,7 +463,7 @@ TranslationBlock *tb_gen_code(CPUState *cpu,
             fprintf(logfile, "OUT: [size=%d]\n", gen_code_size);
             fprintf(logfile,
                     "  -- guest addr 0x%016" PRIx64 " + tb prologue\n",
-                    tcg_ctx->gen_insn_data[insn * TARGET_INSN_START_WORDS]);
+                    tcg_ctx->gen_insn_data[insn * insn_start_words]);
             chunk_start = tcg_ctx->gen_insn_end_off[insn];
             disas(logfile, tb->tc.ptr, chunk_start);
 
@@ -473,7 +476,7 @@ TranslationBlock *tb_gen_code(CPUState *cpu,
                 size_t chunk_end = tcg_ctx->gen_insn_end_off[insn];
                 if (chunk_end > chunk_start) {
                     fprintf(logfile, "  -- guest addr 0x%016" PRIx64 "\n",
-                            tcg_ctx->gen_insn_data[insn * TARGET_INSN_START_WORDS]);
+                            tcg_ctx->gen_insn_data[insn * insn_start_words]);
                     disas(logfile, tb->tc.ptr + chunk_start,
                           chunk_end - chunk_start);
                     chunk_start = chunk_end;
