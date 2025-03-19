@@ -73,6 +73,7 @@
 #include "gdbstub/enums.h"
 #include "qemu/timer.h"
 #include "chardev/char.h"
+#include "gpiodev/gpio.h"
 #include "qemu/bitmap.h"
 #include "qemu/log.h"
 #include "system/blockdev.h"
@@ -1230,6 +1231,20 @@ static int chardev_init_func(void *opaque, QemuOpts *opts, Error **errp)
     return 0;
 }
 
+static int gpiodev_init_func(void *opaque, QemuOpts *opts, Error **errp)
+{
+    Error *local_err = NULL;
+
+    if (!qemu_gpiodev_add(opts, NULL, &local_err)) {
+        if (local_err) {
+            error_propagate(errp, local_err);
+            return -1;
+        }
+        exit(0);
+    }
+    return 0;
+}
+
 #ifdef CONFIG_VIRTFS
 static int fsdev_init_func(void *opaque, QemuOpts *opts, Error **errp)
 {
@@ -2052,6 +2067,9 @@ static void qemu_create_early_backends(void)
 
     qemu_opts_foreach(qemu_find_opts("chardev"),
                       chardev_init_func, NULL, &error_fatal);
+
+    qemu_opts_foreach(qemu_find_opts("gpiodev"),
+                      gpiodev_init_func, NULL, &error_fatal);
 
 #ifdef CONFIG_VIRTFS
     qemu_opts_foreach(qemu_find_opts("fsdev"),
@@ -3236,6 +3254,13 @@ void qemu_init(int argc, char **argv)
                 break;
             case QEMU_OPTION_chardev:
                 opts = qemu_opts_parse_noisily(qemu_find_opts("chardev"),
+                                               optarg, true);
+                if (!opts) {
+                    exit(1);
+                }
+                break;
+            case QEMU_OPTION_gpiodev:
+                opts = qemu_opts_parse_noisily(qemu_find_opts("gpiodev"),
                                                optarg, true);
                 if (!opts) {
                     exit(1);
