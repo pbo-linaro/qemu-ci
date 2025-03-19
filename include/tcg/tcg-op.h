@@ -41,7 +41,7 @@ static inline void tcg_gen_insn_start(uint64_t pc, uint64_t a1)
     tcg_set_insn_start_param(op, 0, pc);
     tcg_set_insn_start_param(op, 1, a1);
 }
-#elif TARGET_INSN_START_EXTRA_WORDS == 2
+#elif TARGET_INSN_START_EXTRA_WORDS >= 2
 static inline void tcg_gen_insn_start(uint64_t pc, uint64_t a1, uint64_t a2)
 {
     unsigned insn_start_words = tcg_ctx->insn_start_words;
@@ -52,8 +52,6 @@ static inline void tcg_gen_insn_start(uint64_t pc, uint64_t a1, uint64_t a2)
     tcg_set_insn_start_param(op, 1, a1);
     tcg_set_insn_start_param(op, 2, a2);
 }
-#else
-#error Unhandled TARGET_INSN_START_EXTRA_WORDS value
 #endif
 
 #if TARGET_LONG_BITS == 32

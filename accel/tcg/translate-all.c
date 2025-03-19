@@ -66,6 +66,7 @@
 #include "internal-target.h"
 #include "tcg/perf.h"
 #include "tcg/insn-start-words.h"
+#include "tcg/tcg-op.h"
 
 TBContext tb_ctx;
 
@@ -351,6 +352,7 @@ TranslationBlock *tb_gen_code(CPUState *cpu,
     tcg_ctx->tlb_dyn_max_bits = CPU_TLB_DYN_MAX_BITS;
 #endif
     tcg_ctx->insn_start_words = TARGET_INSN_START_WORDS;
+    tcg_debug_assert(tcg_ctx->insn_start_words <= TARGET_INSN_START_WORDS_MAX);
 #ifdef TCG_GUEST_DEFAULT_MO
     tcg_ctx->guest_mo = TCG_GUEST_DEFAULT_MO;
 #else
