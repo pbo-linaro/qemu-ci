@@ -28,6 +28,7 @@
 #include "hw/boards.h"
 #endif
 #include "tcg/insn-start-words.h"
+#include "tcg/tcg.h"
 
 #define TO_SPR(group, number) (((group) << 11) + (number))
 
@@ -218,7 +219,7 @@ target_ulong HELPER(mfspr)(CPUOpenRISCState *env, target_ulong rd,
 {
     OpenRISCCPU *cpu = env_archcpu(env);
 #ifndef CONFIG_USER_ONLY
-    uint64_t data[TARGET_INSN_START_WORDS];
+    uint64_t data[TARGET_INSN_START_WORDS_MAX];
     MachineState *ms = MACHINE(qdev_get_machine());
     CPUState *cs = env_cpu(env);
     int idx;
