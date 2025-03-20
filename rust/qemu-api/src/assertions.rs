@@ -120,3 +120,25 @@ macro_rules! assert_match {
         );
     };
 }
+
+/// Assert at compile time that an expression is true.  This is similar
+/// to `const { assert!(...); }` but it works outside functions, as well as
+/// on versions of Rust before 1.79.
+///
+/// # Examples
+///
+/// ```
+/// # use qemu_api::const_assert;
+/// const_assert!("abc".len() == 3);
+/// ```
+///
+/// ```compile_fail
+/// # use qemu_api::const_assert;
+/// const_assert!("abc".len() == 2); // does not compile
+/// ```
+#[macro_export]
+macro_rules! const_assert {
+    ($x:expr) => {
+        const _: [(); { const VALUE__: bool = $x; VALUE__ as usize }] = [()];
+    };
+}
