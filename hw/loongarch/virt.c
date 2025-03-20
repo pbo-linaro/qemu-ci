@@ -958,12 +958,16 @@ static void virt_cpu_unplug(HotplugHandler *hotplug_dev,
     hotplug_handler_unplug(HOTPLUG_HANDLER(lvms->extioi), dev, &err);
     if (err) {
         error_propagate(errp, err);
+        /* Send plug message to restore, discard error here */
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->ipi), dev, NULL);
         return;
     }
 
     /* Notify acpi ged CPU removed */
     hotplug_handler_unplug(HOTPLUG_HANDLER(lvms->acpi_ged), dev, &err);
     if (err) {
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->ipi), dev, NULL);
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->extioi), dev, NULL);
         error_propagate(errp, err);
         return;
     }
