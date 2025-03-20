@@ -2,10 +2,12 @@
 // Author(s): Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-use std::{ffi::CStr, ptr::addr_of_mut};
+use std::{ffi::CStr, mem, ptr::addr_of_mut};
 
 use qemu_api::{
+    bindings,
     chardev::{CharBackend, Chardev, Event},
+    static_assert,
     impl_vmstate_forward,
     irq::{IRQState, InterruptSource},
     memory::{hwaddr, MemoryRegion, MemoryRegionOps, MemoryRegionOpsBuilder},
@@ -123,6 +125,12 @@ pub struct PL011State {
     #[doc(alias = "migrate_clk")]
     pub migrate_clock: bool,
 }
+
+// Some C users of this device embed its state struct into their own
+// structs, so the size of the Rust version must not be any larger
+// than the size of the C one. If this assert triggers you need to
+// expand the padding_for_rust[] array in the C PL011State struct.
+static_assert!(mem::size_of::<PL011State>() <= mem::size_of::<bindings::PL011State>());
 
 qom_isa!(PL011State : SysBusDevice, DeviceState, Object);
 
