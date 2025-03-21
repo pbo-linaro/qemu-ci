@@ -38,7 +38,4 @@
 # define TARGET_PAGE_BITS_MIN  10
 #endif /* !CONFIG_USER_ONLY */
 
-/* ARM processors have a weak memory model */
-#define TCG_GUEST_DEFAULT_MO      (0)
-
 #endif
