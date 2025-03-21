@@ -6,7 +6,6 @@
 #include "qemu/option.h"
 #include "qemu/units.h"
 #include "hw/qdev-core.h"
-#include "migration/blocker.h"
 #include "migration/vmstate.h"
 #include "ui/clipboard.h"
 #include "ui/console.h"
@@ -32,9 +31,6 @@
 
 struct VDAgentChardev {
     Chardev parent;
-
-    /* TODO: migration isn't yet supported */
-    Error *migration_blocker;
 
     /* config */
     bool mouse;
@@ -673,10 +669,6 @@ static void vdagent_chr_open(Chardev *chr,
     return;
 #endif
 
-    if (migrate_add_blocker(&vd->migration_blocker, errp) != 0) {
-        return;
-    }
-
     vd->mouse = VDAGENT_MOUSE_DEFAULT;
     if (cfg->has_mouse) {
         vd->mouse = cfg->mouse;
@@ -998,15 +990,12 @@ static void vdagent_chr_init(Object *obj)
 
     buffer_init(&vd->outbuf, "vdagent-outbuf");
     vmstate_register(NULL, 0, &vmstate_vdagent, vd);
-    error_setg(&vd->migration_blocker,
-               "The vdagent chardev doesn't yet support migration");
 }
 
 static void vdagent_chr_fini(Object *obj)
 {
     VDAgentChardev *vd = QEMU_VDAGENT_CHARDEV(obj);
 
-    migrate_del_blocker(&vd->migration_blocker);
     vdagent_disconnect(vd);
     if (vd->mouse_hs) {
         qemu_input_handler_unregister(vd->mouse_hs);
