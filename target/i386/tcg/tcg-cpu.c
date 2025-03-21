@@ -129,7 +129,10 @@ static const TCGCPUOps x86_tcg_ops = {
     .need_replay_interrupt = x86_need_replay_interrupt,
 #endif /* !CONFIG_USER_ONLY */
 
-    .guest_default_memory_order = TCG_GUEST_DEFAULT_MO,
+    /*
+     * The x86 has a strong memory model with some store-after-load re-ordering
+     */
+    .guest_default_memory_order = TCG_MO_ALL & ~TCG_MO_ST_LD,
 };
 
 static void x86_tcg_cpu_init_ops(AccelCPUClass *accel_cpu, CPUClass *cc)

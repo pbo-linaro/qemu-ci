@@ -213,7 +213,8 @@ static const TCGCPUOps rx_tcg_ops = {
     .cpu_exec_halt = rx_cpu_has_work,
     .do_interrupt = rx_cpu_do_interrupt,
 
-    .guest_default_memory_order = TCG_GUEST_DEFAULT_MO,
+    /* MTTCG not yet supported: require strict ordering */
+    .guest_default_memory_order = TCG_MO_ALL,
 };
 
 static void rx_cpu_class_init(ObjectClass *klass, void *data)
