@@ -360,6 +360,8 @@ static const TCGCPUOps s390_tcg_ops = {
     .debug_excp_handler = s390x_cpu_debug_excp_handler,
     .do_unaligned_access = s390x_cpu_do_unaligned_access,
 #endif /* !CONFIG_USER_ONLY */
+
+    .guest_default_memory_order = TCG_GUEST_DEFAULT_MO,
 };
 #endif /* CONFIG_TCG */
 

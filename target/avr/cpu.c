@@ -216,6 +216,7 @@ static const TCGCPUOps avr_tcg_ops = {
     .cpu_exec_halt = avr_cpu_has_work,
     .tlb_fill = avr_cpu_tlb_fill,
     .do_interrupt = avr_cpu_do_interrupt,
+    .guest_default_memory_order = TCG_GUEST_DEFAULT_MO,
 };
 
 static void avr_cpu_class_init(ObjectClass *oc, void *data)
