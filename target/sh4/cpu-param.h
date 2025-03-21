@@ -16,4 +16,7 @@
 # define TARGET_VIRT_ADDR_SPACE_BITS 32
 #endif
 
+/* MTTCG not yet supported: require strict ordering */
+#define TCG_GUEST_DEFAULT_MO        TCG_MO_ALL
+
 #endif
