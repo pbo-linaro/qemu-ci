@@ -958,6 +958,8 @@ static void virt_cpu_unplug(HotplugHandler *hotplug_dev,
     hotplug_handler_unplug(HOTPLUG_HANDLER(lvms->extioi), dev, &err);
     if (err) {
         error_propagate(errp, err);
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->ipi), dev,
+                             &error_abort);
         return;
     }
 
@@ -965,6 +967,10 @@ static void virt_cpu_unplug(HotplugHandler *hotplug_dev,
     hotplug_handler_unplug(HOTPLUG_HANDLER(lvms->acpi_ged), dev, &err);
     if (err) {
         error_propagate(errp, err);
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->ipi), dev,
+                             &error_abort);
+        hotplug_handler_plug(HOTPLUG_HANDLER(lvms->extioi), dev,
+                             &error_abort);
         return;
     }
 
