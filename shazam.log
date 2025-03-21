@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250321183450.3970-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 5 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/4] target/riscv: Restrict RV128 MTTCG check on system emulation
+  [32m✓[0m [PATCH v2 2/4] tcg: Move qemu_tcg_mttcg_enabled() to 'system/tcg.h'
+  [32m✓[0m [PATCH v2 3/4] tcg: Convert TCGState::mttcg_enabled to TriState
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 4/4] tcg: Convert TARGET_SUPPORTS_MTTCG to TCGCPUOps::mttcg_supported field
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: target/riscv: Restrict RV128 MTTCG check on system emulation
+Applying: tcg: Move qemu_tcg_mttcg_enabled() to 'system/tcg.h'
+Applying: tcg: Convert TCGState::mttcg_enabled to TriState
+Patch failed at 0003 tcg: Convert TCGState::mttcg_enabled to TriState
+error: patch failed: accel/tcg/tcg-all.c:68
+error: accel/tcg/tcg-all.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
