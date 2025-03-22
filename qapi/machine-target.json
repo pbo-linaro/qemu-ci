@@ -162,8 +162,7 @@
 # @modelb: description of the second CPU model to compare, referred to
 #     as "model B" in CpuModelCompareResult
 #
-# Returns: a CpuModelCompareInfo describing how both CPU models
-#     compare
+# Returns: An object describing how both CPU models compare
 #
 # Errors:
 #     - if comparing CPU models is not supported
@@ -218,7 +217,7 @@
 #
 # @modelb: description of the second CPU model to baseline
 #
-# Returns: a CpuModelBaselineInfo describing the baselined CPU model
+# Returns: An object describing the baselined CPU model
 #
 # Errors:
 #     - if baselining CPU models is not supported
@@ -296,7 +295,7 @@
 #
 # @type: expansion type, specifying how to expand the CPU model
 #
-# Returns: a CpuModelExpansionInfo describing the expanded CPU model
+# Returns: An object describing the expanded CPU model
 #
 # Errors:
 #     - if expanding CPU models is not supported

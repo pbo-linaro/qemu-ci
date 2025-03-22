@@ -158,7 +158,7 @@
 #
 # Query the SEV guest launch information.
 #
-# Returns: The @SevLaunchMeasureInfo for the guest
+# Returns: The guest's SEV guest launch measurement info
 #
 # Since: 2.12
 #
