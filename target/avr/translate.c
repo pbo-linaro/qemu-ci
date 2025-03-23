@@ -967,40 +967,38 @@ static void gen_push_ret(DisasContext *ctx, int ret)
     } else if (avr_feature(ctx->env, AVR_FEATURE_2_BYTE_PC)) {
         TCGv t0 = tcg_constant_i32(ret & 0x00ffff);
 
-        tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
-        gen_data_store_raw(ctx, t0, cpu_sp, 0, MO_BEUW);
-        tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
+        gen_data_store_raw(ctx, t0, cpu_sp, -1, MO_BEUW);
+        tcg_gen_subi_tl(cpu_sp, cpu_sp, 2);
     } else if (avr_feature(ctx->env, AVR_FEATURE_3_BYTE_PC)) {
         TCGv lo = tcg_constant_i32(ret & 0x0000ff);
         TCGv hi = tcg_constant_i32((ret & 0xffff00) >> 8);
 
         gen_data_store_raw(ctx, lo, cpu_sp, 0, MO_UB);
-        tcg_gen_subi_tl(cpu_sp, cpu_sp, 2);
-        gen_data_store_raw(ctx, hi, cpu_sp, 0, MO_BEUW);
-        tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
+        gen_data_store_raw(ctx, hi, cpu_sp, -2, MO_BEUW);
+        tcg_gen_subi_tl(cpu_sp, cpu_sp, 3);
+    } else {
+        g_assert_not_reached();
     }
 }
 
 static void gen_pop_ret(DisasContext *ctx, TCGv ret)
 {
     if (avr_feature(ctx->env, AVR_FEATURE_1_BYTE_PC)) {
+        gen_data_load_raw(ctx, ret, cpu_sp, 1, MO_UB);
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        gen_data_load_raw(ctx, ret, cpu_sp, 0, MO_UB);
     } else if (avr_feature(ctx->env, AVR_FEATURE_2_BYTE_PC)) {
-        tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        gen_data_load_raw(ctx, ret, cpu_sp, 0, MO_BEUW);
-        tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
+        gen_data_load_raw(ctx, ret, cpu_sp, 1, MO_BEUW);
+        tcg_gen_addi_tl(cpu_sp, cpu_sp, 2);
     } else if (avr_feature(ctx->env, AVR_FEATURE_3_BYTE_PC)) {
-        TCGv lo = tcg_temp_new_i32();
         TCGv hi = tcg_temp_new_i32();
 
-        tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        gen_data_load_raw(ctx, hi, cpu_sp, 0, MO_BEUW);
+        gen_data_load_raw(ctx, hi, cpu_sp, 1, MO_BEUW);
+        gen_data_load_raw(ctx, ret, cpu_sp, 3, MO_UB);
+        tcg_gen_addi_tl(cpu_sp, cpu_sp, 3);
 
-        tcg_gen_addi_tl(cpu_sp, cpu_sp, 2);
-        gen_data_load_raw(ctx, lo, cpu_sp, 0, MO_UB);
-
-        tcg_gen_deposit_tl(ret, lo, hi, 8, 16);
+        tcg_gen_deposit_tl(ret, ret, hi, 8, 16);
+    } else {
+        g_assert_not_reached();
     }
 }
 
