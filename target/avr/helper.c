@@ -69,7 +69,8 @@ bool avr_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
 
 static void do_stb(CPUAVRState *env, uint32_t addr, uint8_t data, uintptr_t ra)
 {
-    cpu_stb_mmuidx_ra(env, addr, data, MMU_DATA_IDX, ra);
+    cpu_stb_mmuidx_ra(env, addr + env_archcpu(env)->offset_io,
+                      data, MMU_DATA_IDX, ra);
 }
 
 void avr_cpu_do_interrupt(CPUState *cs)
