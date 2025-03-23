@@ -71,9 +71,24 @@ static void arduino_machine_class_init(ObjectClass *oc, void *data)
 
 static void arduino_machine_class_base_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
     ArduinoMachineClass *amc = ARDUINO_MACHINE_CLASS(oc);
+    AtmegaMcuClass *acc;
+    int page_bits;
 
     amc->mcu_type = data;
+
+    /* Find the mcu class that we will instantiate. */
+    acc = ATMEGA_MCU_CLASS(object_class_by_name(amc->mcu_type));
+
+    /*
+     * Select a page size based on the size of sram.
+     * This will result in a page size between 1k and 8k
+     * and minimize the number of pages to span flash.
+     */
+    page_bits = ctz32(acc->sram_size);
+    assert(page_bits >= TARGET_PAGE_BITS_MIN && page_bits <= 13);
+    mc->minimum_page_bits = page_bits;
 }
 
 static void arduino_duemilanove_class_init(ObjectClass *oc, void *data)

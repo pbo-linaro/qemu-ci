@@ -21,8 +21,15 @@
 #ifndef AVR_CPU_PARAM_H
 #define AVR_CPU_PARAM_H
 
-#define TARGET_PAGE_BITS 10
-#define TARGET_PHYS_ADDR_SPACE_BITS 24
+#define TARGET_PAGE_BITS_VARY
+#define TARGET_PAGE_BITS_MIN 10
+
+/*
+ * The real value for TARGET_PHYS_ADDR_SPACE_BITS is 24, but selecting
+ * an overly small value will assert in tb-maint.c when selecting the
+ * shape of the page_table tree.  This allows an 8k page size.
+ */
+#define TARGET_PHYS_ADDR_SPACE_BITS 28
 #define TARGET_VIRT_ADDR_SPACE_BITS 24
 
 #define TCG_GUEST_DEFAULT_MO 0
