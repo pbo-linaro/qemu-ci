@@ -23,6 +23,10 @@
 #define TYPE_ATMEGA1280_MCU "ATmega1280"
 #define TYPE_ATMEGA2560_MCU "ATmega2560"
 
+typedef struct AtmegaMcuClass AtmegaMcuClass;
+DECLARE_CLASS_CHECKERS(AtmegaMcuClass, ATMEGA_MCU,
+                       TYPE_ATMEGA_MCU)
+
 typedef struct AtmegaMcuState AtmegaMcuState;
 DECLARE_INSTANCE_CHECKER(AtmegaMcuState, ATMEGA_MCU,
                          TYPE_ATMEGA_MCU)
@@ -31,6 +35,22 @@ DECLARE_INSTANCE_CHECKER(AtmegaMcuState, ATMEGA_MCU,
 #define USART_MAX 4
 #define TIMER_MAX 6
 #define GPIO_MAX 12
+
+struct AtmegaMcuClass {
+    /*< private >*/
+    SysBusDeviceClass parent_class;
+    /*< public >*/
+    const char *uc_name;
+    const char *cpu_type;
+    size_t flash_size;
+    size_t eeprom_size;
+    size_t sram_size;
+    size_t io_size;
+    size_t gpio_count;
+    size_t adc_count;
+    const uint8_t *irq;
+    const struct peripheral_cfg *dev;
+};
 
 struct AtmegaMcuState {
     /*< private >*/

@@ -36,7 +36,7 @@ enum AtmegaPeripheral {
 #define TIMER(n)    (n + TIMER0)
 #define POWER(n)    (n + POWER0)
 
-typedef struct {
+typedef struct peripheral_cfg {
     uint16_t addr;
     enum AtmegaPeripheral power_index;
     uint8_t power_bit;
@@ -45,26 +45,6 @@ typedef struct {
     uint16_t intflag_addr;
     bool is_timer16;
 } peripheral_cfg;
-
-struct AtmegaMcuClass {
-    /*< private >*/
-    SysBusDeviceClass parent_class;
-    /*< public >*/
-    const char *uc_name;
-    const char *cpu_type;
-    size_t flash_size;
-    size_t eeprom_size;
-    size_t sram_size;
-    size_t io_size;
-    size_t gpio_count;
-    size_t adc_count;
-    const uint8_t *irq;
-    const peripheral_cfg *dev;
-};
-typedef struct AtmegaMcuClass AtmegaMcuClass;
-
-DECLARE_CLASS_CHECKERS(AtmegaMcuClass, ATMEGA_MCU,
-                       TYPE_ATMEGA_MCU)
 
 static const peripheral_cfg dev168_328[PERIFMAX] = {
     [USART0]        = {  0xc0, POWER0, 1 },
