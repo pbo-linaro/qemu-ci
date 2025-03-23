@@ -68,6 +68,35 @@ static void avr_restore_state_to_opc(CPUState *cs,
     cpu_env(cs)->pc_w = data[0];
 }
 
+static int avr_memory_rw_debug(CPUState *cpu, vaddr addr,
+                               uint8_t *buf, size_t len, bool is_write)
+{
+    if (addr < OFFSET_DATA) {
+        size_t len_code;
+        int ret;
+
+        if (addr + len <= OFFSET_DATA) {
+            return cpu_memory_rw_debug(cpu, addr, buf, len, is_write);
+        }
+
+        len_code = addr + len - OFFSET_DATA;
+        ret = cpu_memory_rw_debug(cpu, addr, buf, len_code, is_write);
+        if (ret != 0) {
+            return ret;
+        }
+        addr = OFFSET_DATA;
+        len -= len_code;
+    }
+
+    /*
+     * Data is biased such that SRAM begins at TARGET_PAGE_SIZE,
+     * and I/O is immediately prior.  This leave a hole between
+     * OFFSET_DATA and the relative start of the address space.
+     */
+    addr += env_archcpu(cpu_env(cpu))->offset_io;
+    return cpu_memory_rw_debug(cpu, addr, buf, len, is_write);
+}
+
 static void avr_cpu_reset_hold(Object *obj, ResetType type)
 {
     CPUState *cs = CPU(obj);
@@ -262,6 +291,7 @@ static void avr_cpu_class_init(ObjectClass *oc, void *data)
     cc->gdb_write_register = avr_cpu_gdb_write_register;
     cc->gdb_adjust_breakpoint = avr_cpu_gdb_adjust_breakpoint;
     cc->gdb_core_xml_file = "avr-cpu.xml";
+    cc->memory_rw_debug = avr_memory_rw_debug;
     cc->tcg_ops = &avr_tcg_ops;
 }
 
