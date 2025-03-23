@@ -236,6 +236,8 @@ static void atmega_realize(DeviceState *dev, Error **errp)
 
     object_property_set_uint(OBJECT(&s->cpu), "init-sp",
                              mc->io_size + mc->sram_size - 1, &error_abort);
+    object_property_set_uint(OBJECT(&s->cpu), "offset-io",
+                             0, &error_abort);
 
     qdev_realize(DEVICE(&s->cpu), NULL, &error_abort);
     cpudev = DEVICE(&s->cpu);

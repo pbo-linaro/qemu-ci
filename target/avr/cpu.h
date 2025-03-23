@@ -148,6 +148,8 @@ struct ArchCPU {
 
     /* Initial value of stack pointer */
     uint32_t init_sp;
+    /* Offset of the beginning of I/O within the first page. */
+    uint32_t offset_io;
 };
 
 /**

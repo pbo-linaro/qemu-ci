@@ -92,6 +92,7 @@ struct DisasContext {
 
     /* Routine used to access memory */
     int memidx;
+    uint32_t offset_io;
 
     /*
      * some AVR instructions can make the following instruction to be skipped
@@ -2664,6 +2665,7 @@ static void avr_tr_init_disas_context(DisasContextBase *dcbase, CPUState *cs)
     ctx->cs = cs;
     ctx->env = cpu_env(cs);
     ctx->npc = ctx->base.pc_first / 2;
+    ctx->offset_io = env_archcpu(ctx->env)->offset_io;
 
     ctx->skip_cond = TCG_COND_NEVER;
     if (tb_flags & TB_FLAGS_SKIP) {
