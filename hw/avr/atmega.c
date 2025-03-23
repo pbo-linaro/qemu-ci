@@ -14,6 +14,7 @@
 #include "qapi/error.h"
 #include "exec/memory.h"
 #include "exec/address-spaces.h"
+#include "exec/target_page.h"
 #include "system/system.h"
 #include "hw/qdev-properties.h"
 #include "hw/sysbus.h"
@@ -222,6 +223,7 @@ static void atmega_realize(DeviceState *dev, Error **errp)
     DeviceState *cpudev;
     SysBusDevice *sbd;
     char *devname;
+    uint32_t offset_io, offset_sram;
     size_t i;
 
     assert(mc->io_size <= 0x200);
@@ -231,13 +233,25 @@ static void atmega_realize(DeviceState *dev, Error **errp)
         return;
     }
 
+    /*
+     * Bias the virtual data section so that the start of RAM is at
+     * the start of the second page of the physical data section.
+     * This puts all of the I/O at the end of the first page of the
+     * physical data section.
+     */
+    offset_io = TARGET_PAGE_SIZE - mc->io_size;
+    offset_sram = TARGET_PAGE_SIZE;
+
     /* CPU */
     object_initialize_child(OBJECT(dev), "cpu", &s->cpu, mc->cpu_type);
 
     object_property_set_uint(OBJECT(&s->cpu), "init-sp",
                              mc->io_size + mc->sram_size - 1, &error_abort);
     object_property_set_uint(OBJECT(&s->cpu), "offset-io",
-                             0, &error_abort);
+                             offset_io, &error_abort);
+
+    offset_io += OFFSET_DATA;
+    offset_sram += OFFSET_DATA;
 
     qdev_realize(DEVICE(&s->cpu), NULL, &error_abort);
     cpudev = DEVICE(&s->cpu);
@@ -245,8 +259,7 @@ static void atmega_realize(DeviceState *dev, Error **errp)
     /* SRAM */
     memory_region_init_ram(&s->sram, OBJECT(dev), "sram", mc->sram_size,
                            &error_abort);
-    memory_region_add_subregion(get_system_memory(),
-                                OFFSET_DATA + mc->io_size, &s->sram);
+    memory_region_add_subregion(get_system_memory(), offset_sram, &s->sram);
 
     /* Flash */
     memory_region_init_rom(&s->flash, OBJECT(dev),
@@ -258,13 +271,14 @@ static void atmega_realize(DeviceState *dev, Error **errp)
      *
      * 0x00 - 0x1f: Registers
      * 0x20 - 0x5f: I/O memory
-     * 0x60 - 0xff: Extended I/O
+     * 0x60 - 0x[1]ff: Extended I/O
      */
     s->io = qdev_new(TYPE_UNIMPLEMENTED_DEVICE);
     qdev_prop_set_string(s->io, "name", "I/O");
     qdev_prop_set_uint64(s->io, "size", mc->io_size);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(s->io), &error_fatal);
-    sysbus_mmio_map_overlap(SYS_BUS_DEVICE(s->io), 0, OFFSET_DATA, -1234);
+
+    sysbus_mmio_map_overlap(SYS_BUS_DEVICE(s->io), 0, offset_io, -1234);
 
     /* Power Reduction */
     for (i = 0; i < POWER_MAX; i++) {
@@ -277,7 +291,7 @@ static void atmega_realize(DeviceState *dev, Error **errp)
                                 TYPE_AVR_MASK);
         sysbus_realize(SYS_BUS_DEVICE(&s->pwr[i]), &error_abort);
         sysbus_mmio_map(SYS_BUS_DEVICE(&s->pwr[i]), 0,
-                        OFFSET_DATA + mc->dev[idx].addr);
+                        offset_io + mc->dev[idx].addr);
         g_free(devname);
     }
 
@@ -289,7 +303,7 @@ static void atmega_realize(DeviceState *dev, Error **errp)
         }
         devname = g_strdup_printf("atmega-gpio-%c", 'a' + (char)i);
         create_unimplemented_device(devname,
-                                    OFFSET_DATA + mc->dev[idx].addr, 3);
+                                    offset_io + mc->dev[idx].addr, 3);
         g_free(devname);
     }
 
@@ -305,7 +319,7 @@ static void atmega_realize(DeviceState *dev, Error **errp)
         qdev_prop_set_chr(DEVICE(&s->usart[i]), "chardev", serial_hd(i));
         sbd = SYS_BUS_DEVICE(&s->usart[i]);
         sysbus_realize(sbd, &error_abort);
-        sysbus_mmio_map(sbd, 0, OFFSET_DATA + mc->dev[USART(i)].addr);
+        sysbus_mmio_map(sbd, 0, offset_io + mc->dev[USART(i)].addr);
         connect_peripheral_irq(mc, sbd, 0, cpudev, USART_RXC_IRQ(i));
         connect_peripheral_irq(mc, sbd, 1, cpudev, USART_DRE_IRQ(i));
         connect_peripheral_irq(mc, sbd, 2, cpudev, USART_TXC_IRQ(i));
@@ -321,12 +335,12 @@ static void atmega_realize(DeviceState *dev, Error **errp)
         }
         if (!mc->dev[idx].is_timer16) {
             create_unimplemented_device("avr-timer8",
-                                        OFFSET_DATA + mc->dev[idx].addr, 5);
+                                        offset_io + mc->dev[idx].addr, 5);
             create_unimplemented_device("avr-timer8-intmask",
-                                        OFFSET_DATA
+                                        offset_io
                                         + mc->dev[idx].intmask_addr, 1);
             create_unimplemented_device("avr-timer8-intflag",
-                                        OFFSET_DATA
+                                        offset_io
                                         + mc->dev[idx].intflag_addr, 1);
             continue;
         }
@@ -337,9 +351,9 @@ static void atmega_realize(DeviceState *dev, Error **errp)
                                  s->xtal_freq_hz, &error_abort);
         sbd = SYS_BUS_DEVICE(&s->timer[i]);
         sysbus_realize(sbd, &error_abort);
-        sysbus_mmio_map(sbd, 0, OFFSET_DATA + mc->dev[idx].addr);
-        sysbus_mmio_map(sbd, 1, OFFSET_DATA + mc->dev[idx].intmask_addr);
-        sysbus_mmio_map(sbd, 2, OFFSET_DATA + mc->dev[idx].intflag_addr);
+        sysbus_mmio_map(sbd, 0, offset_io + mc->dev[idx].addr);
+        sysbus_mmio_map(sbd, 1, offset_io + mc->dev[idx].intmask_addr);
+        sysbus_mmio_map(sbd, 2, offset_io + mc->dev[idx].intflag_addr);
         connect_peripheral_irq(mc, sbd, 0, cpudev, TIMER_CAPT_IRQ(i));
         connect_peripheral_irq(mc, sbd, 1, cpudev, TIMER_COMPA_IRQ(i));
         connect_peripheral_irq(mc, sbd, 2, cpudev, TIMER_COMPB_IRQ(i));
@@ -349,12 +363,12 @@ static void atmega_realize(DeviceState *dev, Error **errp)
         g_free(devname);
     }
 
-    create_unimplemented_device("avr-twi",          OFFSET_DATA + 0x0b8, 6);
-    create_unimplemented_device("avr-adc",          OFFSET_DATA + 0x078, 8);
-    create_unimplemented_device("avr-ext-mem-ctrl", OFFSET_DATA + 0x074, 2);
-    create_unimplemented_device("avr-watchdog",     OFFSET_DATA + 0x060, 1);
-    create_unimplemented_device("avr-spi",          OFFSET_DATA + 0x04c, 3);
-    create_unimplemented_device("avr-eeprom",       OFFSET_DATA + 0x03f, 3);
+    create_unimplemented_device("avr-twi",          offset_io + 0x0b8, 6);
+    create_unimplemented_device("avr-adc",          offset_io + 0x078, 8);
+    create_unimplemented_device("avr-ext-mem-ctrl", offset_io + 0x074, 2);
+    create_unimplemented_device("avr-watchdog",     offset_io + 0x060, 1);
+    create_unimplemented_device("avr-spi",          offset_io + 0x04c, 3);
+    create_unimplemented_device("avr-eeprom",       offset_io + 0x03f, 3);
 }
 
 static const Property atmega_props[] = {
