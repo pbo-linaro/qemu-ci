@@ -198,6 +198,28 @@ static bool decode_insn(DisasContext *ctx, uint16_t insn);
 static void gen_inb(DisasContext *ctx, TCGv data, int port);
 static void gen_outb(DisasContext *ctx, TCGv data, int port);
 
+static void gen_data_store_raw(DisasContext *ctx, TCGv data,
+                               TCGv addr, int offset, MemOp mop)
+{
+    if (ctx->offset_io + offset) {
+        TCGv t = tcg_temp_new();
+        tcg_gen_addi_tl(t, addr, ctx->offset_io + offset);
+        addr = t;
+    }
+    tcg_gen_qemu_st_tl(data, addr, MMU_DATA_IDX, mop);
+}
+
+static void gen_data_load_raw(DisasContext *ctx, TCGv data,
+                              TCGv addr, int offset, MemOp mop)
+{
+    if (ctx->offset_io + offset) {
+        TCGv t = tcg_temp_new();
+        tcg_gen_addi_tl(t, addr, ctx->offset_io + offset);
+        addr = t;
+    }
+    tcg_gen_qemu_ld_tl(data, addr, MMU_DATA_IDX, mop);
+}
+
 /*
  * Arithmetic Instructions
  */
@@ -940,21 +962,21 @@ static void gen_push_ret(DisasContext *ctx, int ret)
     if (avr_feature(ctx->env, AVR_FEATURE_1_BYTE_PC)) {
         TCGv t0 = tcg_constant_i32(ret & 0x0000ff);
 
-        tcg_gen_qemu_st_tl(t0, cpu_sp, MMU_DATA_IDX, MO_UB);
+        gen_data_store_raw(ctx, t0, cpu_sp, 0, MO_UB);
         tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
     } else if (avr_feature(ctx->env, AVR_FEATURE_2_BYTE_PC)) {
         TCGv t0 = tcg_constant_i32(ret & 0x00ffff);
 
         tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
-        tcg_gen_qemu_st_tl(t0, cpu_sp, MMU_DATA_IDX, MO_BEUW);
+        gen_data_store_raw(ctx, t0, cpu_sp, 0, MO_BEUW);
         tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
     } else if (avr_feature(ctx->env, AVR_FEATURE_3_BYTE_PC)) {
         TCGv lo = tcg_constant_i32(ret & 0x0000ff);
         TCGv hi = tcg_constant_i32((ret & 0xffff00) >> 8);
 
-        tcg_gen_qemu_st_tl(lo, cpu_sp, MMU_DATA_IDX, MO_UB);
+        gen_data_store_raw(ctx, lo, cpu_sp, 0, MO_UB);
         tcg_gen_subi_tl(cpu_sp, cpu_sp, 2);
-        tcg_gen_qemu_st_tl(hi, cpu_sp, MMU_DATA_IDX, MO_BEUW);
+        gen_data_store_raw(ctx, hi, cpu_sp, 0, MO_BEUW);
         tcg_gen_subi_tl(cpu_sp, cpu_sp, 1);
     }
 }
@@ -963,20 +985,20 @@ static void gen_pop_ret(DisasContext *ctx, TCGv ret)
 {
     if (avr_feature(ctx->env, AVR_FEATURE_1_BYTE_PC)) {
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        tcg_gen_qemu_ld_tl(ret, cpu_sp, MMU_DATA_IDX, MO_UB);
+        gen_data_load_raw(ctx, ret, cpu_sp, 0, MO_UB);
     } else if (avr_feature(ctx->env, AVR_FEATURE_2_BYTE_PC)) {
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        tcg_gen_qemu_ld_tl(ret, cpu_sp, MMU_DATA_IDX, MO_BEUW);
+        gen_data_load_raw(ctx, ret, cpu_sp, 0, MO_BEUW);
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
     } else if (avr_feature(ctx->env, AVR_FEATURE_3_BYTE_PC)) {
         TCGv lo = tcg_temp_new_i32();
         TCGv hi = tcg_temp_new_i32();
 
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 1);
-        tcg_gen_qemu_ld_tl(hi, cpu_sp, MMU_DATA_IDX, MO_BEUW);
+        gen_data_load_raw(ctx, hi, cpu_sp, 0, MO_BEUW);
 
         tcg_gen_addi_tl(cpu_sp, cpu_sp, 2);
-        tcg_gen_qemu_ld_tl(lo, cpu_sp, MMU_DATA_IDX, MO_UB);
+        gen_data_load_raw(ctx, lo, cpu_sp, 0, MO_UB);
 
         tcg_gen_deposit_tl(ret, lo, hi, 8, 16);
     }
@@ -1498,13 +1520,13 @@ static void gen_data_store(DisasContext *ctx, TCGv data, TCGv addr)
     if (ctx->base.tb->flags & TB_FLAGS_FULL_ACCESS) {
         gen_helper_fullwr(tcg_env, data, addr);
     } else {
-        tcg_gen_qemu_st_tl(data, addr, MMU_DATA_IDX, MO_UB);
+        gen_data_store_raw(ctx, data, addr, 0, MO_UB);
     }
 }
 
 static void gen_data_load(DisasContext *ctx, TCGv data, TCGv addr)
 {
-    tcg_gen_qemu_ld_tl(data, addr, MMU_DATA_IDX, MO_UB);
+    gen_data_load_raw(ctx, data, addr, 0, MO_UB);
 }
 
 static void gen_inb(DisasContext *ctx, TCGv data, int port)
