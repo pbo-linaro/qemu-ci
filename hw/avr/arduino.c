@@ -69,6 +69,13 @@ static void arduino_machine_class_init(ObjectClass *oc, void *data)
     mc->no_parallel = 1;
 }
 
+static void arduino_machine_class_base_init(ObjectClass *oc, void *data)
+{
+    ArduinoMachineClass *amc = ARDUINO_MACHINE_CLASS(oc);
+
+    amc->mcu_type = data;
+}
+
 static void arduino_duemilanove_class_init(ObjectClass *oc, void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
@@ -80,7 +87,6 @@ static void arduino_duemilanove_class_init(ObjectClass *oc, void *data)
      */
     mc->desc        = "Arduino Duemilanove (ATmega168)",
     mc->alias       = "2009";
-    amc->mcu_type   = TYPE_ATMEGA168_MCU;
     amc->xtal_hz    = 16 * 1000 * 1000;
 };
 
@@ -95,7 +101,6 @@ static void arduino_uno_class_init(ObjectClass *oc, void *data)
      */
     mc->desc        = "Arduino UNO (ATmega328P)";
     mc->alias       = "uno";
-    amc->mcu_type   = TYPE_ATMEGA328_MCU;
     amc->xtal_hz    = 16 * 1000 * 1000;
 };
 
@@ -110,7 +115,6 @@ static void arduino_mega_class_init(ObjectClass *oc, void *data)
      */
     mc->desc        = "Arduino Mega (ATmega1280)";
     mc->alias       = "mega";
-    amc->mcu_type   = TYPE_ATMEGA1280_MCU;
     amc->xtal_hz    = 16 * 1000 * 1000;
 };
 
@@ -125,7 +129,6 @@ static void arduino_mega2560_class_init(ObjectClass *oc, void *data)
      */
     mc->desc        = "Arduino Mega 2560 (ATmega2560)";
     mc->alias       = "mega2560";
-    amc->mcu_type   = TYPE_ATMEGA2560_MCU;
     amc->xtal_hz    = 16 * 1000 * 1000; /* CSTCE16M0V53-R0 */
 };
 
@@ -134,24 +137,29 @@ static const TypeInfo arduino_machine_types[] = {
         .name          = MACHINE_TYPE_NAME("arduino-duemilanove"),
         .parent        = TYPE_ARDUINO_MACHINE,
         .class_init    = arduino_duemilanove_class_init,
+        .class_data    = (void *)TYPE_ATMEGA168_MCU,
     }, {
         .name          = MACHINE_TYPE_NAME("arduino-uno"),
         .parent        = TYPE_ARDUINO_MACHINE,
         .class_init    = arduino_uno_class_init,
+        .class_data    = (void *)TYPE_ATMEGA328_MCU,
     }, {
         .name          = MACHINE_TYPE_NAME("arduino-mega"),
         .parent        = TYPE_ARDUINO_MACHINE,
         .class_init    = arduino_mega_class_init,
+        .class_data    = (void *)TYPE_ATMEGA1280_MCU,
     }, {
         .name          = MACHINE_TYPE_NAME("arduino-mega-2560-v3"),
         .parent        = TYPE_ARDUINO_MACHINE,
         .class_init    = arduino_mega2560_class_init,
+        .class_data    = (void *)TYPE_ATMEGA2560_MCU,
     }, {
         .name           = TYPE_ARDUINO_MACHINE,
         .parent         = TYPE_MACHINE,
         .instance_size  = sizeof(ArduinoMachineState),
         .class_size     = sizeof(ArduinoMachineClass),
         .class_init     = arduino_machine_class_init,
+        .class_base_init = arduino_machine_class_base_init,
         .abstract       = true,
     }
 };
