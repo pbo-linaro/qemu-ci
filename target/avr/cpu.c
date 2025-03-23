@@ -161,12 +161,14 @@ static void avr_cpu_realizefn(DeviceState *dev, Error **errp)
     memory_region_init_io(&cpu->cpu_reg1, OBJECT(cpu), &avr_cpu_reg1, env,
                           "avr-cpu-reg1", 32);
     memory_region_add_subregion(get_system_memory(),
-                                OFFSET_DATA, &cpu->cpu_reg1);
+                                OFFSET_DATA + cpu->offset_io,
+                                &cpu->cpu_reg1);
 
     memory_region_init_io(&cpu->cpu_reg2, OBJECT(cpu), &avr_cpu_reg2, env,
                           "avr-cpu-reg2", 8);
     memory_region_add_subregion(get_system_memory(),
-                                OFFSET_DATA + 0x58, &cpu->cpu_reg2);
+                                OFFSET_DATA + cpu->offset_io + 0x58,
+                                &cpu->cpu_reg2);
 }
 
 static void avr_cpu_set_int(void *opaque, int irq, int level)
