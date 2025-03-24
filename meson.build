@@ -1328,7 +1328,7 @@ if get_option('spice') \
              .require(pixman.found(),
                       error_message: 'cannot enable SPICE if pixman is not available') \
              .allowed()
-  spice = dependency('spice-server', version: '>=0.14.0',
+  spice = dependency('spice-server', version: '>=0.14.3',
                      required: get_option('spice'),
                      method: 'pkg-config')
 endif
