@@ -49,7 +49,6 @@ typedef struct FuseExport {
     BlockExport common;
 
     struct fuse_session *fuse_session;
-    struct fuse_buf fuse_buf;
     unsigned int in_flight; /* atomic */
     bool mounted, fd_handler_set_up;
 
@@ -63,6 +62,14 @@ typedef struct FuseExport {
     uid_t st_uid;
     gid_t st_gid;
 } FuseExport;
+
+typedef struct FuseIORequest {
+    fuse_req_t req;
+    size_t size;
+    off_t offset;
+    FuseExport *exp;
+    char *write_buf;
+} FuseIORequest;
 
 static GHashTable *exports;
 static const struct fuse_lowlevel_ops fuse_ops;
@@ -281,13 +288,10 @@ fail:
     return ret;
 }
 
-/**
- * Callback to be invoked when the FUSE session FD can be read from.
- * (This is basically the FUSE event loop.)
- */
-static void read_from_fuse_export(void *opaque)
+static void coroutine_fn read_from_fuse_export_coroutine(void *opaque)
 {
     FuseExport *exp = opaque;
+    struct fuse_buf buf = {};
     int ret;
 
     blk_exp_ref(&exp->common);
@@ -295,13 +299,13 @@ static void read_from_fuse_export(void *opaque)
     qatomic_inc(&exp->in_flight);
 
     do {
-        ret = fuse_session_receive_buf(exp->fuse_session, &exp->fuse_buf);
+        ret = fuse_session_receive_buf(exp->fuse_session, &buf);
     } while (ret == -EINTR);
     if (ret < 0) {
         goto out;
     }
 
-    fuse_session_process_buf(exp->fuse_session, &exp->fuse_buf);
+    fuse_session_process_buf(exp->fuse_session, &buf);
 
 out:
     if (qatomic_fetch_dec(&exp->in_flight) == 1) {
@@ -309,6 +313,20 @@ out:
     }
 
     blk_exp_unref(&exp->common);
+
+    free(buf.mem);
+
+}
+
+/**
+ * Callback to be invoked when the FUSE session FD can be read from.
+ * (This is basically the FUSE event loop.)
+ */
+static void read_from_fuse_export(void *opaque)
+{
+    Coroutine *co;
+    co = qemu_coroutine_create(read_from_fuse_export_coroutine, opaque);
+    qemu_coroutine_enter(co);
 }
 
 static void fuse_export_shutdown(BlockExport *blk_exp)
@@ -347,7 +365,6 @@ static void fuse_export_delete(BlockExport *blk_exp)
         fuse_session_destroy(exp->fuse_session);
     }
 
-    free(exp->fuse_buf.mem);
     g_free(exp->mountpoint);
 }
 
@@ -417,7 +434,7 @@ static void fuse_getattr(fuse_req_t req, fuse_ino_t inode,
         return;
     }
 
-    allocated_blocks = bdrv_get_allocated_file_size(blk_bs(exp->common.blk));
+    allocated_blocks = bdrv_co_get_allocated_file_size(blk_bs(exp->common.blk));
     if (allocated_blocks <= 0) {
         allocated_blocks = DIV_ROUND_UP(length, 512);
     } else {
@@ -570,6 +587,107 @@ static void fuse_open(fuse_req_t req, fuse_ino_t inode,
     fuse_reply_open(req, fi);
 }
 
+static void coroutine_fn fuse_read_coroutine(void *opaque)
+{
+    FuseIORequest *io_req = opaque;
+    FuseExport *exp = io_req->exp;
+    int64_t length;
+    void *buffer;
+    int ret;
+
+    if (io_req->size > FUSE_MAX_BOUNCE_BYTES) {
+        fuse_reply_err(io_req->req, EINVAL);
+        goto cleanup;
+    }
+
+    length = blk_getlength(exp->common.blk);
+    if (length < 0) {
+        fuse_reply_err(io_req->req, -length);
+        goto cleanup;
+    }
+
+    if (io_req->offset + io_req->size > length) {
+        io_req->size = length - io_req->offset;
+    }
+
+    if (io_req->size == 0) {
+        fuse_reply_buf(io_req->req, NULL, 0);
+        goto cleanup;
+    }
+
+    buffer = qemu_try_blockalign(blk_bs(exp->common.blk), io_req->size);
+    if (!buffer) {
+        fuse_reply_err(io_req->req, ENOMEM);
+        goto cleanup;
+    }
+
+    ret = blk_co_pread(exp->common.blk, io_req->offset,
+                       io_req->size, buffer, 0);
+    if (ret >= 0) {
+        fuse_reply_buf(io_req->req, buffer, io_req->size);
+    } else {
+        fuse_reply_err(io_req->req, -ret);
+    }
+
+    qemu_vfree(buffer);
+
+cleanup:
+    g_free(io_req);
+}
+
+static void coroutine_fn fuse_write_coroutine(void *opaque)
+{
+    FuseIORequest *io_req = opaque;
+    FuseExport *exp = io_req->exp;
+    int64_t length;
+    int ret;
+
+    if (io_req->size > BDRV_REQUEST_MAX_BYTES) {
+        fuse_reply_err(io_req->req, EINVAL);
+        goto cleanup;
+    }
+
+    if (!exp->writable) {
+        fuse_reply_err(io_req->req, EACCES);
+        goto cleanup;
+    }
+
+    length = blk_getlength(exp->common.blk);
+    if (length < 0) {
+        fuse_reply_err(io_req->req, -length);
+        goto cleanup;
+    }
+
+    if (io_req->offset + io_req->size > length) {
+        if (exp->growable) {
+            ret = fuse_do_truncate(exp, io_req->offset + io_req->size,
+                                   true, PREALLOC_MODE_OFF);
+            if (ret < 0) {
+                fuse_reply_err(io_req->req, -ret);
+                goto cleanup;
+            }
+        } else {
+            io_req->size = MAX(0, length - io_req->offset);
+            if (io_req->size == 0) {
+                fuse_reply_write(io_req->req, 0);
+                goto cleanup;
+            }
+        }
+    }
+
+    ret = blk_co_pwrite(exp->common.blk, io_req->offset, io_req->size,
+                        io_req->write_buf, 0);
+    if (ret >= 0) {
+        fuse_reply_write(io_req->req, io_req->size);
+    } else {
+        fuse_reply_err(io_req->req, -ret);
+    }
+
+cleanup:
+    g_free(io_req->write_buf);
+    g_free(io_req);
+}
+
 /**
  * Handle client reads from the exported image.
  */
@@ -577,45 +695,19 @@ static void fuse_read(fuse_req_t req, fuse_ino_t inode,
                       size_t size, off_t offset, struct fuse_file_info *fi)
 {
     FuseExport *exp = fuse_req_userdata(req);
-    int64_t length;
-    void *buf;
-    int ret;
+    FuseIORequest *io_req = g_new(FuseIORequest, 1);
 
-    /* Limited by max_read, should not happen */
-    if (size > FUSE_MAX_BOUNCE_BYTES) {
-        fuse_reply_err(req, EINVAL);
-        return;
-    }
+    *io_req = (FuseIORequest) {
+        .req = req,
+        .size = size,
+        .offset = offset,
+        .exp = exp,
+    };
 
-    /**
-     * Clients will expect short reads at EOF, so we have to limit
-     * offset+size to the image length.
-     */
-    length = blk_getlength(exp->common.blk);
-    if (length < 0) {
-        fuse_reply_err(req, -length);
-        return;
-    }
-
-    if (offset + size > length) {
-        size = length - offset;
-    }
-
-    buf = qemu_try_blockalign(blk_bs(exp->common.blk), size);
-    if (!buf) {
-        fuse_reply_err(req, ENOMEM);
-        return;
-    }
-
-    ret = blk_pread(exp->common.blk, offset, size, buf, 0);
-    if (ret >= 0) {
-        fuse_reply_buf(req, buf, size);
-    } else {
-        fuse_reply_err(req, -ret);
-    }
-
-    qemu_vfree(buf);
+    Coroutine *co = qemu_coroutine_create(fuse_read_coroutine, io_req);
+    qemu_coroutine_enter(co);
 }
+
 
 /**
  * Handle client writes to the exported image.
@@ -624,48 +716,18 @@ static void fuse_write(fuse_req_t req, fuse_ino_t inode, const char *buf,
                        size_t size, off_t offset, struct fuse_file_info *fi)
 {
     FuseExport *exp = fuse_req_userdata(req);
-    int64_t length;
-    int ret;
+    FuseIORequest *io_req = g_new(FuseIORequest, 1);
 
-    /* Limited by max_write, should not happen */
-    if (size > BDRV_REQUEST_MAX_BYTES) {
-        fuse_reply_err(req, EINVAL);
-        return;
-    }
+    *io_req = (FuseIORequest) {
+        .req = req,
+        .size = size,
+        .offset = offset,
+        .exp = exp,
+        .write_buf = g_memdup2_qemu(buf, size),
+    };
 
-    if (!exp->writable) {
-        fuse_reply_err(req, EACCES);
-        return;
-    }
-
-    /**
-     * Clients will expect short writes at EOF, so we have to limit
-     * offset+size to the image length.
-     */
-    length = blk_getlength(exp->common.blk);
-    if (length < 0) {
-        fuse_reply_err(req, -length);
-        return;
-    }
-
-    if (offset + size > length) {
-        if (exp->growable) {
-            ret = fuse_do_truncate(exp, offset + size, true, PREALLOC_MODE_OFF);
-            if (ret < 0) {
-                fuse_reply_err(req, -ret);
-                return;
-            }
-        } else {
-            size = length - offset;
-        }
-    }
-
-    ret = blk_pwrite(exp->common.blk, offset, size, buf, 0);
-    if (ret >= 0) {
-        fuse_reply_write(req, size);
-    } else {
-        fuse_reply_err(req, -ret);
-    }
+    Coroutine *co = qemu_coroutine_create(fuse_write_coroutine, io_req);
+    qemu_coroutine_enter(co);
 }
 
 /**
