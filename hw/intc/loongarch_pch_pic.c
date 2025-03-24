@@ -95,6 +95,12 @@ static uint64_t pch_pic_read(void *opaque, hwaddr addr, uint64_t field_mask)
     case PCH_PIC_AUTO_CTRL1 ... PCH_PIC_AUTO_CTRL1 + 7:
         /* PCH PIC connect to EXTIOI always, discard auto_ctrl access */
         break;
+    case PCH_PIC_INT_STATUS ... PCH_PIC_INT_STATUS + 7:
+        val = s->intisr & (~s->int_mask);
+        break;
+    case PCH_PIC_INT_POL ... PCH_PIC_INT_POL + 7:
+        val = s->int_polarity;
+        break;
     default:
         qemu_log_mask(LOG_GUEST_ERROR,
                       "pch_pic_read: Bad address 0x%"PRIx64"\n", addr);
@@ -224,27 +230,10 @@ static void loongarch_pch_pic_low_writew(void *opaque, hwaddr addr,
 static uint64_t loongarch_pch_pic_high_readw(void *opaque, hwaddr addr,
                                         unsigned size)
 {
-    LoongArchPICCommonState *s = LOONGARCH_PIC_COMMON(opaque);
-    uint64_t val = 0;
+    uint64_t val;
 
     addr += PCH_PIC_INT_STATUS;
-    switch (addr) {
-    case PCH_PIC_INT_STATUS:
-        val = (uint32_t)(s->intisr & (~s->int_mask));
-        break;
-    case PCH_PIC_INT_STATUS + 4:
-        val = (s->intisr & (~s->int_mask)) >> 32;
-        break;
-    case PCH_PIC_INT_POL:
-        val = (uint32_t)s->int_polarity;
-        break;
-    case PCH_PIC_INT_POL + 4:
-        val = s->int_polarity >> 32;
-        break;
-    default:
-        break;
-    }
-
+    val = loongarch_pch_pic_read(opaque, addr, size);
     trace_loongarch_pch_pic_high_readw(size, addr, val);
     return val;
 }
