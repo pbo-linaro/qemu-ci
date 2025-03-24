@@ -7,6 +7,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/bitops.h"
+#include "qemu/log.h"
 #include "hw/irq.h"
 #include "hw/intc/loongarch_pch_pic.h"
 #include "trace.h"
@@ -71,47 +72,71 @@ static void pch_pic_irq_handler(void *opaque, int irq, int level)
     pch_pic_update_irq(s, mask, level);
 }
 
-static uint64_t loongarch_pch_pic_low_readw(void *opaque, hwaddr addr,
-                                            unsigned size)
+static uint64_t pch_pic_read(void *opaque, hwaddr addr, uint64_t field_mask)
 {
     LoongArchPICCommonState *s = LOONGARCH_PIC_COMMON(opaque);
     uint64_t val = 0;
+    uint32_t offset = addr & 7;
 
     switch (addr) {
-    case PCH_PIC_INT_ID:
-        val = s->id.data & UINT_MAX;
+    case PCH_PIC_INT_ID ... PCH_PIC_INT_ID + 7:
+        val = s->id.data;
         break;
-    case PCH_PIC_INT_ID + 4:
-        val = s->id.data >> 32;
+    case PCH_PIC_INT_MASK ... PCH_PIC_INT_MASK + 7:
+        val = s->int_mask;
         break;
-    case PCH_PIC_INT_MASK:
-        val = (uint32_t)s->int_mask;
+    case PCH_PIC_INT_EDGE ... PCH_PIC_INT_EDGE + 7:
+        val = s->intedge;
         break;
-    case PCH_PIC_INT_MASK + 4:
-        val = s->int_mask >> 32;
+    case PCH_PIC_HTMSI_EN ... PCH_PIC_HTMSI_EN + 7:
+        val = s->htmsi_en;
         break;
-    case PCH_PIC_INT_EDGE:
-        val = (uint32_t)s->intedge;
-        break;
-    case PCH_PIC_INT_EDGE + 4:
-        val = s->intedge >> 32;
-        break;
-    case PCH_PIC_HTMSI_EN:
-        val = (uint32_t)s->htmsi_en;
-        break;
-    case PCH_PIC_HTMSI_EN + 4:
-        val = s->htmsi_en >> 32;
-        break;
-    case PCH_PIC_AUTO_CTRL0:
-    case PCH_PIC_AUTO_CTRL0 + 4:
-    case PCH_PIC_AUTO_CTRL1:
-    case PCH_PIC_AUTO_CTRL1 + 4:
+    case PCH_PIC_AUTO_CTRL0 ... PCH_PIC_AUTO_CTRL0 + 7:
+    case PCH_PIC_AUTO_CTRL1 ... PCH_PIC_AUTO_CTRL1 + 7:
         /* PCH PIC connect to EXTIOI always, discard auto_ctrl access */
         break;
     default:
+        qemu_log_mask(LOG_GUEST_ERROR,
+                      "pch_pic_read: Bad address 0x%"PRIx64"\n", addr);
         break;
     }
 
+    return (val >> (offset * 8)) & field_mask;
+}
+
+static uint64_t loongarch_pch_pic_read(void *opaque, hwaddr addr,
+                                       unsigned size)
+{
+    uint64_t val = 0;
+
+    switch (size) {
+    case 1:
+        val = pch_pic_read(opaque, addr, 0xFF);
+        break;
+    case 2:
+        val = pch_pic_read(opaque, addr, 0xFFFF);
+        break;
+    case 4:
+        val = pch_pic_read(opaque, addr, UINT_MAX);
+        break;
+    case 8:
+        val = pch_pic_read(opaque, addr, UINT64_MAX);
+        break;
+    default:
+        qemu_log_mask(LOG_GUEST_ERROR,
+                      "loongarch_pch_pic_read: Bad size %d\n", size);
+        break;
+    }
+
+    return val;
+}
+
+static uint64_t loongarch_pch_pic_low_readw(void *opaque, hwaddr addr,
+                                            unsigned size)
+{
+    uint64_t val;
+
+    val = loongarch_pch_pic_read(opaque, addr, size);
     trace_loongarch_pch_pic_low_readw(size, addr, val);
     return val;
 }
