@@ -80,15 +80,10 @@ static uint64_t loongarch_pch_pic_low_readw(void *opaque, hwaddr addr,
 
     switch (offset) {
     case PCH_PIC_INT_ID:
-        val = PCH_PIC_INT_ID_VAL;
+        val = s->id.data & UINT_MAX;
         break;
     case PCH_PIC_INT_ID + 4:
-        /*
-         * With 7A1000 manual
-         *   bit  0-15 pch irqchip version
-         *   bit 16-31 irq number supported with pch irqchip
-         */
-        val = deposit32(PCH_PIC_INT_ID_VER, 16, 16, s->irq_num - 1);
+        val = s->id.data >> 32;
         break;
     case PCH_PIC_INT_MASK:
         val = (uint32_t)s->int_mask;
@@ -361,6 +356,14 @@ static void loongarch_pch_pic_reset(DeviceState *d)
     LoongArchPICCommonState *s = LOONGARCH_PIC_COMMON(d);
     int i;
 
+    /*
+     * With 7A1000 manual
+     *   bit  0-15 pch irqchip version
+     *   bit 16-31 irq number supported with pch irqchip
+     */
+    s->id.desc.id = PCH_PIC_INT_ID_VAL;
+    s->id.desc.version = PCH_PIC_INT_ID_VER;
+    s->id.desc.irq_num = s->irq_num - 1;
     s->int_mask = -1;
     s->htmsi_en = 0x0;
     s->intedge  = 0x0;
