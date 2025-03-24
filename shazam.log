@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250324185837.46506-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/7] cpus: Introduce CPUClass::list_cpus() callback
+  [32m✓[0m [PATCH v3 2/7] target/i386: Register CPUClass:list_cpus
+  [32m✓[0m [PATCH v3 3/7] target/ppc: Register CPUClass:list_cpus
+  [32m✓[0m [PATCH v3 4/7] target/sparc: Register CPUClass:list_cpus
+  [32m✓[0m [PATCH v3 5/7] target/s390x: Declare s390_set_qemu_cpu_model/cpu_list in cpu_models.h
+  [32m✓[0m [PATCH v3 6/7] target/s390x: Register CPUClass:list_cpus
+  [32m✓[0m [PATCH v3 7/7] cpus: Remove #ifdef check on cpu_list definition
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 7
+---
+Applying: cpus: Introduce CPUClass::list_cpus() callback
+Applying: target/i386: Register CPUClass:list_cpus
+Applying: target/ppc: Register CPUClass:list_cpus
+Applying: target/sparc: Register CPUClass:list_cpus
+Applying: target/s390x: Declare s390_set_qemu_cpu_model/cpu_list in cpu_models.h
+Applying: target/s390x: Register CPUClass:list_cpus
+Patch failed at 0006 target/s390x: Register CPUClass:list_cpus
+error: patch failed: target/s390x/cpu.c:378
+error: target/s390x/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
