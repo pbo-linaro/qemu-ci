@@ -45,6 +45,16 @@
 /* Number of CPU registers */
 #define NUMBER_OF_CPU_REGISTERS 32
 
+/* CPU registers mapped into i/o ports 0x38-0x3f. */
+#define REG_38_RAMPD  0
+#define REG_38_RAMPX  1
+#define REG_38_RAMPY  2
+#define REG_38_RAMPZ  3
+#define REG_38_EIDN   4
+#define REG_38_SPL    5
+#define REG_38_SPH    6
+#define REG_38_SREG   7
+
 /*
  * Offsets of AVR memory regions in host memory space.
  *
