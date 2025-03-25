@@ -1850,10 +1850,12 @@ static void gen_st_asi(DisasContext *dc, DisasASI *da, TCGv src, TCGv addr)
         if (TARGET_LONG_BITS == 32) {
             gen_exception(dc, TT_ILL_INSN);
             break;
+#ifdef TARGET_SPARC64
         } else if (!(dc->def->features & CPU_FEATURE_HYPV)) {
             /* Pre OpenSPARC CPUs don't have these */
             gen_exception(dc, TT_ILL_INSN);
             break;
+#endif
         }
         /* In OpenSPARC T1+ CPUs TWINX ASIs in store are ST_BLKINIT_ ASIs */
         /* fall through */
@@ -2750,11 +2752,15 @@ static bool trans_SETHI(DisasContext *dc, arg_SETHI *a)
 static bool do_tcc(DisasContext *dc, int cond, int cc,
                    int rs1, bool imm, int rs2_or_imm)
 {
-    int mask = ((dc->def->features & CPU_FEATURE_HYPV) && supervisor(dc)
-                ? UA2005_HTRAP_MASK : V8_TRAP_MASK);
+    int mask = 0;
     DisasCompare cmp;
     TCGLabel *lab;
     TCGv_i32 trap;
+
+#ifdef TARGET_SPARC64
+    mask = ((dc->def->features & CPU_FEATURE_HYPV) && supervisor(dc))
+           ? UA2005_HTRAP_MASK : V8_TRAP_MASK;
+#endif
 
     /* Trap never.  */
     if (cond == 0) {
