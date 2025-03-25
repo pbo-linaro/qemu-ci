@@ -75,11 +75,16 @@ int mips_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
     return 0;
 }
 
+static size_t mips_regsize(MIPSCPU *cpu)
+{
+    return mips_cpu_is_64bit(cpu) ? sizeof(uint64_t) : sizeof(uint32_t);
+}
+
 int mips_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 {
     CPUMIPSState *env = cpu_env(cs);
     target_ulong tmp;
-    size_t regsize = sizeof(tmp);
+    size_t regsize = mips_regsize(MIPS_CPU(cs));
 
     tmp = ldn_p(mem_buf, regsize);
 
