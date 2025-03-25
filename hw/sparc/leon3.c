@@ -152,6 +152,7 @@ static void leon3_cpu_reset(void *opaque)
     int id = info->id;
     ResetData *s = container_of(info, ResetData, info[id]);
     CPUState *cpu = CPU(s->info[id].cpu);
+    SPARCCPU *scpu = SPARC_CPU(cpu);
     CPUSPARCState *env = cpu_env(cpu);
 
     cpu_reset(cpu);
@@ -159,41 +160,41 @@ static void leon3_cpu_reset(void *opaque)
     cpu->halted = cpu->cpu_index != 0;
     env->pc = s->entry;
     env->npc = s->entry + 4;
+    scpu->cache_control = 0;
 }
 
-static void leon3_cache_control_int(CPUSPARCState *env)
+static void leon3_cache_control_int(SPARCCPU *cpu)
 {
     uint32_t state = 0;
 
-    if (env->cache_control & CACHE_CTRL_IF) {
+    if (cpu->cache_control & CACHE_CTRL_IF) {
         /* Instruction cache state */
-        state = env->cache_control & CACHE_STATE_MASK;
+        state = cpu->cache_control & CACHE_STATE_MASK;
         if (state == CACHE_ENABLED) {
             state = CACHE_FROZEN;
             trace_int_helper_icache_freeze();
         }
 
-        env->cache_control &= ~CACHE_STATE_MASK;
-        env->cache_control |= state;
+        cpu->cache_control &= ~CACHE_STATE_MASK;
+        cpu->cache_control |= state;
     }
 
-    if (env->cache_control & CACHE_CTRL_DF) {
+    if (cpu->cache_control & CACHE_CTRL_DF) {
         /* Data cache state */
-        state = (env->cache_control >> 2) & CACHE_STATE_MASK;
+        state = (cpu->cache_control >> 2) & CACHE_STATE_MASK;
         if (state == CACHE_ENABLED) {
             state = CACHE_FROZEN;
             trace_int_helper_dcache_freeze();
         }
 
-        env->cache_control &= ~(CACHE_STATE_MASK << 2);
-        env->cache_control |= (state << 2);
+        cpu->cache_control &= ~(CACHE_STATE_MASK << 2);
+        cpu->cache_control |= (state << 2);
     }
 }
 
-static void leon3_irq_ack(CPUSPARCState *env, int intno)
+static void leon3_irq_ack(SPARCCPU *cpu, int intno)
 {
-    CPUState *cpu = CPU(env_cpu(env));
-    grlib_irqmp_ack(env->irq_manager, cpu->cpu_index, intno);
+    grlib_irqmp_ack(cpu->irq_manager, CPU(cpu)->cpu_index, intno);
 }
 
 /*
@@ -248,10 +249,10 @@ static void leon3_start_cpu(void *opaque, int n, int level)
     async_run_on_cpu(cs, leon3_start_cpu_async_work, RUN_ON_CPU_NULL);
 }
 
-static void leon3_irq_manager(CPUSPARCState *env, int intno)
+static void leon3_irq_manager(SPARCCPU *cpu, int intno)
 {
-    leon3_irq_ack(env, intno);
-    leon3_cache_control_int(env);
+    leon3_irq_ack(cpu, intno);
+    leon3_cache_control_int(cpu);
 }
 
 static void leon3_generic_hw_init(MachineState *machine)
@@ -320,8 +321,8 @@ static void leon3_generic_hw_init(MachineState *machine)
         qdev_connect_gpio_out_named(irqmpdev, "grlib-irq", i,
                                     qdev_get_gpio_in_named(DEVICE(cpu),
                                                            "pil", 0));
-        env->irq_manager = irqmpdev;
-        env->qemu_irq_ack = leon3_irq_manager;
+        cpu->irq_manager = irqmpdev;
+        cpu->qemu_irq_ack = leon3_irq_manager;
     }
 
     sysbus_mmio_map(SYS_BUS_DEVICE(irqmpdev), 0, LEON3_IRQMP_OFFSET);

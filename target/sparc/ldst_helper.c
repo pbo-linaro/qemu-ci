@@ -513,7 +513,7 @@ static void sparc_raise_mmu_fault(CPUState *cs, hwaddr addr,
 
 /* Leon3 cache control */
 
-static void leon3_cache_control_st(CPUSPARCState *env, target_ulong addr,
+static void leon3_cache_control_st(SPARCCPU *cpu, target_ulong addr,
                                    uint64_t val, int size)
 {
     DPRINTF_CACHE_CONTROL("st addr:%08x, val:%" PRIx64 ", size:%d\n",
@@ -534,7 +534,7 @@ static void leon3_cache_control_st(CPUSPARCState *env, target_ulong addr,
         val &= ~CACHE_CTRL_IP;
         val &= ~CACHE_CTRL_DP;
 
-        env->cache_control = val;
+        cpu->cache_control = val;
         break;
     case 0x04:              /* Instruction cache configuration */
     case 0x08:              /* Data cache configuration */
@@ -546,7 +546,7 @@ static void leon3_cache_control_st(CPUSPARCState *env, target_ulong addr,
     };
 }
 
-static uint64_t leon3_cache_control_ld(CPUSPARCState *env, target_ulong addr,
+static uint64_t leon3_cache_control_ld(SPARCCPU *cpu, target_ulong addr,
                                        int size)
 {
     uint64_t ret = 0;
@@ -558,7 +558,7 @@ static uint64_t leon3_cache_control_ld(CPUSPARCState *env, target_ulong addr,
 
     switch (addr) {
     case 0x00:              /* Cache control */
-        ret = env->cache_control;
+        ret = cpu->cache_control;
         break;
 
         /* Configuration registers are read and only always keep those
@@ -599,7 +599,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
         case 0x08:          /* Leon3 Instruction Cache config */
         case 0x0C:          /* Leon3 Date Cache config */
             if (env->def.features & CPU_FEATURE_CACHE_CTRL) {
-                ret = leon3_cache_control_ld(env, addr, size);
+                ret = leon3_cache_control_ld(env_archcpu(env), addr, size);
             } else {
                 qemu_log_mask(LOG_UNIMP,
                               "%08x: unimplemented access size: %d\n", addr,
@@ -819,7 +819,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
         case 0x08:          /* Leon3 Instruction Cache config */
         case 0x0C:          /* Leon3 Date Cache config */
             if (env->def.features & CPU_FEATURE_CACHE_CTRL) {
-                leon3_cache_control_st(env, addr, val, size);
+                leon3_cache_control_st(env_archcpu(env), addr, val, size);
             } else {
                 qemu_log_mask(LOG_UNIMP,
                               "%08x: unimplemented access size: %d\n", addr,

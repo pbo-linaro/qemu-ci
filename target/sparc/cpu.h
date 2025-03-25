@@ -543,11 +543,6 @@ struct CPUArchState {
 #define SOFTINT_REG_MASK (SOFTINT_STIMER|SOFTINT_INTRMASK|SOFTINT_TIMER)
 #endif
     sparc_def_t def;
-
-    /* Leon3 */
-    DeviceState *irq_manager;
-    void (*qemu_irq_ack)(CPUSPARCState *env, int intno);
-    uint32_t cache_control;
 };
 
 /**
@@ -560,6 +555,11 @@ struct ArchCPU {
     CPUState parent_obj;
 
     CPUSPARCState env;
+
+    /* Leon3 */
+    DeviceState *irq_manager;
+    void (*qemu_irq_ack)(SPARCCPU *cpu, int intno);
+    uint32_t cache_control;
 };
 
 /**

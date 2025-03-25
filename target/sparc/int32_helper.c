@@ -168,8 +168,12 @@ void sparc_cpu_do_interrupt(CPUState *cs)
 
 #if !defined(CONFIG_USER_ONLY)
     /* IRQ acknowledgment */
-    if ((intno & ~15) == TT_EXTINT && env->qemu_irq_ack != NULL) {
-        env->qemu_irq_ack(env, intno);
+    if ((intno & ~15) == TT_EXTINT) {
+        SPARCCPU *cpu = env_archcpu(env);
+
+        if (cpu->qemu_irq_ack != NULL) {
+            cpu->qemu_irq_ack(cpu, intno);
+        }
     }
 #endif
 }

@@ -78,7 +78,6 @@ static void sparc_cpu_reset_hold(Object *obj, ResetType type)
     env->pc = 0;
     env->npc = env->pc + 4;
 #endif
-    env->cache_control = 0;
     cpu_put_fsr(env, 0);
 }
 
