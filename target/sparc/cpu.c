@@ -548,6 +548,11 @@ static const sparc_def_t sparc_defs[] = {
 /* This must match sparc_cpu_properties[]. */
 static const char * const feature_name[] = {
     [CPU_FEATURE_BIT_FLOAT128] = "float128",
+    [CPU_FEATURE_BIT_TA0_SHUTDOWN] = "shutdown",
+    [CPU_FEATURE_BIT_POWERDOWN] = "powerdown",
+    [CPU_FEATURE_BIT_CACHE_CTRL] = "cachectrl",
+    [CPU_FEATURE_BIT_ASR17] = "asr17",
+    [CPU_FEATURE_BIT_CASA] = "casa",
 #ifdef TARGET_SPARC64
     [CPU_FEATURE_BIT_CMT] = "cmt",
     [CPU_FEATURE_BIT_GL] = "gl",
