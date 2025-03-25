@@ -516,6 +516,12 @@ static void mips_cpu_initfn(Object *obj)
 #endif
 }
 
+bool mips_cpu_is_64bit(MIPSCPU *cpu)
+{
+    return !!object_class_dynamic_cast(OBJECT_CLASS(CPU(cpu)->cc),
+                                       TYPE_MIPS64_CPU);
+}
+
 static char *mips_cpu_type_name(const char *cpu_model)
 {
     return g_strdup_printf(MIPS_CPU_TYPE_NAME("%s"), cpu_model);
