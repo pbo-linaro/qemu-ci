@@ -2386,6 +2386,8 @@ static void pnv_chip_power11_instance_init(Object *obj)
     object_property_add_alias(obj, "xive-fabric", OBJECT(&chip11->xive),
                               "xive-fabric");
     object_initialize_child(obj, "lpc", &chip11->lpc, TYPE_PNV11_LPC);
+    object_initialize_child(obj, "chiptod", &chip11->chiptod,
+                            TYPE_PNV11_CHIPTOD);
     object_initialize_child(obj, "occ",  &chip11->occ, TYPE_PNV11_OCC);
     object_initialize_child(obj, "sbe",  &chip11->sbe, TYPE_PNV11_SBE);
     object_initialize_child(obj, "homer", &chip11->homer, TYPE_PNV11_HOMER);
@@ -2538,6 +2540,19 @@ static void pnv_chip_power11_realize(DeviceState *dev, Error **errp)
     chip->fw_mr = &chip11->lpc.isa_fw;
     chip->dt_isa_nodename = g_strdup_printf("/lpcm-opb@%" PRIx64 "/lpc@0",
                                             (uint64_t) PNV11_LPCM_BASE(chip));
+
+    /* ChipTOD */
+    object_property_set_bool(OBJECT(&chip11->chiptod), "primary",
+                             chip->chip_id == 0, &error_abort);
+    object_property_set_bool(OBJECT(&chip11->chiptod), "secondary",
+                             chip->chip_id == 1, &error_abort);
+    object_property_set_link(OBJECT(&chip11->chiptod), "chip", OBJECT(chip),
+                             &error_abort);
+    if (!qdev_realize(DEVICE(&chip11->chiptod), NULL, errp)) {
+        return;
+    }
+    pnv_xscom_add_subregion(chip, PNV11_XSCOM_CHIPTOD_BASE,
+                            &chip11->chiptod.xscom_regs);
 
     /* HOMER (must be created before OCC) */
     object_property_set_link(OBJECT(&chip11->homer), "chip", OBJECT(chip),
