@@ -79,12 +79,13 @@ int mips_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 {
     CPUMIPSState *env = cpu_env(cs);
     target_ulong tmp;
+    size_t regsize = sizeof(tmp);
 
-    tmp = ldtul_p(mem_buf);
+    tmp = ldn_p(mem_buf, regsize);
 
     if (n < 32) {
         env->active_tc.gpr[n] = tmp;
-        return sizeof(target_ulong);
+        return regsize;
     }
     if (env->CP0_Config1 & (1 << CP0C1_FP) && n >= 38 && n < 72) {
         switch (n) {
@@ -104,7 +105,7 @@ int mips_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             }
             break;
         }
-        return sizeof(target_ulong);
+        return regsize;
     }
     switch (n) {
     case 32:
@@ -144,5 +145,5 @@ int mips_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
         break;
     }
 
-    return sizeof(target_ulong);
+    return regsize;
 }
