@@ -44,8 +44,6 @@
 
 /* Number of CPU registers */
 #define NUMBER_OF_CPU_REGISTERS 32
-/* Number of IO registers accessible by ld/st/in/out */
-#define NUMBER_OF_IO_REGISTERS 64
 
 /*
  * Offsets of AVR memory regions in host memory space.
