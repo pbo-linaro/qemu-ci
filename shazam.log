@@ -1,0 +1,55 @@
+Grabbing thread from lore.kernel.org/all/20250325045915.994760-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 31 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 149 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/29] exec/cpu-all: extract tlb flags defines to exec/tlb-flags.h
+  [32m✓[0m [PATCH v3 2/29] exec/cpu-all: move cpu_copy to linux-user/qemu.h
+  [32m✓[0m [PATCH v3 3/29] include/exec/cpu-all: move compile time check for CPUArchState to cpu-target.c
+  [32m✓[0m [PATCH v3 4/29] exec/cpu-all: remove system/memory include
+  [32m✓[0m [PATCH v3 5/29] exec/cpu-all: remove exec/page-protection include
+  [32m✓[0m [PATCH v3 6/29] exec/cpu-all: remove tswap include
+  [32m✓[0m [PATCH v3 7/29] exec/cpu-all: remove exec/cpu-interrupt include
+  [32m✓[0m [PATCH v3 8/29] exec/cpu-all: remove exec/cpu-defs include
+  [32m✓[0m [PATCH v3 9/29] exec/cpu-all: remove exec/target_page include
+  [32m✓[0m [PATCH v3 10/29] exec/cpu-all: remove hw/core/cpu.h include
+  [32m✓[0m [PATCH v3 11/29] accel/tcg: fix missing includes for TCG_GUEST_DEFAULT_MO
+  [32m✓[0m [PATCH v3 12/29] accel/tcg: fix missing includes for TARGET_HAS_PRECISE_SMC
+  [32m✓[0m [PATCH v3 13/29] exec/cpu-all: remove cpu include
+  [32m✓[0m [PATCH v3 14/29] exec/cpu-all: transfer exec/cpu-common include to cpu.h headers
+  [32m✓[0m [PATCH v3 15/29] exec/cpu-all: remove this header
+  [32m✓[0m [PATCH v3 16/29] exec/target_page: runtime defintion for TARGET_PAGE_BITS_MIN
+  [32m✓[0m [PATCH v3 17/29] accel/kvm: move KVM_HAVE_MCE_INJECTION define to kvm-all.c
+  [32m✓[0m [PATCH v3 18/29] exec/poison: KVM_HAVE_MCE_INJECTION can now be poisoned
+  [32m✓[0m [PATCH v3 19/29] target/arm/cpu: always define kvm related registers
+  [32m✓[0m [PATCH v3 20/29] target/arm/cpu: flags2 is always uint64_t
+  [32m✓[0m [PATCH v3 21/29] target/arm/cpu: define same set of registers for aarch32 and aarch64
+  [32m✓[0m [PATCH v3 22/29] target/arm/cpu: remove inline stubs for aarch32 emulation
+  [32m✓[0m [PATCH v3 23/29] meson: add common hw files
+  [32m✓[0m [PATCH v3 24/29] hw/arm/boot: make compilation unit hw common
+  [32m✓[0m [PATCH v3 25/29] hw/arm/armv7m: prepare compilation unit to be common
+  [32m✓[0m [PATCH v3 26/29] hw/arm/digic_boards: prepare compilation unit to be common
+  [32m✓[0m [PATCH v3 27/29] hw/arm/xlnx-zynqmp: prepare compilation unit to be common
+  [32m✓[0m [PATCH v3 28/29] hw/arm/xlnx-versal: prepare compilation unit to be common
+  [32m✓[0m [PATCH v3 29/29] hw/arm: make most of the compilation units common
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 29
+---
+Applying: exec/cpu-all: extract tlb flags defines to exec/tlb-flags.h
+Patch failed at 0001 exec/cpu-all: extract tlb flags defines to exec/tlb-flags.h
+error: patch failed: include/exec/cpu-all.h:36
+error: include/exec/cpu-all.h: patch does not apply
+error: patch failed: semihosting/uaccess.c:11
+error: semihosting/uaccess.c: patch does not apply
+error: patch failed: target/sparc/mmu_helper.c:23
+error: target/sparc/mmu_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
