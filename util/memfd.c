@@ -131,9 +131,13 @@ void *qemu_memfd_alloc(const char *name, size_t size, unsigned int seals,
         }
     }
 
-    ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, mfd, 0);
-    if (ptr == MAP_FAILED) {
-        goto err;
+    if (size != 0) {
+        ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, mfd, 0);
+        if (ptr == MAP_FAILED) {
+            goto err;
+        }
+    } else {
+        ptr = fdopen(mfd, "rw");
     }
 
     *fd = mfd;
