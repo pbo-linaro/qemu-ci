@@ -129,8 +129,6 @@
 #
 # Returns information about SEV
 #
-# Returns: @SevInfo
-#
 # Since: 2.12
 #
 # .. qmp-example::
@@ -205,8 +203,6 @@
 # This command is used to get the SEV capabilities, and is supported
 # on AMD X86 platforms only.
 #
-# Returns: SevCapability objects.
-#
 # Since: 2.12
 #
 # .. qmp-example::
@@ -258,8 +254,6 @@
 #
 # @mnonce: a random 16 bytes value encoded in base64 (it will be
 #     included in report)
-#
-# Returns: SevAttestationReport objects.
 #
 # Since: 6.1
 #
@@ -324,8 +318,6 @@
 # This command is ARM-only.  It will return a list of GICCapability
 # objects that describe its capability bits.
 #
-# Returns: a list of GICCapability objects.
-#
 # Since: 2.6
 #
 # .. qmp-example::
@@ -382,8 +374,6 @@
 #
 # Returns information about SGX
 #
-# Returns: @SGXInfo
-#
 # Since: 6.2
 #
 # .. qmp-example::
@@ -400,8 +390,6 @@
 # @query-sgx-capabilities:
 #
 # Returns information from host SGX capabilities
-#
-# Returns: @SGXInfo
 #
 # Since: 6.2
 #
