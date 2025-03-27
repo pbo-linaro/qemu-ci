@@ -28,8 +28,6 @@
 
 
 #define QEMU_VM_FILE_MAGIC 0x5145564d
-#define QEMU_ENV_SRC "QTEST_QEMU_BINARY_SRC"
-#define QEMU_ENV_DST "QTEST_QEMU_BINARY_DST"
 
 unsigned start_address;
 unsigned end_address;
@@ -207,7 +205,7 @@ static QList *migrate_start_get_qmp_capabilities(const MigrateStart *args)
     return capabilities;
 }
 
-static char *migrate_resolve_alias(const char *arch)
+char *migrate_resolve_alias(const char *arch)
 {
     const char *machine_alias;
 

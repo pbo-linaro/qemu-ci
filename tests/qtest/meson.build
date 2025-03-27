@@ -347,6 +347,7 @@ migration_files = [files(
   'migration/misc-tests.c',
   'migration/precopy-tests.c',
   'migration/postcopy-tests.c',
+  'migration/savevm-tests.c',
 )]
 
 migration_tls_files = []
