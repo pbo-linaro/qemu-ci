@@ -3229,6 +3229,10 @@ bool save_snapshot(const char *name, bool overwrite, const char *vmstate,
 
     GLOBAL_STATE_CODE();
 
+    if (!migrate_can_snapshot(errp)) {
+        return false;
+    }
+
     if (migration_is_blocked(errp)) {
         return false;
     }
@@ -3412,6 +3416,10 @@ bool load_snapshot(const char *name, const char *vmstate,
     QEMUFile *f;
     int ret;
     MigrationIncomingState *mis = migration_incoming_get_current();
+
+    if (!migrate_can_snapshot(errp)) {
+        return false;
+    }
 
     if (!bdrv_all_can_snapshot(has_devices, devices, errp)) {
         return false;

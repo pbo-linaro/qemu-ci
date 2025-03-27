@@ -58,6 +58,7 @@ bool migrate_tls(void);
 /* capabilities helpers */
 
 bool migrate_caps_check(bool *old_caps, bool *new_caps, Error **errp);
+bool migrate_can_snapshot(Error **errp);
 
 /* parameters */
 
