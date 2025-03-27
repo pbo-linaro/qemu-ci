@@ -518,3 +518,123 @@ void migrate_postcopy_start(QTestState *from, QTestState *to,
     wait_for_stop(from, src_state);
     qtest_qmp_eventwait(to, "RESUME");
 }
+
+static void job_status_wait(QTestState *s, const char *id, const char *target)
+{
+    QDict *response, *data;
+    const char *status, *name;
+    bool found;
+
+    do {
+        response = qtest_qmp_eventwait_ref(s, "JOB_STATUS_CHANGE");
+        data = qdict_get_qdict(response, "data");
+        g_assert(data);
+
+        name = qdict_get_str(data, "id");
+        if (g_str_equal(name, id)) {
+            status = qdict_get_str(data, "status");
+            found = (strcmp(status, target) == 0);
+        }
+
+        qobject_unref(response);
+    } while (!found);
+}
+
+static bool job_check_status(QTestState *qts, const char *id, char **msg)
+{
+    QDict *rsp, *info;
+    QList *list;
+    const QListEntry *p;
+    gchar *status;
+    const char *job_msg, *job_id;
+
+    rsp = qtest_qmp(qts, "{ 'execute': 'query-jobs' }");
+    g_assert(rsp);
+    g_assert(qdict_haskey(rsp, "return"));
+
+    list = qdict_get_qlist(rsp, "return");
+    g_assert(list);
+
+    for (p = qlist_first(list); p; p = qlist_next(p)) {
+        info = qobject_to(QDict, qlist_entry_obj(p));
+
+        g_assert(qdict_haskey(info, "id"));
+        job_id = qdict_get_str(info, "id");
+
+        if (g_str_equal(job_id, id)) {
+            break;
+        }
+    }
+
+    /* otherwise job not found */
+    g_assert(p);
+
+    g_assert(qdict_haskey(info, "status"));
+    status = g_strdup(qdict_get_str(info, "status"));
+    g_assert(g_str_equal(status, "concluded"));
+
+    if (qdict_haskey(info, "error")) {
+        job_msg = qdict_get_str(info, "error");
+
+        g_assert(msg);
+        *msg = g_strdup(job_msg);
+
+        return false;
+    }
+
+    qobject_unref(rsp);
+
+    return true;
+}
+
+static void snapshot_cmd_qmp(QTestState *qts, const char *cmd, const char *id)
+{
+    if (g_str_equal(cmd, "snapshot-delete")) {
+        qtest_qmp_assert_success(qts, "{ 'execute': %s,"
+                                 "'arguments': { "
+                                 "'job-id': %s,"
+                                 "'tag': 'my-snap',"
+                                 "'devices': [ 'disk0' ] } }",
+                                 cmd, id);
+    } else {
+        qtest_qmp_assert_success(qts, "{ 'execute': %s,"
+                                 "'arguments': { "
+                                 "'job-id': %s,"
+                                 "'tag': 'my-snap',"
+                                 "'devices': [ 'disk0' ],"
+                                 "'vmstate': 'disk0' } }",
+                                 cmd, id);
+    }
+}
+
+static bool snapshot_cmd_qmp_sync(QTestState *qts, const char *cmd, const char* id,
+                                  char **error_str)
+{
+    bool ret;
+
+    snapshot_cmd_qmp(qts, cmd, id);
+    job_status_wait(qts, id, "concluded");
+    ret = job_check_status(qts, id, error_str);
+
+    qtest_qmp_assert_success(qts,
+                             "{ 'execute': 'job-dismiss',"
+                             "'arguments': { "
+                             "'id': %s } }", id);
+    return ret;
+}
+
+bool snapshot_delete_qmp_sync(QTestState *qts, char **error_str)
+{
+    return snapshot_cmd_qmp_sync(qts, "snapshot-delete", "snapdelete0",
+                                 error_str);
+}
+
+bool snapshot_load_qmp_sync(QTestState *qts, char **error_str)
+{
+    return snapshot_cmd_qmp_sync(qts, "snapshot-load", "snapload0", error_str);
+}
+
+bool snapshot_save_qmp_sync(QTestState *qts, char **error_str)
+{
+    return snapshot_cmd_qmp_sync(qts, "snapshot-save", "snapsave0", error_str);
+}
