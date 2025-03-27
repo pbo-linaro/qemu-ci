@@ -207,6 +207,38 @@ static QList *migrate_start_get_qmp_capabilities(const MigrateStart *args)
     return capabilities;
 }
 
+static char *migrate_resolve_alias(const char *arch)
+{
+    const char *machine_alias;
+
+    if (g_str_equal(arch, "i386")) {
+        machine_alias = "pc";
+
+    } else if (g_str_equal(arch, "x86_64")) {
+        machine_alias = "q35";
+
+    } else if (g_str_equal(arch, "s390x")) {
+        machine_alias = "s390-ccw-virtio";
+
+    } else if (g_str_equal(arch, "ppc64")) {
+        machine_alias = "pseries";
+
+    } else if (g_str_equal(arch, "aarch64")) {
+        machine_alias = "virt";
+
+    } else {
+        g_assert_not_reached();
+    }
+
+    if (!qtest_has_machine(machine_alias)) {
+        g_autofree char *msg = g_strdup_printf("machine %s not supported", machine_alias);
+        g_test_skip(msg);
+        return NULL;
+    }
+
+    return resolve_machine_version(machine_alias, QEMU_ENV_SRC, QEMU_ENV_DST);
+}
+
 int migrate_start(QTestState **from, QTestState **to, const char *uri,
                   MigrateStart *args)
 {
@@ -220,7 +252,7 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
     const char *kvm_opts = NULL;
     const char *arch = qtest_get_arch();
     const char *memory_size;
-    const char *machine_alias, *machine_opts = "";
+    const char *machine_opts = "";
     g_autofree char *machine = NULL;
     const char *bootpath;
     g_autoptr(QList) capabilities = migrate_start_get_qmp_capabilities(args);
@@ -241,12 +273,6 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
 
     if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
         memory_size = "150M";
-
-        if (g_str_equal(arch, "i386")) {
-            machine_alias = "pc";
-        } else {
-            machine_alias = "q35";
-        }
         arch_opts = g_strdup_printf(
             "-drive if=none,id=d0,file=%s,format=raw "
             "-device ide-hd,drive=d0,secs=1,cyls=1,heads=1", bootpath);
@@ -254,7 +280,6 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
         end_address = X86_TEST_MEM_END;
     } else if (g_str_equal(arch, "s390x")) {
         memory_size = "128M";
-        machine_alias = "s390-ccw-virtio";
         arch_opts = g_strdup_printf("-bios %s", bootpath);
         start_address = S390_TEST_MEM_START;
         end_address = S390_TEST_MEM_END;
@@ -262,14 +287,12 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
         memory_size = "256M";
         start_address = PPC_TEST_MEM_START;
         end_address = PPC_TEST_MEM_END;
-        machine_alias = "pseries";
         machine_opts = "vsmt=8";
         arch_opts = g_strdup_printf(
             "-nodefaults -machine " PSERIES_DEFAULT_CAPABILITIES " "
             "-bios %s", bootpath);
     } else if (strcmp(arch, "aarch64") == 0) {
         memory_size = "150M";
-        machine_alias = "virt";
         machine_opts = "gic-version=3";
         arch_opts = g_strdup_printf("-cpu max -kernel %s", bootpath);
         start_address = ARM_TEST_MEM_START;
@@ -311,15 +334,10 @@ int migrate_start(QTestState **from, QTestState **to, const char *uri,
         kvm_opts = ",dirty-ring-size=4096";
     }
 
-    if (!qtest_has_machine(machine_alias)) {
-        g_autofree char *msg = g_strdup_printf("machine %s not supported", machine_alias);
-        g_test_skip(msg);
+    machine = migrate_resolve_alias(arch);
+    if (!machine) {
         return -1;
     }
-
-    machine = resolve_machine_version(machine_alias, QEMU_ENV_SRC,
-                                      QEMU_ENV_DST);
-
     g_test_message("Using machine type: %s", machine);
 
     cmd_source = g_strdup_printf("-accel kvm%s -accel tcg "
