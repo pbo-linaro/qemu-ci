@@ -4426,6 +4426,7 @@ typedef struct BenchData {
     int in_flight;
     bool in_flush;
     uint64_t offset;
+    QEMUBH *bh;
 } BenchData;
 
 static void bench_undrained_flush_cb(void *opaque, int ret)
@@ -4479,7 +4480,16 @@ static void bench_cb(void *opaque, int ret)
             }
         }
     }
+    if (b->n > b->in_flight && b->in_flight < b->nrreq) {
+        qemu_bh_schedule(b->bh);
+    }
+}
 
+static void bench_bh(void *opaque)
+{
+    BenchData *b = opaque;
+    BlockAIOCB *acb;
+    
     while (b->n > b->in_flight && b->in_flight < b->nrreq) {
         int64_t offset = b->offset;
         /* blk_aio_* might look for completed I/Os and kick bench_cb
@@ -4737,6 +4747,7 @@ static int img_bench(int argc, char **argv)
     }
 
     gettimeofday(&t1, NULL);
+    data.bh = qemu_bh_new(bench_bh, &data);
     bench_cb(&data, 0);
 
     while (data.n > 0) {
@@ -4755,6 +4766,9 @@ out:
     qemu_vfree(data.buf);
     blk_unref(blk);
 
+    if (data.bh) {
+        qemu_bh_delete(data.bh);
+    }
     if (ret) {
         return 1;
     }
