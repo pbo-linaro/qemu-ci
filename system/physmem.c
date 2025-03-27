@@ -1908,13 +1908,18 @@ static void ram_block_add(RAMBlock *new_block, Error **errp)
             goto out_free;
         }
 
-        error_setg(&new_block->cpr_blocker,
-                   "Memory region %s uses guest_memfd, "
-                   "which is not supported with CPR.",
-                   memory_region_name(new_block->mr));
-        migrate_add_blocker_modes(&new_block->cpr_blocker, errp,
-                                  MIG_MODE_CPR_TRANSFER,
-                                  -1);
+        /*
+         * Add a specific guest_memfd blocker if a generic one would not be
+         * added by ram_block_add_cpr_blocker.
+         */
+        if (new_block->fd >= 0 && qemu_ram_is_shared(new_block)) {
+            error_setg(&new_block->cpr_blocker,
+                       "Memory region %s uses guest_memfd, "
+                       "which is not supported with CPR.",
+                       memory_region_name(new_block->mr));
+            migrate_add_blocker_modes(&new_block->cpr_blocker, errp,
+                                      MIG_MODE_CPR_TRANSFER, -1);
+        }
     }
 
     ram_size = (new_block->offset + new_block->max_length) >> TARGET_PAGE_BITS;
