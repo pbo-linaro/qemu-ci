@@ -18,6 +18,7 @@
 #include "qemu/osdep.h"
 #include "qapi/error.h"
 #include "qemu/module.h"
+#include "hw/irq.h"
 #include "hw/qdev-properties.h"
 #include "hw/sd/sdhci.h"
 #include "sdhci-internal.h"
@@ -50,6 +51,7 @@ static void sdhci_pci_exit(PCIDevice *dev)
 
     sdhci_common_unrealize(s);
     sdhci_uninitfn(s);
+    qemu_free_irq(s->irq);
 }
 
 static void sdhci_pci_class_init(ObjectClass *klass, void *data)
