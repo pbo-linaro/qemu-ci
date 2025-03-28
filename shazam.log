@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250328200459.483089-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/9] include/exec: Move tb_{, set_}page_addr[01] to translation-block.h
+    [31m✗[0m BADSIG: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/9] accel/tcg: Move get_page_addr_code* declarations
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 3/9] accel/tcg: Remove page_protect
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/9] accel/tcg: Remove cpu-all.h, exec-all.h from tb-internal.h
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 5/9] accel/tcg: Build translator.c twice
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/9] accel/tcg: Split out tlb-bounds.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 7/9] include/exec: Redefine tlb-flags with absolute values
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/9] page-vary: Move and rename qemu_target_page_bits_min
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/9] page-vary: Restrict scope of TARGET_PAGE_BITS_MIN
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: include/exec: Move tb_{, set_}page_addr[01] to translation-block.h
+Applying: accel/tcg: Move get_page_addr_code* declarations
+Patch failed at 0002 accel/tcg: Move get_page_addr_code* declarations
+error: patch failed: accel/tcg/translator.c:17
+error: accel/tcg/translator.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
