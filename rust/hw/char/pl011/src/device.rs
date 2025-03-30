@@ -8,9 +8,11 @@ use qemu_api::{
     chardev::{CharBackend, Chardev, Event},
     impl_vmstate_forward,
     irq::{IRQState, InterruptSource},
+    log::{LOG_GUEST_ERROR, LOG_UNIMP},
     memory::{hwaddr, MemoryRegion, MemoryRegionOps, MemoryRegionOpsBuilder},
     prelude::*,
     qdev::{Clock, ClockEvent, DeviceImpl, DeviceState, Property, ResetType, ResettablePhasesImpl},
+    qemu_log_mask,
     qom::{ObjectImpl, Owned, ParentField},
     static_assert,
     sysbus::{SysBusDevice, SysBusDeviceImpl},
@@ -298,8 +300,7 @@ impl PL011Registers {
             DMACR => {
                 self.dmacr = value;
                 if value & 3 > 0 {
-                    // qemu_log_mask(LOG_UNIMP, "pl011: DMA not implemented\n");
-                    eprintln!("pl011: DMA not implemented");
+                    qemu_log_mask!(LOG_UNIMP, "pl011: DMA not implemented\n");
                 }
             }
         }
@@ -535,7 +536,7 @@ impl PL011State {
                 u64::from(device_id[(offset - 0xfe0) >> 2])
             }
             Err(_) => {
-                // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
+                qemu_log_mask!(LOG_GUEST_ERROR, "pl011_read: Bad offset {offset}\n");
                 0
             }
             Ok(field) => {
@@ -567,7 +568,10 @@ impl PL011State {
                 .borrow_mut()
                 .write(field, value as u32, &self.char_backend);
         } else {
-            eprintln!("write bad offset {offset} value {value}");
+            qemu_log_mask!(
+                LOG_GUEST_ERROR,
+                "pl011_write: Bad offset {offset} value {value}\n"
+            );
         }
         if update_irq {
             self.update();
