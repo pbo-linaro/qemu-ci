@@ -169,10 +169,19 @@ typedef struct ReadEventData {
     };
 } QEMU_PACKED ReadEventData;
 
+typedef struct ControlProgramId {
+    uint8_t system_type[8];
+    uint8_t system_name[8];
+    uint64_t system_level;
+    uint8_t sysplex_name[8];
+    uint64_t timestamp;
+} QEMU_PACKED ControlProgramId;
+
 struct SCLPEvent {
     DeviceState qdev;
     bool event_pending;
     char *name;
+    ControlProgramId cpi;
 };
 
 struct SCLPEventClass {
