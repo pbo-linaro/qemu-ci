@@ -26,6 +26,7 @@
 #include "cpu-qom.h"
 #include "qom/object.h"
 #include "hw/registerfields.h"
+#include "hw/intc/intc.h"
 
 #define CPU_RESOLVING_TYPE TYPE_POWERPC_CPU
 
@@ -1585,6 +1586,7 @@ int ppc32_cpu_write_elf32_note(WriteCoreDumpFunction f, CPUState *cs,
 void ppc_maybe_interrupt(CPUPPCState *env);
 void ppc_cpu_do_interrupt(CPUState *cpu);
 bool ppc_cpu_exec_interrupt(CPUState *cpu, int int_req);
+void ppc_cpu_irq_print_info(InterruptStatsProvider *obj, GString *buf);
 void ppc_cpu_do_system_reset(CPUState *cs);
 void ppc_cpu_do_fwnmi_machine_check(CPUState *cs, target_ulong vector);
 extern const VMStateDescription vmstate_ppc_cpu;
@@ -2660,6 +2662,7 @@ enum {
 #endif
 
 /* Hardware exceptions definitions */
+/* Keep powerpc_intr_name in sync */
 enum {
     /* External hardware exception sources */
     PPC_INTERRUPT_RESET     = 0x00001,  /* Reset exception                    */
