@@ -24,6 +24,7 @@
 #include "qemu/rcu.h"
 #include "qemu/rcu_queue.h"
 #include "qemu/cutils.h"
+#include "qobject/qlist.h"
 #include "system/qtest.h"
 
 /* Root node for synth file system */
@@ -134,6 +135,19 @@ int qemu_v9fs_synth_add_file(V9fsSynthNode *parent, int mode,
     pstrcpy(node->name, sizeof(node->name), name);
     QLIST_INSERT_HEAD_RCU(&parent->child, node, sibling);
     return 0;
+}
+
+// Must call after get synth_mutex
+static void v9fs_recursive_free_node(V9fsSynthNode *node)
+{
+    V9fsSynthNode *entry;
+
+    for (entry = QLIST_FIRST(&node->child); entry;) {
+        V9fsSynthNode *next = QLIST_NEXT(entry, sibling);
+        v9fs_recursive_free_node(entry);
+        g_free(entry);
+        entry = next;
+    }
 }
 
 static void synth_fill_statbuf(V9fsSynthNode *node, struct stat *stbuf)
@@ -615,8 +629,22 @@ static int synth_init(FsContext *ctx, Error **errp)
     return 0;
 }
 
+
+static void synth_cleanup(FsContext *ctx)
+{
+    // recursively free all child nodes of synth_root
+    // V9fsSynthNode *tmp;
+    QEMU_LOCK_GUARD(&synth_mutex);
+    v9fs_recursive_free_node(&synth_root);
+    // QLIST_FOREACH(tmp, &synth_root.child, sibling) {
+    //     v9fs_recursive_free_node(tmp);
+    // }
+    QLIST_INIT(&synth_root.child);
+}
+
 FileOperations synth_ops = {
     .init         = synth_init,
+    .cleanup      = synth_cleanup,
     .lstat        = synth_lstat,
     .readlink     = synth_readlink,
     .close        = synth_close,
