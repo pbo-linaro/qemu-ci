@@ -41,6 +41,15 @@ enum ipmi_op {
     IPMI_SEND_NMI
 };
 
+/* Channel properties */
+#define IPMI_CHANNEL_IPMB                0x00
+#define IPMI_CHANNEL_SYSTEM              0x0f
+#define IPMI_CH_MEDIUM_IPMB              0x01
+#define IPMI_CH_MEDIUM_SYSTEM            0x0c
+#define IPMI_CH_PROTOCOL_IPMB            0x01
+#define IPMI_CH_PROTOCOL_KCS             0x05
+#define IPMI_CH_PROTOCOL_BT_15           0x08
+
 #define IPMI_CC_INVALID_CMD                              0xc1
 #define IPMI_CC_COMMAND_INVALID_FOR_LUN                  0xc2
 #define IPMI_CC_TIMEOUT                                  0xc3
@@ -170,6 +179,11 @@ struct IPMIInterfaceClass {
      * Return the firmware info for a device.
      */
     void (*get_fwinfo)(struct IPMIInterface *s, IPMIFwInfo *info);
+
+    /*
+     * IPMI channel protocol type number.
+     */
+    uint8_t protocol;
 };
 
 /*
