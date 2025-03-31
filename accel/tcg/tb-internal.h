@@ -82,6 +82,16 @@ void tb_unlock_pages(TranslationBlock *);
 void tb_invalidate_phys_range_fast(ram_addr_t ram_addr,
                                    unsigned size,
                                    uintptr_t retaddr);
+#ifdef TARGET_HAS_LAZY_ICACHE
+void tb_store_to_phys_range(ram_addr_t ram_addr,
+                            unsigned size, uintptr_t retaddr);
+#else
+static inline void tb_store_to_phys_range(ram_addr_t ram_addr,
+                            unsigned size, uintptr_t retaddr)
+{
+    tb_invalidate_phys_range_fast(ram_addr, size, retaddr);
+}
+#endif
 #endif /* CONFIG_SOFTMMU */
 
 bool tb_invalidate_phys_page_unwind(tb_page_addr_t addr, uintptr_t pc);

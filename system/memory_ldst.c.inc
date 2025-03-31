@@ -286,7 +286,7 @@ void glue(address_space_stl_notdirty, SUFFIX)(ARG1_DECL,
         stl_p(ptr, val);
 
         dirty_log_mask = memory_region_get_dirty_log_mask(mr);
-        dirty_log_mask &= ~(1 << DIRTY_MEMORY_CODE);
+        dirty_log_mask &= DIRTY_CLIENTS_NOCODE;
         cpu_physical_memory_set_dirty_range(memory_region_get_ram_addr(mr) + addr,
                                             4, dirty_log_mask);
         r = MEMTX_OK;

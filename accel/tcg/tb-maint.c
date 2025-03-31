@@ -60,10 +60,20 @@ static bool tb_cmp(const void *ap, const void *bp)
             tb_page_addr1(a) == tb_page_addr1(b));
 }
 
+#ifdef TARGET_HAS_LAZY_ICACHE
+static QemuSpin icache_incoherent_lock;
+static bool icache_incoherent;
+static ram_addr_t icache_incoherent_start;
+static ram_addr_t icache_incoherent_end;
+#endif
+
 void tb_htable_init(void)
 {
     unsigned int mode = QHT_MODE_AUTO_RESIZE;
 
+#ifdef TARGET_HAS_LAZY_ICACHE
+    qemu_spin_init(&icache_incoherent_lock);
+#endif
     qht_init(&tb_ctx.htable, tb_cmp, CODE_GEN_HTABLE_SIZE, mode);
 }
 
@@ -803,6 +813,35 @@ void tb_flush(CPUState *cpu)
     }
 }
 
+#ifdef TARGET_HAS_LAZY_ICACHE
+static void do_tb_flush_incoherent(CPUState *cpu, run_on_cpu_data data)
+{
+    /* Should be no other CPUs running */
+    assert(!qemu_spin_trylock(&icache_incoherent_lock));
+    if (icache_incoherent) {
+        unsigned tb_flush_count = qatomic_read(&tb_ctx.tb_flush_count);
+
+        tb_invalidate_phys_range(icache_incoherent_start,
+                                 icache_incoherent_end);
+        icache_incoherent = false;
+        icache_incoherent_start = 0;
+        icache_incoherent_end = 0;
+        qemu_spin_unlock(&icache_incoherent_lock);
+
+        do_tb_flush(cpu, RUN_ON_CPU_HOST_INT(tb_flush_count));
+    } else {
+        qemu_spin_unlock(&icache_incoherent_lock);
+    }
+}
+
+void tb_flush_incoherent(CPUState *cpu)
+{
+    if (tcg_enabled() && icache_incoherent) {
+        async_safe_run_on_cpu(cpu, do_tb_flush_incoherent, RUN_ON_CPU_NULL);
+    }
+}
+#endif
+
 /* remove @orig from its @n_orig-th jump list */
 static inline void tb_remove_from_jmp_list(TranslationBlock *orig, int n_orig)
 {
@@ -1229,6 +1268,40 @@ void tb_invalidate_phys_range_fast(ram_addr_t ram_addr,
     pages = page_collection_lock(ram_addr, ram_addr + size - 1);
     tb_invalidate_phys_page_fast__locked(pages, ram_addr, size, retaddr);
     page_collection_unlock(pages);
+}
+
+
+void tb_store_to_phys_range(ram_addr_t ram_addr,
+                            unsigned size, uintptr_t retaddr)
+{
+#ifndef TARGET_HAS_LAZY_ICACHE
+    tb_invalidate_phys_range_fast(ram_addr, size, retaddr);
+#else
+    ram_addr_t start, end;
+
+    /*
+     * Address comes in as byte-wise, but the cputlb dirty tracking operates
+     * on a page basis and will not be called a second time on the same page,
+     * so must cover a full page here.
+     */
+    start = ROUND_DOWN(ram_addr, TARGET_PAGE_SIZE);
+    end = ROUND_UP(ram_addr + size, TARGET_PAGE_SIZE) - 1;
+
+    qemu_spin_lock(&icache_incoherent_lock);
+    if (icache_incoherent) {
+        if (start < icache_incoherent_start) {
+            icache_incoherent_start = start;
+        }
+        if (end > icache_incoherent_end) {
+            icache_incoherent_end = end;
+        }
+    } else {
+        icache_incoherent = true;
+        icache_incoherent_start = start;
+        icache_incoherent_end = end;
+    }
+    qemu_spin_unlock(&icache_incoherent_lock);
+#endif
 }
 
 #endif /* CONFIG_USER_ONLY */

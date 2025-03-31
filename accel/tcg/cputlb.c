@@ -1332,18 +1332,27 @@ static void notdirty_write(CPUState *cpu, vaddr mem_vaddr, unsigned size,
                            CPUTLBEntryFull *full, uintptr_t retaddr)
 {
     ram_addr_t ram_addr = mem_vaddr + full->xlat_section;
+    uint8_t mask;
 
     trace_memory_notdirty_write_access(mem_vaddr, ram_addr, size);
 
     if (!cpu_physical_memory_get_dirty_flag(ram_addr, DIRTY_MEMORY_CODE)) {
-        tb_invalidate_phys_range_fast(ram_addr, size, retaddr);
+        tb_store_to_phys_range(ram_addr, size, retaddr);
     }
 
     /*
      * Set both VGA and migration bits for simplicity and to remove
-     * the notdirty callback faster.
+     * the notdirty callback faster. Incoherent icache also sets the
+     * code bit because incoherency is tracked and resolved in the TB
+     * code.
      */
-    cpu_physical_memory_set_dirty_range(ram_addr, size, DIRTY_CLIENTS_NOCODE);
+#ifdef TARGET_HAS_LAZY_ICACHE
+    mask = DIRTY_CLIENTS_ALL;
+#else
+    mask = DIRTY_CLIENTS_NOCODE;
+#endif
+
+    cpu_physical_memory_set_dirty_range(ram_addr, size, mask);
 
     /* We remove the notdirty callback only if the code has been flushed. */
     if (!cpu_physical_memory_is_clean(ram_addr)) {
