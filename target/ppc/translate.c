@@ -183,6 +183,7 @@ struct DisasContext {
     bool sf_mode;
     bool has_cfar;
     bool has_bhrb;
+    bool ifetch_fixed_xlate;
 #endif
     bool fpu_enabled;
     bool altivec_enabled;
@@ -3636,6 +3637,18 @@ static inline bool use_goto_tb(DisasContext *ctx, target_ulong dest)
     if (unlikely(ctx->singlestep_enabled)) {
         return false;
     }
+
+#if defined(TARGET_PPC64)
+    /* XXX: make translator_use_goto_tb take a 'fixed map' bool */
+    /* Suppress goto_tb if requested. */
+    if (ctx->ifetch_fixed_xlate) {
+        if (tb_cflags(ctx->base.tb) & CF_NO_GOTO_TB) {
+            return false;
+        }
+        return true;
+    }
+#endif
+
     return translator_use_goto_tb(&ctx->base, dest);
 }
 
@@ -6525,6 +6538,7 @@ static void ppc_tr_init_disas_context(DisasContextBase *dcbase, CPUState *cs)
     ctx->sf_mode = (hflags >> HFLAGS_64) & 1;
     ctx->has_cfar = !!(env->flags & POWERPC_FLAG_CFAR);
     ctx->has_bhrb = !!(env->flags & POWERPC_FLAG_BHRB);
+    ctx->ifetch_fixed_xlate = ((hflags >> HFLAGS_IMMU_IDX) & 7) == 3;
 #endif
     ctx->lazy_tlb_flush = env->mmu_model == POWERPC_MMU_32B
         || env->mmu_model & POWERPC_MMU_64;
@@ -6606,6 +6620,12 @@ static void ppc_tr_translate_insn(DisasContextBase *dcbase, CPUState *cs)
     if (!ok) {
         gen_invalid(ctx);
     }
+
+#if defined(TARGET_PPC64)
+    if (ctx->ifetch_fixed_xlate) {
+        return;
+    }
+#endif
 
     /* End the TB when crossing a page boundary. */
     if (ctx->base.is_jmp == DISAS_NEXT && !(pc & ~TARGET_PAGE_MASK)) {
