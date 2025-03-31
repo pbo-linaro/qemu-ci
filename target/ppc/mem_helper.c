@@ -24,6 +24,7 @@
 #include "exec/helper-proto.h"
 #include "helper_regs.h"
 #include "exec/cpu_ldst.h"
+#include "exec/tb-flush.h"
 #include "internal.h"
 #include "qemu/atomic128.h"
 
@@ -335,6 +336,7 @@ void helper_icbi(CPUPPCState *env, target_ulong addr)
      * do the load "by hand".
      */
     cpu_ldl_data_ra(env, addr, GETPC());
+    tb_flush_incoherent(env_cpu(env));
 }
 
 void helper_icbiep(CPUPPCState *env, target_ulong addr)

@@ -32,6 +32,22 @@
 #define TARGET_PAGE_BITS_64K 16
 #define TARGET_PAGE_BITS_16M 24
 
+/* icaches are not kept coherent with dcaches. target is to call
+ * tb_flush_incoherent() to bring them into coherency */
+#define TARGET_HAS_LAZY_ICACHE
+/*
+ * Note that this does not model implementation specific behaviour of all
+ * CPUs, notably recent Power CPUs do keep i/d coherent, and only require
+ * context synchronization after code modification to ensure CPU pipeline
+ * is coherent. The ISA and User Manuals do say that icbi (to any address) ;
+ * isync should be used even for these CPUs, so tb_flush_incoherent() in
+ * icbi should work reasonably. The ppc target should continue to work without
+ * TARGET_HAS_LAZY_ICACHE, but some performance corner cases benefit (e.g.,
+ * KVM when clearing a lot of memory freed from a guest that has a lot of exec
+ * pages; PowerVM PFW/boot firmware that stores to globals in the same page as
+ * it executes from).
+ */
+
 #if defined(TARGET_PPC64)
 #define PPC_ELF_MACHINE     EM_PPC64
 #else

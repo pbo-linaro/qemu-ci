@@ -4545,6 +4545,7 @@ static void gen_dss(DisasContext *ctx)
 static void gen_icbi(DisasContext *ctx)
 {
     TCGv t0;
+    translator_io_start(&ctx->base);
     gen_set_access_type(ctx, ACCESS_CACHE);
     t0 = tcg_temp_new();
     gen_addr_reg_index(ctx, t0);
