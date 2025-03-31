@@ -733,7 +733,12 @@ static void ipmi_sim_handle_timeout(IPMIBmcSim *ibs)
 
  do_full_expiry:
     ibs->watchdog_running = 0; /* Stop the watchdog on a timeout */
-    ibs->watchdog_expired |= (1 << IPMI_BMC_WATCHDOG_GET_USE(ibs));
+
+    /* Log the expiry if the don't log bit is clear */
+    if (!IPMI_BMC_WATCHDOG_GET_DONT_LOG(ibs)) {
+        ibs->watchdog_expired |= (1 << IPMI_BMC_WATCHDOG_GET_USE(ibs));
+    }
+
     switch (IPMI_BMC_WATCHDOG_GET_ACTION(ibs)) {
     case IPMI_BMC_WATCHDOG_ACTION_NONE:
         sensor_set_discrete_bit(ibs, IPMI_WATCHDOG_SENSOR, 0, 1,
