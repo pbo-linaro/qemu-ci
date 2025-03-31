@@ -939,6 +939,7 @@ static void ccw_machine_9_2_class_options(MachineClass *mc)
 {
     static GlobalProperty compat[] = {
         { TYPE_S390_PCI_DEVICE, "relaxed-translation", "off", },
+        { TYPE_SCLP_EVENT_FACILITY, "use-cpi", "off", },
     };
 
     ccw_machine_10_0_class_options(mc);

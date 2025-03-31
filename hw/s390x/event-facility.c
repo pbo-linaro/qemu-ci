@@ -22,6 +22,7 @@
 #include "hw/s390x/sclp.h"
 #include "migration/vmstate.h"
 #include "hw/s390x/event-facility.h"
+#include "hw/qdev-properties.h"
 
 typedef struct SCLPEventsBus {
     BusState qbus;
@@ -54,6 +55,7 @@ struct SCLPEventFacility {
     bool allow_all_mask_sizes;
     /* length of the receive mask */
     uint16_t mask_length;
+    bool use_cpi;
 };
 
 /* return true if any child has event pending set */
@@ -455,11 +457,20 @@ static void realize_event_facility(DeviceState *dev, Error **errp)
         qdev_unrealize(DEVICE(&event_facility->quiesce));
         return;
     }
-    if (!qdev_realize(DEVICE(&event_facility->cpi),
-                      BUS(&event_facility->sbus), errp)) {
-        qdev_unrealize(DEVICE(&event_facility->quiesce));
-        qdev_unrealize(DEVICE(&event_facility->cpu_hotplug));
-        return;
+    /*
+     * Add sclpcpi device to QOM only when the virtual machine supports
+     * Control-Program Identification. It is supported by "s390-ccw-virtio-10.0"
+     * machine and higher.
+     */
+    if (!event_facility->use_cpi) {
+        object_unparent(OBJECT(&event_facility->cpi));
+    } else {
+        if (!qdev_realize(DEVICE(&event_facility->cpi),
+                          BUS(&event_facility->sbus), errp)) {
+            qdev_unrealize(DEVICE(&event_facility->quiesce));
+            qdev_unrealize(DEVICE(&event_facility->cpu_hotplug));
+            return;
+        }
     }
 }
 
@@ -470,12 +481,18 @@ static void reset_event_facility(DeviceState *dev)
     sdev->receive_mask = 0;
 }
 
+static const Property qemu_event_facility_properties[] = {
+    DEFINE_PROP_BOOL("use-cpi", SCLPEventFacility,
+                     use_cpi, true),
+};
+
 static void init_event_facility_class(ObjectClass *klass, void *data)
 {
     SysBusDeviceClass *sbdc = SYS_BUS_DEVICE_CLASS(klass);
     DeviceClass *dc = DEVICE_CLASS(sbdc);
     SCLPEventFacilityClass *k = EVENT_FACILITY_CLASS(dc);
 
+    device_class_set_props(dc, qemu_event_facility_properties);
     dc->realize = realize_event_facility;
     device_class_set_legacy_reset(dc, reset_event_facility);
     dc->vmsd = &vmstate_event_facility;
