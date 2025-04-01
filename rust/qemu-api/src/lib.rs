@@ -21,6 +21,7 @@ pub mod cell;
 pub mod chardev;
 pub mod errno;
 pub mod irq;
+pub mod log;
 pub mod memory;
 pub mod module;
 pub mod offset_of;

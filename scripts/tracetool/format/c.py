@@ -43,6 +43,22 @@ def generate(events, backend, group):
             sstate = "TRACE_%s_ENABLED" % e.name.upper(),
             dstate = e.api(e.QEMU_DSTATE))
 
+        cond = "true"
+
+        out('',
+            'void %(api)s(%(args)s)',
+            '{',
+            '    if (%(cond)s) {',
+            '        %(api_nocheck)s(%(names)s);',
+            '    }',
+            '}',
+            api=e.api(),
+            api_nocheck=e.api(e.QEMU_TRACE_NOCHECK),
+            args=e.args,
+            names=", ".join(e.args.names()),
+            cond=cond
+            )
+
     out('TraceEvent *%(group)s_trace_events[] = {',
         group = group.lower())
 

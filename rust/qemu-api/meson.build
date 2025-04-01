@@ -34,6 +34,7 @@ _qemu_api_rs = static_library(
       'src/qom.rs',
       'src/sysbus.rs',
       'src/timer.rs',
+      'src/log.rs',
       'src/vmstate.rs',
       'src/zeroable.rs',
     ],

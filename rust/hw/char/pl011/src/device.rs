@@ -2,15 +2,21 @@
 // Author(s): Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-use std::{ffi::CStr, mem::size_of, ptr::addr_of_mut};
+use std::{
+    ffi::{CStr, CString},
+    mem::size_of,
+    ptr::addr_of_mut,
+};
 
 use qemu_api::{
     chardev::{CharBackend, Chardev, Event},
     impl_vmstate_forward,
     irq::{IRQState, InterruptSource},
+    log::Mask,
     memory::{hwaddr, MemoryRegion, MemoryRegionOps, MemoryRegionOpsBuilder},
     prelude::*,
     qdev::{Clock, ClockEvent, DeviceImpl, DeviceState, Property, ResetType, ResettablePhasesImpl},
+    qemu_log_mask,
     qom::{ObjectImpl, Owned, ParentField},
     static_assert,
     sysbus::{SysBusDevice, SysBusDeviceImpl},
@@ -298,7 +304,7 @@ impl PL011Registers {
             DMACR => {
                 self.dmacr = value;
                 if value & 3 > 0 {
-                    // qemu_log_mask(LOG_UNIMP, "pl011: DMA not implemented\n");
+                    qemu_log_mask!(Mask::log_unimp, "pl011: DMA not implemented\n");
                     eprintln!("pl011: DMA not implemented");
                 }
             }
@@ -535,11 +541,21 @@ impl PL011State {
                 u64::from(device_id[(offset - 0xfe0) >> 2])
             }
             Err(_) => {
-                // qemu_log_mask(LOG_GUEST_ERROR, "pl011_read: Bad offset 0x%x\n", (int)offset);
+                qemu_log_mask!(
+                    Mask::log_guest_error,
+                    "pl011_read: Bad offset 0x%x\n",
+                    offset as i32
+                );
                 0
             }
             Ok(field) => {
+                let regname = field.as_str();
                 let (update_irq, result) = self.regs.borrow_mut().read(field);
+                let c_string = CString::new(regname).expect("CString::new failed");
+                let name_ptr = c_string.as_ptr();
+                unsafe {
+                    qemu_api::bindings::trace_pl011_read(offset as u32, result, name_ptr);
+                }
                 if update_irq {
                     self.update();
                     self.char_backend.accept_input();
@@ -576,8 +592,16 @@ impl PL011State {
 
     fn can_receive(&self) -> u32 {
         let regs = self.regs.borrow();
-        // trace_pl011_can_receive(s->lcr, s->read_count, r);
-        u32::from(regs.read_count < regs.fifo_depth())
+        let fifo_available = u32::from(regs.read_count < regs.fifo_depth());
+        unsafe {
+            qemu_api::bindings::trace_pl011_can_receive(
+                u32::from(regs.line_control),
+                regs.read_count,
+                regs.fifo_depth().try_into().unwrap(),
+                fifo_available,
+            );
+        }
+        fifo_available
     }
 
     fn receive(&self, buf: &[u8]) {

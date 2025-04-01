@@ -74,17 +74,10 @@ def generate(events, backend, group):
         cond = "true"
 
         out('',
-            'static inline void %(api)s(%(args)s)',
-            '{',
-            '    if (%(cond)s) {',
-            '        %(api_nocheck)s(%(names)s);',
-            '    }',
-            '}',
+            'void %(api)s(%(args)s);',
             api=e.api(),
-            api_nocheck=e.api(e.QEMU_TRACE_NOCHECK),
             args=e.args,
-            names=", ".join(e.args.names()),
-            cond=cond)
+            )
 
     backend.generate_end(events, group)
 

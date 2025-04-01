@@ -143,6 +143,11 @@ void qemu_log_unlock(FILE *logfile)
     }
 }
 
+bool qemu_loglevel_mask(int mask)
+{
+    return (qemu_loglevel & mask) != 0;
+}
+
 void qemu_log(const char *fmt, ...)
 {
     FILE *f = qemu_log_trylock();

@@ -72,6 +72,26 @@ pub enum RegisterOffset {
     //Reserved = 0x04C,
 }
 
+impl RegisterOffset {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            RegisterOffset::DR => "DR",
+            RegisterOffset::RSR => "RSR",
+            RegisterOffset::FR => "FR",
+            RegisterOffset::FBRD => "FBRD",
+            RegisterOffset::ILPR => "ILPR",
+            RegisterOffset::IBRD => "IBRD",
+            RegisterOffset::LCR_H => "LCR_H",
+            RegisterOffset::CR => "CR",
+            RegisterOffset::FLS => "FLS",
+            RegisterOffset::IMSC => "IMSC",
+            RegisterOffset::RIS => "RIS",
+            RegisterOffset::MIS => "MIS",
+            RegisterOffset::ICR => "ICR",
+            RegisterOffset::DMACR => "DMACR",
+        }
+    }
+}
 /// Receive Status Register / Data Register common error bits
 ///
 /// The `UARTRSR` register is updated only when a read occurs
