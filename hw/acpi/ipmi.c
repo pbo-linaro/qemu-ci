@@ -55,7 +55,7 @@ static Aml *aml_ipmi_crs(IPMIFwInfo *info)
         abort();
     }
 
-    if (info->interrupt_number) {
+    if (info->irq == IPMI_ISA_IRQ && info->interrupt_number) {
         aml_append(crs, aml_irq_no_flags(info->interrupt_number));
     }
 
