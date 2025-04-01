@@ -434,4 +434,6 @@ void ipmi_bt_class_init(IPMIInterfaceClass *iic)
     iic->handle_if_event = ipmi_bt_handle_event;
     iic->set_irq_enable = ipmi_bt_set_irq_enable;
     iic->reset = ipmi_bt_handle_reset;
+    /* BT System Interface Format, IPMI v1.5 */
+    iic->protocol = IPMI_CHANNEL_PROTOCOL_BT_15;
 }
