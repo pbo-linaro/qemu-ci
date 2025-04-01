@@ -1,0 +1,68 @@
+Grabbing thread from lore.kernel.org/all/20250401080938.32278-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/24] hw/core/cpu: Update CPUClass::mmu_index docstring
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 2/24] accel/tcg: Introduce TCGCPUOps::mmu_index() callback
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/24] target/alpha: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 4/24] target/arm: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 5/24] target/avr: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/24] target/hppa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH 7/24] target/i386: Remove unused cpu_(ldub, stb)_kernel macros
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/24] target/i386: Restrict cpu_mmu_index_kernel() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/24] target/i386: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/24] target/loongarch: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/24] target/m68k: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 12/24] target/microblaze: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 13/24] target/mips: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 14/24] target/openrisc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 15/24] target/ppc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 16/24] target/riscv: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 17/24] target/rx: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 18/24] target/s390x: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 19/24] target/sh4: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 20/24] target/sparc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 21/24] target/tricore: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 22/24] target/xtensa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 23/24] hw/core/cpu: Remove CPUClass::mmu_index()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 24/24] exec: Restrict cpu-mmu-index.h to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 24
+---
+Applying: hw/core/cpu: Update CPUClass::mmu_index docstring
+Applying: accel/tcg: Introduce TCGCPUOps::mmu_index() callback
+Patch failed at 0002 accel/tcg: Introduce TCGCPUOps::mmu_index() callback
+error: include/exec/cpu-mmu-index.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
