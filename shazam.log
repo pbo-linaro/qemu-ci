@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250401083232.33773-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] exec: Restrict 'cpu-ldst-common.h' to accel/tcg/
+  [32m✓[0m [PATCH 2/3] exec: Restrict 'cpu_ldst.h' to accel/tcg/
+  [32m✓[0m [PATCH 3/3] exec: Do not include 'accel/tcg/cpu-ldst.h' in 'exec-all.h'
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: exec: Restrict 'cpu-ldst-common.h' to accel/tcg/
+Patch failed at 0001 exec: Restrict 'cpu-ldst-common.h' to accel/tcg/
+error: include/exec/cpu-ldst-common.h: does not exist in index
+error: patch failed: include/exec/cpu_ldst.h:67
+error: include/exec/cpu_ldst.h: patch does not apply
+error: patch failed: accel/tcg/translator.c:11
+error: accel/tcg/translator.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
