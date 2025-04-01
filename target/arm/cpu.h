@@ -3265,7 +3265,7 @@ extern const uint64_t pred_esz_masks[5];
  * linux syscall TIF_TAGGED_ADDR setting, not TBI in general.
  *
  * There should be a better place to put this, but we need this in
- * include/exec/cpu_ldst.h, and not some place linux-user specific.
+ * include/user/guest-host.h, and not some place linux-user specific.
  */
 static inline target_ulong cpu_untagged_addr(CPUState *cs, target_ulong x)
 {
