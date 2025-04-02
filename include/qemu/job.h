@@ -520,6 +520,8 @@ bool job_is_internal(Job *job);
  */
 bool job_is_cancelled(Job *job);
 
+bool job_is_paused(Job *job);
+
 /* Same as job_is_cancelled(), but called with job lock held. */
 bool job_is_cancelled_locked(Job *job);
 
