@@ -1,0 +1,111 @@
+Grabbing thread from lore.kernel.org/all/20250402210328.52897-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 44 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 92 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/43] tcg: Declare TARGET_INSN_START_EXTRA_WORDS in 'cpu-param.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 2/43] tcg: Always define TARGET_INSN_START_EXTRA_WORDS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/43] hw/core/cpu: Update CPUClass::mmu_index docstring
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 4/43] accel/tcg: Introduce TCGCPUOps::mmu_index() callback
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 5/43] target/alpha: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/43] target/arm: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 7/43] target/avr: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/43] target/hppa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH 9/43] target/i386: Remove unused cpu_(ldub, stb)_kernel macros
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/43] target/i386: Restrict cpu_mmu_index_kernel() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/43] target/i386: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 12/43] target/loongarch: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 13/43] target/m68k: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 14/43] target/microblaze: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 15/43] target/mips: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 16/43] target/openrisc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 17/43] target/ppc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 18/43] target/riscv: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 19/43] target/rx: Fix copy/paste typo (riscv -> rx)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 20/43] target/rx: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 21/43] target/s390x: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 22/43] target/sh4: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 23/43] target/sparc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 24/43] target/tricore: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 25/43] target/xtensa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 26/43] hw/core/cpu: Remove CPUClass::mmu_index()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 27/43] exec: Restrict cpu-mmu-index.h to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 28/43] exec: Restrict 'cpu-ldst-common.h' to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 29/43] exec: Restrict 'cpu_ldst.h' to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 30/43] exec: Do not include 'accel/tcg/cpu-ldst.h' in 'exec-all.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 31/43] tcg: Always define TCG_GUEST_DEFAULT_MO
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 32/43] tcg: Simplify tcg_req_mo() macro
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 33/43] tcg: Define guest_default_memory_order in TCGCPUOps
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 34/43] tcg: Remove use of TCG_GUEST_DEFAULT_MO in tb_gen_code()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 35/43] tcg: Propagate CPUState argument to cpu_req_mo()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 36/43] tcg: Have tcg_req_mo() use TCGCPUOps::guest_default_memory_order
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 37/43] tcg: Remove the TCG_GUEST_DEFAULT_MO definition globally
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 38/43] tcg: Move cpu_req_mo() macro to target-agnostic 'backend-ldst.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 39/43] tcg: Move qemu_tcg_mttcg_enabled() to 'system/tcg.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 40/43] tcg: Convert TCGState::mttcg_enabled to TriState
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 41/43] tcg: Factor mttcg_init() out
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 42/43] tcg: Convert TARGET_SUPPORTS_MTTCG to TCGCPUOps::mttcg_supported field
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 43/43] target/arm: Update comment around cpu_untagged_addr()
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 43
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tcg: Declare TARGET_INSN_START_EXTRA_WORDS in 'cpu-param.h'
+Patch failed at 0001 tcg: Declare TARGET_INSN_START_EXTRA_WORDS in 'cpu-param.h'
+error: patch failed: target/arm/cpu-param.h:37
+error: target/arm/cpu-param.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
