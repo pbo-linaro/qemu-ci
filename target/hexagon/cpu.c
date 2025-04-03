@@ -313,6 +313,11 @@ static void hexagon_cpu_realize(DeviceState *dev, Error **errp)
     mcc->parent_realize(dev, errp);
 }
 
+static int hexagon_cpu_mmu_index(CPUState *cs, bool ifetch)
+{
+    return MMU_USER_IDX;
+}
+
 static void hexagon_cpu_init(Object *obj)
 {
 }
@@ -341,6 +346,7 @@ static void hexagon_cpu_class_init(ObjectClass *c, void *data)
                                        &mcc->parent_phases);
 
     cc->class_by_name = hexagon_cpu_class_by_name;
+    cc->mmu_index = hexagon_cpu_mmu_index;
     cc->dump_state = hexagon_dump_state;
     cc->set_pc = hexagon_cpu_set_pc;
     cc->get_pc = hexagon_cpu_get_pc;
