@@ -711,21 +711,15 @@ static inline DeviceState *create_acpi_ged(VirtMachineState *vms)
 static void create_its(VirtMachineState *vms)
 {
     VirtMachineClass *vmc = VIRT_MACHINE_GET_CLASS(vms);
-    const char *itsclass = its_class_name();
     DeviceState *dev;
 
-    if (!strcmp(itsclass, "arm-gicv3-its")) {
-        if (vmc->no_tcg_its) {
-            itsclass = NULL;
-        }
-    }
-
-    if (!itsclass) {
+    assert(!vmc->no_its);
+    if (!kvm_irqchip_in_kernel() && vmc->no_tcg_its) {
         /* Do nothing if not supported */
         return;
     }
 
-    dev = qdev_new(itsclass);
+    dev = qdev_new(its_class_name());
 
     object_property_set_link(OBJECT(dev), "parent-gicv3", OBJECT(vms->gic),
                              &error_abort);
