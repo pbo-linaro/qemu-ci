@@ -22,20 +22,24 @@
 #if DATA_BITS == 8
 #define SUFFIX b
 #define DATA_TYPE uint8_t
+#define SDATA_TYPE int8_t
 #define WIDER_TYPE uint32_t
 #elif DATA_BITS == 16
 #define SUFFIX w
 #define DATA_TYPE uint16_t
+#define SDATA_TYPE int16_t
 #define WIDER_TYPE uint32_t
 #elif DATA_BITS == 32
 #define SUFFIX l
 #define DATA_TYPE uint32_t
+#define SDATA_TYPE int32_t
 #if HOST_LONG_BITS >= 64
 #define WIDER_TYPE uint64_t
 #endif
 #elif DATA_BITS == 64
 #define SUFFIX q
 #define DATA_TYPE uint64_t
+#define SDATA_TYPE int64_t
 #else
 #error unhandled operand size
 #endif
@@ -44,18 +48,31 @@
 
 /* dynamic flags computation */
 
-static uint32_t glue(compute_all_add, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1)
+static uint32_t glue(compute_all_cout, SUFFIX)(DATA_TYPE dst, SDATA_TYPE carries)
 {
     uint32_t cf, pf, af, zf, sf, of;
-    DATA_TYPE src2 = dst - src1;
 
-    cf = dst < src1;
+    /* PF, ZF, SF computed from result.  */
     pf = compute_pf(dst);
-    af = (dst ^ src1 ^ src2) & CC_A;
     zf = (dst == 0) * CC_Z;
     sf = lshift(dst, 8 - DATA_BITS) & CC_S;
-    of = lshift((src1 ^ src2 ^ -1) & (src1 ^ dst), 12 - DATA_BITS) & CC_O;
+
+    /*
+     * AF, CF, OF computed from carry out vector.  To compute OF put the highest
+     * two carry bits in OF and the bit immediately to the right; adding CC_O / 2
+     * XORs them.
+     */
+    af = (carries << 1) & CC_A;
+    cf = carries < 0;
+    of = (lshift(carries, 12 - DATA_BITS) + CC_O / 2) & CC_O;
     return cf + pf + af + zf + sf + of;
+}
+
+static uint32_t glue(compute_all_add, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1)
+{
+    DATA_TYPE src2 = dst - src1;
+    target_long carries = ADD_COUT_VEC(src1, src2, dst);
+    return glue(compute_all_cout, SUFFIX)(dst, carries);
 }
 
 static int glue(compute_c_add, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1)
@@ -66,25 +83,9 @@ static int glue(compute_c_add, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1)
 static uint32_t glue(compute_all_adc, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1,
                                          DATA_TYPE src3)
 {
-    uint32_t cf, pf, af, zf, sf, of;
-
-#ifdef WIDER_TYPE
-    WIDER_TYPE src13 = (WIDER_TYPE) src1 + (WIDER_TYPE) src3;
-    DATA_TYPE src2 = dst - src13;
-
-    cf = dst < src13;
-#else
     DATA_TYPE src2 = dst - src1 - src3;
-
-    cf = (src3 ? dst <= src1 : dst < src1);
-#endif
-
-    pf = compute_pf(dst);
-    af = (dst ^ src1 ^ src2) & 0x10;
-    zf = (dst == 0) << 6;
-    sf = lshift(dst, 8 - DATA_BITS) & 0x80;
-    of = lshift((src1 ^ src2 ^ -1) & (src1 ^ dst), 12 - DATA_BITS) & CC_O;
-    return cf + pf + af + zf + sf + of;
+    target_long carries = ADD_COUT_VEC(src1, src2, dst);
+    return glue(compute_all_cout, SUFFIX)(dst, carries);
 }
 
 static int glue(compute_c_adc, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1,
@@ -101,16 +102,9 @@ static int glue(compute_c_adc, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1,
 
 static uint32_t glue(compute_all_sub, SUFFIX)(DATA_TYPE dst, DATA_TYPE src2)
 {
-    uint32_t cf, pf, af, zf, sf, of;
     DATA_TYPE src1 = dst + src2;
-
-    cf = src1 < src2;
-    pf = compute_pf(dst);
-    af = (dst ^ src1 ^ src2) & CC_A;
-    zf = (dst == 0) * CC_Z;
-    sf = lshift(dst, 8 - DATA_BITS) & CC_S;
-    of = lshift((src1 ^ src2) & (src1 ^ dst), 12 - DATA_BITS) & CC_O;
-    return cf + pf + af + zf + sf + of;
+    target_long carries = SUB_COUT_VEC(src1, src2, dst);
+    return glue(compute_all_cout, SUFFIX)(dst, carries);
 }
 
 static int glue(compute_c_sub, SUFFIX)(DATA_TYPE dst, DATA_TYPE src2)
@@ -123,25 +117,9 @@ static int glue(compute_c_sub, SUFFIX)(DATA_TYPE dst, DATA_TYPE src2)
 static uint32_t glue(compute_all_sbb, SUFFIX)(DATA_TYPE dst, DATA_TYPE src2,
                                          DATA_TYPE src3)
 {
-    uint32_t cf, pf, af, zf, sf, of;
-
-#ifdef WIDER_TYPE
-    WIDER_TYPE src23 = (WIDER_TYPE) src2 + (WIDER_TYPE) src3;
-    DATA_TYPE src1 = dst + src23;
-
-    cf = src1 < src23;
-#else
     DATA_TYPE src1 = dst + src2 + src3;
-
-    cf = (src3 ? src1 <= src2 : src1 < src2);
-#endif
-
-    pf = compute_pf(dst);
-    af = (dst ^ src1 ^ src2) & 0x10;
-    zf = (dst == 0) << 6;
-    sf = lshift(dst, 8 - DATA_BITS) & 0x80;
-    of = lshift((src1 ^ src2) & (src1 ^ dst), 12 - DATA_BITS) & CC_O;
-    return cf + pf + af + zf + sf + of;
+    target_long carries = SUB_COUT_VEC(src1, src2, dst);
+    return glue(compute_all_cout, SUFFIX)(dst, carries);
 }
 
 static int glue(compute_c_sbb, SUFFIX)(DATA_TYPE dst, DATA_TYPE src2,
@@ -286,6 +264,6 @@ static int glue(compute_c_blsi, SUFFIX)(DATA_TYPE dst, DATA_TYPE src1)
 #undef DATA_BITS
 #undef SIGN_MASK
 #undef DATA_TYPE
-#undef DATA_MASK
+#undef SDATA_TYPE
 #undef SUFFIX
 #undef WIDER_TYPE
