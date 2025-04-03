@@ -5,7 +5,7 @@
 import importlib
 import os
 import platform
-from unittest import skipUnless
+from unittest import skipIf, skipUnless
 
 from .cmd import which
 
@@ -25,6 +25,19 @@ def skipIfMissingCommands(*args):
 
     return skipUnless(has_cmds, 'required command(s) "%s" not installed' %
                                 ", ".join(args))
+
+'''
+Decorator to skip execution of a test if the current
+host operating system does not match one of the permitted
+ones.
+Example
+
+  @skipIfOperatingSystem("Linux", "Darwin")
+'''
+def skipIfOperatingSystem(*args):
+    return skipIf(platform.system() in args,
+                  'not running on one of the required OS(s) "%s"' %
+                  ", ".join(args))
 
 '''
 Decorator to skip execution of a test if the current
