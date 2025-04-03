@@ -212,7 +212,7 @@ static bool its_enabled(VirtMachineState *vms)
 {
     VirtMachineClass *vmc = VIRT_MACHINE_GET_CLASS(vms);
 
-    return !vmc->no_its;
+    return !vmc->no_its && vms->its;
 }
 
 /*
