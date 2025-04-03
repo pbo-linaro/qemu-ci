@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250403234914.9154-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/19] qemu: Introduce TargetInfo API in 'target_info.h'
+  [32m✓[0m [PATCH RFC 2/19] qemu: Convert target_name() to TargetInfo API
+  [32m✓[0m [PATCH RFC 3/19] qemu: Factor target_system_arch() out
+  [32m✓[0m [PATCH RFC 4/19] qemu: Convert target_words_bigendian() to TargetInfo API
+  [32m✓[0m [PATCH RFC 5/19] qemu: Introduce target_long_bits()
+  [32m✓[0m [PATCH RFC 6/19] target/tricore: Replace TARGET_LONG_BITS -> target_long_bits()
+  [32m✓[0m [PATCH RFC 7/19] target/hppa: Replace TARGET_LONG_BITS -> target_long_bits()
+  [32m✓[0m [PATCH RFC 8/19] target/riscv: Replace TARGET_LONG_BITS -> target_long_bits()
+  [32m✓[0m [PATCH RFC 9/19] qemu: Introduce target_cpu_type()
+  [32m✓[0m [PATCH RFC 10/19] cpus: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+  [32m✓[0m [PATCH RFC 11/19] accel/tcg: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+  [32m✓[0m [PATCH RFC 12/19] cpus: Move target-agnostic methods out of cpu-target.c
+  [32m✓[0m [PATCH RFC 13/19] accel: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+  [32m✓[0m [PATCH RFC 14/19] accel: Implement accel_init_ops_interfaces() for both system/user mode
+  [32m✓[0m [PATCH RFC 15/19] accel: Include missing 'qemu/accel.h' header in accel-internal.h
+  [32m✓[0m [PATCH RFC 16/19] accel: Make AccelCPUClass structure target-agnostic
+  [32m✓[0m [PATCH RFC 17/19] accel: Move target-agnostic code from accel-target.c -> accel-common.c
+  [32m✓[0m [PATCH RFC 18/19] qemu: Prepare per-binary QOM filter via TYPE_BINARY_PREFIX
+  [32m✓[0m [PATCH RFC 19/19] system/vl: Filter machine list for binary using machine_binary_filter()
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 19
+---
+Applying: qemu: Introduce TargetInfo API in 'target_info.h'
+Patch failed at 0001 qemu: Introduce TargetInfo API in 'target_info.h'
+error: patch failed: include/exec/poison.h:38
+error: include/exec/poison.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
