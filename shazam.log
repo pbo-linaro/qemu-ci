@@ -1,0 +1,62 @@
+Grabbing thread from lore.kernel.org/all/20250403235821.9909-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 40 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/39] target/arm: Implement per-binary TargetInfo structures
+  [32m✓[0m [PATCH RFC 2/39] target/arm: Register TYPE_BINARY_QEMU_SYSTEM_ARM/AARCH64 interfaces
+  [32m✓[0m [PATCH RFC 3/39] target/arm: Filter CPU types for binary
+  [32m✓[0m [PATCH RFC 4/39] hw/arm: Filter machine types for binary
+  [32m✓[0m [PATCH RFC 5/39] hw/arm/aspeed: Filter machine types for binary
+  [32m✓[0m [PATCH RFC 6/39] hw/arm/aspeed: Build objects once
+  [32m✓[0m [PATCH RFC 7/39] hw/arm/raspi: Filter machine types for binary
+  [32m✓[0m [PATCH RFC 8/39] hw/arm/raspi: Build objects once
+  [32m✓[0m [PATCH RFC 9/39] target/arm/cpregs: Include missing 'target/arm/cpu.h' header
+  [32m✓[0m [PATCH RFC 10/39] hw/arm/boot: Include missing 'system/memory.h' header
+  [32m✓[0m [PATCH RFC 11/39] hw/arm: Use full "target/arm/cpu.h" path to include target's "cpu.h"
+  [32m✓[0m [PATCH RFC 12/39] target/arm/cpu-features: Include missing 'cpu.h' header
+  [32m✓[0m [PATCH RFC 13/39] target/arm/qmp: Include missing 'cpu.h' header
+  [32m✓[0m [PATCH RFC 14/39] target/arm/kvm: Include missing 'cpu-qom.h' header
+  [32m✓[0m [PATCH RFC 15/39] target/arm/hvf: Include missing 'cpu-qom.h' header
+  [32m✓[0m [PATCH RFC 16/39] hw/arm: Remove unnecessary 'cpu.h' header
+  [32m✓[0m [PATCH RFC 17/39] target/arm: Restrict inclusion of 'multiprocessing.h'
+  [32m✓[0m [PATCH RFC 18/39] target/arm: Move some definitions from 'cpu.h' to 'multiprocessing.h'
+  [32m✓[0m [PATCH RFC 19/39] hw/arm: Include missing 'target/arm/gtimer.h' header
+  [32m✓[0m [PATCH RFC 20/39] target/arm: Extract PSCI definitions to 'psci.h'
+  [32m✓[0m [PATCH RFC 21/39] target/arm: Extract feature definitions to 'cpu_has_feature.h' header
+  [32m✓[0m [PATCH RFC 22/39] target/arm: Add arm_cpu_has_feature() helper
+  [32m✓[0m [PATCH RFC 23/39] hw/arm/realview: Replace arm_feature() -> arm_cpu_has_feature()
+  [32m✓[0m [PATCH RFC 24/39] hw/arm/virt-acpi: Replace arm_feature() -> arm_cpu_has_feature()
+  [32m✓[0m [PATCH RFC 25/39] hw/arm: Build virt-acpi-build.c once
+  [32m✓[0m [PATCH RFC 26/39] system/hvf: Avoid including 'cpu.h'
+  [32m✓[0m [PATCH RFC 27/39] system/hvf: Expose hvf_enabled() to common code
+  [32m✓[0m [PATCH RFC 28/39] exec: Do not poison hardware accelerators
+  [32m✓[0m [PATCH RFC 29/39] hw/arm: Build sbsa-ref.c once
+  [32m✓[0m [PATCH RFC 30/39] target/arm: Replace target_ulong -> hwaddr in ARMMMUFaultInfo
+  [32m✓[0m [PATCH RFC 31/39] target/arm: Replace target_ulong -> uint64_t for HWBreakpoint
+  [32m✓[0m [PATCH RFC 32/39] target/arm: Replace target_ulong -> vaddr for CPUWatchpoint
+  [32m✓[0m [PATCH RFC 33/39] hw/core/machine: Allow dynamic registration of valid CPU types
+  [32m✓[0m [PATCH RFC 34/39] hw/arm/virt: Register valid CPU types dynamically
+  [32m✓[0m [PATCH RFC 35/39] hw/arm/virt: Replace TARGET_AARCH64 -> target_long_bits()
+  [32m✓[0m [PATCH RFC 36/39] target/arm: Expose Aarch64 helpers indistinctly
+  [32m✓[0m [PATCH RFC 37/39] hw/arm: Build virt.c once
+  [32m✓[0m [PATCH RFC 38/39] hw/arm: Move xen files to arm_common_ss[]
+  [32m✓[0m [PATCH RFC 39/39] hw/arm/meson: Remove arm_ss[] source set
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 39
+---
+Applying: target/arm: Implement per-binary TargetInfo structures
+Patch failed at 0001 target/arm: Implement per-binary TargetInfo structures
+error: patch failed: meson.build:3263
+error: meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
