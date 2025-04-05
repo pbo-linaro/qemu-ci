@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20250405161320.76854-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 116 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/16] target/riscv: Remove AccelCPUClass::cpu_class_init need
+  [32m✓[0m [PATCH v4 2/16] target/i386: Remove AccelCPUClass::cpu_class_init need
+  [32m✓[0m [PATCH v4 3/16] accel: Remove AccelCPUClass::cpu_class_init() callback
+  [32m✓[0m [PATCH v4 4/16] target/hexagon: Add memory order definition
+  [32m✓[0m [PATCH v4 5/16] tcg: Always define TCG_GUEST_DEFAULT_MO
+  [32m✓[0m [PATCH v4 6/16] tcg: Simplify tcg_req_mo() macro
+  [32m✓[0m [PATCH v4 7/16] tcg: Define guest_default_memory_order in TCGCPUOps
+  [32m✓[0m [PATCH v4 8/16] tcg: Remove use of TCG_GUEST_DEFAULT_MO in tb_gen_code()
+  [32m✓[0m [PATCH v4 9/16] tcg: Propagate CPUState argument to cpu_req_mo()
+  [32m✓[0m [PATCH v4 10/16] tcg: Have tcg_req_mo() use TCGCPUOps::guest_default_memory_order
+  [32m✓[0m [PATCH v4 11/16] tcg: Remove the TCG_GUEST_DEFAULT_MO definition globally
+  [32m✓[0m [PATCH v4 12/16] tcg: Move cpu_req_mo() macro to target-agnostic 'backend-ldst.h'
+  [32m✓[0m [PATCH v4 13/16] tcg: Move qemu_tcg_mttcg_enabled() to 'system/tcg.h'
+  [32m✓[0m [PATCH v4 14/16] tcg: Convert TCGState::mttcg_enabled to TriState
+  [32m✓[0m [PATCH v4 15/16] tcg: Factor mttcg_init() out
+  [32m✓[0m [PATCH v4 16/16] tcg: Convert TARGET_SUPPORTS_MTTCG to TCGCPUOps::mttcg_supported field
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 16
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/riscv: Remove AccelCPUClass::cpu_class_init need
+Applying: target/i386: Remove AccelCPUClass::cpu_class_init need
+Patch failed at 0002 target/i386: Remove AccelCPUClass::cpu_class_init need
+error: patch failed: target/i386/tcg/tcg-cpu.h:76
+error: target/i386/tcg/tcg-cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
