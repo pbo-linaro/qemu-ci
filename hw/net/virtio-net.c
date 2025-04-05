@@ -1687,6 +1687,11 @@ static void virtio_net_hdr_swap(VirtIODevice *vdev, struct virtio_net_hdr *hdr)
     virtio_tswap16s(vdev, &hdr->csum_offset);
 }
 
+typedef struct Header {
+    struct virtio_net_hdr_v1_hash virtio_net;
+    uint8_t payload[1500];
+} Header;
+
 /* dhclient uses AF_PACKET but doesn't pass auxdata to the kernel so
  * it never finds out that the packets don't have valid checksums.  This
  * causes dhclient to get upset.  Fedora's carried a patch for ages to
@@ -1701,7 +1706,7 @@ static void virtio_net_hdr_swap(VirtIODevice *vdev, struct virtio_net_hdr *hdr)
  * we should provide a mechanism to disable it to avoid polluting the host
  * cache.
  */
-static void work_around_broken_dhclient(struct virtio_net_hdr *hdr,
+static void work_around_broken_dhclient(struct Header *hdr,
                                         size_t *hdr_len, const uint8_t *buf,
                                         size_t buf_size, size_t *buf_offset)
 {
@@ -1711,20 +1716,20 @@ static void work_around_broken_dhclient(struct virtio_net_hdr *hdr,
     buf += *buf_offset;
     buf_size -= *buf_offset;
 
-    if ((hdr->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) && /* missing csum */
-        (buf_size >= csum_size && buf_size < 1500) && /* normal sized MTU */
+    if ((hdr->virtio_net.hdr.flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) && /* missing csum */
+        (buf_size >= csum_size && buf_size < sizeof(hdr->payload)) && /* normal sized MTU */
         (buf[12] == 0x08 && buf[13] == 0x00) && /* ethertype == IPv4 */
         (buf[23] == 17) && /* ip.protocol == UDP */
         (buf[34] == 0 && buf[35] == 67)) { /* udp.srcport == bootps */
-        memcpy((uint8_t *)hdr + *hdr_len, buf, csum_size);
-        net_checksum_calculate((uint8_t *)hdr + *hdr_len, csum_size, CSUM_UDP);
-        hdr->flags &= ~VIRTIO_NET_HDR_F_NEEDS_CSUM;
-        *hdr_len += csum_size;
-        *buf_offset += csum_size;
+        memcpy((uint8_t *)hdr + *hdr_len, buf, buf_size);
+        net_checksum_calculate((uint8_t *)hdr + *hdr_len, buf_size, CSUM_UDP);
+        hdr->virtio_net.hdr.flags &= ~VIRTIO_NET_HDR_F_NEEDS_CSUM;
+        *hdr_len += buf_size;
+        *buf_offset += buf_size;
     }
 }
 
-static size_t receive_header(VirtIONet *n, struct virtio_net_hdr *hdr,
+static size_t receive_header(VirtIONet *n, Header *hdr,
                              const void *buf, size_t buf_size,
                              size_t *buf_offset)
 {
@@ -1736,7 +1741,7 @@ static size_t receive_header(VirtIONet *n, struct virtio_net_hdr *hdr,
     work_around_broken_dhclient(hdr, &hdr_len, buf, buf_size, buf_offset);
 
     if (n->needs_vnet_hdr_swap) {
-        virtio_net_hdr_swap(VIRTIO_DEVICE(n), hdr);
+        virtio_net_hdr_swap(VIRTIO_DEVICE(n), (struct virtio_net_hdr *)hdr);
     }
 
     return hdr_len;
@@ -1907,13 +1912,6 @@ static int virtio_net_process_rss(NetClientState *nc, const uint8_t *buf,
     return (index == new_index) ? -1 : new_index;
 }
 
-typedef struct Header {
-    struct virtio_net_hdr_v1_hash virtio_net;
-    struct eth_header eth;
-    struct ip_header ip;
-    struct udp_header udp;
-} Header;
-
 static ssize_t virtio_net_receive_rcu(NetClientState *nc, const uint8_t *buf,
                                       size_t size)
 {
@@ -2004,8 +2002,7 @@ static ssize_t virtio_net_receive_rcu(NetClientState *nc, const uint8_t *buf,
             }
 
             guest_offset = n->has_vnet_hdr ?
-                           receive_header(n, (struct virtio_net_hdr *)&hdr,
-                                          buf, size, &offset) :
+                           receive_header(n, &hdr, buf, size, &offset) :
                            n->guest_hdr_len;
 
             iov_from_buf(sg, elem->in_num, 0, &hdr, guest_offset);
