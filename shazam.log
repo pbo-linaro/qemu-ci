@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250404235624.67816-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] tcg: Introduce and use target_has_precise_smc() runtime helper
+  [32m✓[0m [PATCH 2/2] tcg: Convert TARGET_HAS_PRECISE_SMC to TCGCPUOps::has_precise_smc field
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 2
+---
+Applying: tcg: Introduce and use target_has_precise_smc() runtime helper
+Applying: tcg: Convert TARGET_HAS_PRECISE_SMC to TCGCPUOps::has_precise_smc field
+Patch failed at 0002 tcg: Convert TARGET_HAS_PRECISE_SMC to TCGCPUOps::has_precise_smc field
+error: patch failed: include/accel/tcg/cpu-ops.h:28
+error: include/accel/tcg/cpu-ops.h: patch does not apply
+error: patch failed: include/exec/poison.h:36
+error: include/exec/poison.h: patch does not apply
+error: patch failed: target/i386/cpu.h:35
+error: target/i386/cpu.h: patch does not apply
+error: patch failed: target/s390x/cpu.h:35
+error: target/s390x/cpu.h: patch does not apply
+error: patch failed: accel/tcg/cpu-exec.c:1088
+error: accel/tcg/cpu-exec.c: patch does not apply
+error: patch failed: target/i386/tcg/tcg-cpu.c:130
+error: target/i386/tcg/tcg-cpu.c: patch does not apply
+error: patch failed: target/s390x/cpu.c:351
+error: target/s390x/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
