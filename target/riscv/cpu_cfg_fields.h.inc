@@ -2,7 +2,7 @@
  * Required definitions before including this file:
  *
  * #define BOOL_FIELD(x)
- * #define TYPED_FIELD(type, x)
+ * #define TYPED_FIELD(type, x, default)
  */
 
 BOOL_FIELD(ext_zba)
@@ -153,19 +153,19 @@ BOOL_FIELD(misa_w)
 
 BOOL_FIELD(short_isa_string)
 
-TYPED_FIELD(uint32_t, mvendorid)
-TYPED_FIELD(uint64_t, marchid)
-TYPED_FIELD(uint64_t, mimpid)
+TYPED_FIELD(uint32_t, mvendorid, 0)
+TYPED_FIELD(uint64_t, marchid, 0)
+TYPED_FIELD(uint64_t, mimpid, 0)
 
-TYPED_FIELD(uint32_t, pmu_mask)
-TYPED_FIELD(uint16_t, vlenb)
-TYPED_FIELD(uint16_t, elen)
-TYPED_FIELD(uint16_t, cbom_blocksize)
-TYPED_FIELD(uint16_t, cbop_blocksize)
-TYPED_FIELD(uint16_t, cboz_blocksize)
+TYPED_FIELD(uint32_t, pmu_mask, 0)
+TYPED_FIELD(uint16_t, vlenb, 0)
+TYPED_FIELD(uint16_t, elen, 0)
+TYPED_FIELD(uint16_t, cbom_blocksize, 0)
+TYPED_FIELD(uint16_t, cbop_blocksize, 0)
+TYPED_FIELD(uint16_t, cboz_blocksize, 0)
 
 #ifndef CONFIG_USER_ONLY
-TYPED_FIELD(int8_t, max_satp_mode)
+TYPED_FIELD(int8_t, max_satp_mode, -1)
 #endif
 
 #undef BOOL_FIELD
