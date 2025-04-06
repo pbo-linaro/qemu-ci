@@ -1486,10 +1486,7 @@ static void riscv_cpu_init(Object *obj)
     cpu->cfg.cbop_blocksize = 64;
     cpu->cfg.cboz_blocksize = 64;
     cpu->env.vext_ver = VEXT_VERSION_1_00_0;
-
-#ifndef CONFIG_USER_ONLY
     cpu->cfg.max_satp_mode = -1;
-#endif /* CONFIG_USER_ONLY */
 }
 
 static void riscv_bare_cpu_init(Object *obj)

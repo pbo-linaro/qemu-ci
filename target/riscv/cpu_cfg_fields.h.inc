@@ -164,9 +164,7 @@ TYPED_FIELD(uint16_t, cbom_blocksize, 0)
 TYPED_FIELD(uint16_t, cbop_blocksize, 0)
 TYPED_FIELD(uint16_t, cboz_blocksize, 0)
 
-#ifndef CONFIG_USER_ONLY
 TYPED_FIELD(int8_t, max_satp_mode, -1)
-#endif
 
 #undef BOOL_FIELD
 #undef TYPED_FIELD
