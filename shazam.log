@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250407074939.18657-1-chenyi.qiang@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 49 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/13] memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+  [32m✓[0m [PATCH v4 2/13] memory: Change memory_region_set_ram_discard_manager() to return the result
+  [32m✓[0m [PATCH v4 3/13] memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+  [32m✓[0m [PATCH v4 4/13] memory: Introduce generic state change parent class for RamDiscardManager
+  [32m✓[0m [PATCH v4 5/13] memory: Introduce PrivateSharedManager Interface as child of GenericStateManager
+  [32m✓[0m [PATCH v4 6/13] vfio: Add the support for PrivateSharedManager Interface
+  [32m✓[0m [PATCH v4 7/13] ram-block-attribute: Introduce RamBlockAttribute to manage RAMBLock with guest_memfd
+  [32m✓[0m [PATCH v4 8/13] ram-block-attribute: Introduce a callback to notify shared/private state changes
+  [32m✓[0m [PATCH v4 9/13] memory: Attach RamBlockAttribute to guest_memfd-backed RAMBlocks
+  [32m✓[0m [PATCH v4 10/13] memory: Change NotifyStateClear() definition to return the result
+  [32m✓[0m [PATCH v4 11/13] KVM: Introduce CVMPrivateSharedListener for attribute changes during page conversions
+  [32m✓[0m [PATCH v4 12/13] ram-block-attribute: Add priority listener support for PrivateSharedListener
+  [32m✓[0m [PATCH v4 13/13] RAMBlock: Make guest_memfd require coordinate discard
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 13
+---
+Applying: memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+Applying: memory: Change memory_region_set_ram_discard_manager() to return the result
+Applying: memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+Applying: memory: Introduce generic state change parent class for RamDiscardManager
+Patch failed at 0004 memory: Introduce generic state change parent class for RamDiscardManager
+error: patch failed: hw/vfio/common.c:391
+error: hw/vfio/common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
