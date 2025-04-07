@@ -232,7 +232,7 @@ static int vfio_spapr_remove_window(VFIOContainer *container,
 
 static int vfio_spapr_create_window(VFIOContainer *container,
                                     MemoryRegionSection *section,
-                                    hwaddr *pgsize)
+                                    hwaddr *pgsize, Error **errp)
 {
     int ret = 0;
     VFIOContainerBase *bcontainer = &container->bcontainer;
@@ -252,10 +252,10 @@ static int vfio_spapr_create_window(VFIOContainer *container,
     pgmask = bcontainer->pgsizes & (pagesize | (pagesize - 1));
     pagesize = pgmask ? (1ULL << (63 - clz64(pgmask))) : 0;
     if (!pagesize) {
-        error_report("Host doesn't support page size 0x%"PRIx64
-                     ", the supported mask is 0x%lx",
-                     memory_region_iommu_get_min_page_size(iommu_mr),
-                     bcontainer->pgsizes);
+        error_setg(errp, "Host doesn't support page size 0x%"PRIx64
+                   ", the supported mask is 0x%lx",
+                   memory_region_iommu_get_min_page_size(iommu_mr),
+                   bcontainer->pgsizes);
         return -EINVAL;
     }
 
@@ -302,16 +302,16 @@ static int vfio_spapr_create_window(VFIOContainer *container,
         }
     }
     if (ret) {
-        error_report("Failed to create a window, ret = %d (%m)", ret);
+        error_setg_errno(errp, -ret, "Failed to create a window, ret = %d (%m)", ret);
         return -errno;
     }
 
     if (create.start_addr != section->offset_within_address_space) {
         vfio_spapr_remove_window(container, create.start_addr);
 
-        error_report("Host doesn't support DMA window at %"HWADDR_PRIx", must be %"PRIx64,
-                     section->offset_within_address_space,
-                     (uint64_t)create.start_addr);
+        error_setg(errp, "Host doesn't support DMA window at %"HWADDR_PRIx
+                   ", must be %"PRIx64, section->offset_within_address_space,
+                   (uint64_t)create.start_addr);
         return -EINVAL;
     }
     trace_vfio_spapr_create_window(create.page_shift,
@@ -334,6 +334,7 @@ vfio_spapr_container_add_section_window(VFIOContainerBase *bcontainer,
                                                   container);
     VFIOHostDMAWindow *hostwin;
     hwaddr pgsize = 0;
+    Error *local_err = NULL;
     int ret;
 
     /*
@@ -377,9 +378,9 @@ vfio_spapr_container_add_section_window(VFIOContainerBase *bcontainer,
         }
     }
 
-    ret = vfio_spapr_create_window(container, section, &pgsize);
+    ret = vfio_spapr_create_window(container, section, &pgsize, &local_err);
     if (ret) {
-        error_setg_errno(errp, -ret, "Failed to create SPAPR window");
+        error_propagate(errp, local_err);
         return false;
     }
 
