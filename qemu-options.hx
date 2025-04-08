@@ -1262,6 +1262,14 @@ SRST
     A colon may be used to delineate multiple paths.
 ERST
 
+DEF("secure-boot", HAS_ARG, QEMU_OPTION_secure_boot,
+    "-secure-boot on|off\n"
+    "             enable/disable secure boot\n", QEMU_ARCH_S390X)
+SRST
+``-secure-boot on|off``
+    Enable/disable secure boot. Default is off.
+ERST
+
 DEFHEADING()
 
 DEFHEADING(Block device options:)
