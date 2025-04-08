@@ -25,6 +25,11 @@
 #include "target/s390x/kvm/pv.h"
 #include "qemu/error-report.h"
 
+#ifdef CONFIG_GNUTLS
+#include <gnutls/x509.h>
+#include <gnutls/gnutls.h>
+#include <gnutls/pkcs7.h>
+#endif /* CONFIG_GNUTLS */
 
 int handle_diag_288(CPUS390XState *env, uint64_t r1, uint64_t r3)
 {
@@ -489,9 +494,67 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
     env->regs[r1 + 1] = rc;
 }
 
+#ifdef CONFIG_GNUTLS
+#define datum_init(datum, data, size) \
+    datum = (gnutls_datum_t){data, size}
+
+static int diag_508_init_comp(gnutls_datum_t *comp,
+                              Diag508SignatureVerificationBlock *svb)
+{
+    uint8_t *svb_comp = NULL;
+
+    if (!svb->comp_len || !svb->comp_addr) {
+        error_report("No component data.");
+        return -1;
+    }
+
+    /*
+     * corrupted size vs. prev_size in fastbins, occurs during 2nd iteration,
+     * allocating 1mil bytes.
+     */
+    svb_comp = g_malloc0(svb->comp_len);
+    cpu_physical_memory_read(svb->comp_addr, svb_comp, svb->comp_len);
+
+    /*
+     * Component data is not written back to the caller,
+     * so no need to do a deep copy. Comp is freed when
+     * svb is freed.
+     */
+    datum_init(*comp, svb_comp, svb->comp_len);
+    return 0;
+}
+
+static int diag_508_init_signature(gnutls_pkcs7_t *sig,
+                                   Diag508SignatureVerificationBlock *svb)
+{
+    gnutls_datum_t datum_sig;
+    uint8_t *svb_sig = NULL;
+
+    if (!svb->sig_len || !svb->sig_addr) {
+        error_report("No signature data");
+        return -1;
+    }
+
+    svb_sig = g_malloc0(svb->sig_len);
+    cpu_physical_memory_read(svb->sig_addr, svb_sig, svb->sig_len);
+
+    if (gnutls_pkcs7_init(sig) < 0) {
+        error_report("Failed to initalize pkcs7 data.");
+        return -1;
+    }
+
+    datum_init(datum_sig, svb_sig, svb->sig_len);
+    return gnutls_pkcs7_import(*sig, &datum_sig, GNUTLS_X509_FMT_DER);
+
+}
+#endif /* CONFIG_GNUTLS */
+
 void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 {
+    S390IPLCertificateStore *qcs = s390_ipl_get_certificate_store();
+    size_t csi_size = sizeof(Diag508CertificateStoreInfo);
     uint64_t subcode = env->regs[r3];
+    uint64_t addr = env->regs[r1];
     int rc;
 
     if (env->psw.mask & PSW_MASK_PSTATE) {
@@ -506,7 +569,73 @@ void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
     switch (subcode) {
     case DIAG_508_SUBC_QUERY_SUBC:
-        rc = 0;
+        rc = DIAG_508_SUBC_SIG_VERIF;
+        break;
+    case DIAG_508_SUBC_SIG_VERIF:
+        size_t svb_size = sizeof(Diag508SignatureVerificationBlock);
+        Diag508SignatureVerificationBlock *svb;
+
+        if (!qcs || !qcs->count) {
+            error_report("No certificates in cert store.");
+            rc = DIAG_508_RC_NO_CERTS;
+            break;
+        }
+
+        if (!diag_parm_addr_valid(addr, svb_size, false) ||
+            !diag_parm_addr_valid(addr, csi_size, true)) {
+            s390_program_interrupt(env, PGM_ADDRESSING, ra);
+            return;
+        }
+
+        svb = g_new0(Diag508SignatureVerificationBlock, 1);
+        cpu_physical_memory_read(addr, svb, svb_size);
+
+#ifdef CONFIG_GNUTLS
+        gnutls_pkcs7_t sig = NULL;
+        gnutls_datum_t comp;
+        int i;
+
+        if (diag_508_init_comp(&comp, svb) < 0) {
+            rc = DIAG_508_RC_INVAL_COMP_DATA;
+            g_free(svb);
+            break;
+        }
+
+        if (diag_508_init_signature(&sig, svb) < 0) {
+            rc = DIAG_508_RC_INVAL_PKCS7_SIG;
+            gnutls_pkcs7_deinit(sig);
+            g_free(svb);
+            break;
+        }
+
+        rc = DIAG_508_RC_FAIL_VERIF;
+        /*
+         * It is uncertain which certificate contains
+         * the analogous key to verify the signed data
+         */
+        for (i = 0; i < qcs->count; i++) {
+            gnutls_x509_crt_t g_cert = NULL;
+            if (g_init_cert((uint8_t *)qcs->certs[i].raw, qcs->certs[i].size, &g_cert)) {
+                continue;
+            }
+
+            if (gnutls_pkcs7_verify_direct(sig, g_cert, 0, &comp, 0) == 0) {
+                svb->csi.idx = i;
+                svb->csi.len = qcs->certs[i].size;
+                cpu_physical_memory_write(addr, &svb->csi,
+                                          be32_to_cpu(csi_size));
+                rc = DIAG_508_RC_OK;
+                break;
+            }
+
+            gnutls_x509_crt_deinit(g_cert);
+        }
+
+        gnutls_pkcs7_deinit(sig);
+#else
+        rc = DIAG_508_RC_FAIL_VERIF;
+#endif /* CONFIG_GNUTLS */
+        g_free(svb);
         break;
     default:
         s390_program_interrupt(env, PGM_SPECIFICATION, ra);
