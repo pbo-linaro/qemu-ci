@@ -194,6 +194,7 @@ out:
 void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 {
     S390CPU *cpu = env_archcpu(env);
+    S390IPLCertificateStore *qcs = s390_ipl_get_certificate_store();
     uint64_t subcode = env->regs[r3];
     uint64_t addr = env->regs[r1];
     int rc;
@@ -210,7 +211,7 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
     switch (subcode) {
     case DIAG_320_SUBC_QUERY_ISM:
-        uint64_t ism =  0;
+        uint64_t ism = DIAG_320_ISM_QUERY_VCSI;
 
         if (s390_cpu_virt_mem_write(cpu, addr, (uint8_t)r1, &ism,
                                     be64_to_cpu(sizeof(ism)))) {
@@ -218,6 +219,42 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
             return;
         }
 
+        rc = DIAG_320_RC_OK;
+        break;
+    case DIAG_320_SUBC_QUERY_VCSI:
+        VerificationCertificateStorageSizeBlock vcssb;
+
+        if (!diag_parm_addr_valid(addr, sizeof(VerificationCertificateStorageSizeBlock),
+                                  true)) {
+            s390_program_interrupt(env, PGM_ADDRESSING, ra);
+            return;
+        }
+
+        if (!qcs || !qcs->count) {
+            vcssb.length = 4;
+        } else {
+            vcssb.length = VCSSB_MAX_LEN;
+            vcssb.version = 0;
+            vcssb.totalvc = qcs->count;
+            vcssb.maxvc = MAX_CERTIFICATES;
+            vcssb.maxvcelen = VCE_HEADER_LEN + qcs->max_cert_size;
+            vcssb.largestvcblen = VCB_HEADER_LEN + vcssb.maxvcelen;
+            vcssb.totalvcblen = VCB_HEADER_LEN + qcs->count * VCE_HEADER_LEN +
+                                qcs->total_bytes;
+        }
+
+        if (vcssb.length < 128) {
+            rc = DIAG_320_RC_NOMEM;
+            break;
+        }
+
+        if (s390_cpu_virt_mem_write(cpu, addr, (uint8_t)r1, &vcssb,
+                                    be64_to_cpu(
+                                        sizeof(VerificationCertificateStorageSizeBlock)
+                                    ))) {
+            s390_cpu_virt_mem_handle_exc(cpu, ra);
+            return;
+        }
         rc = DIAG_320_RC_OK;
         break;
     default:
