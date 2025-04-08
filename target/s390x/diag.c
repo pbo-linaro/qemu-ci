@@ -17,6 +17,7 @@
 #include "s390x-internal.h"
 #include "hw/watchdog/wdt_diag288.h"
 #include "system/cpus.h"
+#include "hw/s390x/cert-store.h"
 #include "hw/s390x/ipl.h"
 #include "hw/s390x/s390-virtio-ccw.h"
 #include "system/kvm.h"
@@ -191,6 +192,94 @@ out:
     }
 }
 
+#ifdef CONFIG_GNUTLS
+static bool diag_320_is_cert_valid(gnutls_x509_crt_t cert)
+{
+    time_t now;
+
+    if (gnutls_x509_crt_get_version(cert) < 0) {
+        return false;
+    }
+
+    now = time(0);
+    if (!((gnutls_x509_crt_get_activation_time(cert) < now) &&
+         (gnutls_x509_crt_get_expiration_time(cert) > now))) {
+        return false;
+    }
+
+    return true;
+}
+#endif /* CONFIG_GNUTLS */
+
+static int diag_320_get_cert_info(VerificationCertificateEntry *vce,
+                                 S390IPLCertificate qcert, bool *is_valid,
+                                 unsigned char **key_id_data, void **hash_data)
+{
+#ifdef CONFIG_GNUTLS
+    unsigned int algo;
+    unsigned int bits;
+    int hash_type;
+    int rc;
+
+    gnutls_x509_crt_t g_cert = NULL;
+    if (g_init_cert((uint8_t *)qcert.raw, qcert.size, &g_cert)) {
+        return -1;
+    }
+
+    /* VCE flag (validity) */
+    *is_valid = diag_320_is_cert_valid(g_cert);
+
+    /* key-type */
+    algo = gnutls_x509_crt_get_pk_algorithm(g_cert, &bits);
+    if (algo == GNUTLS_PK_RSA) {
+        vce->vce_hdr.keytype = DIAG_320_VCE_KEYTYPE_SELF_DESCRIBING;
+    }
+
+    /* VC format */
+    if (qcert.format == GNUTLS_X509_FMT_DER) {
+        vce->vce_hdr.format = DIAG_320_VCE_FORMAT_X509_DER;
+    }
+
+    /* key id and key id len */
+    *key_id_data = g_malloc0(qcert.key_id_size);
+    rc = gnutls_x509_crt_get_key_id(g_cert, GNUTLS_KEYID_USE_SHA256,
+                                    *key_id_data, &qcert.key_id_size);
+    if (rc < 0) {
+        error_report("Fail to retrieve certificate key ID");
+        goto out;
+    }
+    vce->vce_hdr.keyidlen = (uint16_t)qcert.key_id_size;
+
+    /* hash type */
+    hash_type = gnutls_x509_crt_get_signature_algorithm(g_cert);
+    if (hash_type == GNUTLS_SIGN_RSA_SHA256) {
+        vce->vce_hdr.hashtype = DIAG_320_VCE_HASHTYPE_SHA2_256;
+    }
+
+    /* hash and hash len */
+    *hash_data = g_malloc0(qcert.hash_size);
+    rc = gnutls_x509_crt_get_fingerprint(g_cert, GNUTLS_DIG_SHA256,
+                                            *hash_data, &qcert.hash_size);
+    if (rc < 0) {
+        error_report("Fail to retrieve certificate hash");
+        goto out;
+    }
+    vce->vce_hdr.hashlen = (uint16_t)qcert.hash_size;
+
+    gnutls_x509_crt_deinit(g_cert);
+
+    return 0;
+out:
+    gnutls_x509_crt_deinit(g_cert);
+    g_free(*key_id_data);
+    g_free(*hash_data);
+
+    return -1;
+#else
+    return -1;
+#endif /* CONFIG_GNUTLS */
+}
+
 void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 {
     S390CPU *cpu = env_archcpu(env);
@@ -211,7 +300,7 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
     switch (subcode) {
     case DIAG_320_SUBC_QUERY_ISM:
-        uint64_t ism = DIAG_320_ISM_QUERY_VCSI;
+        uint64_t ism = DIAG_320_ISM_QUERY_VCSI | DIAG_320_ISM_STORE_VC;
 
         if (s390_cpu_virt_mem_write(cpu, addr, (uint8_t)r1, &ism,
                                     be64_to_cpu(sizeof(ism)))) {
@@ -256,6 +345,142 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
             return;
         }
         rc = DIAG_320_RC_OK;
+        break;
+    case DIAG_320_SUBC_STORE_VC:
+        VerficationCertificateBlock *vcb;
+        size_t vce_offset = VCB_HEADER_LEN;
+        size_t remaining_space;
+        size_t vce_hdr_offset;
+        int i;
+
+        unsigned char *key_id_data = NULL;
+        void *hash_data = NULL;
+        bool is_valid = false;
+
+        vcb = g_new0(VerficationCertificateBlock, 1);
+        if (s390_cpu_virt_mem_read(cpu, addr, (uint8_t)r1, vcb, sizeof(*vcb))) {
+            s390_cpu_virt_mem_handle_exc(cpu, ra);
+            return;
+        }
+
+        if (vcb->vcb_hdr.vcbinlen % 4096 != 0) {
+            rc = DIAG_320_RC_INVAL_VCB_LEN;
+            g_free(vcb);
+            break;
+        }
+
+        if (1 > vcb->vcb_hdr.fvci || vcb->vcb_hdr.fvci > vcb->vcb_hdr.lvci) {
+            rc = DIAG_320_RC_BAD_RANGE;
+            g_free(vcb);
+            break;
+        }
+
+        vcb->vcb_hdr.vcboutlen = VCB_HEADER_LEN;
+        vcb->vcb_hdr.version = 0;
+        vcb->vcb_hdr.svcc = 0;
+        vcb->vcb_hdr.rvcc = 0;
+
+        remaining_space = vcb->vcb_hdr.vcbinlen - VCB_HEADER_LEN;
+
+        for (i = vcb->vcb_hdr.fvci - 1; i < vcb->vcb_hdr.lvci; i++) {
+            VerificationCertificateEntry vce;
+            S390IPLCertificate qcert;
+
+            /*
+             * If cert index goes beyond the highest cert
+             * store index (count - 1), then exit early
+             */
+            if (i >= qcs->count) {
+                break;
+            }
+
+            qcert = qcs->certs[i];
+
+            /*
+             * If there is no more space to store the cert,
+             * set the remaining verification cert count and
+             * break early.
+             */
+            if (remaining_space < qcert.size) {
+                vcb->vcb_hdr.rvcc = vcb->vcb_hdr.lvci - i;
+                break;
+            }
+
+            /* Construct VCE */
+            vce.vce_hdr.len = VCE_HEADER_LEN;
+            vce.vce_hdr.certidx = i + 1;
+            vce.vce_hdr.certlen = qcert.size;
+
+            strncpy((char *)vce.vce_hdr.name, (char *)qcert.vc_name, VC_NAME_LEN_BYTES);
+
+            rc = diag_320_get_cert_info(&vce, qcert, &is_valid, &key_id_data, &hash_data);
+            if (rc) {
+                continue;
+            }
+
+            vce.vce_hdr.len += vce.vce_hdr.keyidlen;
+            vce.vce_hdr.len += vce.vce_hdr.hashlen;
+            vce.vce_hdr.len += vce.vce_hdr.certlen;
+
+            vce.vce_hdr.hashoffset = VCE_HEADER_LEN + vce.vce_hdr.keyidlen;
+            vce.vce_hdr.certoffset = VCE_HEADER_LEN + vce.vce_hdr.keyidlen +
+                                     vce.vce_hdr.hashlen;
+
+            vce_hdr_offset = vce_offset;
+            vce_offset += VCE_HEADER_LEN;
+
+            /* Write Key ID */
+            if (s390_cpu_virt_mem_write(cpu, addr + vce_offset, (uint8_t)r1, key_id_data,
+                                        be16_to_cpu(vce.vce_hdr.keyidlen))) {
+                s390_cpu_virt_mem_handle_exc(cpu, ra);
+                return;
+            }
+            vce_offset += vce.vce_hdr.keyidlen;
+
+            /* Write Hash key */
+            if (s390_cpu_virt_mem_write(cpu, addr + vce_offset, (uint8_t)r1, hash_data,
+                                        be16_to_cpu(vce.vce_hdr.hashlen))) {
+                s390_cpu_virt_mem_handle_exc(cpu, ra);
+                return;
+            }
+             vce_offset += vce.vce_hdr.hashlen;
+
+            /* Write VCE cert data */
+            if (s390_cpu_virt_mem_write(cpu, addr + vce_offset, (uint8_t)r1, qcert.raw,
+                                        be32_to_cpu(vce.vce_hdr.certlen))) {
+                s390_cpu_virt_mem_handle_exc(cpu, ra);
+                return;
+            }
+            vce_offset += qcert.size;
+
+            /* The certificate is valid and VCE contains the certificate */
+            if (is_valid) {
+                vce.vce_hdr.flags |= DIAG_320_VCE_FLAGS_VALID;
+            }
+
+            /* Write VCE Header */
+            if (s390_cpu_virt_mem_write(cpu, addr + vce_hdr_offset, (uint8_t)r1, &vce,
+                                        be32_to_cpu(VCE_HEADER_LEN))) {
+                s390_cpu_virt_mem_handle_exc(cpu, ra);
+                return;
+            }
+
+            vcb->vcb_hdr.vcboutlen += vce.vce_hdr.len;
+            remaining_space -= vce.vce_hdr.len;
+            vcb->vcb_hdr.svcc++;
+
+            g_free(key_id_data);
+            g_free(hash_data);
+        }
+
+        /* Finally, write the header */
+        if (s390_cpu_virt_mem_write(cpu, addr, (uint8_t)r1, vcb,
+                                    be32_to_cpu(VCB_HEADER_LEN))) {
+            s390_cpu_virt_mem_handle_exc(cpu, ra);
+            return;
+        }
+        rc = DIAG_320_RC_OK;
+        g_free(vcb);
         break;
     default:
         s390_program_interrupt(env, PGM_SPECIFICATION, ra);
