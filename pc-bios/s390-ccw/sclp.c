@@ -156,6 +156,14 @@ bool sclp_is_sipl_on(void)
     return cbl & SCCB_CBL_SIPL_BIT;
 }
 
+bool sclp_is_sclaf_on(void)
+{
+    uint16_t cbl = 0;
+
+    sclp_get_cbl(&cbl);
+    return cbl & SCCB_CBL_SCLAF_BIT;
+}
+
 int sclp_read(char *str, size_t count)
 {
     ReadEventData *sccb = (void *)_sccb;
