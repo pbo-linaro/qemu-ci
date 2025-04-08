@@ -510,6 +510,20 @@ static QemuOptsList qemu_action_opts = {
     },
 };
 
+static QemuOptsList qemu_boot_certificates_opts = {
+    .name = "boot-certificates",
+    .implied_opt_name = "boot-certificates",
+    .merge_lists = true,
+    .head = QTAILQ_HEAD_INITIALIZER(qemu_boot_certificates_opts.head),
+    .desc = {
+       {
+           .name = "boot-certificates",
+           .type = QEMU_OPT_STRING,
+       },
+        { /* end of list */}
+    },
+};
+
 const char *qemu_get_vm_name(void)
 {
     return qemu_name;
@@ -2879,6 +2893,7 @@ void qemu_init(int argc, char **argv)
     qemu_add_opts(&qemu_semihosting_config_opts);
     qemu_add_opts(&qemu_fw_cfg_opts);
     qemu_add_opts(&qemu_action_opts);
+    qemu_add_opts(&qemu_boot_certificates_opts);
     qemu_add_run_with_opts();
     module_call_init(MODULE_INIT_OPTS);
 
@@ -3023,6 +3038,13 @@ void qemu_init(int argc, char **argv)
                 break;
             case QEMU_OPTION_boot:
                 machine_parse_property_opt(qemu_find_opts("boot-opts"), "boot", optarg);
+                break;
+            case QEMU_OPTION_boot_certificates:
+                opts = qemu_opts_parse_noisily(qemu_find_opts("boot-certificates"),
+                                               optarg, true);
+                if (!opts) {
+                    exit(1);
+                }
                 break;
             case QEMU_OPTION_fda:
             case QEMU_OPTION_fdb:

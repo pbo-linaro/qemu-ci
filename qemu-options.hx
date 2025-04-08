@@ -1251,6 +1251,17 @@ SRST
     Set system UUID.
 ERST
 
+DEF("boot-certificates", HAS_ARG, QEMU_OPTION_boot_certificates,
+    "-boot-certificates /path/directory:/path/file\n"
+    "                  Provide a path to a directory or a boot certificate.\n"
+    "                  A colon may be used to delineate multiple paths.\n",
+    QEMU_ARCH_S390X)
+SRST
+``-boot-certificates /path/directory:/path/file``
+    Provide a path to a directory or a boot certificate.
+    A colon may be used to delineate multiple paths.
+ERST
+
 DEFHEADING()
 
 DEFHEADING(Block device options:)
