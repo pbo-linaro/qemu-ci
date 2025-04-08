@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250408-jag-sysctl-v1-0-3f4f38b751be@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/3] scripts: nixify archive-source.sh
+  [PATCH 2/3] scripts: Add root dir to arguments
+  [PATCH 3/3] scripts: Clarify doc messages in archive-source.sh
+  ---
+  [31m✗[0m No key: openpgp/joel.granados@kernel.org
+---
+Total patches: 3
+---
+ Base: using specified base-commit ea35a5082a5fe81ce8fd184b0e163cd7b08b7ff7
+Applying: scripts: nixify archive-source.sh
+Applying: scripts: Add root dir to arguments
+Applying: scripts: Clarify doc messages in archive-source.sh
+Patch failed at 0003 scripts: Clarify doc messages in archive-source.sh
+error: patch failed: scripts/archive-source.sh:2
+error: scripts/archive-source.sh: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
