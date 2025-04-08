@@ -185,6 +185,13 @@ static inline bool load_next_iplb(void)
     return true;
 }
 
+static inline bool is_secure_boot_on(uint8_t hdr_flags)
+{
+    /* If secure boot is on, SIPL bit and IPLIR bit must be on. */
+    return (hdr_flags & DIAG308_IPIB_FLAGS_SIPL) &&
+           (hdr_flags & DIAG308_IPIB_FLAGS_IPLIR);
+}
+
 static inline uint64_t diag320(void *data, unsigned long subcode)
 {
     register unsigned long addr asm("0") = (unsigned long)data;

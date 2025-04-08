@@ -757,6 +757,10 @@ static void valid_sclab_check(SclabOriginLocator *sclab_locator,
         comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_SCLAB;
 
         /* a missing SCLAB will not be reported in audit mode */
+        if (boot_mode == ZIPL_SECURE_MODE) {
+            print_func(is_magic_match, "Magic is not matched. SCLAB does not exist");
+        }
+
         return;
     }
 
@@ -1164,7 +1168,11 @@ static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
     int addr_range_index = 0;
 
     void (*print_func)(bool, const char *) = NULL;
-    print_func = &IPL_check;
+    if (boot_mode == ZIPL_SECURE_MODE) {
+        print_func = &IPL_assert;
+    } else if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+        print_func = &IPL_check;
+    }
 
     if (!secure_ipl_supported()) {
         return -1;
@@ -1321,6 +1329,7 @@ static int zipl_run(ScsiBlockPtr *pte)
     entry = (ComponentEntry *)(&header[1]);
 
     switch (boot_mode) {
+    case ZIPL_SECURE_MODE:
     case ZIPL_SECURE_AUDIT_MODE:
         if (zipl_run_secure(entry, tmp_sec)) {
             return -1;
@@ -1692,10 +1701,16 @@ static int zipl_load_vscsi(void)
 int zipl_mode(void)
 {
     uint32_t cert_len;
+    bool secure;
 
     cert_len = request_certificate((uint64_t *)certs_sec, 0);
+    secure = is_secure_boot_on(iplb->hdr_flags);
 
-    return (cert_len > 0) ? ZIPL_SECURE_AUDIT_MODE : ZIPL_NORMAL_MODE;
+    if (secure) {
+        return (cert_len > 0) ? ZIPL_SECURE_MODE : ZIPL_SECURE_INVALID_MODE;
+    } else {
+        return (cert_len > 0) ? ZIPL_SECURE_AUDIT_MODE : ZIPL_NORMAL_MODE;
+    }
 }
 
 void zipl_load(void)
@@ -1703,7 +1718,7 @@ void zipl_load(void)
     VDev *vdev = virtio_get_device();
 
     if (vdev->is_cdrom) {
-        if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+        if (boot_mode == ZIPL_SECURE_AUDIT_MODE || boot_mode == ZIPL_SECURE_MODE) {
             panic("Secure boot from ISO image is not supported!");
         }
         ipl_iso_el_torito();
@@ -1712,7 +1727,7 @@ void zipl_load(void)
     }
 
     if (virtio_get_device_type() == VIRTIO_ID_NET) {
-        if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+        if (boot_mode == ZIPL_SECURE_AUDIT_MODE || boot_mode == ZIPL_SECURE_MODE) {
             panic("Virtio net boot device does not support secure boot!");
         }
         netmain();
@@ -1725,7 +1740,7 @@ void zipl_load(void)
         return;
     }
 
-    if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+    if (boot_mode == ZIPL_SECURE_AUDIT_MODE || boot_mode == ZIPL_SECURE_MODE) {
         panic("ECKD boot device does not support secure boot!");
     }
 

@@ -84,6 +84,8 @@ void zipl_load(void);
 
 #define ZIPL_NORMAL_MODE           1
 #define ZIPL_SECURE_AUDIT_MODE     2
+#define ZIPL_SECURE_MODE           3
+#define ZIPL_SECURE_INVALID_MODE  -1
 
 int zipl_mode(void);
 
