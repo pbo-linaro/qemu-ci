@@ -698,6 +698,7 @@ static uint16_t full_GEN14_GA1[] = {
     S390_FEAT_GROUP_MULTIPLE_EPOCH_PTFF,
     S390_FEAT_DIAG_320,
     S390_FEAT_SIPL,
+    S390_FEAT_SCLAF,
 };
 
 #define full_GEN14_GA2 EmptyFeat
