@@ -30,6 +30,13 @@
 
 /* Scratch space */
 static uint8_t sec[MAX_SECTOR_SIZE*4] __attribute__((__aligned__(PAGE_SIZE)));
+/* sector for storing certificates */
+static uint8_t certs_sec[CERT_MAX_SIZE * MAX_CERTIFICATES];
+/* sector for storing signatures */
+static uint8_t sig_sec[MAX_SECTOR_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
+
+uint8_t vcb_data[MAX_SECTOR_SIZE * 4] __attribute__((__aligned__(PAGE_SIZE)));
+uint8_t vcssb_data[VCSSB_MAX_LEN] __attribute__((__aligned__(PAGE_SIZE)));
 
 const uint8_t el_torito_magic[] = "EL TORITO SPECIFICATION"
                                   "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
@@ -622,6 +629,7 @@ static int zipl_load_segment(ComponentEntry *entry, uint64_t address)
     int i;
     char err_msg[] = "zIPL failed to read BPRS at 0xZZZZZZZZZZZZZZZZ";
     char *blk_no = &err_msg[30]; /* where to print blockno in (those ZZs) */
+    int comp_len = 0;
 
     blockno = entry->data.blockno;
 
@@ -660,6 +668,9 @@ static int zipl_load_segment(ComponentEntry *entry, uint64_t address)
                  */
                 break;
             }
+
+            comp_len += (uint64_t)bprs->size * ((uint64_t)bprs[i].blockct + 1);
+
             address = virtio_load_direct(cur_desc[0], cur_desc[1], 0,
                                          (void *)address);
             if (!address) {
@@ -668,6 +679,305 @@ static int zipl_load_segment(ComponentEntry *entry, uint64_t address)
             }
         }
     } while (blockno);
+
+    return comp_len;
+}
+
+int get_vcssb(VerificationCertificateStorageSizeBlock *vcssb)
+{
+    int rc;
+
+    /* avoid retrieving vcssb multiple times */
+    if (vcssb->length == VCSSB_MAX_LEN) {
+        return 0;
+    }
+
+    rc = diag320(vcssb, DIAG_320_SUBC_QUERY_VCSI);
+    if (rc != DIAG_320_RC_OK) {
+        return -1;
+    }
+
+    return 0;
+}
+
+static inline uint32_t request_certificate(uint64_t *cert, uint8_t index)
+{
+    VerificationCertificateStorageSizeBlock *vcssb;
+    VerficationCertificateBlock *vcb;
+    VerificationCertificateEntry *vce;
+    uint64_t rc = 0;
+    uint32_t cert_len = 0;
+
+    vcssb = (VerificationCertificateStorageSizeBlock *)vcssb_data;
+    vcb = (VerficationCertificateBlock *)vcb_data;
+
+    /* Get Verification Certificate Storage Size block with DIAG320 subcode 1 */
+    if (get_vcssb(vcssb)) {
+        return 0;
+    }
+
+    /*
+     * Request single entry
+     * Fill input fields of single-entry VCB
+     */
+    vcb->vcb_hdr.vcbinlen = ROUND_UP(vcssb->largestvcblen, PAGE_SIZE);
+    vcb->vcb_hdr.fvci = index + 1;
+    vcb->vcb_hdr.lvci = index + 1;
+
+    rc = diag320(vcb, DIAG_320_SUBC_STORE_VC);
+    if (rc == DIAG_320_RC_OK) {
+        vce = (VerificationCertificateEntry *)vcb->vcb_buf;
+        cert_len = vce->vce_hdr.certlen;
+        memcpy(cert, (uint8_t *)vce + vce->vce_hdr.certoffset, vce->vce_hdr.certlen);
+        /* clear out region for next cert(s) */
+        memcpy(vcb_data, 0, sizeof(vcb_data));
+    }
+
+    return cert_len;
+}
+
+static int cert_table_add(uint64_t **cert_table, uint64_t **cert,
+                    uint64_t cert_len, uint8_t cert_idx)
+{
+    if (request_certificate(*cert, cert_idx)) {
+        /* save certificate address to cert_table */
+        cert_table[cert_idx] = *cert;
+        /* update cert address for the next certificate */
+        *cert += cert_len;
+    } else {
+        puts("Could not get certificate");
+        return -1;
+    }
+
+    return 0;
+}
+
+static void cert_list_add(IplSignatureCertificateList *certs, int cert_index,
+                   uint64_t *cert, uint64_t cert_len)
+{
+    if (cert_index > MAX_CERTIFICATES - 1) {
+        printf("Warning: Ignoring cert entry [%d] because it's over 64 entires\n",
+                cert_index + 1);
+        return;
+    }
+
+    certs->cert_entries[cert_index].addr = (uint64_t)cert;
+    certs->cert_entries[cert_index].len = cert_len;
+    certs->ipl_info_header.len += sizeof(certs->cert_entries[cert_index]);
+}
+
+static void comp_list_add(IplDeviceComponentList *comps, int comp_index,
+                   int cert_index, uint64_t comp_addr,
+                   uint64_t comp_len, uint8_t flags)
+{
+    if (comp_index > MAX_CERTIFICATES - 1) {
+        printf("Warning: Ignoring comp entry [%d] because it's over 64 entires\n",
+                comp_index + 1);
+        return;
+    }
+
+    comps->device_entries[comp_index].addr = comp_addr;
+    comps->device_entries[comp_index].len = comp_len;
+    comps->device_entries[comp_index].flags = flags;
+    comps->device_entries[comp_index].cert_index = cert_index;
+    comps->ipl_info_header.len += sizeof(comps->device_entries[comp_index]);
+}
+
+static int update_iirb(IplDeviceComponentList *comps, IplSignatureCertificateList *certs)
+{
+    IplInfoReportBlock *iirb;
+    IplDeviceComponentList *comp_list;
+    IplSignatureCertificateList *cert_list;
+
+    if (iplb->len % 8 != 0) {
+        puts("IPL parameter block length field value is not multiple of 8 bytes");
+        return -1;
+    }
+
+    /* IIRB immediately follows IPLB */
+    iirb = &ipl_data.iirb;
+    iirb->hdr.len = sizeof(IplInfoReportBlockHeader);
+
+    /* Copy IPL device component list after IIRB Header */
+    comp_list = (IplDeviceComponentList *) iirb->info_blks;
+    memcpy(comp_list, comps, comps->ipl_info_header.len);
+
+    /* Update IIRB length */
+    iirb->hdr.len += comps->ipl_info_header.len;
+
+    /* Copy IPL sig cert list after IPL device component list */
+    cert_list = (IplSignatureCertificateList *) (iirb->info_blks +
+                                                 comp_list->ipl_info_header.len);
+    memcpy(cert_list, certs, certs->ipl_info_header.len);
+
+    /* Update IIRB length */
+    iirb->hdr.len += certs->ipl_info_header.len;
+
+    return 0;
+}
+
+static bool secure_ipl_supported(void)
+{
+    if (!sclp_is_sipl_on()) {
+        puts("Secure IPL Facility is not supported by the hypervisor!");
+        return false;
+    }
+
+    if (!is_secure_ipl_extension_supported()) {
+        puts("Secure IPL extensions are not supported by the hypervisor!");
+        return false;
+    }
+
+    if (!(sclp_is_diag320_on() && is_cert_store_facility_supported())) {
+        puts("Certificate Store Facility is not supported by the hypervisor!");
+        return false;
+    }
+
+    return true;
+}
+
+static void init_lists(IplDeviceComponentList *comps, IplSignatureCertificateList *certs)
+{
+    comps->ipl_info_header.ibt = IPL_IBT_COMPONENTS;
+    comps->ipl_info_header.len = sizeof(comps->ipl_info_header);
+
+    certs->ipl_info_header.ibt = IPL_IBT_CERTIFICATES;
+    certs->ipl_info_header.len = sizeof(certs->ipl_info_header);
+}
+
+static bool check_sig_entry(ComponentEntry *entry, uint32_t *sig_len)
+{
+    if ((entry + 1)->component_type != ZIPL_COMP_ENTRY_LOAD) {
+        puts("Next component does not contain signed binary code");
+        return false;
+    }
+
+    if (zipl_load_segment(entry, (uint64_t)sig_sec) < 0) {
+        return false;
+    };
+
+    if (entry->compdat.sig_info.format != DER_SIGNATURE_FORMAT) {
+        puts("Signature is not in DER format");
+        return false;
+    }
+
+    *sig_len = entry->compdat.sig_info.sig_len;
+    return true;
+}
+
+static int perform_sig_verf(uint64_t comp_addr, uint64_t comp_len, uint64_t sig_len,
+                           uint64_t *cert_table[], uint64_t **cert,
+                           IplDeviceComponentList *comps,
+                           IplSignatureCertificateList *certs,
+                           int comp_index, int cert_index,
+                           void (*print_func)(bool, const char *))
+{
+    uint64_t cert_len = -1;
+    uint8_t cert_idx = -1;
+    bool verified;
+
+    verified = verify_signature(comp_len, comp_addr, sig_len, (uint64_t)sig_sec,
+                                &cert_len, &cert_idx);
+
+    if (verified) {
+        if (cert_table[cert_idx] == 0) {
+            if (cert_table_add(cert_table, cert, cert_len, cert_idx)) {
+                return -1;
+            }
+        }
+
+        puts("Verified component");
+        cert_list_add(certs, cert_index, cert_table[cert_idx], cert_len);
+        comp_list_add(comps, comp_index, cert_index, comp_addr, comp_len,
+                      S390_IPL_COMPONENT_FLAG_SC | S390_IPL_COMPONENT_FLAG_CSV);
+    } else {
+        comp_list_add(comps, comp_index, -1, comp_addr, comp_len,
+                      S390_IPL_COMPONENT_FLAG_SC);
+        print_func(verified, "Could not verify component");
+    }
+
+    return 0;
+}
+
+static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
+{
+    bool found_signature = false;
+    struct IplDeviceComponentList comps;
+    struct IplSignatureCertificateList certs;
+    uint64_t *cert = (uint64_t *)certs_sec;
+    int cert_index = 0;
+    int comp_index = 0;
+    int comp_len;
+    bool valid_sig;
+    uint32_t sig_len;
+    /*
+     * Store address of certificate to prevent allocating
+     * the same certificate multiple times.
+     */
+    uint64_t *cert_table[MAX_CERTIFICATES];
+
+    void (*print_func)(bool, const char *) = NULL;
+    print_func = &IPL_check;
+
+    if (!secure_ipl_supported()) {
+        return -1;
+    }
+
+    init_lists(&comps, &certs);
+
+    valid_sig = false;
+    while (entry->component_type == ZIPL_COMP_ENTRY_LOAD ||
+           entry->component_type == ZIPL_COMP_ENTRY_SIGNATURE) {
+
+        if (entry->component_type == ZIPL_COMP_ENTRY_SIGNATURE) {
+            valid_sig = check_sig_entry(entry, &sig_len);
+            if (!valid_sig) {
+                return -1;
+            }
+        } else {
+            comp_len = zipl_load_segment(entry, entry->compdat.load_addr);
+            if (comp_len < 0) {
+                return -1;
+            }
+
+            if (valid_sig) {
+                perform_sig_verf(entry->compdat.load_addr, comp_len, sig_len, cert_table,
+                                 &cert, &comps, &certs, comp_index, cert_index,
+                                 print_func);
+
+                cert_index++;
+                found_signature = true;
+                /*
+                 * complete signature verification for current component,
+                 * reset variable for the next signature entry.
+                 */
+                valid_sig = false;
+            }
+
+            comp_index++;
+        }
+
+        entry++;
+
+        if ((uint8_t *)(&entry[1]) > (tmp_sec + MAX_SECTOR_SIZE)) {
+            puts("Wrong entry value");
+            return -EINVAL;
+        }
+    }
+
+    if (entry->component_type != ZIPL_COMP_ENTRY_EXEC) {
+        puts("No EXEC entry");
+        return -EINVAL;
+    }
+
+    if (!found_signature) {
+        print_func(found_signature, "Secure boot is on, but components are not signed");
+    }
+
+    if (update_iirb(&comps, &certs)) {
+        print_func(false, "Failed to write IPL Information Report Block");
+    }
+    write_reset_psw(entry->compdat.load_psw);
 
     return 0;
 }
@@ -683,7 +993,7 @@ static int zipl_run_normal(ComponentEntry *entry, uint8_t *tmp_sec)
             continue;
         }
 
-        if (zipl_load_segment(entry, entry->compdat.load_addr)) {
+        if (zipl_load_segment(entry, entry->compdat.load_addr) < 0) {
             return -1;
         }
 
@@ -731,8 +1041,17 @@ static int zipl_run(ScsiBlockPtr *pte)
     /* Load image(s) into RAM */
     entry = (ComponentEntry *)(&header[1]);
 
-    if (zipl_run_normal(entry, tmp_sec)) {
-        return -1;
+    switch (boot_mode) {
+    case ZIPL_SECURE_AUDIT_MODE:
+        if (zipl_run_secure(entry, tmp_sec)) {
+            return -1;
+        }
+        break;
+    case ZIPL_NORMAL_MODE:
+        if (zipl_run_normal(entry, tmp_sec)) {
+            return -1;
+        }
+        break;
     }
 
     /* should not return */
@@ -1091,17 +1410,32 @@ static int zipl_load_vscsi(void)
  * IPL starts here
  */
 
+int zipl_mode(void)
+{
+    uint32_t cert_len;
+
+    cert_len = request_certificate((uint64_t *)certs_sec, 0);
+
+    return (cert_len > 0) ? ZIPL_SECURE_AUDIT_MODE : ZIPL_NORMAL_MODE;
+}
+
 void zipl_load(void)
 {
     VDev *vdev = virtio_get_device();
 
     if (vdev->is_cdrom) {
+        if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+            panic("Secure boot from ISO image is not supported!");
+        }
         ipl_iso_el_torito();
         puts("Failed to IPL this ISO image!");
         return;
     }
 
     if (virtio_get_device_type() == VIRTIO_ID_NET) {
+        if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+            panic("Virtio net boot device does not support secure boot!");
+        }
         netmain();
         puts("Failed to IPL from this network!");
         return;
@@ -1110,6 +1444,10 @@ void zipl_load(void)
     if (ipl_scsi()) {
         puts("Failed to IPL from this SCSI device!");
         return;
+    }
+
+    if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
+        panic("ECKD boot device does not support secure boot!");
     }
 
     switch (virtio_get_device_type()) {

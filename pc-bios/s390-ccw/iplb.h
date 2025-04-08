@@ -16,12 +16,15 @@
 #define QEMU_PACKED __attribute__((packed))
 #endif
 
+#include <diag320.h>
+#include <diag508.h>
 #include <qipl.h>
 #include <string.h>
 
 extern QemuIplParameters qipl;
 extern IplParameterBlock *iplb;
 extern bool have_iplb;
+extern int boot_mode;
 
 struct IplInfoReportBlockHeader {
     uint32_t len;
@@ -141,6 +144,71 @@ static inline bool load_next_iplb(void)
     qipl.next_iplb = qipl.next_iplb + sizeof(IplParameterBlock);
 
     return true;
+}
+
+static inline uint64_t diag320(void *data, unsigned long subcode)
+{
+    register unsigned long addr asm("0") = (unsigned long)data;
+    register unsigned long rc asm("1") = 0;
+
+    asm volatile ("diag %0,%2,0x320\n"
+                  : "+d" (addr), "+d" (rc)
+                  : "d" (subcode)
+                  : "memory", "cc");
+    return rc;
+}
+
+static inline uint64_t get_320_subcodes(uint64_t *ism)
+{
+    return diag320(ism, DIAG_320_SUBC_QUERY_ISM);
+}
+
+static inline bool is_cert_store_facility_supported(void)
+{
+    uint64_t d320_ism;
+    get_320_subcodes(&d320_ism);
+    return (d320_ism & DIAG_320_ISM_QUERY_VCSI) &&
+           (d320_ism & DIAG_320_ISM_STORE_VC);
+}
+
+static inline uint64_t _diag508(void *data, unsigned long subcode)
+{
+    register unsigned long addr asm("0") = (unsigned long)data;
+    register unsigned long rc asm("1") = 0;
+
+    asm volatile ("diag %0,%2,0x508\n"
+                  : "+d" (addr), "+d" (rc)
+                  : "d" (subcode)
+                  : "memory", "cc");
+    return rc;
+}
+
+static inline uint64_t get_508_subcodes(void)
+{
+    return _diag508(NULL, DIAG_508_SUBC_QUERY_SUBC);
+}
+
+static inline bool is_secure_ipl_extension_supported(void)
+{
+    uint64_t d508_subcodes;
+
+    d508_subcodes = get_508_subcodes();
+    return d508_subcodes & DIAG_508_SUBC_SIG_VERIF;
+}
+
+static inline bool verify_signature(uint64_t comp_len, uint64_t comp_addr,
+                                    uint64_t sig_len, uint64_t sig_addr,
+                                    uint64_t *cert_len, uint8_t *cert_idx)
+{
+    Diag508SignatureVerificationBlock svb = {{}, comp_len, comp_addr,
+                                             sig_len, sig_addr };
+
+    if (_diag508(&svb, DIAG_508_SUBC_SIG_VERIF) == DIAG_508_RC_OK) {
+        *cert_len = svb.csi.len;
+        *cert_idx = svb.csi.idx;
+        return true;
+    }
+    return false;
 }
 
 #endif /* IPLB_H */
