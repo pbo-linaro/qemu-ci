@@ -88,6 +88,7 @@ void zipl_load(void);
 #define ZIPL_SECURE_INVALID_MODE  -1
 
 int zipl_mode(void);
+int zipl_check_scsi_mbr_magic(void);
 
 /* jump2ipl.c */
 void write_reset_psw(uint64_t psw);
