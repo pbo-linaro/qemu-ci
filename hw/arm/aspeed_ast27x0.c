@@ -898,6 +898,7 @@ static void aspeed_soc_ast2700a0_class_init(ObjectClass *oc, void *data)
 
     sc->valid_cpu_types = valid_cpu_types;
     sc->silicon_rev  = AST2700_A0_SILICON_REV;
+    sc->vbootrom_size = 0x20000;
     sc->sram_size    = 0x20000;
     sc->spis_num     = 3;
     sc->wdts_num     = 8;
@@ -925,6 +926,7 @@ static void aspeed_soc_ast2700a1_class_init(ObjectClass *oc, void *data)
 
     sc->valid_cpu_types = valid_cpu_types;
     sc->silicon_rev  = AST2700_A1_SILICON_REV;
+    sc->vbootrom_size = 0x20000;
     sc->sram_size    = 0x20000;
     sc->spis_num     = 3;
     sc->wdts_num     = 8;
