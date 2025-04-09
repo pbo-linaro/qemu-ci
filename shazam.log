@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20250409134814.478903-1-john.levon@nutanix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 64 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] vfio: refactor out vfio_interrupt_setup()
+  [32m✓[0m [PATCH 2/14] vfio: refactor out vfio_pci_config_setup()
+  [32m✓[0m [PATCH 3/14] vfio: add vfio_prepare_device()
+  [32m✓[0m [PATCH 4/14] vfio: add vfio_attach_device_by_iommu_type()
+  [32m✓[0m [PATCH 5/14] vfio/container: pass listener_begin/commit callbacks
+  [32m✓[0m [PATCH 6/14] vfio: add flags parameter to DMA unmap callback
+  [32m✓[0m [PATCH 7/14] vfio: specify VFIO_DMA_UNMAP_FLAG_ALL to callback
+  [32m✓[0m [PATCH 8/14] vfio: add vfio-pci-base class
+  [32m✓[0m [PATCH 9/14] vfio: add vfio_device_get_irq_info() helper
+  [32m✓[0m [PATCH 10/14] vfio: consistently handle return value for helpers
+  [32m✓[0m [PATCH 11/14] vfio: add vfio_pci_config_space_read/write()
+  [32m✓[0m [PATCH 12/14] vfio: add region info cache
+  [32m✓[0m [PATCH 13/14] vfio: add device IO ops vector
+  [32m✓[0m [PATCH 14/14] vfio/container: pass MemoryRegion to DMA operations
+  ---
+  [32m✓[0m Signed: DKIM/nutanix.com
+---
+Total patches: 14
+---
+Applying: vfio: refactor out vfio_interrupt_setup()
+Applying: vfio: refactor out vfio_pci_config_setup()
+Applying: vfio: add vfio_prepare_device()
+Patch failed at 0003 vfio: add vfio_prepare_device()
+error: patch failed: hw/vfio/container.c:811
+error: hw/vfio/container.c: patch does not apply
+error: hw/vfio/device.c: does not exist in index
+error: include/hw/vfio/vfio-device.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
