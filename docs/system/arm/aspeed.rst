@@ -250,24 +250,14 @@ under Linux), use :
 Booting the ast2700-evb machine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Boot the AST2700 machine from the flash image, use an MTD drive :
+Boot the AST2700 machine using a flash image, with an MTD drive and
+the virtual boot ROM :
 
 .. code-block:: bash
 
-  IMGDIR=ast2700-default
-  UBOOT_SIZE=$(stat --format=%s -L ${IMGDIR}/u-boot-nodtb.bin)
-
   $ qemu-system-aarch64 -M ast2700-evb \
-       -device loader,force-raw=on,addr=0x400000000,file=${IMGDIR}/u-boot-nodtb.bin \
-       -device loader,force-raw=on,addr=$((0x400000000 + ${UBOOT_SIZE})),file=${IMGDIR}/u-boot.dtb \
-       -device loader,force-raw=on,addr=0x430000000,file=${IMGDIR}/bl31.bin \
-       -device loader,force-raw=on,addr=0x430080000,file=${IMGDIR}/optee/tee-raw.bin \
-       -device loader,cpu-num=0,addr=0x430000000 \
-       -device loader,cpu-num=1,addr=0x430000000 \
-       -device loader,cpu-num=2,addr=0x430000000 \
-       -device loader,cpu-num=3,addr=0x430000000 \
-       -smp 4 \
-       -drive file=${IMGDIR}/image-bmc,format=raw,if=mtd \
+       -bios ast27x0_bootrom.bin \
+       -drive file=image-bmc,format=raw,if=mtd \
        -nographic
 
 Aspeed minibmc family boards (``ast1030-evb``)
