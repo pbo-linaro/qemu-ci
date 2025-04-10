@@ -22,6 +22,7 @@
 #include "hw/s390x/event-facility.h"
 #include "hw/s390x/ebcdic.h"
 #include "qapi/qapi-visit-machine.h"
+#include "migration/vmstate.h"
 
 typedef struct Data {
     uint8_t id_format;
@@ -94,12 +95,36 @@ static void get_control_program_id(Object *obj, Visitor *v,
     visit_type_S390ControlProgramId(v, name, &cpi, errp);
 }
 
+static const VMStateDescription vmstate_control_program_id = {
+    .name = "s390_control_program_id",
+    .version_id = 0,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT8_ARRAY(system_type, ControlProgramId, 8),
+        VMSTATE_UINT8_ARRAY(system_name, ControlProgramId, 8),
+        VMSTATE_UINT64(system_level, ControlProgramId),
+        VMSTATE_UINT8_ARRAY(sysplex_name, ControlProgramId, 8),
+        VMSTATE_UINT64(timestamp, ControlProgramId),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
+static const VMStateDescription vmstate_sclpcpi = {
+    .name = "s390_sclpcpi",
+    .version_id = 0,
+    .fields = (const VMStateField[]) {
+        VMSTATE_STRUCT(cpi, SCLPEventCPI, 0, vmstate_control_program_id,
+                       ControlProgramId),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
 static void cpi_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
     SCLPEventClass *k = SCLP_EVENT_CLASS(klass);
 
     dc->user_creatable = false;
+    dc->vmsd =  &vmstate_sclpcpi;
 
     k->can_handle_event = can_handle_event;
     k->get_send_mask = send_mask;
