@@ -152,6 +152,7 @@ struct AspeedSoCClass {
     const char * const *valid_cpu_types;
     uint32_t silicon_rev;
     uint64_t sram_size;
+    uint64_t vbootrom_size;
     uint64_t secsram_size;
     int spis_num;
     int ehcis_num;
