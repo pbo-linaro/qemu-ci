@@ -260,6 +260,17 @@ static void s390_create_sclpconsole(SCLPDevice *sclp,
     qdev_realize_and_unref(dev, ev_fac_bus, &error_fatal);
 }
 
+static void s390_create_sclpcpi(SCLPDevice *sclp)
+{
+    SCLPEventFacility *ef = sclp->event_facility;
+    BusState *ev_fac_bus = sclp_get_event_facility_bus(ef);
+    DeviceState *dev;
+
+    dev = qdev_new(TYPE_SCLP_EVENT_CPI);
+    object_property_add_child(OBJECT(ef), "sclpcpi", OBJECT(dev));
+    qdev_realize_and_unref(dev, ev_fac_bus, &error_fatal);
+}
+
 static void ccw_init(MachineState *machine)
 {
     MachineClass *mc = MACHINE_GET_CLASS(machine);
@@ -323,6 +334,9 @@ static void ccw_init(MachineState *machine)
 
     /* init the TOD clock */
     s390_init_tod();
+
+    /* init SCLP event Control-Program Identification */
+    s390_create_sclpcpi(ms->sclp);
 }
 
 static void s390_cpu_plug(HotplugHandler *hotplug_dev,
