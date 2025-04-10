@@ -55,6 +55,7 @@ struct S390CcwMachineClass {
     /*< public >*/
     bool hpage_1m_allowed;
     int max_threads;
+    bool use_cpi;
 };
 
 /* 1M huge page mappings allowed by the machine */

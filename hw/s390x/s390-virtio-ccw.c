@@ -274,6 +274,7 @@ static void s390_create_sclpcpi(SCLPDevice *sclp)
 static void ccw_init(MachineState *machine)
 {
     MachineClass *mc = MACHINE_GET_CLASS(machine);
+    S390CcwMachineClass *s390mc = S390_CCW_MACHINE_CLASS(mc);
     S390CcwMachineState *ms = S390_CCW_MACHINE(machine);
     int ret;
     VirtualCssBus *css_bus;
@@ -336,7 +337,10 @@ static void ccw_init(MachineState *machine)
     s390_init_tod();
 
     /* init SCLP event Control-Program Identification */
-    s390_create_sclpcpi(ms->sclp);
+    if (s390mc->use_cpi) {
+        s390_create_sclpcpi(ms->sclp);
+    }
+
 }
 
 static void s390_cpu_plug(HotplugHandler *hotplug_dev,
@@ -827,6 +831,7 @@ static void ccw_machine_class_init(ObjectClass *oc, void *data)
 
     s390mc->hpage_1m_allowed = true;
     s390mc->max_threads = 1;
+    s390mc->use_cpi = true;
     mc->reset = s390_machine_reset;
     mc->block_default_type = IF_VIRTIO;
     mc->no_cdrom = 1;
@@ -954,6 +959,9 @@ static void ccw_machine_9_2_class_options(MachineClass *mc)
     static GlobalProperty compat[] = {
         { TYPE_S390_PCI_DEVICE, "relaxed-translation", "off", },
     };
+
+    S390CcwMachineClass *s390mc = S390_CCW_MACHINE_CLASS(mc);
+    s390mc->use_cpi = false;
 
     ccw_machine_10_0_class_options(mc);
     compat_props_add(mc->compat_props, hw_compat_9_2, hw_compat_9_2_len);
