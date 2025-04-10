@@ -199,9 +199,18 @@ typedef struct SCLPEventCPI SCLPEventCPI;
 OBJECT_DECLARE_TYPE(SCLPEventCPI, SCLPEventCPIClass,
                     SCLP_EVENT_CPI)
 
+typedef struct ControlProgramId {
+    uint8_t system_type[8];
+    uint8_t system_name[8];
+    uint64_t system_level;
+    uint8_t sysplex_name[8];
+    uint64_t timestamp;
+} ControlProgramId;
+
 struct SCLPEventCPI {
     DeviceState qdev;
     SCLPEvent event;
+    ControlProgramId cpi;
 };
 
 #define TYPE_SCLP_EVENT_FACILITY "s390-sclp-event-facility"

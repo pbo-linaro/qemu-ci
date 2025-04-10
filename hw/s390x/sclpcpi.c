@@ -18,7 +18,10 @@
   */
 
 #include "qemu/osdep.h"
+#include "qemu/timer.h"
 #include "hw/s390x/event-facility.h"
+#include "hw/s390x/ebcdic.h"
+#include "qapi/qapi-visit-machine.h"
 
 typedef struct Data {
     uint8_t id_format;
@@ -58,9 +61,37 @@ static int write_event_data(SCLPEvent *event, EventBufferHeader *evt_buf_hdr)
 {
     ControlProgramIdMsg *cpim = container_of(evt_buf_hdr, ControlProgramIdMsg,
                                              ebh);
+    SCLPEventCPI *e = SCLP_EVENT_CPI(event);
+
+    ascii_put(e->cpi.system_type, (char *)cpim->data.system_type, 8);
+    ascii_put(e->cpi.system_name, (char *)cpim->data.system_name, 8);
+    ascii_put(e->cpi.sysplex_name, (char *)cpim->data.sysplex_name, 8);
+    e->cpi.system_level = ldq_be_p(&cpim->data.system_level);
+    e->cpi.timestamp = qemu_clock_get_ns(QEMU_CLOCK_HOST);
 
     cpim->ebh.flags = SCLP_EVENT_BUFFER_ACCEPTED;
     return SCLP_RC_NORMAL_COMPLETION;
+}
+
+static void get_control_program_id(Object *obj, Visitor *v,
+                                   const char *name, void *opaque,
+                                   Error **errp)
+{
+    SCLPEventCPI *e = SCLP_EVENT_CPI(obj);
+    S390ControlProgramId *cpi;
+
+    cpi = &(S390ControlProgramId){
+        .system_type = g_strndup((char *) e->cpi.system_type,
+                                 sizeof(e->cpi.system_type)),
+        .system_name = g_strndup((char *) e->cpi.system_name,
+                                 sizeof(e->cpi.system_name)),
+        .system_level = e->cpi.system_level,
+        .sysplex_name = g_strndup((char *) e->cpi.sysplex_name,
+                                  sizeof(e->cpi.sysplex_name)),
+        .timestamp = e->cpi.timestamp
+    };
+
+    visit_type_S390ControlProgramId(v, name, &cpi, errp);
 }
 
 static void cpi_class_init(ObjectClass *klass, void *data)
@@ -74,6 +105,14 @@ static void cpi_class_init(ObjectClass *klass, void *data)
     k->get_send_mask = send_mask;
     k->get_receive_mask = receive_mask;
     k->write_event_data = write_event_data;
+
+    object_class_property_add(klass, "control-program-id",
+                              "S390ControlProgramId",
+                              get_control_program_id,
+                              NULL, NULL, NULL);
+    object_class_property_set_description(klass, "control-program-id",
+        "Control-program identifiers provide data about the guest "
+        "operating system");
 }
 
 static const TypeInfo sclp_cpi_info = {
