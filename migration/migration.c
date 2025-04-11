@@ -4064,8 +4064,6 @@ static void migration_instance_init(Object *obj)
  */
 static bool migration_object_check(MigrationState *ms, Error **errp)
 {
-    /* Assuming all off */
-    bool old_caps[MIGRATION_CAPABILITY__MAX] = { 0 };
     g_autoptr(MigrationConfig) globals = NULL;
 
     /*
@@ -4089,7 +4087,7 @@ static bool migration_object_check(MigrationState *ms, Error **errp)
      * 'globals' because the values are already in s->config.
      */
 
-    return migrate_caps_check(old_caps, ms->capabilities, errp);
+    return migrate_caps_check(&ms->config, errp);
 }
 
 static const TypeInfo migration_type = {
