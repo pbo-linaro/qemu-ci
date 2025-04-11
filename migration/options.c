@@ -1441,3 +1441,27 @@ void qmp_migrate_set_parameters(MigrateSetParameters *params, Error **errp)
     migrate_config_apply(&tmp);
     migrate_post_update_config(&tmp, errp);
 }
+
+void qmp_migrate_set_config(MigrationConfig *config, Error **errp)
+{
+    if (!migrate_config_check(config, errp)) {
+        /* Invalid parameter */
+        return;
+    }
+
+    migrate_config_apply(config);
+    migrate_post_update_config(config, errp);
+}
+
+MigrationConfig *qmp_query_migrate_config(Error **errp)
+{
+    MigrationState *s = migrate_get_current();
+    MigrationConfig *config = g_new0(MigrationConfig, 1);
+
+    QAPI_CLONE_MEMBERS(MigrationConfig, config, &s->config);
+
+    /* set the has_* fields for every option */
+    migrate_config_init(config);
+
+    return config;
+}

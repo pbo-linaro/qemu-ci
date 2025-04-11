@@ -2552,3 +2552,45 @@
   'data': { '*tls-creds': 'str',
             '*tls-hostname': 'str',
             '*tls-authz': 'str' } }
+
+##
+# @query-migrate-config:
+#
+# Returns information about the current migration configuration
+# options
+#
+# Returns: @MigrationConfig
+#
+# Since: 10.1
+#
+# .. qmp-example::
+#
+#     -> { "execute": "query-migrate-config" }
+#     <- { "return": {
+#              "multifd-channels": 2,
+#              "cpu-throttle-increment": 10,
+#              "cpu-throttle-initial": 20,
+#              "max-bandwidth": 33554432,
+#              "downtime-limit": 300
+#           }
+#        }
+##
+{ 'command': 'query-migrate-config',
+  'returns': 'MigrationConfig' }
+
+##
+# @migrate-set-config:
+#
+# Set various migration configuration options.
+#
+# Since: 10.1
+#
+# .. qmp-example::
+#
+#     -> { "execute": "migrate-set-config" ,
+#          "arguments": { "max-bandwidth": 33554432,
+#                         "downtime-limit": 300 } }
+#     <- { "return": {} }
+##
+{ 'command': 'migrate-set-config', 'boxed': true,
+  'data': 'MigrationConfig' }

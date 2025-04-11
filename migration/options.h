@@ -72,7 +72,7 @@ uint64_t migrate_xbzrle_cache_size(void);
 ZeroPageDetection migrate_zero_page_detection(void);
 
 bool migrate_config_check(MigrationConfig *params, Error **errp);
-void migrate_config_init(MigrationConfig *params);
+void migrate_config_init(MigrationConfig *config);
 bool migrate_config_get_cap_compat(MigrationConfig *config, int i);
 bool migrate_caps_check(MigrationConfig *new, Error **errp);
 #endif
