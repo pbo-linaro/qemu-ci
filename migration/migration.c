@@ -4078,16 +4078,12 @@ static bool migration_object_check(MigrationState *ms, Error **errp)
      */
     migrate_config_init(globals);
 
-    if (!migrate_config_check(globals, errp)) {
-        return false;
-    }
-
     /*
      * After the validation succeeds, there's no need to apply the
      * 'globals' because the values are already in s->config.
      */
 
-    return migrate_caps_check(&ms->config, errp);
+    return migrate_config_check(globals, errp);
 }
 
 static const TypeInfo migration_type = {

@@ -46,7 +46,6 @@ bool migrate_postcopy(void);
 bool migrate_rdma(void);
 bool migrate_tls(void);
 
-
 const BitmapMigrationNodeAliasList *migrate_block_bitmap_mapping(void);
 bool migrate_has_block_bitmap_mapping(void);
 
