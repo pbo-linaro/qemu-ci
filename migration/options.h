@@ -59,8 +59,6 @@ bool migrate_tls(void);
 
 bool migrate_caps_check(bool *old_caps, bool *new_caps, Error **errp);
 
-/* parameters */
-
 const BitmapMigrationNodeAliasList *migrate_block_bitmap_mapping(void);
 bool migrate_has_block_bitmap_mapping(void);
 
@@ -86,8 +84,6 @@ const char *migrate_tls_hostname(void);
 uint64_t migrate_xbzrle_cache_size(void);
 ZeroPageDetection migrate_zero_page_detection(void);
 
-/* parameters helpers */
-
-bool migrate_params_check(MigrationParameters *params, Error **errp);
-void migrate_params_init(MigrationParameters *params);
+bool migrate_config_check(MigrationConfig *params, Error **errp);
+void migrate_config_init(MigrationConfig *params);
 #endif

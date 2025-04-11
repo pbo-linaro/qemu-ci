@@ -317,9 +317,7 @@ struct MigrationState {
      */
     uint64_t threshold_size;
 
-    /* params from 'migrate-set-parameters' */
-    MigrationParameters parameters;
-
+    MigrationConfig config;
     MigrationStatus state;
 
     /* State related to return path */

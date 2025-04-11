@@ -973,11 +973,11 @@ static void migration_dirty_limit_guest(void)
      * vcpu-dirty-limit untouched.
      */
     if (dirtylimit_in_service() &&
-        quota_dirtyrate == s->parameters.vcpu_dirty_limit) {
+        quota_dirtyrate == s->config.vcpu_dirty_limit) {
         return;
     }
 
-    quota_dirtyrate = s->parameters.vcpu_dirty_limit;
+    quota_dirtyrate = s->config.vcpu_dirty_limit;
 
     /*
      * Set all vCPU a quota dirtyrate, note that the second

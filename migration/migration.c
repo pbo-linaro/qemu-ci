@@ -119,7 +119,7 @@ static void migration_downtime_start(MigrationState *s)
 /*
  * This is unfortunate: incoming migration actually needs the outgoing
  * migration state (MigrationState) to be there too, e.g. to query
- * capabilities, parameters, using locks, setup errors, etc.
+ * options, using locks, setup errors, etc.
  *
  * NOTE: when calling this, making sure current_migration exists and not
  * been freed yet!  Otherwise trying to access the refcount is already
@@ -1664,7 +1664,7 @@ void migration_remove_notifier(NotifierWithReturn *notify)
 int migration_call_notifiers(MigrationState *s, MigrationEventType type,
                              Error **errp)
 {
-    MigMode mode = s->parameters.mode;
+    MigMode mode = s->config.mode;
     MigrationEvent e;
     int ret;
 
@@ -1735,7 +1735,7 @@ bool migration_thread_is_self(void)
 
 bool migrate_mode_is_cpr(MigrationState *s)
 {
-    MigMode mode = s->parameters.mode;
+    MigMode mode = s->config.mode;
     return mode == MIG_MODE_CPR_REBOOT ||
            mode == MIG_MODE_CPR_TRANSFER;
 }
@@ -1750,9 +1750,8 @@ int migrate_init(MigrationState *s, Error **errp)
     }
 
     /*
-     * Reinitialise all migration state, except
-     * parameters/capabilities that the user set, and
-     * locks.
+     * Reinitialise all migration state, except options that the user
+     * set, and locks.
      */
     s->to_dst_file = NULL;
     s->state = MIGRATION_STATUS_NONE;
@@ -2212,7 +2211,7 @@ void qmp_migrate(const char *uri, bool has_channels,
         return;
     }
 
-    if (s->parameters.mode == MIG_MODE_CPR_TRANSFER && !cpr_channel) {
+    if (s->config.mode == MIG_MODE_CPR_TRANSFER && !cpr_channel) {
         error_setg(errp, "missing 'cpr' migration channel");
         return;
     }
@@ -2237,7 +2236,7 @@ void qmp_migrate(const char *uri, bool has_channels,
      * in which case the target will not listen for the incoming migration
      * connection, so qmp_migrate_finish will fail to connect, and then recover.
      */
-    if (s->parameters.mode == MIG_MODE_CPR_TRANSFER) {
+    if (s->config.mode == MIG_MODE_CPR_TRANSFER) {
         migrate_hup_add(s, cpr_state_ioc(), (GSourceFunc)qmp_migrate_finish_cb,
                         QAPI_CLONE(MigrationAddress, addr));
 
@@ -4068,21 +4067,21 @@ static bool migration_object_check(MigrationState *ms, Error **errp)
 {
     /* Assuming all off */
     bool old_caps[MIGRATION_CAPABILITY__MAX] = { 0 };
-    g_autoptr(MigrationParameters) globals = NULL;
+    g_autoptr(MigrationConfig) globals = NULL;
 
     /*
      * Copy the values that were already set via qdev properties
      * (-global).
      */
-    globals = QAPI_CLONE(MigrationParameters, &ms->parameters);
+    globals = QAPI_CLONE(MigrationConfig, &ms->config);
 
     /*
-     * Set the has_* fields because migrate_params_check() only
+     * Set the has_* fields because migrate_config_check() only
      * validates new fields.
      */
-    migrate_params_init(globals);
+    migrate_config_init(globals);
 
-    if (!migrate_params_check(globals, errp)) {
+    if (!migrate_config_check(globals, errp)) {
         return false;
     }
 
