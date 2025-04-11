@@ -987,6 +987,8 @@ void migrate_params_init(MigrationParameters *params)
     params->has_mode = true;
     params->has_zero_page_detection = true;
     params->has_direct_io = true;
+    params->has_avail_switchover_bandwidth = true;
+    params->has_block_bitmap_mapping = true;
 }
 
 /*
