@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250411101707.3460429-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] vfio/iommufd: Save host iommu capabilities in VFIODevice.caps
+  [32m✓[0m [PATCH 2/5] vfio: Move realize() after attach_device()
+  [32m✓[0m [PATCH 3/5] vfio/iommufd: Implement .get_cap() in TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO sub-class
+  [32m✓[0m [PATCH 4/5] backends/iommufd: Drop hiod_iommufd_get_cap()
+  [32m✓[0m [PATCH 5/5] vfio/iommufd: Drop HostIOMMUDeviceCaps from HostIOMMUDevice
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 5
+---
+Applying: vfio/iommufd: Save host iommu capabilities in VFIODevice.caps
+Patch failed at 0001 vfio/iommufd: Save host iommu capabilities in VFIODevice.caps
+error: include/hw/vfio/vfio-device.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
