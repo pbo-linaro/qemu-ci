@@ -54,6 +54,13 @@
 
 static Error *pv_mig_blocker;
 
+struct diag308response {
+    uint16_t pv_cmd;
+    uint16_t pv_rrc;
+    uint16_t pv_rc;
+    uint16_t diag_rc;
+};
+
 static S390CPU *s390x_new_cpu(const char *typename, uint32_t core_id,
                               Error **errp)
 {
@@ -365,7 +372,10 @@ static void s390_machine_unprotect(S390CcwMachineState *ms)
     ram_block_discard_disable(false);
 }
 
-static int s390_machine_protect(S390CcwMachineState *ms)
+static int s390_machine_protect(S390CcwMachineState *ms,
+                                uint16_t *pv_cmd,
+                                uint16_t *pv_rc,
+                                uint16_t *pv_rrc)
 {
     Error *local_err = NULL;
     int rc;
@@ -408,19 +418,19 @@ static int s390_machine_protect(S390CcwMachineState *ms)
     }
 
     /* Set SE header and unpack */
-    rc = s390_ipl_prepare_pv_header(&local_err);
+    rc = s390_ipl_prepare_pv_header(&local_err, pv_cmd, pv_rc, pv_rrc);
     if (rc) {
         goto out_err;
     }
 
     /* Decrypt image */
-    rc = s390_ipl_pv_unpack();
+    rc = s390_ipl_pv_unpack(pv_cmd, pv_rc, pv_rrc);
     if (rc) {
         goto out_err;
     }
 
     /* Verify integrity */
-    rc = s390_pv_verify();
+    rc = s390_pv_verify(pv_cmd, pv_rc, pv_rrc);
     if (rc) {
         goto out_err;
     }
@@ -453,6 +463,7 @@ static void s390_machine_reset(MachineState *machine, ResetType type)
 {
     S390CcwMachineState *ms = S390_CCW_MACHINE(machine);
     enum s390_reset reset_type;
+    struct diag308response resp;
     CPUState *cs, *t;
     S390CPU *cpu;
 
@@ -540,8 +551,9 @@ static void s390_machine_reset(MachineState *machine, ResetType type)
         }
         run_on_cpu(cs, s390_do_cpu_reset, RUN_ON_CPU_NULL);
 
-        if (s390_machine_protect(ms)) {
-            s390_pv_inject_reset_error(cs);
+        if (s390_machine_protect(ms, &resp.pv_cmd, &resp.pv_rc, &resp.pv_rrc)) {
+            resp.diag_rc = DIAG_308_RC_INVAL_FOR_PV;
+            s390_pv_inject_reset_error(cs, (uint64_t *)(&resp));
             /*
              * Continue after the diag308 so the guest knows something
              * went wrong.
