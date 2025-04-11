@@ -1894,8 +1894,8 @@ void migrate_del_blocker(Error **reasonp)
 
 void qmp_migrate_incoming(const char *uri, bool has_channels,
                           MigrationChannelList *channels,
-                          bool has_exit_on_error, bool exit_on_error,
-                          Error **errp)
+                          MigrationConfig *config, bool has_exit_on_error,
+                          bool exit_on_error, Error **errp)
 {
     Error *local_err = NULL;
     static bool once = true;
@@ -2159,8 +2159,8 @@ static gboolean qmp_migrate_finish_cb(QIOChannel *channel,
     return G_SOURCE_REMOVE;
 }
 
-void qmp_migrate(const char *uri, bool has_channels,
-                 MigrationChannelList *channels, bool has_detach, bool detach,
+void qmp_migrate(const char *uri, bool has_channels, MigrationChannelList *channels,
+                 MigrationConfig *config, bool has_detach, bool detach,
                  bool has_resume, bool resume, Error **errp)
 {
     bool resume_requested;

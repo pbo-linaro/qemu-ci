@@ -1638,6 +1638,10 @@
 #
 # @resume: resume one paused migration, default "off".  (since 3.0)
 #
+# @config: migration configuration options, previously set via
+#     @migrate-set-parameters and @migrate-set-capabilities.  (since
+#     10.1)
+#
 # Since: 0.14
 #
 # .. admonition:: Notes
@@ -1702,6 +1706,7 @@
 { 'command': 'migrate',
   'data': {'*uri': 'str',
            '*channels': [ 'MigrationChannel' ],
+           '*config': 'MigrationConfig',
            '*detach': 'bool', '*resume': 'bool' } }
 
 ##
@@ -1720,6 +1725,10 @@
 #     When set to false, the failure triggers a MIGRATION event, and
 #     error details could be retrieved with query-migrate.
 #     (since 9.1)
+#
+# @config: migration configuration options, previously set via
+#     @migrate-set-parameters and @migrate-set-capabilities.  (since
+#     10.1)
 #
 # Since: 2.3
 #
@@ -1774,6 +1783,7 @@
 { 'command': 'migrate-incoming',
              'data': {'*uri': 'str',
                       '*channels': [ 'MigrationChannel' ],
+                      '*config': 'MigrationConfig',
                       '*exit-on-error': 'bool' } }
 
 ##
