@@ -4051,8 +4051,6 @@ static void migration_instance_init(Object *obj)
     qemu_sem_init(&ms->pause_sem, 0);
     qemu_mutex_init(&ms->error_mutex);
 
-    migrate_params_init(&ms->parameters);
-
     qemu_sem_init(&ms->postcopy_pause_sem, 0);
     qemu_sem_init(&ms->rp_state.rp_sem, 0);
     qemu_sem_init(&ms->rp_state.rp_pong_acks, 0);
@@ -4070,10 +4068,28 @@ static bool migration_object_check(MigrationState *ms, Error **errp)
 {
     /* Assuming all off */
     bool old_caps[MIGRATION_CAPABILITY__MAX] = { 0 };
+    g_autoptr(MigrationParameters) globals = NULL;
 
-    if (!migrate_params_check(&ms->parameters, errp)) {
+    /*
+     * Copy the values that were already set via qdev properties
+     * (-global).
+     */
+    globals = QAPI_CLONE(MigrationParameters, &ms->parameters);
+
+    /*
+     * Set the has_* fields because migrate_params_check() only
+     * validates new fields.
+     */
+    migrate_params_init(globals);
+
+    if (!migrate_params_check(globals, errp)) {
         return false;
     }
+
+    /*
+     * After the validation succeeds, there's no need to apply the
+     * 'globals' because the values are already in s->config.
+     */
 
     return migrate_caps_check(old_caps, ms->capabilities, errp);
 }

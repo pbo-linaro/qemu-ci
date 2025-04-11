@@ -958,11 +958,7 @@ MigrationParameters *qmp_query_migrate_parameters(Error **errp)
 
 void migrate_params_init(MigrationParameters *params)
 {
-    params->tls_hostname = g_strdup("");
-    params->tls_creds = g_strdup("");
-    params->tls_authz = g_strdup("");
-
-    /* Set has_* up only for parameter checks */
+    /* these should match the parameters in migration_properties */
     params->has_throttle_trigger_threshold = true;
     params->has_cpu_throttle_initial = true;
     params->has_cpu_throttle_increment = true;
@@ -1178,137 +1174,50 @@ bool migrate_params_check(MigrationParameters *params, Error **errp)
     return true;
 }
 
-static void migrate_params_test_apply(MigrateSetParameters *params,
-                                      MigrationParameters *dest)
+/*
+ * Compatibility layer to convert MigrateSetParameters to
+ * MigrationParameters. In the existing QMP user interface, the
+ * migrate-set-parameters command takes the TLS options as 'StrOrNull'
+ * while the query-migrate-parameters command returns the TLS strings
+ * as 'str'.
+ */
+static void migrate_params_copy_compat(MigrationParameters *dst,
+                                       MigrateSetParameters *src)
 {
-    *dest = migrate_get_current()->parameters;
+    /* copy the common elements between the two */
+    QAPI_CLONE_MEMBERS(MigrationConfigBase,
+                       (MigrationConfigBase *)dst,
+                       (MigrationConfigBase *)src);
 
-    /* TODO use QAPI_CLONE() instead of duplicating it inline */
-
-    if (params->has_throttle_trigger_threshold) {
-        dest->throttle_trigger_threshold = params->throttle_trigger_threshold;
-    }
-
-    if (params->has_cpu_throttle_initial) {
-        dest->cpu_throttle_initial = params->cpu_throttle_initial;
-    }
-
-    if (params->has_cpu_throttle_increment) {
-        dest->cpu_throttle_increment = params->cpu_throttle_increment;
-    }
-
-    if (params->has_cpu_throttle_tailslow) {
-        dest->cpu_throttle_tailslow = params->cpu_throttle_tailslow;
-    }
-
-    if (params->tls_creds) {
-        if (params->tls_creds->type == QTYPE_QNULL) {
-            dest->tls_creds = NULL;
+     /* now copy the elements of different type */
+    if (src->tls_creds) {
+        if (src->tls_creds->type == QTYPE_QNULL) {
+            dst->tls_creds = NULL;
         } else {
-            dest->tls_creds = params->tls_creds->u.s;
+            dst->tls_creds = src->tls_creds->u.s;
         }
     }
 
-    if (params->tls_hostname) {
-        if (params->tls_hostname->type == QTYPE_QNULL) {
-            dest->tls_hostname = NULL;
+    if (src->tls_hostname) {
+        if (src->tls_hostname->type == QTYPE_QNULL) {
+            dst->tls_hostname = NULL;
         } else {
-            dest->tls_hostname = params->tls_hostname->u.s;
+            dst->tls_hostname = src->tls_hostname->u.s;
         }
     }
 
-    if (params->tls_authz) {
-        if (params->tls_authz->type == QTYPE_QNULL) {
-            dest->tls_authz = NULL;
+    if (src->tls_authz) {
+        if (src->tls_authz->type == QTYPE_QNULL) {
+            dst->tls_authz = NULL;
         } else {
-            dest->tls_authz = params->tls_authz->u.s;
+            dst->tls_authz = src->tls_authz->u.s;
         }
-    }
-
-    if (params->has_max_bandwidth) {
-        dest->max_bandwidth = params->max_bandwidth;
-    }
-
-    if (params->has_avail_switchover_bandwidth) {
-        dest->avail_switchover_bandwidth = params->avail_switchover_bandwidth;
-    }
-
-    if (params->has_downtime_limit) {
-        dest->downtime_limit = params->downtime_limit;
-    }
-
-    if (params->has_x_checkpoint_delay) {
-        dest->x_checkpoint_delay = params->x_checkpoint_delay;
-    }
-
-    if (params->has_multifd_channels) {
-        dest->multifd_channels = params->multifd_channels;
-    }
-    if (params->has_multifd_compression) {
-        dest->multifd_compression = params->multifd_compression;
-    }
-    if (params->has_multifd_qatzip_level) {
-        dest->multifd_qatzip_level = params->multifd_qatzip_level;
-    }
-    if (params->has_multifd_zlib_level) {
-        dest->multifd_zlib_level = params->multifd_zlib_level;
-    }
-    if (params->has_multifd_zstd_level) {
-        dest->multifd_zstd_level = params->multifd_zstd_level;
-    }
-    if (params->has_xbzrle_cache_size) {
-        dest->xbzrle_cache_size = params->xbzrle_cache_size;
-    }
-    if (params->has_max_postcopy_bandwidth) {
-        dest->max_postcopy_bandwidth = params->max_postcopy_bandwidth;
-    }
-    if (params->has_max_cpu_throttle) {
-        dest->max_cpu_throttle = params->max_cpu_throttle;
-    }
-    if (params->has_announce_initial) {
-        dest->announce_initial = params->announce_initial;
-    }
-    if (params->has_announce_max) {
-        dest->announce_max = params->announce_max;
-    }
-    if (params->has_announce_rounds) {
-        dest->announce_rounds = params->announce_rounds;
-    }
-    if (params->has_announce_step) {
-        dest->announce_step = params->announce_step;
-    }
-
-    if (params->has_block_bitmap_mapping) {
-        dest->has_block_bitmap_mapping = true;
-        dest->block_bitmap_mapping = params->block_bitmap_mapping;
-    }
-
-    if (params->has_x_vcpu_dirty_limit_period) {
-        dest->x_vcpu_dirty_limit_period =
-            params->x_vcpu_dirty_limit_period;
-    }
-    if (params->has_vcpu_dirty_limit) {
-        dest->vcpu_dirty_limit = params->vcpu_dirty_limit;
-    }
-
-    if (params->has_mode) {
-        dest->mode = params->mode;
-    }
-
-    if (params->has_zero_page_detection) {
-        dest->zero_page_detection = params->zero_page_detection;
-    }
-
-    if (params->has_direct_io) {
-        dest->direct_io = params->direct_io;
     }
 }
 
 static void migrate_params_apply(MigrateSetParameters *params)
 {
     MigrationState *s = migrate_get_current();
-
-    /* TODO use QAPI_CLONE() instead of duplicating it inline */
 
     if (params->has_throttle_trigger_threshold) {
         s->parameters.throttle_trigger_threshold = params->throttle_trigger_threshold;
@@ -1328,20 +1237,32 @@ static void migrate_params_apply(MigrateSetParameters *params)
 
     if (params->tls_creds) {
         g_free(s->parameters.tls_creds);
-        assert(params->tls_creds->type == QTYPE_QSTRING);
-        s->parameters.tls_creds = g_strdup(params->tls_creds->u.s);
+
+        if (params->tls_creds->type == QTYPE_QNULL) {
+            s->parameters.tls_creds = NULL;
+        } else {
+            s->parameters.tls_creds = g_strdup(params->tls_creds->u.s);
+        }
     }
 
     if (params->tls_hostname) {
         g_free(s->parameters.tls_hostname);
-        assert(params->tls_hostname->type == QTYPE_QSTRING);
-        s->parameters.tls_hostname = g_strdup(params->tls_hostname->u.s);
+
+        if (params->tls_hostname->type == QTYPE_QNULL) {
+            s->parameters.tls_hostname = NULL;
+        } else {
+            s->parameters.tls_hostname = g_strdup(params->tls_hostname->u.s);
+        }
     }
 
     if (params->tls_authz) {
         g_free(s->parameters.tls_authz);
-        assert(params->tls_authz->type == QTYPE_QSTRING);
-        s->parameters.tls_authz = g_strdup(params->tls_authz->u.s);
+
+        if (params->tls_authz->type == QTYPE_QNULL) {
+            s->parameters.tls_authz = NULL;
+        } else {
+            s->parameters.tls_authz = g_strdup(params->tls_authz->u.s);
+        }
     }
 
     if (params->has_max_bandwidth) {
@@ -1456,9 +1377,9 @@ static void migrate_post_update_params(MigrateSetParameters *new, Error **errp)
 
 void qmp_migrate_set_parameters(MigrateSetParameters *params, Error **errp)
 {
-    MigrationParameters tmp;
+    MigrationParameters tmp = {};
 
-    migrate_params_test_apply(params, &tmp);
+    migrate_params_copy_compat(&tmp, params);
 
     if (!migrate_params_check(&tmp, errp)) {
         /* Invalid parameter */
