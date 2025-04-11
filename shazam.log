@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250411201912.2872-1-annie.li@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 87 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v3 1/13] acpi: Implement control method sleep button
+  [32m✓[0m [PATCH RFC v3 2/13] test/acpi: allow DSDT table changes for x86 platform
+  [32m✓[0m [PATCH RFC v3 3/13] acpi: Support Control Method sleep button for x86
+  [32m✓[0m [PATCH RFC v3 4/13] tests/qtest/bios-table-tests: Update ACPI table binaries for x86
+  [32m✓[0m [PATCH RFC v3 5/13] acpi: Send the GPE event of suspend and wakeup for x86
+  [32m✓[0m [PATCH RFC v3 6/13] test/acpi: allow DSDT table changes for microvm
+  [32m✓[0m [PATCH RFC v3 7/13] microvm: support control method sleep button
+  [32m✓[0m [PATCH RFC v3 8/13] hw/acpi: Add ACPI GED support for the sleep event
+  [32m✓[0m [PATCH RFC v3 9/13] microvm: enable sleep GED event
+  [32m✓[0m [PATCH RFC v3 10/13] tests/qtest/bios-table-tests: Update ACPI table binaries for microvm
+  [32m✓[0m [PATCH RFC v3 11/13] microvm: suspend the system as requested
+  [32m✓[0m [PATCH RFC v3 12/13] microvm: enable suspend
+  [32m✓[0m [PATCH RFC v3 13/13] acpi: hmp/qmp: Add hmp/qmp support for system_sleep
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 13
+---
+Applying: acpi: Implement control method sleep button
+Applying: test/acpi: allow DSDT table changes for x86 platform
+Applying: acpi: Support Control Method sleep button for x86
+Applying: tests/qtest/bios-table-tests: Update ACPI table binaries for x86
+Patch failed at 0004 tests/qtest/bios-table-tests: Update ACPI table binaries for x86
+error: tmp/asl-5XBW42.dsl: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
