@@ -22,6 +22,34 @@ impl<T> EqType for T {
     type Itself = T;
 }
 
+pub trait IntoUsize {
+    fn into_usize(v: Self) -> usize;
+}
+
+macro_rules! impl_into_usize {
+    ($type:ty) => {
+        impl IntoUsize for $type {
+            fn into_usize(v: Self) -> usize {
+                v.try_into().unwrap()
+            }
+        }
+
+        impl IntoUsize for crate::cell::BqlCell<$type> {
+            fn into_usize(v: Self) -> usize {
+                let tmp: $type = v.try_into().unwrap();
+                tmp.try_into().unwrap()
+            }
+        }
+    };
+}
+
+// vmstate_n_elems() in C side supports such types.
+impl_into_usize!(u8);
+impl_into_usize!(u16);
+impl_into_usize!(i32);
+impl_into_usize!(u32);
+impl_into_usize!(u64);
+
 /// Assert that two types are the same.
 ///
 /// # Examples
@@ -101,7 +129,7 @@ macro_rules! assert_field_type {
                     T: $crate::assertions::EqType<Itself = U>,
                 {
                 }
-                let index: usize = v.$num.try_into().unwrap();
+                let index: usize = $crate::assertions::IntoUsize::into_usize(v.$num);
                 types_must_be_equal::<_, &$ti>(&v.$i[index]);
             }
         };

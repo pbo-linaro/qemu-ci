@@ -309,6 +309,29 @@ impl<T> From<T> for BqlCell<T> {
     }
 }
 
+// Orphan rules don't like something like `impl<T> From<BqlCell<T>> for T`.
+// It's enough to just implement Into for common types.
+macro_rules! impl_into_inner {
+    ($type:ty) => {
+        impl From<BqlCell<$type>> for $type {
+            fn from(c: BqlCell<$type>) -> $type {
+                c.get()
+            }
+        }
+    };
+}
+
+impl_into_inner!(bool);
+impl_into_inner!(i8);
+impl_into_inner!(i16);
+impl_into_inner!(i32);
+impl_into_inner!(i64);
+impl_into_inner!(u8);
+impl_into_inner!(u16);
+impl_into_inner!(u32);
+impl_into_inner!(u64);
+impl_into_inner!(usize);
+
 impl<T: fmt::Debug + Copy> fmt::Debug for BqlCell<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.get().fmt(f)
