@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250414163849.321857-1-cohuck@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 55 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/10] arm/cpu: Add infra to handle generated ID register definitions
+  [32m✓[0m [PATCH v3 2/10] arm/cpu: Add sysreg properties generation
+  [32m✓[0m [PATCH v3 3/10] arm/cpu: Add generated sysreg properties
+  [32m✓[0m [PATCH v3 4/10] kvm: kvm_get_writable_id_regs
+  [32m✓[0m [PATCH v3 5/10] arm/cpu: accessors for writable id registers
+  [32m✓[0m [PATCH v3 6/10] arm/kvm: Allow reading all the writable ID registers
+  [32m✓[0m [PATCH v3 7/10] arm/kvm: write back modified ID regs to KVM
+  [32m✓[0m [PATCH v3 8/10] arm/cpu: more customization for the kvm host cpu model
+  [32m✓[0m [PATCH v3 9/10] arm-qmp-cmds: introspection for ID register props
+  [32m✓[0m [PATCH v3 10/10] arm/cpu-features: document ID reg properties
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 10
+---
+Applying: arm/cpu: Add infra to handle generated ID register definitions
+Patch failed at 0001 arm/cpu: Add infra to handle generated ID register definitions
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:122: new blank line at EOF.
++
+error: patch failed: target/arm/cpu64.c:35
+error: target/arm/cpu64.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
