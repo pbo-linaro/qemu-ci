@@ -3180,7 +3180,11 @@ int coroutine_fn bdrv_co_pdiscard(BdrvChild *child, int64_t offset,
             }
         }
         if (ret && ret != -ENOTSUP) {
-            goto out;
+            if (ret == -EINVAL && (offset % align != 0 || num % align != 0)) {
+                /* Silently skip rejected unaligned head/tail requests */
+            } else {
+                goto out; /* bail out */
+            }
         }
 
         offset += num;
