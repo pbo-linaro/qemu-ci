@@ -199,7 +199,9 @@ static TCGReg tcg_target_call_oarg_reg(TCGCallReturnKind kind, int slot)
 #define ARITH_SUB  (INSN_OP(2) | INSN_OP3(0x04))
 #define ARITH_SUBCC (INSN_OP(2) | INSN_OP3(0x14))
 #define ARITH_ADDC (INSN_OP(2) | INSN_OP3(0x08))
+#define ARITH_ADDCCC (INSN_OP(2) | INSN_OP3(0x18))
 #define ARITH_SUBC (INSN_OP(2) | INSN_OP3(0x0c))
+#define ARITH_SUBCCC (INSN_OP(2) | INSN_OP3(0x1c))
 #define ARITH_UMUL (INSN_OP(2) | INSN_OP3(0x0a))
 #define ARITH_SMUL (INSN_OP(2) | INSN_OP3(0x0b))
 #define ARITH_UDIV (INSN_OP(2) | INSN_OP3(0x0e))
@@ -211,6 +213,7 @@ static TCGReg tcg_target_call_oarg_reg(TCGCallReturnKind kind, int slot)
 #define ARITH_MOVR (INSN_OP(2) | INSN_OP3(0x2f))
 
 #define ARITH_ADDXC (INSN_OP(2) | INSN_OP3(0x36) | INSN_OPF(0x11))
+#define ARITH_ADDXCCC (INSN_OP(2) | INSN_OP3(0x36) | INSN_OPF(0x13))
 #define ARITH_UMULXHI (INSN_OP(2) | INSN_OP3(0x36) | INSN_OPF(0x16))
 
 #define SHIFT_SLL  (INSN_OP(2) | INSN_OP3(0x25))
@@ -223,6 +226,7 @@ static TCGReg tcg_target_call_oarg_reg(TCGCallReturnKind kind, int slot)
 
 #define RDY        (INSN_OP(2) | INSN_OP3(0x28) | INSN_RS1(0))
 #define WRY        (INSN_OP(2) | INSN_OP3(0x30) | INSN_RD(0))
+#define WRCCR      (INSN_OP(2) | INSN_OP3(0x30) | INSN_RD(2))
 #define JMPL       (INSN_OP(2) | INSN_OP3(0x38))
 #define RETURN     (INSN_OP(2) | INSN_OP3(0x39))
 #define SAVE       (INSN_OP(2) | INSN_OP3(0x3c))
@@ -1382,21 +1386,150 @@ static const TCGOutOpBinary outop_add = {
     .out_rri = tgen_addi,
 };
 
+static void tgen_addco_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_arith(s, a0, a1, a2, ARITH_ADDCC);
+}
+
+static void tgen_addco_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    tcg_out_arithi(s, a0, a1, a2, ARITH_ADDCC);
+}
+
 static const TCGOutOpBinary outop_addco = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, r, rJ),
+    .out_rrr = tgen_addco_rrr,
+    .out_rri = tgen_addco_rri,
 };
+
+static void tgen_addci_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    if (type == TCG_TYPE_I32) {
+        tcg_out_arith(s, a0, a1, a2, ARITH_ADDC);
+    } else if (use_vis3_instructions) {
+        tcg_out_arith(s, a0, a1, a2, ARITH_ADDXC);
+    } else {
+        tcg_out_arith(s, TCG_REG_T1, a1, a2, ARITH_ADD);  /* for CC */
+        tcg_out_arithi(s, a0, TCG_REG_T1, 1, ARITH_ADD);  /* for CS */
+        /* Select the correct result based on actual carry value. */
+        tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, TCG_REG_T1, false);
+    }
+}
+
+static void tgen_addci_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (type == TCG_TYPE_I32) {
+        tcg_out_arithi(s, a0, a1, a2, ARITH_ADDC);
+    } else if (use_vis3_instructions) {
+        tcg_debug_assert(a2 == 0);
+        tcg_out_arith(s, a0, a1, TCG_REG_G0, ARITH_ADDXC);
+    } else if (a2 != 0) {
+        tcg_out_arithi(s, TCG_REG_T1, a1, a2, ARITH_ADD); /* for CC */
+        tcg_out_arithi(s, a0, TCG_REG_T1, 1, ARITH_ADD);  /* for CS */
+        tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, TCG_REG_T1, false);
+    } else if (a0 == a1) {
+        tcg_out_arithi(s, TCG_REG_T1, a1, 1, ARITH_ADD);
+        tcg_out_movcc(s, COND_CS, MOVCC_XCC, a0, TCG_REG_T1, false);
+    } else {
+        tcg_out_arithi(s, a0, a1, 1, ARITH_ADD);
+	tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, a1, false);
+    }
+}
+
+static void tgen_addci_rir(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, TCGReg a2)
+{
+    tgen_addci_rri(s, type, a0, a2, a1);
+}
+
+static void tgen_addci_rii(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, tcg_target_long a2)
+{
+    tgen_addci_rri(s, type, a0, TCG_REG_G0, a2);
+}
+
+static TCGConstraintSetIndex cset_addci(TCGType type, unsigned flags)
+{
+    if (use_vis3_instructions && type == TCG_TYPE_I64) {
+        /* Note that ADDXC doesn't accept immediates.  */
+        return C_O1_I2(r, rZ, rZ);
+    }
+    return C_O1_I2(r, rZ, rJ);
+}
 
 static const TCGOutOpAddSubCarry outop_addci = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_Dynamic,
+    .base.dynamic_constraint = cset_addci,
+    .out_rrr = tgen_addci_rrr,
+    .out_rri = tgen_addci_rri,
+    .out_rir = tgen_addci_rir,
+    .out_rii = tgen_addci_rii,
 };
 
+/* Copy %xcc.c to %icc.c */
+static void tcg_out_dup_xcc_c(TCGContext *s)
+{
+    if (use_vis3_instructions) {
+        tcg_out_arith(s, TCG_REG_T1, TCG_REG_G0, TCG_REG_G0, ARITH_ADDXC);
+    } else {
+        tcg_out_movi_s13(s, TCG_REG_T1, 0);
+        tcg_out_movcc(s, COND_CS, MOVCC_XCC, TCG_REG_T1, 1, true);
+    }
+    /* Write carry-in into %icc via {0,1} + -1. */
+    tcg_out_arithi(s, TCG_REG_G0, TCG_REG_T1, -1, ARITH_ADDCC);
+}
+
+static void tgen_addcio_rrr(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    if (type != TCG_TYPE_I32) {
+        if (use_vis3_instructions) {
+            tcg_out_arith(s, a0, a1, a2, ARITH_ADDXCCC);
+            return;
+        }
+        tcg_out_dup_xcc_c(s);
+    }
+    tcg_out_arith(s, a0, a1, a2, ARITH_ADDCCC);
+}
+
+static void tgen_addcio_rri(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (type != TCG_TYPE_I32) {
+        if (use_vis3_instructions) {
+            tcg_debug_assert(a2 == 0);
+            tcg_out_arith(s, a0, a1, TCG_REG_G0, ARITH_ADDXCCC);
+            return;
+        }
+        tcg_out_dup_xcc_c(s);
+    }
+    tcg_out_arithi(s, a0, a1, a2, ARITH_ADDCCC);
+}
+
+static TCGConstraintSetIndex cset_addcio(TCGType type, unsigned flags)
+{
+    if (use_vis3_instructions && type == TCG_TYPE_I64) {
+        /* Note that ADDXC doesn't accept immediates.  */
+        return C_O1_I2(r, r, rZ);
+    }
+    return C_O1_I2(r, r, rJ);
+}
+
 static const TCGOutOpBinary outop_addcio = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_Dynamic,
+    .base.dynamic_constraint = cset_addcio,
+    .out_rrr = tgen_addcio_rrr,
+    .out_rri = tgen_addcio_rri,
 };
 
 static void tcg_out_set_carry(TCGContext *s)
 {
-    g_assert_not_reached();
+    /* 0x11 -> xcc = nzvC, icc = nzvC */
+    tcg_out_arithi(s, 0, TCG_REG_G0, 0x11, WRCCR);
 }
 
 static void tgen_and(TCGContext *s, TCGType type,
@@ -1735,21 +1868,116 @@ static const TCGOutOpSubtract outop_sub = {
     .out_rrr = tgen_sub,
 };
 
+static void tgen_subbo_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_arith(s, a0, a1, a2, ARITH_SUBCC);
+}
+
+static void tgen_subbo_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    tcg_out_arithi(s, a0, a1, a2, ARITH_SUBCC);
+}
+
 static const TCGOutOpAddSubCarry outop_subbo = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, r, rJ),
+    .out_rrr = tgen_subbo_rrr,
+    .out_rri = tgen_subbo_rri,
 };
+
+static void tgen_subbi_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    if (type == TCG_TYPE_I32) {
+        tcg_out_arith(s, a0, a1, a2, ARITH_ADDC);
+    } else {
+        tcg_out_arith(s, TCG_REG_T1, a1, a2, ARITH_SUB);  /* for CC */
+        tcg_out_arithi(s, a0, TCG_REG_T1, 1, ARITH_SUB);  /* for CS */
+        /* Select the correct result based on actual borrow value. */
+        tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, TCG_REG_T1, false);
+    }
+}
+
+static void tgen_subbi_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (type == TCG_TYPE_I32) {
+        tcg_out_arithi(s, a0, a1, a2, ARITH_ADDC);
+    } else if (a2 != 0) {
+        tcg_out_arithi(s, TCG_REG_T1, a1, a2, ARITH_SUB);  /* for CC */
+        tcg_out_arithi(s, a0, TCG_REG_T1, 1, ARITH_SUB);   /* for CS */
+        tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, TCG_REG_T1, false);
+    } else if (a0 == a1) {
+        tcg_out_arithi(s, TCG_REG_T1, a1, 1, ARITH_SUB);
+        tcg_out_movcc(s, COND_CS, MOVCC_XCC, a0, TCG_REG_T1, false);
+    } else {
+        tcg_out_arithi(s, a0, a1, 1, ARITH_SUB);
+        tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, a1, false);
+    }
+}
+
+static void tgen_subbi_rir(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, TCGReg a2)
+{
+    tgen_subbi_rrr(s, type, a0, TCG_REG_G0, a2);
+}
+
+static void tgen_subbi_rii(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, tcg_target_long a2)
+{
+    tgen_subbi_rri(s, type, a0, TCG_REG_G0, a2);
+}
 
 static const TCGOutOpAddSubCarry outop_subbi = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rZ, rJ),
+    .out_rrr = tgen_subbi_rrr,
+    .out_rri = tgen_subbi_rri,
+    .out_rir = tgen_subbi_rir,
+    .out_rii = tgen_subbi_rii,
 };
 
+static void tgen_subbio_rrr(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    if (type != TCG_TYPE_I32) {
+        tcg_out_dup_xcc_c(s);
+    }
+    tcg_out_arith(s, a0, a1, a2, ARITH_SUBCCC);
+}
+
+static void tgen_subbio_rri(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (type != TCG_TYPE_I32) {
+        tcg_out_dup_xcc_c(s);
+    }
+    tcg_out_arithi(s, a0, a1, a2, ARITH_SUBCCC);
+}
+
+static void tgen_subbio_rir(TCGContext *s, TCGType type,
+                            TCGReg a0, tcg_target_long a1, TCGReg a2)
+{
+    tgen_subbio_rrr(s, type, a0, TCG_REG_G0, a2);
+}
+
+static void tgen_subbio_rii(TCGContext *s, TCGType type,
+                            TCGReg a0, tcg_target_long a1, tcg_target_long a2)
+{
+    tgen_subbio_rri(s, type, a0, TCG_REG_G0, a2);
+}
+
 static const TCGOutOpAddSubCarry outop_subbio = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rZ, rJ),
+    .out_rrr = tgen_subbio_rrr,
+    .out_rri = tgen_subbio_rri,
+    .out_rir = tgen_subbio_rir,
+    .out_rii = tgen_subbio_rii,
 };
 
 static void tcg_out_set_borrow(TCGContext *s)
 {
-    g_assert_not_reached();
+    tcg_out_set_carry(s);  /* borrow == carry */
 }
 
 static void tgen_xor(TCGContext *s, TCGType type,
