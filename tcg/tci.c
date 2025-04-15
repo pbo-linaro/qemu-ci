@@ -361,6 +361,7 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
     tcg_target_ulong regs[TCG_TARGET_NB_REGS];
     uint64_t stack[(TCG_STATIC_CALL_ARGS_SIZE + TCG_STATIC_FRAME_SIZE)
                    / sizeof(uint64_t)];
+    bool carry = false;
 
     regs[TCG_AREG0] = (tcg_target_ulong)env;
     regs[TCG_REG_CALL_STACK] = (uintptr_t)stack;
@@ -471,6 +472,9 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rl(insn, tb_ptr, &r0, &ptr);
             regs[r0] = *(tcg_target_ulong *)ptr;
             break;
+        case INDEX_op_tci_setcarry:
+            carry = true;
+            break;
 
             /* Load/store operations (32 bit). */
 
@@ -574,6 +578,46 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
         case INDEX_op_ctpop:
             tci_args_rr(insn, &r0, &r1);
             regs[r0] = ctpop_tr(regs[r1]);
+            break;
+        case INDEX_op_addco:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            t1 = regs[r1] + regs[r2];
+            carry = t1 < regs[r1];
+            regs[r0] = t1;
+            break;
+        case INDEX_op_addci:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = regs[r1] + regs[r2] + carry;
+            break;
+        case INDEX_op_addcio:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            if (carry) {
+                t1 = regs[r1] + regs[r2] + 1;
+                carry = t1 <= regs[r1];
+            } else {
+                t1 = regs[r1] + regs[r2];
+                carry = t1 < regs[r1];
+            }
+            regs[r0] = t1;
+            break;
+        case INDEX_op_subbo:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            carry = regs[r1] < regs[r2];
+            regs[r0] = regs[r1] - regs[r2];
+            break;
+        case INDEX_op_subbi:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            regs[r0] = regs[r1] - regs[r2] - carry;
+            break;
+        case INDEX_op_subbio:
+            tci_args_rrr(insn, &r0, &r1, &r2);
+            if (carry) {
+                carry = regs[r1] <= regs[r2];
+                regs[r0] = regs[r1] - regs[r2] - 1;
+            } else {
+                carry = regs[r1] < regs[r2];
+                regs[r0] = regs[r1] - regs[r2];
+            }
             break;
         case INDEX_op_muls2:
             tci_args_rrrr(insn, &r0, &r1, &r2, &r3);
@@ -968,6 +1012,10 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
                            op_name, str_r(r0), ptr);
         break;
 
+    case INDEX_op_tci_setcarry:
+        info->fprintf_func(info->stream, "%-12s", op_name);
+        break;
+
     case INDEX_op_ld8u_i32:
     case INDEX_op_ld8u_i64:
     case INDEX_op_ld8s_i32:
@@ -1007,6 +1055,9 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
         break;
 
     case INDEX_op_add:
+    case INDEX_op_addci:
+    case INDEX_op_addcio:
+    case INDEX_op_addco:
     case INDEX_op_and:
     case INDEX_op_andc:
     case INDEX_op_clz:
@@ -1027,6 +1078,9 @@ int print_insn_tci(bfd_vma addr, disassemble_info *info)
     case INDEX_op_shl:
     case INDEX_op_shr:
     case INDEX_op_sub:
+    case INDEX_op_subbi:
+    case INDEX_op_subbio:
+    case INDEX_op_subbo:
     case INDEX_op_xor:
     case INDEX_op_tci_ctz32:
     case INDEX_op_tci_clz32:
