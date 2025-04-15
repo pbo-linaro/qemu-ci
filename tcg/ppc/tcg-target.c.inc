@@ -3663,8 +3663,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
                        const TCGArg args[TCG_MAX_OP_ARGS],
                        const int const_args[TCG_MAX_OP_ARGS])
 {
-    TCGArg a0, a1;
-
     switch (opc) {
     case INDEX_op_goto_ptr:
         tcg_out32(s, MTSPR | RS(args[0]) | CTR);
@@ -3758,57 +3756,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
     case INDEX_op_qemu_st_i128:
         tcg_debug_assert(TCG_TARGET_REG_BITS == 64);
         tcg_out_qemu_ldst_i128(s, args[0], args[1], args[2], args[3], false);
-        break;
-
-#if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_add2_i64:
-#else
-    case INDEX_op_add2_i32:
-#endif
-        /* Note that the CA bit is defined based on the word size of the
-           environment.  So in 64-bit mode it's always carry-out of bit 63.
-           The fallback code using deposit works just as well for 32-bit.  */
-        a0 = args[0], a1 = args[1];
-        if (a0 == args[3] || (!const_args[5] && a0 == args[5])) {
-            a0 = TCG_REG_R0;
-        }
-        if (const_args[4]) {
-            tcg_out32(s, ADDIC | TAI(a0, args[2], args[4]));
-        } else {
-            tcg_out32(s, ADDC | TAB(a0, args[2], args[4]));
-        }
-        if (const_args[5]) {
-            tcg_out32(s, (args[5] ? ADDME : ADDZE) | RT(a1) | RA(args[3]));
-        } else {
-            tcg_out32(s, ADDE | TAB(a1, args[3], args[5]));
-        }
-        if (a0 != args[0]) {
-            tcg_out_mov(s, TCG_TYPE_REG, args[0], a0);
-        }
-        break;
-
-#if TCG_TARGET_REG_BITS == 64
-    case INDEX_op_sub2_i64:
-#else
-    case INDEX_op_sub2_i32:
-#endif
-        a0 = args[0], a1 = args[1];
-        if (a0 == args[5] || (!const_args[3] && a0 == args[3])) {
-            a0 = TCG_REG_R0;
-        }
-        if (const_args[2]) {
-            tcg_out32(s, SUBFIC | TAI(a0, args[4], args[2]));
-        } else {
-            tcg_out32(s, SUBFC | TAB(a0, args[4], args[2]));
-        }
-        if (const_args[3]) {
-            tcg_out32(s, (args[3] ? SUBFME : SUBFZE) | RT(a1) | RA(args[5]));
-        } else {
-            tcg_out32(s, SUBFE | TAB(a1, args[5], args[3]));
-        }
-        if (a0 != args[0]) {
-            tcg_out_mov(s, TCG_TYPE_REG, args[0], a0);
-        }
         break;
 
     case INDEX_op_mb:
@@ -4455,13 +4402,6 @@ tcg_target_op_def(TCGOpcode op, TCGType type, unsigned flags)
     case INDEX_op_st32_i64:
     case INDEX_op_st_i64:
         return C_O0_I2(r, r);
-
-    case INDEX_op_add2_i64:
-    case INDEX_op_add2_i32:
-        return C_O2_I4(r, r, r, r, rI, rZM);
-    case INDEX_op_sub2_i64:
-    case INDEX_op_sub2_i32:
-        return C_O2_I4(r, r, rI, rZM, r, r);
 
     case INDEX_op_qemu_ld_i32:
         return C_O1_I1(r, r);
