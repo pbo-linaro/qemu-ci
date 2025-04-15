@@ -1575,56 +1575,6 @@ static void tcg_out_extrl_i64_i32(TCGContext *s, TCGReg rd, TCGReg rn)
     tcg_out_mov(s, TCG_TYPE_I32, rd, rn);
 }
 
-static void tcg_out_addsub2(TCGContext *s, TCGType ext, TCGReg rl,
-                            TCGReg rh, TCGReg al, TCGReg ah,
-                            tcg_target_long bl, tcg_target_long bh,
-                            bool const_bl, bool const_bh, bool sub)
-{
-    TCGReg orig_rl = rl;
-    AArch64Insn insn;
-
-    if (rl == ah || (!const_bh && rl == bh)) {
-        rl = TCG_REG_TMP0;
-    }
-
-    if (const_bl) {
-        if (bl < 0) {
-            bl = -bl;
-            insn = sub ? I3401_ADDSI : I3401_SUBSI;
-        } else {
-            insn = sub ? I3401_SUBSI : I3401_ADDSI;
-        }
-
-        if (unlikely(al == TCG_REG_XZR)) {
-            /* ??? We want to allow al to be zero for the benefit of
-               negation via subtraction.  However, that leaves open the
-               possibility of adding 0+const in the low part, and the
-               immediate add instructions encode XSP not XZR.  Don't try
-               anything more elaborate here than loading another zero.  */
-            al = TCG_REG_TMP0;
-            tcg_out_movi(s, ext, al, 0);
-        }
-        tcg_out_insn_3401(s, insn, ext, rl, al, bl);
-    } else {
-        tcg_out_insn_3502(s, sub ? I3502_SUBS : I3502_ADDS, ext, rl, al, bl);
-    }
-
-    insn = I3503_ADC;
-    if (const_bh) {
-        /* Note that the only two constants we support are 0 and -1, and
-           that SBC = rn + ~rm + c, so adc -1 is sbc 0, and vice-versa.  */
-        if ((bh != 0) ^ sub) {
-            insn = I3503_SBC;
-        }
-        bh = TCG_REG_XZR;
-    } else if (sub) {
-        insn = I3503_SBC;
-    }
-    tcg_out_insn_3503(s, insn, ext, rh, ah, bh);
-
-    tcg_out_mov(s, ext, orig_rl, rl);
-}
-
 static inline void tcg_out_mb(TCGContext *s, TCGArg a0)
 {
     static const uint32_t sync[] = {
@@ -2895,25 +2845,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType ext,
         tcg_out_qemu_ldst_i128(s, a0, a1, a2, args[3], false);
         break;
 
-    case INDEX_op_add2_i32:
-        tcg_out_addsub2(s, TCG_TYPE_I32, a0, a1, a2, args[3],
-                        (int32_t)args[4], args[5], const_args[4],
-                        const_args[5], false);
-        break;
-    case INDEX_op_add2_i64:
-        tcg_out_addsub2(s, TCG_TYPE_I64, a0, a1, a2, args[3], args[4],
-                        args[5], const_args[4], const_args[5], false);
-        break;
-    case INDEX_op_sub2_i32:
-        tcg_out_addsub2(s, TCG_TYPE_I32, a0, a1, a2, args[3],
-                        (int32_t)args[4], args[5], const_args[4],
-                        const_args[5], true);
-        break;
-    case INDEX_op_sub2_i64:
-        tcg_out_addsub2(s, TCG_TYPE_I64, a0, a1, a2, args[3], args[4],
-                        args[5], const_args[4], const_args[5], true);
-        break;
-
     case INDEX_op_mb:
         tcg_out_mb(s, a0);
         break;
@@ -3406,12 +3337,6 @@ tcg_target_op_def(TCGOpcode op, TCGType type, unsigned flags)
         return C_O0_I2(rz, r);
     case INDEX_op_qemu_st_i128:
         return C_O0_I3(rz, rz, r);
-
-    case INDEX_op_add2_i32:
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i32:
-    case INDEX_op_sub2_i64:
-        return C_O2_I4(r, r, rz, rz, rA, rMZ);
 
     case INDEX_op_add_vec:
     case INDEX_op_sub_vec:
