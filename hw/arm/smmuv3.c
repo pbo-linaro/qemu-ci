@@ -2026,6 +2026,7 @@ static void smmuv3_dev_class_init(ObjectClass *klass, void *data)
                                     &c->parent_realize);
     dc->hotpluggable = false;
     dc->bus_type = TYPE_PCIE_BUS;
+    dc->user_creatable = true;
 }
 
 static void smmuv3_class_init(ObjectClass *klass, void *data)
