@@ -24,6 +24,7 @@
 #include "hw/qdev-properties.h"
 #include "hw/qdev-core.h"
 #include "hw/pci/pci.h"
+#include "hw/pci/pci_bridge.h"
 #include "cpu.h"
 #include "trace.h"
 #include "qemu/log.h"
@@ -1873,6 +1874,38 @@ static void smmu_reset_exit(Object *obj, ResetType type)
     smmuv3_init_regs(s);
 }
 
+static int smmuv3_dev_pcie_bus(Object *obj, void *opaque)
+{
+    DeviceState *d = opaque;
+    PCIBus *bus;
+
+    if (!object_dynamic_cast(obj, TYPE_PCI_HOST_BRIDGE)) {
+        return 0;
+    }
+
+    bus = PCI_HOST_BRIDGE(obj)->bus;
+    if (d->parent_bus && !strcmp(bus->qbus.name, d->parent_bus->name)) {
+        object_property_set_link(OBJECT(d), "primary-bus", OBJECT(bus),
+                                 &error_abort);
+        return 1;
+    }
+    return 0;
+}
+
+static void smmuv3_dev_realize(DeviceState *d, Error **errp)
+{
+    SMMUv3DevState *s_nested = ARM_SMMUV3_DEV(d);
+    SMMUv3DevClass *c = ARM_SMMUV3_DEV_GET_CLASS(s_nested);
+    Error *local_err = NULL;
+
+    object_child_foreach_recursive(object_get_root(), smmuv3_dev_pcie_bus, d);
+    c->parent_realize(d, &local_err);
+    if (local_err) {
+        error_propagate(errp, local_err);
+        return;
+    }
+}
+
 static void smmu_realize(DeviceState *d, Error **errp)
 {
     SMMUState *sys = ARM_SMMU(d);
@@ -1983,6 +2016,18 @@ static void smmuv3_instance_init(Object *obj)
     /* Nothing much to do here as of now */
 }
 
+static void smmuv3_dev_class_init(ObjectClass *klass, void *data)
+{
+    DeviceClass *dc = DEVICE_CLASS(klass);
+    SMMUv3DevClass *c = ARM_SMMUV3_DEV_CLASS(klass);
+
+    dc->vmsd = &vmstate_smmuv3;
+    device_class_set_parent_realize(dc, smmuv3_dev_realize,
+                                    &c->parent_realize);
+    dc->hotpluggable = false;
+    dc->bus_type = TYPE_PCIE_BUS;
+}
+
 static void smmuv3_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
@@ -2038,6 +2083,14 @@ static void smmuv3_iommu_memory_region_class_init(ObjectClass *klass,
     imrc->notify_flag_changed = smmuv3_notify_flag_changed;
 }
 
+static const TypeInfo smmuv3_dev_type_info = {
+    .name          = TYPE_ARM_SMMUV3_DEV,
+    .parent        = TYPE_ARM_SMMUV3,
+    .instance_size = sizeof(SMMUv3DevState),
+    .class_size    = sizeof(SMMUv3DevClass),
+    .class_init    = smmuv3_dev_class_init,
+};
+
 static const TypeInfo smmuv3_type_info = {
     .name          = TYPE_ARM_SMMUV3,
     .parent        = TYPE_ARM_SMMU,
@@ -2056,6 +2109,7 @@ static const TypeInfo smmuv3_iommu_memory_region_info = {
 static void smmuv3_register_types(void)
 {
     type_register_static(&smmuv3_type_info);
+    type_register_static(&smmuv3_dev_type_info);
     type_register_static(&smmuv3_iommu_memory_region_info);
 }
 

@@ -87,4 +87,20 @@ OBJECT_DECLARE_TYPE(SMMUv3State, SMMUv3Class, ARM_SMMUV3)
 #define STAGE1_SUPPORTED(s)      FIELD_EX32(s->idr[0], IDR0, S1P)
 #define STAGE2_SUPPORTED(s)      FIELD_EX32(s->idr[0], IDR0, S2P)
 
+struct SMMUv3DevState {
+    SMMUv3State smmuv3_state;
+};
+
+struct SMMUv3DevClass {
+    /*< private >*/
+    SMMUv3Class smmuv3_class;
+    /*< public >*/
+
+    DeviceRealize parent_realize;
+};
+
+/* User creatable smmuv3 device */
+#define TYPE_ARM_SMMUV3_DEV   "arm-smmuv3-dev"
+OBJECT_DECLARE_TYPE(SMMUv3DevState, SMMUv3DevClass, ARM_SMMUV3_DEV)
+
 #endif
