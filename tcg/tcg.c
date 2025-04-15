@@ -4408,6 +4408,7 @@ liveness_pass_2(TCGContext *s)
                                   : INDEX_op_ld_i64);
                 TCGOp *lop = tcg_op_insert_before(s, op, lopc, 3);
 
+                TCGOP_TYPE(lop) = arg_ts->type;
                 lop->args[0] = temp_arg(dir_ts);
                 lop->args[1] = temp_arg(arg_ts->mem_base);
                 lop->args[2] = arg_ts->mem_offset;
@@ -4480,6 +4481,7 @@ liveness_pass_2(TCGContext *s)
                         arg_ts->state = TS_MEM;
                     }
 
+                    TCGOP_TYPE(sop) = arg_ts->type;
                     sop->args[0] = temp_arg(out_ts);
                     sop->args[1] = temp_arg(arg_ts->mem_base);
                     sop->args[2] = arg_ts->mem_offset;
@@ -4507,6 +4509,7 @@ liveness_pass_2(TCGContext *s)
                                       : INDEX_op_st_i64);
                     TCGOp *sop = tcg_op_insert_after(s, op, sopc, 3);
 
+                    TCGOP_TYPE(sop) = arg_ts->type;
                     sop->args[0] = temp_arg(dir_ts);
                     sop->args[1] = temp_arg(arg_ts->mem_base);
                     sop->args[2] = arg_ts->mem_offset;
