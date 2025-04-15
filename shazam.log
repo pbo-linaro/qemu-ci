@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/CABru571BjFa_SX5xHXbJwxRjKOOm-eo_dBTuaZx%2BKHOJBNVR%3Dg@mail.gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] Converting aio_set_event_notifier to use io_uring methods
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: chore: adhere to qemu coding stds
+Patch failed at 0001 chore: adhere to qemu coding stds
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:33: trailing whitespace.
+    if (!ctx || !ctx->fdmon_ops || !ctx->fdmon_ops->add_sqe) 
+error: patch failed: util/aio-posix.c:829
+error: util/aio-posix.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
