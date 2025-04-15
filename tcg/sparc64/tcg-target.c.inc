@@ -919,74 +919,6 @@ static const TCGOutOpMovcond outop_movcond = {
     .out = tgen_movcond,
 };
 
-static void tcg_out_addsub2_i32(TCGContext *s, TCGReg rl, TCGReg rh,
-                                TCGReg al, TCGReg ah, int32_t bl, int blconst,
-                                int32_t bh, int bhconst, int opl, int oph)
-{
-    TCGReg tmp = TCG_REG_T1;
-
-    /* Note that the low parts are fully consumed before tmp is set.  */
-    if (rl != ah && (bhconst || rl != bh)) {
-        tmp = rl;
-    }
-
-    tcg_out_arithc(s, tmp, al, bl, blconst, opl);
-    tcg_out_arithc(s, rh, ah, bh, bhconst, oph);
-    tcg_out_mov(s, TCG_TYPE_I32, rl, tmp);
-}
-
-static void tcg_out_addsub2_i64(TCGContext *s, TCGReg rl, TCGReg rh,
-                                TCGReg al, TCGReg ah, int32_t bl, int blconst,
-                                int32_t bh, int bhconst, bool is_sub)
-{
-    TCGReg tmp = TCG_REG_T1;
-
-    /* Note that the low parts are fully consumed before tmp is set.  */
-    if (rl != ah && (bhconst || rl != bh)) {
-        tmp = rl;
-    }
-
-    tcg_out_arithc(s, tmp, al, bl, blconst, is_sub ? ARITH_SUBCC : ARITH_ADDCC);
-
-    if (use_vis3_instructions && !is_sub) {
-        /* Note that ADDXC doesn't accept immediates.  */
-        if (bhconst && bh != 0) {
-           tcg_out_movi_s13(s, TCG_REG_T2, bh);
-           bh = TCG_REG_T2;
-        }
-        tcg_out_arith(s, rh, ah, bh, ARITH_ADDXC);
-    } else if (bh == TCG_REG_G0) {
-	/* If we have a zero, we can perform the operation in two insns,
-           with the arithmetic first, and a conditional move into place.  */
-	if (rh == ah) {
-            tcg_out_arithi(s, TCG_REG_T2, ah, 1,
-			   is_sub ? ARITH_SUB : ARITH_ADD);
-            tcg_out_movcc(s, COND_CS, MOVCC_XCC, rh, TCG_REG_T2, 0);
-	} else {
-            tcg_out_arithi(s, rh, ah, 1, is_sub ? ARITH_SUB : ARITH_ADD);
-	    tcg_out_movcc(s, COND_CC, MOVCC_XCC, rh, ah, 0);
-	}
-    } else {
-        /*
-         * Otherwise adjust BH as if there is carry into T2.
-         * Note that constant BH is constrained to 11 bits for the MOVCC,
-         * so the adjustment fits 12 bits.
-         */
-        if (bhconst) {
-            tcg_out_movi_s13(s, TCG_REG_T2, bh + (is_sub ? -1 : 1));
-        } else {
-            tcg_out_arithi(s, TCG_REG_T2, bh, 1,
-                           is_sub ? ARITH_SUB : ARITH_ADD);
-        }
-        /* ... smoosh T2 back to original BH if carry is clear ... */
-        tcg_out_movcc(s, COND_CC, MOVCC_XCC, TCG_REG_T2, bh, bhconst);
-	/* ... and finally perform the arithmetic with the new operand.  */
-        tcg_out_arith(s, rh, ah, TCG_REG_T2, is_sub ? ARITH_SUB : ARITH_ADD);
-    }
-
-    tcg_out_mov(s, TCG_TYPE_I64, rl, tmp);
-}
-
 static void tcg_out_jmpl_const(TCGContext *s, const tcg_insn_unit *dest,
                                bool in_prologue, bool tail_call)
 {
@@ -1424,10 +1356,10 @@ static void tgen_addci_rri(TCGContext *s, TCGType type,
 {
     if (type == TCG_TYPE_I32) {
         tcg_out_arithi(s, a0, a1, a2, ARITH_ADDC);
-    } else if (use_vis3_instructions) {
-        tcg_debug_assert(a2 == 0);
-        tcg_out_arith(s, a0, a1, TCG_REG_G0, ARITH_ADDXC);
-    } else if (a2 != 0) {
+        return;
+    }
+    /* !use_vis3_instructions */
+    if (a2 != 0) {
         tcg_out_arithi(s, TCG_REG_T1, a1, a2, ARITH_ADD); /* for CC */
         tcg_out_arithi(s, a0, TCG_REG_T1, 1, ARITH_ADD);  /* for CS */
         tcg_out_movcc(s, COND_CC, MOVCC_XCC, a0, TCG_REG_T1, false);
@@ -1440,25 +1372,13 @@ static void tgen_addci_rri(TCGContext *s, TCGType type,
     }
 }
 
-static void tgen_addci_rir(TCGContext *s, TCGType type,
-                           TCGReg a0, tcg_target_long a1, TCGReg a2)
-{
-    tgen_addci_rri(s, type, a0, a2, a1);
-}
-
-static void tgen_addci_rii(TCGContext *s, TCGType type,
-                           TCGReg a0, tcg_target_long a1, tcg_target_long a2)
-{
-    tgen_addci_rri(s, type, a0, TCG_REG_G0, a2);
-}
-
 static TCGConstraintSetIndex cset_addci(TCGType type, unsigned flags)
 {
     if (use_vis3_instructions && type == TCG_TYPE_I64) {
         /* Note that ADDXC doesn't accept immediates.  */
-        return C_O1_I2(r, rZ, rZ);
+        return C_O1_I2(r, rz, rz);
     }
-    return C_O1_I2(r, rZ, rJ);
+    return C_O1_I2(r, rz, rJ);
 }
 
 static const TCGOutOpAddSubCarry outop_addci = {
@@ -1466,8 +1386,6 @@ static const TCGOutOpAddSubCarry outop_addci = {
     .base.dynamic_constraint = cset_addci,
     .out_rrr = tgen_addci_rrr,
     .out_rri = tgen_addci_rri,
-    .out_rir = tgen_addci_rir,
-    .out_rii = tgen_addci_rii,
 };
 
 /* Copy %xcc.c to %icc.c */
@@ -1487,10 +1405,7 @@ static void tgen_addcio_rrr(TCGContext *s, TCGType type,
                             TCGReg a0, TCGReg a1, TCGReg a2)
 {
     if (type != TCG_TYPE_I32) {
-        if (use_vis3_instructions) {
-            tcg_out_arith(s, a0, a1, a2, ARITH_ADDXCCC);
-            return;
-        }
+        /* !use_vis3_instructions */
         tcg_out_dup_xcc_c(s);
     }
     tcg_out_arith(s, a0, a1, a2, ARITH_ADDCCC);
@@ -1500,11 +1415,7 @@ static void tgen_addcio_rri(TCGContext *s, TCGType type,
                             TCGReg a0, TCGReg a1, tcg_target_long a2)
 {
     if (type != TCG_TYPE_I32) {
-        if (use_vis3_instructions) {
-            tcg_debug_assert(a2 == 0);
-            tcg_out_arith(s, a0, a1, TCG_REG_G0, ARITH_ADDXCCC);
-            return;
-        }
+        /* !use_vis3_instructions */
         tcg_out_dup_xcc_c(s);
     }
     tcg_out_arithi(s, a0, a1, a2, ARITH_ADDCCC);
@@ -1514,9 +1425,9 @@ static TCGConstraintSetIndex cset_addcio(TCGType type, unsigned flags)
 {
     if (use_vis3_instructions && type == TCG_TYPE_I64) {
         /* Note that ADDXC doesn't accept immediates.  */
-        return C_O1_I2(r, r, rZ);
+        return C_O1_I2(r, rz, rz);
     }
-    return C_O1_I2(r, r, rJ);
+    return C_O1_I2(r, rz, rJ);
 }
 
 static const TCGOutOpBinary outop_addcio = {
@@ -1881,7 +1792,7 @@ static void tgen_subbo_rri(TCGContext *s, TCGType type,
 }
 
 static const TCGOutOpAddSubCarry outop_subbo = {
-    .base.static_constraint = C_O1_I2(r, r, rJ),
+    .base.static_constraint = C_O1_I2(r, rz, rJ),
     .out_rrr = tgen_subbo_rrr,
     .out_rri = tgen_subbo_rri,
 };
@@ -1917,24 +1828,10 @@ static void tgen_subbi_rri(TCGContext *s, TCGType type,
     }
 }
 
-static void tgen_subbi_rir(TCGContext *s, TCGType type,
-                           TCGReg a0, tcg_target_long a1, TCGReg a2)
-{
-    tgen_subbi_rrr(s, type, a0, TCG_REG_G0, a2);
-}
-
-static void tgen_subbi_rii(TCGContext *s, TCGType type,
-                           TCGReg a0, tcg_target_long a1, tcg_target_long a2)
-{
-    tgen_subbi_rri(s, type, a0, TCG_REG_G0, a2);
-}
-
 static const TCGOutOpAddSubCarry outop_subbi = {
-    .base.static_constraint = C_O1_I2(r, rZ, rJ),
+    .base.static_constraint = C_O1_I2(r, rz, rJ),
     .out_rrr = tgen_subbi_rrr,
     .out_rri = tgen_subbi_rri,
-    .out_rir = tgen_subbi_rir,
-    .out_rii = tgen_subbi_rii,
 };
 
 static void tgen_subbio_rrr(TCGContext *s, TCGType type,
@@ -1955,24 +1852,10 @@ static void tgen_subbio_rri(TCGContext *s, TCGType type,
     tcg_out_arithi(s, a0, a1, a2, ARITH_SUBCCC);
 }
 
-static void tgen_subbio_rir(TCGContext *s, TCGType type,
-                            TCGReg a0, tcg_target_long a1, TCGReg a2)
-{
-    tgen_subbio_rrr(s, type, a0, TCG_REG_G0, a2);
-}
-
-static void tgen_subbio_rii(TCGContext *s, TCGType type,
-                            TCGReg a0, tcg_target_long a1, tcg_target_long a2)
-{
-    tgen_subbio_rri(s, type, a0, TCG_REG_G0, a2);
-}
-
 static const TCGOutOpAddSubCarry outop_subbio = {
-    .base.static_constraint = C_O1_I2(r, rZ, rJ),
+    .base.static_constraint = C_O1_I2(r, rz, rJ),
     .out_rrr = tgen_subbio_rrr,
     .out_rri = tgen_subbio_rri,
-    .out_rir = tgen_subbio_rir,
-    .out_rii = tgen_subbio_rii,
 };
 
 static void tcg_out_set_borrow(TCGContext *s)
@@ -2114,17 +1997,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         tcg_out_ldst(s, a0, a1, a2, STW);
         break;
 
-    case INDEX_op_add2_i32:
-        tcg_out_addsub2_i32(s, args[0], args[1], args[2], args[3],
-                            args[4], const_args[4], args[5], const_args[5],
-                            ARITH_ADDCC, ARITH_ADDC);
-        break;
-    case INDEX_op_sub2_i32:
-        tcg_out_addsub2_i32(s, args[0], args[1], args[2], args[3],
-                            args[4], const_args[4], args[5], const_args[5],
-                            ARITH_SUBCC, ARITH_SUBC);
-        break;
-
     case INDEX_op_qemu_ld_i32:
         tcg_out_qemu_ld(s, a0, a1, a2, TCG_TYPE_I32);
         break;
@@ -2146,15 +2018,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
     case INDEX_op_st_i64:
         tcg_out_ldst(s, a0, a1, a2, STX);
-        break;
-
-    case INDEX_op_add2_i64:
-        tcg_out_addsub2_i64(s, args[0], args[1], args[2], args[3], args[4],
-                            const_args[4], args[5], const_args[5], false);
-        break;
-    case INDEX_op_sub2_i64:
-        tcg_out_addsub2_i64(s, args[0], args[1], args[2], args[3], args[4],
-                            const_args[4], args[5], const_args[5], true);
         break;
 
     case INDEX_op_mb:
@@ -2202,12 +2065,6 @@ tcg_target_op_def(TCGOpcode op, TCGType type, unsigned flags)
     case INDEX_op_qemu_st_i32:
     case INDEX_op_qemu_st_i64:
         return C_O0_I2(rz, r);
-
-    case INDEX_op_add2_i32:
-    case INDEX_op_add2_i64:
-    case INDEX_op_sub2_i32:
-    case INDEX_op_sub2_i64:
-        return C_O2_I4(r, r, rz, rz, rJ, rJ);
 
     default:
         return C_NotImplemented;
