@@ -2518,8 +2518,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
                        const TCGArg args[TCG_MAX_OP_ARGS],
                        const int const_args[TCG_MAX_OP_ARGS])
 {
-    TCGArg a0, a1, a2, a3, a4, a5;
-
     switch (opc) {
     case INDEX_op_goto_ptr:
         tcg_out_b_reg(s, COND_AL, args[0]);
@@ -2551,47 +2549,6 @@ static void tcg_out_op(TCGContext *s, TCGOpcode opc, TCGType type,
         break;
     case INDEX_op_st_i32:
         tcg_out_st32(s, COND_AL, args[0], args[1], args[2]);
-        break;
-
-    case INDEX_op_add2_i32:
-        a0 = args[0], a1 = args[1], a2 = args[2];
-        a3 = args[3], a4 = args[4], a5 = args[5];
-        if (a0 == a3 || (a0 == a5 && !const_args[5])) {
-            a0 = TCG_REG_TMP;
-        }
-        tcg_out_dat_rIN(s, COND_AL, ARITH_ADD | TO_CPSR, ARITH_SUB | TO_CPSR,
-                        a0, a2, a4, const_args[4]);
-        tcg_out_dat_rIK(s, COND_AL, ARITH_ADC, ARITH_SBC,
-                        a1, a3, a5, const_args[5]);
-        tcg_out_mov_reg(s, COND_AL, args[0], a0);
-        break;
-    case INDEX_op_sub2_i32:
-        a0 = args[0], a1 = args[1], a2 = args[2];
-        a3 = args[3], a4 = args[4], a5 = args[5];
-        if ((a0 == a3 && !const_args[3]) || (a0 == a5 && !const_args[5])) {
-            a0 = TCG_REG_TMP;
-        }
-        if (const_args[2]) {
-            if (const_args[4]) {
-                tcg_out_movi32(s, COND_AL, a0, a4);
-                a4 = a0;
-            }
-            tcg_out_dat_rI(s, COND_AL, ARITH_RSB | TO_CPSR, a0, a4, a2, 1);
-        } else {
-            tcg_out_dat_rIN(s, COND_AL, ARITH_SUB | TO_CPSR,
-                            ARITH_ADD | TO_CPSR, a0, a2, a4, const_args[4]);
-        }
-        if (const_args[3]) {
-            if (const_args[5]) {
-                tcg_out_movi32(s, COND_AL, a1, a5);
-                a5 = a1;
-            }
-            tcg_out_dat_rI(s, COND_AL, ARITH_RSC, a1, a5, a3, 1);
-        } else {
-            tcg_out_dat_rIK(s, COND_AL, ARITH_SBC, ARITH_ADC,
-                            a1, a3, a5, const_args[5]);
-        }
-        tcg_out_mov_reg(s, COND_AL, args[0], a0);
         break;
 
     case INDEX_op_qemu_ld_i32:
@@ -2639,10 +2596,6 @@ tcg_target_op_def(TCGOpcode op, TCGType type, unsigned flags)
     case INDEX_op_st_i32:
         return C_O0_I2(r, r);
 
-    case INDEX_op_add2_i32:
-        return C_O2_I4(r, r, r, r, rIN, rIK);
-    case INDEX_op_sub2_i32:
-        return C_O2_I4(r, r, rI, rI, rIN, rIK);
     case INDEX_op_qemu_ld_i32:
         return C_O1_I1(r, q);
     case INDEX_op_qemu_ld_i64:
