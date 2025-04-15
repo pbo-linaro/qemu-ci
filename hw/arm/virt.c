@@ -56,6 +56,7 @@
 #include "qemu/cutils.h"
 #include "qemu/error-report.h"
 #include "qemu/module.h"
+#include "hw/pci/pci_bus.h"
 #include "hw/pci-host/gpex.h"
 #include "hw/virtio/virtio-pci.h"
 #include "hw/core/sysbus-fdt.h"
@@ -1443,6 +1444,31 @@ static void create_smmuv3_dt_bindings(const VirtMachineState *vms, hwaddr base,
     qemu_fdt_setprop_cell(ms->fdt, node, "#iommu-cells", 1);
     qemu_fdt_setprop_cell(ms->fdt, node, "phandle", vms->iommu_phandle);
     g_free(node);
+}
+
+static void create_smmuv3_dev_dtb(VirtMachineState *vms,
+                                  DeviceState *dev)
+{
+    PlatformBusDevice *pbus = PLATFORM_BUS_DEVICE(vms->platform_bus_dev);
+    SysBusDevice *sbdev = SYS_BUS_DEVICE(dev);
+    int irq = platform_bus_get_irqn(pbus, sbdev, 0);
+    hwaddr base = platform_bus_get_mmio_addr(pbus, sbdev, 0);
+    MachineState *ms = MACHINE(vms);
+    PCIBus *bus;
+
+    bus = PCI_BUS(object_property_get_link(OBJECT(dev), "primary-bus",
+                                           &error_abort));
+    if (strcmp("pcie.0", bus->qbus.name)) {
+        warn_report("SMMUv3 device only supported with pcie.0 for DT");
+        return;
+    }
+    base += vms->memmap[VIRT_PLATFORM_BUS].base;
+    irq += vms->irqmap[VIRT_PLATFORM_BUS];
+
+    vms->iommu_phandle = qemu_fdt_alloc_phandle(ms->fdt);
+    create_smmuv3_dt_bindings(vms, base, irq);
+    qemu_fdt_setprop_cells(ms->fdt, vms->pciehb_nodename, "iommu-map",
+                           0x0, vms->iommu_phandle, 0x0, 0x10000);
 }
 
 static void create_smmu(const VirtMachineState *vms,
@@ -2944,6 +2970,18 @@ static void virt_machine_device_pre_plug_cb(HotplugHandler *hotplug_dev,
         qlist_append_str(reserved_regions, resv_prop_str);
         qdev_prop_set_array(dev, "reserved-regions", reserved_regions);
         g_free(resv_prop_str);
+    } else if (object_dynamic_cast(OBJECT(dev), TYPE_ARM_SMMUV3_DEV)) {
+        VirtMachineClass *vmc = VIRT_MACHINE_GET_CLASS(vms);
+
+        if (vmc->no_smmuv3_device) {
+            error_setg(errp, "virt machine does not support arm-smmuv3-device");
+        } else if ((vms->iommu == VIRT_IOMMU_VIRTIO) ||
+                   (vms->iommu == VIRT_IOMMU_SMMUV3)) {
+            error_setg(errp, "virt machine already has %s set."
+                       "Doesn't support multiple incompatible iommus",
+                       (vms->iommu == VIRT_IOMMU_VIRTIO) ?
+                       "virtio-iommu" : "iommu=smmuv3");
+        }
     }
 }
 
@@ -2965,6 +3003,19 @@ static void virt_machine_device_plug_cb(HotplugHandler *hotplug_dev,
         virt_memory_plug(hotplug_dev, dev, errp);
     } else if (object_dynamic_cast(OBJECT(dev), TYPE_VIRTIO_MD_PCI)) {
         virtio_md_pci_plug(VIRTIO_MD_PCI(dev), MACHINE(hotplug_dev), errp);
+    }
+
+    if (object_dynamic_cast(OBJECT(dev), TYPE_ARM_SMMUV3_DEV)) {
+        VirtMachineClass *vmc = VIRT_MACHINE_GET_CLASS(vms);
+
+        create_smmuv3_dev_dtb(vms, dev);
+        if (vms->iommu != VIRT_IOMMU_SMMUV3_DEV) {
+            vms->iommu = VIRT_IOMMU_SMMUV3_DEV;
+        }
+        if (!vmc->no_nested_smmu) {
+            object_property_set_str(OBJECT(dev), "stage", "nested",
+                                    &error_fatal);
+        }
     }
 
     if (object_dynamic_cast(OBJECT(dev), TYPE_VIRTIO_IOMMU_PCI)) {
@@ -3169,6 +3220,7 @@ static void virt_machine_class_init(ObjectClass *oc, void *data)
     machine_class_allow_dynamic_sysbus_dev(mc, TYPE_RAMFB_DEVICE);
     machine_class_allow_dynamic_sysbus_dev(mc, TYPE_VFIO_PLATFORM);
     machine_class_allow_dynamic_sysbus_dev(mc, TYPE_UEFI_VARS_SYSBUS);
+    machine_class_allow_dynamic_sysbus_dev(mc, TYPE_ARM_SMMUV3_DEV);
 #ifdef CONFIG_TPM
     machine_class_allow_dynamic_sysbus_dev(mc, TYPE_TPM_TIS_SYSBUS);
 #endif
@@ -3418,8 +3470,10 @@ DEFINE_VIRT_MACHINE_AS_LATEST(10, 0)
 
 static void virt_machine_9_2_options(MachineClass *mc)
 {
+    VirtMachineClass *vmc = VIRT_MACHINE_CLASS(OBJECT_CLASS(mc));
     virt_machine_10_0_options(mc);
     compat_props_add(mc->compat_props, hw_compat_9_2, hw_compat_9_2_len);
+    vmc->no_smmuv3_device = true;
 }
 DEFINE_VIRT_MACHINE(9, 2)
 
