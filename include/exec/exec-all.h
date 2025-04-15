@@ -232,7 +232,8 @@ static inline tb_page_addr_t get_page_addr_code(CPUArchState *env,
 MemoryRegionSection *
 address_space_translate_for_iotlb(CPUState *cpu, int asidx, hwaddr addr,
                                   hwaddr *xlat, hwaddr *plen,
-                                  MemTxAttrs attrs, int *prot);
+                                  MemTxAttrs attrs, int *prot,
+                                  MMUAccessType access_type);
 hwaddr memory_region_section_get_iotlb(CPUState *cpu,
                                        MemoryRegionSection *section);
 #endif
