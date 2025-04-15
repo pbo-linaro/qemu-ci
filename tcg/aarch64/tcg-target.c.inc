@@ -508,7 +508,9 @@ typedef enum {
 
     /* Add/subtract with carry instructions.  */
     I3503_ADC       = 0x1a000000,
+    I3503_ADCS      = 0x3a000000,
     I3503_SBC       = 0x5a000000,
+    I3503_SBCS      = 0x7a000000,
 
     /* Conditional select instructions.  */
     I3506_CSEL      = 0x1a800000,
@@ -2078,21 +2080,81 @@ static const TCGOutOpBinary outop_add = {
     .out_rri = tgen_addi,
 };
 
+static void tgen_addco(TCGContext *s, TCGType type,
+                       TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3502, ADDS, type, a0, a1, a2);
+}
+
+static void tgen_addco_imm(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (a2 >= 0) {
+        tcg_out_insn(s, 3401, ADDSI, type, a0, a1, a2);
+    } else {
+        tcg_out_insn(s, 3401, SUBSI, type, a0, a1, -a2);
+    }
+}
+
 static const TCGOutOpBinary outop_addco = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, r, rA),
+    .out_rrr = tgen_addco,
+    .out_rri = tgen_addco_imm,
 };
+
+static void tgen_addci_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3503, ADC, type, a0, a1, a2);
+}
+
+static void tgen_addci_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    /*
+     * Note that the only two constants we support are 0 and -1, and
+     * that SBC = rn + ~rm + c, so adc -1 is sbc 0, and vice-versa.
+     */
+    if (a2) {
+        tcg_out_insn(s, 3503, SBC, type, a0, a1, TCG_REG_XZR);
+    } else {
+        tcg_out_insn(s, 3503, ADC, type, a0, a1, TCG_REG_XZR);
+    }
+}
 
 static const TCGOutOpAddSubCarry outop_addci = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rz, rMZ),
+    .out_rrr = tgen_addci_rrr,
+    .out_rri = tgen_addci_rri,
 };
 
+static void tgen_addcio(TCGContext *s, TCGType type,
+                        TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3503, ADCS, type, a0, a1, a2);
+}
+
+static void tgen_addcio_imm(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    /* Use SBCS w/0 for ADCS w/-1 -- see above. */
+    if (a2) {
+        tcg_out_insn(s, 3503, SBCS, type, a0, a1, TCG_REG_XZR);
+    } else {
+        tcg_out_insn(s, 3503, ADCS, type, a0, a1, TCG_REG_XZR);
+    }
+}
+
 static const TCGOutOpBinary outop_addcio = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rz, rMZ),
+    .out_rrr = tgen_addcio,
+    .out_rri = tgen_addcio_imm,
 };
 
 static void tcg_out_set_carry(TCGContext *s)
 {
-    g_assert_not_reached();
+    tcg_out_insn(s, 3502, SUBS, TCG_TYPE_I32,
+                 TCG_REG_XZR, TCG_REG_XZR, TCG_REG_XZR);
 }
 
 static void tgen_and(TCGContext *s, TCGType type,
@@ -2438,21 +2500,95 @@ static const TCGOutOpSubtract outop_sub = {
     .out_rrr = tgen_sub,
 };
 
+static void tgen_subbo_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3502, SUBS, type, a0, a1, a2);
+}
+
+static void tgen_subbo_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    if (a2 >= 0) {
+        tcg_out_insn(s, 3401, SUBSI, type, a0, a1, a2);
+    } else {
+        tcg_out_insn(s, 3401, ADDSI, type, a0, a1, -a2);
+    }
+}
+
+static void tgen_subbo_rir(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, TCGReg a2)
+{
+    tgen_subbo_rrr(s, type, a0, TCG_REG_XZR, a2);
+}
+
+static void tgen_subbo_rii(TCGContext *s, TCGType type,
+                           TCGReg a0, tcg_target_long a1, tcg_target_long a2)
+{
+    if (a2 == 0) {
+        tgen_subbo_rrr(s, type, a0, TCG_REG_XZR, TCG_REG_XZR);
+        return;
+    }
+
+    /*
+     * We want to allow a1 to be zero for the benefit of negation via
+     * subtraction.  However, that leaves open the possibility of
+     * adding 0 +/- const, and the immediate add/sub instructions
+     * encode XSP not XZR.  Since we have 0 - non-zero, borrow is
+     * always set.
+     */
+    tcg_out_movi(s, type, a0, -a2);
+    tcg_out_set_borrow(s);
+}
+
 static const TCGOutOpAddSubCarry outop_subbo = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rZ, rA),
+    .out_rrr = tgen_subbo_rrr,
+    .out_rri = tgen_subbo_rri,
+    .out_rir = tgen_subbo_rir,
+    .out_rii = tgen_subbo_rii,
 };
+
+static void tgen_subbi_rrr(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3503, SBC, type, a0, a1, a2);
+}
+
+static void tgen_subbi_rri(TCGContext *s, TCGType type,
+                           TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    tgen_addci_rri(s, type, a0, a1, ~a2);
+}
 
 static const TCGOutOpAddSubCarry outop_subbi = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rz, rMZ),
+    .out_rrr = tgen_subbi_rrr,
+    .out_rri = tgen_subbi_rri,
 };
 
+static void tgen_subbio_rrr(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, TCGReg a2)
+{
+    tcg_out_insn(s, 3503, SBCS, type, a0, a1, a2);
+}
+
+static void tgen_subbio_rri(TCGContext *s, TCGType type,
+                            TCGReg a0, TCGReg a1, tcg_target_long a2)
+{
+    tgen_addcio_imm(s, type, a0, a1, ~a2);
+}
+
 static const TCGOutOpAddSubCarry outop_subbio = {
-    .base.static_constraint = C_NotImplemented,
+    .base.static_constraint = C_O1_I2(r, rz, rMZ),
+    .out_rrr = tgen_subbio_rrr,
+    .out_rri = tgen_subbio_rri,
 };
 
 static void tcg_out_set_borrow(TCGContext *s)
 {
-    g_assert_not_reached();
+    tcg_out_insn(s, 3502, ADDS, TCG_TYPE_I32,
+                 TCG_REG_XZR, TCG_REG_XZR, TCG_REG_XZR);
 }
 
 static void tgen_xor(TCGContext *s, TCGType type,
