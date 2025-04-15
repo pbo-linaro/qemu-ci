@@ -1214,6 +1214,12 @@ static bool fold_add_vec(OptContext *ctx, TCGOp *op)
     return finish_folding(ctx, op);
 }
 
+static bool fold_add_carry(OptContext *ctx, TCGOp *op)
+{
+    fold_commutative(ctx, op);
+    return finish_folding(ctx, op);
+}
+
 static bool fold_addsub2(OptContext *ctx, TCGOp *op, bool add)
 {
     bool a_const = arg_is_const(op->args[2]) && arg_is_const(op->args[3]);
@@ -2816,6 +2822,11 @@ void tcg_optimize(TCGContext *s)
             break;
         case INDEX_op_add_vec:
             done = fold_add_vec(&ctx, op);
+            break;
+        case INDEX_op_addci:
+        case INDEX_op_addco:
+        case INDEX_op_addcio:
+            done = fold_add_carry(&ctx, op);
             break;
         CASE_OP_32_64(add2):
             done = fold_add2(&ctx, op);
