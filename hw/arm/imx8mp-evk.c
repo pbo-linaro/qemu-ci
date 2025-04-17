@@ -93,11 +93,22 @@ static void imx8mp_evk_init(MachineState *machine)
     }
 }
 
-static void imx8mp_evk_machine_init(MachineClass *mc)
+static void imx8mp_evk_machine_class_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
+
     mc->desc = "NXP i.MX 8M Plus EVK Board";
     mc->init = imx8mp_evk_init;
     mc->max_cpus = FSL_IMX8MP_NUM_CPUS;
     mc->default_ram_id = "imx8mp-evk.ram";
 }
-DEFINE_MACHINE("imx8mp-evk", imx8mp_evk_machine_init)
+
+static const TypeInfo imx8_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("imx8mp-evk"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = imx8mp_evk_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(imx8_machine_types)

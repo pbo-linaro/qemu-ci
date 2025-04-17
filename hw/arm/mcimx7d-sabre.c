@@ -68,12 +68,23 @@ static void mcimx7d_sabre_init(MachineState *machine)
     }
 }
 
-static void mcimx7d_sabre_machine_init(MachineClass *mc)
+static void mcimx7d_sabre_machine_class_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
+
     mc->desc = "Freescale i.MX7 DUAL SABRE (Cortex-A7)";
     mc->init = mcimx7d_sabre_init;
     mc->max_cpus = FSL_IMX7_NUM_CPUS;
     mc->default_ram_id = "mcimx7d-sabre.ram";
     mc->auto_create_sdcard = true;
 }
-DEFINE_MACHINE("mcimx7d-sabre", mcimx7d_sabre_machine_init)
+
+static const TypeInfo imx7_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("mcimx7d-sabre"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = mcimx7d_sabre_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(imx7_machine_types)

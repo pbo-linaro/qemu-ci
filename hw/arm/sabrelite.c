@@ -103,8 +103,10 @@ static void sabrelite_init(MachineState *machine)
     }
 }
 
-static void sabrelite_machine_init(MachineClass *mc)
+static void sabrelite_machine_class_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
+
     mc->desc = "Freescale i.MX6 Quad SABRE Lite Board (Cortex-A9)";
     mc->init = sabrelite_init;
     mc->max_cpus = FSL_IMX6_NUM_CPUS;
@@ -113,4 +115,12 @@ static void sabrelite_machine_init(MachineClass *mc)
     mc->auto_create_sdcard = true;
 }
 
-DEFINE_MACHINE("sabrelite", sabrelite_machine_init)
+static const TypeInfo sabrelite_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("sabrelite"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = sabrelite_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(sabrelite_machine_types)
