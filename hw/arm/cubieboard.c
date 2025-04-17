@@ -106,12 +106,13 @@ static void cubieboard_init(MachineState *machine)
     arm_load_kernel(&a10->cpu, machine, &cubieboard_binfo);
 }
 
-static void cubieboard_machine_init(MachineClass *mc)
+static void cubieboard_machine_class_init(ObjectClass *oc, void *data)
 {
     static const char * const valid_cpu_types[] = {
         ARM_CPU_TYPE_NAME("cortex-a8"),
         NULL
     };
+    MachineClass *mc = MACHINE_CLASS(oc);
 
     mc->desc = "cubietech cubieboard (Cortex-A8)";
     mc->default_cpu_type = ARM_CPU_TYPE_NAME("cortex-a8");
@@ -125,4 +126,12 @@ static void cubieboard_machine_init(MachineClass *mc)
     mc->auto_create_sdcard = true;
 }
 
-DEFINE_MACHINE("cubieboard", cubieboard_machine_init)
+static const TypeInfo cubieboard_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("cubieboard"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = cubieboard_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(cubieboard_machine_types)
