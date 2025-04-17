@@ -125,12 +125,13 @@ static void bpim2u_init(MachineState *machine)
     arm_load_kernel(&r40->cpus[0], machine, &bpim2u_binfo);
 }
 
-static void bpim2u_machine_init(MachineClass *mc)
+static void bpim2u_machine_class_init(ObjectClass *oc, void *data)
 {
     static const char * const valid_cpu_types[] = {
         ARM_CPU_TYPE_NAME("cortex-a7"),
         NULL
     };
+    MachineClass *mc = MACHINE_CLASS(oc);
 
     mc->desc = "Bananapi M2U (Cortex-A7)";
     mc->init = bpim2u_init;
@@ -144,4 +145,12 @@ static void bpim2u_machine_init(MachineClass *mc)
     mc->auto_create_sdcard = true;
 }
 
-DEFINE_MACHINE("bpim2u", bpim2u_machine_init)
+static const TypeInfo bananapi_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("bpim2u"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = bpim2u_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(bananapi_machine_types)
