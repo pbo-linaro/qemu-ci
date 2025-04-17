@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250417210025.68322-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] exec: Rename target_words_bigendian() -> target_big_endian()
+    + Reviewed-by: Michael S. Tsirkin <mst@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: exec: Rename target_words_bigendian() -> target_big_endian()
+Patch failed at 0001 exec: Rename target_words_bigendian() -> target_big_endian()
+error: patch failed: include/exec/tswap.h:11
+error: include/exec/tswap.h: patch does not apply
+error: system/memory-internal.h: does not exist in index
+error: patch failed: cpu-target.c:86
+error: cpu-target.c: patch does not apply
+error: patch failed: system/memory.c:2575
+error: system/memory.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
