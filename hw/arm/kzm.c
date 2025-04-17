@@ -131,12 +131,22 @@ static void kzm_init(MachineState *machine)
     }
 }
 
-static void kzm_machine_init(MachineClass *mc)
+static void kzm_machine_class_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
+
     mc->desc = "ARM KZM Emulation Baseboard (ARM1136)";
     mc->init = kzm_init;
     mc->ignore_memory_transaction_failures = true;
     mc->default_ram_id = "kzm.ram";
 }
 
-DEFINE_MACHINE("kzm", kzm_machine_init)
+static const TypeInfo kzm_machine_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("kzm"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = kzm_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(kzm_machine_types)
