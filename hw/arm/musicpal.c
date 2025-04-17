@@ -1334,8 +1334,10 @@ static void musicpal_init(MachineState *machine)
     arm_load_kernel(cpu, machine, &musicpal_binfo);
 }
 
-static void musicpal_machine_init(MachineClass *mc)
+static void musicpal_machine_class_init(ObjectClass *oc, void *data)
 {
+    MachineClass *mc = MACHINE_CLASS(oc);
+
     mc->desc = "Marvell 88w8618 / MusicPal (ARM926EJ-S)";
     mc->init = musicpal_init;
     mc->ignore_memory_transaction_failures = true;
@@ -1345,8 +1347,6 @@ static void musicpal_machine_init(MachineClass *mc)
 
     machine_add_audiodev_property(mc);
 }
-
-DEFINE_MACHINE("musicpal", musicpal_machine_init)
 
 static void mv88w8618_wlan_class_init(ObjectClass *klass, void *data)
 {
@@ -1375,3 +1375,13 @@ static void musicpal_register_types(void)
 }
 
 type_init(musicpal_register_types)
+
+static const TypeInfo musicpal_types[] = {
+    {
+        .name           = MACHINE_TYPE_NAME("musicpal"),
+        .parent         = TYPE_MACHINE,
+        .class_init     = musicpal_machine_class_init,
+    },
+};
+
+DEFINE_TYPES(musicpal_types)
