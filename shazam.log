@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250417165430.58213-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 48 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] qemu: Introduce target_cpu_type()
+  [32m✓[0m [PATCH 2/7] cpus: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+  [32m✓[0m [PATCH 3/7] cpus: Move target-agnostic methods out of cpu-target.c
+  [32m✓[0m [PATCH 4/7] accel: Implement accel_init_ops_interfaces() for both system/user mode
+  [32m✓[0m [PATCH 5/7] accel: Include missing 'qemu/accel.h' header in accel-internal.h
+  [32m✓[0m [PATCH 6/7] accel: Make AccelCPUClass structure target-agnostic
+  [32m✓[0m [PATCH 7/7] accel: Move target-agnostic code from accel-target.c -> accel-common.c
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 7
+---
+Applying: qemu: Introduce target_cpu_type()
+Applying: cpus: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+Patch failed at 0002 cpus: Replace CPU_RESOLVING_TYPE -> target_cpu_type()
+error: patch failed: accel/tcg/tcg-all.c:35
+error: accel/tcg/tcg-all.c: patch does not apply
+error: patch failed: cpu-target.c:22
+error: cpu-target.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
