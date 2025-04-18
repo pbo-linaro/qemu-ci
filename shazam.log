@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250418172908.25147-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 39 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 78 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v3 1/14] qapi: Rename TargetInfo structure as BinaryTargetInfo
+  [32m✓[0m [PATCH RFC v3 2/14] qemu: Convert target_name() to TargetInfo API
+  [32m✓[0m [PATCH RFC v3 3/14] system/vl: Filter machine list available for a particular target binary
+  [32m✓[0m [PATCH RFC v3 4/14] hw/arm: Register TYPE_TARGET_ARM/AARCH64_MACHINE QOM interfaces
+  [32m✓[0m [PATCH RFC v3 5/14] hw/core: Allow ARM/Aarch64 binaries to use the 'none' machine
+  [32m✓[0m [PATCH RFC v3 6/14] hw/arm: Filter machine types for qemu-system-arm/aarch64 binaries
+  [32m✓[0m [PATCH RFC v3 7/14] meson: Prepare to accept per-binary TargetInfo structure implementation
+  [32m✓[0m [PATCH RFC v3 8/14] config/target: Implement per-binary TargetInfo structure (ARM, AARCH64)
+  [32m✓[0m [PATCH RFC v3 9/14] hw/arm/aspeed: Build objects once
+  [32m✓[0m [PATCH RFC v3 10/14] hw/arm/raspi: Build objects once
+  [32m✓[0m [PATCH RFC v3 11/14] hw/core/machine: Allow dynamic registration of valid CPU types
+  [32m✓[0m [PATCH RFC v3 12/14] hw/arm/virt: Register valid CPU types dynamically
+  [32m✓[0m [PATCH RFC v3 13/14] qemu/target_info: Add target_aarch64() helper
+  [32m✓[0m [PATCH RFC v3 14/14] hw/arm/virt: Replace TARGET_AARCH64 -> target_aarch64()
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 14
+---
+Applying: qapi: Rename TargetInfo structure as BinaryTargetInfo
+Applying: qemu: Convert target_name() to TargetInfo API
+Patch failed at 0002 qemu: Convert target_name() to TargetInfo API
+error: patch failed: include/hw/core/cpu.h:1115
+error: include/hw/core/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
