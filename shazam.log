@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250418005059.4436-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v2 1/11] qapi: Rename TargetInfo structure as BinaryTargetInfo
+  [32m✓[0m [PATCH RFC v2 2/11] qemu: Convert target_name() to TargetInfo API
+  [32m✓[0m [PATCH RFC v2 3/11] system/vl: Filter machine list available for a particular target binary
+  [32m✓[0m [PATCH RFC v2 4/11] hw/arm: Register TYPE_TARGET_ARM/AARCH64_CPU QOM interfaces
+  [32m✓[0m [PATCH RFC v2 5/11] hw/arm: Filter machine types for qemu-system-aarch64 binary
+  [32m✓[0m [PATCH RFC v2 6/11] hw/arm: Filter machine types for qemu-system-arm binary
+  [32m✓[0m [PATCH RFC v2 7/11] hw/core: Allow ARM/Aarch64 binaries to use the 'none' machine
+  [32m✓[0m [PATCH RFC v2 8/11] config/target: Implement per-binary TargetInfo structure (ARM)
+  [32m✓[0m [PATCH RFC v2 9/11] config/target: Implement per-binary TargetInfo structure (Aarch64)
+  [32m✓[0m [PATCH RFC v2 10/11] hw/arm/aspeed: Build objects once
+  [32m✓[0m [PATCH RFC v2 11/11] hw/arm/raspi: Build objects once
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 11
+---
+Applying: qapi: Rename TargetInfo structure as BinaryTargetInfo
+Applying: qemu: Convert target_name() to TargetInfo API
+Patch failed at 0002 qemu: Convert target_name() to TargetInfo API
+error: patch failed: include/hw/core/cpu.h:1115
+error: include/hw/core/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
