@@ -507,7 +507,7 @@ struct BlockDriver {
         BlockDriverState *bs, BlockCompletionFunc *cb, void *opaque);
 
     BlockAIOCB * GRAPH_RDLOCK_PTR (*bdrv_aio_pdiscard)(
-        BlockDriverState *bs, int64_t offset, int bytes,
+        BlockDriverState *bs, int64_t offset, int64_t bytes,
         BlockCompletionFunc *cb, void *opaque);
 
     int coroutine_fn GRAPH_RDLOCK_PTR (*bdrv_co_readv)(BlockDriverState *bs,
