@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250421163112.21316-1-tomitamoeko@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] vfio/igd: Restrict legacy mode to Gen6-9 devices
+  [32m✓[0m [PATCH 2/11] vfio/igd: Always emulate ASLS (OpRegion) register
+  [32m✓[0m [PATCH 3/11] vfio/igd: Detect IGD device by OpRegion
+  [32m✓[0m [PATCH 4/11] vfio/igd: Remove vfio_pci_igd_setup_opregion
+  [32m✓[0m [PATCH 5/11] vfio/igd: Check vendor and device ID on GVT-g mdev
+  [32m✓[0m [PATCH 6/11] vfio/igd: Enable OpRegion by default
+  [32m✓[0m [PATCH 7/11] vfio/igd: Allow hotplugging with OpRegion enabled
+  [32m✓[0m [PATCH 8/11] vfio/igd: Allow overriding GMS with 0xf0 to 0xfe on Gen9+
+  [32m✓[0m [PATCH 9/11] vfio/igd: Only emulate GGC register when x-igd-gms is set
+  [32m✓[0m [PATCH 10/11] vfio/igd: Remove generation limitation for IGD passthrough
+  [32m✓[0m [PATCH 11/11] vfio/igd: Update IGD passthrough documentation
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 11
+---
+Applying: vfio/igd: Restrict legacy mode to Gen6-9 devices
+Applying: vfio/igd: Always emulate ASLS (OpRegion) register
+Applying: vfio/igd: Detect IGD device by OpRegion
+Applying: vfio/igd: Remove vfio_pci_igd_setup_opregion
+Patch failed at 0004 vfio/igd: Remove vfio_pci_igd_setup_opregion
+error: patch failed: hw/vfio/igd.c:185
+error: hw/vfio/igd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
