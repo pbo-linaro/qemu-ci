@@ -1,0 +1,62 @@
+Grabbing thread from lore.kernel.org/all/20250307185645.970034-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 37 messages in the thread
+WARNING: duplicate messages found at index 1
+   Subject 1: include/exec: Split out exec/cpu-interrupt.h
+   Subject 2: include/exec: Move TARGET_PAGE_{SIZE, MASK, BITS} to target_page.h
+  2 is a reply... replacing existing: include/exec: Move TARGET_PAGE_{SIZE, MASK, BITS} to target_page.h
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 110 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/16] include/exec: Split out exec/cpu-interrupt.h
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 2/16] accel/tcg: Compile watchpoint.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 3/16] exec: Declare tlb_reset_dirty*() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 4/16] exec: Declare tlb_set_page_full() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 5/16] exec: Declare tlb_set_page_with_attrs() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 6/16] exec: Declare tlb_set_page() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 7/16] exec: Declare tlb_hit*() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 8/16] exec: Declare tlb_flush*() in 'exec/cputlb.h'
+  [31m✗[0m [PATCH 9/16] system: Build watchpoint.c once
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 10/16] accel/tcg: Build tcg-accel-ops.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 11/16] accel/tcg: Build tcg-accel-ops-icount.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 12/16] accel/tcg: Build tcg-accel-ops-rr.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 13/16] accel/tcg: Build tcg-accel-ops-mttcg.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 14/16] include/exec: Split out helper-getpc.h
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 15/16] accel/tcg: Build tcg-runtime.c once
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 16/16] accel/tcg: Build tcg-runtime-gvec.c once
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  ---
+  [31m✗[0m BADSIG: DKIM/linaro.org
+---
+Total patches: 16
+---
+Applying: include/exec: Split out exec/cpu-interrupt.h
+Patch failed at 0001 include/exec: Split out exec/cpu-interrupt.h
+error: patch failed: include/exec/poison.h:46
+error: include/exec/poison.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
