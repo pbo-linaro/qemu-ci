@@ -12,36 +12,17 @@ from qemu_test import exec_command_and_wait_for_pattern
 
 class AST1030Machine(LinuxKernelTest):
 
-    ASSET_ZEPHYR_1_04 = Asset(
+    ASSET_ZEPHYR_3_00 = Asset(
         ('https://github.com/AspeedTech-BMC'
-         '/zephyr/releases/download/v00.01.04/ast1030-evb-demo.zip'),
-        '4ac6210adcbc61294927918707c6762483fd844dde5e07f3ba834ad1f91434d3')
+         '/zephyr/releases/download/v00.03.00/ast1030-evb-demo.zip'),
+        '37fe3ecd4a1b9d620971a15b96492a81093435396eeac69b6f3e384262ff555f')
 
-    def test_ast1030_zephyros_1_04(self):
-        self.set_machine('ast1030-evb')
-
-        kernel_name = "ast1030-evb-demo/zephyr.elf"
-        kernel_file = self.archive_extract(
-            self.ASSET_ZEPHYR_1_04, member=kernel_name)
-
-        self.vm.set_console()
-        self.vm.add_args('-kernel', kernel_file, '-nographic')
-        self.vm.launch()
-        self.wait_for_console_pattern("Booting Zephyr OS")
-        exec_command_and_wait_for_pattern(self, "help",
-                                          "Available commands")
-
-    ASSET_ZEPHYR_1_07 = Asset(
-        ('https://github.com/AspeedTech-BMC'
-         '/zephyr/releases/download/v00.01.07/ast1030-evb-demo.zip'),
-        'ad52e27959746988afaed8429bf4e12ab988c05c4d07c9d90e13ec6f7be4574c')
-
-    def test_ast1030_zephyros_1_07(self):
+    def test_ast1030_zephyros_3_00(self):
         self.set_machine('ast1030-evb')
 
         kernel_name = "ast1030-evb-demo/zephyr.bin"
         kernel_file = self.archive_extract(
-            self.ASSET_ZEPHYR_1_07, member=kernel_name)
+            self.ASSET_ZEPHYR_3_00, member=kernel_name)
 
         self.vm.set_console()
         self.vm.add_args('-kernel', kernel_file, '-nographic')
@@ -49,17 +30,10 @@ class AST1030Machine(LinuxKernelTest):
         self.wait_for_console_pattern("Booting Zephyr OS")
         for shell_cmd in [
                 'kernel stacks',
-                'otp info conf',
-                'otp info scu',
                 'hwinfo devid',
                 'crypto aes256_cbc_vault',
-                'random get',
-                'jtag JTAG1 sw_xfer high TMS',
-                'adc ADC0 resolution 12',
-                'adc ADC0 read 42',
-                'adc ADC1 read 69',
-                'i2c scan I2C_0',
-                'i3c attach I3C_0',
+                'jtag jtag@7e6e4100 sw_xfer high TMS',
+                'iic scan i2c@7e7b0080',
                 'hash test',
                 'kernel uptime',
                 'kernel reboot warm',
