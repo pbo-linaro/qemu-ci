@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250422145502.70770-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 73 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v4 1/19] qapi: Rename TargetInfo structure as QemuTargetInfo
+  [32m✓[0m [PATCH RFC v4 2/19] qemu: Convert target_name() to TargetInfo API
+  [32m✓[0m [PATCH RFC v4 3/19] system/vl: Filter machine list available for a particular target binary
+  [32m✓[0m [PATCH RFC v4 4/19] hw/arm: Register TYPE_TARGET_ARM/AARCH64_MACHINE QOM interfaces
+  [32m✓[0m [PATCH RFC v4 5/19] hw/core: Allow ARM/Aarch64 binaries to use the 'none' machine
+  [32m✓[0m [PATCH RFC v4 6/19] hw/arm: Filter machine types for qemu-system-arm/aarch64 binaries
+  [32m✓[0m [PATCH RFC v4 7/19] meson: Prepare to accept per-binary TargetInfo structure implementation
+  [32m✓[0m [PATCH RFC v4 8/19] config/target: Implement per-binary TargetInfo structure (ARM, AARCH64)
+  [32m✓[0m [PATCH RFC v4 9/19] hw/arm/aspeed: Build objects once
+  [32m✓[0m [PATCH RFC v4 10/19] hw/arm/raspi: Build objects once
+  [32m✓[0m [PATCH RFC v4 11/19] hw/core/machine: Allow dynamic registration of valid CPU types
+  [32m✓[0m [PATCH RFC v4 12/19] hw/arm/virt: Register valid CPU types dynamically
+  [32m✓[0m [PATCH RFC v4 13/19] hw/arm/virt: Check accelerator availability at runtime
+  [32m✓[0m [PATCH RFC v4 14/19] qemu/target_info: Add %target_arch field to TargetInfo
+  [32m✓[0m [PATCH RFC v4 15/19] qemu/target_info: Add target_aarch64() helper
+  [32m✓[0m [PATCH RFC v4 16/19] hw/arm/virt: Replace TARGET_AARCH64 -> target_aarch64()
+  [32m✓[0m [PATCH RFC v4 17/19] hw/core: Get default_cpu_type calling machine_class_default_cpu_type()
+  [32m✓[0m [PATCH RFC v4 18/19] hw/core: Introduce MachineClass::get_default_cpu_type() helper
+  [32m✓[0m [PATCH RFC v4 19/19] hw/arm/virt: Get default CPU type at runtime
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 19
+---
+Applying: qapi: Rename TargetInfo structure as QemuTargetInfo
+Applying: qemu: Convert target_name() to TargetInfo API
+Patch failed at 0002 qemu: Convert target_name() to TargetInfo API
+error: patch failed: include/hw/core/cpu.h:1115
+error: include/hw/core/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
