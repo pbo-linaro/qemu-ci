@@ -31,6 +31,7 @@
 #ifdef CONFIG_TCG
 #include "exec/cpu_ldst.h"
 #include "tcg/tcg.h"
+#include "tcg/tcg_loongarch.h"
 #endif
 
 const char * const regnames[32] = {
