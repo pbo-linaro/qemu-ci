@@ -1,0 +1,358 @@
+Grabbing thread from lore.kernel.org/all/20250422192819.302784-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 148 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 778 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/147] exec/tswap: target code can use TARGET_BIG_ENDIAN instead of target_words_bigendian()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH 2/147] exec/tswap: implement {ld, st}.*_p as functions instead of macros
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH 3/147] exec/memory_ldst: extract memory_ldst declarations from cpu-all.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 4/147] exec/memory_ldst_phys: extract memory_ldst_phys declarations from cpu-all.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 5/147] exec/memory.h: make devend_memop "target defines" agnostic
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 6/147] codebase: prepare to remove cpu.h from exec/exec-all.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 7/147] exec/exec-all: remove dependency on cpu.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 8/147] exec/memory-internal: remove dependency on cpu.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 9/147] exec/ram_addr: remove dependency on cpu.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 10/147] system/kvm: make kvm_flush_coalesced_mmio_buffer() accessible for common code
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 11/147] exec/ram_addr: call xen_hvm_modified_memory only if xen is enabled
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 12/147] hw/xen: add stubs for various functions
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 13/147] system/xen: remove inline stubs
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 14/147] system/physmem: compilation unit is now common to all targets
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 15/147] include/exec/memory: extract devend_big_endian from devend_memop
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 16/147] include/exec/memory: move devend functions to memory-internal.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 17/147] system/memory: make compilation unit common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 18/147] system/ioport: make compilation unit common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 19/147] accel/tcg: Build user-exec-stub.c once
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 20/147] accel/tcg: Build plugin-gen.c once
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 21/147] accel/tcg: Fix cpu_ld*_code_mmu for user mode
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 22/147] include/exec: Use vaddr for *_mmu guest memory access routines
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 23/147] include/exec: Split out cpu-ldst-common.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 24/147] include/exec: Split out accel/tcg/cpu-mmu-index.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 25/147] include/exec: Inline *_mmuidx_ra memory operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 26/147] include/exec: Inline *_data_ra memory operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 27/147] include/exec: Inline *_data memory operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 28/147] include/exec: Inline *_code memory operations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 29/147] accel/tcg: Perform aligned atomic reads in translator_ld
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 30/147] accel/tcg: Use cpu_ld*_code_mmu in translator.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 31/147] accel/tcg: Implement translator_ld*_end
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 32/147] accel/tcg: Remove mmap_lock/unlock from watchpoint.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 33/147] include/exec: Split out mmap-lock.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 34/147] include/system: Move exec/memory.h to system/memory.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 35/147] include/system: Move exec/address-spaces.h to system/address-spaces.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 36/147] include/system: Move exec/ioport.h to system/ioport.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 37/147] include/system: Move exec/ram_addr.h to system/ram_addr.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 38/147] include/system: Move exec/ramblock.h to system/ramblock.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 39/147] accel/tcg: Remove unnecesary inclusion of memory-internal.h in cputlb.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 40/147] exec: Restrict memory-internal.h to system/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 41/147] meson: Introduce top-level libuser_ss and libsystem_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 42/147] gdbstub: Move syscalls.c out of common_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 43/147] accel/tcg: Use libuser_ss and libsystem_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 44/147] target/mips: Restrict semihosting tests to system mode
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 45/147] target/xtensa: Restrict semihosting tests to system mode
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 46/147] semihosting: Move user-only implementation out-of-line
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 47/147] semihosting: Assert is_user in user-only semihosting_enabled
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 48/147] include/exec: Split out watchpoint.h
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 49/147] hw/core: Move unconditional files to libsystem_ss, libuser_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 50/147] system: Move most files to libsystem_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 51/147] plugins: Move api.c, core.c to libuser_ss, libsystem_ss
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 52/147] include/exec: Drop ifndef CONFIG_USER_ONLY from cpu-common.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 53/147] include/hw/core: Drop ifndef CONFIG_USER_ONLY from cpu.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 54/147] include/hw/intc: Remove ifndef CONFIG_USER_ONLY from armv7m_nvic.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 55/147] include/hw/s390x: Remove ifndef CONFIG_USER_ONLY in css.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 56/147] include/exec: Split out icount.h
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 57/147] include/exec: Protect icount_enabled from poisoned symbols
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 58/147] include/system: Remove ifndef CONFIG_USER_ONLY in qtest.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 59/147] include/qemu: Remove ifndef CONFIG_USER_ONLY from accel.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 60/147] target/riscv: Remove ifndef CONFIG_USER_ONLY from cpu_cfg.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 61/147] meson: Only allow CONFIG_USER_ONLY from certain source sets
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 62/147] exec/cpu-all: extract tlb flags defines to exec/tlb-flags.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 63/147] accel/tcg: Fix argument types of tlb_reset_dirty
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 64/147] accel/tcg: Pass CPUTLBEntryFull to tlb_reset_dirty_range_locked
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 65/147] accel/tcg: Rebuild full flags in tlb_reset_dirty_range_locked
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 66/147] include/exec: Move TLB_MMIO, TLB_DISCARD_WRITE to slow flags
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH 67/147] include/exec: Move tb_{, set_}page_addr[01] to translation-block.h
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH 68/147] accel/tcg: Move get_page_addr_code* declarations
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 69/147] accel/tcg: Remove page_protect
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 70/147] accel/tcg: Remove cpu-all.h, exec-all.h from tb-internal.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 71/147] target/rx: Fix copy/paste typo (riscv -> rx)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 72/147] hw/core/cpu: Update CPUClass::mmu_index docstring
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 73/147] accel/tcg: Introduce TCGCPUOps::mmu_index() callback
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 74/147] target/alpha: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 75/147] target/arm: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 76/147] target/avr: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 77/147] target/hppa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 78/147] target/i386: Remove unused cpu_(ldub, stb)_kernel macros
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 79/147] target/i386: Restrict cpu_mmu_index_kernel() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 80/147] target/i386: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 81/147] target/loongarch: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 82/147] target/m68k: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 83/147] target/microblaze: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 84/147] target/mips: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 85/147] target/openrisc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 86/147] target/ppc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 87/147] target/riscv: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 88/147] target/rx: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 89/147] target/s390x: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 90/147] target/sh4: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 91/147] target/sparc: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 92/147] target/tricore: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 93/147] target/xtensa: Restrict SoftMMU mmu_index() to TCG
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 94/147] target/hexagon: Implement TCGCPUOps.mmu_index
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 95/147] hw/core/cpu: Remove CPUClass::mmu_index()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 96/147] accel/tcg: Build translator.c twice
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 97/147] accel/tcg: Split out tlb-bounds.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 98/147] include/exec: Redefine tlb-flags with absolute values
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 99/147] page-vary: Move and rename qemu_target_page_bits_min
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 100/147] page-vary: Restrict scope of TARGET_PAGE_BITS_MIN
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 101/147] exec/cpu-all: move cpu_copy to linux-user/qemu.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 102/147] include/exec/cpu-all: move compile time check for CPUArchState to cpu-target.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 103/147] exec/cpu-all: remove system/memory include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 104/147] exec/cpu-all: remove exec/page-protection include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 105/147] exec/cpu-all: remove tswap include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 106/147] exec/cpu-all: remove exec/cpu-interrupt include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 107/147] accel/tcg: fix missing includes for TCG_GUEST_DEFAULT_MO
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 108/147] accel/tcg: fix missing includes for TARGET_HAS_PRECISE_SMC
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 109/147] exec/cpu-all: remove cpu include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 110/147] exec/cpu-all: remove exec/target_page include
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 111/147] exec/cpu-all: transfer exec/cpu-common include to cpu.h headers
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 112/147] exec/cpu-all: remove this header
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 113/147] accel/kvm: move KVM_HAVE_MCE_INJECTION define to kvm-all.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 114/147] exec/poison: KVM_HAVE_MCE_INJECTION can now be poisoned
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 115/147] target/arm/cpu: always define kvm related registers
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 116/147] target/arm/cpu: flags2 is always uint64_t
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 117/147] target/arm/cpu: define same set of registers for aarch32 and aarch64
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 118/147] target/arm/cpu: remove inline stubs for aarch32 emulation
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 119/147] meson: add common hw files
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Acked-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 120/147] hw/arm/boot: make compilation unit hw common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 121/147] hw/arm/digic_boards: prepare compilation unit to be common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 122/147] hw/arm/xlnx-zynqmp: prepare compilation unit to be common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 123/147] hw/arm/xlnx-versal: prepare compilation unit to be common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 124/147] hw/arm: make most of the compilation units common
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 125/147] target/riscv: Do not expose rv128 CPU on user mode emulation
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([31m✗[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH 126/147] tcg: Include missing 'cpu.h' in translate-all.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 127/147] tcg: Declare TARGET_INSN_START_EXTRA_WORDS in 'cpu-param.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 128/147] tcg: Always define TARGET_INSN_START_EXTRA_WORDS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 129/147] exec: Restrict 'cpu-ldst-common.h' to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 130/147] exec: Restrict 'cpu_ldst.h' to accel/tcg/
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 131/147] exec: Do not include 'accel/tcg/cpu-ldst.h' in 'exec-all.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 132/147] tcg: Always define TCG_GUEST_DEFAULT_MO
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 133/147] tcg: Simplify tcg_req_mo() macro
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 134/147] tcg: Define guest_default_memory_order in TCGCPUOps
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 135/147] tcg: Remove use of TCG_GUEST_DEFAULT_MO in tb_gen_code()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 136/147] tcg: Propagate CPUState argument to cpu_req_mo()
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 137/147] tcg: Have tcg_req_mo() use TCGCPUOps::guest_default_memory_order
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 138/147] tcg: Remove the TCG_GUEST_DEFAULT_MO definition globally
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 139/147] tcg: Move cpu_req_mo() macro to target-agnostic 'backend-ldst.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 140/147] tcg: Pass max_threads not max_cpus to tcg_init
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 141/147] tcg: Move qemu_tcg_mttcg_enabled() to 'system/tcg.h'
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 142/147] accel/tcg: Remove mttcg_enabled
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 143/147] tcg: Convert TCGState::mttcg_enabled to TriState
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 144/147] accel/tcg: Move mttcg warning to tcg_init_machine
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 145/147] target/riscv: Remove AccelCPUClass::cpu_class_init need
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 146/147] target/i386: Remove AccelCPUClass::cpu_class_init need
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH 147/147] tcg: Convert TARGET_SUPPORTS_MTTCG to TCGCPUOps::mttcg_supported field
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 147
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+     Msg From: Pierrick Bouvier <pierrick.bouvier@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: exec/tswap: target code can use TARGET_BIG_ENDIAN instead of target_words_bigendian()
+Applying: exec/tswap: implement {ld, st}.*_p as functions instead of macros
+Applying: exec/memory_ldst: extract memory_ldst declarations from cpu-all.h
+Applying: exec/memory_ldst_phys: extract memory_ldst_phys declarations from cpu-all.h
+Applying: exec/memory.h: make devend_memop "target defines" agnostic
+Applying: codebase: prepare to remove cpu.h from exec/exec-all.h
+Applying: exec/exec-all: remove dependency on cpu.h
+Applying: exec/memory-internal: remove dependency on cpu.h
+Applying: exec/ram_addr: remove dependency on cpu.h
+Applying: system/kvm: make kvm_flush_coalesced_mmio_buffer() accessible for common code
+Applying: exec/ram_addr: call xen_hvm_modified_memory only if xen is enabled
+Applying: hw/xen: add stubs for various functions
+Applying: system/xen: remove inline stubs
+Applying: system/physmem: compilation unit is now common to all targets
+Applying: include/exec/memory: extract devend_big_endian from devend_memop
+Applying: include/exec/memory: move devend functions to memory-internal.h
+Applying: system/memory: make compilation unit common
+Applying: system/ioport: make compilation unit common
+Applying: accel/tcg: Build user-exec-stub.c once
+Applying: accel/tcg: Build plugin-gen.c once
+Applying: accel/tcg: Fix cpu_ld*_code_mmu for user mode
+Applying: include/exec: Use vaddr for *_mmu guest memory access routines
+Applying: include/exec: Split out cpu-ldst-common.h
+Applying: include/exec: Split out accel/tcg/cpu-mmu-index.h
+Applying: include/exec: Inline *_mmuidx_ra memory operations
+Applying: include/exec: Inline *_data_ra memory operations
+Applying: include/exec: Inline *_data memory operations
+Applying: include/exec: Inline *_code memory operations
+Applying: accel/tcg: Perform aligned atomic reads in translator_ld
+Applying: accel/tcg: Use cpu_ld*_code_mmu in translator.c
+Applying: accel/tcg: Implement translator_ld*_end
+Applying: accel/tcg: Remove mmap_lock/unlock from watchpoint.c
+Applying: include/exec: Split out mmap-lock.h
+Applying: include/system: Move exec/memory.h to system/memory.h
+Patch failed at 0034 include/system: Move exec/memory.h to system/memory.h
+error: patch failed: target/avr/cpu.h:23
+error: target/avr/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
