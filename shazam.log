@@ -1,0 +1,63 @@
+Grabbing thread from lore.kernel.org/all/20250422160224.199714-1-clg@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 38 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 216 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/37] vfio: Move vfio_mig_active() into migration.c
+  [32m✓[0m [PATCH v3 2/37] vfio: Rename vfio_reset_bytes_transferred()
+  [32m✓[0m [PATCH v3 3/37] vfio: Introduce a new header file for external migration services
+  [32m✓[0m [PATCH v3 4/37] vfio: Make vfio_un/block_multiple_devices_migration() static
+  [32m✓[0m [PATCH v3 5/37] vfio: Make vfio_viommu_preset() static
+  [32m✓[0m [PATCH v3 6/37] vfio: Introduce a new header file for internal migration services
+  [32m✓[0m [PATCH v3 7/37] vfio: Move vfio_device_state_is_running/precopy() into migration.c
+  [32m✓[0m [PATCH v3 8/37] vfio: Introduce a new header file for VFIOdisplay declarations
+  [32m✓[0m [PATCH v3 9/37] vfio: Move VFIOHostDMAWindow definition into spapr.c
+  [32m✓[0m [PATCH v3 10/37] vfio: Introduce a new header file for VFIOIOMMUFD declarations
+  [32m✓[0m [PATCH v3 11/37] vfio: Introduce new files for VFIORegion definitions and declarations
+  [32m✓[0m [PATCH v3 12/37] vfio: Introduce a new header file for VFIOcontainer declarations
+  [32m✓[0m [PATCH v3 13/37] vfio: Make vfio_group_list static
+  [32m✓[0m [PATCH v3 14/37] vfio: Move VFIOAddressSpace helpers into container-base.c
+  [32m✓[0m [PATCH v3 15/37] vfio: Move Host IOMMU type declarations into their respective files
+  [32m✓[0m [PATCH v3 16/37] vfio: Introduce a new header file for helper services
+  [32m✓[0m [PATCH v3 17/37] vfio: Move vfio_get_info_dma_avail() into helpers.c
+  [32m✓[0m [PATCH v3 18/37] vfio: Move vfio_kvm_device_add/del_fd() to helpers.c
+  [32m✓[0m [PATCH v3 19/37] vfio: Move vfio_get_device_info() to helpers.c
+  [32m✓[0m [PATCH v3 20/37] vfio: Introduce a new file for VFIODevice definitions
+  [32m✓[0m [PATCH v3 21/37] vfio: Introduce new files for CPR definitions and declarations
+  [32m✓[0m [PATCH v3 22/37] vfio: Move vfio_kvm_device_fd() into helpers.c
+  [32m✓[0m [PATCH v3 23/37] vfio: Move vfio_device_list into device.c
+  [32m✓[0m [PATCH v3 24/37] vfio: Move vfio_de/attach_device() into device.c
+  [32m✓[0m [PATCH v3 25/37] vfio: Move vfio_reset_handler() into device.c
+  [32m✓[0m [PATCH v3 26/37] vfio: Move dirty tracking related services into container-base.c
+  [32m✓[0m [PATCH v3 27/37] vfio: Make vfio_devices_query_dirty_bitmap() static
+  [32m✓[0m [PATCH v3 28/37] vfio: Make vfio_container_query_dirty_bitmap() static
+  [32m✓[0m [PATCH v3 29/37] vfio: Rename vfio_devices_all_dirty_tracking_started()
+  [32m✓[0m [PATCH v3 30/37] vfio: Rename vfio_devices_all_device_dirty_tracking()
+  [32m✓[0m [PATCH v3 31/37] vfio: Rename vfio_get_dirty_bitmap()
+  [32m✓[0m [PATCH v3 32/37] vfio: Introduce new files for VFIO MemoryListener
+  [32m✓[0m [PATCH v3 33/37] vfio: Rename RAM discard related services
+  [32m✓[0m [PATCH v3 34/37] vfio: Introduce vfio_listener_un/register() routines
+  [32m✓[0m [PATCH v3 35/37] vfio: Rename vfio-common.h to vfio-device.h
+  [32m✓[0m [PATCH v3 36/37] vfio: Rename VFIODevice related services
+  [32m✓[0m [PATCH v3 37/37] vfio: Rename VFIOContainer related services
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 37
+---
+Applying: vfio: Move vfio_mig_active() into migration.c
+Applying: vfio: Rename vfio_reset_bytes_transferred()
+Applying: vfio: Introduce a new header file for external migration services
+Applying: vfio: Make vfio_un/block_multiple_devices_migration() static
+Applying: vfio: Make vfio_viommu_preset() static
+Patch failed at 0005 vfio: Make vfio_viommu_preset() static
+error: patch failed: hw/vfio/common.c:66
+error: hw/vfio/common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
