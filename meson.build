@@ -735,6 +735,7 @@ warn_flags = [
   '-Wstrict-prototypes',
   '-Wtype-limits',
   '-Wundef',
+  '-Wunguarded-availability',
   '-Wvla',
   '-Wwrite-strings',
 
@@ -747,6 +748,7 @@ warn_flags = [
   '-Wno-string-plus-int',
   '-Wno-tautological-type-limit-compare',
   '-Wno-typedef-redefinition',
+  '-Wno-unguarded-availability-new',
 ]
 
 if host_os != 'darwin'
