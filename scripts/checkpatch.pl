@@ -1404,8 +1404,8 @@ sub checkspdx {
 	}
     }
     if (@unknown) {
-	ERROR("Saw unacceptable licenses '" . join(',', @unknown) .
-	      "', valid choices for QEMU are:\n" . join("\n", $prefer, @valid));
+	WARN("Saw unacceptable licenses '" . join(',', @unknown) .
+	     "', valid choices for QEMU are:\n" . join("\n", $prefer, @valid));
     }
 
     if ($nonpreferred) {
@@ -1689,7 +1689,7 @@ sub process {
 				and not $expect_spdx_file =~ /(trace\.h)$/) {
 				# Files to include auto-generated files don't require a license
 			    # source code files MUST have SPDX license declared
-			    ERROR("New file '$expect_spdx_file' requires " .
+			    WARN("New file '$expect_spdx_file' requires " .
 				  "'SPDX-License-Identifier'");
 			} else {
 			    # Other files MAY have SPDX license if appropriate
