@@ -3151,6 +3151,7 @@ static inline bool bswap_code(bool sctlr_b)
 #endif
 }
 
+typedef uint32_t tb_flags_t;
 void cpu_get_tb_cpu_state(CPUARMState *env, vaddr *pc,
                           uint64_t *cs_base, uint32_t *flags);
 

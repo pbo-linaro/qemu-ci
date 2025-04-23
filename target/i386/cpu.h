@@ -2612,6 +2612,7 @@ int cpu_mmu_index_kernel(CPUX86State *env);
 #include "hw/i386/apic.h"
 #endif
 
+typedef uint32_t tb_flags_t;
 static inline void cpu_get_tb_cpu_state(CPUX86State *env, vaddr *pc,
                                         uint64_t *cs_base, uint32_t *flags)
 {

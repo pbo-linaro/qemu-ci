@@ -464,8 +464,9 @@ void alpha_cpu_do_transaction_failed(CPUState *cs, hwaddr physaddr,
                                      MemTxResult response, uintptr_t retaddr);
 #endif
 
+typedef uint32_t tb_flags_t;
 static inline void cpu_get_tb_cpu_state(CPUAlphaState *env, vaddr *pc,
-                                        uint64_t *cs_base, uint32_t *pflags)
+                                        uint64_t *cs_base, tb_flags_t *pflags)
 {
     *pc = env->pc;
     *cs_base = 0;

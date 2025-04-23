@@ -417,6 +417,7 @@ static inline int s390x_env_mmu_index(CPUS390XState *env, bool ifetch)
 
 #include "tcg/tcg_s390x.h"
 
+typedef uint32_t tb_flags_t;
 void cpu_get_tb_cpu_state(CPUS390XState *env, vaddr *pc,
                           uint64_t *cs_base, uint32_t *flags);
 

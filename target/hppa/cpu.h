@@ -352,6 +352,7 @@ hwaddr hppa_abs_to_phys_pa2_w1(vaddr addr);
 #define CS_BASE_DIFFPAGE    (1 << 12)
 #define CS_BASE_DIFFSPACE   (1 << 13)
 
+typedef uint32_t tb_flags_t;
 void cpu_get_tb_cpu_state(CPUHPPAState *env, vaddr *pc,
                           uint64_t *cs_base, uint32_t *pflags);
 

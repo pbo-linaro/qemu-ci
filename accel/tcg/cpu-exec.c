@@ -302,7 +302,7 @@ static void log_cpu_exec(vaddr pc, CPUState *cpu,
 }
 
 static bool check_for_breakpoints_slow(CPUState *cpu, vaddr pc,
-                                       uint32_t *cflags)
+                                       tb_flags_t *cflags)
 {
     CPUBreakpoint *bp;
     bool match_page = false;
@@ -368,7 +368,7 @@ static bool check_for_breakpoints_slow(CPUState *cpu, vaddr pc,
 }
 
 static inline bool check_for_breakpoints(CPUState *cpu, vaddr pc,
-                                         uint32_t *cflags)
+                                         tb_flags_t *cflags)
 {
     return unlikely(!QTAILQ_EMPTY(&cpu->breakpoints)) &&
         check_for_breakpoints_slow(cpu, pc, cflags);
@@ -388,7 +388,7 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
     TranslationBlock *tb;
     vaddr pc;
     uint64_t cs_base;
-    uint32_t flags, cflags;
+    tb_flags_t flags, cflags;
 
     /*
      * By definition we've just finished a TB, so I/O is OK.
@@ -565,7 +565,7 @@ void cpu_exec_step_atomic(CPUState *cpu)
     TranslationBlock *tb;
     vaddr pc;
     uint64_t cs_base;
-    uint32_t flags, cflags;
+    tb_flags_t flags, cflags;
     int tb_exit;
 
     if (sigsetjmp(cpu->jmp_env, 0) == 0) {
@@ -956,7 +956,7 @@ cpu_exec_loop(CPUState *cpu, SyncClocks *sc)
             TranslationBlock *tb;
             vaddr pc;
             uint64_t cs_base;
-            uint32_t flags, cflags;
+            tb_flags_t flags, cflags;
 
             cpu_get_tb_cpu_state(cpu_env(cpu), &pc, &cs_base, &flags);
 

@@ -594,7 +594,7 @@ void tb_check_watchpoint(CPUState *cpu, uintptr_t retaddr)
         vaddr pc;
         uint64_t cs_base;
         tb_page_addr_t addr;
-        uint32_t flags;
+        tb_flags_t flags;
 
         cpu_get_tb_cpu_state(env, &pc, &cs_base, &flags);
         addr = get_page_addr_code(env, pc);

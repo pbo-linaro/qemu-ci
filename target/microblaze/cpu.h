@@ -421,6 +421,7 @@ static inline bool mb_cpu_is_big_endian(CPUState *cs)
     return !cpu->cfg.endi;
 }
 
+typedef uint32_t tb_flags_t;
 static inline void cpu_get_tb_cpu_state(CPUMBState *env, vaddr *pc,
                                         uint64_t *cs_base, uint32_t *flags)
 {
