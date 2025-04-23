@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250423072824.3647952-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/5] vfio/iommufd: Make a separate call to get IOMMU capabilities
+  [32m✓[0m [PATCH v2 2/5] vfio/iommufd: Move realize() after attachment
+  [32m✓[0m [PATCH v2 3/5] vfio/container: Move realize() after attachment
+  [32m✓[0m [PATCH v2 4/5] vfio: Cleanup host IOMMU device creation
+  [32m✓[0m [PATCH v2 5/5] vfio: Remove hiod_typename property
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 5
+---
+Applying: vfio/iommufd: Make a separate call to get IOMMU capabilities
+Applying: vfio/iommufd: Move realize() after attachment
+Patch failed at 0002 vfio/iommufd: Move realize() after attachment
+error: patch failed: hw/vfio/iommufd.c:500
+error: hw/vfio/iommufd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
