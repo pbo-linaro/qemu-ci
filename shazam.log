@@ -1,0 +1,51 @@
+Grabbing thread from lore.kernel.org/all/20250424222112.36194-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 66 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v5 1/21] qapi: Rename TargetInfo structure as QemuTargetInfo
+  [32m✓[0m [PATCH RFC v5 2/21] qemu: Convert target_name() to TargetInfo API
+  [32m✓[0m [PATCH RFC v5 3/21] system/vl: Filter machine list available for a particular target binary
+  [32m✓[0m [PATCH RFC v5 4/21] hw/core/null-machine: Define machine as generic QOM type
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH RFC v5 5/21] hw/arm: Register TYPE_TARGET_ARM/AARCH64_MACHINE QOM interfaces
+  [32m✓[0m [PATCH RFC v5 6/21] hw/core: Allow ARM/Aarch64 binaries to use the 'none' machine
+  [32m✓[0m [PATCH RFC v5 7/21] hw/boards: Introduce DEFINE_MACHINE_WITH_INTERFACES() macro
+  [32m✓[0m [PATCH RFC v5 8/21] hw/arm: Add DEFINE_MACHINE_[ARM_]AARCH64() macros
+  [32m✓[0m [PATCH RFC v5 9/21] hw/arm: Filter machine types for qemu-system-arm/aarch64 binaries
+  [32m✓[0m [PATCH RFC v5 10/21] meson: Prepare to accept per-binary TargetInfo structure implementation
+  [32m✓[0m [PATCH RFC v5 11/21] config/target: Implement per-binary TargetInfo structure (ARM, AARCH64)
+  [32m✓[0m [PATCH RFC v5 12/21] hw/arm/aspeed: Build objects once
+  [32m✓[0m [PATCH RFC v5 13/21] hw/arm/raspi: Build objects once
+  [32m✓[0m [PATCH RFC v5 14/21] hw/core/machine: Allow dynamic registration of valid CPU types
+  [32m✓[0m [PATCH RFC v5 15/21] hw/arm/virt: Register valid CPU types dynamically
+  [32m✓[0m [PATCH RFC v5 16/21] hw/arm/virt: Check accelerator availability at runtime
+  [32m✓[0m [PATCH RFC v5 17/21] qemu/target_info: Add %target_arch field to TargetInfo
+  [32m✓[0m [PATCH RFC v5 18/21] qemu/target_info: Add target_aarch64() helper
+  [32m✓[0m [PATCH RFC v5 19/21] hw/arm/virt: Replace TARGET_AARCH64 -> target_aarch64()
+  [32m✓[0m [PATCH RFC v5 20/21] hw/core: Introduce MachineClass::get_default_cpu_type() helper
+  [32m✓[0m [PATCH RFC v5 21/21] hw/arm/virt: Get default CPU type at runtime
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 21
+---
+Applying: qapi: Rename TargetInfo structure as QemuTargetInfo
+Applying: qemu: Convert target_name() to TargetInfo API
+Applying: system/vl: Filter machine list available for a particular target binary
+Applying: hw/core/null-machine: Define machine as generic QOM type
+Applying: hw/arm: Register TYPE_TARGET_ARM/AARCH64_MACHINE QOM interfaces
+Applying: hw/core: Allow ARM/Aarch64 binaries to use the 'none' machine
+Applying: hw/boards: Introduce DEFINE_MACHINE_WITH_INTERFACES() macro
+Patch failed at 0007 hw/boards: Introduce DEFINE_MACHINE_WITH_INTERFACES() macro
+error: patch failed: include/hw/boards.h:744
+error: include/hw/boards.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
