@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20250424094653.35932-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 88 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/13] accel/tcg: Use vaddr for walk_memory_regions callback
+  [32m✓[0m [PATCH v2 2/13] accel/tcg: Use vaddr in user/page-protection.h
+  [32m✓[0m [PATCH v2 3/13] accel/tcg: Correct list of included headers in tcg-stub.c
+  [32m✓[0m [PATCH v2 4/13] include/exec: Include missing headers in exec-all.h
+  [32m✓[0m [PATCH v2 5/13] include/exec: Move tb_invalidate_phys_range to translation-block.h
+  [32m✓[0m [PATCH v2 6/13] accel/tcg: Compile tb-maint.c twice
+  [32m✓[0m [PATCH v2 7/13] target/riscv: Include missing 'accel/tcg/getpc.h' in csr.c
+  [32m✓[0m [PATCH v2 8/13] target/hexagon: Include missing 'accel/tcg/getpc.h'
+  [32m✓[0m [PATCH v2 9/13] accel/tcg: Include 'accel/tcg/getpc.h' in 'exec/helper-proto'
+  [32m✓[0m [PATCH v2 10/13] physmem: Move TCG IOMMU methods around
+  [32m✓[0m [PATCH v2 11/13] physmem: Restrict TCG IOMMU code to TCG accel
+  [32m✓[0m [PATCH v2 12/13] accel/tcg: Extract probe API out of 'exec/exec-all.h'
+  [32m✓[0m [PATCH v2 13/13] include: Remove 'exec/exec-all.h'
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 13
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Suggested-by: Richard Henderson <richard.henderson@linaro.org>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: accel/tcg: Use vaddr for walk_memory_regions callback
+Patch failed at 0001 accel/tcg: Use vaddr for walk_memory_regions callback
+error: patch failed: include/user/page-protection.h:14
+error: include/user/page-protection.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
