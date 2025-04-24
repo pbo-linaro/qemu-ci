@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250424011918.599958-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 8 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/15] accel/tcg: Add CPUState argument to page_unprotect
+  [32m✓[0m [PATCH 2/15] accel/tcg: Add CPUState argument to tb_invalidate_phys_page_unwind
+  [32m✓[0m [PATCH 3/15] accel/tcg: Add CPUState arg to tb_invalidate_phys_page_range__locked
+  [32m✓[0m [PATCH 4/15] accel/tcg: Merge tb_invalidate_phys_range{__locked}
+  [32m✓[0m [PATCH 5/15] accel/tcg: Add CPUState arg to tb_invalidate_phys_range
+  [32m✓[0m [PATCH 6/15] accel/tcg: Add CPUState arg to tb_invalidate_phys_range_fast
+  [32m✓[0m [PATCH 7/15] accel/tcg: Convert TARGET_HAS_PRECISE_SMC to TCGCPUOps.precise_smc
+  [32m✓[0m [PATCH 8/15] accel/tcg: Simplify CPU_TLB_DYN_MAX_BITS
+  [32m✓[0m [PATCH 9/15] accel/tcg: Simplify L1_MAP_ADDR_SPACE_BITS
+  [32m✓[0m [PATCH 10/15] accel/tcg: Merge internal-target.h into internal-common.h
+  [32m✓[0m [PATCH 11/15] accel/tcg: Reduce scope of tb_phys_invalidate, tb_set_jmp_target
+  [32m✓[0m [PATCH 12/15] accel/tcg: Use vaddr for walk_memory_regions callback
+  [32m✓[0m [PATCH 13/15] accel/tcg: Use vaddr in user/page-protection.h
+  [32m✓[0m [PATCH 14/15] include/exec: Move tb_invalidate_phys_range to translation-block.h
+  [32m✓[0m [PATCH 15/15] accel/tcg: Compile tb-maint.c twice
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 15
+---
+Applying: accel/tcg: Add CPUState argument to page_unprotect
+Patch failed at 0001 accel/tcg: Add CPUState argument to page_unprotect
+error: patch failed: include/user/page-protection.h:16
+error: include/user/page-protection.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
