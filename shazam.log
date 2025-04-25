@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20250425200024.853260-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] tcg/sparc64: Unexport use_vis3_instructions
+  [32m✓[0m [PATCH 2/2] tcg/sparc64: Implement CTPOP
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 2
+---
+Applying: tcg/sparc64: Unexport use_vis3_instructions
+Patch failed at 0001 tcg/sparc64: Unexport use_vis3_instructions
+error: patch failed: tcg/sparc64/tcg-target-has.h:7
+error: tcg/sparc64/tcg-target-has.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
