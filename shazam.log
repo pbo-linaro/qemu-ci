@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250425094452.17013-1-jay.chang@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 8 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/2] target/riscv: Extend PMP region up to 64
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([32m✓[0m DKIM/gmail.com)
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([32m✓[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH v2 2/2] target/riscv: Make PMP region count configurable
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 2
+---
+Applying: target/riscv: Extend PMP region up to 64
+Applying: target/riscv: Make PMP region count configurable
+Patch failed at 0002 target/riscv: Make PMP region count configurable
+error: patch failed: target/riscv/cpu.c:1123
+error: target/riscv/cpu.c: patch does not apply
+error: target/riscv/cpu_cfg_fields.h.inc: does not exist in index
+error: patch failed: target/riscv/pmp.c:135
+error: target/riscv/pmp.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
