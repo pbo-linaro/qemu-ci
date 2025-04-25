@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250425005439.2252467-13-eblake@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 36 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/11] block: Expand block status mode from bool to flags
+  [32m✓[0m [PATCH v3 2/11] file-posix, gluster: Handle zero block status hint better
+  [32m✓[0m [PATCH v3 3/11] block: Let bdrv_co_is_zero_fast consolidate adjacent extents
+  [32m✓[0m [PATCH v3 4/11] block: Add new bdrv_co_is_all_zeroes() function
+  [32m✓[0m [PATCH v3 5/11] iotests: Improve iotest 194 to mirror data
+  [32m✓[0m [PATCH v3 6/11] mirror: Minor refactoring
+  [32m✓[0m [PATCH v3 7/11] mirror: Skip pre-zeroing destination if it is already zero
+  [32m✓[0m [PATCH v3 8/11] mirror: Skip writing zeroes when target is already zero
+  [32m✓[0m [PATCH v3 9/11] iotests/common.rc: add disk_usage function
+  [32m✓[0m [PATCH v3 10/11] tests: Add iotest mirror-sparse for recent patches
+  [32m✓[0m [PATCH v3 11/11] mirror: Allow QMP override to declare target already zero
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 11
+---
+Applying: block: Expand block status mode from bool to flags
+Applying: file-posix, gluster: Handle zero block status hint better
+Applying: block: Let bdrv_co_is_zero_fast consolidate adjacent extents
+Applying: block: Add new bdrv_co_is_all_zeroes() function
+Applying: iotests: Improve iotest 194 to mirror data
+Applying: mirror: Minor refactoring
+Applying: mirror: Skip pre-zeroing destination if it is already zero
+Patch failed at 0007 mirror: Skip pre-zeroing destination if it is already zero
+error: corrupt patch at line 43
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
