@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250425115912.912889-1-djordje.todorovic@htecgroup.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] hw/intc: Allow gaps in hartids for aclint and aplic
+  [32m✓[0m [PATCH 2/9] target/riscv: Add cpu_set_exception_base
+  [32m✓[0m [PATCH 3/9] target/riscv: Add MIPS P8700 CPU
+  [32m✓[0m [PATCH 4/9] target/riscv: Add MIPS P8700 CSRs
+  [32m✓[0m [PATCH 5/9] target/riscv: Add mips.ccmov instruction
+  [32m✓[0m [PATCH 6/9] target/riscv: Add mips.pref instruction
+  [32m✓[0m [PATCH 7/9] target/riscv: Add Xmipslsp instructions
+  [32m✓[0m [PATCH 8/9] configs/devices: Add MIPS Boston-aia board model to RISC-V
+  [32m✓[0m [PATCH 9/9] hw/riscv: Add a network device e1000e to the boston-aia
+  ---
+  [32m✓[0m Signed: DKIM/htecgroup.com
+---
+Total patches: 9
+---
+Applying: hw/intc: Allow gaps in hartids for aclint and aplic
+Applying: target/riscv: Add cpu_set_exception_base
+Patch failed at 0002 target/riscv: Add cpu_set_exception_base
+error: patch failed: target/riscv/cpu.h:632
+error: target/riscv/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
