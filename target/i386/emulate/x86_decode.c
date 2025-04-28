@@ -1408,7 +1408,7 @@ struct decode_tbl _2op_inst[] = {
 };
 
 struct decode_x87_tbl invl_inst_x87 = {0x0, 0, 0, 0, 0, false, false, NULL,
-                                       NULL, decode_invalid, 0};
+                                       NULL, decode_invalid};
 
 struct decode_x87_tbl _x87_inst[] = {
     {0xd8, 0, 3, X86_DECODE_CMD_FADD, 10, false, false,
