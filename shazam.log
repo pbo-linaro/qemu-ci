@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250428201028.1699157-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/10] accel/tcg: Generalize fake_user_interrupt test
+  [32m✓[0m [PATCH 2/10] accel/tcg: Unconditionally use CPU_DUMP_CCOP in log_cpu_exec
+  [32m✓[0m [PATCH 3/10] accel/tcg: Introduce TCGCPUOps.cpu_exec_reset
+  [32m✓[0m [PATCH 4/10] target/i386: Split out x86_cpu_exec_reset
+  [32m✓[0m [PATCH 5/10] accel/tcg: Hoist cpu_get_tb_cpu_state decl to accl/tcg/cpu-ops.h
+  [32m✓[0m [PATCH 6/10] target/riscv: Move cpu_get_tb_cpu_state to tcg-cpu.c
+  [32m✓[0m [PATCH 7/10] accel/tcg: Return TCGTBCPUState from cpu_get_tb_cpu_state
+  [32m✓[0m [PATCH 8/10] accel/tcg: Move cpu_get_tb_cpu_state to TCGCPUOps
+  [32m✓[0m [PATCH 9/10] accel/tcg: Split out accel/tcg/helper-retaddr.h
+  [32m✓[0m [PATCH 10/10] accel/tcg: Compile cpu-exec.c twice
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 10
+---
+Applying: accel/tcg: Generalize fake_user_interrupt test
+Applying: accel/tcg: Unconditionally use CPU_DUMP_CCOP in log_cpu_exec
+Applying: accel/tcg: Introduce TCGCPUOps.cpu_exec_reset
+Patch failed at 0003 accel/tcg: Introduce TCGCPUOps.cpu_exec_reset
+error: patch failed: target/tricore/cpu.c:182
+error: target/tricore/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
