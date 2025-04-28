@@ -1,0 +1,48 @@
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build_container:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # cd tests/docker/dockerfiles/
+        # ls *docker | sed -e 's/.docker//' | tr '\n' ','
+        # remove: debian-bootstrap,debian-toolchain
+        container: [alpine,centos9,debian,debian-all-test-cross,debian-amd64-cross,debian-arm64-cross,debian-armhf-cross,debian-hexagon-cross,debian-i686-cross,debian-legacy-test-cross,debian-loongarch-cross,debian-mips64el-cross,debian-mipsel-cross,debian-ppc64el-cross,debian-riscv64-cross,debian-s390x-cross,debian-tricore-cross,debian-xtensa-cross,fedora,fedora-rust-nightly,fedora-win64-cross,opensuse-leap,ubuntu2204]
+    steps:
+      - uses: actions/checkout@v4
+      - run: podman build -t docker.io/pbolinaro/qemu-ci:${{matrix.container}} - < tests/docker/dockerfiles/${{matrix.container}}.docker
+      - run: podman login -u pbolinaro -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - run: podman push docker.io/pbolinaro/qemu-ci:${{matrix.container}}
+
+  build_container_arm64_debian:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - run: podman build -t docker.io/pbolinaro/qemu-ci:arm64-debian - < tests/docker/dockerfiles/debian.docker
+      - run: podman login -u pbolinaro -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - run: podman push docker.io/pbolinaro/qemu-ci:arm64-debian
+
+  build_container_debian-precache-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      # we clean up runner first, to get more disk space
+      - run: podman system prune -af && sudo rm -rf /opt/*
+      - uses: actions/checkout@v4
+      - run: podman build -t qemu/debian - < tests/docker/dockerfiles/debian.docker
+      # fill download cache for functional and check-avocado
+      # running check-avocado without any qemu binary will only download data
+      # in /root/avocado
+      - run: >
+          podman run -it -v $(pwd):$(pwd) -w $(pwd) qemu/debian
+          bash -c './configure && ninja -C build precache-functional -k 0 || ninja -C build precache-functional -j1 -k 0'
+      # commit result as a new image. Cache will be in /root/.cache and /root/avocado
+      - run: podman commit "$(podman ps -aq)" --change CMD=/bin/bash docker.io/pbolinaro/qemu-ci:debian-precache-tests
+      - run: podman login -u pbolinaro -p ${{secrets.DOCKERHUB_PASSWORD}}
+      - run: podman push docker.io/pbolinaro/qemu-ci:debian-precache-tests
