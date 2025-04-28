@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250428161004.35613-1-tomitamoeko@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 21 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] vfio/igd: Restrict legacy mode to Gen6-9 devices
+  [32m✓[0m [PATCH 2/9] vfio/igd: Always emulate ASLS (OpRegion) register
+  [32m✓[0m [PATCH 3/9] vfio/igd: Detect IGD device by OpRegion
+  [32m✓[0m [PATCH 4/9] vfio/igd: Check vendor and device ID on GVT-g mdev
+  [32m✓[0m [PATCH 5/9] vfio/igd: Check OpRegion support on GVT-g mdev
+  [32m✓[0m [PATCH 6/9] vfio/igd: Enable OpRegion by default
+  [32m✓[0m [PATCH 7/9] vfio/igd: Allow overriding GMS with 0xf0 to 0xfe on Gen9+
+  [32m✓[0m [PATCH 8/9] vfio/igd: Only emulate GGC register when x-igd-gms is set
+  [32m✓[0m [PATCH 9/9] vfio/igd: Remove generation limitation for IGD passthrough
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 9
+---
+Applying: vfio/igd: Restrict legacy mode to Gen6-9 devices
+Patch failed at 0001 vfio/igd: Restrict legacy mode to Gen6-9 devices
+error: patch failed: docs/igd-assign.txt:47
+error: docs/igd-assign.txt: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
