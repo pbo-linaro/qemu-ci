@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250429091855.1948374-1-steven_lee@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 26 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v3 1/9] aspeed: ast27x0: Map unimplemented devices in SoC memory
+  [PATCH v3 2/9] aspeed: ast27x0: Correct hex notation for device addresses
+  [PATCH v3 3/9] hw/intc/aspeed: Add support for AST2700 SSP INTC
+  [PATCH v3 4/9] hw/intc/aspeed: Add support for AST2700 TSP INTC
+  [PATCH v3 5/9] hw/arm/aspeed_ast27x0-ssp: Introduce AST27x0 A1 SSP SoC
+  [PATCH v3 6/9] hw/arm/aspeed_ast27x0-tsp: Introduce AST27x0 A1 TSP SoC
+  [PATCH v3 7/9] hw/arm: Introduce ASPEED AST2700 A1 full core machine
+  [PATCH v3 8/9] tests/function/aspeed: Add functional test for AST2700FC
+  [PATCH v3 9/9] docs: Add support for ast2700fc machine
+---
+Total patches: 9
+---
+Applying: aspeed: ast27x0: Map unimplemented devices in SoC memory
+Patch failed at 0001 aspeed: ast27x0: Map unimplemented devices in SoC memory
+error: patch failed: hw/arm/aspeed_ast27x0.c:876
+error: hw/arm/aspeed_ast27x0.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
