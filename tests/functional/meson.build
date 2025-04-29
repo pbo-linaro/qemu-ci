@@ -76,6 +76,7 @@ tests_generic_bsduser = [
 
 tests_aarch64_system_quick = [
   'migration',
+  'vmstate',
 ]
 
 tests_aarch64_system_thorough = [
@@ -164,6 +165,10 @@ tests_loongarch64_system_thorough = [
   'loongarch64_virt',
 ]
 
+tests_m68k_system_quick = [
+  'vmstate',
+]
+
 tests_m68k_system_thorough = [
   'm68k_mcf5208evb',
   'm68k_nextcube',
@@ -230,6 +235,7 @@ tests_ppc_system_thorough = [
 
 tests_ppc64_system_quick = [
   'migration',
+  'vmstate',
 ]
 
 tests_ppc64_system_thorough = [
@@ -263,6 +269,10 @@ tests_riscv64_system_thorough = [
 
 tests_rx_system_thorough = [
   'rx_gdbsim',
+]
+
+tests_s390x_system_quick = [
+  'vmstate',
 ]
 
 tests_s390x_system_thorough = [
@@ -305,8 +315,9 @@ tests_x86_64_system_quick = [
   'migration',
   'pc_cpu_hotplug_props',
   'virtio_version',
-  'x86_cpu_model_versions',
+  'vmstate',
   'vnc',
+  'x86_cpu_model_versions',
 ]
 
 tests_x86_64_system_thorough = [
