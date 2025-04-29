@@ -67,6 +67,7 @@ extensions = [
     'qapi_domain',
     'qapidoc',
     'qmp_lexer',
+    'uniquelabel',
 ]
 
 if sphinx.version_info[:3] > (4, 0, 0):
