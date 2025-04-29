@@ -1101,7 +1101,7 @@ static void arm_cpu_set_irq(void *opaque, int irq, int level)
 
 static void arm_cpu_kvm_set_irq(void *opaque, int irq, int level)
 {
-#ifdef CONFIG_KVM
+#ifdef CONFIG_KVM_IS_POSSIBLE
     ARMCPU *cpu = opaque;
     CPUARMState *env = &cpu->env;
     CPUState *cs = CPU(cpu);
