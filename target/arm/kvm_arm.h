@@ -16,6 +16,21 @@
 #define KVM_ARM_VGIC_V2   (1 << 0)
 #define KVM_ARM_VGIC_V3   (1 << 1)
 
+#ifndef COMPILING_PER_TARGET
+
+/* we copy those definitions from asm-arm and asm-aarch64, as they are the same
+ * for both architectures */
+#define KVM_ARM_IRQ_CPU_IRQ 0
+#define KVM_ARM_IRQ_CPU_FIQ 1
+#define KVM_ARM_IRQ_TYPE_CPU 0
+typedef unsigned int __u32;
+struct kvm_vcpu_init {
+    __u32 target;
+    __u32 features[7];
+};
+
+#endif /* COMPILING_PER_TARGET */
+
 /**
  * kvm_arm_register_device:
  * @mr: memory region for this device
