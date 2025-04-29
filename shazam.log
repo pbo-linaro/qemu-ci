@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250429153907.31866-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] hw/arm/virt: Update comment about Multiprocessor Affinity Register
+  [32m✓[0m [PATCH 2/4] hw/arm/virt: Remove deprecated virt-3.0 machine
+  [32m✓[0m [PATCH 3/4] hw/arm/virt: Remove deprecated virt-3.1 machine
+  [32m✓[0m [PATCH 4/4] hw/arm/virt: Remove deprecated virt-4.0 machine
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: hw/arm/virt: Update comment about Multiprocessor Affinity Register
+Patch failed at 0001 hw/arm/virt: Update comment about Multiprocessor Affinity Register
+error: patch failed: hw/arm/virt.c:1767
+error: hw/arm/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
