@@ -1,0 +1,56 @@
+Grabbing thread from lore.kernel.org/all/20250430164854.2233995-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 32 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/16] accel/tcg: Generalize fake_user_interrupt test
+  [32m✓[0m [PATCH v2 2/16] accel/tcg: Unconditionally use CPU_DUMP_CCOP in log_cpu_exec
+  [32m✓[0m [PATCH v2 3/16] accel/tcg: Introduce TCGCPUOps.cpu_exec_reset
+  [32m✓[0m [PATCH v2 4/16] target/i386: Split out x86_cpu_exec_reset
+  [32m✓[0m [PATCH v2 5/16] accel/tcg: Hoist cpu_get_tb_cpu_state decl to accl/tcg/cpu-ops.h
+  [32m✓[0m [PATCH v2 6/16] target/arm: Move cpu_get_tb_cpu_state to hflags.c
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 7/16] target/arm: Unexport assert_hflags_rebuild_correctly
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 8/16] target/riscv: Move cpu_get_tb_cpu_state to tcg-cpu.c
+  [32m✓[0m [PATCH v2 9/16] accel/tcg: Return TCGTBCPUState from cpu_get_tb_cpu_state
+  [32m✓[0m [PATCH v2 10/16] accel/tcg: Move cpu_get_tb_cpu_state to TCGCPUOps
+  [32m✓[0m [PATCH v2 11/16] accel/tcg: Pass TCGTBCPUState to tb_lookup
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 12/16] accel/tcg: Pass TCGTBCPUState to tb_htable_lookup
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 13/16] accel/tcg: Use TCGTBCPUState in struct tb_desc
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 14/16] accel/tcg: Pass TCGTBCPUState to tb_gen_code
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 15/16] accel/tcg: Split out accel/tcg/helper-retaddr.h
+  [32m✓[0m [PATCH v2 16/16] accel/tcg: Compile cpu-exec.c twice
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 16
+---
+Applying: accel/tcg: Generalize fake_user_interrupt test
+Applying: accel/tcg: Unconditionally use CPU_DUMP_CCOP in log_cpu_exec
+Applying: accel/tcg: Introduce TCGCPUOps.cpu_exec_reset
+Applying: target/i386: Split out x86_cpu_exec_reset
+Applying: accel/tcg: Hoist cpu_get_tb_cpu_state decl to accl/tcg/cpu-ops.h
+Patch failed at 0005 accel/tcg: Hoist cpu_get_tb_cpu_state decl to accl/tcg/cpu-ops.h
+error: patch failed: target/alpha/cpu.c:25
+error: target/alpha/cpu.c: patch does not apply
+error: patch failed: target/arm/helper.c:30
+error: target/arm/helper.c: patch does not apply
+error: patch failed: target/i386/tcg/tcg-cpu.c:131
+error: target/i386/tcg/tcg-cpu.c: patch does not apply
+error: patch failed: target/openrisc/cpu.c:23
+error: target/openrisc/cpu.c: patch does not apply
+error: patch failed: target/sh4/cpu.c:26
+error: target/sh4/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
