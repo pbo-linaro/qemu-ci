@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250430230631.2571291-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] tcg: Define INSN_START_WORDS as constant 3
+  [32m✓[0m [PATCH 2/6] accel/tcg: Don't use TARGET_LONG_BITS in decode_sleb128
+  [32m✓[0m [PATCH 3/6] accel/tcg: Use target_long_bits() in translate-all.c
+  [32m✓[0m [PATCH 4/6] accel/tcg: Build translate-all.c twice
+  [32m✓[0m [PATCH 5/6] accel/tcg: Build tcg-all.c twice
+  [32m✓[0m [PATCH 6/6] accel/tcg: Use vaddr in cpu_loop.h
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 6
+---
+Applying: tcg: Define INSN_START_WORDS as constant 3
+Applying: accel/tcg: Don't use TARGET_LONG_BITS in decode_sleb128
+Applying: accel/tcg: Use target_long_bits() in translate-all.c
+Applying: accel/tcg: Build translate-all.c twice
+Patch failed at 0004 accel/tcg: Build translate-all.c twice
+error: patch failed: accel/tcg/translate-all.c:22
+error: accel/tcg/translate-all.c: patch does not apply
+error: patch failed: accel/tcg/meson.build:10
+error: accel/tcg/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
