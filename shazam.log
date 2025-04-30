@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250430072524.3650582-1-dietmar@proxmox.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 15 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/7] new configure option to enable gstreamer
+    + Reviewed-by: Marc-André Lureau <marcandre.lureau@redhat.com> ([32m✓[0m DKIM/gmail.com)
+  [PATCH v5 2/7] add vnc h264 encoder
+  [PATCH v5 3/7] vnc: h264: send additional frames after the display is clean
+  [PATCH v5 4/7] h264: search for available h264 encoder
+  [PATCH v5 5/7] h264: new vnc options to configure h264 at server side
+  [PATCH v5 6/7] h264: add hardware encoders
+  [PATCH v5 7/7] h264: stop gstreamer pipeline before destroying, cleanup on exit
+---
+Total patches: 7
+---
+Applying: new configure option to enable gstreamer
+Patch failed at 0001 new configure option to enable gstreamer
+error: patch failed: meson.build:2563
+error: meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
