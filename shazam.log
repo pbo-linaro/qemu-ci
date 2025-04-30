@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250430142609.84134-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] hw/i386/intel_iommu: Remove IntelIOMMUState::buggy_eim field
+  [32m✓[0m [PATCH 2/5] hw/intc/ioapic: Remove IOAPICCommonState::version field
+  [32m✓[0m [PATCH 3/5] hw/virtio/virtio-pci: Remove VirtIOPCIProxy::ignore_backend_features field
+  [32m✓[0m [PATCH 4/5] hw/char/virtio-serial: Do not expose the 'emergency-write' property
+  [32m✓[0m [PATCH 5/5] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_PAGE_PER_VQ definition
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 5
+---
+Applying: hw/i386/intel_iommu: Remove IntelIOMMUState::buggy_eim field
+Applying: hw/intc/ioapic: Remove IOAPICCommonState::version field
+Applying: hw/virtio/virtio-pci: Remove VirtIOPCIProxy::ignore_backend_features field
+Patch failed at 0003 hw/virtio/virtio-pci: Remove VirtIOPCIProxy::ignore_backend_features field
+error: patch failed: hw/virtio/virtio-pci.c:2351
+error: hw/virtio/virtio-pci.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
