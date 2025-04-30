@@ -3127,6 +3127,7 @@ F: mcd/*
 F: docs/interop/mcd.rst
 F: qapi/mcd.json
 F: include/exec/mcdstub.h
+X: tests/qtest/mcd-*
 
 Memory API
 M: Paolo Bonzini <pbonzini@redhat.com>
