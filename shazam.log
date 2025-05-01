@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20250501230129.2596-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/10] hw/s390x/s390-virtio-ccw: Remove the deprecated 2.10 and 2.11 machine types
+  [32m✓[0m [PATCH 2/10] hw/core/machine: Remove hw_compat_2_10[] array
+  [32m✓[0m [PATCH 3/10] hw/input/virtio-input: Remove VirtIOInputHID::wheel_axis field
+  [32m✓[0m [PATCH 4/10] hw/core/machine: Remove hw_compat_2_11[] array
+  [32m✓[0m [PATCH 5/10] hw/timer/hpet: Remove HPETState::hpet_offset_saved field
+  [32m✓[0m [PATCH 6/10] hw/net/e1000: Remove unused E1000_FLAG_TSO flag
+  [32m✓[0m [PATCH 7/10] hw/s390x/s390-virtio-ccw: Remove the deprecated 2.12 machine type
+  [32m✓[0m [PATCH 8/10] hw/core/machine: Remove hw_compat_2_12[] array
+  [32m✓[0m [PATCH 9/10] hw/audio/hda-codec: Remove HDAAudioState::use_timer field
+  [32m✓[0m [PATCH 10/10] hw/display/vga-pci: Do not expose the 'global-vmstate' property
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 10
+---
+Applying: hw/s390x/s390-virtio-ccw: Remove the deprecated 2.10 and 2.11 machine types
+Applying: hw/core/machine: Remove hw_compat_2_10[] array
+Patch failed at 0002 hw/core/machine: Remove hw_compat_2_10[] array
+error: patch failed: include/hw/boards.h:829
+error: include/hw/boards.h: patch does not apply
+error: patch failed: hw/core/machine.c:238
+error: hw/core/machine.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
