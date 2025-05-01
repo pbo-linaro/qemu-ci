@@ -1,0 +1,74 @@
+Grabbing thread from lore.kernel.org/all/20250501062344.2526061-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 49 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 61 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/33] target/arm: Replace target_ulong -> uint64_t for HWBreakpoint
+  [32m✓[0m [PATCH v3 2/33] include/system/hvf: missing vaddr include
+  [32m✓[0m [PATCH v3 3/33] meson: add common libs for target and target_system
+  [32m✓[0m [PATCH v3 4/33] target/arm: move kvm stubs and remove CONFIG_KVM from kvm_arm.h
+  [32m✓[0m [PATCH v3 5/33] target/arm/kvm-stub: add kvm_arm_reset_vcpu stub
+  [32m✓[0m [PATCH v3 6/33] target/arm/cpu: move arm_cpu_kvm_set_irq to kvm.c
+  [32m✓[0m [PATCH v3 7/33] accel/hvf: add hvf_enabled() for common code
+  [32m✓[0m [PATCH v3 8/33] target/arm/cpu: remove TARGET_BIG_ENDIAN dependency
+  [32m✓[0m [PATCH v3 9/33] target/arm/cpu: remove TARGET_AARCH64 around aarch64_cpu_dump_state common
+  [32m✓[0m [PATCH v3 10/33] target/arm/cpu: remove TARGET_AARCH64 in arm_cpu_finalize_features
+  [32m✓[0m [PATCH v3 11/33] target/arm/cpu: compile file twice (user, system) only
+  [32m✓[0m [PATCH v3 12/33] target/arm/cpu32-stubs.c: compile file twice (user, system)
+  [32m✓[0m [PATCH v3 13/33] target/arm/helper: use i64 for exception_pc_alignment
+  [32m✓[0m [PATCH v3 14/33] target/arm/helper: user i64 for probe_access
+  [32m✓[0m [PATCH v3 15/33] target/arm/helper: extract common helpers
+  [32m✓[0m [PATCH v3 16/33] target/arm/debug_helper: only include common helpers
+  [32m✓[0m [PATCH v3 17/33] target/arm/debug_helper: remove target_ulong
+  [32m✓[0m [PATCH v3 18/33] target/arm/debug_helper: compile file twice (user, system)
+  [32m✓[0m [PATCH v3 19/33] target/arm/helper: restrict include to common helpers
+  [32m✓[0m [PATCH v3 20/33] target/arm/helper: replace target_ulong by vaddr
+  [32m✓[0m [PATCH v3 21/33] target/arm/helper: expose aarch64 cpu registration
+  [32m✓[0m [PATCH v3 22/33] target/arm/helper: remove remaining TARGET_AARCH64
+  [32m✓[0m [PATCH v3 23/33] target/arm/helper: compile file twice (user, system)
+  [32m✓[0m [PATCH v3 24/33] target/arm/vfp_fpscr: compile file twice (user, system)
+  [32m✓[0m [PATCH v3 25/33] target/arm/arch_dump: remove TARGET_AARCH64 conditionals
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 26/33] target/arm/arch_dump: compile file once (system)
+  [32m✓[0m [PATCH v3 27/33] target/arm/arm-powerctl: compile file once (system)
+  [32m✓[0m [PATCH v3 28/33] target/arm/cortex-regs: compile file once (system)
+  [32m✓[0m [PATCH v3 29/33] target/arm/ptw: replace target_ulong with uint64_t
+  [32m✓[0m [PATCH v3 30/33] target/arm/ptw: remove TARGET_AARCH64 from arm_casq_ptw
+  [32m✓[0m [PATCH v3 31/33] target/arm/ptw: compile file once (system)
+  [32m✓[0m [PATCH v3 32/33] target/arm/meson: accelerator files are not needed in user mode
+  [32m✓[0m [PATCH v3 33/33] target/arm/kvm-stub: compile file once (system)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 33
+---
+Applying: target/arm: Replace target_ulong -> uint64_t for HWBreakpoint
+Applying: include/system/hvf: missing vaddr include
+Applying: meson: add common libs for target and target_system
+Applying: target/arm: move kvm stubs and remove CONFIG_KVM from kvm_arm.h
+Applying: target/arm/kvm-stub: add kvm_arm_reset_vcpu stub
+Applying: target/arm/cpu: move arm_cpu_kvm_set_irq to kvm.c
+Applying: accel/hvf: add hvf_enabled() for common code
+Applying: target/arm/cpu: remove TARGET_BIG_ENDIAN dependency
+Applying: target/arm/cpu: remove TARGET_AARCH64 around aarch64_cpu_dump_state common
+Applying: target/arm/cpu: remove TARGET_AARCH64 in arm_cpu_finalize_features
+Applying: target/arm/cpu: compile file twice (user, system) only
+Applying: target/arm/cpu32-stubs.c: compile file twice (user, system)
+Applying: target/arm/helper: use i64 for exception_pc_alignment
+Applying: target/arm/helper: user i64 for probe_access
+Applying: target/arm/helper: extract common helpers
+Applying: target/arm/debug_helper: only include common helpers
+Applying: target/arm/debug_helper: remove target_ulong
+Applying: target/arm/debug_helper: compile file twice (user, system)
+Applying: target/arm/helper: restrict include to common helpers
+Patch failed at 0019 target/arm/helper: restrict include to common helpers
+error: patch failed: target/arm/helper.c:36
+error: target/arm/helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
