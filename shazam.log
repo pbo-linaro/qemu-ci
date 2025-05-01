@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250501210456.89071-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] hw/i386/pc: Remove deprecated pc-q35-2.8 and pc-i440fx-2.8 machines
+  [32m✓[0m [PATCH 2/18] hw/i386/pc: Remove pc_compat_2_8[] array
+  [32m✓[0m [PATCH 3/18] hw/southbridge/ich9: Remove ICH9_LPC_SMI_F_BROADCAST_BIT definition
+  [32m✓[0m [PATCH 4/18] hw/i386/kvm: Remove KVMClockState::mach_use_reliable_get_clock field
+  [32m✓[0m [PATCH 5/18] hw/core/machine: Remove hw_compat_2_8[] array
+  [32m✓[0m [PATCH 6/18] hw/block/pflash: Remove PFlashCFI01::old_multiple_chip_handling field
+  [32m✓[0m [PATCH 7/18] hw/pci/pcie: Remove QEMU_PCIE_EXTCAP_INIT definition
+  [32m✓[0m [PATCH 8/18] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_INIT_DEVERR definition
+  [32m✓[0m [PATCH 9/18] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_INIT_LNKCTL definition
+  [32m✓[0m [PATCH 10/18] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_INIT_PM definition
+  [32m✓[0m [PATCH 11/18] hw/nvram/fw_cfg: Remove FWCfgState::file_slots field
+  [32m✓[0m [PATCH 12/18] hw/nvram/fw_cfg: Inline fw_cfg_file_slots()
+  [32m✓[0m [PATCH 13/18] hw/i386/pc: Remove deprecated pc-q35-2.9 and pc-i440fx-2.9 machines
+  [32m✓[0m [PATCH 14/18] hw/i386/pc: Remove pc_compat_2_9[] array
+  [32m✓[0m [PATCH 15/18] hw/core/machine: Remove hw_compat_2_9[] array
+  [32m✓[0m [PATCH 16/18] hw/net/virtio-net: Remove VirtIONet::mtu_bypass_backend field
+  [32m✓[0m [PATCH 17/18] hw/pci-bridge/gen_pcie_rp: Remove GenPCIERootPort::migrate_msix field
+  [32m✓[0m [PATCH 18/18] hw/i386/x86-iommu: Remove X86IOMMUState::pt_supported field
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: hw/i386/pc: Remove deprecated pc-q35-2.8 and pc-i440fx-2.8 machines
+Patch failed at 0001 hw/i386/pc: Remove deprecated pc-q35-2.8 and pc-i440fx-2.8 machines
+error: patch failed: hw/i386/pc_piix.c:746
+error: hw/i386/pc_piix.c: patch does not apply
+error: patch failed: hw/i386/pc_q35.c:639
+error: hw/i386/pc_q35.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
