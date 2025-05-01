@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250501223522.99772-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] hw/i386/pc: Remove deprecated pc-q35-2.10 and pc-i440fx-2.10 machines
+  [32m✓[0m [PATCH 2/8] hw/i386/pc: Remove pc_compat_2_10[] array
+  [32m✓[0m [PATCH 3/8] hw/pci-host/i440fx: Remove I440FXState::pci_hole64_fix field
+  [32m✓[0m [PATCH 4/8] hw/pci-host/q35: Remove Q35PCIHost::pci_hole64_fix field
+  [32m✓[0m [PATCH 5/8] hw/i386/pc: Remove deprecated pc-q35-2.11 and pc-i440fx-2.11 machines
+  [32m✓[0m [PATCH 6/8] hw/i386/pc: Remove pc_compat_2_11[] array
+  [32m✓[0m [PATCH 7/8] hw/i386/pc: Remove deprecated pc-q35-2.12 and pc-i440fx-2.12 machines
+  [32m✓[0m [PATCH 8/8] hw/i386/pc: Remove pc_compat_2_12[] array
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 8
+---
+Applying: hw/i386/pc: Remove deprecated pc-q35-2.10 and pc-i440fx-2.10 machines
+Patch failed at 0001 hw/i386/pc: Remove deprecated pc-q35-2.10 and pc-i440fx-2.10 machines
+error: patch failed: hw/i386/pc_piix.c:727
+error: hw/i386/pc_piix.c: patch does not apply
+error: patch failed: hw/i386/pc_q35.c:620
+error: hw/i386/pc_q35.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
