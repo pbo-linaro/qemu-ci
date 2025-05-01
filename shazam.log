@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20250501183628.87479-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/16] hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+  [32m✓[0m [PATCH v2 2/16] hw/i386/pc: Remove PCMachineClass::legacy_cpu_hotplug field
+  [32m✓[0m [PATCH v2 3/16] hw/i386/x86: Remove X86MachineClass::fwcfg_dma_enabled field
+  [32m✓[0m [PATCH v2 4/16] hw/i386/pc: Remove pc_compat_2_6[] array
+  [32m✓[0m [PATCH v2 5/16] hw/intc/apic: Remove APICCommonState::legacy_instance_id field
+  [32m✓[0m [PATCH v2 6/16] hw/core/machine: Remove hw_compat_2_6[] array
+  [32m✓[0m [PATCH v2 7/16] hw/virtio/virtio-mmio: Remove VirtIOMMIOProxy::format_transport_address field
+  [32m✓[0m [PATCH v2 8/16] hw/i386/pc: Remove deprecated pc-q35-2.7 and pc-i440fx-2.7 machines
+  [32m✓[0m [PATCH v2 9/16] hw/i386/pc: Remove pc_compat_2_7[] array
+  [32m✓[0m [PATCH v2 10/16] hw/audio/pcspk: Remove PCSpkState::migrate field
+  [32m✓[0m [PATCH v2 11/16] hw/core/machine: Remove hw_compat_2_7[] array
+  [32m✓[0m [PATCH v2 12/16] hw/i386/intel_iommu: Remove IntelIOMMUState::buggy_eim field
+  [32m✓[0m [PATCH v2 13/16] hw/intc/ioapic: Remove IOAPICCommonState::version field
+  [32m✓[0m [PATCH v2 14/16] hw/virtio/virtio-pci: Remove VirtIOPCIProxy::ignore_backend_features field
+  [32m✓[0m [PATCH v2 15/16] hw/char/virtio-serial: Do not expose the 'emergency-write' property
+  [32m✓[0m [PATCH v2 16/16] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_PAGE_PER_VQ definition
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 16
+---
+Applying: hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+Patch failed at 0001 hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+error: patch failed: hw/i386/pc_piix.c:764
+error: hw/i386/pc_piix.c: patch does not apply
+error: patch failed: hw/i386/pc_q35.c:658
+error: hw/i386/pc_q35.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
