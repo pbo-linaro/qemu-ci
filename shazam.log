@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250502102323.104815-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] lcitool: use Rust 1.78 for Debian bookworm
+  [32m✓[0m [PATCH 2/9] rust: use std::ffi instead of std::os::raw
+  [32m✓[0m [PATCH 3/9] rust: let bilge use "let ... else"
+  [32m✓[0m [PATCH 4/9] rust: qemu_api_macros: use "let ... else"
+  [32m✓[0m [PATCH 5/9] rust: use MaybeUninit::zeroed() in const context
+  [32m✓[0m [PATCH 6/9] rust: remove offset_of replacement
+  [32m✓[0m [PATCH 7/9] rust: replace c_str! with c"" literals
+  [32m✓[0m [PATCH 8/9] rust: enable clippy::ptr_cast_constness
+  [32m✓[0m [PATCH 9/9] docs: rust: update for newer minimum supported version
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+Applying: lcitool: use Rust 1.78 for Debian bookworm
+Applying: rust: use std::ffi instead of std::os::raw
+Patch failed at 0002 rust: use std::ffi instead of std::os::raw
+error: patch failed: rust/hw/timer/hpet/src/hpet.rs:3
+error: rust/hw/timer/hpet/src/hpet.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
