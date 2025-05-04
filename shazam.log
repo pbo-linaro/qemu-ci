@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20250504205714.3432096-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/12] accel/tcg: Add TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 2/12] target: Use cpu_pointer_wrap_notreached for strict align targets
+  [32m✓[0m [PATCH 3/12] target: Use cpu_pointer_wrap_uint32 for 32-bit targets
+  [32m✓[0m [PATCH 4/12] target/arm: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 5/12] target/i386: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 6/12] target/loongarch: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 7/12] target/mips: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 8/12] target/ppc: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 9/12] target/riscv: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 10/12] target/s390x: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 11/12] target/sparc: Fill in TCGCPUOps.pointer_wrap
+  [32m✓[0m [PATCH 12/12] accel/tcg: Assert TCGCPUOps.pointer_wrap is set
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 12
+---
+Applying: accel/tcg: Add TCGCPUOps.pointer_wrap
+Applying: target: Use cpu_pointer_wrap_notreached for strict align targets
+Patch failed at 0002 target: Use cpu_pointer_wrap_notreached for strict align targets
+error: patch failed: target/alpha/cpu.c:261
+error: target/alpha/cpu.c: patch does not apply
+error: patch failed: target/hppa/cpu.c:269
+error: target/hppa/cpu.c: patch does not apply
+error: patch failed: target/sh4/cpu.c:296
+error: target/sh4/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
