@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250505-sphinx82-v1-0-85f2418b33b1@daynix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] docs: Bump sphinx to 8.2.3
+  [32m✓[0m [PATCH 2/2] MAINTAINERS: Add docs/requirements.txt
+  ---
+  [32m✓[0m Signed: DKIM/daynix-com.20230601.gappssmtp.com (From: akihiko.odaki@daynix.com)
+---
+Total patches: 2
+---
+ Base: using specified base-commit 1da8f3a3c53b604edfe0d55e475102640490549e
+Applying: docs: Bump sphinx to 8.2.3
+Patch failed at 0001 docs: Bump sphinx to 8.2.3
+error: patch failed: pythondeps.toml:24
+error: pythondeps.toml: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
