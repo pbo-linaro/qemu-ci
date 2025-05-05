@@ -34,7 +34,6 @@ arm_ss.add(files(
   'mve_helper.c',
   'op_helper.c',
   'vec_helper.c',
-  'arith_helper.c',
   'vfp_helper.c',
 ))
 
@@ -59,6 +58,7 @@ arm_system_ss.add(when: 'CONFIG_ARM_V7M', if_true: files('cpu-v7m.c'))
 arm_user_ss.add(when: 'TARGET_AARCH64', if_false: files('cpu-v7m.c'))
 
 arm_common_system_ss.add(files(
+  'arith_helper.c',
   'crypto_helper.c',
   'hflags.c',
   'iwmmxt_helper.c',
@@ -67,6 +67,7 @@ arm_common_system_ss.add(files(
   'tlb-insns.c',
 ))
 arm_user_ss.add(files(
+  'arith_helper.c',
   'crypto_helper.c',
   'hflags.c',
   'iwmmxt_helper.c',
