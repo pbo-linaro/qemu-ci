@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250505090438.24992-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 23 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] lcitool: use newer Rust for Debian and Ubuntu
+  [32m✓[0m [PATCH 2/11] meson, cargo: require Rust 1.77.0
+  [32m✓[0m [PATCH 3/11] rust: use std::ffi instead of std::os::raw
+  [32m✓[0m [PATCH 4/11] rust: let bilge use "let ... else"
+  [32m✓[0m [PATCH 5/11] rust: qemu_api_macros: make pattern matching more readable and efficient
+  [32m✓[0m [PATCH 6/11] rust: use MaybeUninit::zeroed() in const context
+  [32m✓[0m [PATCH 7/11] rust: qom: fix TODO about zeroability of classes
+  [32m✓[0m [PATCH 8/11] rust: enable clippy::ptr_cast_constness
+  [32m✓[0m [PATCH 9/11] rust: remove offset_of replacement
+  [32m✓[0m [PATCH 10/11] rust: replace c_str! with c"" literals
+  [32m✓[0m [PATCH 11/11] docs: rust: update for newer minimum supported version
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 11
+---
+Applying: lcitool: use newer Rust for Debian and Ubuntu
+Applying: meson, cargo: require Rust 1.77.0
+Patch failed at 0002 meson, cargo: require Rust 1.77.0
+error: patch failed: rust/Cargo.toml:12
+error: rust/Cargo.toml: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
