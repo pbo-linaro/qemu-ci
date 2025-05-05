@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250505100854.73936-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] meson, cargo: require Rust 1.83.0
+  [32m✓[0m [PATCH 2/5] rust: use inline const expressions
+  [32m✓[0m [PATCH 3/5] rust: vmstate: convert to use builder pattern
+  [32m✓[0m [PATCH 4/5] rust: vmstate: use const_refs_to_static
+  [32m✓[0m [PATCH 5/5] rust: qdev: const_refs_to_static
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: meson, cargo: require Rust 1.83.0
+Patch failed at 0001 meson, cargo: require Rust 1.83.0
+error: patch failed: docs/devel/rust.rst:71
+error: docs/devel/rust.rst: patch does not apply
+error: patch failed: meson.build:94
+error: meson.build: patch does not apply
+error: patch failed: rust/Cargo.toml:12
+error: rust/Cargo.toml: patch does not apply
+error: patch failed: rust/clippy.toml:1
+error: rust/clippy.toml: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
