@@ -1,0 +1,58 @@
+Grabbing thread from lore.kernel.org/all/20250506152927.222671-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 31 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 185 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/30] lcitool: use newer Rust for Debian and Ubuntu
+  [32m✓[0m [PATCH 2/30] meson, cargo: require Rust 1.77.0
+  [32m✓[0m [PATCH 3/30] rust: use std::ffi instead of std::os::raw
+  [32m✓[0m [PATCH 4/30] rust: let bilge use "let ... else"
+  [32m✓[0m [PATCH 5/30] rust: qemu_api_macros: make pattern matching more readable and efficient
+  [32m✓[0m [PATCH 6/30] rust: use MaybeUninit::zeroed() in const context
+  [32m✓[0m [PATCH 7/30] rust: qom: fix TODO about zeroability of classes
+  [32m✓[0m [PATCH 8/30] rust: enable clippy::ptr_cast_constness
+  [32m✓[0m [PATCH 9/30] rust: remove offset_of replacement
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 10/30] rust: replace c_str! with c"" literals
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 11/30] docs: rust: update for newer minimum supported version
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH 12/30] target/i386/emulate: fix target_ulong format strings
+  [32m✓[0m [PATCH 13/30] rust: clippy: enable uninlined_format_args lint
+  [32m✓[0m [PATCH 14/30] ci: run RISC-V cross jobs by default
+  [32m✓[0m [PATCH 15/30] docs: build-system: fix typo
+  [32m✓[0m [PATCH 16/30] target/arm/helper.c: Fix type conflict of GLib function pointers
+  [32m✓[0m [PATCH 17/30] target/i386/cpu.c: Fix type conflict of GLib function pointers
+  [32m✓[0m [PATCH 18/30] target/ppc: Fix type conflict of GLib function pointers
+  [32m✓[0m [PATCH 19/30] target/s390x: Fix type conflict of GLib function pointers
+  [32m✓[0m [PATCH 20/30] include/glib-compat.h: Poison g_list_sort and g_slist_sort
+  [32m✓[0m [PATCH 21/30] util/cacheflush.c: Update cache flushing mechanism for Emscripten
+  [32m✓[0m [PATCH 22/30] block: Add including of ioctl header for Emscripten build
+  [32m✓[0m [PATCH 23/30] block: Fix type conflict of the copy_file_range stub
+  [32m✓[0m [PATCH 24/30] include/qemu/osdep.h: Add Emscripten-specific OS dependencies
+  [32m✓[0m [PATCH 25/30] Disable options unsupported on Emscripten
+  [32m✓[0m [PATCH 26/30] util: exclude mmap-alloc.c from compilation target on Emscripten
+  [32m✓[0m [PATCH 27/30] util: Add coroutine backend for emscripten
+  [32m✓[0m [PATCH 28/30] meson: Add wasm build in build scripts
+  [32m✓[0m [PATCH 29/30] tests: Add Dockerfile containing dependencies for Emscripten build
+  [32m✓[0m [PATCH 30/30] gitlab: Enable CI for wasm build
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 30
+---
+Applying: lcitool: use newer Rust for Debian and Ubuntu
+Applying: meson, cargo: require Rust 1.77.0
+Applying: rust: use std::ffi instead of std::os::raw
+Applying: rust: let bilge use "let ... else"
+Patch failed at 0004 rust: let bilge use "let ... else"
+error: patch failed: subprojects/packagefiles/bilge-impl-1.63.0.patch:1
+error: subprojects/packagefiles/bilge-impl-1.63.0.patch: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
