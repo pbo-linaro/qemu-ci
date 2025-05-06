@@ -4452,6 +4452,7 @@ qcow2_co_truncate(BlockDriverState *bs, int64_t offset, bool exact,
         int64_t allocation_start, host_offset, guest_offset;
         int64_t clusters_allocated;
         int64_t old_file_size, last_cluster, new_file_size;
+        int64_t old_size, last_used_cluster;
         uint64_t nb_new_data_clusters, nb_new_l2_tables;
         bool subclusters_need_allocation = false;
 
@@ -4478,6 +4479,27 @@ qcow2_co_truncate(BlockDriverState *bs, int64_t offset, bool exact,
             old_file_size = (last_cluster + 1) * s->cluster_size;
         } else {
             old_file_size = ROUND_UP(old_file_size, s->cluster_size);
+        }
+
+        /* Ensure that refcount does not point past the end of the actual file size.
+         * If refcount refers to regions beyond the file size, we can't properly call
+         * qcow2_refcount_area. */
+        old_size = bdrv_co_getlength(bs);
+        if (old_size < 0) {
+            error_setg_errno(errp, -old_size,
+                             "Failed to inquire current length");
+            ret = old_size;
+            goto fail;
+        }
+
+        last_used_cluster = qcow2_get_last_cluster(bs, old_size);
+        if (last_used_cluster >= old_file_size / s->cluster_size) {
+            error_setg(errp,
+                "Can't resize: last used cluster (%" PRId64
+                ") exceeds file size (%" PRIu64 " clusters)",
+                last_used_cluster, old_file_size / s->cluster_size);
+                ret = -ERANGE;
+                goto fail;
         }
 
         nb_new_data_clusters = (ROUND_UP(offset, s->cluster_size) -
