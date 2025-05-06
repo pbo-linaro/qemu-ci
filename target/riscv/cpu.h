@@ -635,7 +635,7 @@ FIELD(TB_FLAGS, VS, 5, 2)
 FIELD(TB_FLAGS, LMUL, 7, 3)
 FIELD(TB_FLAGS, SEW, 10, 3)
 FIELD(TB_FLAGS, VL_EQ_VLMAX, 13, 1)
-FIELD(TB_FLAGS, VILL, 14, 1)
+/* VILL replaced by checked of LMUL==4 */
 FIELD(TB_FLAGS, VSTART_EQ_ZERO, 15, 1)
 /* The combination of MXL/SXL/UXL that applies to the current cpu mode. */
 FIELD(TB_FLAGS, XL, 16, 2)

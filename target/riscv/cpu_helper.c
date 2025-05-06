@@ -38,6 +38,9 @@
 #include "debug.h"
 #include "pmp.h"
 
+/* avoid pulling in the tcg/riscv/tcg-target.c.inc */
+#define VLMUL_RESERVED (4)
+
 int riscv_env_mmu_index(CPURISCVState *env, bool ifetch)
 {
 #ifdef CONFIG_USER_ONLY
@@ -164,7 +167,7 @@ void cpu_get_tb_cpu_state(CPURISCVState *env, vaddr *pc,
         uint32_t maxsz = vlmax << vsew;
         bool vl_eq_vlmax = (env->vstart == 0) && (vlmax == env->vl) &&
                            (maxsz >= 8);
-        flags = FIELD_DP32(flags, TB_FLAGS, VILL, env->vill);
+        g_assert(env->vill && lmul != VLMUL_RESERVED);
         flags = FIELD_DP32(flags, TB_FLAGS, SEW, vsew);
         flags = FIELD_DP32(flags, TB_FLAGS, LMUL,
                            FIELD_EX64(env->vtype, VTYPE, VLMUL));
@@ -175,7 +178,7 @@ void cpu_get_tb_cpu_state(CPURISCVState *env, vaddr *pc,
                            FIELD_EX64(env->vtype, VTYPE, VMA));
         flags = FIELD_DP32(flags, TB_FLAGS, VSTART_EQ_ZERO, env->vstart == 0);
     } else {
-        flags = FIELD_DP32(flags, TB_FLAGS, VILL, 1);
+        flags = FIELD_DP32(flags, TB_FLAGS, LMUL, VLMUL_RESERVED);
     }
 
     if (cpu_get_fcfien(env)) {
