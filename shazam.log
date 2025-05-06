@@ -1,0 +1,21 @@
+Grabbing thread from lore.kernel.org/all/CACkyd_aL_KAgG1FzoC%2BH%2BTpNm2KCvWq%2B35HMUsVaBKWThNSBNQ@mail.gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Analyzing 1 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2] util/memfd: allow allocating 0 bytes
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: util/memfd: allow allocating 0 bytes
+Patch failed at 0001 util/memfd: allow allocating 0 bytes
+error: corrupt patch at line 19
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
