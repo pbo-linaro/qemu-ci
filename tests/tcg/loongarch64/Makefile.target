@@ -16,5 +16,7 @@ LOONGARCH64_TESTS  += test_fclass
 LOONGARCH64_TESTS  += test_fpcom
 LOONGARCH64_TESTS  += test_pcadd
 LOONGARCH64_TESTS  += test_fcsr
+LOONGARCH64_TESTS  += test_fnmsub
+LOONGARCH64_TESTS  += test_vfnmsub
 
 TESTS += $(LOONGARCH64_TESTS)

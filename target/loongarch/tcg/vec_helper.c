@@ -2446,10 +2446,15 @@ void HELPER(NAME)(void *vd, void *vj, void *vk, void *va,                    \
     VReg *Vk = (VReg *)vk;                                                   \
     VReg *Va = (VReg *)va;                                                   \
     int oprsz = simd_oprsz(desc);                                            \
+    uint32_t flag = flags;                                                   \
+    uint32_t neg_res;                                                        \
                                                                              \
+    neg_res = flag & float_muladd_negate_result;                             \
+    flag ^= neg_res;                                                         \
     vec_clear_cause(env);                                                    \
     for (i = 0; i < oprsz / (BIT / 8); i++) {                                \
-        Vd->E(i) = FN(Vj->E(i), Vk->E(i), Va->E(i), flags, &env->fp_status); \
+        Vd->E(i) = FN(Vj->E(i), Vk->E(i), Va->E(i), flag, &env->fp_status);  \
+        Vd->E(i) |= neg_res ? (1ULL << (BIT - 1)) : 0;                       \
         vec_update_fcsr0(env, GETPC());                                      \
     }                                                                        \
 }

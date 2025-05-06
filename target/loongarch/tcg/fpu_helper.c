@@ -389,9 +389,13 @@ uint64_t helper_fmuladd_s(CPULoongArchState *env, uint64_t fj,
                           uint64_t fk, uint64_t fa, uint32_t flag)
 {
     uint64_t fd;
+    uint32_t neg_res;
 
+    neg_res = flag & float_muladd_negate_result;
+    flag ^= neg_res;
     fd = nanbox_s(float32_muladd((uint32_t)fj, (uint32_t)fk,
                                  (uint32_t)fa, flag, &env->fp_status));
+    fd |= neg_res ? 0x80000000ULL : 0;
     update_fcsr0(env, GETPC());
     return fd;
 }
@@ -400,8 +404,12 @@ uint64_t helper_fmuladd_d(CPULoongArchState *env, uint64_t fj,
                           uint64_t fk, uint64_t fa, uint32_t flag)
 {
     uint64_t fd;
+    uint32_t neg_res;
 
+    neg_res = flag & float_muladd_negate_result;
+    flag ^= neg_res;
     fd = float64_muladd(fj, fk, fa, flag, &env->fp_status);
+    fd |= neg_res ? 0x8000000000000000ULL : 0;
     update_fcsr0(env, GETPC());
     return fd;
 }
