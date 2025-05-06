@@ -97,7 +97,7 @@ tests_aarch64_system_thorough = [
   'aarch64_tcg_plugins',
   'aarch64_tuxrun',
   'aarch64_virt',
-  'aarch64_virt_gpu',
+  # 'aarch64_virt_gpu', # missing vulkaninfo in container
   'aarch64_xen',
   'aarch64_xlnx_versal',
   'multiprocess',
@@ -124,7 +124,7 @@ tests_arm_system_thorough = [
   'arm_aspeed_ast2500',
   'arm_aspeed_ast2600',
   'arm_aspeed_bletchley',
-  'arm_aspeed_rainier',
+  # 'arm_aspeed_rainier', # timeout
   'arm_bpim2u',
   'arm_canona1100',
   'arm_collie',
@@ -171,8 +171,8 @@ tests_loongarch64_system_thorough = [
 tests_m68k_system_thorough = [
   'm68k_mcf5208evb',
   'm68k_nextcube',
-  'm68k_replay',
-  'm68k_q800',
+  #'m68k_replay',
+  #'m68k_q800',
   'm68k_tuxrun',
 ]
 

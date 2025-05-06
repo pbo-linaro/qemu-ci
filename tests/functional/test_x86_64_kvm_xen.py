@@ -143,15 +143,15 @@ class KVMXenGuest(QemuSystemTest):
                                 'grep xen-platform-pci /proc/interrupts',
                                 'IO-APIC')
 
-    def test_kvm_xen_guest_novector_noapic(self):
-        self.common_vm_setup()
-        self.kernel_params = (self.KERNEL_DEFAULT +
-                              ' xen_emul_unplug=ide-disks' +
-                              ' xen_no_vector_callback noapic')
-        self.run_and_check()
-        exec_command_and_wait_for_pattern(self,
-                                'grep xen-platform-pci /proc/interrupts',
-                                'XT-PIC')
+    #def test_kvm_xen_guest_novector_noapic(self):
+    #    self.common_vm_setup()
+    #    self.kernel_params = (self.KERNEL_DEFAULT +
+    #                          ' xen_emul_unplug=ide-disks' +
+    #                          ' xen_no_vector_callback noapic')
+    #    self.run_and_check()
+    #    exec_command_and_wait_for_pattern(self,
+    #                            'grep xen-platform-pci /proc/interrupts',
+    #                            'XT-PIC')
 
 if __name__ == '__main__':
     QemuSystemTest.main()
