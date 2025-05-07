@@ -199,9 +199,11 @@ TRANS(fmadd_s, FP_SP, gen_muladd, gen_helper_fmuladd_s, 0)
 TRANS(fmadd_d, FP_DP, gen_muladd, gen_helper_fmuladd_d, 0)
 TRANS(fmsub_s, FP_SP, gen_muladd, gen_helper_fmuladd_s, float_muladd_negate_c)
 TRANS(fmsub_d, FP_DP, gen_muladd, gen_helper_fmuladd_d, float_muladd_negate_c)
-TRANS(fnmadd_s, FP_SP, gen_muladd, gen_helper_fmuladd_s, float_muladd_negate_result)
-TRANS(fnmadd_d, FP_DP, gen_muladd, gen_helper_fmuladd_d, float_muladd_negate_result)
+TRANS(fnmadd_s, FP_SP, gen_muladd, gen_helper_fmuladd_s,
+      float_muladd_negate_rounded_result)
+TRANS(fnmadd_d, FP_DP, gen_muladd, gen_helper_fmuladd_d,
+      float_muladd_negate_rounded_result)
 TRANS(fnmsub_s, FP_SP, gen_muladd, gen_helper_fmuladd_s,
-      float_muladd_negate_c | float_muladd_negate_result)
+      float_muladd_negate_c | float_muladd_negate_rounded_result)
 TRANS(fnmsub_d, FP_DP, gen_muladd, gen_helper_fmuladd_d,
-      float_muladd_negate_c | float_muladd_negate_result)
+      float_muladd_negate_c | float_muladd_negate_rounded_result)

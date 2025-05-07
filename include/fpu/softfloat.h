@@ -129,7 +129,8 @@ enum {
     float_muladd_negate_c = 1,
     float_muladd_negate_product = 2,
     float_muladd_negate_result = 4,
-    float_muladd_suppress_add_product_zero = 8,
+    float_muladd_negate_rounded_result = 8,
+    float_muladd_suppress_add_product_zero = 16,
 };
 
 /*----------------------------------------------------------------------------

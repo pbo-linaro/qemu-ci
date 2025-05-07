@@ -2458,12 +2458,12 @@ DO_4OP_F(vfmadd_s, 32, UW, float32_muladd, 0)
 DO_4OP_F(vfmadd_d, 64, UD, float64_muladd, 0)
 DO_4OP_F(vfmsub_s, 32, UW, float32_muladd, float_muladd_negate_c)
 DO_4OP_F(vfmsub_d, 64, UD, float64_muladd, float_muladd_negate_c)
-DO_4OP_F(vfnmadd_s, 32, UW, float32_muladd, float_muladd_negate_result)
-DO_4OP_F(vfnmadd_d, 64, UD, float64_muladd, float_muladd_negate_result)
+DO_4OP_F(vfnmadd_s, 32, UW, float32_muladd, float_muladd_negate_rounded_result)
+DO_4OP_F(vfnmadd_d, 64, UD, float64_muladd, float_muladd_negate_rounded_result)
 DO_4OP_F(vfnmsub_s, 32, UW, float32_muladd,
-         float_muladd_negate_c | float_muladd_negate_result)
+         float_muladd_negate_c | float_muladd_negate_rounded_result)
 DO_4OP_F(vfnmsub_d, 64, UD, float64_muladd,
-         float_muladd_negate_c | float_muladd_negate_result)
+         float_muladd_negate_c | float_muladd_negate_rounded_result)
 
 #define DO_2OP_F(NAME, BIT, E, FN)                       \
 void HELPER(NAME)(void *vd, void *vj,                    \

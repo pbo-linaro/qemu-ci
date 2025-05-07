@@ -2234,13 +2234,18 @@ float16_muladd_scalbn(float16 a, float16 b, float16 c,
                       int scale, int flags, float_status *status)
 {
     FloatParts64 pa, pb, pc, *pr;
+    float16 r;
 
     float16_unpack_canonical(&pa, a, status);
     float16_unpack_canonical(&pb, b, status);
     float16_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, scale, flags, status);
 
-    return float16_round_pack_canonical(pr, status);
+    r = float16_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = float16_chs(r);
+    }
+    return r;
 }
 
 float16 float16_muladd(float16 a, float16 b, float16 c,
@@ -2254,13 +2259,18 @@ float32_muladd_scalbn(float32 a, float32 b, float32 c,
                       int scale, int flags, float_status *status)
 {
     FloatParts64 pa, pb, pc, *pr;
+    float32 r;
 
     float32_unpack_canonical(&pa, a, status);
     float32_unpack_canonical(&pb, b, status);
     float32_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, scale, flags, status);
 
-    return float32_round_pack_canonical(pr, status);
+    r = float32_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = float32_chs(r);
+    }
+    return r;
 }
 
 float64 QEMU_SOFTFLOAT_ATTR
@@ -2268,13 +2278,18 @@ float64_muladd_scalbn(float64 a, float64 b, float64 c,
                       int scale, int flags, float_status *status)
 {
     FloatParts64 pa, pb, pc, *pr;
+    float64 r;
 
     float64_unpack_canonical(&pa, a, status);
     float64_unpack_canonical(&pb, b, status);
     float64_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, scale, flags, status);
 
-    return float64_round_pack_canonical(pr, status);
+    r = float64_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = float64_chs(r);
+    }
+    return r;
 }
 
 static bool force_soft_fma;
@@ -2422,39 +2437,54 @@ float64 float64r32_muladd(float64 a, float64 b, float64 c,
                           int flags, float_status *status)
 {
     FloatParts64 pa, pb, pc, *pr;
+    float64 r;
 
     float64_unpack_canonical(&pa, a, status);
     float64_unpack_canonical(&pb, b, status);
     float64_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, 0, flags, status);
 
-    return float64r32_round_pack_canonical(pr, status);
+    r = float64r32_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = float64_chs(r);
+    }
+    return r;
 }
 
 bfloat16 QEMU_FLATTEN bfloat16_muladd(bfloat16 a, bfloat16 b, bfloat16 c,
                                       int flags, float_status *status)
 {
     FloatParts64 pa, pb, pc, *pr;
+    bfloat16 r;
 
     bfloat16_unpack_canonical(&pa, a, status);
     bfloat16_unpack_canonical(&pb, b, status);
     bfloat16_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, 0, flags, status);
 
-    return bfloat16_round_pack_canonical(pr, status);
+    r = bfloat16_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = bfloat16_chs(r);
+    }
+    return r;
 }
 
 float128 QEMU_FLATTEN float128_muladd(float128 a, float128 b, float128 c,
                                       int flags, float_status *status)
 {
     FloatParts128 pa, pb, pc, *pr;
+    float128 r;
 
     float128_unpack_canonical(&pa, a, status);
     float128_unpack_canonical(&pb, b, status);
     float128_unpack_canonical(&pc, c, status);
     pr = parts_muladd_scalbn(&pa, &pb, &pc, 0, flags, status);
 
-    return float128_round_pack_canonical(pr, status);
+    r = float128_round_pack_canonical(pr, status);
+    if (flags & float_muladd_negate_rounded_result) {
+        r = float128_chs(r);
+    }
+    return r;
 }
 
 /*
