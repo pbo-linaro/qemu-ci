@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20250507023148.1877287-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 58 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v4 1/16] hw/intc/loongarch_pch: Modify name of some registers
+  [PATCH v4 2/16] hw/intc/loongarch_pch: Modify register name PCH_PIC_xxx_OFFSET with PCH_PIC_xxx
+  [PATCH v4 3/16] hw/intc/loongarch_pch: Remove some duplicate macro
+  [PATCH v4 4/16] hw/intc/loongarch_pch: Set version information at initial stage
+  [PATCH v4 5/16] hw/intc/loongarch_pch: Use relative address in MemoryRegionOps
+  [PATCH v4 6/16] hw/intc/loongarch_pch: Discard write operation with ISR register
+  [PATCH v4 7/16] hw/intc/loongarch_pch: Use generic read callback for iomem32_low region
+  [PATCH v4 8/16] hw/intc/loongarch_pch: Use generic read callback for iomem32_high region
+  [PATCH v4 9/16] hw/intc/loongarch_pch: Use generic read callback for iomem8 region
+  [PATCH v4 10/16] hw/intc/loongarch_pch: Use generic write callback for iomem32_low region
+  [PATCH v4 11/16] hw/intc/loongarch_pch: Use generic write callback for iomem32_high region
+  [PATCH v4 12/16] hw/intc/loongarch_pch: Use generic write callback for iomem8 region
+  [PATCH v4 13/16] hw/intc/loongarch_pch: Use unified trace event for memory region ops
+  [PATCH v4 14/16] hw/intc/loongarch_pch: Rename memory region iomem32_low with iomem
+  [PATCH v4 15/16] hw/intc/loongarch_pch: Set flexible memory access size with iomem region
+  [PATCH v4 16/16] hw/intc/loongarch_pch: Merge three memory region into one
+---
+Total patches: 16
+---
+Applying: hw/intc/loongarch_pch: Modify name of some registers
+Applying: hw/intc/loongarch_pch: Modify register name PCH_PIC_xxx_OFFSET with PCH_PIC_xxx
+Applying: hw/intc/loongarch_pch: Remove some duplicate macro
+Applying: hw/intc/loongarch_pch: Set version information at initial stage
+Patch failed at 0004 hw/intc/loongarch_pch: Set version information at initial stage
+error: patch failed: hw/intc/loongarch_pic_common.c:49
+error: hw/intc/loongarch_pic_common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
