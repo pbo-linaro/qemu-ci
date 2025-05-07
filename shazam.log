@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20250507152020.1254632-1-john.levon@nutanix.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 93 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/15] vfio: add vfio_device_prepare()
+  [32m✓[0m [PATCH v3 2/15] vfio: add vfio_device_unprepare()
+  [32m✓[0m [PATCH v3 3/15] vfio: add vfio_attach_device_by_iommu_type()
+  [32m✓[0m [PATCH v3 4/15] vfio: add vfio_device_get_irq_info() helper
+  [32m✓[0m [PATCH v3 5/15] vfio: consistently handle return value for helpers
+  [32m✓[0m [PATCH v3 6/15] vfio: add strread/writeerror()
+  [32m✓[0m [PATCH v3 7/15] vfio: add vfio_pci_config_space_read/write()
+  [32m✓[0m [PATCH v3 8/15] vfio: add unmap_all flag to DMA unmap callback
+  [32m✓[0m [PATCH v3 9/15] vfio: implement unmap all for DMA unmap callbacks
+  [32m✓[0m [PATCH v3 10/15] vfio: add device IO ops vector
+  [32m✓[0m [PATCH v3 11/15] vfio: add region info cache
+  [32m✓[0m [PATCH v3 12/15] vfio: add read/write to device IO ops vector
+  [32m✓[0m [PATCH v3 13/15] vfio: add vfio-pci-base class
+  [32m✓[0m [PATCH v3 14/15] vfio/container: pass listener_begin/commit callbacks
+  [32m✓[0m [PATCH v3 15/15] vfio/container: pass MemoryRegion to DMA operations
+  ---
+  [32m✓[0m Signed: DKIM/nutanix.com
+---
+Total patches: 15
+---
+Applying: vfio: add vfio_device_prepare()
+Applying: vfio: add vfio_device_unprepare()
+Applying: vfio: add vfio_attach_device_by_iommu_type()
+Applying: vfio: add vfio_device_get_irq_info() helper
+Applying: vfio: consistently handle return value for helpers
+Applying: vfio: add strread/writeerror()
+Applying: vfio: add vfio_pci_config_space_read/write()
+Applying: vfio: add unmap_all flag to DMA unmap callback
+Applying: vfio: implement unmap all for DMA unmap callbacks
+Applying: vfio: add device IO ops vector
+Applying: vfio: add region info cache
+Patch failed at 0011 vfio: add region info cache
+error: patch failed: hw/vfio/igd.c:510
+error: hw/vfio/igd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
