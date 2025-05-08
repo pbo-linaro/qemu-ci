@@ -144,6 +144,17 @@ FIELD(PCIMAP, LO2, 12, 6)
 FIELD(PCIMAP, 2, 18, 1)
 
 #define BONITO_PCIMEMBASECFG    (0x14 >> 2)      /* 0x114 */
+REG32(PCIMEMBASECFG, 0x114)
+FIELD(PCIMEMBASECFG, MASK0, 0, 5)
+FIELD(PCIMEMBASECFG, TRANS0, 5, 5)
+FIELD(PCIMEMBASECFG, CACHED0, 10, 1)
+FIELD(PCIMEMBASECFG, IO0, 11, 1)
+FIELD(PCIMEMBASECFG, MASK1, 12, 5)
+FIELD(PCIMEMBASECFG, TRANS1, 17, 5)
+FIELD(PCIMEMBASECFG, CACHED1, 22, 1)
+FIELD(PCIMEMBASECFG, IO1, 23, 1)
+
+
 #define BONITO_PCIMAP_CFG       (0x18 >> 2)      /* 0x118 */
 
 /* 5. ICU & GPIO regs */
@@ -258,9 +269,12 @@ struct BonitoState {
     PCIHostState parent_obj;
     qemu_irq *pic;
     PCIBonitoState *pci_dev;
+    MemoryRegion dma_mr;
     MemoryRegion pci_mem;
+    AddressSpace dma_as;
     MemoryRegion *pcimem_lo_alias;
     MemoryRegion *pcimem_hi_alias;
+    MemoryRegion *dma_alias;
 };
 
 #define TYPE_PCI_BONITO "Bonito"
@@ -312,6 +326,57 @@ static void bonito_update_pcimap(PCIBonitoState *s)
                                    FIELD_EX32(pcimap, PCIMAP, LO2) << 26);
     memory_region_set_alias_offset(s->pcihost->pcimem_hi_alias,
                                    FIELD_EX32(pcimap, PCIMAP, 2) << 31);
+}
+
+static void pcibasecfg_decode(uint32_t mask, uint32_t trans, bool io,
+                                     uint32_t *base, uint32_t *size)
+{
+    uint32_t val;
+
+    mask = (mask << 23 | 0xF0000000);
+    val = ctz32(mask);
+    *size = 1 << val;
+    *base = (trans & ~(*size - 1)) | io << 28;
+}
+
+static void bonito_update_pcibase(PCIBonitoState *s)
+{
+    uint32_t pcibasecfg = s->regs[BONITO_PCIMEMBASECFG];
+    uint32_t size, base;
+    uint32_t pcibase, wmask;
+
+    pcibasecfg_decode(FIELD_EX32(pcibasecfg, PCIMEMBASECFG, MASK0),
+                      FIELD_EX32(pcibasecfg, PCIMEMBASECFG, TRANS0),
+                      FIELD_EX32(pcibasecfg, PCIMEMBASECFG, IO0),
+                      &base, &size);
+
+    wmask = ~(size - 1);
+    /* Mask will also influence PCIBase register writable range */
+    pci_set_long(s->dev.wmask + PCI_BASE_ADDRESS_0, wmask);
+    /* Clear RO bits in PCIBase */
+    pcibase = pci_get_long(s->dev.config + PCI_BASE_ADDRESS_0);
+    pcibase &= wmask;
+    pci_set_long(s->dev.config + PCI_BASE_ADDRESS_0, pcibase);
+    /* Adjust DMA spaces */
+    memory_region_set_size(&s->pcihost->dma_alias[0], size);
+    memory_region_set_alias_offset(&s->pcihost->dma_alias[0], base);
+    memory_region_set_address(&s->pcihost->dma_alias[0], pcibase);
+
+    /* Ditto for PCIMEMBASECFG1 */
+    pcibasecfg_decode(FIELD_EX32(pcibasecfg, PCIMEMBASECFG, MASK1),
+                      FIELD_EX32(pcibasecfg, PCIMEMBASECFG, TRANS1),
+                      FIELD_EX32(pcibasecfg, PCIMEMBASECFG, IO1),
+                      &base, &size);
+
+    wmask = ~(size - 1);
+    pci_set_long(s->dev.wmask + PCI_BASE_ADDRESS_1, wmask);
+    pcibase = pci_get_long(s->dev.config + PCI_BASE_ADDRESS_1);
+    pcibase &= wmask;
+    pci_set_long(s->dev.config + PCI_BASE_ADDRESS_1, pcibase);
+
+    memory_region_set_size(&s->pcihost->dma_alias[1], size);
+    memory_region_set_alias_offset(&s->pcihost->dma_alias[1], base);
+    memory_region_set_address(&s->pcihost->dma_alias[1], pcibase);
 }
 
 static void bonito_writel(void *opaque, hwaddr addr,
@@ -624,11 +689,34 @@ static const MemoryRegionOps bonito_spciconf_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
+static void bonito_pci_write_config(PCIDevice *dev, uint32_t address,
+                                    uint32_t val, int len)
+{
+    pci_default_write_config(dev, address, val, len);
+
+    if (ranges_overlap(address, len, PCI_BASE_ADDRESS_0, 12)) {
+        /* Bonito Host Bridge BARs are defined as DMA windows (pciBase) */
+        bonito_update_pcibase(PCI_BONITO(dev));
+    }
+}
+
 static int pci_bonito_map_irq(PCIDevice *pci_dev, int irq_num)
 {
     /* Fuloong 2E PCI INTX are connected to Bonito GPIN[3:0] */
     return ICU_PIN_GPINx(irq_num);
 }
+
+static AddressSpace *bonito_pcihost_set_iommu(PCIBus *bus, void *opaque,
+                                              int devfn)
+{
+    BonitoState *bs = opaque;
+
+    return &bs->dma_as;
+}
+
+static const PCIIOMMUOps bonito_iommu_ops = {
+    .get_address_space = bonito_pcihost_set_iommu,
+};
 
 static void bonito_reset_hold(Object *obj, ResetType type)
 {
@@ -653,6 +741,11 @@ static void bonito_reset_hold(Object *obj, ResetType type)
     s->regs[BONITO_DQCFG] = 0x8;
     s->regs[BONITO_MEMSIZE] = 0x10000000;
     s->regs[BONITO_PCIMAP] = 0x6140;
+    bonito_update_pcimap(s);
+
+    pci_set_long(s->dev.config + PCI_BASE_ADDRESS_0, 0x80000000);
+    pci_set_long(s->dev.config + PCI_BASE_ADDRESS_1, 0x0);
+    bonito_update_pcibase(s);
 }
 
 static const VMStateDescription vmstate_bonito = {
@@ -700,6 +793,7 @@ static void bonito_pci_realize(PCIDevice *dev, Error **errp)
     PCIHostState *phb = PCI_HOST_BRIDGE(s->pcihost);
     BonitoState *bs = s->pcihost;
     MemoryRegion *pcimem_hi_alias = g_new(MemoryRegion, 1);
+    MemoryRegion *dma_alias = g_new(MemoryRegion, 2);
 
     /*
      * Bonito North Bridge, built on FPGA,
@@ -764,6 +858,24 @@ static void bonito_pci_realize(PCIDevice *dev, Error **errp)
                                 (hwaddr)BONITO_PCIHI_BASE + BONITO_PCIHI_SIZE,
                                 2 * GiB);
 
+    /* 32bit DMA */
+    memory_region_init(&bs->dma_mr, OBJECT(s), "dma.pciBase", 4 * GiB);
+
+    /* pciBase0, mapped to system RAM */
+    memory_region_init_alias(&dma_alias[0], NULL, "pciBase0.mem.alias",
+                             host_mem, 0x80000000, 256 * MiB);
+    memory_region_add_subregion_overlap(&bs->dma_mr, 0, &dma_alias[0], 2);
+
+    /* pciBase1, mapped to system RAM */
+    memory_region_init_alias(&dma_alias[1], NULL, "pciBase1.mem.alias",
+                            host_mem, 0, 256 * MiB);
+    memory_region_add_subregion_overlap(&bs->dma_mr, 0, &dma_alias[1], 1);
+
+    bs->dma_alias = dma_alias;
+
+    address_space_init(&bs->dma_as, &bs->dma_mr, "pciBase.dma");
+    pci_setup_iommu(phb->bus, &bonito_iommu_ops, bs);
+
     /* set the default value of north bridge pci config */
     pci_set_word(dev->config + PCI_COMMAND, 0x0000);
     pci_set_word(dev->config + PCI_STATUS, 0x0000);
@@ -806,6 +918,7 @@ static void bonito_pci_class_init(ObjectClass *klass, const void *data)
     PCIDeviceClass *k = PCI_DEVICE_CLASS(klass);
     ResettableClass *rc = RESETTABLE_CLASS(klass);
 
+    k->config_write = bonito_pci_write_config;
     rc->phases.hold = bonito_reset_hold;
     k->realize = bonito_pci_realize;
     k->vendor_id = 0xdf53;
