@@ -80,10 +80,9 @@ static int stream_prepare(Job *job)
      * may end up working with the wrong base node (or it might even have gone
      * away by the time we want to use it).
      */
-    bdrv_drained_begin(unfiltered_bs);
+    bdrv_drain_all_begin();
     if (unfiltered_bs_cow) {
         bdrv_ref(unfiltered_bs_cow);
-        bdrv_drained_begin(unfiltered_bs_cow);
     }
 
     bdrv_graph_rdlock_main_loop();
@@ -124,10 +123,9 @@ static int stream_prepare(Job *job)
 
 out:
     if (unfiltered_bs_cow) {
-        bdrv_drained_end(unfiltered_bs_cow);
         bdrv_unref(unfiltered_bs_cow);
     }
-    bdrv_drained_end(unfiltered_bs);
+    bdrv_drain_all_end();
     return ret;
 }
 
@@ -373,10 +371,12 @@ void stream_start(const char *job_id, BlockDriverState *bs,
      * already have our own plans. Also don't allow resize as the image size is
      * queried only at the job start and then cached.
      */
+    bdrv_drain_all_begin();
     bdrv_graph_wrlock();
     if (block_job_add_bdrv(&s->common, "active node", bs, 0,
                            basic_flags | BLK_PERM_WRITE, errp)) {
         bdrv_graph_wrunlock();
+        bdrv_drain_all_end();
         goto fail;
     }
 
@@ -397,10 +397,12 @@ void stream_start(const char *job_id, BlockDriverState *bs,
                                  basic_flags, errp);
         if (ret < 0) {
             bdrv_graph_wrunlock();
+            bdrv_drain_all_end();
             goto fail;
         }
     }
     bdrv_graph_wrunlock();
+    bdrv_drain_all_end();
 
     s->base_overlay = base_overlay;
     s->above_base = above_base;
