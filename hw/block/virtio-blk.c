@@ -220,6 +220,7 @@ static inline void submit_requests(VirtIOBlock *s, MultiReqBuffer *mrb,
     QEMUIOVector *qiov = &mrb->reqs[start]->qiov;
     int64_t sector_num = mrb->reqs[start]->sector_num;
     bool is_write = mrb->is_write;
+    bool is_fua = mrb->is_fua;
     BdrvRequestFlags flags = 0;
 
     if (num_reqs > 1) {
@@ -256,6 +257,9 @@ static inline void submit_requests(VirtIOBlock *s, MultiReqBuffer *mrb,
     }
 
     if (is_write) {
+        if (is_fua) {
+            flags |= BDRV_REQ_FUA;
+        }
         blk_aio_pwritev(blk, sector_num << BDRV_SECTOR_BITS, qiov,
                         flags, virtio_blk_rw_complete,
                         mrb->reqs[start]);
@@ -828,13 +832,16 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
 
     type = virtio_ldl_p(vdev, &req->out.type);
 
-    /* VIRTIO_BLK_T_OUT defines the command direction. VIRTIO_BLK_T_BARRIER
-     * is an optional flag. Although a guest should not send this flag if
-     * not negotiated we ignored it in the past. So keep ignoring it. */
-    switch (type & ~(VIRTIO_BLK_T_OUT | VIRTIO_BLK_T_BARRIER)) {
+    /* VIRTIO_BLK_T_BARRIER is an optional flag. Although a guest should not
+     * send this flag if not negotiated we ignored it in the past. So keep
+     * ignoring it. */
+    switch (type & ~VIRTIO_BLK_T_BARRIER) {
     case VIRTIO_BLK_T_IN:
+    case VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_OUT_FUA:
     {
         bool is_write = type & VIRTIO_BLK_T_OUT;
+        bool is_fua = (type & ~VIRTIO_BLK_T_BARRIER) == VIRTIO_BLK_T_OUT_FUA;
         req->sector_num = virtio_ldq_p(vdev, &req->out.sector);
 
         if (is_write) {
@@ -858,10 +865,10 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
         block_acct_start(blk_get_stats(s->blk), &req->acct, req->qiov.size,
                          is_write ? BLOCK_ACCT_WRITE : BLOCK_ACCT_READ);
 
-        /* merge would exceed maximum number of requests or IO direction
-         * changes */
+        /* merge would exceed maximum number of requests or type changes */
         if (mrb->num_reqs > 0 && (mrb->num_reqs == VIRTIO_BLK_MAX_MERGE_REQS ||
                                   is_write != mrb->is_write ||
+                                  is_fua != mrb->is_fua ||
                                   !s->conf.request_merging)) {
             virtio_blk_submit_multireq(s, mrb);
         }
@@ -869,6 +876,7 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
         assert(mrb->num_reqs < VIRTIO_BLK_MAX_MERGE_REQS);
         mrb->reqs[mrb->num_reqs++] = req;
         mrb->is_write = is_write;
+        mrb->is_fua = is_fua;
         break;
     }
     case VIRTIO_BLK_T_FLUSH:
@@ -910,7 +918,7 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
         g_free(req);
         break;
     }
-    case VIRTIO_BLK_T_ZONE_APPEND & ~VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_ZONE_APPEND:
         /*
          * Passing out_iov/out_num and in_iov/in_num is not safe
          * to access req->elem.out_sg directly because it may be
@@ -918,13 +926,8 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
          */
         virtio_blk_handle_zone_append(req, out_iov, in_iov, out_num, in_num);
         break;
-    /*
-     * VIRTIO_BLK_T_DISCARD and VIRTIO_BLK_T_WRITE_ZEROES are defined with
-     * VIRTIO_BLK_T_OUT flag set. We masked this flag in the switch statement,
-     * so we must mask it for these requests, then we will check if it is set.
-     */
-    case VIRTIO_BLK_T_DISCARD & ~VIRTIO_BLK_T_OUT:
-    case VIRTIO_BLK_T_WRITE_ZEROES & ~VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_DISCARD:
+    case VIRTIO_BLK_T_WRITE_ZEROES:
     {
         struct virtio_blk_discard_write_zeroes dwz_hdr;
         size_t out_len = iov_size(out_iov, out_num);
@@ -932,12 +935,8 @@ static int virtio_blk_handle_request(VirtIOBlockReq *req, MultiReqBuffer *mrb)
                                VIRTIO_BLK_T_WRITE_ZEROES;
         uint8_t err_status;
 
-        /*
-         * Unsupported if VIRTIO_BLK_T_OUT is not set or the request contains
-         * more than one segment.
-         */
-        if (unlikely(!(type & VIRTIO_BLK_T_OUT) ||
-                     out_len > sizeof(dwz_hdr))) {
+        /* Unsupported if the request contains more than one segment. */
+        if (unlikely(out_len > sizeof(dwz_hdr))) {
             virtio_blk_req_complete(req, VIRTIO_BLK_S_UNSUPP);
             g_free(req);
             return 0;
@@ -1882,6 +1881,8 @@ static const Property virtio_blk_properties[] = {
                        conf.max_discard_sectors, BDRV_REQUEST_MAX_SECTORS),
     DEFINE_PROP_UINT32("max-write-zeroes-sectors", VirtIOBlock,
                        conf.max_write_zeroes_sectors, BDRV_REQUEST_MAX_SECTORS),
+    DEFINE_PROP_BIT64("fua-write", VirtIOBlock, host_features,
+                      VIRTIO_BLK_F_OUT_FUA, true),
     DEFINE_PROP_BOOL("x-enable-wce-if-config-wce", VirtIOBlock,
                      conf.x_enable_wce_if_config_wce, true),
 };
