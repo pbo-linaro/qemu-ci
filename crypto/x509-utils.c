@@ -129,6 +129,7 @@ int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
     int hlen;
     gnutls_x509_crt_t crt;
     gnutls_datum_t datum = {.data = cert, .size = size};
+    gnutls_x509_crt_fmt_t fmt;
 
     if (alg >= G_N_ELEMENTS(qcrypto_to_gnutls_hash_alg_map)) {
         error_setg(errp, "Unknown hash algorithm");
@@ -140,9 +141,15 @@ int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
         return -1;
     }
 
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return -1;
+    }
+
     gnutls_x509_crt_init(&crt);
 
-    if (gnutls_x509_crt_import(crt, &datum, GNUTLS_X509_FMT_PEM) != 0) {
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
         error_setg(errp, "Failed to import certificate");
         goto cleanup;
     }
@@ -199,6 +206,173 @@ cleanup:
     return rc;
 }
 
+int qcrypto_get_x509_cert_version(uint8_t *cert, size_t size, Error **errp)
+{
+    int rc = -1;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+    gnutls_x509_crt_fmt_t fmt;
+
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        goto cleanup;
+    }
+
+    rc = gnutls_x509_crt_get_version(crt);
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return rc;
+}
+
+int qcrypto_check_x509_cert_times(uint8_t *cert, size_t size, Error **errp)
+{
+    int rc = -1;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+    time_t now = time(0);
+    gnutls_x509_crt_fmt_t fmt;
+
+    if (now == ((time_t)-1)) {
+        error_setg(errp, "Cannot get current time");
+        return rc;
+    }
+
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        goto cleanup;
+    }
+
+    if (gnutls_x509_crt_get_expiration_time(crt) < now) {
+        error_setg(errp, "The certificate has expired");
+        goto cleanup;
+    }
+
+    if (gnutls_x509_crt_get_activation_time(crt) > now) {
+        error_setg(errp, "The certificate is not yet active");
+        goto cleanup;
+    }
+
+    rc = 0;
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return rc;
+}
+
+int qcrypto_get_x509_pk_algorithm(uint8_t *cert, size_t size, Error **errp)
+{
+    int rc = -1;
+    unsigned int bits;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+    gnutls_x509_crt_fmt_t fmt;
+
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        goto cleanup;
+    }
+
+    rc = gnutls_x509_crt_get_pk_algorithm(crt, &bits);
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return rc;
+}
+
+int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
+                                 QCryptoKeyidFlags flag,
+                                 uint8_t *result,
+                                 size_t *resultlen,
+                                 Error **errp)
+{
+    int ret = -1;
+    int keyid_len;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+    gnutls_x509_crt_fmt_t fmt;
+
+    if (flag >= G_N_ELEMENTS(qcrypto_to_gnutls_keyid_flags_map)) {
+        error_setg(errp, "Unknown key id flag");
+        return -1;
+    }
+
+    if (result == NULL) {
+        error_setg(errp, "No valid buffer given");
+        return -1;
+    }
+
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return -1;
+    }
+
+    if (gnutls_x509_crt_init(&crt)) {
+        error_setg(errp, "Failed to initialize certificate");
+        return -1;
+    }
+
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        goto cleanup;
+    }
+
+    keyid_len = qcrypto_get_x509_keyid_len(QCRYPTO_KEYID_FLAGS_SHA256, errp);
+    if (*resultlen < keyid_len) {
+        error_setg(errp,
+                   "Result buffer size %zu is smaller than key id %d",
+                   *resultlen, keyid_len);
+        goto cleanup;
+    }
+
+    if (gnutls_x509_crt_get_key_id(crt,
+                                   qcrypto_to_gnutls_keyid_flags_map[flag],
+                                   result, resultlen) != 0) {
+        error_setg(errp, "Failed to get fingerprint from certificate");
+        goto cleanup;
+    }
+
+    ret = 0;
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return ret;
+}
+
 #else /* ! CONFIG_GNUTLS */
 
 int qcrypto_check_x509_cert_fmt(uint8_t *cert, size_t size,
@@ -233,6 +407,34 @@ int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
 int qcrypto_get_x509_signature_algorithm(uint8_t *cert, size_t size, Error **errp)
 {
     error_setg(errp, "To get signature algorithm requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_cert_version(uint8_t *cert, size_t size, Error **errp)
+{
+    error_setg(errp, "To get certificate version requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_check_x509_cert_times(uint8_t *cert, size_t size, Error **errp)
+{
+    error_setg(errp, "To get certificate times requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_pk_algorithm(uint8_t *cert, size_t size, Error **errp)
+{
+    error_setg(errp, "To get public key algorithm requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
+                                 QCryptoKeyidFlags flag,
+                                 uint8_t *result,
+                                 size_t *resultlen,
+                                 Error **errp)
+{
+    error_setg(errp, "To get key ID requires GNUTLS");
     return -ENOTSUP;
 }
 

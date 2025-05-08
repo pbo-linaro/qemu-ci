@@ -692,3 +692,23 @@
            'rsa-sha256', 'rsa-sha384', 'rsa-sha512', 'rsa-sha224',
            'dsa-sha224', 'dsa-sha256',
            'ecdsa-sha1', 'ecdsa-sha224', 'ecdsa-sha256', 'ecdsa-sha384', 'ecdsa-sha512']}
+
+##
+# @QCryptoPkAlgo:
+#
+# Algorithms for public-key
+#
+# @unknown: UNKNOWN
+#
+# @rsa: RSA
+#
+# @dsa: DSA
+#
+# @dh: DH
+#
+# @ecdsa: ECDSA
+#
+# Since: 9.2
+##
+{ 'enum': 'QCryptoPkAlgo',
+  'data': ['unknown', 'rsa', 'dsa', 'dh', 'ecdsa']}
