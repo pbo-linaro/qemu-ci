@@ -20,6 +20,7 @@
 #include "system/memory.h"
 #include "hw/qdev-core.h"
 #include "hw/s390x/ipl/diag320.h"
+#include "hw/s390x/ipl/diag508.h"
 #include "hw/s390x/ipl/qipl.h"
 #include "qom/object.h"
 #include "target/s390x/kvm/pv.h"
