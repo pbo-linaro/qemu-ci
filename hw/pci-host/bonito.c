@@ -157,6 +157,22 @@ FIELD(BONGENCFG, PCIQUEUE,      12, 1)
 #define BONITO_INTEN            (0x38 >> 2)      /* 0x138 */
 #define BONITO_INTISR           (0x3c >> 2)      /* 0x13c */
 
+/* ICU Pins */
+#define ICU_PIN_MBOXx(x)        (0 + (x))
+#define ICU_PIN_DMARDY          4
+#define ICU_PIN_DMAEMPTY        5
+#define ICU_PIN_COPYRDY         6
+#define ICU_PIN_COPYEMPTY       7
+#define ICU_PIN_COPYERR         8
+#define ICU_PIN_PCIIRQ          9
+#define ICU_PIN_MASTERERR       10
+#define ICU_PIN_SYSTEMERR       11
+#define ICU_PIN_DRAMPERR        12
+#define ICU_PIN_RETRYERR        13
+#define ICU_PIN_INTTIMER        14
+#define ICU_PIN_GPIOx(x)        (16 + (x))
+#define ICU_PIN_GPINx(x)        (25 + (x))
+
 /* PCI mail boxes */
 #define BONITO_PCIMAIL0_OFFSET    0x40
 #define BONITO_PCIMAIL1_OFFSET    0x44
@@ -206,6 +222,7 @@ struct PCIBonitoState {
 
     BonitoState *pcihost;
     uint32_t regs[BONITO_REGS];
+    uint32_t icu_pin_state;
 
     struct bonldma {
         uint32_t ldmactrl;
@@ -241,6 +258,40 @@ struct BonitoState {
 
 #define TYPE_PCI_BONITO "Bonito"
 OBJECT_DECLARE_SIMPLE_TYPE(PCIBonitoState, PCI_BONITO)
+
+static void bonito_update_irq(PCIBonitoState *s)
+{
+    BonitoState *bs = s->pcihost;
+    uint32_t inten = s->regs[BONITO_INTEN];
+    uint32_t intisr = s->regs[BONITO_INTISR];
+    uint32_t intpol = s->regs[BONITO_INTPOL];
+    uint32_t intedge = s->regs[BONITO_INTEDGE];
+    uint32_t pin_state = s->icu_pin_state;
+    uint32_t level, edge;
+
+    pin_state = (pin_state & ~intpol) | (~pin_state & intpol);
+
+    level = pin_state & ~intedge;
+    edge = (pin_state & ~intisr) & intedge;
+
+    intisr = (intisr & intedge) | level;
+    intisr |= edge;
+    intisr &= inten;
+
+    s->regs[BONITO_INTISR] = intisr;
+
+    qemu_set_irq(*bs->pic, !!intisr);
+}
+
+static void bonito_set_irq(void *opaque, int irq, int level)
+{
+    BonitoState *bs = opaque;
+    PCIBonitoState *s = bs->pci_dev;
+
+    s->icu_pin_state = deposit32(s->icu_pin_state, irq, 1, !!level);
+
+    bonito_update_irq(s);
+}
 
 static void bonito_writel(void *opaque, hwaddr addr,
                           uint64_t val, unsigned size)
@@ -289,12 +340,12 @@ static void bonito_writel(void *opaque, hwaddr addr,
         }
         break;
     case BONITO_INTENSET:
-        s->regs[BONITO_INTENSET] = val;
         s->regs[BONITO_INTEN] |= val;
+        bonito_update_irq(s);
         break;
     case BONITO_INTENCLR:
-        s->regs[BONITO_INTENCLR] = val;
         s->regs[BONITO_INTEN] &= ~val;
+        bonito_update_irq(s);
         break;
     case BONITO_INTEN:
     case BONITO_INTISR:
@@ -549,45 +600,10 @@ static const MemoryRegionOps bonito_spciconf_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
-#define BONITO_IRQ_BASE 32
-
-static void pci_bonito_set_irq(void *opaque, int irq_num, int level)
-{
-    BonitoState *s = opaque;
-    qemu_irq *pic = s->pic;
-    PCIBonitoState *bonito_state = s->pci_dev;
-    int internal_irq = irq_num - BONITO_IRQ_BASE;
-
-    if (bonito_state->regs[BONITO_INTEDGE] & (1 << internal_irq)) {
-        qemu_irq_pulse(*pic);
-    } else {   /* level triggered */
-        if (bonito_state->regs[BONITO_INTPOL] & (1 << internal_irq)) {
-            qemu_irq_raise(*pic);
-        } else {
-            qemu_irq_lower(*pic);
-        }
-    }
-}
-
-/* map the original irq (0~3) to bonito irq (16~47, but 16~31 are unused) */
 static int pci_bonito_map_irq(PCIDevice *pci_dev, int irq_num)
 {
-    int slot;
-
-    slot = PCI_SLOT(pci_dev->devfn);
-
-    switch (slot) {
-    case 5:   /* FULOONG2E_VIA_SLOT, SouthBridge, IDE, USB, ACPI, AC97, MC97 */
-        return irq_num % 4 + BONITO_IRQ_BASE;
-    case 6:   /* FULOONG2E_ATI_SLOT, VGA */
-        return 4 + BONITO_IRQ_BASE;
-    case 7:   /* FULOONG2E_RTL_SLOT, RTL8139 */
-        return 5 + BONITO_IRQ_BASE;
-    case 8 ... 12: /* PCI slot 1 to 4 */
-        return (slot - 8 + irq_num) + 6 + BONITO_IRQ_BASE;
-    default:  /* Unknown device, don't do any translation */
-        return irq_num;
-    }
+    /* Fuloong 2E PCI INTX are connected to Bonito GPIN[3:0] */
+    return ICU_PIN_GPINx(irq_num);
 }
 
 static void bonito_reset_hold(Object *obj, ResetType type)
@@ -633,7 +649,7 @@ static void bonito_host_realize(DeviceState *dev, Error **errp)
 
     memory_region_init(&bs->pci_mem, OBJECT(dev), "pci.mem", BONITO_PCIHI_SIZE);
     phb->bus = pci_register_root_bus(dev, "pci",
-                                     pci_bonito_set_irq, pci_bonito_map_irq,
+                                     bonito_set_irq, pci_bonito_map_irq,
                                      dev, &bs->pci_mem, get_system_io(),
                                      PCI_DEVFN(5, 0), 32, TYPE_PCI_BUS);
 
