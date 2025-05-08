@@ -19,4 +19,10 @@ int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
                                       size_t *resultlen,
                                       Error **errp);
 
+int qcrypto_check_x509_cert_fmt(uint8_t *cert, size_t size,
+                                 QCryptoCertFmt fmt, Error **errp);
+int qcrypto_get_x509_hash_len(QCryptoHashAlgo alg, Error **errp);
+int qcrypto_get_x509_keyid_len(QCryptoKeyidFlags flag, Error **errp);
+int qcrypto_get_x509_signature_algorithm(uint8_t *cert, size_t size, Error **errp);
+
 #endif

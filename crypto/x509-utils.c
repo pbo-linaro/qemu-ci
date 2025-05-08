@@ -11,6 +11,12 @@
 #include "qemu/osdep.h"
 #include "qapi/error.h"
 #include "crypto/x509-utils.h"
+
+/*
+ * Surround with GNUTLS marco to ensure the interfaces are
+ * still available when GNUTLS is not enabled.
+ */
+#ifdef CONFIG_GNUTLS
 #include <gnutls/gnutls.h>
 #include <gnutls/crypto.h>
 #include <gnutls/x509.h>
@@ -24,6 +30,94 @@ static const int qcrypto_to_gnutls_hash_alg_map[QCRYPTO_HASH_ALGO__MAX] = {
     [QCRYPTO_HASH_ALGO_SHA512] = GNUTLS_DIG_SHA512,
     [QCRYPTO_HASH_ALGO_RIPEMD160] = GNUTLS_DIG_RMD160,
 };
+
+static const int qcrypto_to_gnutls_keyid_flags_map[QCRYPTO_KEYID_FLAGS__MAX] = {
+    [QCRYPTO_KEYID_FLAGS_SHA1] = GNUTLS_KEYID_USE_SHA1,
+    [QCRYPTO_KEYID_FLAGS_SHA256] = GNUTLS_KEYID_USE_SHA256,
+    [QCRYPTO_KEYID_FLAGS_SHA512] = GNUTLS_KEYID_USE_SHA512,
+    [QCRYPTO_KEYID_FLAGS_BEST_KNOWN] = GNUTLS_KEYID_USE_BEST_KNOWN,
+};
+
+static const int qcrypto_to_gnutls_cert_fmt_map[QCRYPTO_CERT_FMT__MAX] = {
+    [QCRYPTO_CERT_FMT_DER] = GNUTLS_X509_FMT_DER,
+    [QCRYPTO_CERT_FMT_PEM] = GNUTLS_X509_FMT_PEM,
+};
+
+int qcrypto_check_x509_cert_fmt(uint8_t *cert, size_t size,
+                                 QCryptoCertFmt fmt, Error **errp)
+{
+    int rc;
+    int ret = 0;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+
+    if (fmt >= G_N_ELEMENTS(qcrypto_to_gnutls_cert_fmt_map)) {
+        error_setg(errp, "Unknown certificate format");
+        return ret;
+    }
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        goto cleanup;
+    }
+
+    rc = gnutls_x509_crt_import(crt, &datum, qcrypto_to_gnutls_cert_fmt_map[fmt]);
+    if (rc == GNUTLS_E_ASN1_TAG_ERROR) {
+        ret = 0;
+        goto cleanup;
+    }
+
+    ret = 1;
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return ret;
+}
+
+static int qcrypto_get_x509_cert_fmt(uint8_t *cert, size_t size, Error **errp)
+{
+    int fmt;
+
+    if (qcrypto_check_x509_cert_fmt(cert, size, QCRYPTO_CERT_FMT_DER, errp)) {
+        fmt = GNUTLS_X509_FMT_DER;
+    } else if (qcrypto_check_x509_cert_fmt(cert, size, QCRYPTO_CERT_FMT_PEM, errp)) {
+        fmt = GNUTLS_X509_FMT_PEM;
+    } else {
+        return -1;
+    }
+
+    return fmt;
+}
+
+int qcrypto_get_x509_hash_len(QCryptoHashAlgo alg, Error **errp)
+{
+    if (alg >= G_N_ELEMENTS(qcrypto_to_gnutls_hash_alg_map)) {
+        error_setg(errp, "Unknown hash algorithm");
+        return 0;
+    }
+
+    return gnutls_hash_get_len(qcrypto_to_gnutls_hash_alg_map[alg]);
+}
+
+int qcrypto_get_x509_keyid_len(QCryptoKeyidFlags flag, Error **errp)
+{
+    QCryptoHashAlgo alg;
+
+    if (flag >= G_N_ELEMENTS(qcrypto_to_gnutls_keyid_flags_map)) {
+        error_setg(errp, "Unknown key id flag");
+        return 0;
+    }
+
+    alg = QCRYPTO_HASH_ALGO_SHA1;
+    if ((flag & qcrypto_to_gnutls_keyid_flags_map[QCRYPTO_KEYID_FLAGS_SHA512]) ||
+        (flag & qcrypto_to_gnutls_keyid_flags_map[QCRYPTO_KEYID_FLAGS_BEST_KNOWN])) {
+        alg = QCRYPTO_HASH_ALGO_SHA512;
+    } else if (flag & qcrypto_to_gnutls_keyid_flags_map[QCRYPTO_KEYID_FLAGS_SHA256]) {
+        alg = QCRYPTO_HASH_ALGO_SHA256;
+    }
+
+    return qcrypto_get_x509_hash_len(alg, errp);
+}
 
 int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
                                       QCryptoHashAlgo alg,
@@ -74,3 +168,72 @@ int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
     gnutls_x509_crt_deinit(crt);
     return ret;
 }
+
+int qcrypto_get_x509_signature_algorithm(uint8_t *cert, size_t size, Error **errp)
+{
+    int rc = -1;
+    gnutls_x509_crt_t crt;
+    gnutls_datum_t datum = {.data = cert, .size = size};
+    gnutls_x509_crt_fmt_t fmt;
+
+    fmt = qcrypto_get_x509_cert_fmt(cert, size, errp);
+    if (fmt == -1) {
+        error_setg(errp, "Certificate is neither in DER or PEM format");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        return rc;
+    }
+
+    if (gnutls_x509_crt_import(crt, &datum, fmt) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        goto cleanup;
+    }
+
+    rc = gnutls_x509_crt_get_signature_algorithm(crt);
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    return rc;
+}
+
+#else /* ! CONFIG_GNUTLS */
+
+int qcrypto_check_x509_cert_fmt(uint8_t *cert, size_t size,
+                                 QCryptoCertFmt fmt, Error **errp)
+{
+    error_setg(errp, "To get certificate format requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_hash_len(QCryptoHashAlgo alg, Error **errp)
+{
+    error_setg(errp, "To get hash length requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_keyid_len(QCryptoKeyidFlags flag, Error **errp)
+{
+    error_setg(errp, "To get key ID length requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_cert_fingerprint(uint8_t *cert, size_t size,
+                                      QCryptoHashAlgo hash,
+                                      uint8_t *result,
+                                      size_t *resultlen,
+                                      Error **errp)
+{
+    error_setg(errp, "To get fingerprint requires GNUTLS");
+    return -ENOTSUP;
+}
+
+int qcrypto_get_x509_signature_algorithm(uint8_t *cert, size_t size, Error **errp)
+{
+    error_setg(errp, "To get signature algorithm requires GNUTLS");
+    return -ENOTSUP;
+}
+
+#endif /* ! CONFIG_GNUTLS */

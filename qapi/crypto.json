@@ -612,3 +612,83 @@
   'base': { 'alg': 'QCryptoAkCipherAlgo' },
   'discriminator': 'alg',
   'data': { 'rsa': 'QCryptoAkCipherOptionsRSA' }}
+
+##
+# @QCryptoKeyidFlags:
+#
+# The supported flags for the key ID
+#
+# @sha1: SHA-1
+#
+# @sha256: SHA-256
+#
+# @sha512: SHA-512
+#
+# @best-known: BEST-KNOWN
+#
+# Since: 9.2
+##
+{ 'enum': 'QCryptoKeyidFlags',
+  'data': ['sha1', 'sha256', 'sha512', 'best-known']}
+
+##
+# @QCryptoCertFmt:
+#
+# The supported certificate encoding formats
+#
+# @der: DER
+#
+# @pem: PEM
+#
+# Since: 9.2
+##
+{ 'enum': 'QCryptoCertFmt',
+  'data': ['der', 'pem']}
+
+##
+# @QCryptoSigAlgo:
+#
+# Algorithms for digital signature
+#
+# @unknown: UNKNOWN
+#
+# @rsa-sha1: RSA-SHA1 or RSA-SHA
+#
+# @dsa-sha1: DSA-SHA1 or DSA-SHA
+#
+# @rsa-md5: RSA-MD5
+#
+# @rsa-md2: RSA-MD2
+#
+# @rsa-rmd160: RSA-RMD160
+#
+# @rsa-sha256: RSA-SHA256
+#
+# @rsa-sha384: RSA-SHA384
+#
+# @rsa-sha512: RSA-SHA512
+#
+# @rsa-sha224: RSA-SHA224
+#
+# @dsa-sha224: DSA-SHA224
+#
+# @dsa-sha256: DSA-SHA256
+#
+# @ecdsa-sha1: ECDSA-SHA1
+#
+# @ecdsa-sha224: ECDSA-SHA224
+#
+# @ecdsa-sha256: ECDSA-SHA256
+#
+# @ecdsa-sha384: ECDSA-SHA384
+#
+# @ecdsa-sha512: ECDSA-SHA512
+#
+# Since: 9.2
+##
+{ 'enum': 'QCryptoSigAlgo',
+  'data': ['unknown', 'rsa-sha1', 'dsa-sha1',
+           'rsa-md5', 'rsa-md2', 'rsa-rmd160',
+           'rsa-sha256', 'rsa-sha384', 'rsa-sha512', 'rsa-sha224',
+           'dsa-sha224', 'dsa-sha256',
+           'ecdsa-sha1', 'ecdsa-sha224', 'ecdsa-sha256', 'ecdsa-sha384', 'ecdsa-sha512']}
