@@ -1,5 +1,5 @@
 /*
- * bonito north bridge support
+ * Algorithmics Ltd BONITO north bridge emulation
  *
  * Copyright (c) 2008 yajin (yajin@vm-kernel.org)
  * Copyright (c) 2010 Huacai Chen (zltjiangshi@gmail.com)
@@ -8,10 +8,21 @@
  *
  * Contributions after 2012-01-13 are licensed under the terms of the
  * GNU GPL, version 2 or (at your option) any later version.
- */
-
-/*
- * fuloong 2e mini pc has a bonito north bridge.
+ *
+ * For 32-bit variant:
+ * "BONITO - PCI/SDRAM System Controller for Vr43xx"
+ * https://wiki.qemu.org/File:Bonito-spec.pdf
+ *
+ * "BONITO - Companion Chip for Vr43xx and Vr5xxx" (uPD65949S1-P00-F6)
+ * https://repo.oss.cipunited.com/archives/docs/NEC/U15789EE1V0DS00.pdf
+ *
+ * For 64-bit variant:
+ * "BONITO64 - "north bridge" controller for 64-bit MIPS CPUs"
+ * https://wiki.qemu.org/File:Bonito-spec.pdf
+ *
+ * For Godson (Loongson) 2E variant:
+ * "Godson 2E North Bridge User Manual" (in Chinese)
+ * https://github.com/loongson-community/docs/blob/master/2E/Godson_2E_NB_UM.pdf
  */
 
 #include "qemu/osdep.h"
