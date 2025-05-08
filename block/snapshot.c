@@ -327,7 +327,7 @@ int bdrv_snapshot_goto(BlockDriverState *bs,
 
 /**
  * Delete an internal snapshot by @snapshot_id and @name.
- * @bs: block device used in the operation
+ * @bs: block device used in the operation, needs to be drained
  * @snapshot_id: unique snapshot ID, or NULL
  * @name: snapshot name, or NULL
  * @errp: location to store error
@@ -356,6 +356,8 @@ int bdrv_snapshot_delete(BlockDriverState *bs,
     BlockDriverState *fallback_bs = bdrv_snapshot_fallback(bs);
     int ret;
 
+    assert(qatomic_read(&bs->quiesce_counter) > 0);
+
     GLOBAL_STATE_CODE();
 
     if (!drv) {
@@ -368,9 +370,6 @@ int bdrv_snapshot_delete(BlockDriverState *bs,
         return -EINVAL;
     }
 
-    /* drain all pending i/o before deleting snapshot */
-    bdrv_drained_begin(bs);
-
     if (drv->bdrv_snapshot_delete) {
         ret = drv->bdrv_snapshot_delete(bs, snapshot_id, name, errp);
     } else if (fallback_bs) {
@@ -382,7 +381,6 @@ int bdrv_snapshot_delete(BlockDriverState *bs,
         ret = -ENOTSUP;
     }
 
-    bdrv_drained_end(bs);
     return ret;
 }
 
@@ -573,9 +571,13 @@ int bdrv_all_delete_snapshot(const char *name,
     GList *iterbdrvs;
 
     GLOBAL_STATE_CODE();
-    GRAPH_RDLOCK_GUARD_MAINLOOP();
+
+    bdrv_drain_all_begin();
+    bdrv_graph_rdlock_main_loop();
 
     if (bdrv_all_get_snapshot_devices(has_devices, devices, &bdrvs, errp) < 0) {
+        bdrv_graph_rdunlock_main_loop();
+        bdrv_drain_all_end();
         return -1;
     }
 
@@ -594,12 +596,16 @@ int bdrv_all_delete_snapshot(const char *name,
         if (ret < 0) {
             error_prepend(errp, "Could not delete snapshot '%s' on '%s': ",
                           name, bdrv_get_device_or_node_name(bs));
+            bdrv_graph_rdunlock_main_loop();
+            bdrv_drain_all_end();
             return -1;
         }
 
         iterbdrvs = iterbdrvs->next;
     }
 
+    bdrv_graph_rdunlock_main_loop();
+    bdrv_drain_all_end();
     return 0;
 }
 
