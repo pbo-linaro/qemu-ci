@@ -1,0 +1,53 @@
+Grabbing thread from lore.kernel.org/all/20250508133550.81391-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 28 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 100 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/27] hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+  [32m✓[0m [PATCH v4 2/27] hw/i386/pc: Remove PCMachineClass::legacy_cpu_hotplug field
+  [32m✓[0m [PATCH v4 3/27] hw/nvram/fw_cfg: Rename fw_cfg_init_mem() with '_nodma' suffix
+  [32m✓[0m [PATCH v4 4/27] hw/mips/loongson3_virt: Prefer using fw_cfg_init_mem_nodma()
+  [32m✓[0m [PATCH v4 5/27] hw/nvram/fw_cfg: Factor fw_cfg_init_mem_internal() out
+  [32m✓[0m [PATCH v4 6/27] hw/nvram/fw_cfg: Rename fw_cfg_init_mem_wide() -> fw_cfg_init_mem_dma()
+  [32m✓[0m [PATCH v4 7/27] hw/i386/x86: Remove X86MachineClass::fwcfg_dma_enabled field
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [32m✓[0m [PATCH v4 8/27] hw/i386/pc: Remove multiboot.bin
+  [32m✓[0m [PATCH v4 9/27] hw/nvram/fw_cfg: Remove fw_cfg_io_properties::dma_enabled
+  [32m✓[0m [PATCH v4 10/27] hw/i386/pc: Remove linuxboot.bin
+  [32m✓[0m [PATCH v4 11/27] hw/i386/pc: Remove pc_compat_2_6[] array
+  [32m✓[0m [PATCH v4 12/27] target/i386/cpu: Remove CPUX86State::enable_cpuid_0xb field
+  [32m✓[0m [PATCH v4 13/27] target/i386/cpu: Remove CPUX86State::fill_mtrr_mask field
+  [32m✓[0m [PATCH v4 14/27] hw/intc/apic: Remove APICCommonState::legacy_instance_id field
+  [32m✓[0m [PATCH v4 15/27] hw/core/machine: Remove hw_compat_2_6[] array
+  [32m✓[0m [PATCH v4 16/27] hw/virtio/virtio-mmio: Remove VirtIOMMIOProxy::format_transport_address field
+  [32m✓[0m [PATCH v4 17/27] hw/i386/pc: Remove deprecated pc-q35-2.7 and pc-i440fx-2.7 machines
+  [32m✓[0m [PATCH v4 18/27] hw/i386/pc: Remove pc_compat_2_7[] array
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v4 19/27] target/i386/cpu: Remove CPUX86State::full_cpuid_auto_level field
+  [32m✓[0m [PATCH v4 20/27] target/i386/cpu: Remove CPUX86State::enable_l3_cache field
+  [32m✓[0m [PATCH v4 21/27] hw/audio/pcspk: Remove PCSpkState::migrate field
+  [32m✓[0m [PATCH v4 22/27] hw/core/machine: Remove hw_compat_2_7[] array
+  [32m✓[0m [PATCH v4 23/27] hw/i386/intel_iommu: Remove IntelIOMMUState::buggy_eim field
+  [32m✓[0m [PATCH v4 24/27] hw/intc/ioapic: Remove IOAPICCommonState::version field
+  [32m✓[0m [PATCH v4 25/27] hw/virtio/virtio-pci: Remove VirtIOPCIProxy::ignore_backend_features field
+  [32m✓[0m [PATCH v4 26/27] hw/char/virtio-serial: Do not expose the 'emergency-write' property
+  [32m✓[0m [PATCH v4 27/27] hw/virtio/virtio-pci: Remove VIRTIO_PCI_FLAG_PAGE_PER_VQ definition
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 27
+---
+Applying: hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+Patch failed at 0001 hw/i386/pc: Remove deprecated pc-q35-2.6 and pc-i440fx-2.6 machines
+error: patch failed: hw/i386/pc_piix.c:764
+error: hw/i386/pc_piix.c: patch does not apply
+error: patch failed: hw/i386/pc_q35.c:658
+error: hw/i386/pc_q35.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
