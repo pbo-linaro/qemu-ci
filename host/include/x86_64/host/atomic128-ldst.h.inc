@@ -11,7 +11,6 @@
 #ifndef X86_64_ATOMIC128_LDST_H
 #define X86_64_ATOMIC128_LDST_H
 
-#ifdef CONFIG_INT128_TYPE
 #include "host/cpuinfo.h"
 #include "tcg/debug-assert.h"
 #include <immintrin.h>
@@ -67,9 +66,5 @@ static inline void atomic16_set(Int128 *ptr, Int128 val)
         } while (!__sync_bool_compare_and_swap_16(ptr_align, old, new.i));
     }
 }
-#else
-/* Provide QEMU_ERROR stubs. */
-#include "host/include/generic/host/atomic128-ldst.h.inc"
-#endif
 
 #endif /* X86_64_ATOMIC128_LDST_H */

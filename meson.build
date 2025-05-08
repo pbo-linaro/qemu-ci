@@ -2966,7 +2966,10 @@ has_int128_type = cc.compiles('''
   __int128_t a;
   __uint128_t b;
   int main(void) { b = a; }''')
-config_host_data.set('CONFIG_INT128_TYPE', has_int128_type)
+
+if not has_int128_type
+    error('You must use a compiler with int128 support to compile QEMU')
+endif
 
 has_int128 = has_int128_type and cc.links('''
   __int128_t a;

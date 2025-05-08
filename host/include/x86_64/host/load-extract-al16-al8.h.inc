@@ -8,7 +8,6 @@
 #ifndef X86_64_LOAD_EXTRACT_AL16_AL8_H
 #define X86_64_LOAD_EXTRACT_AL16_AL8_H
 
-#ifdef CONFIG_INT128_TYPE
 #include "host/atomic128-ldst.h.inc"
 
 /**
@@ -41,10 +40,5 @@ load_atom_extract_al16_or_al8(void *pv, int s)
     }
     return int128_getlo(int128_urshift(r.s, shr));
 }
-#else
-/* Fallback definition that must be optimized away, or error.  */
-uint64_t QEMU_ERROR("unsupported atomic")
-    load_atom_extract_al16_or_al8(void *pv, int s);
-#endif
 
 #endif /* X86_64_LOAD_EXTRACT_AL16_AL8_H */

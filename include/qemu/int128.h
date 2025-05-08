@@ -479,18 +479,14 @@ static inline void bswap128s(Int128 *s)
 #define INT128_MIN int128_make128(0, INT64_MIN)
 
 /*
- * When compiler supports a 128-bit type, define a combination of
+ * Define a combination of
  * a possible structure and the native types.  Ease parameter passing
  * via use of the transparent union extension.
  */
-#ifdef CONFIG_INT128_TYPE
 typedef union {
     __uint128_t u;
     __int128_t i;
     Int128 s;
 } Int128Alias __attribute__((transparent_union));
-#else
-typedef Int128 Int128Alias;
-#endif /* CONFIG_INT128_TYPE */
 
 #endif /* INT128_H */
