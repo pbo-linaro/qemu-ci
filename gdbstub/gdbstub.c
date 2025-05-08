@@ -1160,7 +1160,7 @@ static void handle_insert_bp(GArray *params, void *user_ctx)
         return;
     }
 
-    res = gdb_breakpoint_insert(gdbserver_state.c_cpu,
+    res = gdb_breakpoint_insert(gdbserver_state.g_cpu,
                                 gdb_get_cmd_param(params, 0)->val_ul,
                                 gdb_get_cmd_param(params, 1)->val_ull,
                                 gdb_get_cmd_param(params, 2)->val_ull);
@@ -1184,7 +1184,7 @@ static void handle_remove_bp(GArray *params, void *user_ctx)
         return;
     }
 
-    res = gdb_breakpoint_remove(gdbserver_state.c_cpu,
+    res = gdb_breakpoint_remove(gdbserver_state.g_cpu,
                                 gdb_get_cmd_param(params, 0)->val_ul,
                                 gdb_get_cmd_param(params, 1)->val_ull,
                                 gdb_get_cmd_param(params, 2)->val_ull);

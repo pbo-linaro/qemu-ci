@@ -48,8 +48,17 @@ enum RSState {
 
 typedef struct GDBState {
     bool init;       /* have we been initialised? */
-    CPUState *c_cpu; /* current CPU for step/continue ops */
-    CPUState *g_cpu; /* current CPU for other ops */
+    /*
+     * Current CPU for step/continue ops. Updated by the remote packet
+     * 'Hc thread-id'
+     */
+    CPUState *c_cpu;
+    /*
+     * Current CPU for other ops such as memory accesses ('m'/'M'), general
+     * register accesses ('g'/'G'), breakpoint management ('z'/'Z'), etc.
+     * Updated by the remote packet 'Hg thread-id'
+     */
+    CPUState *g_cpu;
     CPUState *query_cpu; /* for q{f|s}ThreadInfo */
     enum RSState state; /* parsing state */
     char line_buf[MAX_PACKET_LENGTH];
