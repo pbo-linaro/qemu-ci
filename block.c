@@ -4805,10 +4805,11 @@ bdrv_reopen_parse_file_or_backing(BDRVReopenState *reopen_state,
 
     if (old_child_bs) {
         bdrv_ref(old_child_bs);
+        bdrv_graph_rdunlock_main_loop();
         bdrv_drained_begin(old_child_bs);
+    } else {
+        bdrv_graph_rdunlock_main_loop();
     }
-
-    bdrv_graph_rdunlock_main_loop();
     bdrv_graph_wrlock();
 
     ret = bdrv_set_file_or_backing_noperm(bs, new_child_bs, is_backing,
