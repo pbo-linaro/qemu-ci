@@ -747,6 +747,14 @@ static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
      * cert_table value: index of cert entry in cert list that contains the certificate
      */
     int cert_table[MAX_CERTIFICATES] = { [0 ... MAX_CERTIFICATES - 1] = -1};
+
+    int sclab_count = 0;
+    int global_sclab_count = 0;
+    uint64_t sclab_load_psw = 0;
+
+    SecureIplCompAddrRange comp_addr_range[MAX_CERTIFICATES];
+    int addr_range_index = 0;
+
     zipl_secure_print_func = zipl_secure_get_print_func(boot_mode);
 
     if (!zipl_secure_ipl_supported()) {
@@ -778,7 +786,17 @@ static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
                 return -1;
             }
 
-            if (have_sig) {
+            zipl_secure_addr_overlap_check(comp_addr_range, &addr_range_index,
+                                           comp_addr, comp_addr + comp_len, have_sig);
+
+            if (!have_sig) {
+                zipl_secure_check_unsigned_comp(comp_addr, &comps, comp_index,
+                                                cert_index, comp_len);
+            } else {
+                zipl_secure_check_sclab(comp_addr, &comps, comp_len, comp_index,
+                                        &sclab_count, &sclab_load_psw,
+                                        &global_sclab_count);
+
                 verified = verify_signature(comp_len, comp_addr,
                                             sig_len, (uint64_t)sig_sec,
                                             &cert_len, &cert_idx);
@@ -800,11 +818,12 @@ static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
                     zipl_secure_print_func(verified, "Could not verify component");
                 }
 
-                comp_index++;
                 found_signature = true;
                 /* After a signature is used another new one can be accepted */
                 have_sig = false;
             }
+
+            comp_index++;
         }
 
         entry++;
@@ -821,8 +840,29 @@ static int zipl_run_secure(ComponentEntry *entry, uint8_t *tmp_sec)
     }
 
     if (!found_signature) {
+        comps.ipl_info_header.iiei |= S390_IPL_INFO_IIEI_NO_SIGED_COMP;
         zipl_secure_print_func(found_signature,
                                "Secure boot is on, but components are not signed");
+    } else {
+        if (sclab_count == 0) {
+            comps.ipl_info_header.iiei |= S390_IPL_INFO_IIEI_NO_SCLAB;
+            zipl_secure_print_func(false, "No recognizable SCLAB");
+        }
+
+        /* Verify PSW from the final component entry with PSW from the global SCLAB. */
+        if ((comps.ipl_info_header.iiei & S390_IPL_INFO_IIEI_NO_SCLAB) == 0) {
+            if (global_sclab_count == 0) {
+                comps.ipl_info_header.iiei |= S390_IPL_INFO_IIEI_NO_GLOBAL_SCLAB;
+                zipl_secure_print_func(false, "Global SCLAB does not exists");
+            } else if (global_sclab_count == 1 && sclab_load_psw) {
+                zipl_secure_load_psw_check(comp_addr_range, addr_range_index,
+                                           sclab_load_psw, entry->compdat.load_psw,
+                                           &comps, comp_index);
+            } else {
+                /* Program will only reach here in audit mode */
+                puts("Multiple global SCLABs");
+            }
+        }
     }
 
     if (zipl_secure_update_iirb(&comps, &certs)) {

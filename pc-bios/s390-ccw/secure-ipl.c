@@ -9,6 +9,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "bootmap.h"
 #include "s390-ccw.h"
 #include "secure-ipl.h"
 
@@ -161,6 +162,12 @@ bool zipl_secure_ipl_supported(void)
         return false;
     }
 
+    if (!sclp_is_sclaf_on()) {
+        puts("Secure IPL Code Loading Attributes Facility is not supported by" \
+             " the hypervisor!");
+        return false;
+    }
+
     return true;
 }
 
@@ -172,4 +179,229 @@ void zipl_secure_init_lists(IplDeviceComponentList *comps,
 
     certs->ipl_info_header.ibt = IPL_IBT_CERTIFICATES;
     certs->ipl_info_header.len = sizeof(certs->ipl_info_header);
+}
+
+static bool is_comp_overlap(SecureIplCompAddrRange *comp_addr_range, int addr_range_index,
+                            uint64_t start_addr, uint64_t end_addr)
+{
+    /* neither a signed nor an unsigned component can overlap with a signed component */
+    for (int i = 0; i < addr_range_index; i++) {
+        if ((comp_addr_range[i].start_addr <= end_addr &&
+            start_addr <= comp_addr_range[i].end_addr) &&
+            comp_addr_range[i].is_signed) {
+            return true;
+       }
+    }
+
+    return false;
+}
+
+static void comp_addr_range_add(SecureIplCompAddrRange *comp_addr_range,
+                                int addr_range_index, bool is_signed,
+                                uint64_t start_addr, uint64_t end_addr)
+{
+    comp_addr_range[addr_range_index].is_signed = is_signed;
+    comp_addr_range[addr_range_index].start_addr = start_addr;
+    comp_addr_range[addr_range_index].end_addr = end_addr;
+}
+
+static void unsigned_addr_check(uint64_t load_addr, IplDeviceComponentList *comps,
+                                int comp_index)
+{
+    bool is_addr_valid;
+
+    is_addr_valid = load_addr >= 0x2000;
+    if (!is_addr_valid) {
+        comps->device_entries[comp_index].cei |=
+        S390_IPL_COMPONENT_CEI_INVALID_UNSIGNED_ADDR;
+        zipl_secure_print_func(is_addr_valid, "Load address is less than 0x2000");
+    }
+}
+
+void zipl_secure_addr_overlap_check(SecureIplCompAddrRange *comp_addr_range,
+                                    int *addr_range_index,
+                                    uint64_t start_addr, uint64_t end_addr,
+                                    bool is_signed)
+{
+    bool overlap;
+
+    overlap = is_comp_overlap(comp_addr_range, *addr_range_index,
+                              start_addr, end_addr);
+    if (!overlap) {
+        comp_addr_range_add(comp_addr_range, *addr_range_index, is_signed,
+                            start_addr, end_addr);
+        *addr_range_index += 1;
+    } else {
+        zipl_secure_print_func(!overlap, "Component addresses overlap");
+    }
+}
+
+static void valid_sclab_check(SclabOriginLocator *sclab_locator,
+                              IplDeviceComponentList *comps, int comp_index)
+{
+    bool is_magic_match;
+    bool is_len_valid;
+
+    /* identifies the presence of SCLAB */
+    is_magic_match = magic_match(sclab_locator->magic, ZIPL_MAGIC);
+    if (!is_magic_match) {
+        comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_SCLAB;
+
+        /* a missing SCLAB will not be reported in audit mode */
+        return;
+    }
+
+    is_len_valid = sclab_locator->len >= 32;
+    if (!is_len_valid) {
+        comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_SCLAB_LEN;
+        comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_SCLAB;
+        zipl_secure_print_func(is_len_valid, "Invalid SCLAB length");
+    }
+}
+
+static void sclab_format_check(SecureCodeLoadingAttributesBlock *sclab,
+                               IplDeviceComponentList *comps, int comp_index)
+{
+    bool valid_format;
+
+    valid_format = sclab->format == 0;
+    if (!valid_format) {
+        comps->device_entries[comp_index].cei |=
+        S390_IPL_COMPONENT_CEI_INVALID_SCLAB_FORMAT;
+    }
+    zipl_secure_print_func(valid_format, "Format-0 SCLAB is not being used");
+}
+
+static void sclab_opsw_check(SecureCodeLoadingAttributesBlock *sclab,
+                             int *global_sclab_count, uint64_t *sclab_load_psw,
+                             IplDeviceComponentList *comps, int comp_index)
+{
+    bool is_load_psw_zero;
+    bool is_ola_on;
+    bool has_one_glob_sclab;
+
+    /* OPSW is zero */
+    if (!(sclab->flags & S390_IPL_SCLAB_FLAG_OPSW)) {
+        is_load_psw_zero = sclab->load_psw == 0;
+        if (!is_load_psw_zero) {
+            comps->device_entries[comp_index].cei |=
+            S390_IPL_COMPONENT_CEI_SCLAB_LOAD_PSW_NOT_ZERO;
+            zipl_secure_print_func(is_load_psw_zero,
+                       "Load PSW is not zero when Override PSW bit is zero");
+        }
+    } else {
+        is_ola_on = sclab->flags & S390_IPL_SCLAB_FLAG_OLA;
+        if (!is_ola_on) {
+            comps->device_entries[comp_index].cei |=
+            S390_IPL_COMPONENT_CEI_SCLAB_OLA_NOT_ONE;
+            zipl_secure_print_func(is_ola_on,
+                       "Override Load Address bit is not set to one in the global SCLAB");
+        }
+
+        *global_sclab_count += 1;
+        if (*global_sclab_count == 1) {
+            *sclab_load_psw = sclab->load_psw;
+        } else {
+            has_one_glob_sclab = false;
+            comps->ipl_info_header.iiei |= S390_IPL_INFO_IIEI_MORE_GLOBAL_SCLAB;
+            zipl_secure_print_func(has_one_glob_sclab, "More than one global SCLAB");
+        }
+    }
+}
+
+static void sclab_ola_check(SecureCodeLoadingAttributesBlock *sclab,
+                            uint64_t load_addr, IplDeviceComponentList *comps,
+                            int comp_index)
+{
+    bool is_load_addr_zero;
+    bool is_matched;
+
+    /* OLA is zero */
+    if (!(sclab->flags & S390_IPL_SCLAB_FLAG_OLA)) {
+        is_load_addr_zero = sclab->load_addr == 0;
+        if (!is_load_addr_zero) {
+            comps->device_entries[comp_index].cei |=
+            S390_IPL_COMPONENT_CEI_SCLAB_LOAD_ADDR_NOT_ZERO;
+            zipl_secure_print_func(is_load_addr_zero,
+                       "Load Address is not zero when Override Load Address bit is zero");
+        }
+    } else {
+        is_matched = sclab->load_addr == load_addr;
+        if (!is_matched) {
+            comps->device_entries[comp_index].cei |=
+            S390_IPL_COMPONENT_CEI_UNMATCHED_SCLAB_LOAD_ADDR;
+            zipl_secure_print_func(is_matched,
+                       "Load Address does not match with component load address");
+        }
+    }
+}
+
+static bool is_psw_valid(uint64_t psw, SecureIplCompAddrRange *comp_addr_range,
+                         int range_index)
+{
+    uint32_t addr = psw & 0x3FFFFFFF;
+
+    /* PSW points to the beginning of a signed binary code component */
+    for (int i = 0; i < range_index; i++) {
+        if (comp_addr_range[i].is_signed && comp_addr_range[i].start_addr == addr) {
+            return true;
+       }
+    }
+
+    return false;
+}
+
+void zipl_secure_load_psw_check(SecureIplCompAddrRange *comp_addr_range,
+                                int addr_range_index, uint64_t sclab_load_psw,
+                                uint64_t load_psw, IplDeviceComponentList *comps,
+                                int comp_index)
+{
+    bool is_valid;
+    bool is_matched;
+
+    is_valid = is_psw_valid(sclab_load_psw, comp_addr_range, addr_range_index) &&
+               is_psw_valid(load_psw, comp_addr_range, addr_range_index);
+    if (!is_valid) {
+        comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_LOAD_PSW;
+        zipl_secure_print_func(is_valid, "Invalid PSW");
+    }
+
+    is_matched = load_psw == sclab_load_psw;
+    if (!is_matched) {
+        comps->device_entries[comp_index].cei |=
+        S390_IPL_COMPONENT_CEI_UNMATCHED_SCLAB_LOAD_PSW;
+        zipl_secure_print_func(is_matched,
+                               "Load PSW does not match with PSW in component");
+    }
+}
+
+void zipl_secure_check_unsigned_comp(uint64_t comp_addr, IplDeviceComponentList *comps,
+                                     int comp_index, int cert_index, uint64_t comp_len)
+{
+    unsigned_addr_check(comp_addr, comps, comp_index);
+
+    zipl_secure_comp_list_add(comps, comp_index, cert_index, comp_addr, comp_len, 0x00);
+}
+
+void zipl_secure_check_sclab(uint64_t comp_addr, IplDeviceComponentList *comps,
+                             uint64_t comp_len, int comp_index, int *sclab_count,
+                             uint64_t *sclab_load_psw, int *global_sclab_count)
+{
+    SclabOriginLocator *sclab_locator;
+    SecureCodeLoadingAttributesBlock *sclab;
+
+    sclab_locator = (SclabOriginLocator *)(comp_addr + comp_len - 8);
+    valid_sclab_check(sclab_locator, comps, comp_index);
+
+    if ((comps->device_entries[comp_index].cei &
+         S390_IPL_COMPONENT_CEI_INVALID_SCLAB) == 0) {
+        *sclab_count += 1;
+        sclab = (SecureCodeLoadingAttributesBlock *)(comp_addr + comp_len -
+                                                     sclab_locator->len);
+
+        sclab_format_check(sclab, comps, comp_index);
+        sclab_opsw_check(sclab, global_sclab_count, sclab_load_psw,
+                         comps, comp_index);
+        sclab_ola_check(sclab, comp_addr, comps, comp_index);
+    }
 }

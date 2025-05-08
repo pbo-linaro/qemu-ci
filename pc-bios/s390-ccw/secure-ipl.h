@@ -26,6 +26,26 @@ bool zipl_secure_ipl_supported(void);
 void zipl_secure_init_lists(IplDeviceComponentList *comps,
                             IplSignatureCertificateList *certs);
 
+typedef struct SecureIplCompAddrRange {
+    bool is_signed;
+    uint64_t start_addr;
+    uint64_t end_addr;
+} SecureIplCompAddrRange;
+
+void zipl_secure_addr_overlap_check(SecureIplCompAddrRange *comp_addr_range,
+                                    int *addr_range_index,
+                                    uint64_t start_addr, uint64_t end_addr,
+                                    bool is_signed);
+void zipl_secure_load_psw_check(SecureIplCompAddrRange *comp_addr_range,
+                                int addr_range_index, uint64_t sclab_load_psw,
+                                uint64_t load_psw, IplDeviceComponentList *comps,
+                                int comp_index);
+void zipl_secure_check_unsigned_comp(uint64_t comp_addr, IplDeviceComponentList *comps,
+                                     int comp_index, int cert_index, uint64_t comp_len);
+void zipl_secure_check_sclab(uint64_t comp_addr, IplDeviceComponentList *comps,
+                             uint64_t comp_len, int comp_index, int *sclab_count,
+                             uint64_t *sclab_load_psw, int *global_sclab_count);
+
 typedef void (*ipl_print_func_t)(bool, const char *);
 
 static inline ipl_print_func_t zipl_secure_get_print_func(ZiplBootMode boot_mode)
