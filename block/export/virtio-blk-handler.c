@@ -169,11 +169,13 @@ int coroutine_fn virtio_blk_process_req(VirtioBlkHandler *handler,
     type = le32_to_cpu(out.type);
     switch (type & ~VIRTIO_BLK_T_BARRIER) {
     case VIRTIO_BLK_T_IN:
-    case VIRTIO_BLK_T_OUT: {
+    case VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_OUT_FUA: {
         QEMUIOVector qiov;
         int64_t offset;
         ssize_t ret = 0;
         bool is_write = type & VIRTIO_BLK_T_OUT;
+        bool is_fua = type == VIRTIO_BLK_T_OUT_FUA;
         int64_t sector_num = le64_to_cpu(out.sector);
 
         if (is_write && !handler->writable) {
@@ -197,7 +199,8 @@ int coroutine_fn virtio_blk_process_req(VirtioBlkHandler *handler,
         offset = sector_num << VIRTIO_BLK_SECTOR_BITS;
 
         if (is_write) {
-            ret = blk_co_pwritev(blk, offset, qiov.size, &qiov, 0);
+            ret = blk_co_pwritev(blk, offset, qiov.size, &qiov,
+                                 is_fua ? BDRV_REQ_FUA : 0);
         } else {
             ret = blk_co_preadv(blk, offset, qiov.size, &qiov, 0);
         }
