@@ -762,7 +762,7 @@ static int mirror_exit_common(Job *job)
          * check for an op blocker on @to_replace, and we have our own
          * there.
          */
-        bdrv_graph_wrlock();
+        bdrv_graph_wrlock(false);
         if (bdrv_recurse_can_replace(src, to_replace)) {
             bdrv_replace_node(to_replace, target_bs, &local_err);
         } else {
@@ -771,7 +771,7 @@ static int mirror_exit_common(Job *job)
                        "would not lead to an abrupt change of visible data",
                        to_replace->node_name, target_bs->node_name);
         }
-        bdrv_graph_wrunlock();
+        bdrv_graph_wrunlock(false);
         bdrv_drained_end(to_replace);
         if (local_err) {
             error_report_err(local_err);
@@ -791,9 +791,9 @@ static int mirror_exit_common(Job *job)
      * valid.
      */
     block_job_remove_all_bdrv(bjob);
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(false);
     bdrv_replace_node(mirror_top_bs, mirror_top_bs->backing->bs, &error_abort);
-    bdrv_graph_wrunlock();
+    bdrv_graph_wrunlock(false);
 
     if (abort && s->base_ro && !bdrv_is_read_only(target_bs)) {
         bdrv_reopen_set_read_only(target_bs, true, NULL);
@@ -1904,15 +1904,13 @@ static BlockJob *mirror_start_job(
      */
     bdrv_disable_dirty_bitmap(s->dirty_bitmap);
 
-    bdrv_drain_all_begin();
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(true);
     ret = block_job_add_bdrv(&s->common, "source", bs, 0,
                              BLK_PERM_WRITE_UNCHANGED | BLK_PERM_WRITE |
                              BLK_PERM_CONSISTENT_READ,
                              errp);
     if (ret < 0) {
-        bdrv_graph_wrunlock();
-        bdrv_drain_all_end();
+        bdrv_graph_wrunlock(true);
         goto fail;
     }
 
@@ -1957,20 +1955,17 @@ static BlockJob *mirror_start_job(
             ret = block_job_add_bdrv(&s->common, "intermediate node", iter, 0,
                                      iter_shared_perms, errp);
             if (ret < 0) {
-                bdrv_graph_wrunlock();
-                bdrv_drain_all_end();
+                bdrv_graph_wrunlock(true);
                 goto fail;
             }
         }
 
         if (bdrv_freeze_backing_chain(mirror_top_bs, target, errp) < 0) {
-            bdrv_graph_wrunlock();
-            bdrv_drain_all_end();
+            bdrv_graph_wrunlock(true);
             goto fail;
         }
     }
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
 
     QTAILQ_INIT(&s->ops_in_flight);
 
@@ -1996,12 +1991,12 @@ fail:
 
     bs_opaque->stop = true;
     bdrv_drained_begin(bs);
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(false);
     assert(mirror_top_bs->backing->bs == bs);
     bdrv_child_refresh_perms(mirror_top_bs, mirror_top_bs->backing,
                              &error_abort);
     bdrv_replace_node(mirror_top_bs, bs, &error_abort);
-    bdrv_graph_wrunlock();
+    bdrv_graph_wrunlock(false);
     bdrv_drained_end(bs);
 
     bdrv_unref(mirror_top_bs);

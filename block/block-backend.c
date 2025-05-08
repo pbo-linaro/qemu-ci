@@ -889,11 +889,9 @@ void blk_remove_bs(BlockBackend *blk)
     root = blk->root;
     blk->root = NULL;
 
-    bdrv_drain_all_begin();
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(true);
     bdrv_root_unref_child(root);
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
 }
 
 /*
@@ -906,8 +904,7 @@ int blk_insert_bs(BlockBackend *blk, BlockDriverState *bs, Error **errp)
 
     GLOBAL_STATE_CODE();
     bdrv_ref(bs);
-    bdrv_drain_all_begin();
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(true);
 
     if ((bs->open_flags & BDRV_O_INACTIVE) && blk_can_inactivate(blk)) {
         blk->disable_perm = true;
@@ -921,8 +918,7 @@ int blk_insert_bs(BlockBackend *blk, BlockDriverState *bs, Error **errp)
     blk->root = bdrv_root_attach_child(bs, "root", &child_root,
                                        BDRV_CHILD_FILTERED | BDRV_CHILD_PRIMARY,
                                        perm, shared_perm, blk, errp);
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
     if (blk->root == NULL) {
         return -EPERM;
     }

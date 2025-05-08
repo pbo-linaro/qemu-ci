@@ -108,17 +108,21 @@ void unregister_aiocontext(AioContext *ctx);
  *
  * The wrlock can only be taken from the main loop, with BQL held, as only the
  * main loop is allowed to modify the graph.
+ *
+ * @drain whether bdrv_drain_all_begin() should be called before taking the lock
  */
 void no_coroutine_fn TSA_ACQUIRE(graph_lock) TSA_NO_TSA
-bdrv_graph_wrlock(void);
+bdrv_graph_wrlock(bool drain);
 
 /*
  * bdrv_graph_wrunlock:
  * Write finished, reset global has_writer to 0 and restart
  * all readers that are waiting.
+ *
+ * @drain whether bdrv_drain_all_end() should be called after releasing the lock
  */
 void no_coroutine_fn TSA_RELEASE(graph_lock) TSA_NO_TSA
-bdrv_graph_wrunlock(void);
+bdrv_graph_wrunlock(bool drain);
 
 /*
  * bdrv_graph_co_rdlock:

@@ -198,8 +198,7 @@ void block_job_remove_all_bdrv(BlockJob *job)
      * one to make sure that such a concurrent access does not attempt
      * to process an already freed BdrvChild.
      */
-    bdrv_drain_all_begin();
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(true);
     while (job->nodes) {
         GSList *l = job->nodes;
         BdrvChild *c = l->data;
@@ -211,8 +210,7 @@ void block_job_remove_all_bdrv(BlockJob *job)
 
         g_slist_free_1(l);
     }
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
 }
 
 bool block_job_has_bdrv(BlockJob *job, BlockDriverState *bs)
@@ -498,8 +496,7 @@ void *block_job_create(const char *job_id, const BlockJobDriver *driver,
     int ret;
     GLOBAL_STATE_CODE();
 
-    bdrv_drain_all_begin();
-    bdrv_graph_wrlock();
+    bdrv_graph_wrlock(true);
 
     if (job_id == NULL && !(flags & JOB_INTERNAL)) {
         job_id = bdrv_get_device_name(bs);
@@ -508,8 +505,7 @@ void *block_job_create(const char *job_id, const BlockJobDriver *driver,
     job = job_create(job_id, &driver->job_driver, txn, bdrv_get_aio_context(bs),
                      flags, cb, opaque, errp);
     if (job == NULL) {
-        bdrv_graph_wrunlock();
-        bdrv_drain_all_end();
+        bdrv_graph_wrunlock(true);
         return NULL;
     }
 
@@ -547,13 +543,11 @@ void *block_job_create(const char *job_id, const BlockJobDriver *driver,
         goto fail;
     }
 
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
     return job;
 
 fail:
-    bdrv_graph_wrunlock();
-    bdrv_drain_all_end();
+    bdrv_graph_wrunlock(true);
     job_early_fail(&job->job);
     return NULL;
 }

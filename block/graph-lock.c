@@ -106,14 +106,20 @@ static uint32_t reader_count(void)
     return rd;
 }
 
-void no_coroutine_fn bdrv_graph_wrlock(void)
+void no_coroutine_fn bdrv_graph_wrlock(bool drain)
 {
     GLOBAL_STATE_CODE();
     assert(!qatomic_read(&has_writer));
     assert(!qemu_in_coroutine());
 
-    /* Make sure that constantly arriving new I/O doesn't cause starvation */
-    bdrv_drain_all_begin_nopoll();
+    if (drain) {
+        bdrv_drain_all_begin();
+    } else {
+        /*
+         * Make sure that constantly arriving new I/O doesn't cause starvation
+         */
+        bdrv_drain_all_begin_nopoll();
+    }
 
     /*
      * reader_count == 0: this means writer will read has_reader as 1
@@ -139,10 +145,12 @@ void no_coroutine_fn bdrv_graph_wrlock(void)
         smp_mb();
     } while (reader_count() >= 1);
 
-    bdrv_drain_all_end();
+    if (!drain) {
+        bdrv_drain_all_end();
+    }
 }
 
-void no_coroutine_fn bdrv_graph_wrunlock(void)
+void no_coroutine_fn bdrv_graph_wrunlock(bool drain)
 {
     GLOBAL_STATE_CODE();
     assert(qatomic_read(&has_writer));
@@ -168,6 +176,10 @@ void no_coroutine_fn bdrv_graph_wrunlock(void)
      * progress.
      */
     aio_bh_poll(qemu_get_aio_context());
+
+    if (drain) {
+        bdrv_drain_all_end();
+    }
 }
 
 void coroutine_fn bdrv_graph_co_rdlock(void)
