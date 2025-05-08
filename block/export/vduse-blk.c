@@ -329,7 +329,8 @@ static int vduse_blk_exp_create(BlockExport *exp, BlockExportOptions *opts,
                (1ULL << VIRTIO_BLK_F_BLK_SIZE) |
                (1ULL << VIRTIO_BLK_F_FLUSH) |
                (1ULL << VIRTIO_BLK_F_DISCARD) |
-               (1ULL << VIRTIO_BLK_F_WRITE_ZEROES);
+               (1ULL << VIRTIO_BLK_F_WRITE_ZEROES) |
+               (1ULL << VIRTIO_BLK_F_OUT_FUA);
 
     if (num_queues > 1) {
         features |= 1ULL << VIRTIO_BLK_F_MQ;
