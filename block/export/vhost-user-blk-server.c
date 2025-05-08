@@ -125,6 +125,7 @@ static uint64_t vu_blk_get_features(VuDev *dev)
                1ull << VIRTIO_BLK_F_FLUSH |
                1ull << VIRTIO_BLK_F_DISCARD |
                1ull << VIRTIO_BLK_F_WRITE_ZEROES |
+               1ull << VIRTIO_BLK_F_OUT_FUA |
                1ull << VIRTIO_BLK_F_CONFIG_WCE |
                1ull << VIRTIO_BLK_F_MQ |
                1ull << VIRTIO_F_VERSION_1 |

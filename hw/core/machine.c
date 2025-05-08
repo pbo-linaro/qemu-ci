@@ -39,6 +39,7 @@
 
 GlobalProperty hw_compat_10_0[] = {
     { "virtio-blk-device", "fua-write", "false" },
+    { "vhost-user-blk", "fua-write", "false" },
 };
 const size_t hw_compat_10_0_len = G_N_ELEMENTS(hw_compat_10_0);
 

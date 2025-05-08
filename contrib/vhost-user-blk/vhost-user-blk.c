@@ -154,7 +154,7 @@ vub_readv(VubReq *req, struct iovec *iov, uint32_t iovcnt)
 }
 
 static ssize_t
-vub_writev(VubReq *req, struct iovec *iov, uint32_t iovcnt)
+vub_writev(VubReq *req, struct iovec *iov, uint32_t iovcnt, int flags)
 {
     VubDev *vdev_blk = req->vdev_blk;
     ssize_t rc;
@@ -271,12 +271,19 @@ static int vub_virtio_process_req(VubDev *vdev_blk,
     type = le32_to_cpu(req->out->type);
     switch (type & ~VIRTIO_BLK_T_BARRIER) {
     case VIRTIO_BLK_T_IN:
-    case VIRTIO_BLK_T_OUT: {
+    case VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_OUT_FUA: {
         ssize_t ret = 0;
         bool is_write = type & VIRTIO_BLK_T_OUT;
+        int flags = 0;
         req->sector_num = le64_to_cpu(req->out->sector);
         if (is_write) {
-            ret  = vub_writev(req, &elem->out_sg[1], out_num);
+            #ifdef RWF_SYNC
+            if (type == VIRTIO_BLK_T_OUT_FUA) {
+                flags |= RWF_SYNC;
+            }
+            #endif
+            ret  = vub_writev(req, &elem->out_sg[1], out_num, flags);
         } else {
             ret = vub_readv(req, &elem->in_sg[0], in_num);
         }
@@ -378,6 +385,9 @@ vub_get_features(VuDev *dev)
                #if defined(__linux__) && defined(BLKDISCARD) && defined(BLKZEROOUT)
                1ull << VIRTIO_BLK_F_DISCARD |
                1ull << VIRTIO_BLK_F_WRITE_ZEROES |
+               #endif
+               #ifdef RWF_SYNC
+               1ull << VIRTIO_BLK_F_OUT_FUA |
                #endif
                1ull << VIRTIO_BLK_F_CONFIG_WCE;
 
