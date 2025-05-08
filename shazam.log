@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250508093211.463592-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] target/i386: do not trigger IRQ shadow for LSS
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: target/i386: do not trigger IRQ shadow for LSS
+Patch failed at 0001 target/i386: do not trigger IRQ shadow for LSS
+error: patch failed: target/i386/tcg/translate.c:1992
+error: target/i386/tcg/translate.c: patch does not apply
+error: patch failed: target/i386/tcg/emit.c.inc:352
+error: target/i386/tcg/emit.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
