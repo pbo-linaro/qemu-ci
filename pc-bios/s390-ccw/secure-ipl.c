@@ -248,6 +248,11 @@ static void valid_sclab_check(SclabOriginLocator *sclab_locator,
         comps->device_entries[comp_index].cei |= S390_IPL_COMPONENT_CEI_INVALID_SCLAB;
 
         /* a missing SCLAB will not be reported in audit mode */
+        if (boot_mode == ZIPL_SECURE_MODE) {
+            zipl_secure_print_func(is_magic_match,
+                                   "Magic is not matched. SCLAB does not exist");
+         }
+
         return;
     }
 

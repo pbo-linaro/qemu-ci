@@ -52,6 +52,8 @@ static inline ipl_print_func_t zipl_secure_get_print_func(ZiplBootMode boot_mode
 {
     if (boot_mode == ZIPL_SECURE_AUDIT_MODE) {
         return &IPL_check;
+    } else if (boot_mode == ZIPL_SECURE_MODE) {
+        return &IPL_assert;
     }
 
     return NULL;
