@@ -72,6 +72,7 @@ static uint64_t virtio_blk_request(QGuestAllocator *alloc, QVirtioDevice *d,
     switch (req->type) {
     case VIRTIO_BLK_T_IN:
     case VIRTIO_BLK_T_OUT:
+    case VIRTIO_BLK_T_OUT_FUA:
         g_assert_cmpuint(data_size % 512, ==, 0);
         break;
     case VIRTIO_BLK_T_DISCARD:
@@ -387,6 +388,61 @@ static QVirtQueue *test_basic(QVirtioDevice *dev, QGuestAllocator *alloc)
 
         test_invalid_discard_write_zeroes(dev, alloc, qts, vq,
                                           VIRTIO_BLK_T_DISCARD);
+    }
+
+    if (features & (1u << VIRTIO_BLK_F_OUT_FUA)) {
+        /* FUA write and read with 3 descriptor layout */
+        /* FUA write request */
+        req.type = VIRTIO_BLK_T_OUT_FUA;
+        req.ioprio = 1;
+        req.sector = 0;
+        req.data = g_malloc0(512);
+        strcpy(req.data, "test");
+
+        req_addr = virtio_blk_request(alloc, dev, &req, 512);
+
+        g_free(req.data);
+
+        free_head = qvirtqueue_add(qts, vq, req_addr, 16, false, true);
+        qvirtqueue_add(qts, vq, req_addr + 16, 512, false, true);
+        qvirtqueue_add(qts, vq, req_addr + 528, 1, true, false);
+
+        qvirtqueue_kick(qts, dev, vq, free_head);
+
+        qvirtio_wait_used_elem(qts, dev, vq, free_head, NULL,
+                            QVIRTIO_BLK_TIMEOUT_US);
+        status = readb(req_addr + 528);
+        g_assert_cmpint(status, ==, 0);
+
+        guest_free(alloc, req_addr);
+
+        /* Read request */
+        req.type = VIRTIO_BLK_T_IN;
+        req.ioprio = 1;
+        req.sector = 0;
+        req.data = g_malloc0(512);
+
+        req_addr = virtio_blk_request(alloc, dev, &req, 512);
+
+        g_free(req.data);
+
+        free_head = qvirtqueue_add(qts, vq, req_addr, 16, false, true);
+        qvirtqueue_add(qts, vq, req_addr + 16, 512, true, true);
+        qvirtqueue_add(qts, vq, req_addr + 528, 1, true, false);
+
+        qvirtqueue_kick(qts, dev, vq, free_head);
+
+        qvirtio_wait_used_elem(qts, dev, vq, free_head, NULL,
+                            QVIRTIO_BLK_TIMEOUT_US);
+        status = readb(req_addr + 528);
+        g_assert_cmpint(status, ==, 0);
+
+        data = g_malloc0(512);
+        qtest_memread(qts, req_addr + 16, data, 512);
+        g_assert_cmpstr(data, ==, "test");
+        g_free(data);
+
+        guest_free(alloc, req_addr);
     }
 
     if (features & (1u << VIRTIO_F_ANY_LAYOUT)) {

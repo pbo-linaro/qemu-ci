@@ -44,6 +44,7 @@ static const int user_feature_bits[] = {
     VIRTIO_BLK_F_CONFIG_WCE,
     VIRTIO_BLK_F_DISCARD,
     VIRTIO_BLK_F_WRITE_ZEROES,
+    VIRTIO_BLK_F_OUT_FUA,
     VIRTIO_F_VERSION_1,
     VIRTIO_RING_F_INDIRECT_DESC,
     VIRTIO_RING_F_EVENT_IDX,
@@ -581,6 +582,8 @@ static const Property vhost_user_blk_properties[] = {
                       VIRTIO_BLK_F_DISCARD, true),
     DEFINE_PROP_BIT64("write-zeroes", VHostUserBlk, parent_obj.host_features,
                       VIRTIO_BLK_F_WRITE_ZEROES, true),
+    DEFINE_PROP_BIT64("fua-write", VHostUserBlk, parent_obj.host_features,
+                      VIRTIO_BLK_F_OUT_FUA, true),
 };
 
 static void vhost_user_blk_class_init(ObjectClass *klass, const void *data)
