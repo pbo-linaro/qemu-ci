@@ -1353,7 +1353,22 @@ sub checkfilename {
 	}
 }
 
-sub checkspdx {
+sub check_spdx_present {
+    my $expect_spdx_file = shift;
+
+    if ($expect_spdx_file =~
+	/\.(c|h|py|pl|sh|json|inc|Makefile)$/) {
+	# source code files MUST have SPDX license declared
+	ERROR("New file '$expect_spdx_file' requires " .
+	      "'SPDX-License-Identifier'");
+    } else {
+	# Other files MAY have SPDX license if appropriate
+	WARN("Does new file '$expect_spdx_file' need " .
+	     "'SPDX-License-Identifier'?");
+    }
+}
+
+sub check_spdx_expression {
     my ($file, $expr) = @_;
 
     # Imported Linux headers probably have SPDX tags, but if they
@@ -1442,6 +1457,8 @@ sub process {
 	my $in_imported_file = 0;
 	my $in_no_imported_file = 0;
 	my $non_utf8_charset = 0;
+	my $expect_spdx = 0;
+	my $expect_spdx_file;
 
 	our @report = ();
 	our $cnt_lines = 0;
@@ -1679,9 +1696,38 @@ sub process {
 			WARN("added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
 		}
 
+# All new files should have a SPDX-License-Identifier tag
+		if ($line =~ /^diff --git/) {
+		    # Start of file diff marker, report last file if it failed
+		    # SPDX validation
+		    if (defined $expect_spdx_file) {
+			&check_spdx_present($expect_spdx_file);
+		    }
+
+		    # Reset state ready to find new file
+		    $expect_spdx = 0;
+		    $expect_spdx_file = undef;
+		} elsif ($line =~ /^new file mode\s*\d+\s*$/) {
+		    # This diff block is a new file, so we must
+		    # mandate a SPDX tag
+		    $expect_spdx = 1;
+		} elsif ($expect_spdx) {
+		    # Capture filename if don't already have it
+		    $expect_spdx_file = $realfile unless
+			defined $expect_spdx_file;
+
+		    # SPDX tags may occurr in comments which were
+		    # stripped from '$line', so use '$rawline'. If
+		    # we see one we pass validation
+		    if ($rawline =~ /SPDX-License-Identifier/) {
+			$expect_spdx = 0;
+			$expect_spdx_file = undef;
+		    }
+		}
+
 # Check SPDX-License-Identifier references a permitted license
 		if ($rawline =~ m,SPDX-License-Identifier: (.*?)(\*/)?\s*$,) {
-		    &checkspdx($realfile, $1);
+		    &check_spdx_expression($realfile, $1);
 		}
 
 		if ($rawline =~ m,(SPDX-[a-zA-Z0-9-_]+):,) {
@@ -3211,6 +3257,12 @@ sub process {
 			$line =~ /\b(?:$non_exit_glib_asserts)\(/) {
 			ERROR("Use g_assert or g_assert_not_reached\n". $herecurr);
 		}
+	}
+
+	# End of diff, report last file block if it failed
+	# SPDX validation
+	if (defined $expect_spdx_file) {
+	    &check_spdx_present($expect_spdx_file);
 	}
 
 	if ($is_patch && $chk_signoff && $signoff == 0) {
