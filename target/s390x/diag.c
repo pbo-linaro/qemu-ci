@@ -494,7 +494,10 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
 void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 {
+    S390IPLCertificateStore *qcs = s390_ipl_get_certificate_store();
+    size_t csi_size = sizeof(Diag508CertificateStoreInfo);
     uint64_t subcode = env->regs[r3];
+    uint64_t addr = env->regs[r1];
     int rc;
 
     if (env->psw.mask & PSW_MASK_PSTATE) {
@@ -509,7 +512,83 @@ void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
     switch (subcode) {
     case DIAG_508_SUBC_QUERY_SUBC:
-        rc = 0;
+        rc = DIAG_508_SUBC_SIG_VERIF;
+        break;
+    case DIAG_508_SUBC_SIG_VERIF:
+        size_t svb_size = sizeof(Diag508SignatureVerificationBlock);
+        Diag508SignatureVerificationBlock *svb;
+        uint64_t comp_len, comp_addr;
+        uint64_t sig_len, sig_addr;
+        uint8_t *svb_comp;
+        uint8_t *svb_sig;
+        int verified;
+        Error *err = NULL;
+        int i;
+
+        if (!qcs || !qcs->count) {
+            rc = DIAG_508_RC_NO_CERTS;
+            break;
+        }
+
+        if (!diag_parm_addr_valid(addr, svb_size, false) ||
+            !diag_parm_addr_valid(addr, csi_size, true)) {
+            s390_program_interrupt(env, PGM_ADDRESSING, ra);
+            return;
+        }
+
+        svb = g_new0(Diag508SignatureVerificationBlock, 1);
+        cpu_physical_memory_read(addr, svb, svb_size);
+
+        comp_len = be64_to_cpu(svb->comp_len);
+        comp_addr = be64_to_cpu(svb->comp_addr);
+        sig_len = be64_to_cpu(svb->sig_len);
+        sig_addr = be64_to_cpu(svb->sig_addr);
+
+        if (!comp_len || !comp_addr) {
+            rc = DIAG_508_RC_INVAL_COMP_DATA;
+            g_free(svb);
+            break;
+        }
+
+        if (!sig_len || !sig_addr) {
+            rc = DIAG_508_RC_INVAL_PKCS7_SIG;
+            g_free(svb);
+            break;
+        }
+
+        svb_comp = g_malloc0(comp_len);
+        cpu_physical_memory_read(comp_addr, svb_comp, comp_len);
+
+        svb_sig = g_malloc0(sig_len);
+        cpu_physical_memory_read(sig_addr, svb_sig, sig_len);
+
+        rc = DIAG_508_RC_FAIL_VERIF;
+        /*
+         * It is uncertain which certificate contains
+         * the analogous key to verify the signed data
+         */
+        for (i = 0; i < qcs->count; i++) {
+            verified = qcrypto_verify_x509_cert((uint8_t *)qcs->certs[i].raw,
+                                                qcs->certs[i].size,
+                                                svb_comp, comp_len,
+                                                svb_sig, sig_len, &err);
+
+            /* return early if GNUTLS is not enabled */
+            if (verified == -ENOTSUP) {
+                g_free(svb);
+                break;
+            }
+
+            if (verified == 0) {
+                svb->csi.idx = i;
+                svb->csi.len = cpu_to_be64(qcs->certs[i].size);
+                cpu_physical_memory_write(addr, &svb->csi, be32_to_cpu(csi_size));
+                rc = DIAG_508_RC_OK;
+                break;
+           }
+        }
+
+        g_free(svb);
         break;
     default:
         s390_program_interrupt(env, PGM_SPECIFICATION, ra);

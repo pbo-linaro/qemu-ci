@@ -35,4 +35,8 @@ int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
                                  size_t *resultlen,
                                  Error **errp);
 
+int qcrypto_verify_x509_cert(uint8_t *cert, size_t cert_size,
+                             uint8_t *comp, size_t comp_size,
+                             uint8_t *sig, size_t sig_size, Error **errp);
+
 #endif
