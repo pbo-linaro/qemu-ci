@@ -8,6 +8,15 @@ get_ipv4_addr()
         head -1 | tr -d '\n'
 }
 
+get_ipv6_addr() {
+    ipv6=$(ip -6 -o addr show dev "$1" |
+        sed -n 's/.*[[:blank:]]inet6[[:blank:]]*\([^[:blank:]/]*\).*/\1/p' |
+        head -1 | tr -d '\n')
+
+    [ $? -eq 0 ] || return
+    echo -n "[$ipv6%$1]"
+}
+
 # existing rdma interfaces
 rdma_interfaces()
 {
@@ -20,11 +29,16 @@ ipv4_interfaces()
     ip -o addr show | awk '/inet / {print $2}' | grep -v -w lo
 }
 
+ipv6_interfaces()
+{
+    ip -o addr show | awk '/inet6 / {print $2}' | sort -u | grep -v -w lo
+}
+
 rdma_rxe_detect()
 {
     for r in $(rdma_interfaces)
     do
-        ipv4_interfaces | grep -qw $r && get_ipv4_addr $r && return
+        "$IP_FAMILY"_interfaces | grep -qw $r && get_"$IP_FAMILY"_addr $r && return
     done
 
     return 1
@@ -32,11 +46,11 @@ rdma_rxe_detect()
 
 rdma_rxe_setup()
 {
-    for i in $(ipv4_interfaces)
+    for i in $("$IP_FAMILY"_interfaces)
     do
         rdma_interfaces | grep -qw $i && continue
         rdma link add "${i}_rxe" type rxe netdev "$i" && {
-            echo "Setup new rdma/rxe ${i}_rxe for $i with $(get_ipv4_addr $i)"
+            echo "Setup new rdma/rxe ${i}_rxe for $i with $(get_"$IP_FAMILY"_addr $i)"
             return
         }
     done
@@ -49,6 +63,12 @@ rdma_rxe_clean()
 {
     modprobe -r rdma_rxe
 }
+
+IP_FAMILY=${IP_FAMILY:-ipv4}
+if [ "$IP_FAMILY" != "ipv6" ] && [ "$IP_FAMILY" != "ipv4" ]; then
+    echo "Unknown ip family '$IP_FAMILY', only ipv4 or ipv6 is supported." >&2
+    exit 1
+fi
 
 operation=${1:-detect}
 
