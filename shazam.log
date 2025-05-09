@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250509172229.726-1-shiju.jose@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/7] hw/cxl/events: Update for rev3.2 common event record format
+  [PATCH 2/7] hw/cxl/events: Updates for rev3.2 general media event record
+  [PATCH 3/7] hw/cxl/events: Updates for rev3.2 DRAM event record
+  [PATCH 4/7] hw/cxl/events: Updates for rev3.2 memory module event record
+  [PATCH 5/7] hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature attributes in cmd_features_set_feature()
+  [PATCH 6/7] hw/cxl: Add Maintenance support
+  [PATCH 7/7] hw/cxl: Add emulation for memory sparing control feature
+---
+Total patches: 7
+---
+Applying: hw/cxl/events: Update for rev3.2 common event record format
+Applying: hw/cxl/events: Updates for rev3.2 general media event record
+Applying: hw/cxl/events: Updates for rev3.2 DRAM event record
+Applying: hw/cxl/events: Updates for rev3.2 memory module event record
+Patch failed at 0004 hw/cxl/events: Updates for rev3.2 memory module event record
+error: patch failed: hw/mem/cxl_type3.c:1958
+error: hw/mem/cxl_type3.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
