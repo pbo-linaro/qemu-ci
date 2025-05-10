@@ -22,6 +22,7 @@
 #include "hw/char/nrf51_uart.h"
 #include "hw/gpio/nrf51_gpio.h"
 #include "hw/nvram/nrf51_nvm.h"
+#include "hw/rtc/nrf51_rtc.h"
 #include "hw/timer/nrf51_timer.h"
 #include "hw/i2c/microbit_i2c.h"
 
@@ -538,6 +539,253 @@ static void test_nrf51_timer(void)
     qtest_quit(qts);
 }
 
+/* RTC Helper Functions */
+static void rtc_task(QTestState *qts, hwaddr task)
+{
+    qtest_writel(qts, NRF51_RTC0_BASE + task, NRF51_TRIGGER_TASK);
+}
+
+static void rtc_clear_event(QTestState *qts, hwaddr event)
+{
+    qtest_writel(qts, NRF51_RTC0_BASE + event, NRF51_EVENT_CLEAR);
+}
+
+static void rtc_set_prescaler(QTestState *qts, uint32_t prescaler)
+{
+    qtest_writel(qts, NRF51_RTC0_BASE + NRF51_RTC_PRESCALER, prescaler);
+}
+
+static void rtc_set_cc(QTestState *qts, size_t idx, uint32_t value)
+{
+    qtest_writel(qts, NRF51_RTC0_BASE + NRF51_RTC_CC0 + idx * 4, value);
+}
+
+static void rtc_assert_events(QTestState *qts,
+                              uint32_t tick,
+                              uint32_t ovrflw,
+                              uint32_t cmp0,
+                              uint32_t cmp1,
+                              uint32_t cmp2,
+                              uint32_t cmp3) {
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_EVENTS_TICK),
+                     ==,
+                     tick);
+    g_assert_cmpuint(qtest_readl(qts,
+                                 NRF51_RTC0_BASE + NRF51_RTC_EVENTS_OVRFLW),
+                     ==,
+                     ovrflw);
+    g_assert_cmpuint(qtest_readl(qts,
+                                 NRF51_RTC0_BASE + NRF51_RTC_EVENTS_COMPARE0),
+                     ==,
+                     cmp0);
+    g_assert_cmpuint(qtest_readl(qts,
+                                 NRF51_RTC0_BASE + NRF51_RTC_EVENTS_COMPARE1),
+                     ==,
+                     cmp1);
+    g_assert_cmpuint(qtest_readl(qts,
+                                 NRF51_RTC0_BASE + NRF51_RTC_EVENTS_COMPARE2),
+                     ==,
+                     cmp2);
+    g_assert_cmpuint(qtest_readl(qts,
+                                 NRF51_RTC0_BASE + NRF51_RTC_EVENTS_COMPARE3),
+                     ==,
+                     cmp3);
+}
+
+static void test_nrf51_rtc(void)
+{
+    QTestState *qts = qtest_init("-M microbit");
+    uint64_t tick_ns = 30517; /* 32.768 kHz = ~30.517 µs per tick */
+
+    /* Check reset state */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     0);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_PRESCALER),
+                     ==,
+                     0);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_INTENSET),
+                     ==,
+                     0);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_EVTEN),
+                     ==,
+                     0);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_POWER),
+                     ==,
+                     0);
+    rtc_assert_events(qts, 0, 0, 0, 0, 0, 0);
+
+    /* Test power control */
+    qtest_writel(qts, NRF51_RTC0_BASE + NRF51_RTC_POWER, 1); /* Enable power */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_POWER),
+                     ==,
+                     1);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_TASKS_START,
+                 1); /* Start RTC */
+    /* Perform multiple smaller clock steps to ensure timer fires */
+    for (int i = 0; i < 10; i++) {
+        qtest_clock_step(qts, tick_ns * 2); /* Advance 2 ticks per step */
+    }
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     19);
+    qtest_writel(qts, NRF51_RTC0_BASE + NRF51_RTC_POWER, 0); /* Disable power */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_POWER),
+                     ==,
+                     0);
+    qtest_clock_step(qts, tick_ns * 10);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     0); /* No increment */
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_POWER,
+                 1); /* Re-enable power */
+
+    /* Test counter increment with prescaler = 0 */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_clock_step(qts, tick_ns * 10); /* Advance 10 ticks */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     10);
+    rtc_task(qts, NRF51_RTC_TASKS_STOP);
+    qtest_clock_step(qts, tick_ns * 10); /* No increment when stopped */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     10);
+
+    /* Test PRESCALER write restriction */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_PRESCALER,
+                 1); /* Try to write while running */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_PRESCALER),
+                     ==,
+                     0); /* No change */
+    rtc_task(qts, NRF51_RTC_TASKS_STOP);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_PRESCALER,
+                 1); /* Write when stopped */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_PRESCALER),
+                     ==,
+                     1);
+
+    /* Test TICK and COMPARE events with IRQ */
+    qtest_irq_intercept_out_named(qts,
+                                  "/machine/nrf51/rtc",
+                                  "sysbus-irq"); /* Intercept RTC IRQ */
+    rtc_task(qts, NRF51_RTC_TASKS_CLEAR);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     0);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_EVTENSET,
+                 0x00010001); /* Enable TICK, COMPARE0 events */
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_INTENSET,
+                 0x00010001); /* Enable TICK, COMPARE0 interrupts */
+    rtc_set_cc(qts, 0, 5);    /* COMPARE0 at counter = 5 */
+    g_assert_false(qtest_get_irq(qts, 0)); /* No IRQ yet */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_clock_step(qts, tick_ns * 6); /* Advance 3 ticks */
+    rtc_assert_events(qts, 1, 0, 0, 0, 0, 0);
+    g_assert_true(qtest_get_irq(qts, 0)); /* TICK IRQ */
+    qtest_clock_step(qts, tick_ns * 6);   /* Advance to 6 ticks */
+    rtc_assert_events(qts, 1, 0, 1, 0, 0, 0);
+    g_assert_true(qtest_get_irq(qts, 0)); /* COMPARE0 IRQ */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     6);
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_TICK);
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_COMPARE0);
+    rtc_assert_events(qts, 0, 0, 0, 0, 0, 0);
+    g_assert_false(qtest_get_irq(qts, 0)); /* IRQ cleared */
+
+    /* Test prescaler */
+    rtc_task(qts, NRF51_RTC_TASKS_CLEAR);
+    rtc_set_prescaler(qts, 1); /* Prescaler = 1, tick period = 2 * 30.517 µs */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_clock_step(qts, tick_ns * 4); /* 4 base ticks = 2 prescaled ticks */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     2);
+    rtc_task(qts, NRF51_RTC_TASKS_STOP);
+
+    /* Test interrupt enable */
+    rtc_task(qts, NRF51_RTC_TASKS_CLEAR);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_INTENSET,
+                 0x00010001); /* Enable TICK, COMPARE0 interrupts */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_INTENSET),
+                     ==,
+                     0x00010001);
+    qtest_writel(qts, NRF51_RTC0_BASE + NRF51_RTC_INTENCLR, 0x00010001);
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_INTENSET),
+                     ==,
+                     0x00000000);
+
+    /* Test overflow */
+    rtc_task(qts, NRF51_RTC_TASKS_CLEAR);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_EVTENCLR,
+                 0x00000001); /* Disable TICK event */
+    rtc_task(qts, NRF51_RTC_TASKS_TRIGOVRFLW);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_EVTENSET,
+                 0x00000002); /* Enable OVRFLW event */
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_INTENSET,
+                 0x00000002); /* Enable OVRFLW interrupt */
+    rtc_set_prescaler(qts, 0);
+    g_assert_false(qtest_get_irq(qts, 0)); /* No IRQ yet */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_clock_step(qts, tick_ns * 3); /* Advance 3 ticks to overflow */
+    g_assert_cmpuint(qtest_readl(qts, NRF51_RTC0_BASE + NRF51_RTC_COUNTER),
+                     ==,
+                     1); /* Wrapped to 1 */
+    rtc_assert_events(qts, 1, 1, 0, 1, 1, 1);
+    g_assert_true(qtest_get_irq(qts, 0)); /* OVRFLW IRQ */
+    /* Clear overflow & tick */
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_OVRFLW);
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_TICK);
+    /* Clear the spurious compare events */
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_COMPARE1);
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_COMPARE2);
+    rtc_clear_event(qts, NRF51_RTC_EVENTS_COMPARE3);
+    rtc_assert_events(qts, 0, 0, 0, 0, 0, 0);
+    g_assert_false(qtest_get_irq(qts, 0)); /* IRQ cleared */
+
+    /* Test multiple COMPARE registers */
+    rtc_task(qts, NRF51_RTC_TASKS_CLEAR);
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_EVTENSET,
+                 0x000F0000); /* Enable COMPARE[0-3] events */
+    qtest_writel(qts,
+                 NRF51_RTC0_BASE + NRF51_RTC_INTENSET,
+                 0x000F0000); /* Enable COMPARE[0-3] interrupts */
+    rtc_set_cc(qts, 0, 2);
+    rtc_set_cc(qts, 1, 4);
+    rtc_set_cc(qts, 2, 6);
+    rtc_set_cc(qts, 3, 8);
+    g_assert_false(qtest_get_irq(qts, 0)); /* No IRQ yet */
+    rtc_task(qts, NRF51_RTC_TASKS_START);
+    qtest_clock_step(qts, tick_ns * 3); /* Advance to 3 ticks */
+    rtc_assert_events(qts, 1, 0, 1, 0, 0, 0);
+    g_assert_true(qtest_get_irq(qts, 0)); /* COMPARE0 IRQ */
+    qtest_clock_step(qts, tick_ns * 2);   /* Advance to 5 ticks */
+    rtc_assert_events(qts, 1, 0, 1, 1, 0, 0);
+    g_assert_true(qtest_get_irq(qts, 0)); /* COMPARE1 IRQ */
+    qtest_clock_step(qts, tick_ns * 2);   /* Advance to 7 ticks */
+    rtc_assert_events(qts, 1, 0, 1, 1, 1, 0);
+    g_assert_true(qtest_get_irq(qts, 0)); /* COMPARE2 IRQ */
+    qtest_clock_step(qts, tick_ns * 2);   /* Advance to 9 ticks */
+    rtc_assert_events(qts, 1, 0, 1, 1, 1, 1);
+    g_assert_true(qtest_get_irq(qts, 0)); /* COMPARE3 IRQ */
+    rtc_task(qts, NRF51_RTC_TASKS_STOP);
+
+    qtest_quit(qts);
+}
+
 int main(int argc, char **argv)
 {
     g_test_init(&argc, &argv, NULL);
@@ -548,6 +796,7 @@ int main(int argc, char **argv)
     qtest_add_func("/microbit/nrf51/nvmc", test_nrf51_nvmc);
     qtest_add_func("/microbit/nrf51/timer", test_nrf51_timer);
     qtest_add_func("/microbit/microbit/i2c", test_microbit_i2c);
+    qtest_add_func("/microbit/nrf51/rtc", test_nrf51_rtc);
 
     return g_test_run();
 }

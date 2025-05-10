@@ -118,6 +118,17 @@ static void nrf51_soc_realize(DeviceState *dev_soc, Error **errp)
                        qdev_get_gpio_in(DEVICE(&s->armv7m),
                        BASE_TO_IRQ(NRF51_RNG_BASE)));
 
+    /* RTC */
+    if (!sysbus_realize(SYS_BUS_DEVICE(&s->rtc), errp)) {
+        return;
+    }
+    mr = sysbus_mmio_get_region(SYS_BUS_DEVICE(&s->rtc), 0);
+    memory_region_add_subregion_overlap(&s->container, NRF51_RTC0_BASE, mr, 0);
+    sysbus_connect_irq(SYS_BUS_DEVICE(&s->rtc), 0,
+                       qdev_get_gpio_in(DEVICE(&s->armv7m),
+                       BASE_TO_IRQ(NRF51_RTC0_BASE)
+                       ));
+
     /* UICR, FICR, NVMC, FLASH */
     if (!object_property_set_uint(OBJECT(&s->nvm), "flash-size",
                                   s->flash_size, errp)) {
@@ -194,6 +205,8 @@ static void nrf51_soc_init(Object *obj)
     object_property_add_alias(obj, "serial0", OBJECT(&s->uart), "chardev");
 
     object_initialize_child(obj, "rng", &s->rng, TYPE_NRF51_RNG);
+
+    object_initialize_child(obj, "rtc", &s->rtc, TYPE_NRF51_RTC);
 
     object_initialize_child(obj, "nvm", &s->nvm, TYPE_NRF51_NVM);
 
