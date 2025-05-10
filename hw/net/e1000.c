@@ -899,6 +899,11 @@ e1000_receive_iov(NetClientState *nc, const struct iovec *iov, int iovcnt)
         return 0;
     }
 
+    if (iov->iov_len < ETH_HLEN && iovcnt == 1) {
+        /* Broken packet if overall length < ETH_HLEN */
+        return -1;
+    }
+
     if (iov->iov_len < MAXIMUM_ETHERNET_HDR_LEN) {
         /* This is very unlikely, but may happen. */
         iov_to_buf(iov, iovcnt, 0, min_buf, MAXIMUM_ETHERNET_HDR_LEN);
@@ -922,7 +927,7 @@ e1000_receive_iov(NetClientState *nc, const struct iovec *iov, int iovcnt)
             memmove(filter_buf + 4, filter_buf, 12);
         } else {
             iov_from_buf(iov, iovcnt, 4, filter_buf, 12);
-            while (iov->iov_len <= iov_ofs) {
+            while (iov->iov_len <= iov_ofs) {   // If size < iov_ofs, will cause stack ovf
                 iov_ofs -= iov->iov_len;
                 iov++;
             }
