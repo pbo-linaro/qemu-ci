@@ -110,6 +110,7 @@ typedef struct CPUArchState {
     uint32_t fpsr;
     uint32_t fpsr_pdr; /* live only with a packed decimal real operand */
     float_status fp_status;
+    uint32_t fpiar;
 
     uint64_t mactmp;
     /*
