@@ -95,6 +95,11 @@ aspeed_otpmem_prog(uint32_t addr, uint32_t prog_value, uint32_t value) "OTP Memo
 aspeed_otpmem_prog_conflict(uint32_t addr, uint32_t bits) "Conflict at addr=0x%x, bits=0x%08x"
 aspeed_otpmem_prog_bit(int bit) "Programmed bit %d"
 
+# aspped_sbc.c
+aspeed_sbc_otpmem_state(const char *enabled) "OTP Memory is %s"
+aspeed_sbc_ignore_cmd(uint32_t cmd) "Ignoring command 0x%" PRIx32
+aspeed_sbc_handle_cmd(uint32_t cmd, uint32_t addr, bool ret) "Handling command 0x%" PRIx32 " for OTP addr 0x%" PRIx32 " Result: %d"
+
 # aspeed_scu.c
 aspeed_scu_write(uint64_t offset, unsigned size, uint32_t data) "To 0x%" PRIx64 " of size %u: 0x%" PRIx32
 aspeed_scu_read(uint64_t offset, unsigned size, uint32_t data) "To 0x%" PRIx64 " of size %u: 0x%" PRIx32
