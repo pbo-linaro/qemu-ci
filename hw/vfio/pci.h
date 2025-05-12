@@ -210,6 +210,18 @@ static inline bool vfio_is_vga(VFIOPCIDevice *vdev)
     return class == PCI_CLASS_DISPLAY_VGA;
 }
 
+/* MSI/MSI-X/INTx */
+void vfio_vector_init(VFIOPCIDevice *vdev, int nr);
+void vfio_msi_interrupt(void *opaque);
+void vfio_add_kvm_msi_virq(VFIOPCIDevice *vdev, VFIOMSIVector *vector,
+                           int vector_n, bool msix);
+int vfio_msix_vector_use(PCIDevice *pdev, unsigned int nr, MSIMessage msg);
+void vfio_msix_vector_release(PCIDevice *pdev, unsigned int nr);
+bool vfio_msix_present(void *opaque, int version_id);
+void vfio_prepare_kvm_msi_virq_batch(VFIOPCIDevice *vdev);
+void vfio_commit_kvm_msi_virq_batch(VFIOPCIDevice *vdev);
+bool vfio_intx_enable(VFIOPCIDevice *vdev, Error **errp);
+
 uint32_t vfio_pci_read_config(PCIDevice *pdev, uint32_t addr, int len);
 void vfio_pci_write_config(PCIDevice *pdev,
                            uint32_t addr, uint32_t val, int len);
