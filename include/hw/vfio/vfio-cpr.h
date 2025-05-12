@@ -24,6 +24,7 @@ typedef struct VFIODeviceCPR {
     bool reused;
     Error *mdev_blocker;
     Error *id_blocker;
+    uint32_t hwpt_id;
 } VFIODeviceCPR;
 
 struct VFIOContainer;

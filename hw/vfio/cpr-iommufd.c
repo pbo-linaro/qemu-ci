@@ -110,6 +110,12 @@ static int vfio_device_post_load(void *opaque, int version_id)
         error_report_err(err);
         return false;
     }
+    if (!vbasedev->mdev) {
+        VFIOIOMMUFDContainer *container = container_of(vbasedev->bcontainer,
+                                                       VFIOIOMMUFDContainer,
+                                                       bcontainer);
+        iommufd_cdev_rebuild_hwpt(vbasedev, container);
+    }
     return true;
 }
 
@@ -121,6 +127,7 @@ static const VMStateDescription vfio_device_vmstate = {
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
         VMSTATE_INT32(devid, VFIODevice),
+        VMSTATE_UINT32(cpr.hwpt_id, VFIODevice),
         VMSTATE_END_OF_LIST()
     }
 };

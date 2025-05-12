@@ -318,6 +318,7 @@ static bool iommufd_cdev_detach_ioas_hwpt(VFIODevice *vbasedev, Error **errp)
 static void iommufd_cdev_use_hwpt(VFIODevice *vbasedev, VFIOIOASHwpt *hwpt)
 {
     vbasedev->hwpt = hwpt;
+    vbasedev->cpr.hwpt_id = hwpt->hwpt_id;
     vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
     QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
 }
@@ -371,6 +372,23 @@ static bool iommufd_cdev_make_hwpt(VFIODevice *vbasedev,
                                 vbasedev->iommu_dirty_tracking;
     iommufd_cdev_use_hwpt(vbasedev, hwpt);
     return true;
+}
+
+void iommufd_cdev_rebuild_hwpt(VFIODevice *vbasedev,
+                               VFIOIOMMUFDContainer *container)
+{
+    VFIOIOASHwpt *hwpt;
+    int hwpt_id = vbasedev->cpr.hwpt_id;
+
+    trace_iommufd_cdev_rebuild_hwpt(container->be->fd, hwpt_id);
+
+    QLIST_FOREACH(hwpt, &container->hwpt_list, next) {
+        if (hwpt->hwpt_id == hwpt_id) {
+            iommufd_cdev_use_hwpt(vbasedev, hwpt);
+            return;
+        }
+    }
+    iommufd_cdev_make_hwpt(vbasedev, container, hwpt_id, false, NULL);
 }
 
 static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
@@ -567,7 +585,8 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
             vbasedev->iommufd != container->be) {
             continue;
         }
-        if (!iommufd_cdev_attach_container(vbasedev, container, &err)) {
+        if (!vbasedev->cpr.reused &&
+            !iommufd_cdev_attach_container(vbasedev, container, &err)) {
             const char *msg = error_get_pretty(err);
 
             trace_iommufd_cdev_fail_attach_existing_container(msg);
@@ -605,7 +624,8 @@ skip_ioas_alloc:
     bcontainer = &container->bcontainer;
     vfio_address_space_insert(space, bcontainer);
 
-    if (!iommufd_cdev_attach_container(vbasedev, container, errp)) {
+    if (!vbasedev->cpr.reused &&
+        !iommufd_cdev_attach_container(vbasedev, container, errp)) {
         goto err_attach_container;
     }
 
