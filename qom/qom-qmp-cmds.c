@@ -69,6 +69,78 @@ ObjectPropertyInfoList *qmp_qom_list(const char *path, Error **errp)
     return props;
 }
 
+static void qom_list_add_property_value(Object *obj, ObjectProperty *prop,
+                                        ObjectPropertyValueList **props)
+{
+    ObjectPropertyValue *item = g_new0(ObjectPropertyValue, 1);
+    Error *err = NULL;
+
+    QAPI_LIST_PREPEND(*props, item);
+
+    item->name = g_strdup(prop->name);
+    item->type = g_strdup(prop->type);
+    item->value = object_property_get_qobject(obj, prop->name, &err);
+
+    if (!item->value) {
+        /*
+         * For bulk get, the error message is dropped, but the value field
+         * is omitted so the caller knows this property could not be read.
+         */
+        error_free(err);
+    }
+}
+
+static ObjectNode *qom_tree_get(const char *path, Error **errp)
+{
+    Object *obj;
+    ObjectProperty *prop;
+    ObjectNode *result, *child;
+    ObjectPropertyIterator iter;
+
+    obj = qom_resolve_path(path, errp);
+    if (obj == NULL) {
+        return NULL;
+    }
+
+    result = g_new0(ObjectNode, 1);
+
+    object_property_iter_init(&iter, obj);
+    while ((prop = object_property_iter_next(&iter))) {
+        if (strstart(prop->type, "child<", NULL)) {
+            g_autofree char *child_path = g_strdup_printf("%s/%s",
+                                                          path, prop->name);
+            child = qom_tree_get(child_path, errp);
+            if (!child) {
+                qapi_free_ObjectNode(result);
+                return NULL;
+            }
+            child->name = g_strdup(prop->name);
+            QAPI_LIST_PREPEND(result->children, child);
+        } else {
+            qom_list_add_property_value(obj, prop, &result->properties);
+        }
+    }
+
+    return result;
+}
+
+ObjectNode *qmp_qom_tree_get(const char *path, Error **errp)
+{
+    ObjectNode *result = qom_tree_get(path, errp);
+
+    if (result) {
+        /* Strip the path prefix if any */
+        const char *basename = strrchr(path, '/');
+
+        if (!basename || !basename[1]) {
+            result->name = g_strdup(path);
+        } else {
+            result->name = g_strdup(basename + 1);
+        }
+    }
+    return result;
+}
+
 void qmp_qom_set(const char *path, const char *property, QObject *value,
                  Error **errp)
 {
