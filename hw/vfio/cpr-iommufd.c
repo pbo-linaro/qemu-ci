@@ -8,6 +8,7 @@
 #include "qemu/osdep.h"
 #include "qapi/error.h"
 #include "hw/vfio/vfio-cpr.h"
+#include "hw/vfio/vfio-device.h"
 #include "migration/blocker.h"
 #include "migration/cpr.h"
 #include "migration/migration.h"
@@ -25,10 +26,25 @@ static bool vfio_cpr_supported(VFIOIOMMUFDContainer *container, Error **errp)
     return true;
 }
 
+static int vfio_container_post_load(void *opaque, int version_id)
+{
+    VFIOIOMMUFDContainer *container = opaque;
+    VFIOContainerBase *bcontainer = &container->bcontainer;
+    VFIODevice *vbasedev;
+
+    QLIST_FOREACH(vbasedev, &bcontainer->device_list, container_next) {
+        vbasedev->cpr.reused = false;
+    }
+    container->be->cpr_reused = false;
+
+    return 0;
+}
+
 static const VMStateDescription vfio_container_vmstate = {
     .name = "vfio-iommufd-container",
     .version_id = 0,
     .minimum_version_id = 0,
+    .post_load = vfio_container_post_load,
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
         VMSTATE_END_OF_LIST()

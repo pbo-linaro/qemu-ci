@@ -16,11 +16,17 @@
 #include "qemu/module.h"
 #include "qom/object_interfaces.h"
 #include "qemu/error-report.h"
+#include "migration/cpr.h"
 #include "monitor/monitor.h"
 #include "trace.h"
 #include "hw/vfio/vfio-device.h"
 #include <sys/ioctl.h>
 #include <linux/iommufd.h>
+
+static const char *iommufd_fd_name(IOMMUFDBackend *be)
+{
+    return object_get_canonical_path_component(OBJECT(be));
+}
 
 static void iommufd_backend_init(Object *obj)
 {
@@ -47,9 +53,8 @@ static void iommufd_backend_set_fd(Object *obj, const char *str, Error **errp)
     IOMMUFDBackend *be = IOMMUFD_BACKEND(obj);
     int fd = -1;
 
-    fd = monitor_fd_param(monitor_cur(), str, errp);
+    fd = cpr_get_fd_param(iommufd_fd_name(be), str, 0, &be->cpr_reused, errp);
     if (fd == -1) {
-        error_prepend(errp, "Could not parse remote object fd %s:", str);
         return;
     }
     be->fd = fd;
@@ -95,14 +100,9 @@ bool iommufd_change_process(IOMMUFDBackend *be, Error **errp)
 
 bool iommufd_backend_connect(IOMMUFDBackend *be, Error **errp)
 {
-    int fd;
-
     if (be->owned && !be->users) {
-        fd = qemu_open("/dev/iommu", O_RDWR, errp);
-        if (fd < 0) {
-            return false;
-        }
-        be->fd = fd;
+        be->fd = cpr_open_fd("/dev/iommu", O_RDWR, iommufd_fd_name(be), 0,
+                             &be->cpr_reused, errp);
     }
     be->users++;
 
@@ -121,6 +121,7 @@ void iommufd_backend_disconnect(IOMMUFDBackend *be)
         be->fd = -1;
     }
 out:
+    cpr_delete_fd(iommufd_fd_name(be), 0);
     trace_iommufd_backend_disconnect(be->fd, be->users);
 }
 
