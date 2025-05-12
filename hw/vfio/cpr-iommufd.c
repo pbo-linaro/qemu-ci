@@ -31,6 +31,13 @@ static int vfio_container_post_load(void *opaque, int version_id)
     VFIOIOMMUFDContainer *container = opaque;
     VFIOContainerBase *bcontainer = &container->bcontainer;
     VFIODevice *vbasedev;
+    Error *err = NULL;
+    uint32_t ioas_id = container->ioas_id;
+
+    if (!iommufd_cdev_get_info_iova_range(container, ioas_id, &err)) {
+        error_report_err(err);
+        return -1;
+    }
 
     QLIST_FOREACH(vbasedev, &bcontainer->device_list, container_next) {
         vbasedev->cpr.reused = false;
@@ -47,6 +54,7 @@ static const VMStateDescription vfio_container_vmstate = {
     .post_load = vfio_container_post_load,
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
+        VMSTATE_UINT32(ioas_id, VFIOIOMMUFDContainer),
         VMSTATE_END_OF_LIST()
     }
 };
