@@ -25,6 +25,7 @@ typedef struct IOMMUFDBackend IOMMUFDBackend;
 typedef struct VFIOIOMMUFDContainer {
     VFIOContainerBase bcontainer;
     IOMMUFDBackend *be;
+    Error *cpr_blocker;
     uint32_t ioas_id;
     QLIST_HEAD(, VFIOIOASHwpt) hwpt_list;
 } VFIOIOMMUFDContainer;
