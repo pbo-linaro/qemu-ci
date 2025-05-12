@@ -35,6 +35,7 @@ import argparse
 from qemu.qmp import ExecuteError
 
 from .qom_common import QOMCommand
+from .qom_common import ObjectNode
 
 
 try:
@@ -224,28 +225,27 @@ class QOMTree(QOMCommand):
         super().__init__(args)
         self.path = args.path
 
-    def _list_node(self, path: str) -> None:
+    def _list_tree(self, node: ObjectNode, path: str) -> None:
         print(path)
-        items = self.qom_list(path)
-        for item in items:
-            if item.child:
-                continue
-            try:
-                rsp = self.qmp.cmd('qom-get', path=path,
-                                   property=item.name)
-                print(f"  {item.name}: {rsp} ({item.type})")
-            except ExecuteError as err:
-                print(f"  {item.name}: <EXCEPTION: {err!s}> ({item.type})")
+
+        for item in node.properties:
+            value = item.value
+            if value == None:
+                value = f"<EXCEPTION: property could not be read>"
+            print(f"  {item.name}: {value} ({item.type})")
+
         print('')
-        for item in items:
-            if not item.child:
-                continue
-            if path == '/':
-                path = ''
-            self._list_node(f"{path}/{item.name}")
+        if path == '/':
+            path = ''
+
+        for child in node.children:
+            self._list_tree(child, f"{path}/{child.name}")
+
 
     def run(self) -> int:
-        self._list_node(self.path)
+        root = self.qom_tree_get(self.path)
+        self._list_tree(root, self.path)
+
         return 0
 
 

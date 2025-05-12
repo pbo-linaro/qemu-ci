@@ -65,6 +65,47 @@ class ObjectPropertyInfo:
         return self.type.startswith('link<')
 
 
+class ObjectPropertyValue:
+    """
+    Represents a property return from e.g. qom-tree-get
+    """
+    def __init__(self, name: str, type_: str, value: object):
+        self.name = name
+        self.type = type_
+        self.value = value
+
+    @classmethod
+    def make(cls, value: Dict[str, Any]) -> 'ObjectPropertyValue':
+        """
+        Build an ObjectPropertyValue from a Dict with an unknown shape.
+        """
+        assert value.keys() >= {'name', 'type'}
+        assert value.keys() <= {'name', 'type', 'value'}
+        return cls(value['name'], value['type'], value.get('value'))
+
+
+class ObjectNode:
+    """
+    Represents the return type from e.g. qom-tree-get
+    """
+    def __init__(self, name: str, children: List['ObjectNode'],
+                 properties: List[ObjectPropertyValue]):
+        self.name = name
+        self.children = children
+        self.properties = properties
+
+    @classmethod
+    def make(cls, value: Dict[str, Any]) -> 'ObjectNode':
+        """
+        Build an ObjectNode from a Dict with an unknown shape.
+        """
+        assert value.keys() == {'name', 'children', 'properties'}
+
+        props = [ObjectPropertyValue.make(x) for x in value['properties']]
+        children = [ObjectNode.make(x) for x in value['children']]
+        return cls(value['name'], children, props)
+
+
 CommandT = TypeVar('CommandT', bound='QOMCommand')
 
 
@@ -144,6 +185,13 @@ class QOMCommand:
         # qom-list returns List[ObjectPropertyInfo]
         assert isinstance(rsp, list)
         return [ObjectPropertyInfo.make(x) for x in rsp]
+
+    def qom_tree_get(self, path: str) -> ObjectNode:
+        """
+        :return: a strongly typed root node from the 'qom-tree-get' command.
+        """
+        rsp = self.qmp.cmd('qom-tree-get', path=path)
+        return ObjectNode.make(rsp)
 
     @classmethod
     def command_runner(
