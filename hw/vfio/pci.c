@@ -29,6 +29,7 @@
 #include "hw/pci/pci_bridge.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-properties-system.h"
+#include "hw/vfio/vfio-cpr.h"
 #include "migration/vmstate.h"
 #include "qobject/qdict.h"
 #include "qemu/error-report.h"
@@ -56,13 +57,25 @@ static void vfio_disable_interrupts(VFIOPCIDevice *vdev);
 static void vfio_mmap_set_enabled(VFIOPCIDevice *vdev, bool enabled);
 static void vfio_msi_disable_common(VFIOPCIDevice *vdev);
 
+/* Create new or reuse existing eventfd */
 static bool vfio_notifier_init(VFIOPCIDevice *vdev, EventNotifier *e,
                                const char *name, int nr, Error **errp)
 {
-    int ret = event_notifier_init(e, 0);
+    int fd = vfio_cpr_load_vector_fd(vdev, name, nr);
+    int ret = 0;
 
-    if (ret) {
-        error_setg_errno(errp, -ret, "vfio_notifier_init %s failed", name);
+    if (fd >= 0) {
+        event_notifier_init_fd(e, fd);
+    } else {
+        ret = event_notifier_init(e, 0);
+        if (ret) {
+            error_setg_errno(errp, -ret, "vfio_notifier_init %s failed", name);
+        } else {
+            fd = event_notifier_get_fd(e);
+            if (fd >= 0) {
+                vfio_cpr_save_vector_fd(vdev, name, nr, fd);
+            }
+        }
     }
     return !ret;
 }
@@ -70,6 +83,7 @@ static bool vfio_notifier_init(VFIOPCIDevice *vdev, EventNotifier *e,
 static void vfio_notifier_cleanup(VFIOPCIDevice *vdev, EventNotifier *e,
                                   const char *name, int nr)
 {
+    vfio_cpr_delete_vector_fd(vdev, name, nr);
     event_notifier_cleanup(e);
 }
 
@@ -553,6 +567,15 @@ static int vfio_msix_vector_do_use(PCIDevice *pdev, unsigned int nr,
     VFIOMSIVector *vector;
     int ret;
     bool resizing = !!(vdev->nr_vectors < nr + 1);
+
+    /*
+     * Ignore the callback from msix_set_vector_notifiers during resume.
+     * The necessary subset of these actions is called from
+     * vfio_cpr_claim_vectors during post load.
+     */
+    if (vdev->vbasedev.cpr.reused) {
+        return 0;
+    }
 
     trace_vfio_msix_vector_do_use(vdev->vbasedev.name, nr);
 
@@ -2937,6 +2960,11 @@ static void vfio_register_err_notifier(VFIOPCIDevice *vdev)
     fd = event_notifier_get_fd(&vdev->err_notifier);
     qemu_set_fd_handler(fd, vfio_err_notifier_handler, NULL, vdev);
 
+    /* Do not alter irq_signaling during vfio_realize for cpr */
+    if (vdev->vbasedev.cpr.reused) {
+        return;
+    }
+
     if (!vfio_device_irq_set_signaling(&vdev->vbasedev, VFIO_PCI_ERR_IRQ_INDEX, 0,
                                        VFIO_IRQ_SET_ACTION_TRIGGER, fd, &err)) {
         error_reportf_err(err, VFIO_MSG_PREFIX, vdev->vbasedev.name);
@@ -3003,6 +3031,12 @@ static void vfio_register_req_notifier(VFIOPCIDevice *vdev)
 
     fd = event_notifier_get_fd(&vdev->req_notifier);
     qemu_set_fd_handler(fd, vfio_req_notifier_handler, NULL, vdev);
+
+    /* Do not alter irq_signaling during vfio_realize for cpr */
+    if (vdev->vbasedev.cpr.reused) {
+        vdev->req_enabled = true;
+        return;
+    }
 
     if (!vfio_device_irq_set_signaling(&vdev->vbasedev, VFIO_PCI_REQ_IRQ_INDEX, 0,
                                        VFIO_IRQ_SET_ACTION_TRIGGER, fd, &err)) {
