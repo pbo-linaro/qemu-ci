@@ -32,6 +32,8 @@ struct QIOChannel *cpr_state_ioc(void);
 
 bool cpr_needed_for_reuse(void *opaque);
 void cpr_kvm_close(void);
+int cpr_get_fd_param(const char *name, const char *fdname, int index,
+                     bool *reused, Error **errp);
 
 void cpr_transfer_init(void);
 QEMUFile *cpr_transfer_output(MigrationChannel *channel, Error **errp);
