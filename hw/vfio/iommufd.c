@@ -459,8 +459,8 @@ static int iommufd_cdev_ram_block_discard_disable(bool state)
     return ram_block_uncoordinated_discard_disable(state);
 }
 
-static bool iommufd_cdev_get_info_iova_range(VFIOIOMMUFDContainer *container,
-                                             uint32_t ioas_id, Error **errp)
+bool iommufd_cdev_get_info_iova_range(VFIOIOMMUFDContainer *container,
+                                      uint32_t ioas_id, Error **errp)
 {
     VFIOContainerBase *bcontainer = &container->bcontainer;
     g_autofree struct iommu_ioas_iova_ranges *info = NULL;

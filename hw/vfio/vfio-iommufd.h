@@ -31,4 +31,7 @@ typedef struct VFIOIOMMUFDContainer {
 
 OBJECT_DECLARE_SIMPLE_TYPE(VFIOIOMMUFDContainer, VFIO_IOMMU_IOMMUFD);
 
+bool iommufd_cdev_get_info_iova_range(VFIOIOMMUFDContainer *container,
+                                      uint32_t ioas_id, Error **errp);
+
 #endif /* HW_VFIO_VFIO_IOMMUFD_H */
