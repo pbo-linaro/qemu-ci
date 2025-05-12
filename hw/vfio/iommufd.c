@@ -310,16 +310,70 @@ static bool iommufd_cdev_detach_ioas_hwpt(VFIODevice *vbasedev, Error **errp)
     return true;
 }
 
+static void iommufd_cdev_use_hwpt(VFIODevice *vbasedev, VFIOIOASHwpt *hwpt)
+{
+    vbasedev->hwpt = hwpt;
+    vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
+    QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
+}
+
+/*
+ * iommufd_cdev_make_hwpt: If @alloc_id, allocate a hwpt_id, else use @hwpt_id.
+ * Create and add a hwpt struct to the container's list and to the device.
+ * Always succeeds if !@alloc_id.
+ */
+static bool iommufd_cdev_make_hwpt(VFIODevice *vbasedev,
+                                   VFIOIOMMUFDContainer *container,
+                                   uint32_t hwpt_id, bool alloc_id,
+                                   Error **errp)
+{
+    VFIOIOASHwpt *hwpt;
+    uint32_t flags = 0;
+
+    /*
+     * This is quite early and VFIO Migration state isn't yet fully
+     * initialized, thus rely only on IOMMU hardware capabilities as to
+     * whether IOMMU dirty tracking is going to be requested. Later
+     * vfio_migration_realize() may decide to use VF dirty tracking
+     * instead.
+     */
+    g_assert(vbasedev->hiod);
+    if (vbasedev->hiod->caps.hw_caps & IOMMU_HW_CAP_DIRTY_TRACKING) {
+        flags = IOMMU_HWPT_ALLOC_DIRTY_TRACKING;
+    }
+
+    if (alloc_id) {
+        if (!iommufd_backend_alloc_hwpt(vbasedev->iommufd, vbasedev->devid,
+                                        container->ioas_id, flags,
+                                        IOMMU_HWPT_DATA_NONE, 0, NULL,
+                                        &hwpt_id, errp)) {
+            return false;
+        }
+
+        if (iommufd_cdev_attach_ioas_hwpt(vbasedev, hwpt_id, errp)) {
+            iommufd_backend_free_id(container->be, hwpt_id);
+            return false;
+        }
+    }
+
+    hwpt = g_malloc0(sizeof(*hwpt));
+    hwpt->hwpt_id = hwpt_id;
+    hwpt->hwpt_flags = flags;
+    QLIST_INIT(&hwpt->device_list);
+
+    QLIST_INSERT_HEAD(&container->hwpt_list, hwpt, next);
+    container->bcontainer.dirty_pages_supported |=
+                                vbasedev->iommu_dirty_tracking;
+    iommufd_cdev_use_hwpt(vbasedev, hwpt);
+    return true;
+}
+
 static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
                                          VFIOIOMMUFDContainer *container,
                                          Error **errp)
 {
     ERRP_GUARD();
-    IOMMUFDBackend *iommufd = vbasedev->iommufd;
-    uint32_t type, flags = 0;
-    uint64_t hw_caps;
     VFIOIOASHwpt *hwpt;
-    uint32_t hwpt_id;
     int ret;
 
     /* Try to find a domain */
@@ -340,54 +394,14 @@ static bool iommufd_cdev_autodomains_get(VFIODevice *vbasedev,
 
             return false;
         } else {
-            vbasedev->hwpt = hwpt;
-            QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
-            vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
+            iommufd_cdev_use_hwpt(vbasedev, hwpt);
             return true;
         }
     }
-
-    /*
-     * This is quite early and VFIO Migration state isn't yet fully
-     * initialized, thus rely only on IOMMU hardware capabilities as to
-     * whether IOMMU dirty tracking is going to be requested. Later
-     * vfio_migration_realize() may decide to use VF dirty tracking
-     * instead.
-     */
-    if (!iommufd_backend_get_device_info(vbasedev->iommufd, vbasedev->devid,
-                                         &type, NULL, 0, &hw_caps, errp)) {
+    if (!iommufd_cdev_make_hwpt(vbasedev, container, 0, true, errp)) {
         return false;
     }
 
-    if (hw_caps & IOMMU_HW_CAP_DIRTY_TRACKING) {
-        flags = IOMMU_HWPT_ALLOC_DIRTY_TRACKING;
-    }
-
-    if (!iommufd_backend_alloc_hwpt(iommufd, vbasedev->devid,
-                                    container->ioas_id, flags,
-                                    IOMMU_HWPT_DATA_NONE, 0, NULL,
-                                    &hwpt_id, errp)) {
-        return false;
-    }
-
-    hwpt = g_malloc0(sizeof(*hwpt));
-    hwpt->hwpt_id = hwpt_id;
-    hwpt->hwpt_flags = flags;
-    QLIST_INIT(&hwpt->device_list);
-
-    ret = iommufd_cdev_attach_ioas_hwpt(vbasedev, hwpt->hwpt_id, errp);
-    if (ret) {
-        iommufd_backend_free_id(container->be, hwpt->hwpt_id);
-        g_free(hwpt);
-        return false;
-    }
-
-    vbasedev->hwpt = hwpt;
-    vbasedev->iommu_dirty_tracking = iommufd_hwpt_dirty_tracking(hwpt);
-    QLIST_INSERT_HEAD(&hwpt->device_list, vbasedev, hwpt_next);
-    QLIST_INSERT_HEAD(&container->hwpt_list, hwpt, next);
-    container->bcontainer.dirty_pages_supported |=
-                                vbasedev->iommu_dirty_tracking;
     if (container->bcontainer.dirty_pages_supported &&
         !vbasedev->iommu_dirty_tracking) {
         warn_report("IOMMU instance for device %s doesn't support dirty tracking",
@@ -530,6 +544,11 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
 
     space = vfio_address_space_get(as);
 
+    if (!vfio_device_hiod_create_and_realize(vbasedev,
+            TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO, errp)) {
+        goto err_alloc_ioas;
+    }
+
     /* try to attach to an existing container in this space */
     QLIST_FOREACH(bcontainer, &space->containers, next) {
         container = container_of(bcontainer, VFIOIOMMUFDContainer, bcontainer);
@@ -601,11 +620,6 @@ found_container:
     ret = ioctl(devfd, VFIO_DEVICE_GET_INFO, &dev_info);
     if (ret) {
         error_setg_errno(errp, errno, "error getting device info");
-        goto err_listener_register;
-    }
-
-    if (!vfio_device_hiod_create_and_realize(vbasedev,
-                     TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO, errp)) {
         goto err_listener_register;
     }
 
