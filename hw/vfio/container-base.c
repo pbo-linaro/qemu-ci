@@ -79,7 +79,16 @@ int vfio_container_dma_map(VFIOContainerBase *bcontainer,
                            RAMBlock *rb)
 {
     VFIOIOMMUClass *vioc = VFIO_IOMMU_GET_CLASS(bcontainer);
+    int mfd = rb ? qemu_ram_get_fd(rb) : -1;
 
+    if (mfd >= 0 && vioc->dma_map_file) {
+        unsigned long start = vaddr - qemu_ram_get_host_addr(rb);
+        unsigned long offset = qemu_ram_get_fd_offset(rb);
+
+        vioc->dma_map_file(bcontainer, iova, size, mfd, start + offset,
+                           readonly);
+        return 0;
+    }
     g_assert(vioc->dma_map);
     return vioc->dma_map(bcontainer, iova, size, vaddr, readonly);
 }
