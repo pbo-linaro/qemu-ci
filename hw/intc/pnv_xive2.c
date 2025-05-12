@@ -1196,7 +1196,8 @@ static void pnv_xive2_ic_cq_write(void *opaque, hwaddr offset,
     case CQ_FIRMASK_OR: /* FIR error reporting */
         break;
     default:
-        xive2_error(xive, "CQ: invalid write 0x%"HWADDR_PRIx, offset);
+        xive2_error(xive, "CQ: invalid write 0x%"HWADDR_PRIx" value 0x%"PRIx64,
+                    offset, val);
         return;
     }
 
@@ -1494,7 +1495,8 @@ static void pnv_xive2_ic_vc_write(void *opaque, hwaddr offset,
         break;
 
     default:
-        xive2_error(xive, "VC: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "VC: invalid write @0x%"HWADDR_PRIx" value 0x%"PRIx64,
+                    offset, val);
         return;
     }
 
@@ -1702,7 +1704,8 @@ static void pnv_xive2_ic_pc_write(void *opaque, hwaddr offset,
         break;
 
     default:
-        xive2_error(xive, "PC: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "PC: invalid write @0x%"HWADDR_PRIx" value 0x%"PRIx64,
+                    offset, val);
         return;
     }
 
@@ -1789,7 +1792,8 @@ static void pnv_xive2_ic_tctxt_write(void *opaque, hwaddr offset,
         xive->tctxt_regs[reg] = val;
         break;
     default:
-        xive2_error(xive, "TCTXT: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "TCTXT: invalid write @0x%"HWADDR_PRIx
+                    " data 0x%"PRIx64, offset, val);
         return;
     }
 }
@@ -1860,7 +1864,8 @@ static void pnv_xive2_xscom_write(void *opaque, hwaddr offset,
         pnv_xive2_ic_tctxt_write(opaque, mmio_offset, val, size);
         break;
     default:
-        xive2_error(xive, "XSCOM: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "XSCOM: invalid write @%"HWADDR_PRIx
+                    " value 0x%"PRIx64, offset, val);
     }
 }
 
@@ -1928,7 +1933,8 @@ static void pnv_xive2_ic_notify_write(void *opaque, hwaddr offset,
         break;
 
     default:
-        xive2_error(xive, "NOTIFY: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "NOTIFY: invalid write @%"HWADDR_PRIx
+                    " value 0x%"PRIx64, offset, val);
     }
 }
 
@@ -1970,7 +1976,8 @@ static void pnv_xive2_ic_lsi_write(void *opaque, hwaddr offset,
 {
     PnvXive2 *xive = PNV_XIVE2(opaque);
 
-    xive2_error(xive, "LSI: invalid write @%"HWADDR_PRIx, offset);
+    xive2_error(xive, "LSI: invalid write @%"HWADDR_PRIx" value 0x%"PRIx64,
+                offset, val);
 }
 
 static const MemoryRegionOps pnv_xive2_ic_lsi_ops = {
@@ -2073,7 +2080,8 @@ static void pnv_xive2_ic_sync_write(void *opaque, hwaddr offset,
         inject_type = PNV_XIVE2_QUEUE_NXC_ST_RMT_CI;
         break;
     default:
-        xive2_error(xive, "SYNC: invalid write @%"HWADDR_PRIx, offset);
+        xive2_error(xive, "SYNC: invalid write @%"HWADDR_PRIx" value 0x%"PRIx64,
+                    offset, val);
         return;
     }
 
