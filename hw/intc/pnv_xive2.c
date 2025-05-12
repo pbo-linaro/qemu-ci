@@ -1410,7 +1410,14 @@ static void pnv_xive2_ic_vc_write(void *opaque, hwaddr offset,
     /*
      * ESB cache updates (not modeled)
      */
-    /* case VC_ESBC_FLUSH_CTRL: */
+    case VC_ESBC_FLUSH_CTRL:
+        if (val & VC_ESBC_FLUSH_CTRL_WANT_CACHE_DISABLE) {
+            xive2_error(xive, "VC: unsupported write @0x%"HWADDR_PRIx
+                        " value 0x%"PRIx64" bit[2] poll_want_cache_disable",
+                        offset, val);
+            return;
+        }
+        break;
     case VC_ESBC_FLUSH_POLL:
         xive->vc_regs[VC_ESBC_FLUSH_CTRL >> 3] |= VC_ESBC_FLUSH_CTRL_POLL_VALID;
         /* ESB update */
@@ -1426,7 +1433,14 @@ static void pnv_xive2_ic_vc_write(void *opaque, hwaddr offset,
     /*
      * EAS cache updates (not modeled)
      */
-    /* case VC_EASC_FLUSH_CTRL: */
+    case VC_EASC_FLUSH_CTRL:
+        if (val & VC_EASC_FLUSH_CTRL_WANT_CACHE_DISABLE) {
+            xive2_error(xive, "VC: unsupported write @0x%"HWADDR_PRIx
+                        " value 0x%"PRIx64" bit[2] poll_want_cache_disable",
+                        offset, val);
+            return;
+        }
+        break;
     case VC_EASC_FLUSH_POLL:
         xive->vc_regs[VC_EASC_FLUSH_CTRL >> 3] |= VC_EASC_FLUSH_CTRL_POLL_VALID;
         /* EAS update */
@@ -1465,7 +1479,14 @@ static void pnv_xive2_ic_vc_write(void *opaque, hwaddr offset,
         break;
 
 
-    /* case VC_ENDC_FLUSH_CTRL: */
+    case VC_ENDC_FLUSH_CTRL:
+        if (val & VC_ENDC_FLUSH_CTRL_WANT_CACHE_DISABLE) {
+            xive2_error(xive, "VC: unsupported write @0x%"HWADDR_PRIx
+                        " value 0x%"PRIx64" bit[2] poll_want_cache_disable",
+                        offset, val);
+            return;
+        }
+        break;
     case VC_ENDC_FLUSH_POLL:
         xive->vc_regs[VC_ENDC_FLUSH_CTRL >> 3] |= VC_ENDC_FLUSH_CTRL_POLL_VALID;
         break;
@@ -1686,7 +1707,14 @@ static void pnv_xive2_ic_pc_write(void *opaque, hwaddr offset,
         pnv_xive2_nxc_update(xive, watch_engine);
         break;
 
-   /* case PC_NXC_FLUSH_CTRL: */
+    case PC_NXC_FLUSH_CTRL:
+        if (val & PC_NXC_FLUSH_CTRL_WANT_CACHE_DISABLE) {
+            xive2_error(xive, "VC: unsupported write @0x%"HWADDR_PRIx
+                        " value 0x%"PRIx64" bit[2] poll_want_cache_disable",
+                        offset, val);
+            return;
+        }
+        break;
     case PC_NXC_FLUSH_POLL:
         xive->pc_regs[PC_NXC_FLUSH_CTRL >> 3] |= PC_NXC_FLUSH_CTRL_POLL_VALID;
         break;
