@@ -16,6 +16,54 @@
 
 static int verbosity_level;
 
+static void test_tree_node(QDict *node)
+{
+    QDict *prop, *child;
+    QList *props, *children;
+    QListEntry *entry;
+
+    g_assert(qdict_haskey(node, "name"));
+    g_assert(qdict_haskey(node, "properties"));
+
+    if (verbosity_level >= 3) {
+        g_test_message("%s", qdict_get_str(node, "name"));
+    }
+
+    props = qobject_to(QList, qdict_get(node, "properties"));
+    QLIST_FOREACH_ENTRY(props, entry) {
+        prop = qobject_to(QDict, qlist_entry_obj(entry));
+        g_assert(qdict_haskey(prop, "name"));
+        g_assert(qdict_haskey(prop, "type"));
+    }
+
+    if (!qdict_haskey(node, "children")) {
+        return;
+    }
+
+    children = qobject_to(QList, qdict_get(node, "children"));
+    QLIST_FOREACH_ENTRY(children, entry) {
+        child = qobject_to(QDict, qlist_entry_obj(entry));
+        test_tree_node(child);
+    }
+}
+
+static void test_tree(QTestState *qts, const char *path)
+{
+    g_autoptr(QDict) response = NULL;
+    QDict *node;
+
+    if (verbosity_level >= 2) {
+        g_test_message("Obtaining tree at %s", path);
+    }
+    response = qtest_qmp(qts, "{ 'execute': 'qom-tree-get',"
+                              "  'arguments': { 'path': %s } }", path);
+    g_assert(response);
+
+    g_assert(qdict_haskey(response, "return"));
+    node = qobject_to(QDict, qdict_get(response, "return"));
+    test_tree_node(node);
+}
+
 static void test_properties(QTestState *qts, const char *path, bool recurse)
 {
     char *child_path;
@@ -100,6 +148,7 @@ static void test_machine(gconstpointer data)
     }
 
     test_properties(qts, "/machine", true);
+    test_tree(qts, "/machine");
 
     response = qtest_qmp(qts, "{ 'execute': 'quit' }");
     g_assert(qdict_haskey(response, "return"));
