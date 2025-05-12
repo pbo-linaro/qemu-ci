@@ -32,9 +32,6 @@
 #include "vfio-helpers.h"
 #include "vfio-listener.h"
 
-#define TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO             \
-            TYPE_HOST_IOMMU_DEVICE_IOMMUFD "-vfio"
-
 static int iommufd_cdev_map(const VFIOContainerBase *bcontainer, hwaddr iova,
                             ram_addr_t size, void *vaddr, bool readonly)
 {
@@ -557,7 +554,8 @@ static bool iommufd_cdev_attach(const char *name, VFIODevice *vbasedev,
 
     space = vfio_address_space_get(as);
 
-    if (!vfio_device_hiod_create_and_realize(vbasedev,
+    if (!vbasedev->cpr.reused &&
+        !vfio_device_hiod_create_and_realize(vbasedev,
             TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO, errp)) {
         goto err_alloc_ioas;
     }

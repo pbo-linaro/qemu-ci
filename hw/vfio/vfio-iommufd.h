@@ -11,6 +11,9 @@
 
 #include "hw/vfio/vfio-container-base.h"
 
+#define TYPE_HOST_IOMMU_DEVICE_IOMMUFD_VFIO             \
+            TYPE_HOST_IOMMU_DEVICE_IOMMUFD "-vfio"
+
 typedef struct VFIODevice VFIODevice;
 
 typedef struct VFIOIOASHwpt {
