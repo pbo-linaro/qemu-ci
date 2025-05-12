@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20250512095226.93621-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 179 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/26] target/riscv: assert argument to set_satp_mode_max_supported is valid
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 2/26] target/riscv: cpu: store max SATP mode as a single integer
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 3/26] target/riscv: update max_satp_mode based on QOM properties
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 4/26] target/riscv: remove supported from RISCVSATPMap
+    [32m✓[0m Signed: DKIM/redhat.com
+  [31m✗[0m [PATCH 5/26] target/riscv: move satp_mode.{map, init} out of CPUConfig
+    [31m✗[0m BADSIG: DKIM/redhat.com
+  [32m✓[0m [PATCH 6/26] target/riscv: introduce RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 7/26] target/riscv: store RISCVCPUDef struct directly in the class
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 8/26] target/riscv: merge riscv_cpu_class_init with the class_base function
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 9/26] target/riscv: move RISCVCPUConfig fields to a header file
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 10/26] target/riscv: include default value in cpu_cfg_fields.h.inc
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 11/26] target/riscv: add more RISCVCPUDef fields
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 12/26] target/riscv: convert abstract CPU classes to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 13/26] target/riscv: convert profile CPU models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 14/26] target/riscv: convert bare CPU models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 15/26] target/riscv: convert dynamic CPU models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 16/26] target/riscv: convert SiFive E CPU models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 17/26] target/riscv: convert ibex CPU models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 18/26] target/riscv: convert SiFive U models to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 19/26] target/riscv: th: make CSR insertion test a bit more intuitive
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 20/26] target/riscv: generalize custom CSR functionality
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 21/26] target/riscv: convert TT C906 to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 22/26] target/riscv: convert TT Ascalon to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 23/26] target/riscv: convert Ventana V1 to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 24/26] target/riscv: convert Xiangshan Nanhu to RISCVCPUDef
+    [32m✓[0m Signed: DKIM/redhat.com
+  [32m✓[0m [PATCH 25/26] target/riscv: remove .instance_post_init
+    [32m✓[0m Signed: DKIM/redhat.com
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 26/26] qom: reverse order of instance_post_init calls
+    [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 26
+---
+Applying: target/riscv: assert argument to set_satp_mode_max_supported is valid
+Applying: target/riscv: cpu: store max SATP mode as a single integer
+Applying: target/riscv: update max_satp_mode based on QOM properties
+Patch failed at 0003 target/riscv: update max_satp_mode based on QOM properties
+error: patch failed: hw/riscv/virt-acpi-build.c:261
+error: hw/riscv/virt-acpi-build.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
