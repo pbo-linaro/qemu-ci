@@ -11,6 +11,7 @@
 #include "hw/vfio/pci.h"
 #include "hw/pci/msix.h"
 #include "hw/pci/msi.h"
+#include "migration/blocker.h"
 #include "migration/cpr.h"
 #include "qapi/error.h"
 #include "system/runstate.h"
@@ -184,3 +185,23 @@ const VMStateDescription vfio_cpr_pci_vmstate = {
         VMSTATE_END_OF_LIST()
     }
 };
+
+bool vfio_cpr_set_device_name(VFIODevice *vbasedev, Error **errp)
+{
+    if (vbasedev->dev->id) {
+        vbasedev->name = g_strdup(vbasedev->dev->id);
+        return true;
+    } else {
+        /*
+         * Assign a name so any function printing it will not break, but the
+         * fd number changes across processes, so this cannot be used as an
+         * invariant name for CPR.
+         */
+        vbasedev->name = g_strdup_printf("VFIO_FD%d", vbasedev->fd);
+        error_setg(&vbasedev->cpr.id_blocker,
+                   "vfio device with fd=%d needs an id property",
+                   vbasedev->fd);
+        return migrate_add_blocker_modes(&vbasedev->cpr.id_blocker, errp,
+                                         MIG_MODE_CPR_TRANSFER, -1) == 0;
+    }
+}
