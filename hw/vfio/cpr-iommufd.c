@@ -47,10 +47,27 @@ static int vfio_container_post_load(void *opaque, int version_id)
     return 0;
 }
 
+static int vfio_container_pre_save(void *opaque)
+{
+    VFIOIOMMUFDContainer *container = opaque;
+    Error *err = NULL;
+
+    /*
+     * The process has not changed yet, but proactively call the ioctl,
+     * and it will fail if any DMA mappings are not supported.
+     */
+    if (!iommufd_change_process(container->be, &err)) {
+        error_report_err(err);
+        return -1;
+    }
+    return 0;
+}
+
 static const VMStateDescription vfio_container_vmstate = {
     .name = "vfio-iommufd-container",
     .version_id = 0,
     .minimum_version_id = 0,
+    .pre_save = vfio_container_pre_save,
     .post_load = vfio_container_post_load,
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
@@ -59,10 +76,23 @@ static const VMStateDescription vfio_container_vmstate = {
     }
 };
 
+static int iommufd_cpr_post_load(void *opaque, int version_id)
+{
+     IOMMUFDBackend *be = opaque;
+     Error *err = NULL;
+
+     if (!iommufd_change_process(be, &err)) {
+        error_report_err(err);
+        return -1;
+     }
+     return 0;
+}
+
 static const VMStateDescription iommufd_cpr_vmstate = {
     .name = "iommufd",
     .version_id = 0,
     .minimum_version_id = 0,
+    .post_load = iommufd_cpr_post_load,
     .needed = cpr_needed_for_reuse,
     .fields = (VMStateField[]) {
         VMSTATE_END_OF_LIST()
