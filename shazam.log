@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250513173928.77376-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 86 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/19] target/arm/tcg-stubs: compile file once (system)
+  [32m✓[0m [PATCH 2/19] target/arm/hvf_arm: Avoid using poisoned CONFIG_HVF definition
+  [32m✓[0m [PATCH 3/19] target/arm: Only link with zlib when TCG is enabled
+  [32m✓[0m [PATCH 4/19] target/arm/cpregs: Include missing 'target/arm/cpu.h' header
+  [32m✓[0m [PATCH 5/19] hw/arm/boot: Include missing 'system/memory.h' header
+  [32m✓[0m [PATCH 6/19] target/arm/cpu-features: Include missing 'cpu.h' header
+  [32m✓[0m [PATCH 7/19] target/arm/qmp: Include missing 'cpu.h' header
+  [32m✓[0m [PATCH 8/19] target/arm/kvm: Include missing 'cpu-qom.h' header
+  [32m✓[0m [PATCH 9/19] target/arm/hvf: Include missing 'cpu-qom.h' header
+  [32m✓[0m [PATCH 10/19] hw/arm: Remove unnecessary 'cpu.h' header
+  [32m✓[0m [PATCH 11/19] target/arm: Restrict inclusion of 'multiprocessing.h'
+  [32m✓[0m [PATCH 12/19] target/arm: Move some definitions from 'cpu.h' to 'multiprocessing.h'
+  [32m✓[0m [PATCH 13/19] hw/arm: Include missing 'target/arm/gtimer.h' header
+  [32m✓[0m [PATCH 14/19] target/arm: Extract PSCI definitions to 'psci.h'
+  [32m✓[0m [PATCH 15/19] target/arm: Extract feature definitions to 'cpu_has_feature.h' header
+  [32m✓[0m [PATCH 16/19] target/arm: Add arm_cpu_has_feature() helper
+  [32m✓[0m [PATCH 17/19] hw/arm/realview: Replace arm_feature() -> arm_cpu_has_feature()
+  [32m✓[0m [PATCH 18/19] hw/arm/virt-acpi: Replace arm_feature() -> arm_cpu_has_feature()
+  [32m✓[0m [PATCH 19/19] target/arm: Always include full path to 'cpu.h'
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 19
+---
+Applying: target/arm/tcg-stubs: compile file once (system)
+Applying: target/arm/hvf_arm: Avoid using poisoned CONFIG_HVF definition
+Patch failed at 0002 target/arm/hvf_arm: Avoid using poisoned CONFIG_HVF definition
+error: patch failed: target/arm/meson.build:32
+error: target/arm/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
