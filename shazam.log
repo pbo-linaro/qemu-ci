@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.18-20250514114012@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 334 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/18] Makefile: "make dist" generates a .xz, not .bz2
+  [PATCH 2/18] hw/rtc/goldfish: keep time offset when resetting
+  [PATCH 3/18] hw/pci-host/designware: Fix ATU_UPPER_TARGET register access
+  [PATCH 4/18] target/avr: Fix buffer read in avr_print_insn
+  [PATCH 5/18] target/mips: Revert TARGET_PAGE_BITS_VARY
+  [PATCH 6/18] target/mips: Require even maskbits in update_pagemask
+  [PATCH 7/18] target/mips: Simplify and fix update_pagemask
+  [PATCH 8/18] migration: fix SEEK_CUR offset calculation in qio_channel_block_seek
+  [PATCH 9/18] virtio-net: Fix num_buffers for version 1
+  [PATCH 10/18] smbios: Fix buffer overrun when using path= option
+  [PATCH 11/18] plugins/loader: fix deadlock when resetting/uninstalling a plugin
+    + Fixes: 54cb65d8588 ("plugin: add core code") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 12/18] target/i386/hvf: fix lflags_to_rflags
+  [PATCH 13/18] target/avr: Improve decode of LDS, STS
+    + Fixes: 9732b024f79 ("target/avr: Add instruction translation - Data  Transfer Instructions") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 14/18] target/arm: Don't assert() for ISB/SB inside IT block
+  [PATCH 15/18] hw/gpio/imx_gpio: Fix interpretation of GDIR polarity
+  [PATCH 16/18] hw/i2c/imx: Always set interrupt status bit if interrupt condition occurs
+  [PATCH 17/18] 9pfs: fix concurrent v9fs_reclaim_fd() calls
+  [PATCH 18/18] 9pfs: fix FD leak and reduce latency of v9fs_reclaim_fd()
+---
+Total patches: 18
+---
+Applying: Makefile: "make dist" generates a .xz, not .bz2
+Patch failed at 0001 Makefile: "make dist" generates a .xz, not .bz2
+error: patch failed: Makefile:213
+error: Makefile: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
