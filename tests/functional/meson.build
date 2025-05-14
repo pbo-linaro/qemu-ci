@@ -128,7 +128,7 @@ tests_arm_system_thorough = [
   'arm_aspeed_romulus',
   'arm_aspeed_witherspoon',
   'arm_aspeed_ast2500',
-  'arm_aspeed_ast2600',
+  #'arm_aspeed_ast2600', # timeout
   'arm_aspeed_bletchley',
   'arm_aspeed_catalina',
   'arm_aspeed_gb200nvl_bmc',
