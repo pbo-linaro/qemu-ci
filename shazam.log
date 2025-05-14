@@ -1,0 +1,62 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-9.2.4-20250514155748@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 35 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 665 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/34] docs/specs/riscv-iommu: Fixed broken link to external risv iommu document
+  [PATCH 2/34] hw/rtc/goldfish: keep time offset when resetting
+  [PATCH 3/34] hw/pci-host/designware: Fix ATU_UPPER_TARGET register access
+  [PATCH 4/34] target/avr: Fix buffer read in avr_print_insn
+  [PATCH 5/34] target/mips: Revert TARGET_PAGE_BITS_VARY
+  [PATCH 6/34] target/mips: Require even maskbits in update_pagemask
+  [PATCH 7/34] target/mips: Simplify and fix update_pagemask
+  [PATCH 8/34] migration: fix SEEK_CUR offset calculation in qio_channel_block_seek
+  [PATCH 9/34] virtio-net: Fix num_buffers for version 1
+  [PATCH 10/34] hw/i386/amd_iommu: Assign pci-id 0x1419 for the AMD IOMMU device
+  [PATCH 11/34] tcg: Allocate TEMP_VAL_MEM frame in temp_load()
+  [PATCH 12/34] target/ppc: Big-core scratch register fix
+  [PATCH 13/34] target/ppc: Fix SPRC/SPRD SPRs for P9/10
+  [PATCH 14/34] scsi-disk: Apply error policy for host_status errors again
+    + Reviewed-by: Paolo Bonzini <pbonzini@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 15/34] smbios: Fix buffer overrun when using path= option
+  [PATCH 16/34] plugins/loader: fix deadlock when resetting/uninstalling a plugin
+    + Fixes: 54cb65d8588 ("plugin: add core code") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 17/34] Fix objdump output parser in "nsis.py"
+  [PATCH 18/34] Revert "virtio-net: Copy received header to buffer"
+  [PATCH 19/34] target/i386/hvf: fix lflags_to_rflags
+  [PATCH 20/34] target/avr: Improve decode of LDS, STS
+    + Fixes: 9732b024f79 ("target/avr: Add instruction translation - Data  Transfer Instructions") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 21/34] hw/core: Get default_cpu_type calling machine_class_default_cpu_type()
+  [PATCH 22/34] hw/core/cpu: gdb_arch_name string should not be freed
+  [PATCH 23/34] target/mips: Fix MIPS16e translation
+  [PATCH 24/34] meson: Use has_header_symbol() to check getcpu()
+  [PATCH 25/34] meson: Remove CONFIG_STATX and CONFIG_STATX_MNT_ID
+  [PATCH 26/34] accel/tcg: Don't use TARGET_LONG_BITS in decode_sleb128
+  [PATCH 27/34] target/arm: Don't assert() for ISB/SB inside IT block
+  [PATCH 28/34] hw/gpio/imx_gpio: Fix interpretation of GDIR polarity
+  [PATCH 29/34] target/i386: do not trigger IRQ shadow for LSS
+  [PATCH 30/34] target/i386: do not block singlestep for STI
+  [PATCH 31/34] gitlab: use --refetch in check-patch/check-dco jobs
+  [PATCH 32/34] hw/i2c/imx: Always set interrupt status bit if interrupt condition occurs
+  [PATCH 33/34] 9pfs: fix concurrent v9fs_reclaim_fd() calls
+  [PATCH 34/34] 9pfs: fix FD leak and reduce latency of v9fs_reclaim_fd()
+---
+Total patches: 34
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Stefan Weil <sw@weilnetz.de>
+     Msg From: Stefan Weil via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: docs/specs/riscv-iommu: Fixed broken link to external risv iommu document
+Patch failed at 0001 docs/specs/riscv-iommu: Fixed broken link to external risv iommu document
+error: patch failed: docs/specs/riscv-iommu.rst:4
+error: docs/specs/riscv-iommu.rst: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
