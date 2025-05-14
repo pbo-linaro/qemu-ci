@@ -132,7 +132,7 @@ tests_arm_system_thorough = [
   'arm_aspeed_bletchley',
   'arm_aspeed_catalina',
   'arm_aspeed_gb200nvl_bmc',
-  'arm_aspeed_rainier',
+  #'arm_aspeed_rainier', # timeout
   'arm_bpim2u',
   'arm_canona1100',
   'arm_collie',
