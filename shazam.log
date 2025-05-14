@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20250514170431.2786231-1-eric.auger@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 46 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/22] hw/i386/acpi-build: Make aml_pci_device_dsm() static
+  [32m✓[0m [PATCH 2/22] hw/arm/virt: Introduce machine state acpi pcihp flags and props
+  [32m✓[0m [PATCH 3/22] hw/acpi: Rename and move build_x86_acpi_pci_hotplug to pcihp
+  [32m✓[0m [PATCH 4/22] hw/pci-host/gpex-acpi: Add native_pci_hotplug arg to acpi_dsdt_add_pci_osc
+  [32m✓[0m [PATCH 5/22] hw/pci-host/gpex-acpi: Split host bridge OSC and DSM generation
+  [32m✓[0m [PATCH 6/22] hw/pci-host/gpex-acpi: Propagate hotplug type info from virt machine downto gpex
+  [32m✓[0m [PATCH 7/22] hw/i386/acpi-build: Turn build_q35_osc_method into a generic method
+  [32m✓[0m [PATCH 8/22] hw/pci-host/gpex-acpi: Use build_pci_host_bridge_osc_method
+  [32m✓[0m [PATCH 9/22] hw/i386/acpi-build: Introduce build_append_pcihp_resources() helper
+  [32m✓[0m [PATCH 10/22] hw/acpi/pcihp: Add an AmlRegionSpace arg to build_acpi_pci_hotplug
+  [32m✓[0m [PATCH 11/22] hw/i386/acpi-build: Move build_append_notification_callback to pcihp
+  [32m✓[0m [PATCH 12/22] hw/i386/acpi-build: Move build_append_pci_bus_devices/pcihp_slots to pcihp
+  [32m✓[0m [PATCH 13/22] hw/i386/acpi-build: Introduce and use acpi_get_pci_host
+  [32m✓[0m [PATCH 14/22] hw/i386/acpi-build: Move aml_pci_edsm to a generic place
+  [32m✓[0m [PATCH 15/22] hw/arm/virt-acpi-build: Modify the DSDT ACPI table to enable ACPI PCI hotplug
+  [32m✓[0m [PATCH 16/22] hw/acpi/ged: Prepare the device to react to PCI hotplug events
+  [32m✓[0m [PATCH 17/22] hw/acpi/ged: Call pcihp plug callbacks in hotplug handler implementation
+  [32m✓[0m [PATCH 18/22] hw/acpi/ged: Support migration of AcpiPciHpState
+  [32m✓[0m [PATCH 19/22] hw/core/sysbus: Introduce sysbus_mmio_map_name() helper
+  [32m✓[0m [PATCH 20/22] hw/arm/virt: Let virt support pci hotplug/unplug GED event
+  [32m✓[0m [PATCH 21/22] hw/arm/virt: Plug pcihp hotplug/hotunplug callbacks
+  [32m✓[0m [PATCH 22/22] hw/arm/virt: Use ACPI PCI hotplug by default
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 22
+---
+Applying: hw/i386/acpi-build: Make aml_pci_device_dsm() static
+Applying: hw/arm/virt: Introduce machine state acpi pcihp flags and props
+Applying: hw/acpi: Rename and move build_x86_acpi_pci_hotplug to pcihp
+Applying: hw/pci-host/gpex-acpi: Add native_pci_hotplug arg to acpi_dsdt_add_pci_osc
+Applying: hw/pci-host/gpex-acpi: Split host bridge OSC and DSM generation
+Applying: hw/pci-host/gpex-acpi: Propagate hotplug type info from virt machine downto gpex
+Applying: hw/i386/acpi-build: Turn build_q35_osc_method into a generic method
+Applying: hw/pci-host/gpex-acpi: Use build_pci_host_bridge_osc_method
+Patch failed at 0008 hw/pci-host/gpex-acpi: Use build_pci_host_bridge_osc_method
+error: dsdt.dsl_before: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
