@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250519182153.3835722-1-jsnow@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] python: convert packages to PEP517/pyproject.toml
+  [32m✓[0m [PATCH 2/8] python: update pylint ignores
+  [32m✓[0m [PATCH 3/8] python: sync changes from external qemu.qmp package
+  [32m✓[0m [PATCH 4/8] python: use 3.9+ builtin type hints
+  [32m✓[0m [PATCH 5/8] python: convert remaining deprecated type hints for 3.9+
+  [32m✓[0m [PATCH 6/8] python: clean up requirements for 3.9+
+  [32m✓[0m [PATCH 7/8] python: update mkvenv to type-check under different python versions
+  [32m✓[0m [PATCH 8/8] python: remove version restriction for mypy
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: python: convert packages to PEP517/pyproject.toml
+Patch failed at 0001 python: convert packages to PEP517/pyproject.toml
+error: patch failed: python/tests/minreqs.txt:11
+error: python/tests/minreqs.txt: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
