@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250519143518.11086-1-jim.shu@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 22 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/4] target/riscv: Add the checking into stimecmp write function.
+  [32m✓[0m [PATCH v3 2/4] hw/intc: riscv_aclint: Fix mtime write for sstc extension
+  [32m✓[0m [PATCH v3 3/4] target/riscv: Fix VSTIP bit in sstc extension.
+  [32m✓[0m [PATCH v3 4/4] target/riscv: Enable/Disable S/VS-mode Timer when STCE bit is changed
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 4
+---
+Applying: target/riscv: Add the checking into stimecmp write function.
+Applying: hw/intc: riscv_aclint: Fix mtime write for sstc extension
+Applying: target/riscv: Fix VSTIP bit in sstc extension.
+Applying: target/riscv: Enable/Disable S/VS-mode Timer when STCE bit is changed
+Patch failed at 0004 target/riscv: Enable/Disable S/VS-mode Timer when STCE bit is changed
+error: patch failed: target/riscv/csr.c:3201
+error: target/riscv/csr.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
