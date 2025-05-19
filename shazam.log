@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/58a08318.d0.196e7eb9068.Coremail.xb@ultrarisc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] target/riscv/kvm/kvm-cpu: Fixed the issue of resume after QEMU+KVM migration
+---
+Total patches: 1
+---
+Applying: target/riscv/kvm/kvm-cpu: Fixed the issue of resume after QEMU+KVM migration
+Patch failed at 0001 target/riscv/kvm/kvm-cpu: Fixed the issue of resume after QEMU+KVM migration
+error: patch fragment without header at line 23: @@ -601,6 +609,15 @@ static int kvm_riscv_put_regs_core(CPUState *cs)
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
