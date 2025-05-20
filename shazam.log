@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20250520102856.132417-1-chenyi.qiang@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/10] memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+  [32m✓[0m [PATCH v5 2/10] memory: Change memory_region_set_ram_discard_manager() to return the result
+  [32m✓[0m [PATCH v5 3/10] memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+  [32m✓[0m [PATCH v5 4/10] ram-block-attribute: Introduce RamBlockAttribute to manage RAMBlock with guest_memfd
+  [32m✓[0m [PATCH v5 5/10] ram-block-attribute: Introduce a helper to notify shared/private state changes
+  [32m✓[0m [PATCH v5 6/10] memory: Attach RamBlockAttribute to guest_memfd-backed RAMBlocks
+  [32m✓[0m [PATCH v5 7/10] RAMBlock: Make guest_memfd require coordinate discard
+  [32m✓[0m [PATCH v5 8/10] memory: Change NotifyRamDiscard() definition to return the result
+  [32m✓[0m [PATCH v5 9/10] KVM: Introduce RamDiscardListener for attribute changes during memory conversions
+  [32m✓[0m [PATCH v5 10/10] ram-block-attribute: Add more error handling during state changes
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 10
+---
+Applying: memory: Export a helper to get intersection of a MemoryRegionSection with a given range
+Applying: memory: Change memory_region_set_ram_discard_manager() to return the result
+Applying: memory: Unify the definiton of ReplayRamPopulate() and ReplayRamDiscard()
+Applying: ram-block-attribute: Introduce RamBlockAttribute to manage RAMBlock with guest_memfd
+Applying: ram-block-attribute: Introduce a helper to notify shared/private state changes
+Applying: memory: Attach RamBlockAttribute to guest_memfd-backed RAMBlocks
+Applying: RAMBlock: Make guest_memfd require coordinate discard
+Applying: memory: Change NotifyRamDiscard() definition to return the result
+Applying: KVM: Introduce RamDiscardListener for attribute changes during memory conversions
+Patch failed at 0009 KVM: Introduce RamDiscardListener for attribute changes during memory conversions
+error: target/i386/kvm/tdx.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
