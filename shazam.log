@@ -1,0 +1,48 @@
+Grabbing thread from lore.kernel.org/all/20250520113018.49569-1-magnuskulke@linux.microsoft.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/25] accel: Add Meson and config support for MSHV accelerator
+  [32m✓[0m [PATCH RFC 2/25] target/i386/emulate: allow instruction decoding from stream
+  [32m✓[0m [PATCH RFC 3/25] target/i386/mshv: Add x86 decoder/emu implementation
+  [32m✓[0m [PATCH RFC 4/25] hw/intc: Generalize APIC helper names from kvm_* to accel_*
+  [32m✓[0m [PATCH RFC 5/25] include/hw/hyperv: Add MSHV ABI header definitions
+  [32m✓[0m [PATCH RFC 6/25] accel/mshv: Add accelerator skeleton
+  [32m✓[0m [PATCH RFC 7/25] accel/mshv: Register memory region listeners
+  [32m✓[0m [PATCH RFC 8/25] accel/mshv: Initialize VM partition
+  [32m✓[0m [PATCH RFC 9/25] accel/mshv: Register guest memory regions with hypervisor
+  [32m✓[0m [PATCH RFC 10/25] accel/mshv: Add ioeventfd support
+  [32m✓[0m [PATCH RFC 11/25] accel/mshv: Add basic interrupt injection support
+  [32m✓[0m [PATCH RFC 12/25] accel/mshv: Add vCPU creation and execution loop
+  [32m✓[0m [PATCH RFC 13/25] accel/mshv: Add vCPU signal handling
+  [32m✓[0m [PATCH RFC 14/25] target/i386/mshv: Add CPU create and remove logic
+  [32m✓[0m [PATCH RFC 15/25] target/i386/mshv: Implement mshv_store_regs()
+  [32m✓[0m [PATCH RFC 16/25] target/i386/mshv: Implement mshv_get_standard_regs()
+  [32m✓[0m [PATCH RFC 17/25] target/i386/mshv: Implement mshv_get_special_regs()
+  [32m✓[0m [PATCH RFC 18/25] target/i386/mshv: Implement mshv_arch_put_registers()
+  [32m✓[0m [PATCH RFC 19/25] target/i386/mshv: Set local interrupt controller state
+  [32m✓[0m [PATCH RFC 20/25] target/i386/mshv: Register CPUID entries with MSHV
+  [32m✓[0m [PATCH RFC 21/25] target/i386/mshv: Register MSRs with MSHV
+  [32m✓[0m [PATCH RFC 22/25] target/i386/mshv: Integrate x86 instruction decoder/emulator
+  [32m✓[0m [PATCH RFC 23/25] target/i386/mshv: Write MSRs to the hypervisor
+  [32m✓[0m [PATCH RFC 24/25] target/i386/mshv: Implement mshv_vcpu_run()
+  [32m✓[0m [PATCH RFC 25/25] accel/mshv: Add memory remapping workaround
+  ---
+  [32m✓[0m Signed: DKIM/linux.microsoft.com
+---
+Total patches: 25
+---
+Applying: accel: Add Meson and config support for MSHV accelerator
+Applying: target/i386/emulate: allow instruction decoding from stream
+Patch failed at 0002 target/i386/emulate: allow instruction decoding from stream
+error: patch failed: target/i386/emulate/x86_decode.h:269
+error: target/i386/emulate/x86_decode.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
