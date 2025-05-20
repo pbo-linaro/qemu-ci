@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250520130158.767083-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 19 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/8] uefi-test-tools:: Add LoongArch64 support
+  [PATCH v2 2/8] tests/data/uefi-boot-images: Add ISO image for LoongArch system
+  [PATCH v2 3/8] tests/qtest/bios-tables-test: Use MiB macro rather hardcode value
+  [PATCH v2 4/8] tests/acpi: Add empty ACPI data files for LoongArch
+  [PATCH v2 5/8] tests/qtest/bios-tables-test: Add basic testing for LoongArch
+  [PATCH v2 6/8] rebuild-expected-aml.sh: Add support for LoongArch
+  [PATCH v2 7/8] tests/acpi: Fill acpi table data for LoongArch
+  [PATCH v2 8/8] tests/acpi: Remove stale allowed tables
+---
+Total patches: 8
+---
+ Base: using specified base-commit 757a34115e7491744a63dfc3d291fd1de5297ee2
+Applying: uefi-test-tools:: Add LoongArch64 support
+Applying: tests/data/uefi-boot-images: Add ISO image for LoongArch system
+Patch failed at 0002 tests/data/uefi-boot-images: Add ISO image for LoongArch system
+error: corrupt binary patch at line 205: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
