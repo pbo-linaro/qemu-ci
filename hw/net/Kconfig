@@ -109,6 +109,9 @@ config LASI_82596
     bool
     select I82596_COMMON
 
+config LOWRISC_ETH
+    bool
+
 config SUNHME
     bool
 

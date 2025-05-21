@@ -20,6 +20,16 @@ lan9118_phy_reset(void) ""
 lance_mem_readw(uint64_t addr, uint32_t ret) "addr=0x%"PRIx64"val=0x%04x"
 lance_mem_writew(uint64_t addr, uint32_t val) "addr=0x%"PRIx64"val=0x%04x"
 
+# lowrisc.c
+lowrisc_eth_io_read(uint64_t addr, uint64_t val) "addr=0x%04"PRIx64" val=0x%016"PRIx64
+lowrisc_eth_io_write(uint64_t addr, uint64_t val) "addr=0x%04"PRIx64" val=0x%016"PRIx64
+lowrisc_eth_tx(unsigned length) "transmitting packet (%u bytes)"
+lowrisc_eth_irq(bool set, unsigned first, unsigned next, unsigned irqen) "set=%d first=%u next=%u irqen=%u"
+lowrisc_eth_rx(unsigned length, unsigned first, unsigned next, unsigned last) "rx length %u (%u,%u,%u)"
+lowrisc_eth_rx_good(unsigned length, unsigned index) "received %u bytes to index %u"
+lowrisc_eth_rx_check(unsigned first, unsigned next, unsigned last, bool ok) "%u,%u,%u -> %u"
+lowrisc_eth_rx_upd_rsr(uint64_t val) "RSR 0x%"PRIx64
+
 # mipsnet.c
 mipsnet_send(uint32_t size) "sending len=%u"
 mipsnet_receive(uint32_t size) "receiving len=%u"
