@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250521155458.24255-1-ben.dooks@codethink.co.uk/t.mbox.gz
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/2] hw/riscv: add CVA6 machine
+  [31m✗[0m [PATCH 2/2] target/riscv: add cva6 cpu type
+  ---
+  [31m✗[0m BADSIG: DKIM/codethink.co.uk
+---
+Total patches: 2
+---
+Applying: hw/riscv: add CVA6 machine
+Applying: target/riscv: add cva6 cpu type
+Patch failed at 0002 target/riscv: add cva6 cpu type
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:372: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: patch failed: target/riscv/cpu.c:496
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
