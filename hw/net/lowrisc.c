@@ -194,6 +194,32 @@ static bool lowrisc_eth_can_receive(NetClientState *nc)
     return ok;
 }
 
+static unsigned lowrisc_eth_phy_read(void *opaque, unsigned reg)
+{
+    unsigned phy = reg >> 5;
+
+    reg &= 0x1f;
+    if (phy == 1) {
+        switch (reg) {
+        case 0x00:
+            return 0xcafe;
+        case 0x01:
+            return 0xf00d;
+
+        default:
+            return 0xffff;
+        }
+    } else {
+        return reg;
+    }
+
+    return 0xffff;
+}
+
+static void lowrisc_eth_phy_write(void *opaque, unsigned reg, unsigned val)
+{
+}
+
 #define make_mac(__m, __b) (((uint32_t)(__m)) << (__b))
 
 static void lowrisc_eth_init_registers(LowriscEthState *s)
@@ -209,6 +235,13 @@ static void lowrisc_eth_init_registers(LowriscEthState *s)
     s->r_mdioctrl = FIELD_DP32(0x0, MDIOCTRL, M_DI, 1);
     memset(&s->r_rplr, 0, sizeof(s->r_rplr));
 
+    /* setup the mdio bus */
+    mdio_bb_init(&s->mdio_bb);
+    s->mdio_bb.name = "lowrisc_eth";
+    s->mdio_bb.param = s;
+    s->mdio_bb.read = lowrisc_eth_phy_read;
+    s->mdio_bb.write = lowrisc_eth_phy_write;
+    
     /* init mac registers */
 
     mac = &s->conf.macaddr.a[0];
@@ -259,12 +292,11 @@ static uint64_t lowrisc_eth_read(void *opaque, hwaddr offset, unsigned size)
 
 static void lowrisc_eth_update_mdioctrl(LowriscEthState *s, uint32_t val)
 {
-    /* since we're not implementing any sort of bit-banged MDIO, we just
-     * return the data input as high, which seems to be enough to allow
-     * the PHY link checks to work
-     */
+    bool mdc = FIELD_EX32(val, MDIOCTRL, M_CLK);
+    bool mdo = FIELD_EX32(val, MDIOCTRL, M_DO);
 
-    s->r_mdioctrl = FIELD_DP32(s->r_mdioctrl, MDIOCTRL, M_DI, 1);
+    mdio_bb_update(&s->mdio_bb, mdc, mdo);
+    s->r_mdioctrl = FIELD_DP32(val, MDIOCTRL, M_DI, s->mdio_bb.mdi);
 }
 
 /* update tplr register, assume we're transmitting a packet */

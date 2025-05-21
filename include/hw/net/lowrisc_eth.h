@@ -17,6 +17,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(LowriscEthState, LOWRISC_ETH)
 
 #include "net/net.h"
 #include "hw/sysbus.h"
+#include "hw/net/mdio_bb.h"
 
 #define RX_SZ           (2048)
 #define NR_RX_BUFFS     (8)
@@ -36,6 +37,9 @@ struct LowriscEthState {
     NICState *nic;
     NICConf conf;
     qemu_irq irq;
+
+    /* the mdio bus */
+    struct mdio_bb mdio_bb;
 
     /* register states */
     uint32_t r_maclo;

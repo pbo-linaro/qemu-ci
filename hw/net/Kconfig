@@ -114,6 +114,7 @@ config MDIO_BB
 
 config LOWRISC_ETH
     bool
+    select MDIO_BB
 
 config SUNHME
     bool
