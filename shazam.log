@@ -1,0 +1,102 @@
+Grabbing thread from lore.kernel.org/all/cover.1747825544.git.pabeni@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/16] linux-headers: Update to Linux v6.15-rc net-next
+  [32m✓[0m [PATCH RFC 2/16] migration: introduce support for 128 bit int state.
+  [32m✓[0m [PATCH RFC 3/16] virtio: introduce extended features type
+  [32m✓[0m [PATCH RFC 4/16] virtio: serialize extended features state
+  [32m✓[0m [PATCH RFC 5/16] qmp: update virtio features map to support extended features
+  [32m✓[0m [PATCH RFC 6/16] virtio: add support for negotiating extended features.
+  [32m✓[0m [PATCH RFC 7/16] virtio-pci: implement support for extended features.
+  [32m✓[0m [PATCH RFC 8/16] vhost: add support for negotiating extended features.
+  [32m✓[0m [PATCH RFC 9/16] vhost-backend: implement extended features support.
+  [32m✓[0m [PATCH RFC 10/16] vhost-net: implement extended features support.
+  [32m✓[0m [PATCH RFC 11/16] qdev-properties: add property for extended virtio features
+  [32m✓[0m [PATCH RFC 12/16] virtio-net: implement extended features support.
+  [32m✓[0m [PATCH RFC 13/16] net: implement tunnel probing
+  [32m✓[0m [PATCH RFC 14/16] net: bundle all offloads in a single struct
+  [32m✓[0m [PATCH RFC 15/16] net: implement tnl feature offloading
+  [32m✓[0m [PATCH RFC 16/16] net: make vhost-net aware of GSO over UDP tunnel hdr layout
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 16
+---
+Applying: linux-headers: Update to Linux v6.15-rc net-next
+Patch failed at 0001 linux-headers: Update to Linux v6.15-rc net-next
+error: patch failed: include/standard-headers/asm-x86/setup_data.h:18
+error: include/standard-headers/asm-x86/setup_data.h: patch does not apply
+error: patch failed: include/standard-headers/drm/drm_fourcc.h:420
+error: include/standard-headers/drm/drm_fourcc.h: patch does not apply
+error: patch failed: include/standard-headers/linux/const.h:33
+error: include/standard-headers/linux/const.h: patch does not apply
+error: patch failed: include/standard-headers/linux/ethtool.h:2059
+error: include/standard-headers/linux/ethtool.h: patch does not apply
+error: patch failed: include/standard-headers/linux/fuse.h:229
+error: include/standard-headers/linux/fuse.h: patch does not apply
+error: patch failed: include/standard-headers/linux/pci_regs.h:486
+error: include/standard-headers/linux/pci_regs.h: patch does not apply
+error: patch failed: include/standard-headers/linux/virtio_snd.h:25
+error: include/standard-headers/linux/virtio_snd.h: patch does not apply
+error: patch failed: linux-headers/asm-arm64/kvm.h:105
+error: linux-headers/asm-arm64/kvm.h: patch does not apply
+error: patch failed: linux-headers/asm-arm64/unistd_64.h:323
+error: linux-headers/asm-arm64/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-generic/mman-common.h:85
+error: linux-headers/asm-generic/mman-common.h: patch does not apply
+error: patch failed: linux-headers/asm-generic/unistd.h:849
+error: linux-headers/asm-generic/unistd.h: patch does not apply
+error: patch failed: linux-headers/asm-loongarch/unistd_64.h:319
+error: linux-headers/asm-loongarch/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-mips/unistd_n32.h:395
+error: linux-headers/asm-mips/unistd_n32.h: patch does not apply
+error: patch failed: linux-headers/asm-mips/unistd_n64.h:371
+error: linux-headers/asm-mips/unistd_n64.h: patch does not apply
+error: patch failed: linux-headers/asm-mips/unistd_o32.h:441
+error: linux-headers/asm-mips/unistd_o32.h: patch does not apply
+error: patch failed: linux-headers/asm-powerpc/unistd_32.h:448
+error: linux-headers/asm-powerpc/unistd_32.h: patch does not apply
+error: patch failed: linux-headers/asm-powerpc/unistd_64.h:420
+error: linux-headers/asm-powerpc/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-riscv/kvm.h:182
+error: linux-headers/asm-riscv/kvm.h: patch does not apply
+error: patch failed: linux-headers/asm-riscv/unistd_32.h:314
+error: linux-headers/asm-riscv/unistd_32.h: patch does not apply
+error: patch failed: linux-headers/asm-riscv/unistd_64.h:324
+error: linux-headers/asm-riscv/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-s390/unistd_32.h:439
+error: linux-headers/asm-s390/unistd_32.h: patch does not apply
+error: patch failed: linux-headers/asm-s390/unistd_64.h:387
+error: linux-headers/asm-s390/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-x86/kvm.h:557
+error: linux-headers/asm-x86/kvm.h: patch does not apply
+error: patch failed: linux-headers/asm-x86/unistd_32.h:457
+error: linux-headers/asm-x86/unistd_32.h: patch does not apply
+error: patch failed: linux-headers/asm-x86/unistd_64.h:380
+error: linux-headers/asm-x86/unistd_64.h: patch does not apply
+error: patch failed: linux-headers/asm-x86/unistd_x32.h:333
+error: linux-headers/asm-x86/unistd_x32.h: patch does not apply
+error: patch failed: linux-headers/linux/bits.h:4
+error: linux-headers/linux/bits.h: patch does not apply
+error: patch failed: linux-headers/linux/const.h:33
+error: linux-headers/linux/const.h: patch does not apply
+error: patch failed: linux-headers/linux/iommufd.h:55
+error: linux-headers/linux/iommufd.h: patch does not apply
+error: patch failed: linux-headers/linux/kvm.h:921
+error: linux-headers/linux/kvm.h: patch does not apply
+error: patch failed: linux-headers/linux/psp-sev.h:73
+error: linux-headers/linux/psp-sev.h: patch does not apply
+error: patch failed: linux-headers/linux/stddef.h:70
+error: linux-headers/linux/stddef.h: patch does not apply
+error: patch failed: linux-headers/linux/vfio.h:671
+error: linux-headers/linux/vfio.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
