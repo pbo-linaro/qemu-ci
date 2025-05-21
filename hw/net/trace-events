@@ -312,6 +312,14 @@ igb_wrn_rx_desc_modes_not_supp(int desc_type) "Not supported descriptor type: %d
 # igbvf.c
 igbvf_wrn_io_addr_unknown(uint64_t addr) "IO unknown register 0x%"PRIx64
 
+# mdio_bb.c
+mdio_bb_update(const char *name, unsigned state, bool mdc, bool mdo) "(%s) state %u, mdc=%u mdo=%u"
+mdio_bb_start(const char *name) "(%s) starting transaction"
+mdio_bb_read(const char *name, unsigned phy, unsigned reg, unsigned data) "(%s) phy %d reg %u -> read %04x"
+mdio_bb_write(const char *name, unsigned phy, unsigned reg, unsigned data) "(%s) phy %d reg %u -> write  %04x"
+mdio_bb_new_state(const char *name, unsigned prev, unsigned state) "(%s) state %u to new state %u"
+mdio_bb_illegal_state(const char *name, unsigned last, unsigned mdo) "(%s) illegal state from %u (mdo %u)"
+
 # spapr_llan.c
 spapr_vlan_get_rx_bd_from_pool_found(int pool, int32_t count, uint32_t rx_bufs) "pool=%d count=%"PRId32" rxbufs=%"PRIu32
 spapr_vlan_get_rx_bd_from_page(int buf_ptr, uint64_t bd) "use_buf_ptr=%d bd=0x%016"PRIx64
