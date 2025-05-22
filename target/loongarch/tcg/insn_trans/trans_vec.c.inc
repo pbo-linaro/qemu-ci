@@ -3465,7 +3465,7 @@ TRANS(xvmsknz_b, LASX, gen_xx, gen_helper_vmsknz_b)
 static uint64_t vldi_get_value(DisasContext *ctx, uint32_t imm)
 {
     int mode;
-    uint64_t data, t;
+    uint64_t data=0, t;
 
     /*
      * imm bit [11:8] is mode, mode value is 0-12.
@@ -3571,7 +3571,6 @@ static uint64_t vldi_get_value(DisasContext *ctx, uint32_t imm)
         break;
     default:
         generate_exception(ctx, EXCCODE_INE);
-        g_assert_not_reached();
     }
     return data;
 }
