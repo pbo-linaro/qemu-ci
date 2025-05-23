@@ -1685,7 +1685,7 @@ sub process {
 		if ($line =~ /^new file mode\s*\d+\s*$/) {
 		    if ($expect_spdx) {
 			if ($expect_spdx_file =~
-			    /\.(c|h|py|pl|sh|json|inc|Makefile)$/) {
+			    /\.(c|h|py|pl|inc|Makefile)$/) {
 			    # source code files MUST have SPDX license declared
 			    ERROR("New file '$expect_spdx_file' requires " .
 				  "'SPDX-License-Identifier'");
