@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250523182442.54469-1-jsnow@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 26 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/4] docs/qapi-domain: add return-nodesc
+  [32m✓[0m [PATCH v3 2/4] docs, qapi: generate undocumented return sections
+  [32m✓[0m [PATCH v3 3/4] qapi: remove trivial "Returns:" sections
+  [32m✓[0m [PATCH v3 4/4] qapi: rephrase return docs to avoid type name
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 4
+---
+Applying: docs/qapi-domain: add return-nodesc
+Applying: docs, qapi: generate undocumented return sections
+Applying: qapi: remove trivial "Returns:" sections
+Patch failed at 0003 qapi: remove trivial "Returns:" sections
+error: patch failed: qapi/misc-target.json:363
+error: qapi/misc-target.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
