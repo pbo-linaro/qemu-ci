@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20250523233305.433424-1-dmitry.osipenko@collabora.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 231 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v12 1/10] ui/sdl2: Restore original context after new context creation
+  [32m✓[0m [PATCH v12 2/10] ui/sdl2: Implement dpy dmabuf functions
+  [32m✓[0m [PATCH v12 3/10] virtio-gpu: Handle virgl fence creation errors
+  [32m✓[0m [PATCH v12 4/10] virtio-gpu: Support asynchronous fencing
+  [32m✓[0m [PATCH v12 5/10] virtio-gpu: Support DRM native context
+  [32m✓[0m [PATCH v12 6/10] ui/sdl2: Don't disable scanout when display is refreshed
+  [32m✓[0m [PATCH v12 7/10] ui/gtk: Don't disable scanout when display is refreshed
+  [32m✓[0m [PATCH v12 8/10] docs/system: virtio-gpu: Add link to Mesa VirGL doc
+  [32m✓[0m [PATCH v12 9/10] docs/system: virtio-gpu: Update Venus link
+  [32m✓[0m [PATCH v12 10/10] docs/system: virtio-gpu: Document host/guest requirements
+  ---
+  [32m✓[0m Signed: DKIM/collabora.com
+---
+Total patches: 10
+---
+Applying: ui/sdl2: Restore original context after new context creation
+Applying: ui/sdl2: Implement dpy dmabuf functions
+Applying: virtio-gpu: Handle virgl fence creation errors
+Patch failed at 0003 virtio-gpu: Handle virgl fence creation errors
+error: patch failed: hw/display/virtio-gpu-virgl.c:972
+error: hw/display/virtio-gpu-virgl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
