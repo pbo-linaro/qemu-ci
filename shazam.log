@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250527231248.1279174-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/13] migration: Add option to set postcopy-blocktime
+  [32m✓[0m [PATCH 2/13] migration/postcopy: Push blocktime start/end into page req mutex
+  [32m✓[0m [PATCH 3/13] migration/postcopy: Drop all atomic ops in blocktime feature
+  [32m✓[0m [PATCH 4/13] migration/postcopy: Make all blocktime vars 64bits
+  [32m✓[0m [PATCH 5/13] migration/postcopy: Drop PostcopyBlocktimeContext.start_time
+  [32m✓[0m [PATCH 6/13] migration/postcopy: Bring blocktime layer to us level
+  [32m✓[0m [PATCH 7/13] migration/postcopy: Add blocktime fault counts per-vcpu
+  [32m✓[0m [PATCH 8/13] migration/postcopy: Report fault latencies in blocktime
+  [32m✓[0m [PATCH 9/13] migration/postcopy: Initialize blocktime context only until listen
+  [32m✓[0m [PATCH 10/13] migration/postcopy: Cache the tid->vcpu mapping for blocktime
+  [32m✓[0m [PATCH 11/13] migration/postcopy: Cleanup the total blocktime accounting
+  [32m✓[0m [PATCH 12/13] migration/postcopy: Optimize blocktime fault tracking with hashtable
+  [32m✓[0m [PATCH 13/13] migration/postcopy: blocktime allows track / report non-vCPU faults
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 13
+---
+Applying: migration: Add option to set postcopy-blocktime
+Applying: migration/postcopy: Push blocktime start/end into page req mutex
+Applying: migration/postcopy: Drop all atomic ops in blocktime feature
+Applying: migration/postcopy: Make all blocktime vars 64bits
+Applying: migration/postcopy: Drop PostcopyBlocktimeContext.start_time
+Applying: migration/postcopy: Bring blocktime layer to us level
+Applying: migration/postcopy: Add blocktime fault counts per-vcpu
+Applying: migration/postcopy: Report fault latencies in blocktime
+Patch failed at 0008 migration/postcopy: Report fault latencies in blocktime
+error: patch failed: migration/migration-hmp-cmds.c:202
+error: migration/migration-hmp-cmds.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
