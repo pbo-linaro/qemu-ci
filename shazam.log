@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250527170404.1580482-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 9 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] meson: update to version 1.8.1
+  [32m✓[0m [PATCH 2/6] rust: use "objects" for Rust executables as well
+  [32m✓[0m [PATCH 3/6] build, dockerfiles: add support for detecting rustdoc
+  [32m✓[0m [PATCH 4/6] rust: add qemu-api doctests to "meson test"
+  [32m✓[0m [PATCH 5/6] rust: cell: remove support for running doctests with "cargo test --doc"
+  [32m✓[0m [PATCH 6/6] rust: use native Meson support for clippy and rustdoc
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 6
+---
+Applying: meson: update to version 1.8.1
+Applying: rust: use "objects" for Rust executables as well
+Patch failed at 0002 rust: use "objects" for Rust executables as well
+error: patch failed: rust/meson.build:14
+error: rust/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
