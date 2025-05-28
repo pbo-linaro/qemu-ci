@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20250528123236.1138632-1-sjg@chromium.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 2 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/25] RFC: scripts: Add scripts for running QEMU
+  [32m✓[0m [PATCH v5 2/25] RFC: scripts: build-qemu: Support xPL with ARM
+  [32m✓[0m [PATCH v5 3/25] emulation: fdt: Allow using U-Boot's device tree with QEMU
+  [32m✓[0m [PATCH v5 4/25] spl: Tidy up the header includes
+  [32m✓[0m [PATCH v5 5/25] x86: Move Intel GNVS file into the common include directory
+  [32m✓[0m [PATCH v5 6/25] spl: Rename jump_to_image_no_args()
+  [32m✓[0m [PATCH v5 7/25] passage: Support an incoming passage
+  [32m✓[0m [PATCH v5 8/25] fdt: Redo devicetree setup
+  [32m✓[0m [PATCH v5 9/25] fdt: Support reading FDT from standard passage
+  [32m✓[0m [PATCH v5 10/25] bloblist: Adjust how the bloblist is received from passage
+  [32m✓[0m [PATCH v5 11/25] bloblist: Drop bloblist_maybe_init()
+  [32m✓[0m [PATCH v5 12/25] passage: arm: Accept a passage from the previous phase
+  [32m✓[0m [PATCH v5 13/25] passage: spl: Support adding the dtb to the passage bloblist
+  [32m✓[0m [PATCH v5 14/25] passage: spl: Support passing the passage to U-Boot
+  [32m✓[0m [PATCH v5 15/25] passage: arm: Add the arch-specific standard passage impl
+  [32m✓[0m [PATCH v5 16/25] vexpress_fvp: Update to use the new Kconfig options
+  [32m✓[0m [PATCH v5 17/25] arm: qemu: Add an SPL build
+  [32m✓[0m [PATCH v5 18/25] arm: qemu: Add a 64-bit SPL build
+  [32m✓[0m [PATCH v5 19/25] xferlist: Drop old xferlist code
+  [32m✓[0m [PATCH v5 20/25] passage: Add a qemu test for ARM
+  [32m✓[0m [PATCH v5 21/25] sandbox: Add a way of checking structs for standard passage
+  [32m✓[0m [PATCH v5 22/25] passage: Add documentation
+  [32m✓[0m [PATCH v5 23/25] passage: Add docs for spl_handoff
+  [32m✓[0m [PATCH v5 24/25] passage: Add checks for pre-existing blobs
+  [32m✓[0m [PATCH v5 25/25] CI: Add tests for gitlab and azure
+  ---
+  [32m✓[0m Signed: DKIM/chromium.org
+---
+Total patches: 25
+---
+ Base: base-commit 2f3766949bbea7aa5a472157561d387fd94205d2 not known, ignoring
+Applying: RFC: scripts: Add scripts for running QEMU
+Applying: RFC: scripts: build-qemu: Support xPL with ARM
+Applying: emulation: fdt: Allow using U-Boot's device tree with QEMU
+Patch failed at 0003 emulation: fdt: Allow using U-Boot's device tree with QEMU
+error: arch/arm/Kconfig: does not exist in index
+error: board/emulation/common/Kconfig: does not exist in index
+error: doc/develop/devicetree/dt_qemu.rst: does not exist in index
+error: dts/Kconfig: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
