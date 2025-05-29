@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20250529220228.1187563-8-eblake@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 11 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] io: Add helper for setting socket send buffer size
+  [32m✓[0m [PATCH 2/6] nbd: Set unix socket send buffer on macOS
+  [32m✓[0m [PATCH 3/6] nbd: Set unix socket send buffer on Linux
+  [32m✓[0m [PATCH 4/6] iotests: Use disk_usage in more places
+  [32m✓[0m [PATCH 5/6] iotests: Improve mirror-sparse on ext4 and xfs
+  [32m✓[0m [PATCH 6/6] iotests: Filter out ZFS in several tests
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 6
+---
+Applying: io: Add helper for setting socket send buffer size
+Applying: nbd: Set unix socket send buffer on macOS
+Applying: nbd: Set unix socket send buffer on Linux
+Patch failed at 0003 nbd: Set unix socket send buffer on Linux
+error: corrupt patch at line 20
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
