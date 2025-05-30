@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250530080307.2055502-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 32 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] subprojects: add the anyhow crate
+  [32m✓[0m [PATCH 2/14] subprojects: add the foreign crate
+  [32m✓[0m [PATCH 3/14] util/error: expose Error definition to Rust code
+  [32m✓[0m [PATCH 4/14] util/error: allow non-NUL-terminated err->src
+  [32m✓[0m [PATCH 5/14] util/error: make func optional
+  [32m✓[0m [PATCH 6/14] rust: qemu-api: add bindings to Error
+  [32m✓[0m [PATCH 7/14] rust: qemu-api: add tests for Error bindings
+  [32m✓[0m [PATCH 8/14] rust: qdev: support returning errors from realize
+  [32m✓[0m [PATCH 9/14] rust/hpet: change type of num_timers to usize
+  [32m✓[0m [PATCH 10/14] hpet: adjust VMState for consistency with Rust version
+  [32m✓[0m [PATCH 11/14] hpet: return errors from realize if properties are incorrect
+  [32m✓[0m [PATCH 12/14] rust/hpet: return errors from realize if properties are incorrect
+  [32m✓[0m [PATCH 13/14] rust/hpet: Drop BqlCell wrapper for num_timers
+  [32m✓[0m [PATCH 14/14] docs: update Rust module status
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: subprojects: add the anyhow crate
+Patch failed at 0001 subprojects: add the anyhow crate
+error: patch failed: rust/meson.build:1
+error: rust/meson.build: patch does not apply
+error: patch failed: rust/qemu-api/meson.build:35
+error: rust/qemu-api/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
