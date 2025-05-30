@@ -196,6 +196,11 @@ int tap_probe_has_uso(int fd)
     return 1;
 }
 
+bool tap_probe_vnet_hash_supported_types(int fd, uint32_t *types)
+{
+    return !ioctl(fd, TUNGETVNETHASHTYPES, types);
+}
+
 void tap_fd_set_vnet_hdr_len(int fd, int len)
 {
     if (ioctl(fd, TUNSETVNETHDRSZ, &len) == -1) {

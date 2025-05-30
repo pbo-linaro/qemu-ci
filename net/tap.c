@@ -248,6 +248,13 @@ static void tap_set_vnet_hdr_len(NetClientState *nc, int len)
     s->using_vnet_hdr = true;
 }
 
+static bool tap_get_vnet_hash_supported_types(NetClientState *nc,
+                                              uint32_t *types)
+{
+    TAPState *s = DO_UPCAST(TAPState, nc, nc);
+    return tap_probe_vnet_hash_supported_types(s->fd, types);
+}
+
 static void tap_set_vnet_automq(NetClientState *nc, uint32_t hash_types)
 {
     TAPState *s = DO_UPCAST(TAPState, nc, nc);
@@ -357,6 +364,7 @@ static NetClientInfo net_tap_info = {
     .has_vnet_hdr_len = tap_has_vnet_hdr_len,
     .set_offload = tap_set_offload,
     .set_vnet_hdr_len = tap_set_vnet_hdr_len,
+    .get_vnet_hash_supported_types = tap_get_vnet_hash_supported_types,
     .set_vnet_automq = tap_set_vnet_automq,
     .set_vnet_rss = tap_set_vnet_rss,
     .set_vnet_le = tap_set_vnet_le,
