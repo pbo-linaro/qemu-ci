@@ -1213,20 +1213,58 @@ static void virtio_net_detach_ebpf_rss(VirtIONet *n)
 
 static void virtio_net_commit_rss_config(VirtIONet *n)
 {
-    if (n->rss_data.peer_hash_available) {
-        return;
-    }
-
     if (n->rss_data.enabled) {
-        n->rss_data.enabled_software_rss = n->rss_data.populate_hash;
-        if (n->rss_data.populate_hash) {
-            virtio_net_detach_ebpf_rss(n);
-        } else if (!virtio_net_attach_ebpf_rss(n)) {
-            if (get_vhost_net(qemu_get_queue(n->nic)->peer)) {
-                warn_report("Can't load eBPF RSS for vhost");
+        if (n->rss_data.peer_hash_available &&
+            (n->rss_data.peer_hash_types & n->rss_data.runtime_hash_types) ==
+            n->rss_data.runtime_hash_types) {
+            if (n->rss_data.redirect) {
+                size_t indirection_table_size =
+                    n->rss_data.indirections_len *
+                    sizeof(*n->rss_data.indirections_table);
+
+                size_t hash_size = sizeof(NetVnetRss) +
+                                   indirection_table_size +
+                                   sizeof(n->rss_data.key);
+
+                g_autofree struct {
+                    NetVnetRss hdr;
+                    uint8_t footer[];
+                } *rss = g_malloc(hash_size);
+
+                rss->hdr.hash_types = n->rss_data.runtime_hash_types;
+                rss->hdr.indirection_table_mask =
+                    n->rss_data.indirections_len - 1;
+                rss->hdr.unclassified_queue = n->rss_data.default_queue;
+
+                memcpy(rss->footer, n->rss_data.indirections_table,
+                       indirection_table_size);
+
+                memcpy(rss->footer + indirection_table_size, n->rss_data.key,
+                       sizeof(n->rss_data.key));
+
+                qemu_set_vnet_rss(qemu_get_queue(n->nic)->peer, &rss->hdr,
+                                  n->rss_data.populate_hash);
             } else {
-                warn_report("Can't load eBPF RSS - fallback to software RSS");
-                n->rss_data.enabled_software_rss = true;
+                qemu_set_vnet_automq(qemu_get_queue(n->nic)->peer,
+                                     n->rss_data.runtime_hash_types);
+            }
+
+            n->rss_data.enabled_software_rss = false;
+        } else {
+            if (n->rss_data.peer_hash_available) {
+                qemu_set_vnet_automq(qemu_get_queue(n->nic)->peer, 0);
+            }
+
+            n->rss_data.enabled_software_rss = n->rss_data.populate_hash;
+            if (n->rss_data.populate_hash) {
+                virtio_net_detach_ebpf_rss(n);
+            } else if (!virtio_net_attach_ebpf_rss(n)) {
+                if (get_vhost_net(qemu_get_queue(n->nic)->peer)) {
+                    warn_report("Can't load eBPF RSS for vhost");
+                } else {
+                    warn_report("Can't load eBPF RSS - fallback to software RSS");
+                    n->rss_data.enabled_software_rss = true;
+                }
             }
         }
 
@@ -1235,7 +1273,12 @@ static void virtio_net_commit_rss_config(VirtIONet *n)
                                     n->rss_data.indirections_len,
                                     sizeof(n->rss_data.key));
     } else {
-        virtio_net_detach_ebpf_rss(n);
+        if (n->rss_data.peer_hash_available) {
+            qemu_set_vnet_automq(qemu_get_queue(n->nic)->peer, 0);
+        } else {
+            virtio_net_detach_ebpf_rss(n);
+        }
+
         trace_virtio_net_rss_disable(n);
     }
 }
