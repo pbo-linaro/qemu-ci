@@ -205,6 +205,17 @@ void tap_fd_set_vnet_hdr_len(int fd, int len)
     }
 }
 
+void tap_fd_set_vnet_automq(int fd, uint32_t hash_types)
+{
+    assert(!ioctl(fd, TUNSETVNETREPORTINGAUTOMQ, &hash_types));
+}
+
+void tap_fd_set_vnet_rss(int fd, const NetVnetRss *rss, bool hash_report)
+{
+    unsigned int cmd = hash_report ? TUNSETVNETREPORTINGRSS : TUNSETVNETRSS;
+    assert(!ioctl(fd, cmd, rss));
+}
+
 int tap_fd_set_vnet_le(int fd, int is_le)
 {
     int arg = is_le ? 1 : 0;

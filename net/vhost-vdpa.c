@@ -271,6 +271,15 @@ static bool vhost_vdpa_get_vnet_hash_supported_types(NetClientState *nc,
     return true;
 }
 
+static void vhost_vdpa_set_vnet_automq(NetClientState *nc, uint32_t hash_types)
+{
+}
+
+static void vhost_vdpa_set_vnet_rss(NetClientState *nc, const NetVnetRss *rss,
+                                    bool hash_report)
+{
+}
+
 static bool vhost_vdpa_has_ufo(NetClientState *nc)
 {
     assert(nc->info->type == NET_CLIENT_DRIVER_VHOST_VDPA);
@@ -461,6 +470,8 @@ static NetClientInfo net_vhost_vdpa_info = {
         .cleanup = vhost_vdpa_cleanup,
         .has_vnet_hdr = vhost_vdpa_has_vnet_hdr,
         .get_vnet_hash_supported_types = vhost_vdpa_get_vnet_hash_supported_types,
+        .set_vnet_automq = vhost_vdpa_set_vnet_automq,
+        .set_vnet_rss = vhost_vdpa_set_vnet_rss,
         .has_ufo = vhost_vdpa_has_ufo,
         .set_vnet_le = vhost_vdpa_set_vnet_le,
         .check_peer_type = vhost_vdpa_check_peer_type,
@@ -1335,6 +1346,8 @@ static NetClientInfo net_vhost_vdpa_cvq_info = {
     .cleanup = vhost_vdpa_cleanup,
     .has_vnet_hdr = vhost_vdpa_has_vnet_hdr,
     .get_vnet_hash_supported_types = vhost_vdpa_get_vnet_hash_supported_types,
+    .set_vnet_automq = vhost_vdpa_set_vnet_automq,
+    .set_vnet_rss = vhost_vdpa_set_vnet_rss,
     .has_ufo = vhost_vdpa_has_ufo,
     .check_peer_type = vhost_vdpa_check_peer_type,
 };

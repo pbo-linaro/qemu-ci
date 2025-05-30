@@ -32,6 +32,9 @@
 #define TUNSETVNETLE _IOW('T', 220, int)
 #define TUNSETVNETBE _IOW('T', 222, int)
 #define TUNSETSTEERINGEBPF _IOR('T', 224, int)
+#define TUNSETVNETREPORTINGAUTOMQ _IOR('T', 229, __u32)
+#define TUNSETVNETREPORTINGRSS _IOR('T', 230, NetVnetRss)
+#define TUNSETVNETRSS _IOR('T', 231, struct NetVnetRss)
 
 #endif
 
