@@ -1968,7 +1968,8 @@ static ssize_t virtio_net_receive_rcu(NetClientState *nc, const uint8_t *buf,
             }
 
             receive_header(n, sg, elem->in_num, buf, size);
-            if (n->rss_data.populate_hash) {
+            if (n->rss_data.enabled_software_rss &&
+                n->rss_data.populate_hash) {
                 offset = offsetof(typeof(extra_hdr), hash_value);
                 iov_from_buf(sg, elem->in_num, offset,
                              (char *)&extra_hdr + offset,
@@ -3099,11 +3100,13 @@ static uint64_t virtio_net_get_features(VirtIODevice *vdev, uint64_t features,
     }
 
     if (!get_vhost_net(nc->peer)) {
-        if (!use_own_hash) {
-            virtio_clear_feature(&features, VIRTIO_NET_F_HASH_REPORT);
-            virtio_clear_feature(&features, VIRTIO_NET_F_RSS);
-        } else if (virtio_has_feature(features, VIRTIO_NET_F_RSS)) {
-            virtio_net_load_ebpf(n, errp);
+        if (!use_peer_hash) {
+            if (!use_own_hash) {
+                virtio_clear_feature(&features, VIRTIO_NET_F_HASH_REPORT);
+                virtio_clear_feature(&features, VIRTIO_NET_F_RSS);
+            } else if (virtio_has_feature(features, VIRTIO_NET_F_RSS)) {
+                virtio_net_load_ebpf(n, errp);
+            }
         }
 
         return features;
