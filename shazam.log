@@ -1,0 +1,143 @@
+Grabbing thread from lore.kernel.org/all/20250530071250.2050910-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 78 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1388 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/77] meson: build target libraries with common dependencies
+  [32m✓[0m [PATCH 2/77] hw/arm: remove explicit dependencies listed
+  [32m✓[0m [PATCH 3/77] target/arm: remove explicit dependencies listed
+  [32m✓[0m [PATCH 4/77] meson: apply target config for picking files from lib{system, user}
+  [32m✓[0m [PATCH 5/77] meson: merge lib{system, user}_ss with {system, user}_ss
+  [32m✓[0m [PATCH 6/77] meson: remove lib{system, user}_ss aliases
+  [32m✓[0m [PATCH 7/77] meson: merge hw_common_arch in target_common_system_arch
+  [32m✓[0m [PATCH 8/77] hw/timer/hpet: Reorganize register decoding
+  [32m✓[0m [PATCH 9/77] rust: Fix Zhao's email address
+    + Reviewed-by: Peter Maydell <peter.maydell@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 10/77] rust: Fix the typos in doc
+    + Reviewed-by: Peter Maydell <peter.maydell@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/77] rust: hpet: rename hpet module to "device"
+  [32m✓[0m [PATCH 12/77] target/i386/emulate: more lflags cleanups
+  [32m✓[0m [PATCH 13/77] rocker: do not pollute the namespace
+  [32m✓[0m [PATCH 14/77] i386: Introduce tdx-guest object
+  [32m✓[0m [PATCH 15/77] i386/tdx: Implement tdx_kvm_type() for TDX
+  [32m✓[0m [PATCH 16/77] i386/tdx: Implement tdx_kvm_init() to initialize TDX VM context
+  [32m✓[0m [PATCH 17/77] i386/tdx: Get tdx_capabilities via KVM_TDX_CAPABILITIES
+  [32m✓[0m [PATCH 18/77] i386/tdx: Introduce is_tdx_vm() helper and cache tdx_guest object
+  [32m✓[0m [PATCH 19/77] kvm: Introduce kvm_arch_pre_create_vcpu()
+  [32m✓[0m [PATCH 20/77] i386/tdx: Initialize TDX before creating TD vcpus
+  [32m✓[0m [PATCH 21/77] i386/tdx: Add property sept-ve-disable for tdx-guest object
+  [32m✓[0m [PATCH 22/77] i386/tdx: Make sept_ve_disable set by default
+  [32m✓[0m [PATCH 23/77] i386/tdx: Wire CPU features up with attributes of TD guest
+  [32m✓[0m [PATCH 24/77] i386/tdx: Validate TD attributes
+  [32m✓[0m [PATCH 25/77] i386/tdx: Support user configurable mrconfigid/mrowner/mrownerconfig
+  [32m✓[0m [PATCH 26/77] i386/tdx: Set APIC bus rate to match with what TDX module enforces
+  [32m✓[0m [PATCH 27/77] i386/tdx: Implement user specified tsc frequency
+  [32m✓[0m [PATCH 28/77] i386/tdx: load TDVF for TD guest
+  [32m✓[0m [PATCH 29/77] i386/tdvf: Introduce function to parse TDVF metadata
+  [32m✓[0m [PATCH 30/77] i386/tdx: Parse TDVF metadata for TDX VM
+  [32m✓[0m [PATCH 31/77] i386/tdx: Don't initialize pc.rom for TDX VMs
+  [32m✓[0m [PATCH 32/77] i386/tdx: Track mem_ptr for each firmware entry of TDVF
+  [32m✓[0m [PATCH 33/77] i386/tdx: Track RAM entries for TDX VM
+  [32m✓[0m [PATCH 34/77] headers: Add definitions from UEFI spec for volumes, resources, etc...
+  [32m✓[0m [PATCH 35/77] i386/tdx: Setup the TD HOB list
+  [32m✓[0m [PATCH 36/77] i386/tdx: Add TDVF memory via KVM_TDX_INIT_MEM_REGION
+  [32m✓[0m [PATCH 37/77] i386/tdx: Call KVM_TDX_INIT_VCPU to initialize TDX vcpu
+  [32m✓[0m [PATCH 38/77] i386/tdx: Finalize TDX VM
+  [32m✓[0m [PATCH 39/77] i386/tdx: Enable user exit on KVM_HC_MAP_GPA_RANGE
+  [32m✓[0m [PATCH 40/77] i386/tdx: Handle KVM_SYSTEM_EVENT_TDX_FATAL
+  [32m✓[0m [PATCH 41/77] i386/tdx: Wire TDX_REPORT_FATAL_ERROR with GuestPanic facility
+  [32m✓[0m [PATCH 42/77] kvm: Check KVM_CAP_MAX_VCPUS at vm level
+  [32m✓[0m [PATCH 43/77] i386/cpu: introduce x86_confidential_guest_cpu_instance_init()
+  [32m✓[0m [PATCH 44/77] i386/tdx: implement tdx_cpu_instance_init()
+  [32m✓[0m [PATCH 45/77] i386/cpu: Introduce enable_cpuid_0x1f to force exposing CPUID 0x1f
+  [32m✓[0m [PATCH 46/77] i386/tdx: Force exposing CPUID 0x1f
+  [32m✓[0m [PATCH 47/77] i386/tdx: Set kvm_readonly_mem_enabled to false for TDX VM
+  [32m✓[0m [PATCH 48/77] i386/tdx: Disable SMM for TDX VMs
+  [32m✓[0m [PATCH 49/77] i386/tdx: Disable PIC for TDX VMs
+  [32m✓[0m [PATCH 50/77] i386/tdx: Set and check kernel_irqchip mode for TDX
+  [32m✓[0m [PATCH 51/77] i386/tdx: Don't synchronize guest tsc for TDs
+  [32m✓[0m [PATCH 52/77] i386/tdx: Only configure MSR_IA32_UCODE_REV in kvm_init_msrs() for TDs
+  [32m✓[0m [PATCH 53/77] i386/apic: Skip kvm_apic_put() for TDX
+  [32m✓[0m [PATCH 54/77] cpu: Don't set vcpu_dirty when guest_state_protected
+  [32m✓[0m [PATCH 55/77] i386/cgs: Rename *mask_cpuid_features() to *adjust_cpuid_features()
+  [32m✓[0m [PATCH 56/77] i386/tdx: Implement adjust_cpuid_features() for TDX
+  [32m✓[0m [PATCH 57/77] i386/tdx: Add TDX fixed1 bits to supported CPUIDs
+  [32m✓[0m [PATCH 58/77] i386/tdx: Add supported CPUID bits related to TD Attributes
+  [32m✓[0m [PATCH 59/77] i386/tdx: Add supported CPUID bits relates to XFAM
+  [32m✓[0m [PATCH 60/77] i386/tdx: Add XFD to supported bit of TDX
+  [32m✓[0m [PATCH 61/77] i386/tdx: Define supported KVM features for TDX
+  [32m✓[0m [PATCH 62/77] i386/cgs: Introduce x86_confidential_guest_check_features()
+  [32m✓[0m [PATCH 63/77] i386: Remove unused parameter "uint32_t bit" in feature_word_description()
+  [32m✓[0m [PATCH 64/77] target/i386: Print CPUID subleaf info for unsupported feature
+  [32m✓[0m [PATCH 65/77] i386/tdx: Fetch and validate CPUID of TD guest
+  [32m✓[0m [PATCH 66/77] i386/tdx: Don't treat SYSCALL as unavailable
+  [32m✓[0m [PATCH 67/77] i386/tdx: Make invtsc default on
+  [32m✓[0m [PATCH 68/77] i386/tdx: Validate phys_bits against host value
+  [32m✓[0m [PATCH 69/77] docs: Add TDX documentation
+  [32m✓[0m [PATCH 70/77] rust: make declaration of dependent crates more consistent
+  [32m✓[0m [PATCH 71/77] target/i386: Update EPYC CPU model for Cache property, RAS, SVM feature bits
+  [32m✓[0m [PATCH 72/77] target/i386: Update EPYC-Rome CPU model for Cache property, RAS, SVM feature bits
+  [32m✓[0m [PATCH 73/77] target/i386: Update EPYC-Milan CPU model for Cache property, RAS, SVM feature bits
+  [32m✓[0m [PATCH 74/77] target/i386: Add couple of feature bits in CPUID_Fn80000021_EAX
+  [32m✓[0m [PATCH 75/77] target/i386: Update EPYC-Genoa for Cache property, perfmon-v2, RAS and SVM feature bits
+  [32m✓[0m [PATCH 76/77] target/i386: Add support for EPYC-Turin model
+  [32m✓[0m [PATCH 77/77] target/i386/tcg/helper-tcg: fix file references in comments
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 77
+---
+Applying: meson: build target libraries with common dependencies
+Applying: hw/arm: remove explicit dependencies listed
+Applying: target/arm: remove explicit dependencies listed
+Applying: meson: apply target config for picking files from lib{system, user}
+Applying: meson: merge lib{system, user}_ss with {system, user}_ss
+Applying: meson: remove lib{system, user}_ss aliases
+Applying: meson: merge hw_common_arch in target_common_system_arch
+Applying: hw/timer/hpet: Reorganize register decoding
+Applying: rust: Fix Zhao's email address
+Applying: rust: Fix the typos in doc
+Applying: rust: hpet: rename hpet module to "device"
+Applying: target/i386/emulate: more lflags cleanups
+Applying: rocker: do not pollute the namespace
+Applying: i386: Introduce tdx-guest object
+Applying: i386/tdx: Implement tdx_kvm_type() for TDX
+Applying: i386/tdx: Implement tdx_kvm_init() to initialize TDX VM context
+Applying: i386/tdx: Get tdx_capabilities via KVM_TDX_CAPABILITIES
+Applying: i386/tdx: Introduce is_tdx_vm() helper and cache tdx_guest object
+Applying: kvm: Introduce kvm_arch_pre_create_vcpu()
+Applying: i386/tdx: Initialize TDX before creating TD vcpus
+Applying: i386/tdx: Add property sept-ve-disable for tdx-guest object
+Applying: i386/tdx: Make sept_ve_disable set by default
+Applying: i386/tdx: Wire CPU features up with attributes of TD guest
+Applying: i386/tdx: Validate TD attributes
+Applying: i386/tdx: Support user configurable mrconfigid/mrowner/mrownerconfig
+Applying: i386/tdx: Set APIC bus rate to match with what TDX module enforces
+Applying: i386/tdx: Implement user specified tsc frequency
+Applying: i386/tdx: load TDVF for TD guest
+Applying: i386/tdvf: Introduce function to parse TDVF metadata
+Applying: i386/tdx: Parse TDVF metadata for TDX VM
+Applying: i386/tdx: Don't initialize pc.rom for TDX VMs
+Applying: i386/tdx: Track mem_ptr for each firmware entry of TDVF
+Applying: i386/tdx: Track RAM entries for TDX VM
+Applying: headers: Add definitions from UEFI spec for volumes, resources, etc...
+Applying: i386/tdx: Setup the TD HOB list
+Applying: i386/tdx: Add TDVF memory via KVM_TDX_INIT_MEM_REGION
+Applying: i386/tdx: Call KVM_TDX_INIT_VCPU to initialize TDX vcpu
+Applying: i386/tdx: Finalize TDX VM
+Applying: i386/tdx: Enable user exit on KVM_HC_MAP_GPA_RANGE
+Applying: i386/tdx: Handle KVM_SYSTEM_EVENT_TDX_FATAL
+Applying: i386/tdx: Wire TDX_REPORT_FATAL_ERROR with GuestPanic facility
+Applying: kvm: Check KVM_CAP_MAX_VCPUS at vm level
+Applying: i386/cpu: introduce x86_confidential_guest_cpu_instance_init()
+Patch failed at 0043 i386/cpu: introduce x86_confidential_guest_cpu_instance_init()
+error: patch failed: target/i386/cpu.c:37
+error: target/i386/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
