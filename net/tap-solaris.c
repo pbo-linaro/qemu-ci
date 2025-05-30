@@ -225,6 +225,16 @@ void tap_fd_set_vnet_hdr_len(int fd, int len)
 {
 }
 
+void tap_fd_set_vnet_automq(int fd, uint32_t hash_types)
+{
+    g_assert_not_reached();
+}
+
+void tap_fd_set_vnet_rss(int fd, const NetVnetRss *rss, bool hash_report)
+{
+    g_assert_not_reached();
+}
+
 int tap_fd_set_vnet_le(int fd, int is_le)
 {
     return -EINVAL;

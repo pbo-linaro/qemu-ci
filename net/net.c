@@ -582,6 +582,17 @@ bool qemu_get_vnet_hash_supported_types(NetClientState *nc, uint32_t *types)
     return nc->info->get_vnet_hash_supported_types(nc, types);
 }
 
+void qemu_set_vnet_automq(NetClientState *nc, uint32_t hash_types)
+{
+    nc->info->set_vnet_automq(nc, hash_types);
+}
+
+void qemu_set_vnet_rss(NetClientState *nc, const NetVnetRss *rss,
+                       bool hash_report)
+{
+    nc->info->set_vnet_rss(nc, rss, hash_report);
+}
+
 int qemu_set_vnet_le(NetClientState *nc, bool is_le)
 {
 #if HOST_BIG_ENDIAN
