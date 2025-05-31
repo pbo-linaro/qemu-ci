@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250531-zlib-v2-0-b75c4b4769e1@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/2] ui/vnc: Introduce the VncWorker type
+  [31m✗[0m [PATCH v2 2/2] ui/vnc: Do not copy z_stream
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 2
+---
+ Base: using specified base-commit f0737158b483e7ec2b2512145aeab888b85cc1f7
+Applying: ui/vnc: Introduce the VncWorker type
+Patch failed at 0001 ui/vnc: Introduce the VncWorker type
+error: patch failed: ui/vnc-enc-tight.c:992
+error: ui/vnc-enc-tight.c: patch does not apply
+error: patch failed: ui/vnc-jobs.c:185
+error: ui/vnc-jobs.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
