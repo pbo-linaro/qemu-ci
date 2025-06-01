@@ -1,0 +1,70 @@
+Grabbing thread from lore.kernel.org/all/cover.1748791463.git.mst@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 313 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/31] virtio: check for validity of indirect descriptors
+  [32m✓[0m [PATCH 2/31] hw/i386/amd_iommu: Fix device setup failure when PT is on.
+  [32m✓[0m [PATCH 3/31] hw/i386/amd_iommu: Fix xtsup when vcpus < 255
+    + Reviewed-by: Joao Martins <joao.m.martins@oracle.com> ([31m✗[0m DKIM/oracle.com)
+  [32m✓[0m [PATCH 4/31] pcie: Add helper to declare PASID capability for a pcie device
+  [32m✓[0m [PATCH 5/31] pcie: Helper functions to check if PASID is enabled
+  [32m✓[0m [PATCH 6/31] pcie: Helper function to check if ATS is enabled
+  [32m✓[0m [PATCH 7/31] pcie: Add a helper to declare the PRI capability for a pcie device
+  [32m✓[0m [PATCH 8/31] pcie: Helper functions to check to check if PRI is enabled
+  [32m✓[0m [PATCH 9/31] pci: Cache the bus mastering status in the device
+  [32m✓[0m [PATCH 10/31] pci: Add an API to get IOMMU's min page size and virtual address width
+  [32m✓[0m [PATCH 11/31] memory: Store user data pointer in the IOMMU notifiers
+  [32m✓[0m [PATCH 12/31] pci: Add a pci-level initialization function for IOMMU notifiers
+  [32m✓[0m [PATCH 13/31] pci: Add a pci-level API for ATS
+  [32m✓[0m [PATCH 14/31] pci: Add a PCI-level API for PRI
+  [32m✓[0m [PATCH 15/31] uefi-test-tools:: Add LoongArch64 support
+  [32m✓[0m [PATCH 16/31] tests/data/uefi-boot-images: Add ISO image for LoongArch system
+  [32m✓[0m [PATCH 17/31] tests/qtest/bios-tables-test: Use MiB macro rather hardcode value
+  [32m✓[0m [PATCH 18/31] tests/acpi: Add empty ACPI data files for LoongArch
+  [32m✓[0m [PATCH 19/31] tests/qtest/bios-tables-test: Add basic testing for LoongArch
+  [32m✓[0m [PATCH 20/31] rebuild-expected-aml.sh: Add support for LoongArch
+  [32m✓[0m [PATCH 21/31] tests/acpi: Fill acpi table data for LoongArch
+  [32m✓[0m [PATCH 22/31] tests/acpi: Remove stale allowed tables
+  [32m✓[0m [PATCH 23/31] vhost: Don't set vring call if guest notifier is unused
+    + Acked-by: Stefano Garzarella <sgarzare@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 24/31] vdpa: check for iova tree initialized at net_client_start
+  [32m✓[0m [PATCH 25/31] vdpa: reorder vhost_vdpa_set_backend_cap
+  [32m✓[0m [PATCH 26/31] vdpa: set backend capabilities at vhost_vdpa_init
+  [32m✓[0m [PATCH 27/31] vdpa: add listener_registered
+  [32m✓[0m [PATCH 28/31] vdpa: reorder listener assignment
+  [32m✓[0m [PATCH 29/31] vdpa: move iova_tree allocation to net_vhost_vdpa_init
+  [32m✓[0m [PATCH 30/31] vdpa: move memory listener register to vhost_vdpa_init
+  [32m✓[0m [PATCH 31/31] hw/i386/pc_piix: Fix RTC ISA IRQ wiring of isapc machine
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 31
+---
+Applying: virtio: check for validity of indirect descriptors
+Applying: hw/i386/amd_iommu: Fix device setup failure when PT is on.
+Applying: hw/i386/amd_iommu: Fix xtsup when vcpus < 255
+Applying: pcie: Add helper to declare PASID capability for a pcie device
+Applying: pcie: Helper functions to check if PASID is enabled
+Applying: pcie: Helper function to check if ATS is enabled
+Applying: pcie: Add a helper to declare the PRI capability for a pcie device
+Applying: pcie: Helper functions to check to check if PRI is enabled
+Applying: pci: Cache the bus mastering status in the device
+Applying: pci: Add an API to get IOMMU's min page size and virtual address width
+Applying: memory: Store user data pointer in the IOMMU notifiers
+Applying: pci: Add a pci-level initialization function for IOMMU notifiers
+Applying: pci: Add a pci-level API for ATS
+Applying: pci: Add a PCI-level API for PRI
+Applying: uefi-test-tools:: Add LoongArch64 support
+Applying: tests/data/uefi-boot-images: Add ISO image for LoongArch system
+Patch failed at 0016 tests/data/uefi-boot-images: Add ISO image for LoongArch system
+error: corrupt binary patch at line 204: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
