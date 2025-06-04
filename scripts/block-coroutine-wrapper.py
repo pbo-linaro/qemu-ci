@@ -186,7 +186,7 @@ def create_co_wrapper(func: FuncDecl) -> str:
     name = func.target_name
     struct_name = func.struct_name
     return f"""\
-{func.return_type} {func.name}({ func.gen_list('{decl}') })
+{func.return_type} GRAPH_UNLOCKED {func.name}({ func.gen_list('{decl}') })
 {{
     {struct_name} s = {{
         .poll_state.ctx = qemu_get_current_aio_context(),
