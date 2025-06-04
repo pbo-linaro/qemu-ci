@@ -16,6 +16,7 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/crypto.h>
 #include <gnutls/x509.h>
+#include <gnutls/pkcs7.h>
 
 static const int qcrypto_to_gnutls_hash_alg_map[QCRYPTO_HASH_ALGO__MAX] = {
     [QCRYPTO_HASH_ALGO_MD5] = GNUTLS_DIG_MD5,
@@ -364,6 +365,58 @@ cleanup:
     return ret;
 }
 
+static int qcrypto_import_pkcs7(gnutls_pkcs7_t pkcs7, gnutls_datum_t *datum)
+{
+    int rc;
+
+    rc = gnutls_pkcs7_import(pkcs7, datum , GNUTLS_X509_FMT_PEM);
+    if (rc) {
+        rc = gnutls_pkcs7_import(pkcs7, datum , GNUTLS_X509_FMT_DER);
+    }
+
+    return rc;
+}
+
+int qcrypto_verify_x509_cert(uint8_t *cert, size_t cert_size,
+                             uint8_t *comp, size_t comp_size,
+                             uint8_t *sig, size_t sig_size, Error **errp)
+{
+    int rc = -1;
+    gnutls_x509_crt_t crt;
+    gnutls_pkcs7_t signature;
+    gnutls_datum_t cert_datum = {.data = cert, .size = cert_size};
+    gnutls_datum_t data_datum = {.data = comp, .size = comp_size};
+    gnutls_datum_t sig_datum = {.data = sig, .size = sig_size};
+
+    if (gnutls_x509_crt_init(&crt) < 0) {
+        error_setg(errp, "Failed to initialize certificate");
+        return rc;
+    }
+
+    if (qcrypto_import_x509_cert(crt, &cert_datum) != 0) {
+        error_setg(errp, "Failed to import certificate");
+        gnutls_x509_crt_deinit(crt);
+        return rc;
+    }
+
+    if (gnutls_pkcs7_init(&signature) < 0) {
+        error_setg(errp, "Failed to initalize pkcs7 data.");
+        return rc;
+    }
+
+    if (qcrypto_import_pkcs7(signature, &sig_datum) != 0) {
+        error_setg(errp, "Failed to import signature");
+        goto cleanup;
+    }
+
+    rc = gnutls_pkcs7_verify_direct(signature, crt, 0, &data_datum, 0);
+
+cleanup:
+    gnutls_x509_crt_deinit(crt);
+    gnutls_pkcs7_deinit(signature);
+    return rc;
+}
+
 #else /* ! CONFIG_GNUTLS */
 
 int qcrypto_check_x509_cert_fmt(uint8_t *cert, size_t size,
@@ -424,6 +477,14 @@ int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
                                  Error **errp)
 {
     error_setg(errp, "GNUTLS is required to get key ID");
+    return -ENOTSUP;
+}
+
+int qcrypto_verify_x509_cert(uint8_t *cert, size_t cert_size,
+                             uint8_t *comp, size_t comp_size,
+                             uint8_t *sig, size_t sig_size, Error **errp)
+{
+    error_setg(errp, "GNUTLS is required for signature-verification support");
     return -ENOTSUP;
 }
 

@@ -136,4 +136,24 @@ int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
                                  size_t *resultlen,
                                  Error **errp);
 
+/**
+ * qcrypto_verify_x509_cert
+ * @cert: pointer to the raw certiricate data
+ * @cert_size: size of the certificate
+ * @comp: pointer to the component to be verified
+ * @comp_size: size of the component
+ * @sig: pointer to the signature
+ * @sig_size: size of the signature
+ * @errp: error pointer
+ *
+ * Verify the provided @comp against the @sig and @cert.
+ *
+ * Returns: 0 on success,
+ *          negative error code on error,
+ *          -ENOTSUP if GNUTLS is not enabled.
+ */
+int qcrypto_verify_x509_cert(uint8_t *cert, size_t cert_size,
+                             uint8_t *comp, size_t comp_size,
+                             uint8_t *sig, size_t sig_size, Error **errp);
+
 #endif
