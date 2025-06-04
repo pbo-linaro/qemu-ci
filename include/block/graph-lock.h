@@ -169,7 +169,7 @@ bdrv_graph_rdunlock_main_loop(void);
 /*
  * assert_bdrv_graph_readable:
  * Make sure that the reader is either the main loop,
- * or there is at least a reader helding the rdlock.
+ * or there is at least a reader holding the rdlock.
  * In this way an incoming writer is aware of the read and waits.
  */
 void GRAPH_RDLOCK assert_bdrv_graph_readable(void);
