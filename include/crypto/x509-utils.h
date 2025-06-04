@@ -73,4 +73,67 @@ int qcrypto_get_x509_keyid_len(QCryptoKeyidFlags flag);
  */
 int qcrypto_get_x509_signature_algorithm(uint8_t *cert, size_t size, Error **errp);
 
+/**
+ * qcrypto_get_x509_cert_version
+ * @cert: pointer to the raw certiricate data
+ * @size: size of the certificate
+ * @errp: error pointer
+ *
+ * Determine the version of the @cert.
+ *
+ * Returns: version of certificate on success,
+ *          negative error code on error,
+ *          -ENOTSUP if GNUTLS is not enabled.
+ */
+int qcrypto_get_x509_cert_version(uint8_t *cert, size_t size, Error **errp);
+
+/**
+ * qcrypto_check_x509_cert_times
+ * @cert: pointer to the raw certiricate data
+ * @size: size of the certificate
+ * @errp: error pointer
+ *
+ * Check whether the @cert activation and expiration times are valid at the current time.
+ *
+ * Returns: 0 if the certificate times are valid,
+ *         -1 on error,
+ *         -ENOTSUP if GNUTLS is not enabled.
+ */
+int qcrypto_check_x509_cert_times(uint8_t *cert, size_t size, Error **errp);
+
+/**
+ * qcrypto_get_x509_pk_algorithm
+ * @cert: pointer to the raw certiricate data
+ * @size: size of the certificate
+ * @errp: error pointer
+ *
+ * Determine the public key algorithm of the @cert.
+ *
+ * Returns: a value from the QCryptoPkAlgo enum on success,
+ *          -1 on error,
+ *          -ENOTSUP if GNUTLS is not enabled.
+ */
+int qcrypto_get_x509_pk_algorithm(uint8_t *cert, size_t size, Error **errp);
+
+/**
+ * qcrypto_get_x509_cert_key_id
+ * @cert: pointer to the raw certiricate data
+ * @size: size of the certificate
+ * @flag: the key ID flag
+ * @result: pointer to a buffer to store output key ID (may not be null)
+ * @resultlen: pointer to the size of the buffer
+ * @errp: error pointer
+ *
+ * Retrieve the key ID from the @cert based on the specified @flag.
+ *
+ * Returns: 0 if key ID was successfully stored in @result,
+ *         -1 on error,
+ *         -ENOTSUP if GNUTLS is not enabled.
+ */
+int qcrypto_get_x509_cert_key_id(uint8_t *cert, size_t size,
+                                 QCryptoKeyidFlags flag,
+                                 uint8_t *result,
+                                 size_t *resultlen,
+                                 Error **errp);
+
 #endif
