@@ -774,6 +774,7 @@ static inline void qemu_reset_optind(void)
 }
 
 int qemu_fdatasync(int fd);
+int qemu_fcntl_addfl(int fd, int flag);
 
 /**
  * qemu_close_all_open_fd:
