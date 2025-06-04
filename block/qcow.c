@@ -1134,8 +1134,7 @@ fail:
     return ret;
 }
 
-static int coroutine_fn
-qcow_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int qcow_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
     BDRVQcowState *s = bs->opaque;
     bdi->cluster_size = s->cluster_size;
@@ -1204,7 +1203,7 @@ static BlockDriver bdrv_qcow = {
 
     .bdrv_make_empty        = qcow_make_empty,
     .bdrv_co_pwritev_compressed = qcow_co_pwritev_compressed,
-    .bdrv_co_get_info       = qcow_co_get_info,
+    .bdrv_get_info          = qcow_get_info,
 
     .create_opts            = &qcow_create_opts,
     .strong_runtime_opts    = qcow_strong_runtime_opts,

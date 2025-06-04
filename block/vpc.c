@@ -605,8 +605,7 @@ fail:
     return ret;
 }
 
-static int coroutine_fn
-vpc_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int vpc_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
     BDRVVPCState *s = (BDRVVPCState *)bs->opaque;
 
@@ -1246,7 +1245,7 @@ static BlockDriver bdrv_vpc = {
     .bdrv_co_pwritev            = vpc_co_pwritev,
     .bdrv_co_block_status       = vpc_co_block_status,
 
-    .bdrv_co_get_info       = vpc_co_get_info,
+    .bdrv_get_info          = vpc_get_info,
 
     .is_format              = true,
     .create_opts            = &vpc_create_opts,

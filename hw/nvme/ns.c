@@ -50,7 +50,7 @@ void nvme_ns_init_format(NvmeNamespace *ns)
 
     npdg = ns->blkconf.discard_granularity / ns->lbasz;
 
-    ret = bdrv_get_info(blk_bs(ns->blkconf.blk), &bdi);
+    ret = bdrv_get_info_unlocked(blk_bs(ns->blkconf.blk), &bdi);
     if (ret >= 0 && bdi.cluster_size > ns->blkconf.discard_granularity) {
         npdg = bdi.cluster_size / ns->lbasz;
     }

@@ -1494,8 +1494,7 @@ static int64_t coroutine_fn bdrv_qed_co_getlength(BlockDriverState *bs)
     return s->header.image_size;
 }
 
-static int coroutine_fn
-bdrv_qed_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int bdrv_qed_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
     BDRVQEDState *s = bs->opaque;
 
@@ -1664,7 +1663,7 @@ static BlockDriver bdrv_qed = {
     .bdrv_co_pwrite_zeroes          = bdrv_qed_co_pwrite_zeroes,
     .bdrv_co_truncate               = bdrv_qed_co_truncate,
     .bdrv_co_getlength              = bdrv_qed_co_getlength,
-    .bdrv_co_get_info               = bdrv_qed_co_get_info,
+    .bdrv_get_info                  = bdrv_qed_get_info,
     .bdrv_refresh_limits            = bdrv_qed_refresh_limits,
     .bdrv_co_change_backing_file    = bdrv_qed_co_change_backing_file,
     .bdrv_co_invalidate_cache       = bdrv_qed_co_invalidate_cache,

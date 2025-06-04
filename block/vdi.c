@@ -329,11 +329,12 @@ static int coroutine_fn vdi_co_check(BlockDriverState *bs, BdrvCheckResult *res,
     return 0;
 }
 
-static int coroutine_fn
-vdi_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int vdi_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
-    /* TODO: vdi_co_get_info would be needed for machine snapshots.
-       vm_state_offset is still missing. */
+    /*
+     * TODO: vdi_get_info would be needed for machine snapshots.
+     * vm_state_offset is still missing.
+     */
     BDRVVdiState *s = (BDRVVdiState *)bs->opaque;
     logout("\n");
     bdi->cluster_size = s->block_size;
@@ -1052,7 +1053,7 @@ static BlockDriver bdrv_vdi = {
     .bdrv_co_pwritev    = vdi_co_pwritev,
 #endif
 
-    .bdrv_co_get_info = vdi_co_get_info,
+    .bdrv_get_info = vdi_get_info,
 
     .is_format = true,
     .create_opts = &vdi_create_opts,

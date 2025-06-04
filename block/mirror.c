@@ -1082,7 +1082,7 @@ static int coroutine_fn mirror_run(Job *job, Error **errp)
     bdrv_get_backing_filename(target_bs, backing_filename,
                               sizeof(backing_filename));
     bdrv_graph_co_rdlock();
-    if (!bdrv_co_get_info(target_bs, &bdi) && bdi.cluster_size) {
+    if (!bdrv_get_info(target_bs, &bdi) && bdi.cluster_size) {
         s->target_cluster_size = bdi.cluster_size;
     } else {
         s->target_cluster_size = BDRV_SECTOR_SIZE;
@@ -1844,6 +1844,7 @@ static BlockJob *mirror_start_job(
 
     GLOBAL_STATE_CODE();
 
+    bdrv_graph_rdlock_main_loop();
     if (granularity == 0) {
         granularity = bdrv_get_default_bitmap_granularity(target);
     }
@@ -1852,6 +1853,7 @@ static BlockJob *mirror_start_job(
 
     if (buf_size < 0) {
         error_setg(errp, "Invalid parameter 'buf-size'");
+        bdrv_graph_rdunlock_main_loop();
         return NULL;
     }
 
@@ -1859,7 +1861,6 @@ static BlockJob *mirror_start_job(
         buf_size = DEFAULT_MIRROR_BUF_SIZE;
     }
 
-    bdrv_graph_rdlock_main_loop();
     if (bdrv_skip_filters(bs) == bdrv_skip_filters(target)) {
         error_setg(errp, "Can't mirror node into itself");
         bdrv_graph_rdunlock_main_loop();

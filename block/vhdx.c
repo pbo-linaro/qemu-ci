@@ -1167,8 +1167,7 @@ static void vhdx_block_translate(BDRVVHDXState *s, int64_t sector_num,
 }
 
 
-static int coroutine_fn
-vhdx_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int vhdx_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
     BDRVVHDXState *s = bs->opaque;
 
@@ -2257,7 +2256,7 @@ static BlockDriver bdrv_vhdx = {
     .bdrv_co_writev         = vhdx_co_writev,
     .bdrv_co_create         = vhdx_co_create,
     .bdrv_co_create_opts    = vhdx_co_create_opts,
-    .bdrv_co_get_info       = vhdx_co_get_info,
+    .bdrv_get_info          = vhdx_get_info,
     .bdrv_co_check          = vhdx_co_check,
     .bdrv_has_zero_init     = vhdx_has_zero_init,
 

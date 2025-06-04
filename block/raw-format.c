@@ -393,10 +393,9 @@ static BlockMeasureInfo *raw_measure(QemuOpts *opts, BlockDriverState *in_bs,
     return info;
 }
 
-static int coroutine_fn GRAPH_RDLOCK
-raw_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
+static int GRAPH_RDLOCK raw_get_info(BlockDriverState *bs, BlockDriverInfo *bdi)
 {
-    return bdrv_co_get_info(bs->file->bs, bdi);
+    return bdrv_get_info(bs->file->bs, bdi);
 }
 
 static void GRAPH_RDLOCK raw_refresh_limits(BlockDriverState *bs, Error **errp)
@@ -660,7 +659,7 @@ BlockDriver bdrv_raw = {
     .bdrv_co_getlength    = &raw_co_getlength,
     .is_format            = true,
     .bdrv_measure         = &raw_measure,
-    .bdrv_co_get_info     = &raw_co_get_info,
+    .bdrv_get_info        = &raw_get_info,
     .bdrv_refresh_limits  = &raw_refresh_limits,
     .bdrv_probe_blocksizes = &raw_probe_blocksizes,
     .bdrv_probe_geometry  = &raw_probe_geometry,

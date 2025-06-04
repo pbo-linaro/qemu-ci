@@ -114,7 +114,9 @@ void qmp_block_dirty_bitmap_add(const char *node, const char *name,
         }
     } else {
         /* Default to cluster size, if available: */
+        bdrv_graph_rdlock_main_loop();
         granularity = bdrv_get_default_bitmap_granularity(bs);
+        bdrv_graph_rdunlock_main_loop();
     }
 
     if (!has_persistent) {

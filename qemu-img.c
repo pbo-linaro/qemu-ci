@@ -2506,10 +2506,12 @@ static int img_convert(int argc, char **argv)
         src_bs = blk_bs(s.src[bs_i]);
         s.src_alignment[bs_i] = DIV_ROUND_UP(src_bs->bl.request_alignment,
                                              BDRV_SECTOR_SIZE);
+        bdrv_graph_rdlock_main_loop();
         if (!bdrv_get_info(src_bs, &bdi)) {
             s.src_alignment[bs_i] = MAX(s.src_alignment[bs_i],
                                         bdi.cluster_size / BDRV_SECTOR_SIZE);
         }
+        bdrv_graph_rdunlock_main_loop();
         s.total_sectors += s.src_sectors[bs_i];
     }
 
@@ -2768,7 +2770,9 @@ static int img_convert(int argc, char **argv)
         s.target_backing_sectors = -1;
     }
 
+    bdrv_graph_rdlock_main_loop();
     ret = bdrv_get_info(out_bs, &bdi);
+    bdrv_graph_rdunlock_main_loop();
     if (ret < 0) {
         if (s.compressed) {
             error_report("could not get block driver info");
@@ -3694,7 +3698,9 @@ static int img_rebase(int argc, char **argv)
      * We need overlay subcluster size (or cluster size in case writes are
      * compressed) to make sure write requests are aligned.
      */
+    bdrv_graph_rdlock_main_loop();
     ret = bdrv_get_info(unfiltered_bs, &bdi);
+    bdrv_graph_rdunlock_main_loop();
     if (ret < 0) {
         error_report("could not get block driver info");
         goto out;

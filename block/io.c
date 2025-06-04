@@ -743,7 +743,7 @@ bdrv_round_to_subclusters(BlockDriverState *bs, int64_t offset, int64_t bytes,
 {
     BlockDriverInfo bdi;
     IO_CODE();
-    if (bdrv_co_get_info(bs, &bdi) < 0 || bdi.subcluster_size == 0) {
+    if (bdrv_get_info(bs, &bdi) < 0 || bdi.subcluster_size == 0) {
         *align_offset = offset;
         *align_bytes = bytes;
     } else {
@@ -758,7 +758,7 @@ static int coroutine_fn GRAPH_RDLOCK bdrv_get_cluster_size(BlockDriverState *bs)
     BlockDriverInfo bdi;
     int ret;
 
-    ret = bdrv_co_get_info(bs, &bdi);
+    ret = bdrv_get_info(bs, &bdi);
     if (ret < 0 || bdi.cluster_size == 0) {
         return bs->bl.request_alignment;
     } else {

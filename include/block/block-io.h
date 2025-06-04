@@ -193,11 +193,12 @@ bdrv_get_device_name(const BlockDriverState *bs);
 const char * GRAPH_RDLOCK
 bdrv_get_device_or_node_name(const BlockDriverState *bs);
 
+/* The coroutine is called 'unlocked' because the wrapper is. */
 int coroutine_fn GRAPH_RDLOCK
-bdrv_co_get_info(BlockDriverState *bs, BlockDriverInfo *bdi);
-
-int co_wrapper_mixed_bdrv_rdlock
-bdrv_get_info(BlockDriverState *bs, BlockDriverInfo *bdi);
+bdrv_co_get_info_unlocked(BlockDriverState *bs, BlockDriverInfo *bdi);
+int co_wrapper_bdrv_rdlock
+bdrv_get_info_unlocked(BlockDriverState *bs, BlockDriverInfo *bdi);
+int GRAPH_RDLOCK bdrv_get_info(BlockDriverState *bs, BlockDriverInfo *bdi);
 
 ImageInfoSpecific * GRAPH_RDLOCK
 bdrv_get_specific_info(BlockDriverState *bs, Error **errp);
