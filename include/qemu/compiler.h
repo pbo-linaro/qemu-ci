@@ -208,6 +208,18 @@
 #endif
 
 /*
+ * Disable -ftrivial-auto-var-init on a local variable. Use this in rare cases
+ * when the compiler zeroes a large on-stack variable and this causes a
+ * performance bottleneck. Only use it when performance data indicates this is
+ * necessary since security risks increase with uninitialized stack variables.
+ */
+#if __has_attribute(uninitialized)
+# define QEMU_UNINITIALIZED __attribute__((uninitialized))
+#else
+# define QEMU_UNINITIALIZED
+#endif
+
+/*
  * http://clang.llvm.org/docs/ThreadSafetyAnalysis.html
  *
  * TSA is available since clang 3.6-ish.
