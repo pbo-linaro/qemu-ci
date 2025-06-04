@@ -527,9 +527,81 @@ void handle_diag_320(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
     env->regs[r1 + 1] = rc;
 }
 
+static int handle_diag508_sig_verif(uint64_t addr, size_t csi_size, size_t svb_size,
+                                    S390IPLCertificateStore *qcs)
+{
+    int rc;
+    int verified;
+    Error *err;
+    uint64_t comp_len, comp_addr;
+    uint64_t sig_len, sig_addr;
+    g_autofree uint8_t *svb_comp;
+    g_autofree uint8_t *svb_sig;
+    g_autofree Diag508SignatureVerificationBlock *svb;
+
+    if (!qcs || !qcs->count) {
+        return DIAG_508_RC_NO_CERTS;
+    }
+
+    svb = g_new0(Diag508SignatureVerificationBlock, 1);
+    cpu_physical_memory_read(addr, svb, svb_size);
+
+    comp_len = be64_to_cpu(svb->comp_len);
+    comp_addr = be64_to_cpu(svb->comp_addr);
+    sig_len = be64_to_cpu(svb->sig_len);
+    sig_addr = be64_to_cpu(svb->sig_addr);
+
+    if (!comp_len || !comp_addr) {
+        return DIAG_508_RC_INVAL_COMP_DATA;
+    }
+
+    if (!sig_len || !sig_addr) {
+        return DIAG_508_RC_INVAL_PKCS7_SIG;
+    }
+
+    svb_comp = g_malloc0(comp_len);
+    cpu_physical_memory_read(comp_addr, svb_comp, comp_len);
+
+    svb_sig = g_malloc0(sig_len);
+    cpu_physical_memory_read(sig_addr, svb_sig, sig_len);
+
+    rc = DIAG_508_RC_FAIL_VERIF;
+    /*
+     * It is uncertain which certificate contains
+     * the analogous key to verify the signed data
+     */
+    for (int i = 0; i < qcs->count; i++) {
+        err = NULL;
+        verified = qcrypto_verify_x509_cert((uint8_t *)qcs->certs[i].raw,
+                                            qcs->certs[i].size,
+                                            svb_comp, comp_len,
+                                            svb_sig, sig_len, &err);
+
+        /* return early if GNUTLS is not enabled */
+        if (verified == -ENOTSUP) {
+            break;
+        }
+
+        if (verified == 0) {
+            svb->csi.idx = i;
+            svb->csi.len = cpu_to_be64(qcs->certs[i].size);
+            cpu_physical_memory_write(addr, &svb->csi, be32_to_cpu(csi_size));
+            rc = DIAG_508_RC_OK;
+            break;
+       }
+    }
+
+    return rc;
+}
+
+QEMU_BUILD_BUG_MSG(sizeof(Diag508SignatureVerificationBlock) != 48,
+                   "size of Diag508SignatureVerificationBlock is wrong");
+
 void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 {
+    S390IPLCertificateStore *qcs = s390_ipl_get_certificate_store();
     uint64_t subcode = env->regs[r3];
+    uint64_t addr = env->regs[r1];
     int rc;
 
     if (env->psw.mask & PSW_MASK_PSTATE) {
@@ -544,7 +616,19 @@ void handle_diag_508(CPUS390XState *env, uint64_t r1, uint64_t r3, uintptr_t ra)
 
     switch (subcode) {
     case DIAG_508_SUBC_QUERY_SUBC:
-        rc = 0;
+        rc = DIAG_508_SUBC_SIG_VERIF;
+        break;
+    case DIAG_508_SUBC_SIG_VERIF:
+        size_t csi_size = sizeof(Diag508CertificateStoreInfo);
+        size_t svb_size = sizeof(Diag508SignatureVerificationBlock);
+
+        if (!diag_parm_addr_valid(addr, svb_size, false) ||
+            !diag_parm_addr_valid(addr, csi_size, true)) {
+            s390_program_interrupt(env, PGM_ADDRESSING, ra);
+            return;
+        }
+
+        rc = handle_diag508_sig_verif(addr, csi_size, svb_size, qcs);
         break;
     default:
         s390_program_interrupt(env, PGM_SPECIFICATION, ra);
