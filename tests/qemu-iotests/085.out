@@ -255,4 +255,25 @@ Formatting 'TEST_DIR/15-snapshot-v0.IMGFMT', fmt=IMGFMT size=134217728 backing_f
                                     'overlay':'snap_15' }
                    }
 {"error": {"class": "GenericError", "desc": "Cannot find device='nodevice' nor node-name='nodevice'"}}
+
+=== Add snapshot in combination with compress filter ===
+
+Formatting 'TEST_DIR/16-snapshot-v0.IMGFMT', fmt=IMGFMT size=134217728 backing_file=TEST_DIR/15-snapshot-v0.IMGFMT backing_fmt=IMGFMT
+{ 'execute': 'blockdev-add', 'arguments':
+           { 'driver': 'IMGFMT', 'node-name': 'snap_16', 'backing': null,
+             'file':
+             { 'driver': 'file', 'filename': 'TEST_DIR/16-snapshot-v0.IMGFMT',
+               'node-name': 'file_16' } } }
+{"return": {}}
+{ 'execute': 'blockdev-add',
+                     'arguments': { 'driver':'compress',
+                                    'node-name':'compress',
+                                    'file':'virtio0' }
+                   }
+{"return": {}}
+{ 'execute': 'blockdev-snapshot',
+                     'arguments': { 'node':'compress',
+                                    'overlay':'snap_16' }
+                   }
+{"return": {}}
 *** done

@@ -270,6 +270,24 @@ _send_qemu_cmd $h "{ 'execute': 'blockdev-snapshot',
                                     'overlay':'snap_${SNAPSHOTS}' }
                    }" "error"
 
+echo
+echo === Add snapshot in combination with compress filter ===
+echo
+
+SNAPSHOTS=$((${SNAPSHOTS}+1))
+add_snapshot_image ${SNAPSHOTS}
+
+_send_qemu_cmd $h "{ 'execute': 'blockdev-add',
+                     'arguments': { 'driver':'compress',
+                                    'node-name':'compress',
+                                    'file':'virtio0' }
+                   }" "return"
+
+_send_qemu_cmd $h "{ 'execute': 'blockdev-snapshot',
+                     'arguments': { 'node':'compress',
+                                    'overlay':'snap_${SNAPSHOTS}' }
+                   }" "return"
+
 # success, all done
 echo "*** done"
 rm -f $seq.full
