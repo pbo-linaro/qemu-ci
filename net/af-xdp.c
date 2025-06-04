@@ -559,12 +559,11 @@ int net_init_af_xdp(const Netdev *netdev,
             s->map_start_index = opts->map_start_index;
         }
 
-        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, errp) ||
-            af_xdp_socket_create(s, opts, errp) ||
-            af_xdp_update_xsk_map(s, errp)) {
+        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, &err) ||
+            af_xdp_socket_create(s, opts, &err) ||
+            af_xdp_update_xsk_map(s, &err)) {
             /* Make sure the XDP program will be removed. */
-            s->n_queues = i;
-            error_propagate(errp, err);
+            s->n_queues = i + 1;
             goto err;
         }
     }
@@ -586,6 +585,7 @@ int net_init_af_xdp(const Netdev *netdev,
 err:
     if (nc0) {
         qemu_del_net_client(nc0);
+        error_propagate(errp, err);
     }
 
     return -1;
