@@ -52,6 +52,10 @@ typedef struct AFXDPState {
     uint32_t             n_queues;
     uint32_t             xdp_flags;
     bool                 inhibit;
+
+    char                 *map_path;
+    int                  map_fd;
+    uint32_t             map_start_index;
 } AFXDPState;
 
 #define AF_XDP_BATCH_SIZE 64
@@ -261,6 +265,7 @@ static void af_xdp_send(void *opaque)
 static void af_xdp_cleanup(NetClientState *nc)
 {
     AFXDPState *s = DO_UPCAST(AFXDPState, nc, nc);
+    int idx;
 
     qemu_purge_queued_packets(nc);
 
@@ -282,6 +287,18 @@ static void af_xdp_cleanup(NetClientState *nc)
                 "af-xdp: unable to remove XDP program from '%s', ifindex: %d\n",
                 s->ifname, s->ifindex);
     }
+
+    if (s->map_fd >= 0) {
+        idx = nc->queue_index + s->map_start_index;
+        if (bpf_map_delete_elem(s->map_fd, &idx)) {
+            fprintf(stderr, "af-xdp: unable to remove AF_XDP socket from map %s\n",
+                    s->map_path);
+        }
+        close(s->map_fd);
+        s->map_fd = -1;
+    }
+    g_free(s->map_path);
+    s->map_path = NULL;
 }
 
 static int af_xdp_umem_create(AFXDPState *s, int sock_fd, Error **errp)
@@ -345,7 +362,6 @@ static int af_xdp_socket_create(AFXDPState *s,
     };
     int queue_id, error = 0;
 
-    s->inhibit = opts->has_inhibit && opts->inhibit;
     if (s->inhibit) {
         cfg.libxdp_flags |= XSK_LIBXDP_FLAGS__INHIBIT_PROG_LOAD;
     }
@@ -392,6 +408,34 @@ static int af_xdp_socket_create(AFXDPState *s,
     }
 
     s->xdp_flags = cfg.xdp_flags;
+
+    return 0;
+}
+
+static int af_xdp_update_xsk_map(AFXDPState *s, Error **errp)
+{
+    int xsk_fd, idx, error = 0;
+
+    if (!s->map_path)
+        return 0;
+
+    s->map_fd = bpf_obj_get(s->map_path);
+    if (s->map_fd < 0) {
+        error = errno;
+    } else {
+        xsk_fd = xsk_socket__fd(s->xsk);
+        idx = s->nc.queue_index + s->map_start_index;
+        if (bpf_map_update_elem(s->map_fd, &idx, &xsk_fd, 0)) {
+            error = errno;
+        }
+    }
+
+    if (error) {
+        error_setg_errno(errp, error,
+                         "failed to insert AF_XDP socket into map %s",
+                         s->map_path);
+        return -1;
+    }
 
     return 0;
 }
@@ -450,6 +494,7 @@ int net_init_af_xdp(const Netdev *netdev,
     int64_t i, queues;
     Error *err = NULL;
     AFXDPState *s;
+    bool inhibit;
 
     ifindex = if_nametoindex(opts->ifname);
     if (!ifindex) {
@@ -465,8 +510,21 @@ int net_init_af_xdp(const Netdev *netdev,
         return -1;
     }
 
-    if ((opts->has_inhibit && opts->inhibit) != !!opts->sock_fds) {
-        error_setg(errp, "'inhibit=on' requires 'sock-fds' and vice versa");
+    inhibit = opts->has_inhibit && opts->inhibit;
+    if (inhibit && !opts->sock_fds && !opts->map_path) {
+        error_setg(errp, "'inhibit=on' requires 'sock-fds' or 'map-path'");
+        return -1;
+    }
+    if (!inhibit && (opts->sock_fds || opts->map_path)) {
+        error_setg(errp, "'sock-fds' and 'map-path' require 'inhibit=on'");
+        return -1;
+    }
+    if (opts->sock_fds && opts->map_path) {
+        error_setg(errp, "'sock-fds' and 'map-path' are mutually exclusive");
+        return -1;
+    }
+    if (!opts->map_path && opts->has_map_start_index) {
+        error_setg(errp, "'map-start-index' requires 'map-path'");
         return -1;
     }
 
@@ -492,8 +550,18 @@ int net_init_af_xdp(const Netdev *netdev,
         s->ifindex = ifindex;
         s->n_queues = queues;
 
-        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, errp)
-            || af_xdp_socket_create(s, opts, errp)) {
+        s->inhibit = inhibit;
+
+        s->map_path = g_strdup(opts->map_path);
+        s->map_fd = -1;
+        s->map_start_index = 0;
+        if (opts->has_map_start_index && opts->map_start_index > 0) {
+            s->map_start_index = opts->map_start_index;
+        }
+
+        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, errp) ||
+            af_xdp_socket_create(s, opts, errp) ||
+            af_xdp_update_xsk_map(s, errp)) {
             /* Make sure the XDP program will be removed. */
             s->n_queues = i;
             error_propagate(errp, err);
@@ -501,7 +569,7 @@ int net_init_af_xdp(const Netdev *netdev,
         }
     }
 
-    if (nc0) {
+    if (nc0 && !inhibit) {
         s = DO_UPCAST(AFXDPState, nc, nc0);
         if (bpf_xdp_query_id(s->ifindex, s->xdp_flags, &prog_id) || !prog_id) {
             error_setg_errno(errp, errno,
