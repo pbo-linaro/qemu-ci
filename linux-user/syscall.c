@@ -13058,7 +13058,7 @@ static abi_long do_syscall1(CPUArchState *cpu_env, int num, abi_long arg1,
                 }
                 pposix_mq_attr = &posix_mq_attr;
             }
-            p = lock_user_string(arg1 - 1);
+            p = lock_user_string(arg1);
             if (!p) {
                 return -TARGET_EFAULT;
             }
@@ -13068,7 +13068,7 @@ static abi_long do_syscall1(CPUArchState *cpu_env, int num, abi_long arg1,
         return ret;
 
     case TARGET_NR_mq_unlink:
-        p = lock_user_string(arg1 - 1);
+        p = lock_user_string(arg1);
         if (!p) {
             return -TARGET_EFAULT;
         }
