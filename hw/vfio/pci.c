@@ -2654,6 +2654,11 @@ static int vfio_pci_save_config(VFIODevice *vbasedev, QEMUFile *f, Error **errp)
 {
     VFIOPCIDevice *vdev = container_of(vbasedev, VFIOPCIDevice, vbasedev);
 
+    PCIDevice *pdev = &vdev->pdev;
+    BusState *qbus = qdev_get_parent_bus(DEVICE(pdev));
+
+    pci_device_save(PCI_DEVICE(qbus->parent), f);
+
     return vmstate_save_state_with_err(f, &vmstate_vfio_pci_config, vdev, NULL,
                                        errp);
 }
@@ -2662,11 +2667,17 @@ static int vfio_pci_load_config(VFIODevice *vbasedev, QEMUFile *f)
 {
     VFIOPCIDevice *vdev = container_of(vbasedev, VFIOPCIDevice, vbasedev);
     PCIDevice *pdev = &vdev->pdev;
+    BusState *qbus = qdev_get_parent_bus(DEVICE(pdev));
     pcibus_t old_addr[PCI_NUM_REGIONS - 1];
     int bar, ret;
 
     for (bar = 0; bar < PCI_ROM_SLOT; bar++) {
         old_addr[bar] = pdev->io_regions[bar].addr;
+    }
+
+    ret = pci_device_load(PCI_DEVICE(qbus->parent), f);
+    if (ret) {
+        return ret;
     }
 
     ret = vmstate_load_state(f, &vmstate_vfio_pci_config, vdev, 1);
