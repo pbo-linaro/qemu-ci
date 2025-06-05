@@ -17,6 +17,33 @@
 #include "migration/vmstate.h"
 #include "trace.h"
 
+#define CPR_MAX_RETRIES     50     /* Retry for up to 5 seconds */
+#define CPR_RETRY_DELAY_US  100000 /* 100 ms per retry */
+
+bool cpr_validate_socket_path(const char *path, Error **errp)
+{
+    struct stat st;
+    int retries = CPR_MAX_RETRIES;
+
+    do {
+        if (!stat(path, &st) && S_ISSOCK(st.st_mode)) {
+            return true;
+        }
+
+        if (errno == ENOENT) {
+            usleep(CPR_RETRY_DELAY_US);
+        } else {
+            error_setg_errno(errp, errno,
+                "Unable to check status of socket path '%s'", path);
+            return false;
+        }
+    } while (--retries > 0);
+
+    error_setg(errp, "Socket path '%s' not found after %d retries",
+                                            path, CPR_MAX_RETRIES);
+    return false;
+}
+
 QEMUFile *cpr_transfer_output(MigrationChannel *channel, Error **errp)
 {
     MigrationAddress *addr = channel->addr;
@@ -27,6 +54,14 @@ QEMUFile *cpr_transfer_output(MigrationChannel *channel, Error **errp)
         g_autoptr(QIOChannelSocket) sioc = qio_channel_socket_new();
         QIOChannel *ioc = QIO_CHANNEL(sioc);
         SocketAddress *saddr = &addr->u.socket;
+
+        /*
+         * Verify that the cpr.sock Unix domain socket file exists and is ready
+         * before proceeding with the connection.
+         */
+        if (!cpr_validate_socket_path(addr->u.socket.u.q_unix.path, errp)) {
+            return NULL;
+        }
 
         if (qio_channel_socket_connect_sync(sioc, saddr, errp) < 0) {
             return NULL;
