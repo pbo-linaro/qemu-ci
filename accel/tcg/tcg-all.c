@@ -36,6 +36,7 @@
 #include "qapi/qapi-builtin-visit.h"
 #include "qemu/units.h"
 #include "qemu/target-info.h"
+#include "qemu/timer.h"
 #ifndef CONFIG_USER_ONLY
 #include "hw/boards.h"
 #endif
@@ -50,6 +51,7 @@ struct TCGState {
     bool one_insn_per_tb;
     int splitwx_enabled;
     unsigned long tb_size;
+    uint64_t rr_kick_period;
 };
 typedef struct TCGState TCGState;
 
@@ -76,9 +78,11 @@ static void tcg_accel_instance_init(Object *obj)
 #else
     s->splitwx_enabled = 0;
 #endif
+    s->rr_kick_period = NANOSECONDS_PER_SECOND / 10;
 }
 
 bool one_insn_per_tb;
+uint64_t rr_kick_period;
 
 static int tcg_init_machine(MachineState *ms)
 {
@@ -125,6 +129,7 @@ static int tcg_init_machine(MachineState *ms)
 #endif
 
     tcg_allowed = true;
+    rr_kick_period = s->rr_kick_period;
 
     page_init();
     tb_htable_init();
@@ -234,6 +239,30 @@ static int tcg_gdbstub_supported_sstep_flags(void)
     }
 }
 
+static void tcg_get_rr_kick_period(Object *obj, Visitor *v,
+                                   const char *name, void *opaque,
+                                   Error **errp)
+{
+    TCGState *s = TCG_STATE(obj);
+    uint64_t value = s->rr_kick_period;
+
+    visit_type_uint64(v, name, &value, errp);
+}
+
+static void tcg_set_rr_kick_period(Object *obj, Visitor *v,
+                                   const char *name, void *opaque,
+                                   Error **errp)
+{
+    TCGState *s = TCG_STATE(obj);
+    uint64_t value;
+
+    if (!visit_type_uint64(v, name, &value, errp)) {
+        return;
+    }
+
+    s->rr_kick_period = value;
+}
+
 static void tcg_accel_class_init(ObjectClass *oc, const void *data)
 {
     AccelClass *ac = ACCEL_CLASS(oc);
@@ -264,6 +293,12 @@ static void tcg_accel_class_init(ObjectClass *oc, const void *data)
                                    tcg_set_one_insn_per_tb);
     object_class_property_set_description(oc, "one-insn-per-tb",
         "Only put one guest insn in each translation block");
+
+    object_class_property_add(oc, "rr-kick-period", "uint64",
+        tcg_get_rr_kick_period, tcg_set_rr_kick_period,
+        NULL, NULL);
+    object_class_property_set_description(oc, "rr-kick-period",
+        "TCG round robin kick period in nanoseconds");
 }
 
 static const TypeInfo tcg_accel_type = {
