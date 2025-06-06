@@ -5597,6 +5597,7 @@ static bool vtd_check_hiod(IntelIOMMUState *s, VTDHostIOMMUDevice *vtd_hiod,
     }
 
     vtd_hiod->errata = vtd->flags & IOMMU_HW_INFO_VTD_ERRATA_772415_SPR17;
+    return true;
 #endif
 
     error_setg(errp, "host device is uncompatible with stage-1 translation");
