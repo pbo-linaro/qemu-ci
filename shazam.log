@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250608134843.26530-1-conte.souleymane@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] docs/interop: convert text file to restructuredText format
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: docs/interop: convert text file to restructuredText format
+Patch failed at 0001 docs/interop: convert text file to restructuredText format
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:39: trailing whitespace.
+store extra information about the image file. A regular cluster may be 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:43: trailing whitespace.
+Normally the file size will be a multiple of the cluster size.  If the file size 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:44: trailing whitespace.
+is not a multiple, extra information after the last cluster may not be preserved 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:57: trailing whitespace.
+ 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:61: trailing whitespace.
+ 
+error: patch failed: docs/interop/index.rst:17
+error: docs/interop/index.rst: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
