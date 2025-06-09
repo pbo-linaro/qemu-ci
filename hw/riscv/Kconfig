@@ -9,6 +9,17 @@ config IBEX
 
 # RISC-V machines in alphabetical order
 
+# technically it might be possible to build cva6 32bit
+config CVA6
+    bool
+    default y
+    depends on RISCV64
+    select DEVICE_TREE
+    select SIFIVE_PLIC
+    select XILINX_SPI
+    select RISCV_ACLINT
+    select UNIMP
+
 config MICROCHIP_PFSOC
     bool
     default y
