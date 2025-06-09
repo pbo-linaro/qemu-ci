@@ -83,8 +83,7 @@ static void cva6_machine_class_init(ObjectClass *oc, const void *data)
     mc->init = cva6_machine_init;
     mc->max_cpus = 1;
     mc->default_ram_id = "cva6.ram";
-    /* start with "max" cpu type until we sort out CVA6 type */
-    mc->default_cpu_type = TYPE_RISCV_CPU_MAX;
+    mc->default_cpu_type = TYPE_RISCV_CPU_CVA6;
     mc->default_ram_size = cva6_memmap[CVA6_DRAM].size;
 };
 
