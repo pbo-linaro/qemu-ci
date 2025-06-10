@@ -22,13 +22,7 @@
 /*************************************************************************/
 /* cpr state container for all information to be saved. */
 
-typedef QLIST_HEAD(CprFdList, CprFd) CprFdList;
-
-typedef struct CprState {
-    CprFdList fds;
-} CprState;
-
-static CprState cpr_state;
+CprState cpr_state;
 
 /****************************************************************************/
 
@@ -129,8 +123,6 @@ int cpr_open_fd(const char *path, int flags, const char *name, int id,
 }
 
 /*************************************************************************/
-#define CPR_STATE "CprState"
-
 static const VMStateDescription vmstate_cpr_state = {
     .name = CPR_STATE,
     .version_id = 1,
@@ -138,6 +130,10 @@ static const VMStateDescription vmstate_cpr_state = {
     .fields = (VMStateField[]) {
         VMSTATE_QLIST_V(fds, CprState, 1, vmstate_cpr_fd, CprFd, next),
         VMSTATE_END_OF_LIST()
+    },
+    .subsections = (const VMStateDescription * const []) {
+        &vmstate_cpr_vfio_devices,
+        NULL
     }
 };
 /*************************************************************************/
