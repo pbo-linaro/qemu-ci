@@ -182,6 +182,9 @@ struct PCIDevice {
     uint32_t max_bounce_buffer_size;
 
     char *sriov_pf;
+
+    /* CPR */
+    bool skip_reset_on_cpr;
 };
 
 static inline int pci_intx(PCIDevice *pci_dev)
