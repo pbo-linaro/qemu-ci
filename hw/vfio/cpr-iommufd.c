@@ -110,10 +110,40 @@ static bool vfio_cpr_supported(IOMMUFDBackend *be, Error **errp)
     return true;
 }
 
+static int iommufd_cpr_pre_save(void *opaque)
+{
+    IOMMUFDBackend *be = opaque;
+    Error *local_err = NULL;
+
+    /*
+     * The process has not changed yet, but proactively call the ioctl,
+     * and it will fail if any DMA mappings are not supported.
+     */
+    if (!iommufd_change_process(be, &local_err)) {
+        error_report_err(local_err);
+        return -1;
+    }
+    return 0;
+}
+
+static int iommufd_cpr_post_load(void *opaque, int version_id)
+{
+     IOMMUFDBackend *be = opaque;
+     Error *local_err = NULL;
+
+     if (!iommufd_change_process(be, &local_err)) {
+        error_report_err(local_err);
+        return -1;
+     }
+     return 0;
+}
+
 static const VMStateDescription iommufd_cpr_vmstate = {
     .name = "iommufd",
     .version_id = 0,
     .minimum_version_id = 0,
+    .pre_save = iommufd_cpr_pre_save,
+    .post_load = iommufd_cpr_post_load,
     .needed = cpr_incoming_needed,
     .fields = (VMStateField[]) {
         VMSTATE_END_OF_LIST()
