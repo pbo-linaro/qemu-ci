@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250611155618.351-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 174 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v13 1/7] target/arm/tcg: increase cache level for cpu=max
+  [PATCH v13 2/7] hw/core/machine: topology functions capabilities added
+  [PATCH v13 3/7] hw/arm/virt: add cache hierarchy to device tree
+  [PATCH v13 4/7] bios-tables-test: prepare to change ARM ACPI virt PPTT
+  [PATCH v13 5/7] hw/acpi: add cache hierarchy to pptt table
+  [PATCH v13 6/7] tests/qtest/bios-table-test: testing new ARM ACPI PPTT topology
+  [PATCH v13 7/7] Update the ACPI tables based on new aml-build.c
+---
+Total patches: 7
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+ Base: using specified base-commit 09be8a511a2e278b45729d7b065d30c68dd699d0
+Applying: target/arm/tcg: increase cache level for cpu=max
+Applying: hw/core/machine: topology functions capabilities added
+Applying: hw/arm/virt: add cache hierarchy to device tree
+Applying: bios-tables-test: prepare to change ARM ACPI virt PPTT
+Applying: hw/acpi: add cache hierarchy to pptt table
+Patch failed at 0005 hw/acpi: add cache hierarchy to pptt table
+error: patch failed: hw/acpi/aml-build.c:2141
+error: hw/acpi/aml-build.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
