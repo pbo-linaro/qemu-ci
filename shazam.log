@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250613141217.474825-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 50 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/14] migration: Add option to set postcopy-blocktime
+  [32m✓[0m [PATCH v3 2/14] migration/postcopy: Push blocktime start/end into page req mutex
+  [32m✓[0m [PATCH v3 3/14] migration/postcopy: Drop all atomic ops in blocktime feature
+  [32m✓[0m [PATCH v3 4/14] migration/postcopy: Make all blocktime vars 64bits
+  [32m✓[0m [PATCH v3 5/14] migration/postcopy: Drop PostcopyBlocktimeContext.start_time
+  [32m✓[0m [PATCH v3 6/14] migration/postcopy: Bring blocktime layer to ns level
+  [32m✓[0m [PATCH v3 7/14] migration/postcopy: Add blocktime fault counts per-vcpu
+  [32m✓[0m [PATCH v3 8/14] migration/postcopy: Report fault latencies in blocktime
+  [32m✓[0m [PATCH v3 9/14] migration/postcopy: Initialize blocktime context only until listen
+  [32m✓[0m [PATCH v3 10/14] migration/postcopy: Cache the tid->vcpu mapping for blocktime
+  [32m✓[0m [PATCH v3 11/14] migration/postcopy: Cleanup the total blocktime accounting
+  [32m✓[0m [PATCH v3 12/14] migration/postcopy: Optimize blocktime fault tracking with hashtable
+  [32m✓[0m [PATCH v3 13/14] migration/postcopy: blocktime allows track / report non-vCPU faults
+  [32m✓[0m [PATCH v3 14/14] migration/postcopy: Add latency distribution report for blocktime
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: migration: Add option to set postcopy-blocktime
+Applying: migration/postcopy: Push blocktime start/end into page req mutex
+Applying: migration/postcopy: Drop all atomic ops in blocktime feature
+Applying: migration/postcopy: Make all blocktime vars 64bits
+Applying: migration/postcopy: Drop PostcopyBlocktimeContext.start_time
+Applying: migration/postcopy: Bring blocktime layer to ns level
+Applying: migration/postcopy: Add blocktime fault counts per-vcpu
+Applying: migration/postcopy: Report fault latencies in blocktime
+Patch failed at 0008 migration/postcopy: Report fault latencies in blocktime
+error: patch failed: migration/migration-hmp-cmds.c:202
+error: migration/migration-hmp-cmds.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
