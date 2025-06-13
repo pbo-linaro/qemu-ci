@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20250613140801.474264-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 44 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/11] migration/hmp: Reorg "info migrate" once more
+  [32m✓[0m [PATCH v3 2/11] migration/hmp: Fix postcopy-blocktime per-vCPU results
+  [32m✓[0m [PATCH v3 3/11] migration/docs: Move docs for postcopy blocktime feature
+  [32m✓[0m [PATCH v3 4/11] migration/bg-snapshot: Do not check for SKIP in iterator
+  [32m✓[0m [PATCH v3 5/11] migration: Drop save_live_complete_postcopy hook
+  [32m✓[0m [PATCH v3 6/11] migration: Rename save_live_complete_precopy to save_complete
+  [32m✓[0m [PATCH v3 7/11] migration: qemu_savevm_complete*() helpers
+  [32m✓[0m [PATCH v3 8/11] migration/ram: One less indent for ram_find_and_save_block()
+  [32m✓[0m [PATCH v3 9/11] migration/ram: Add tracepoints for ram_save_complete()
+  [32m✓[0m [PATCH v3 10/11] migration: Rewrite the migration complete detect logic
+  [32m✓[0m [PATCH v3 11/11] migration/postcopy: Avoid clearing dirty bitmap for postcopy too
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 11
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Tested-by: Li Zhijian <lizhijian@fujitsu.com>
+     Msg From: Zhijian Li (Fujitsu) via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
+     Msg From: Zhijian Li (Fujitsu) via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: migration/hmp: Reorg "info migrate" once more
+Applying: migration/hmp: Fix postcopy-blocktime per-vCPU results
+Applying: migration/docs: Move docs for postcopy blocktime feature
+Applying: migration/bg-snapshot: Do not check for SKIP in iterator
+Applying: migration: Drop save_live_complete_postcopy hook
+Applying: migration: Rename save_live_complete_precopy to save_complete
+Applying: migration: qemu_savevm_complete*() helpers
+Applying: migration/ram: One less indent for ram_find_and_save_block()
+Applying: migration/ram: Add tracepoints for ram_save_complete()
+Applying: migration: Rewrite the migration complete detect logic
+Applying: migration/postcopy: Avoid clearing dirty bitmap for postcopy too
+Patch failed at 0011 migration/postcopy: Avoid clearing dirty bitmap for postcopy too
+error: patch failed: migration/ram.c:835
+error: migration/ram.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
