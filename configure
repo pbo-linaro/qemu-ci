@@ -1881,8 +1881,7 @@ if test "$skip_meson" = no; then
   # Only enable by default for git builds and on select OSes
   echo "# environment defaults, can still be overridden on " >> $cross
   echo "# the command line" >> $cross
-  if test -e "$source_path/.git" && \
-      { test "$host_os" = linux || test "$host_os" = "windows"; }; then
+  if test -e "$source_path/.git"; then
       echo 'werror = true' >> $cross
   fi
   echo "[project options]" >> $cross
