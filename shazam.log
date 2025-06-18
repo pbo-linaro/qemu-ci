@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250618083930.451313-1-lvivier@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] net: Refactor stream logic for reuse in '-net passt'
+  [32m✓[0m [PATCH 2/8] net: Define net_client_set_link()
+  [32m✓[0m [PATCH 3/8] net: Introduce helper to identify vhost-user clients
+  [32m✓[0m [PATCH 4/8] net: Add get_vhost_net callback to NetClientInfo
+  [32m✓[0m [PATCH 5/8] net: Add get_acked_features callback to NetClientInfo
+  [32m✓[0m [PATCH 6/8] net: Add save_acked_features callback to NetClientInfo
+  [32m✓[0m [PATCH 7/8] net: Add passt network backend
+  [32m✓[0m [PATCH 8/8] net/passt: Implement vhost-user backend support
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: net: Refactor stream logic for reuse in '-net passt'
+Patch failed at 0001 net: Refactor stream logic for reuse in '-net passt'
+error: patch failed: net/stream.c:27
+error: net/stream.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
