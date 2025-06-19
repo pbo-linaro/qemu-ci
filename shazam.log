@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250619023944.1278716-1-gaosong@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/9] hw/loongarch: move some machine define to virt.h
+  [PATCH v2 2/9] loongarch: add virt feature avecintc support
+  [PATCH v2 3/9] loongarch: add a advance interrupt controller device
+  [PATCH v2 4/9] target/loongarch: add msg interrupt CSR registers
+  [PATCH v2 5/9] hw/loongarch: AVEC controller add a MemoryRegion
+  [PATCH v2 6/9] hw/loongarch: Implement avec controller imput and output pins
+  [PATCH v2 7/9] hw/loongarch: Implement avec set irq
+  [PATCH v2 8/9] target/loongarch: CSR_ESTAT enable msg interrupts.
+  [PATCH v2 9/9] target/loongarch: CSR_ECFG enable msg interrupt
+---
+Total patches: 9
+---
+Applying: hw/loongarch: move some machine define to virt.h
+Applying: loongarch: add virt feature avecintc support
+Patch failed at 0002 loongarch: add virt feature avecintc support
+error: patch failed: include/hw/loongarch/virt.h:83
+error: include/hw/loongarch/virt.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
