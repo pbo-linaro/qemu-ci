@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250620143720.3143-1-tanishdesai37@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 10 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/3] tracetool: removed the unused vcpu property
+  [32m✓[0m [PATCH v2 2/3] tracetool: introduce generate_unconditional
+    + Reviewed-by: Alex Bennée <alex.bennee@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v2 3/3] tracetool: remove redundant event_get_state checks
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 3
+---
+Applying: tracetool: removed the unused vcpu property
+Applying: tracetool: introduce generate_unconditional
+Applying: tracetool: remove redundant event_get_state checks
+Patch failed at 0003 tracetool: remove redundant event_get_state checks
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:19: trailing whitespace.
+    
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:21: trailing whitespace.
+    
+warning: 2 lines add whitespace errors.
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:18: trailing whitespace.
+    
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:60: trailing whitespace.
+        
+warning: 2 lines add whitespace errors.
+error: patch failed: scripts/tracetool/backend/ftrace.py:34
+error: scripts/tracetool/backend/ftrace.py: patch does not apply
+error: patch failed: scripts/tracetool/backend/log.py:49
+error: scripts/tracetool/backend/log.py: patch does not apply
+error: patch failed: scripts/tracetool/backend/syslog.py:30
+error: scripts/tracetool/backend/syslog.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
