@@ -1,0 +1,85 @@
+Grabbing thread from lore.kernel.org/all/20250620172751.94231-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 43 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/42] accel/split: Minimal stubs for split accelerator
+  [32m✓[0m [PATCH RFC 2/42] accel/split: Define SplitAccelState
+  [32m✓[0m [PATCH RFC 3/42] accel/split: Implement cpus_are_resettable()
+  [32m✓[0m [PATCH RFC 4/42] accel/split: Implement accel_init_machine()
+  [32m✓[0m [PATCH RFC 5/42] accel/split: Expose 'hw' and 'sw' properties
+  [32m✓[0m [PATCH RFC 6/42] accel/split: Empty setup_post()
+  [32m✓[0m [PATCH RFC 7/42] accel/split: Implement supports_guest_debug()
+  [32m✓[0m [PATCH RFC 8/42] accel/split: Implement gdbstub_supported_sstep_flags()
+  [32m✓[0m [PATCH RFC 9/42] accel/split: Add cpu_thread_routine() stub
+  [32m✓[0m [PATCH RFC 10/42] accel/split: Define and allocate AccelCPUState
+  [32m✓[0m [PATCH RFC 11/42] accel/split: Register MTTCG
+  [32m✓[0m [PATCH RFC 12/42] accel/split: Have thread routine ready to dispatch over HW/SW
+  [32m✓[0m [PATCH RFC 13/42] accel/split: Implement cpu_reset_hold()
+  [32m✓[0m [PATCH RFC 14/42] accel/split: Implement synchronize_post_init()
+  [32m✓[0m [PATCH RFC 15/42] accel/split: Implement synchronize_pre_resume()
+  [32m✓[0m [PATCH RFC 16/42] accel/split: Implement synchronize_state()
+  [32m✓[0m [PATCH RFC 17/42] accel/split: Implement synchronize_post_reset()
+  [32m✓[0m [PATCH RFC 18/42] accel/split: Implement synchronize_pre_loadvm()
+  [32m✓[0m [PATCH RFC 19/42] accel/split: Implement kick_vcpu_thread()
+  [32m✓[0m [PATCH RFC 20/42] accel/split: Implement cpu_common_realize()
+  [32m✓[0m [PATCH RFC 21/42] accel/split: Set use_hw in cpu_thread_routine() and switch over
+  [32m✓[0m [PATCH RFC 22/42] accel/split: Add few trace events in cpu_thread_routine handler
+  [32m✓[0m [PATCH RFC 23/42] target/arm: Implement SysemuCPUOps::can_accelerate() handler
+  [32m✓[0m [PATCH RFC 24/42] accel/split: Implement handle_interrupt()
+  [32m✓[0m [PATCH RFC 25/42] accel/split: Empty ops_init()
+  [32m✓[0m [PATCH RFC 26/42] accel/split: Empty set/get_virtual_clock()
+  [32m✓[0m [PATCH RFC 27/42] accel/split: Empty get_elapsed_ticks()
+  [32m✓[0m [PATCH RFC 28/42] accel/split: Empty cpu_thread_is_idle()
+  [32m✓[0m [PATCH RFC 29/42] accel/split: Kludge qemu_tcg_mttcg_enabled()
+  [32m✓[0m [PATCH RFC 30/42] accel/split: Implement remove_all_breakpoints()
+  [32m✓[0m [PATCH RFC 31/42] accel/split: Implement remove_breakpoint()
+  [32m✓[0m [PATCH RFC 32/42] accel/split: Implement insert_breakpoint()
+  [32m✓[0m [PATCH RFC 33/42] accel/split: Implement update_guest_debug()
+  [32m✓[0m [PATCH RFC 34/42] accel/split: Implement get_[vcpu]_stats()
+  [32m✓[0m [PATCH RFC 35/42] target/arm: Emulate EL2 under TCG
+  [32m✓[0m [PATCH RFC 36/42] target/arm: Have ERET switch to hw accel for EL0/EL1
+  [32m✓[0m [PATCH RFC 37/42] accel/hvf: Emulate HVC at EL2
+  [32m✓[0m [PATCH RFC 38/42] accel/tcg: Introduce TCGCPUOps::rebuild_tb_hflags handler
+  [32m✓[0m [PATCH RFC 39/42] target/arm: Implement TCGCPUOps::rebuild_tb_hflags()
+  [32m✓[0m [PATCH RFC 40/42] accel/split: Call TCGCPUOps::rebuild_tb_hflags()
+  [32m✓[0m [PATCH RFC 41/42] tests/functional: Add split_available() helper
+  [32m✓[0m [PATCH RFC 42/42] tests/functional: Test Aarch64 virt machine with split-accelerator
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 42
+---
+Applying: accel/split: Minimal stubs for split accelerator
+Applying: accel/split: Define SplitAccelState
+Applying: accel/split: Implement cpus_are_resettable()
+Applying: accel/split: Implement accel_init_machine()
+Applying: accel/split: Expose 'hw' and 'sw' properties
+Applying: accel/split: Empty setup_post()
+Applying: accel/split: Implement supports_guest_debug()
+Applying: accel/split: Implement gdbstub_supported_sstep_flags()
+Applying: accel/split: Add cpu_thread_routine() stub
+Applying: accel/split: Define and allocate AccelCPUState
+Applying: accel/split: Register MTTCG
+Applying: accel/split: Have thread routine ready to dispatch over HW/SW
+Applying: accel/split: Implement cpu_reset_hold()
+Applying: accel/split: Implement synchronize_post_init()
+Applying: accel/split: Implement synchronize_pre_resume()
+Applying: accel/split: Implement synchronize_state()
+Applying: accel/split: Implement synchronize_post_reset()
+Applying: accel/split: Implement synchronize_pre_loadvm()
+Applying: accel/split: Implement kick_vcpu_thread()
+Applying: accel/split: Implement cpu_common_realize()
+Applying: accel/split: Set use_hw in cpu_thread_routine() and switch over
+Applying: accel/split: Add few trace events in cpu_thread_routine handler
+Patch failed at 0022 accel/split: Add few trace events in cpu_thread_routine handler
+error: patch failed: meson.build:3635
+error: meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
