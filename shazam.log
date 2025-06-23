@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250623094230.76084-1-shameerali.kolothum.thodi@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 116 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/11] hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+  [PATCH v5 2/11] hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+  [PATCH v5 3/11] hw/arm/virt-acpi-build: Update IORT for multiple smmuv3 devices
+  [PATCH v5 4/11] hw/arm/virt: Factor out common SMMUV3 dt bindings code
+  [PATCH v5 5/11] hw/arm/virt: Add an SMMU_IO_LEN macro
+  [PATCH v5 6/11] hw/pci: Introduce pci_setup_iommu_per_bus() for per-bus IOMMU ops retrieval
+  [PATCH v5 7/11] hw/arm/virt: Allow user-creatable SMMUv3 dev instantiation
+  [PATCH v5 8/11] qemu-options.hx: Document the arm-smmuv3 device
+  [PATCH v5 9/11] bios-tables-test: Allow for smmuv3 test data.
+  [PATCH v5 10/11] qtest/bios-tables-test: Add tests for legacy smmuv3 and smmuv3 device
+  [PATCH v5 11/11] qtest/bios-tables-test: Update tables for smmuv3 tests
+---
+Total patches: 11
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+Applying: hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+Patch failed at 0002 hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+error: patch failed: hw/arm/virt.c:1614
+error: hw/arm/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
