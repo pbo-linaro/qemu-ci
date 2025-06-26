@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250626235102.1902427-1-anisa.su887@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v1 1/1] hw/cxl: Fix MCTP Binding Check
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: hw/cxl: Fix MCTP Binding Check
+Patch failed at 0001 hw/cxl: Fix MCTP Binding Check
+error: patch failed: hw/cxl/cxl-mailbox-utils.c:60
+error: hw/cxl/cxl-mailbox-utils.c: patch does not apply
+error: hw/cxl/i2c_mctp_cxl.c: does not exist in index
+error: hw/usb/dev-mctp.c: does not exist in index
+error: patch failed: include/hw/cxl/cxl_mailbox.h:27
+error: include/hw/cxl/cxl_mailbox.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
