@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20250626222743.1766404-1-anisa.su887@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 86 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/10] cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+  [32m✓[0m [PATCH v4 2/10] cxl/type3: Add dsmas_flags to CXLDCRegion struct
+  [32m✓[0m [PATCH v4 3/10] cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
+  [32m✓[0m [PATCH v4 4/10] cxl_events.h: Move definition for dynamic_capacity_uuid and enum for DC event types
+  [32m✓[0m [PATCH v4 5/10] hw/cxl_type3: Add DC Region bitmap lock
+  [32m✓[0m [PATCH v4 6/10] cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+  [32m✓[0m [PATCH v4 7/10] cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
+  [32m✓[0m [PATCH v4 8/10] hw/cxl: create helper function to create DC Event Records from extents
+  [32m✓[0m [PATCH v4 9/10] cxl-mailbox-utils: 0x5604 - FMAPI Initiate DC Add
+  [32m✓[0m [PATCH v4 10/10] cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 10
+---
+Applying: cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+Applying: cxl/type3: Add dsmas_flags to CXLDCRegion struct
+Applying: cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
+Applying: cxl_events.h: Move definition for dynamic_capacity_uuid and enum for DC event types
+Applying: hw/cxl_type3: Add DC Region bitmap lock
+Applying: cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+Applying: cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
+Applying: hw/cxl: create helper function to create DC Event Records from extents
+Patch failed at 0008 hw/cxl: create helper function to create DC Event Records from extents
+error: patch failed: hw/mem/cxl_type3.c:2078
+error: hw/mem/cxl_type3.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
