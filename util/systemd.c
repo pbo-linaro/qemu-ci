@@ -16,37 +16,62 @@
 #include "qemu/error-report.h"
 
 #ifndef _WIN32
+static char fdnames[256];
+
 unsigned int check_socket_activation(void)
 {
+    static unsigned int nr_fds = -1;
     const char *s;
     unsigned long pid;
-    unsigned long nr_fds;
+    unsigned long nr_fdsl;
     unsigned int i;
     int fd;
     int f;
     int err;
 
+    if (nr_fds != -1) {
+        return nr_fds;
+    }
     s = getenv("LISTEN_PID");
     if (s == NULL) {
+        nr_fds = 0;
         return 0;
     }
     err = qemu_strtoul(s, NULL, 10, &pid);
     if (err) {
+        nr_fds = 0;
         return 0;
     }
     if (pid != getpid()) {
+        nr_fds = 0;
         return 0;
     }
 
     s = getenv("LISTEN_FDS");
     if (s == NULL) {
+        nr_fds = 0;
         return 0;
     }
-    err = qemu_strtoul(s, NULL, 10, &nr_fds);
+    err = qemu_strtoul(s, NULL, 10, &nr_fdsl);
     if (err) {
+        nr_fds = 0;
         return 0;
     }
-    assert(nr_fds <= UINT_MAX);
+    assert(nr_fdsl <= UINT_MAX);
+    nr_fds = (unsigned int) nr_fdsl;
+    s = getenv("LISTEN_FDNAMES");
+    if (s != NULL) {
+        size_t fdnames_len = strlen(s);
+        if (fdnames_len + 1 > sizeof(fdnames)) {
+            error_report("LISTEN_FDNAMES is larger than %ldu bytes, "
+                         "ignoring socket activation.",
+                         sizeof(fdnames));
+            nr_fds = 0;
+            return 0;
+        } else {
+            memcpy(fdnames, s, fdnames_len + 1);
+        }
+    }
 
     /* So these are not passed to any child processes we might start. */
     unsetenv("LISTEN_FDS");
@@ -69,7 +94,7 @@ unsigned int check_socket_activation(void)
         }
     }
 
-    return (unsigned int) nr_fds;
+    return nr_fds;
 }
 
 #else /* !_WIN32 */
