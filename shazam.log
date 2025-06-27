@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20250627095620.3300028-1-eric.auger@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 34 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 303 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/32] hw/i386/acpi-build: Make aml_pci_device_dsm() static
+  [32m✓[0m [PATCH v4 2/32] hw/acpi: Rename and move build_x86_acpi_pci_hotplug to pcihp
+  [32m✓[0m [PATCH v4 3/32] hw/pci-host/gpex-acpi: Add native_pci_hotplug arg to acpi_dsdt_add_pci_osc
+  [32m✓[0m [PATCH v4 4/32] tests/qtest/bios-tables-test: Prepare for changes in the DSDT table
+  [32m✓[0m [PATCH v4 5/32] hw/pci-host/gpex-acpi: Split host bridge OSC and DSM generation
+  [32m✓[0m [PATCH v4 6/32] hw/acpi/ged: Add a acpi-pci-hotplug-with-bridge-support property
+  [32m✓[0m [PATCH v4 7/32] hw/pci-host/gpex-acpi: Use GED acpi pcihp property
+  [32m✓[0m [PATCH v4 8/32] hw/i386/acpi-build: Turn build_q35_osc_method into a generic method
+  [32m✓[0m [PATCH v4 9/32] hw/pci-host/gpex-acpi: Use build_pci_host_bridge_osc_method
+  [32m✓[0m [PATCH v4 10/32] tests/qtest/bios-tables-test: Update DSDT blobs after GPEX _OSC change
+  [32m✓[0m [PATCH v4 11/32] hw/i386/acpi-build: Introduce build_append_pcihp_resources() helper
+  [32m✓[0m [PATCH v4 12/32] hw/acpi/pcihp: Add an AmlRegionSpace arg to build_acpi_pci_hotplug
+  [32m✓[0m [PATCH v4 13/32] hw/i386/acpi-build: Move build_append_notification_callback to pcihp
+  [32m✓[0m [PATCH v4 14/32] hw/i386/acpi-build: Move build_append_pci_bus_devices/pcihp_slots to pcihp
+  [32m✓[0m [PATCH v4 15/32] hw/i386/acpi-build: Use AcpiPciHpState::root in acpi_set_pci_info
+  [32m✓[0m [PATCH v4 16/32] hw/i386/acpi-build: Move aml_pci_edsm to a generic place
+  [32m✓[0m [PATCH v4 17/32] tests/qtest/bios-tables-test: Prepare for changes in the arm virt DSDT table
+    + Reviewed-by: Igor Mammedov <imammedo@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Eric Auger <eric.auger@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v4 18/32] hw/arm/virt-acpi-build: Let non hotplug ports support static acpi-index
+  [32m✓[0m [PATCH v4 19/32] tests/qtest/bios-tables-test: Update ARM DSDT reference blobs
+  [32m✓[0m [PATCH v4 20/32] hw/arm/virt-acpi-build: Modify the DSDT ACPI table to enable ACPI PCI hotplug
+  [32m✓[0m [PATCH v4 21/32] hw/acpi/ged: Add a bus link property
+  [32m✓[0m [PATCH v4 22/32] hw/arm/virt: Pass the bus on the ged creation
+  [32m✓[0m [PATCH v4 23/32] hw/acpi/ged: Call pcihp plug callbacks in hotplug handler implementation
+  [32m✓[0m [PATCH v4 24/32] hw/acpi/pcihp: Remove root arg in acpi_pcihp_init
+  [32m✓[0m [PATCH v4 25/32] hw/acpi/ged: Prepare the device to react to PCI hotplug events
+  [32m✓[0m [PATCH v4 26/32] hw/acpi/ged: Support migration of AcpiPciHpState
+  [32m✓[0m [PATCH v4 27/32] hw/core/sysbus: Introduce sysbus_mmio_map_name() helper
+  [32m✓[0m [PATCH v4 28/32] hw/arm/virt: Minor code reshuffling in create_acpi_ged
+  [32m✓[0m [PATCH v4 29/32] hw/arm/virt: Let virt support pci hotplug/unplug GED event
+  [32m✓[0m [PATCH v4 30/32] tests/qtest/bios-tables-test: Prepare for addition of acpi pci hp tests
+  [32m✓[0m [PATCH v4 31/32] tests/qtest/bios-tables-test: Add aarch64 ACPI PCI hotplug test
+  [32m✓[0m [PATCH v4 32/32] qtest/bios-tables-test: Create DSDT acpipcihp and hpoffacpiindex variant blobs
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 32
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/i386/acpi-build: Make aml_pci_device_dsm() static
+Applying: hw/acpi: Rename and move build_x86_acpi_pci_hotplug to pcihp
+Applying: hw/pci-host/gpex-acpi: Add native_pci_hotplug arg to acpi_dsdt_add_pci_osc
+Applying: tests/qtest/bios-tables-test: Prepare for changes in the DSDT table
+Applying: hw/pci-host/gpex-acpi: Split host bridge OSC and DSM generation
+Applying: hw/acpi/ged: Add a acpi-pci-hotplug-with-bridge-support property
+Applying: hw/pci-host/gpex-acpi: Use GED acpi pcihp property
+Applying: hw/i386/acpi-build: Turn build_q35_osc_method into a generic method
+Applying: hw/pci-host/gpex-acpi: Use build_pci_host_bridge_osc_method
+Applying: tests/qtest/bios-tables-test: Update DSDT blobs after GPEX _OSC change
+Applying: hw/i386/acpi-build: Introduce build_append_pcihp_resources() helper
+Applying: hw/acpi/pcihp: Add an AmlRegionSpace arg to build_acpi_pci_hotplug
+Applying: hw/i386/acpi-build: Move build_append_notification_callback to pcihp
+Applying: hw/i386/acpi-build: Move build_append_pci_bus_devices/pcihp_slots to pcihp
+Applying: hw/i386/acpi-build: Use AcpiPciHpState::root in acpi_set_pci_info
+Applying: hw/i386/acpi-build: Move aml_pci_edsm to a generic place
+Applying: tests/qtest/bios-tables-test: Prepare for changes in the arm virt DSDT table
+Applying: hw/arm/virt-acpi-build: Let non hotplug ports support static acpi-index
+Applying: tests/qtest/bios-tables-test: Update ARM DSDT reference blobs
+Patch failed at 0019 tests/qtest/bios-tables-test: Update ARM DSDT reference blobs
+error: corrupt binary patch at line 118: -- 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:85: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: corrupt patch at line 81
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
