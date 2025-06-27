@@ -2270,6 +2270,7 @@ DEF("spice", HAS_ARG, QEMU_OPTION_spice,
     "       [,x509-cert-file=<file>][,x509-cacert-file=<file>]\n"
     "       [,x509-dh-key-file=<file>][,addr=addr]\n"
     "       [,ipv4=on|off][,ipv6=on|off][,unix=on|off]\n"
+    "       [,socket-activated=<str>]\n"
     "       [,tls-ciphers=<list>]\n"
     "       [,tls-channel=[main|display|cursor|inputs|record|playback]]\n"
     "       [,plaintext-channel=[main|display|cursor|inputs|record|playback]]\n"
@@ -2297,8 +2298,10 @@ SRST
         Set the IP address spice is listening on. Default is any
         address.
 
-    ``ipv4=on|off``; \ ``ipv6=on|off``; \ ``unix=on|off``
-        Force using the specified IP version.
+    ``ipv4=on|off``; \ ``ipv6=on|off``; \ ``unix=on|off`` ; \ ``socket-activated=<str>``
+        Force using the specified IP version.  Or, use a unix-domain socket.
+        Or, listen using the passed file descriptor from systemd-style socket
+        activation associated with FileDescriptorName ``str``.
 
     ``password-secret=<secret-id>``
         Set the ID of the ``secret`` object containing the password

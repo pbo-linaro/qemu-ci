@@ -38,6 +38,7 @@
 #include "migration/misc.h"
 #include "hw/pci/pci_bus.h"
 #include "ui/spice-display.h"
+#include "qemu/systemd.h"
 
 /* core bits */
 
@@ -433,6 +434,9 @@ static QemuOptsList qemu_spice_opts = {
         },{
             .name = "unix",
             .type = QEMU_OPT_BOOL,
+        },{
+            .name = "socket-activated",
+            .type = QEMU_OPT_STRING,
 #endif
         },{
             .name = "password-secret",
@@ -736,18 +740,37 @@ static void qemu_spice_init(void)
     }
 
     spice_server = spice_server_new();
-    spice_server_set_addr(spice_server, addr ? addr : "", addr_flags);
-    if (port) {
-        spice_server_set_port(spice_server, port);
-    }
-    if (tls_port) {
-        spice_server_set_tls(spice_server, tls_port,
-                             x509_cacert_file,
-                             x509_cert_file,
-                             x509_key_file,
-                             x509_key_password,
-                             x509_dh_file,
-                             tls_ciphers);
+    str = qemu_opt_get(opts, "socket-activated");
+    if (str) {
+        int fd = socket_activated_fd_by_label(str);
+        if (fd == -1) {
+            error_report("socket-activated spice failed: No FD found with label '%s'",
+                         str);
+            exit(1);
+        }
+
+        if (addr || addr_flags) {
+            error_report("When spice is socket-activated, do not set addr or ipv4 or ipv6 or unix");
+            exit(1);
+        }
+        if (spice_server_set_listen_socket_fd(spice_server, fd) == -1) {
+            error_report("spice_server_set_listen_socket_fd failed!");
+            exit(1);
+        }
+    } else {
+        spice_server_set_addr(spice_server, addr ? addr : "", addr_flags);
+        if (port) {
+            spice_server_set_port(spice_server, port);
+        }
+        if (tls_port) {
+            spice_server_set_tls(spice_server, tls_port,
+                                 x509_cacert_file,
+                                 x509_cert_file,
+                                 x509_key_file,
+                                 x509_key_password,
+                                 x509_dh_file,
+                                 tls_ciphers);
+        }
     }
     if (password) {
         qemu_spice.set_passwd(password, false, false);
