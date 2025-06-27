@@ -23,4 +23,19 @@
  */
 unsigned int check_socket_activation(void);
 
+
+/*
+ * Check if socket activation indicates named file descriptor based on
+ * the colon-delimited LISTEN_FDNAMES.  The "label" must not be NULL,
+ * and should be a simple text string that does not contain a colon,
+ * matching the FileDescriptorName= directive in systemd.socket(5)
+ *
+ * It is acceptable to ask for the empty string as a label.
+ *
+ * Returns -1 if no socket activation is in use, or if the label does
+ * not match any file descriptor.  Otherwise, returns the lowest
+ * numeric value for a file descriptor matching the label exactly.
+ */
+unsigned int socket_activated_fd_by_label(const char *label);
+
 #endif

@@ -97,8 +97,43 @@ unsigned int check_socket_activation(void)
     return nr_fds;
 }
 
+unsigned int socket_activated_fd_by_label(const char *label)
+{
+    int nr_fds = check_socket_activation();
+    if (!nr_fds) {
+        return -1;
+    }
+    int curfd;
+    const char *nameend;
+    const char *nameptr;
+    size_t labellen, namelen;
+
+    labellen = sizeof(label);
+    curfd = 0;
+    nameptr = fdnames;
+    do {
+        nameend = strchr(nameptr, ':');
+        if (nameend) {
+            namelen = nameend - nameptr;
+            nameend++;
+        } else {
+            namelen = strlen(nameptr);
+        }
+        if (labellen == namelen && memcmp(nameptr, label, namelen) == 0) {
+            return curfd + FIRST_SOCKET_ACTIVATION_FD;
+        }
+        curfd++;
+        nameptr = nameend;
+    } while (nameptr && curfd < nr_fds);
+    return -1;
+}
+
 #else /* !_WIN32 */
 unsigned int check_socket_activation(void)
+{
+    return 0;
+}
+unsigned int socket_activated_fd_by_label(const char *label)
 {
     return 0;
 }
