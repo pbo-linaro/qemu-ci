@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250701121815.523896-1-osteffen@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/2] hw/uefi: Add hardware-info ID for virtio mmio devices for SVSM
+  [32m✓[0m [PATCH RFC 2/2] q35: add virtio-mmio slots
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: hw/uefi: Add hardware-info ID for virtio mmio devices for SVSM
+Applying: q35: add virtio-mmio slots
+Patch failed at 0002 q35: add virtio-mmio slots
+error: patch failed: hw/i386/pc.c:1844
+error: hw/i386/pc.c: patch does not apply
+error: patch failed: hw/i386/pc_q35.c:335
+error: hw/i386/pc_q35.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
