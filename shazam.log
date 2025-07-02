@@ -1,0 +1,218 @@
+Grabbing thread from lore.kernel.org/all/20250702123410.761208-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 99 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 234 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/97] target/arm: Introduce FPST_ZA, FPST_ZA_F16
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 2/97] target/arm: Use FPST_ZA for sme_fmopa_[hsd]
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 3/97] target/arm: Rename zarray to za_state.za
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 4/97] target/arm: Add isar feature tests for SME2p1, SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 5/97] target/arm: Add ZT0
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 6/97] target/arm: Add zt0_excp_el to DisasContext
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 7/97] target/arm: Implement SME2 ZERO ZT0
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 8/97] target/arm: Add alignment argument to gen_sve_{ldr, str}
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 9/97] target/arm: Implement SME2 LDR/STR ZT0
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 10/97] target/arm: Implement SME2 MOVT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 11/97] target/arm: Split get_tile_rowcol argument tile_index
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 12/97] target/arm: Rename MOVA for translate
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 13/97] target/arm: Split out get_zarray
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 14/97] target/arm: Introduce ARMCPU.sme_max_vq
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 15/97] target/arm: Implement SME2 MOVA to/from tile, multiple registers
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 16/97] target/arm: Implement SME2 MOVA to/from array, multiple registers
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 17/97] target/arm: Implement SME2 BMOPA
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 18/97] target/arm: Implement SME2 SMOPS, UMOPS (2-way)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 19/97] target/arm: Introduce gen_gvec_sve2_sqdmulh
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 20/97] target/arm: Implement SME2 Multiple and Single SVE Destructive
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 21/97] target/arm: Implement SME2 Multiple Vectors SVE Destructive
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 22/97] target/arm: Implement SME2 ADD/SUB (array results, multiple and single vector)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 23/97] target/arm: Implement SME2 ADD/SUB (array results, multiple vectors)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 24/97] target/arm: Pass ZA to helper_sve2_fmlal_zz[zx]w_s
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 25/97] target/arm: Add helper_gvec{_ah}_bfmlsl{_nx}
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 26/97] target/arm: Implement SME2 FMLAL, BFMLAL
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 27/97] target/arm: Implement SME2 FDOT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 28/97] target/arm: Implement SME2 BFDOT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 29/97] target/arm: Implement SME2 FVDOT, BFVDOT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 30/97] target/arm: Rename helper_gvec_*dot_[bh] to *_4[bh]
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 31/97] target/arm: Implemement SME2 SDOT, UDOT, USDOT, SUDOT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 32/97] target/arm: Rename SVE SDOT and UDOT patterns
+    [32m✓[0m Signed: DKIM/linaro.org
+    + Reviewed-by: Peter Maydell <peter.maydell@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 33/97] target/arm: Tighten USDOT (vectors) decode
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 34/97] target/arm: Implement SDOT, UDOT (2-way) for SME2/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 35/97] target/arm: Implement SME2 SVDOT, UVDOT, SUVDOT, USVDOT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 36/97] target/arm: Implement SME2 SMLAL, SMLSL, UMLAL, UMLSL
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 37/97] target/arm: Rename gvec_fml[as]_[hs] with _nf_ infix
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 38/97] target/arm: Implement SME2 FMLA, FMLS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 39/97] target/arm: Implement SME2 BFMLA, BFMLS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 40/97] target/arm: Implement SME2 FADD, FSUB, BFADD, BFSUB
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 41/97] target/arm: Implement SME2 ADD/SUB (array accumulator)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 42/97] target/arm: Implement SME2 BFCVT, BFCVTN, FCVT, FCVTN
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 43/97] target/arm: Implement SME2 FCVT (widening), FCVTL
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 44/97] target/arm: Implement SME2 FCVTZS, FCVTZU
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 45/97] target/arm: Implement SME2 SCVTF, UCVTF
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 46/97] target/arm: Implement SME2 FRINTN, FRINTP, FRINTM, FRINTA
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 47/97] target/arm: Introduce do_[us]sat_[bhs] macros
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 48/97] target/arm: Use do_[us]sat_[bhs] in sve_helper.c
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 49/97] target/arm: Implement SME2 SQCVT, UQCVT, SQCVTU
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 50/97] target/arm: Implement SQCVTN, UQCVTN, SQCVTUN for SME2/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 51/97] target/arm: Implement SME2 SUNPK, UUNPK
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 52/97] target/arm: Implement SME2 ZIP, UZP (four registers)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 53/97] target/arm: Move do_urshr, do_srshr to vec_internal.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 54/97] target/arm: Implement SME2 SQRSHR, UQRSHR, SQRSHRN
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 55/97] target/arm: Implement SME2 ZIP, UZP (two registers)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 56/97] target/arm: Implement SME2 FCLAMP, SCLAMP, UCLAMP
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 57/97] target/arm: Enable SCLAMP, UCLAMP for SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 58/97] target/arm: Implement FCLAMP for SME2, SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 59/97] target/arm: Implement SME2p1 Multiple Zero
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 60/97] target/arm: Introduce pred_count_test
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 61/97] target/arm: Fold predtest_ones into helper_sve_brkns
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 62/97] target/arm: Split out do_whilel from helper_sve_whilel
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 63/97] target/arm: Split out do_whileg from helper_sve_whileg
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 64/97] target/arm: Move scale by esz into helper_sve_while*
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 65/97] target/arm: Split trans_WHILE to lt and gt
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 66/97] target/arm: Enable PSEL for SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 67/97] target/arm: Implement SVE2p1 WHILE (predicate pair)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 68/97] target/arm: Implement SVE2p1 WHILE (predicate as counter)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 69/97] target/arm: Implement SVE2p1 PTRUE (predicate as counter)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 70/97] target/arm: Implement {ADD, SMIN, SMAX, UMIN, UMAX}QV for SVE2p1
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 71/97] target/arm: Implement SVE2p1 PEXT
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 72/97] target/arm: Implement SME2 SEL
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 73/97] target/arm: Implement ANDQV, ORQV, EORQV for SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 74/97] target/arm: Implement FADDQV, F{MIN, MAX}{NM}QV for SVE2p1
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 75/97] target/arm: Implement BFMLSLB{L,T} for SME2/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 76/97] target/arm: Implement CNTP (predicate as counter) for SME2/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 77/97] target/arm: Implement DUPQ for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 78/97] target/arm: Implement EXTQ for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 79/97] target/arm: Implement PMOV for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 80/97] target/arm: Implement ZIPQ, UZPQ for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 81/97] target/arm: Implement TBLQ, TBXQ for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 82/97] target/arm: Implement SME2 counted predicate register load/store
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 83/97] target/arm: Split the ST_zpri and ST_zprr patterns
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 84/97] target/arm: Implement {LD1, ST1}{W, D} (128-bit element) for SVE2p1
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 85/97] target/arm: Move ld1qq and st1qq primitives to sve_ldst_internal.h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [31m✗[0m [PATCH v3 86/97] target/arm: Implement {LD, ST}[234]Q for SME2p1/SVE2p1
+    [31m✗[0m BADSIG: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 87/97] target/arm: Implement LD1Q, ST1Q for SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 88/97] target/arm: Implement MOVAZ for SME2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 89/97] target/arm: Implement LUTI2, LUTI4 for SME2/SME2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 90/97] target/arm: Rename FMOPA_h to FMOPA_w_h
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 91/97] target/arm: Rename BFMOPA to BFMOPA_w
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 92/97] target/arm: Support FPCR.AH in SME FMOPS, BFMOPS
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 93/97] target/arm: Implement FMOPA (non-widening) for fp16
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 94/97] target/arm: Implement SME2 BFMOPA (non-widening)
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 95/97] target/arm: Enable FEAT_SME2p1 on -cpu max
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 96/97] linux-user/aarch64: Set hwcap bits for SME2p1/SVE2p1
+    [32m✓[0m Signed: DKIM/linaro.org
+  [32m✓[0m [PATCH v3 97/97] tests/tcg/aarch64: Add sme2-matmul test case
+    [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 97
+---
+Applying: target/arm: Introduce FPST_ZA, FPST_ZA_F16
+Applying: target/arm: Use FPST_ZA for sme_fmopa_[hsd]
+Applying: target/arm: Rename zarray to za_state.za
+Applying: target/arm: Add isar feature tests for SME2p1, SVE2p1
+Patch failed at 0004 target/arm: Add isar feature tests for SME2p1, SVE2p1
+error: patch failed: target/arm/cpu-features.h:603
+error: target/arm/cpu-features.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
