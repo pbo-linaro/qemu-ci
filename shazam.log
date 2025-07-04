@@ -1,0 +1,78 @@
+Grabbing thread from lore.kernel.org/all/20250704111207.591994-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 41 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 196 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/40] target/riscv: Add the checking into stimecmp write function.
+  [32m✓[0m [PATCH 2/40] hw/intc: riscv_aclint: Fix mtime write for sstc extension
+  [32m✓[0m [PATCH 3/40] target/riscv: Fix VSTIP bit in sstc extension.
+  [32m✓[0m [PATCH 4/40] target/riscv: Enable/Disable S/VS-mode Timer when STCE bit is changed
+  [32m✓[0m [PATCH 5/40] target/riscv/cpu.c: fix zama16b order in isa_edata_arr[]
+  [32m✓[0m [PATCH 6/40] target/riscv/tcg: restrict satp_mode changes in cpu_set_profile
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 7/40] target/riscv/tcg: decouple profile enablement from user prop
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+    + Acked-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 8/40] target/riscv: add profile->present flag
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 9/40] target/riscv: Extend PMP region up to 64
+  [32m✓[0m [PATCH 10/40] target/riscv: remove capital 'Z' CPU properties
+  [32m✓[0m [PATCH 11/40] target/riscv/cpu.c: add 'sdtrig' in riscv,isa
+  [32m✓[0m [PATCH 12/40] target/riscv/cpu.c: add 'ssstrict' to riscv, isa
+  [32m✓[0m [PATCH 13/40] target/riscv/cpu.c: do better with 'named features' doc
+    + Reviewed-by: Alistair Francis <alistair.francis@wdc.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 14/40] target/riscv: support atomic instruction fetch (Ziccif)
+  [32m✓[0m [PATCH 15/40] target/riscv/kvm: add max_satp_mode from host cpu
+  [32m✓[0m [PATCH 16/40] target/riscv: Make PMP region count configurable
+  [32m✓[0m [PATCH 17/40] hw/riscv/riscv-iommu: Fix PPN field of Translation-reponse register
+  [32m✓[0m [PATCH 18/40] target/riscv: use qemu_chr_fe_write_all() in DBCN_CONSOLE_WRITE_BYTE
+  [32m✓[0m [PATCH 19/40] target/riscv: Fix fcvt.s.bf16 NaN box checking
+  [32m✓[0m [PATCH 20/40] hw/char: sifive_uart: Avoid infinite delay of async xmit function
+  [32m✓[0m [PATCH 21/40] hw/riscv/virt: Fix clint base address type
+  [32m✓[0m [PATCH 22/40] hw/riscv/virt: Use setprop_sized_cells for clint
+  [32m✓[0m [PATCH 23/40] hw/riscv/virt: Use setprop_sized_cells for memory
+  [32m✓[0m [PATCH 24/40] hw/riscv/virt: Use setprop_sized_cells for aplic
+  [32m✓[0m [PATCH 25/40] hw/riscv/virt: Use setprop_sized_cells for aclint
+  [32m✓[0m [PATCH 26/40] hw/riscv/virt: Use setprop_sized_cells for plic
+  [32m✓[0m [PATCH 27/40] hw/riscv/virt: Use setprop_sized_cells for virtio
+  [32m✓[0m [PATCH 28/40] hw/riscv/virt: Use setprop_sized_cells for reset
+  [32m✓[0m [PATCH 29/40] hw/riscv/virt: Use setprop_sized_cells for uart
+  [32m✓[0m [PATCH 30/40] hw/riscv/virt: Use setprop_sized_cells for rtc
+  [32m✓[0m [PATCH 31/40] hw/riscv/virt: Use setprop_sized_cells for iommu
+  [32m✓[0m [PATCH 32/40] hw/riscv/virt: Use setprop_sized_cells for pcie
+  [32m✓[0m [PATCH 33/40] target/riscv: Add BOSC's Xiangshan Kunminghu CPU
+  [32m✓[0m [PATCH 34/40] hw/riscv: Initial support for BOSC's Xiangshan Kunminghu FPGA prototype
+    + Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com> ([32m✓[0m DKIM/lanxincomputing-com.20200927.dkim.feishu.cn)
+  [32m✓[0m [PATCH 35/40] target/riscv: rvv: Fix missing exit TB flow for ldff_trans
+  [32m✓[0m [PATCH 36/40] migration: Fix migration failure when aia is configured as aplic-imsic
+  [32m✓[0m [PATCH 37/40] target/riscv: Fix MEPC/SEPC bit masking for IALIGN
+  [32m✓[0m [PATCH 38/40] tests/tcg/riscv64: Add test for MEPC bit masking
+  [32m✓[0m [PATCH 39/40] target/riscv: Add a property to set vill bit on reserved usage of vsetvli instruction
+  [32m✓[0m [PATCH 40/40] target: riscv: Add Svrsw60t59b extension support
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 40
+---
+Applying: target/riscv: Add the checking into stimecmp write function.
+Applying: hw/intc: riscv_aclint: Fix mtime write for sstc extension
+Applying: target/riscv: Fix VSTIP bit in sstc extension.
+Applying: target/riscv: Enable/Disable S/VS-mode Timer when STCE bit is changed
+Applying: target/riscv/cpu.c: fix zama16b order in isa_edata_arr[]
+Applying: target/riscv/tcg: restrict satp_mode changes in cpu_set_profile
+Applying: target/riscv/tcg: decouple profile enablement from user prop
+Applying: target/riscv: add profile->present flag
+Applying: target/riscv: Extend PMP region up to 64
+Applying: target/riscv: remove capital 'Z' CPU properties
+Applying: target/riscv/cpu.c: add 'sdtrig' in riscv,isa
+Patch failed at 0011 target/riscv/cpu.c: add 'sdtrig' in riscv,isa
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/RHCT' without full index line
+error: tests/data/acpi/riscv64/virt/RHCT: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
