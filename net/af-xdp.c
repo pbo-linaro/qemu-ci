@@ -482,9 +482,8 @@ int net_init_af_xdp(const Netdev *netdev,
         pstrcpy(s->ifname, sizeof(s->ifname), opts->ifname);
         s->ifindex = ifindex;
 
-        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, errp)
-            || af_xdp_socket_create(s, opts, errp)) {
-            error_propagate(errp, err);
+        if (af_xdp_umem_create(s, sock_fds ? sock_fds[i] : -1, &err) ||
+            af_xdp_socket_create(s, opts, &err)) {
             goto err;
         }
     }
@@ -506,6 +505,7 @@ int net_init_af_xdp(const Netdev *netdev,
 err:
     if (nc0) {
         qemu_del_net_client(nc0);
+        error_propagate(errp, err);
     }
 
     return -1;
