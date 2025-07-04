@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250704151431.1033520-1-gustavo.romero@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/5] target/arm: Add the MECEn SCR_EL3 bit
+  [32m✓[0m [PATCH v2 2/5] target/arm: Add FEAT_MEC registers
+  [32m✓[0m [PATCH v2 3/5] target/arm: Add FEAT_SCTLR2
+  [32m✓[0m [PATCH v2 4/5] target/arm: Add FEAT_TCR2
+  [32m✓[0m [PATCH v2 5/5] target/arm: Advertise FEAT_MEC in cpu max
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 5
+---
+Applying: target/arm: Add the MECEn SCR_EL3 bit
+Applying: target/arm: Add FEAT_MEC registers
+Applying: target/arm: Add FEAT_SCTLR2
+Patch failed at 0003 target/arm: Add FEAT_SCTLR2
+error: patch failed: target/arm/cpu-features.h:296
+error: target/arm/cpu-features.h: patch does not apply
+error: patch failed: target/arm/tcg/cpu64.c:1242
+error: target/arm/tcg/cpu64.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
