@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/4887cd10-6126-489f-9e68-85b3ecdf0b3d@quyllur.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Adds the GDB register XML files for Sparc and Sparc64.
+  ---
+  [32m✓[0m Signed: DKIM/quyllur.org
+---
+Total patches: 1
+---
+Applying: Adds the GDB register XML files for Sparc and Sparc64.
+Patch failed at 0001 Adds the GDB register XML files for Sparc and Sparc64.
+error: git diff header lacks filename information when removing 1 leading pathname component (line 27)
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
