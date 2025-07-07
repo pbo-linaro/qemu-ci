@@ -1,0 +1,53 @@
+Grabbing thread from lore.kernel.org/all/20250707202111.293787-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/20] target/arm: Convert get_phys_addr_v5 to access_perm
+  [32m✓[0m [PATCH 2/20] target/arm: Convert get_phys_addr_v6 to access_perm
+  [32m✓[0m [PATCH 3/20] target/arm: Convert get_phys_addr_lpae to access_perm
+  [32m✓[0m [PATCH 4/20] target/arm: Convert get_phys_addr_pmsav5 to access_perm
+  [32m✓[0m [PATCH 5/20] target/arm: Convert get_phys_addr_pmsav7 to access_perm
+  [32m✓[0m [PATCH 6/20] target/arm: Convert pmsav8_mpu_lookup to access_perm
+  [32m✓[0m [PATCH 7/20] target/arm: Convert v8m_is_sau_exempt to access_perm
+  [32m✓[0m [PATCH 8/20] target/arm: Convert v8m_security_lookup to access_perm
+  [32m✓[0m [PATCH 9/20] target/arm: Convert get_phys_addr_pmsav8 to access_perm
+  [32m✓[0m [PATCH 10/20] target/arm: Convert get_phys_addr_disabled to access_perm
+  [32m✓[0m [PATCH 11/20] target/arm: Convert get_phys_addr_nogpc to access_perm
+  [32m✓[0m [PATCH 12/20] target/arm: Convert get_phys_addr_gpc to access_perm
+  [32m✓[0m [PATCH 13/20] target/arm: Convert get_phys_addr_with_space_nogpc to access_perm
+  [32m✓[0m [PATCH 14/20] target/arm: Convert get_phys_addr to access_perm
+  [32m✓[0m [PATCH 15/20] target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+  [32m✓[0m [PATCH 16/20] target/arm: Introduce get_phys_addr_for_at
+  [32m✓[0m [PATCH 17/20] target/arm: Skip AF and DB updates for AccessType_AT
+  [32m✓[0m [PATCH 18/20] target/arm: Convert do_ats_write to access_perm
+  [32m✓[0m [PATCH 19/20] target/arm: Fill in HFGITR_EL2 bits for Arm v9.5
+  [32m✓[0m [PATCH 20/20] target/arm: Implement FEAT_ATS1A
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 20
+---
+Applying: target/arm: Convert get_phys_addr_v5 to access_perm
+Applying: target/arm: Convert get_phys_addr_v6 to access_perm
+Applying: target/arm: Convert get_phys_addr_lpae to access_perm
+Applying: target/arm: Convert get_phys_addr_pmsav5 to access_perm
+Applying: target/arm: Convert get_phys_addr_pmsav7 to access_perm
+Applying: target/arm: Convert pmsav8_mpu_lookup to access_perm
+Applying: target/arm: Convert v8m_is_sau_exempt to access_perm
+Applying: target/arm: Convert v8m_security_lookup to access_perm
+Applying: target/arm: Convert get_phys_addr_pmsav8 to access_perm
+Applying: target/arm: Convert get_phys_addr_disabled to access_perm
+Applying: target/arm: Convert get_phys_addr_nogpc to access_perm
+Applying: target/arm: Convert get_phys_addr_gpc to access_perm
+Applying: target/arm: Convert get_phys_addr_with_space_nogpc to access_perm
+Patch failed at 0013 target/arm: Convert get_phys_addr_with_space_nogpc to access_perm
+error: target/arm/tcg/cpregs-at.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
