@@ -209,10 +209,18 @@ static void aspeed_sbc_instance_init(Object *obj)
 {
     AspeedSBCClass *sc = ASPEED_SBC_GET_CLASS(obj);
     AspeedSBCState *s = ASPEED_SBC(obj);
+    char *otpname;
 
     if (sc->has_otp) {
         object_initialize_child(OBJECT(s), "otp", &s->otp,
                                 TYPE_ASPEED_OTP);
+        otpname = object_property_get_str(qdev_get_machine(),
+                                          "otpmem",
+                                          &error_abort);
+        if (strlen(otpname)) {
+            object_property_add_alias(obj, otpname,
+                                      OBJECT(&s->otp), "drive");
+        }
     }
 }
 
