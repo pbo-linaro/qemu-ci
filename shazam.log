@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20250710141512.170302-1-xiaoyao.li@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Nothing matching that query.
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] i386/tdx: Use .has_gpa field to check if the gpa is valid
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 1
+---
+Applying: i386/tdx: Use .has_gpa field to check if the gpa is valid
+Patch failed at 0001 i386/tdx: Use .has_gpa field to check if the gpa is valid
+error: patch failed: target/i386/kvm/tdx.c:1298
+error: target/i386/kvm/tdx.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
