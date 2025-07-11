@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20250711093340.608485-1-thuth@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 47 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/15] target/s390x/kvm: Use vaddr in find/insert_hw_breakpoint()
+  [32m✓[0m [PATCH 2/15] target/s390x/tcg: Use vaddr in s390_probe_access()
+  [32m✓[0m [PATCH 3/15] hw/s390x/s390-pci-bus.c: Use g_assert_not_reached() in functions taking an ett
+  [32m✓[0m [PATCH 4/15] pc-bios/s390-ccw: Allow to select a different pxelinux.cfg entry via loadparm
+  [32m✓[0m [PATCH 5/15] pc-bios/s390-ccw: Allow up to 31 entries for pxelinux.cfg
+  [32m✓[0m [PATCH 6/15] pc-bios/s390-ccw: Make get_boot_index() from menu.c global
+  [32m✓[0m [PATCH 7/15] pc-bios/s390-ccw: Add a boot menu for booting via pxelinux.cfg
+  [32m✓[0m [PATCH 8/15] tests/functional: Add a test for s390x pxelinux.cfg network booting
+  [32m✓[0m [PATCH 9/15] pc-bios/s390-ccw: link statically
+  [32m✓[0m [PATCH 10/15] pc-bios: Update the s390 bios images with the pxelinux.cfg loadparm changes
+  [32m✓[0m [PATCH 11/15] tests/functional: Add dependency to the keymap_targets
+  [32m✓[0m [PATCH 12/15] tests/functional/test_ppc_bamboo: Replace broken link with working assets
+  [32m✓[0m [PATCH 13/15] target/s390x: Remove unused s390_cpu_[un]halt() user stubs
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 14/15] target/s390x: Expose s390_count_running_cpus() method
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH 15/15] target/s390x: Have s390_cpu_halt() not return anything
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 15
+---
+Applying: target/s390x/kvm: Use vaddr in find/insert_hw_breakpoint()
+Applying: target/s390x/tcg: Use vaddr in s390_probe_access()
+Applying: hw/s390x/s390-pci-bus.c: Use g_assert_not_reached() in functions taking an ett
+Applying: pc-bios/s390-ccw: Allow to select a different pxelinux.cfg entry via loadparm
+Applying: pc-bios/s390-ccw: Allow up to 31 entries for pxelinux.cfg
+Applying: pc-bios/s390-ccw: Make get_boot_index() from menu.c global
+Applying: pc-bios/s390-ccw: Add a boot menu for booting via pxelinux.cfg
+Applying: tests/functional: Add a test for s390x pxelinux.cfg network booting
+Applying: pc-bios/s390-ccw: link statically
+Applying: pc-bios: Update the s390 bios images with the pxelinux.cfg loadparm changes
+Patch failed at 0010 pc-bios: Update the s390 bios images with the pxelinux.cfg loadparm changes
+error: corrupt binary patch at line 954: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
