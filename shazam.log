@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250711140828.1714666-1-gustavo.romero@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 55 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v7 1/6] target/arm: Add the MECEn SCR_EL3 bit
+  [32m✓[0m [PATCH v7 2/6] target/arm: Add FEAT_MEC registers
+  [32m✓[0m [PATCH v7 3/6] target/arm: Add FEAT_SCTLR2
+  [32m✓[0m [PATCH v7 4/6] target/arm: Add FEAT_TCR2
+  [32m✓[0m [PATCH v7 5/6] target/arm: Implement FEAT_MEC cache instructions
+  [32m✓[0m [PATCH v7 6/6] target/arm: Advertise FEAT_MEC in cpu max
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 6
+---
+Applying: target/arm: Add the MECEn SCR_EL3 bit
+Applying: target/arm: Add FEAT_MEC registers
+Patch failed at 0002 target/arm: Add FEAT_MEC registers
+error: patch failed: target/arm/helper.c:5196
+error: target/arm/helper.c: patch does not apply
+error: patch failed: target/arm/internals.h:1987
+error: target/arm/internals.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
