@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20250711054005.60969-1-jsnow@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 31 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/18] qapi: add cross-references to acpi.json
+  [32m✓[0m [PATCH v2 2/18] qapi: add cross-references to authz.json
+  [32m✓[0m [PATCH v2 3/18] qapi: add cross-references to block layer
+  [32m✓[0m [PATCH v2 4/18] qapi: add cross-references to crypto.json
+  [32m✓[0m [PATCH v2 5/18] qapi: add cross-references to dump.json
+  [32m✓[0m [PATCH v2 6/18] qapi: add cross-references to job.json
+  [32m✓[0m [PATCH v2 7/18] qapi: add cross-references to Machine core
+  [32m✓[0m [PATCH v2 8/18] qapi: add cross-references to migration.json
+  [32m✓[0m [PATCH v2 9/18] qapi: add cross-references to net.json
+  [32m✓[0m [PATCH v2 10/18] qapi: add cross-references to pci.json
+  [32m✓[0m [PATCH v2 11/18] qapi: add cross-references to QOM
+  [32m✓[0m [PATCH v2 12/18] qapi: add cross-references to replay.json
+  [32m✓[0m [PATCH v2 13/18] qapi: add cross-references to run-state.json
+  [32m✓[0m [PATCH v2 14/18] qapi: add cross-references to sockets.json
+  [32m✓[0m [PATCH v2 15/18] qapi: add cross-references to ui.json
+  [32m✓[0m [PATCH v2 16/18] qapi: add cross-references to virtio.json
+  [32m✓[0m [PATCH v2 17/18] qapi: add cross-references to yank.json
+  [32m✓[0m [PATCH v2 18/18] qapi: add cross-references to misc modules
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 18
+---
+Applying: qapi: add cross-references to acpi.json
+Applying: qapi: add cross-references to authz.json
+Applying: qapi: add cross-references to block layer
+Patch failed at 0003 qapi: add cross-references to block layer
+error: patch failed: qapi/block-core.json:761
+error: qapi/block-core.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
