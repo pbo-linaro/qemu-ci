@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250711224915.62369-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/9] target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+  [32m✓[0m [PATCH v2 2/9] target/arm: Add in_prot_check to S1Translate
+  [32m✓[0m [PATCH v2 3/9] target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+  [32m✓[0m [PATCH v2 4/9] target/arm: Introduce get_phys_addr_for_at
+  [32m✓[0m [PATCH v2 5/9] target/arm: Skip AF and DB updates for AccessType_AT
+  [32m✓[0m [PATCH v2 6/9] target/arm: Convert do_ats_write to access_perm
+  [32m✓[0m [PATCH v2 7/9] target/arm: Fill in HFG[RWI]TR_EL2 bits for Arm v9.5
+  [32m✓[0m [PATCH v2 8/9] target/arm: Remove outdated comment for ZCR_EL12
+  [32m✓[0m [PATCH v2 9/9] target/arm: Implement FEAT_ATS1A
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+Applying: target/arm: Add in_prot_check to S1Translate
+Applying: target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+Applying: target/arm: Introduce get_phys_addr_for_at
+Patch failed at 0004 target/arm: Introduce get_phys_addr_for_at
+error: target/arm/tcg/cpregs-at.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
