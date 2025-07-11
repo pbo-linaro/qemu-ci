@@ -1,0 +1,61 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.0.3-20250711105634@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 40 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1086 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/39] hw/misc/aspeed_hace: Ensure HASH_IRQ is always set to prevent firmware hang
+  [PATCH 2/39] hw/arm/aspeed_ast27x0: Fix RAM size detection failure on BE hosts
+  [PATCH 3/39] ui/gtk: Document scale and coordinate handling
+  [PATCH 4/39] ui/gtk: Use consistent naming for variables in different coordinates
+  [PATCH 5/39] gtk/ui: Introduce helper gd_update_scale
+  [PATCH 6/39] ui/gtk: Update scales in fixed-scale mode when rendering GL area
+  [PATCH 7/39] ui/sdl: Consider scaling in mouse event handling
+  [PATCH 8/39] ui/vnc.c: replace big endian flag with byte order value
+  [PATCH 9/39] ui/vnc: take account of client byte order in pixman format
+  [PATCH 10/39] ui/vnc: fix tight palette pixel encoding for 8/16-bpp formats
+  [PATCH 11/39] hw/arm: Add missing psci_conduit to NPCM8XX SoC boot info
+  [PATCH 12/39] vhost: Don't set vring call if guest notifier is unused
+    + Acked-by: Stefano Garzarella <sgarzare@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 13/39] hw/i386/pc_piix: Fix RTC ISA IRQ wiring of isapc machine
+  [PATCH 14/39] hw/i386/amd_iommu: Fix device setup failure when PT is on.
+  [PATCH 15/39] hw/i386/amd_iommu: Fix xtsup when vcpus < 255
+    + Reviewed-by: Joao Martins <joao.m.martins@oracle.com> ([31m✗[0m DKIM/oracle.com)
+  [PATCH 16/39] audio: fix SIGSEGV in AUD_get_buffer_size_out()
+  [PATCH 17/39] audio: fix size calculation in AUD_get_buffer_size_out()
+  [PATCH 18/39] hw/audio/asc: fix SIGSEGV in asc_realize()
+  [PATCH 19/39] target/i386: Remove FRED dependency on WRMSRNS
+  [PATCH 20/39] iotests: fix 240
+  [PATCH 21/39] hw/core/qdev-properties-system: Add missing return in set_drive_helper()
+  [PATCH 22/39] hw/loongarch/virt: Fix big endian support with MCFG table
+  [PATCH 23/39] hw/arm/virt: Check bypass iommu is not set for iommu-map DT property
+  [PATCH 24/39] qemu-options.hx: Fix reversed description of icount sleep behavior
+  [PATCH 25/39] hw/arm/mps2: Configure the AN500 CPU with 16 MPU regions
+  [PATCH 26/39] linux-user/arm: Fix return value of SYS_cacheflush
+  [PATCH 27/39] target/loongarch: add check for fcond
+  [PATCH 28/39] target/loongarch: fix vldi/xvldi raise wrong error
+  [PATCH 29/39] tcg: Fix constant propagation in tcg_reg_alloc_dup
+  [PATCH 30/39] target/arm: Make RETA[AB] UNDEF when pauth is not implemented
+  [PATCH 31/39] target/arm: Correct KVM & HVF dtb_compatible value
+  [PATCH 32/39] virtio-gpu: support context init multiple timeline
+  [PATCH 33/39] hw/s390x/ccw-device: Fix memory leak in loadparm setter
+  [PATCH 34/39] target/arm: Fix SME vs AdvSIMD exception priority
+  [PATCH 35/39] target/arm: Fix sve_access_check for SME
+  [PATCH 36/39] target/arm: Fix 128-bit element ZIP, UZP, TRN
+  [PATCH 37/39] target/arm: Fix PSEL size operands to tcg_gen_gvec_ands
+  [PATCH 38/39] target/arm: Fix f16_dotadd vs nan selection
+  [PATCH 39/39] target/arm: Fix bfdotadd_ebf vs nan selection
+---
+Total patches: 39
+---
+Applying: hw/misc/aspeed_hace: Ensure HASH_IRQ is always set to prevent firmware hang
+Patch failed at 0001 hw/misc/aspeed_hace: Ensure HASH_IRQ is always set to prevent firmware hang
+error: patch failed: hw/misc/aspeed_hace.c:301
+error: hw/misc/aspeed_hace.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
