@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250711-rust-qdev-properties-v3-1-e198624416fb@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Nothing matching that query.
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3] rust: add qdev Device derive macro
+  ---
+  [31m✗[0m No key: openpgp/manos.pitsidianakis@linaro.org
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+ Base: using specified base-commit c77283dd5d79149f4e7e9edd00f65416c648ee59
+ Deps: looking for dependencies matching 4 patch-ids
+Grabbing search results from lore.kernel.org
+ Deps: Applying prerequisite patch: [PATCH] rust: Fix compilation with rustc v1.88
+ Deps: Applying prerequisite patch: [PATCH 1/2] rust/qemu-api-macros: normalize TryInto output
+ Deps: Applying prerequisite patch: [PATCH 2/2] rust/qemu-api-macros: add unit tests
+ Deps: Applying prerequisite patch: [PATCH] rust/qemu-api-macros: use syn::Error directly
+Applying: rust: Fix compilation with rustc v1.88
+Applying: rust/qemu-api-macros: normalize TryInto output
+Applying: rust/qemu-api-macros: add unit tests
+Applying: rust/qemu-api-macros: use syn::Error directly
+Patch failed at 0004 rust/qemu-api-macros: use syn::Error directly
+error: patch failed: rust/qemu-api-macros/src/lib.rs:6
+error: rust/qemu-api-macros/src/lib.rs: patch does not apply
+error: patch failed: rust/qemu-api-macros/src/utils.rs:1
+error: rust/qemu-api-macros/src/utils.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
