@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20250711084749.18300-1-shameerali.kolothum.thodi@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 217 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v8 1/12] hw/arm/virt-acpi-build: Don't create ITS id mappings by default
+  [PATCH v8 2/12] hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+  [PATCH v8 3/12] hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+  [PATCH v8 4/12] hw/arm/virt-acpi-build: Update IORT for multiple smmuv3 devices
+  [PATCH v8 5/12] hw/arm/virt: Factor out common SMMUV3 dt bindings code
+  [PATCH v8 6/12] hw/arm/virt: Add an SMMU_IO_LEN macro
+  [PATCH v8 7/12] hw/pci: Introduce pci_setup_iommu_per_bus() for per-bus IOMMU ops retrieval
+  [PATCH v8 8/12] hw/arm/virt: Allow user-creatable SMMUv3 dev instantiation
+  [PATCH v8 9/12] qemu-options.hx: Document the arm-smmuv3 device
+  [PATCH v8 10/12] bios-tables-test: Allow for smmuv3 test data.
+  [PATCH v8 11/12] qtest/bios-tables-test: Add tests for legacy smmuv3 and smmuv3 device
+  [PATCH v8 12/12] qtest/bios-tables-test: Update tables for smmuv3 tests
+---
+Total patches: 12
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/arm/virt-acpi-build: Don't create ITS id mappings by default
+Applying: hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+Applying: hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+Patch failed at 0003 hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+error: patch failed: include/hw/arm/virt.h:178
+error: include/hw/arm/virt.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
