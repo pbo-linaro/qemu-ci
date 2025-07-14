@@ -320,9 +320,11 @@ static void cpu_arm_set_sve(Object *obj, bool value, Error **errp)
 {
     ARMCPU *cpu = ARM_CPU(obj);
 
-    if (value && kvm_enabled() && !kvm_arm_sve_supported()) {
-        error_setg(errp, "'sve' feature not supported by KVM on this host");
-        return;
+    if (value) {
+        if (kvm_enabled() && !kvm_arm_sve_supported()) {
+            error_setg(errp, "'sve' feature not supported by KVM on this host");
+            return;
+        }
     }
 
     FIELD_DP64_IDREG(&cpu->isar, ID_AA64PFR0, SVE, value);
