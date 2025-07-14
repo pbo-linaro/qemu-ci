@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250714173146.511-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 60 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v7 1/4] tests: virt: Allow changes to PPTT test table
+  [PATCH v7 2/4] hw/acpi/aml-build: Set identical implementation flag for PPTT processor nodes
+  [PATCH v7 3/4] hw/acpi/aml-build: Build a root node in the PPTT table
+  [PATCH v7 4/4] tests: virt: Update expected ACPI tables for virt test
+---
+Total patches: 4
+---
+ Base: using specified base-commit 09be8a511a2e278b45729d7b065d30c68dd699d0
+Applying: tests: virt: Allow changes to PPTT test table
+Applying: hw/acpi/aml-build: Set identical implementation flag for PPTT processor nodes
+Applying: hw/acpi/aml-build: Build a root node in the PPTT table
+Applying: tests: virt: Update expected ACPI tables for virt test
+Patch failed at 0004 tests: virt: Update expected ACPI tables for virt test
+error: tests/data/acpi/loongarch64/virt/PPTT: does not exist in index
+error: tests/data/acpi/loongarch64/virt/PPTT.topology: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
