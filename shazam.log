@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250714080859.1960104-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/7] i386/cpu: Mark EBX/ECX/EDX in CPUID 0x80000000 leaf as reserved for Intel
+  [32m✓[0m [PATCH v2 2/7] i386/cpu: Mark CPUID 0x80000008 ECX bits[0:7] & [12:15] as reserved for Intel/Zhaoxin
+  [32m✓[0m [PATCH v2 3/7] i386/cpu: Reorder CPUID leaves in cpu_x86_cpuid()
+  [32m✓[0m [PATCH v2 4/7] i386/cpu: Fix number of addressable IDs field for CPUID.01H.EBX[23:16]
+  [32m✓[0m [PATCH v2 5/7] i386/cpu: Fix cpu number overflow in CPUID.01H.EBX[23:16]
+  [32m✓[0m [PATCH v2 6/7] i386/cpu: Fix overflow of cache topology fields in CPUID.04H
+  [32m✓[0m [PATCH v2 7/7] i386/cpu: Honor maximum value for CPUID.8000001DH.EAX[25:14]
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 7
+---
+Applying: i386/cpu: Mark EBX/ECX/EDX in CPUID 0x80000000 leaf as reserved for Intel
+Applying: i386/cpu: Mark CPUID 0x80000008 ECX bits[0:7] & [12:15] as reserved for Intel/Zhaoxin
+Applying: i386/cpu: Reorder CPUID leaves in cpu_x86_cpuid()
+Applying: i386/cpu: Fix number of addressable IDs field for CPUID.01H.EBX[23:16]
+Patch failed at 0004 i386/cpu: Fix number of addressable IDs field for CPUID.01H.EBX[23:16]
+error: patch failed: target/i386/cpu.c:7869
+error: target/i386/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
