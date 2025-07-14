@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20250714155941.22176-1-shameerali.kolothum.thodi@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 145 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC v3 1/15] backends/iommufd: Introduce iommufd_backend_alloc_viommu
+  [PATCH RFC v3 2/15] backends/iommufd: Introduce iommufd_vdev_alloc
+  [PATCH RFC v3 3/15] hw/arm/smmu-common: Factor out common helper functions and export
+  [PATCH RFC v3 4/15] hw/arm/smmu-common: Introduce smmu_iommu_ops_by_type() helper
+  [PATCH RFC v3 5/15] hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+  [PATCH RFC v3 6/15] hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+  [PATCH RFC v3 7/15] hw/arm/smmuv3: Implement get_viommu_cap() callback
+  [PATCH RFC v3 8/15] hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+  [PATCH RFC v3 9/15] hw/arm/smmuv3-accel: Support nested STE install/uninstall support
+  [PATCH RFC v3 10/15] hw/arm/smmuv3-accel: Allocate a vDEVICE object for device
+  [PATCH RFC v3 11/15] hw/pci/pci: Introduce optional get_msi_address_space() callback.
+  [PATCH RFC v3 12/15] hw/arm/smmuv3-accel: Introduce helpers to batch and issue cache invalidations
+  [PATCH RFC v3 13/15] hw/arm/smmuv3: Forward invalidation commands to hw
+  [PATCH RFC v3 14/15] Read and validate host SMMUv3 feature bits
+  [PATCH RFC v3 15/15] hw/arm/smmu-common: Add accel property for SMMU dev
+---
+Total patches: 15
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Nicolin Chen <nicolinc@nvidia.com>
+     Msg From: Nicolin Chen via <qemu-arm@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_viommu
+Applying: backends/iommufd: Introduce iommufd_vdev_alloc
+Applying: hw/arm/smmu-common: Factor out common helper functions and export
+Applying: hw/arm/smmu-common: Introduce smmu_iommu_ops_by_type() helper
+Patch failed at 0004 hw/arm/smmu-common: Introduce smmu_iommu_ops_by_type() helper
+error: patch failed: hw/arm/smmu-common.c:962
+error: hw/arm/smmu-common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
