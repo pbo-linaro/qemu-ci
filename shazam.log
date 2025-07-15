@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250715000045.57332-1-jcksn@duck.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 95 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/11] MAX78000: Add MAX78000FTHR Machine
+  [32m✓[0m [PATCH v5 2/11] MAX78000: ICC Implementation
+  [32m✓[0m [PATCH v5 3/11] MAX78000: Add ICC to SOC
+  [32m✓[0m [PATCH v5 4/11] MAX78000: UART Implementation
+  [32m✓[0m [PATCH v5 5/11] MAX78000: Add UART to SOC
+  [32m✓[0m [PATCH v5 6/11] MAX78000: GCR Implementation
+  [32m✓[0m [PATCH v5 7/11] MAX78000: Add GCR to SOC
+  [32m✓[0m [PATCH v5 8/11] MAX78000: TRNG Implementation
+  [32m✓[0m [PATCH v5 9/11] MAX78000: Add TRNG to SOC
+  [32m✓[0m [PATCH v5 10/11] MAX78000: AES implementation
+  [32m✓[0m [PATCH v5 11/11] MAX78000: Add AES to SOC
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 11
+---
+Applying: MAX78000: Add MAX78000FTHR Machine
+Patch failed at 0001 MAX78000: Add MAX78000FTHR Machine
+error: patch failed: hw/arm/Kconfig:95
+error: hw/arm/Kconfig: patch does not apply
+error: hw/arm/max78000_soc.c: already exists in index
+error: hw/arm/max78000fthr.c: already exists in index
+error: patch failed: hw/arm/meson.build:27
+error: hw/arm/meson.build: patch does not apply
+error: include/hw/arm/max78000_soc.h: already exists in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
