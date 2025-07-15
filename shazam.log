@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250715140048.84942-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 8 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/8] Revert "accel/tcg: Unregister the RCU before exiting RR thread"
+  [32m✓[0m [PATCH v6 2/8] accel/tcg: Extract statistic related code to tcg-stats.c
+  [32m✓[0m [PATCH v6 3/8] accel/system: Introduce @x-accel-stats QMP command
+  [32m✓[0m [PATCH v6 4/8] accel/system: Add 'info accel' on human monitor
+  [32m✓[0m [PATCH v6 5/8] accel/tcg: Propagate AccelState to dump_accel_info()
+  [32m✓[0m [PATCH v6 6/8] accel/tcg: Implement AccelClass::get_stats() handler
+  [32m✓[0m [PATCH v6 7/8] accel/hvf: Implement AccelClass::get_vcpu_stats()
+  [32m✓[0m [PATCH v6 8/8] linux-user: Dump TCG stats to logfile
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 8
+---
+Applying: Revert "accel/tcg: Unregister the RCU before exiting RR thread"
+Applying: accel/tcg: Extract statistic related code to tcg-stats.c
+Patch failed at 0002 accel/tcg: Extract statistic related code to tcg-stats.c
+error: patch failed: accel/tcg/monitor.c:7
+error: accel/tcg/monitor.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
