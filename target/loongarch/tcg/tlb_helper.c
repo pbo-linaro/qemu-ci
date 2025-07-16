@@ -517,6 +517,7 @@ void helper_invtlb_page_asid_or_g(CPULoongArchState *env,
         tlb_vppn = FIELD_EX64(tlb->tlb_misc, TLB_MISC, VPPN);
         vpn = (addr & TARGET_VIRT_MASK) >> (tlb_ps + 1);
         compare_shift = tlb_ps + 1 - R_TLB_MISC_VPPN_SHIFT;
+        compare_shift = MIN(63, compare_shift);
 
         if ((tlb_g || (tlb_asid == asid)) &&
             (vpn == (tlb_vppn >> compare_shift))) {
