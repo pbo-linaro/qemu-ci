@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250716073145.915-1-sarunkod@amd.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] hw/i386/amd_iommu: Fix MMIO register write tracing
+  [32m✓[0m [PATCH 2/7] hw/i386/amd_iommu: Remove unused and wrongly set ats_enabled field
+  [32m✓[0m [PATCH 3/7] hw/i386/amd_iommu: Move IOAPIC memory region initialization to the end
+  [32m✓[0m [PATCH 4/7] hw/i386/amd_iommu: Support MMIO writes to the status register
+  [32m✓[0m [PATCH 5/7] hw/i386/amd_iommu: Fix event log generation
+  [32m✓[0m [PATCH 6/7] hw/i386/amd_iommu: Fix handling device on buses != 0
+  [32m✓[0m [PATCH 7/7] hw/i386/amd_iommu: Support 64 bit address for IOTLB lookup
+  ---
+  [32m✓[0m Signed: DKIM/amd.com
+---
+Total patches: 7
+---
+Applying: hw/i386/amd_iommu: Fix MMIO register write tracing
+Applying: hw/i386/amd_iommu: Remove unused and wrongly set ats_enabled field
+Applying: hw/i386/amd_iommu: Move IOAPIC memory region initialization to the end
+Patch failed at 0003 hw/i386/amd_iommu: Move IOAPIC memory region initialization to the end
+error: patch failed: hw/i386/amd_iommu.c:2343
+error: hw/i386/amd_iommu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
