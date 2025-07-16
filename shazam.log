@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250716183824.216257-1-hibriansong@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/1] block/export: FUSE-over-io_uring Support for QEMU FUSE Exports
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: block/export: FUSE-over-io_uring Support for QEMU FUSE Exports
+Patch failed at 0001 block/export: FUSE-over-io_uring Support for QEMU FUSE Exports
+error: patch failed: block/export/fuse.c:48
+error: block/export/fuse.c: patch does not apply
+error: patch failed: util/fdmon-io_uring.c:452
+error: util/fdmon-io_uring.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
