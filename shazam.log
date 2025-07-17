@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/1752777568-236368-1-git-send-email-steven.sistare@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 10 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v2 1/8] migration: stop vm earlier for cpr
+  [32m✓[0m [PATCH RFC v2 2/8] migration: cpr setup notifier
+  [32m✓[0m [PATCH RFC v2 3/8] vhost: reset vhost devices for cpr
+  [32m✓[0m [PATCH RFC v2 4/8] cpr: delete all fds
+  [32m✓[0m [PATCH RFC v2 5/8] Revert "vhost-backend: remove vhost_kernel_reset_device()"
+  [32m✓[0m [PATCH RFC v2 6/8] tap: common return label
+  [32m✓[0m [PATCH RFC v2 7/8] tap: cpr support
+  [32m✓[0m [PATCH RFC v2 8/8] tap: postload fix for cpr
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 8
+---
+Applying: migration: stop vm earlier for cpr
+Applying: migration: cpr setup notifier
+Applying: vhost: reset vhost devices for cpr
+Applying: cpr: delete all fds
+Applying: Revert "vhost-backend: remove vhost_kernel_reset_device()"
+Applying: tap: common return label
+Patch failed at 0006 tap: common return label
+error: patch failed: net/tap.c:972
+error: net/tap.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
