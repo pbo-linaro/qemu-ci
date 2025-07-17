@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20250717093833.402237-1-djordje.todorovic@htecgroup.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 61 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/14] hw/intc: Allow gaps in hartids for aclint and aplic
+  [32m✓[0m [PATCH v6 2/14] target/riscv: Add cpu_set_exception_base
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([31m✗[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH v6 3/14] target/riscv: Add MIPS P8700 CPU
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([31m✗[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH v6 4/14] target/riscv: Add MIPS P8700 CSRs
+  [32m✓[0m [PATCH v6 5/14] target/riscv: Add mips.ccmov instruction
+  [32m✓[0m [PATCH v6 6/14] target/riscv: Add mips.pref instruction
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([31m✗[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH v6 7/14] target/riscv: Add Xmipslsp instructions
+  [32m✓[0m [PATCH v6 8/14] hw/misc: Add RISC-V CMGCR device implementation
+  [32m✓[0m [PATCH v6 9/14] hw/misc: Add RISC-V CPC device implementation
+  [32m✓[0m [PATCH v6 10/14] hw/riscv: Add support for RISCV CPS
+  [32m✓[0m [PATCH v6 11/14] hw/riscv: Add support for MIPS Boston-aia board mode
+  [32m✓[0m [PATCH v6 12/14] hw/pci: Allow explicit function numbers in pci
+  [32m✓[0m [PATCH v6 13/14] riscv/boston-aia: Add an e1000e NIC in slot 0 func 1
+    + Reviewed-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com> ([31m✗[0m DKIM/ventanamicro.com)
+  [32m✓[0m [PATCH v6 14/14] test/functional: Add test for boston-aia board
+  ---
+  [32m✓[0m Signed: DKIM/htecgroup.com
+---
+Total patches: 14
+---
+Applying: hw/intc: Allow gaps in hartids for aclint and aplic
+Applying: target/riscv: Add cpu_set_exception_base
+Applying: target/riscv: Add MIPS P8700 CPU
+Patch failed at 0003 target/riscv: Add MIPS P8700 CPU
+error: patch failed: target/riscv/cpu-qom.h:55
+error: target/riscv/cpu-qom.h: patch does not apply
+error: patch failed: target/riscv/cpu.c:3180
+error: target/riscv/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
