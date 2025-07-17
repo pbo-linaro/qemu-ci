@@ -1,0 +1,60 @@
+Grabbing thread from lore.kernel.org/all/20250717034054.1903991-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 22 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v1 1/21] hw/arm/aspeed_ast27x0-fc: Support VBootRom
+  [PATCH v1 2/21] hw/arm/ast27x0: Move SSP coprocessor initialization from machine to SoC leve
+  [PATCH v1 3/21] hw/arm/ast27x0: Move TSP coprocessor initialization from machine to SoC leve
+  [PATCH v1 4/21] hw/arm/aspeed_ast27x0-ssp: Switch SSP memory to SDRAM and use dram_container for remap support
+  [PATCH v1 5/21] hw/arm/aspeed_ast27x0-tsp: Switch TSP memory to SDRAM and use dram_container for remap support
+  [PATCH v1 6/21] hw/arm/ast27x0: Add SRAM alias for SSP and ensure correct device realization order
+  [PATCH v1 7/21] hw/arm/ast27x0: Add SRAM alias for TSP and ensure correct device realization order
+  [PATCH v1 8/21] hw/arm/ast27x0: Add SCU alias for SSP and ensure correct device realization order
+  [PATCH v1 9/21] hw/arm/ast27x0: Add SCU alias for TSP and ensure correct device realization order
+  [PATCH v1 10/21] hw/arm/ast27x0: Move DRAM and SDMC initialization earlier to support memory aliasing
+  [PATCH v1 11/21] hw/arm/ast27x0: Add DRAM alias for SSP SDRAM remap and update realization order
+  [PATCH v1 12/21] hw/arm/ast27x0: Add DRAM alias for TSP SDRAM remap and update realization order
+  [PATCH v1 13/21] hw/arm/ast27x0: Start SSP in powered-off state to match hardware behavior
+  [PATCH v1 14/21] hw/arm/ast27x0: Start TSP in powered-off state to match hardware behavior
+  [PATCH v1 15/21] hw/misc/aspeed_scu: Add SCU support for SSP SDRAM remap
+  [PATCH v1 16/21] hw/misc/aspeed_scu: Add SCU support for TSP SDRAM remap
+  [PATCH v1 17/21] hw/misc/aspeed_scu: Implement SSP reset and power-on control via SCU registers
+  [PATCH v1 18/21] hw/misc/aspeed_scu: Implement TSP reset and power-on control via SCU registers
+  [PATCH v1 19/21] pc-bios: Update AST27x0 vBootrom with SSP/TSP SCU initialization support
+  [PATCH v1 20/21] tests/function/aspeed: Replace manual loader with vbootrom for ast2700fc test
+  [PATCH v1 21/21] docs: Add support vbootrom for ast2700fc
+---
+Total patches: 21
+---
+Applying: hw/arm/aspeed_ast27x0-fc: Support VBootRom
+Applying: hw/arm/ast27x0: Move SSP coprocessor initialization from machine to SoC leve
+Applying: hw/arm/ast27x0: Move TSP coprocessor initialization from machine to SoC leve
+Applying: hw/arm/aspeed_ast27x0-ssp: Switch SSP memory to SDRAM and use dram_container for remap support
+Applying: hw/arm/aspeed_ast27x0-tsp: Switch TSP memory to SDRAM and use dram_container for remap support
+Applying: hw/arm/ast27x0: Add SRAM alias for SSP and ensure correct device realization order
+Applying: hw/arm/ast27x0: Add SRAM alias for TSP and ensure correct device realization order
+Applying: hw/arm/ast27x0: Add SCU alias for SSP and ensure correct device realization order
+Applying: hw/arm/ast27x0: Add SCU alias for TSP and ensure correct device realization order
+Applying: hw/arm/ast27x0: Move DRAM and SDMC initialization earlier to support memory aliasing
+Applying: hw/arm/ast27x0: Add DRAM alias for SSP SDRAM remap and update realization order
+Applying: hw/arm/ast27x0: Add DRAM alias for TSP SDRAM remap and update realization order
+Applying: hw/arm/ast27x0: Start SSP in powered-off state to match hardware behavior
+Applying: hw/arm/ast27x0: Start TSP in powered-off state to match hardware behavior
+Applying: hw/misc/aspeed_scu: Add SCU support for SSP SDRAM remap
+Applying: hw/misc/aspeed_scu: Add SCU support for TSP SDRAM remap
+Applying: hw/misc/aspeed_scu: Implement SSP reset and power-on control via SCU registers
+Applying: hw/misc/aspeed_scu: Implement TSP reset and power-on control via SCU registers
+Applying: pc-bios: Update AST27x0 vBootrom with SSP/TSP SCU initialization support
+Patch failed at 0019 pc-bios: Update AST27x0 vBootrom with SSP/TSP SCU initialization support
+error: corrupt binary patch at line 152: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
