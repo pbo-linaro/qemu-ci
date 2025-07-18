@@ -50,6 +50,11 @@ def parse_args(test_name: str) -> argparse.Namespace:
         "This is equivalent to setting QEMU_TEST_KEEP_SCRATCH=1 in the "
         "environment.",
     )
+    parser.add_argument(
+        "--list-tests",
+        action="store_true",
+        help="List all tests that would be executed and exit.",
+    )
     return parser.parse_args()
 
 
@@ -281,10 +286,13 @@ class QemuBaseTest(unittest.TestCase):
 
     def main():
         path = os.path.basename(sys.argv[0])[:-3]
-        # If argparse receives --help or an unknown argument, it will raise a
-        # SystemExit which will get caught by the test runner. Parse the
-        # arguments here too to handle that case.
-        parse_args(path)
+        args = parse_args(path)
+        if args.list_tests:
+            loader = unittest.TestLoader()
+            for test_suite in loader.loadTestsFromName(path):
+                for test in test_suite:
+                    print(test)
+            return
 
         cache = os.environ.get("QEMU_TEST_PRECACHE", None)
         if cache is not None:
