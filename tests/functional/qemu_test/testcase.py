@@ -43,6 +43,13 @@ def parse_args(test_name: str) -> argparse.Namespace:
         help="Also print test and console logs on stdout. This will make the"
         " TAP output invalid and is meant for debugging only.",
     )
+    parser.add_argument(
+        "--keep-scratch",
+        action="store_true",
+        help="Do not purge any scratch files created during the tests. "
+        "This is equivalent to setting QEMU_TEST_KEEP_SCRATCH=1 in the "
+        "environment.",
+    )
     return parser.parse_args()
 
 
@@ -214,6 +221,9 @@ class QemuBaseTest(unittest.TestCase):
         path = os.path.basename(sys.argv[0])[:-3]
         args = parse_args(path)
         self.stdout_handler = None
+        self.keep_scratch = (
+            "QEMU_TEST_KEEP_SCRATCH" in os.environ or args.keep_scratch
+        )
         if args.debug:
             self.stdout_handler = logging.StreamHandler(sys.stdout)
             self.stdout_handler.setLevel(logging.DEBUG)
@@ -255,8 +265,10 @@ class QemuBaseTest(unittest.TestCase):
             self.skipTest('One or more assets is not available')
 
     def tearDown(self):
-        if "QEMU_TEST_KEEP_SCRATCH" not in os.environ:
+        if not self.keep_scratch:
             shutil.rmtree(self.workdir)
+        else:
+            self.log.info(f"Kept scratch files in {self.workdir}")
         if self.socketdir is not None:
             shutil.rmtree(self.socketdir.name)
             self.socketdir = None
