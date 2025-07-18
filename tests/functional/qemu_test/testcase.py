@@ -55,6 +55,14 @@ def parse_args(test_name: str) -> argparse.Namespace:
         action="store_true",
         help="List all tests that would be executed and exit.",
     )
+    parser.add_argument(
+        "-k",
+        dest="test_name_patterns",
+        action="append",
+        type=str,
+        help="Only run tests which match the given substring. "
+        "This argument is passed to unittest.main verbatim.",
+    )
     return parser.parse_args()
 
 
@@ -301,8 +309,12 @@ class QemuBaseTest(unittest.TestCase):
 
         tr = pycotap.TAPTestRunner(message_log = pycotap.LogMode.LogToError,
                                    test_output_log = pycotap.LogMode.LogToError)
+        argv = ["__dummy__", path] + (
+            (["-k"] + args.test_name_patterns)
+            if args.test_name_patterns else []
+        )
         res = unittest.main(module = None, testRunner = tr, exit = False,
-                            argv=["__dummy__", path])
+                            argv=argv)
         for (test, message) in res.result.errors + res.result.failures:
 
             if hasattr(test, "log_filename"):
