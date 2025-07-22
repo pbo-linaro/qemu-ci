@@ -183,7 +183,7 @@ static uint32_t ssi_sd_transfer(SSIPeripheral *dev, uint32_t val)
                 s->response[0] = 1;
                 memcpy(&s->response[1], longresp, 4);
             } else if (s->arglen != 4) {
-                BADF("Unexpected response to cmd %d\n", s->cmd);
+                BADF("Unexpected response to cmd %d, arglen=%d\n", s->cmd, s->arglen);
                 /* Illegal command is about as near as we can get.  */
                 s->arglen = 1;
                 s->response[0] = 4;
