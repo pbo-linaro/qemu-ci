@@ -1,0 +1,45 @@
+Grabbing thread from lore.kernel.org/all/20250722174228.16205-1-j@getutm.app/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/1] tcg/tcti: add TCTI TCG backend for acceleration on non-JIT AArch64
+  ---
+  [32m✓[0m Signed: DKIM/getutm.app
+---
+Total patches: 1
+---
+Applying: tcg/tcti: add TCTI TCG backend for acceleration on non-JIT AArch64
+Patch failed at 0001 tcg/tcti: add TCTI TCG backend for acceleration on non-JIT AArch64
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:1531: trailing whitespace.
+ 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:1626: trailing whitespace.
+    // Note that we name every _host_ register here; but don't 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:1644: trailing whitespace.
+    TCG_MASK_GP_REGISTERS = 0xFFFFul, 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:1657: trailing whitespace.
+    TCG_MASK_VECTOR_REGISTERS = 0xFFFF000000000000ul, 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:2557: trailing whitespace.
+        } 
+error: patch failed: meson.build:53
+error: meson.build: patch does not apply
+error: patch failed: include/accel/tcg/getpc.h:13
+error: include/accel/tcg/getpc.h: patch does not apply
+error: patch failed: include/tcg/tcg-opc.h:40
+error: include/tcg/tcg-opc.h: patch does not apply
+error: patch failed: tcg/optimize.c:2958
+error: tcg/optimize.c: patch does not apply
+error: patch failed: tcg/tcg-op.c:1150
+error: tcg/tcg-op.c: patch does not apply
+error: patch failed: tcg/tcg.c:2145
+error: tcg/tcg.c: patch does not apply
+error: patch failed: tcg/meson.build:27
+error: tcg/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
