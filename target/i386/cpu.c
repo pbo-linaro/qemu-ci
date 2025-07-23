@@ -8723,6 +8723,7 @@ static void x86_cpu_reset_hold(Object *obj, ResetType type)
     env->exception_injected = 0;
     env->exception_has_payload = false;
     env->exception_payload = 0;
+    env->exception_is_nested = false;
     env->nmi_injected = false;
     env->triple_fault_pending = false;
 #if !defined(CONFIG_USER_ONLY)

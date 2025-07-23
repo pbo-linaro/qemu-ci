@@ -54,6 +54,7 @@ typedef struct KvmCpuidInfo {
 bool kvm_is_vm_type_supported(int type);
 bool kvm_has_adjust_clock_stable(void);
 bool kvm_has_exception_payload(void);
+bool kvm_has_exception_nested_flag(void);
 void kvm_synchronize_all_tsc(void);
 
 void kvm_get_apic_state(DeviceState *d, struct kvm_lapic_state *kapic);

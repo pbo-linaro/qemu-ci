@@ -174,6 +174,7 @@ static int has_xsave2;
 static int has_xcrs;
 static int has_sregs2;
 static int has_exception_payload;
+static int has_exception_nested_flag;
 static int has_triple_fault_event;
 
 static bool has_msr_mcg_ext_ctl;
@@ -257,6 +258,11 @@ bool kvm_has_adjust_clock_stable(void)
 bool kvm_has_exception_payload(void)
 {
     return has_exception_payload;
+}
+
+bool kvm_has_exception_nested_flag(void)
+{
+    return has_exception_nested_flag;
 }
 
 static bool kvm_x2apic_api_set_flags(uint64_t flags)
@@ -3075,6 +3081,21 @@ static int kvm_vm_enable_exception_payload(KVMState *s)
     return ret;
 }
 
+static int kvm_vm_enable_exception_nested_flag(KVMState *s)
+{
+    int ret = 0;
+    has_exception_nested_flag = kvm_check_extension(s, KVM_CAP_EXCEPTION_NESTED_FLAG);
+    if (has_exception_nested_flag) {
+        ret = kvm_vm_enable_cap(s, KVM_CAP_EXCEPTION_NESTED_FLAG, 0, true);
+        if (ret < 0) {
+            error_report("kvm: Failed to enable exception nested flag cap: %s",
+                         strerror(-ret));
+        }
+    }
+
+    return ret;
+}
+
 static int kvm_vm_enable_triple_fault_event(KVMState *s)
 {
     int ret = 0;
@@ -3251,6 +3272,11 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
     hv_vpindex_settable = kvm_check_extension(s, KVM_CAP_HYPERV_VP_INDEX);
 
     ret = kvm_vm_enable_exception_payload(s);
+    if (ret < 0) {
+        return ret;
+    }
+
+    ret = kvm_vm_enable_exception_nested_flag(s);
     if (ret < 0) {
         return ret;
     }
@@ -5041,6 +5067,10 @@ static int kvm_put_vcpu_events(X86CPU *cpu, int level)
         events.exception_has_payload = env->exception_has_payload;
         events.exception_payload = env->exception_payload;
     }
+    if (has_exception_nested_flag) {
+        events.flags |= KVM_VCPUEVENT_VALID_NESTED_FLAG;
+        events.exception_is_nested = env->exception_is_nested;
+    }
     events.exception.nr = env->exception_nr;
     events.exception.injected = env->exception_injected;
     events.exception.has_error_code = env->has_error_code;
@@ -5108,6 +5138,11 @@ static int kvm_get_vcpu_events(X86CPU *cpu)
     } else {
         env->exception_pending = 0;
         env->exception_has_payload = false;
+    }
+    if (events.flags & KVM_VCPUEVENT_VALID_NESTED_FLAG) {
+        env->exception_is_nested = events.exception_is_nested;
+    } else {
+        env->exception_is_nested = false;
     }
     env->exception_injected = events.exception.injected;
     env->exception_nr =

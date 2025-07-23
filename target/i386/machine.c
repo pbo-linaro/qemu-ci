@@ -458,6 +458,7 @@ static const VMStateDescription vmstate_exception_info = {
         VMSTATE_UINT8(env.exception_injected, X86CPU),
         VMSTATE_UINT8(env.exception_has_payload, X86CPU),
         VMSTATE_UINT64(env.exception_payload, X86CPU),
+        VMSTATE_UINT8(env.exception_is_nested, X86CPU),
         VMSTATE_END_OF_LIST()
     }
 };
