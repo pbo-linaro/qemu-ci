@@ -86,6 +86,7 @@ enum {
     OPTION_BITMAPS = 275,
     OPTION_FORCE = 276,
     OPTION_SKIP_BROKEN = 277,
+    OPTION_REMOVE_ALL = 278,
 };
 
 typedef enum OutputFormat {
@@ -4992,6 +4993,7 @@ enum ImgBitmapAct {
     BITMAP_ENABLE,
     BITMAP_DISABLE,
     BITMAP_MERGE,
+    BITMAP_REMOVE_ALL,
 };
 typedef struct ImgBitmapAction {
     enum ImgBitmapAct act;
@@ -5010,7 +5012,7 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
     BlockDriverState *bs = NULL, *src_bs = NULL;
     bool image_opts = false;
     int64_t granularity = 0;
-    bool add = false, merge = false;
+    bool add = false, merge = false, remove_all = false, any = false;
     QSIMPLEQ_HEAD(, ImgBitmapAction) actions;
     ImgBitmapAction *act, *act_next;
     const char *op;
@@ -5026,6 +5028,7 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
             {"add", no_argument, 0, OPTION_ADD},
             {"granularity", required_argument, 0, 'g'},
             {"remove", no_argument, 0, OPTION_REMOVE},
+            {"remove-all", no_argument, 0, OPTION_REMOVE_ALL},
             {"clear", no_argument, 0, OPTION_CLEAR},
             {"enable", no_argument, 0, OPTION_ENABLE},
             {"disable", no_argument, 0, OPTION_DISABLE},
@@ -5044,8 +5047,8 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
         switch (c) {
         case 'h':
             cmd_help(ccmd, "[-f FMT | --image-opts]\n"
-"        ( --add [-g SIZE] | --remove | --clear | --enable | --disable |\n"
-"          --merge SOURCE [-b SRC_FILE [-F SRC_FMT]] )..\n"
+"        ( --add [-g SIZE] | --remove | --remove-all | --clear | --enable |\n"
+"          --disable | --merge SOURCE [-b SRC_FILE [-F SRC_FMT]] )..\n"
 "        [--object OBJDEF] FILE BITMAP\n"
 ,
 "  -f, --format FMT\n"
@@ -5060,6 +5063,8 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
 "     with optional multiplier suffix (in powers of 1024)\n"
 "  --remove\n"
 "     removes BITMAP from FILE\n"
+"  --remove-all\n"
+"     removes all bitmaps from FILE\n"
 "  --clear\n"
 "     clears BITMAP in FILE\n"
 "  --enable, --disable\n"
@@ -5089,7 +5094,7 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_ADD;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
-            add = true;
+            add = any = true;
             break;
         case 'g':
             granularity = cvtnum("granularity", optarg, true);
@@ -5101,28 +5106,38 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_REMOVE;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
+            any = true;
+            break;
+        case OPTION_REMOVE_ALL:
+            act = g_new0(ImgBitmapAction, 1);
+            act->act = BITMAP_REMOVE_ALL;
+            QSIMPLEQ_INSERT_TAIL(&actions, act, next);
+            remove_all = true;
             break;
         case OPTION_CLEAR:
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_CLEAR;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
+            any = true;
             break;
         case OPTION_ENABLE:
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_ENABLE;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
+            any = true;
             break;
         case OPTION_DISABLE:
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_DISABLE;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
+            any = true;
             break;
         case OPTION_MERGE:
             act = g_new0(ImgBitmapAction, 1);
             act->act = BITMAP_MERGE;
             act->src = optarg;
             QSIMPLEQ_INSERT_TAIL(&actions, act, next);
-            merge = true;
+            any = merge = true;
             break;
         case 'b':
             src_filename = optarg;
@@ -5139,8 +5154,8 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
     }
 
     if (QSIMPLEQ_EMPTY(&actions)) {
-        error_report("Need at least one of --add, --remove, --clear, "
-                     "--enable, --disable, or --merge");
+        error_report("Need at least one of --add, --remove, --remove-all, "
+                     "--clear, --enable, --disable, or --merge");
         goto out;
     }
 
@@ -5158,8 +5173,12 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
         goto out;
     }
 
-    if (optind != argc - 2) {
+    if (any && optind != argc - 2) {
         error_report("Expecting filename and bitmap name");
+        goto out;
+    }
+    if (!any && remove_all && optind != argc - 1) {
+        error_report("Expecting filename");
         goto out;
     }
 
@@ -5199,6 +5218,18 @@ static int img_bitmap(const img_cmd_t *ccmd, int argc, char **argv)
             qmp_block_dirty_bitmap_remove(bs->node_name, bitmap, &err);
             op = "remove";
             break;
+        case BITMAP_REMOVE_ALL: {
+            while (1) {
+                BdrvDirtyBitmap *bm = bdrv_dirty_bitmap_first(bs);
+                if (bm == NULL) {
+                    break;
+                }
+                qmp_block_dirty_bitmap_remove(bs->node_name,
+                                              bdrv_dirty_bitmap_name(bm), &err);
+            }
+            op = "remove-all";
+            break;
+        }
         case BITMAP_CLEAR:
             qmp_block_dirty_bitmap_clear(bs->node_name, bitmap, &err);
             op = "clear";
