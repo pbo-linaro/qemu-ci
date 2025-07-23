@@ -31,6 +31,11 @@ static void kvm_ipi_access_regs(void *opaque, bool write)
 
     for (cpu = 0; cpu < ipi->num_cpu; cpu++) {
         core = &ipi->cpu[cpu];
+        if (core == NULL || core->cpu == NULL ) {
+            continue;
+        }
+        cpu = core->cpu->cpu_index;
+
         attr = (cpu << 16) | CORE_STATUS_OFF;
         kvm_ipi_access_reg(fd, attr, &core->status, write);
 
