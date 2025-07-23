@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250723094213.2975268-1-dbarboza@ventanamicro.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/1] roms/opensbi: Update to v1.7
+  ---
+  [32m✓[0m Signed: DKIM/ventanamicro.com
+---
+Total patches: 1
+---
+Applying: roms/opensbi: Update to v1.7
+Patch failed at 0001 roms/opensbi: Update to v1.7
+error: cannot apply binary patch to 'pc-bios/opensbi-riscv32-generic-fw_dynamic.bin' without full index line
+error: pc-bios/opensbi-riscv32-generic-fw_dynamic.bin: patch does not apply
+error: cannot apply binary patch to 'pc-bios/opensbi-riscv64-generic-fw_dynamic.bin' without full index line
+error: pc-bios/opensbi-riscv64-generic-fw_dynamic.bin: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
