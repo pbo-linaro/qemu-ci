@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250725202016.21325-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] cpu-target: build compilation unit once for user/system
+  [32m✓[0m [PATCH 2/3] include/exec/target_page.h: move page-target.c to header
+  [32m✓[0m [PATCH 3/3] system/main.c: compile only once
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: cpu-target: build compilation unit once for user/system
+Patch failed at 0001 cpu-target: build compilation unit once for user/system
+error: patch failed: meson.build:3887
+error: meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
