@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250725230849.13026-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Nothing matching that query.
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/3] linux-user/aarch64: Split out signal_for_exception
+  [32m✓[0m [PATCH v2 2/3] linux-user/aarch64: Check syndrome for EXCP_UDEF
+  [32m✓[0m [PATCH v2 3/3] linux-user/aarch64: Generate ESR signal records
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: linux-user/aarch64: Split out signal_for_exception
+Applying: linux-user/aarch64: Check syndrome for EXCP_UDEF
+Applying: linux-user/aarch64: Generate ESR signal records
+Patch failed at 0003 linux-user/aarch64: Generate ESR signal records
+error: patch failed: linux-user/aarch64/signal.c:683
+error: linux-user/aarch64/signal.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
