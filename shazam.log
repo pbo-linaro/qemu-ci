@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/2a89ad4c8f5665d07952a4f1749caa6ec0cd3d9c.1753654515.git.mjt@tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/2] roms/vbootrom: update to 601d410
+  [PATCH 2/2] roms/Makefile: build ast27x0_bootrom
+---
+Total patches: 2
+---
+Applying: roms/vbootrom: update to 601d410
+Applying: roms/Makefile: build ast27x0_bootrom
+Patch failed at 0002 roms/Makefile: build ast27x0_bootrom
+error: patch failed: roms/Makefile:200
+error: roms/Makefile: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
