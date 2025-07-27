@@ -1,0 +1,116 @@
+Grabbing thread from lore.kernel.org/all/20250727080254.83840-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 83 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 13 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/82] target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/82] target/arm: Add in_prot_check to S1Translate
+  [32m✓[0m [PATCH 3/82] target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+  [32m✓[0m [PATCH 4/82] target/arm: Introduce get_phys_addr_for_at
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 5/82] target/arm: Skip AF and DB updates for AccessType_AT
+  [32m✓[0m [PATCH 6/82] target/arm: Add prot_check parameter to do_ats_write
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/82] target/arm: Fill in HFG[RWI]TR_EL2 bits for Arm v9.5
+  [32m✓[0m [PATCH 8/82] target/arm: Remove outdated comment for ZCR_EL12
+  [32m✓[0m [PATCH 9/82] target/arm: Implement FEAT_ATS1A
+  [32m✓[0m [PATCH 10/82] target/arm: Add isar feature test for FEAT_S1PIE, FEAT_S2PIE
+  [32m✓[0m [PATCH 11/82] target/arm: Enable TCR2_ELx.PIE
+  [32m✓[0m [PATCH 12/82] target/arm: Implement PIR_ELx, PIRE0_ELx, S2PIR_EL2 registers
+  [32m✓[0m [PATCH 13/82] target/arm: Force HPD for stage2 translations
+  [32m✓[0m [PATCH 14/82] target/arm: Cache NV1 early in get_phys_addr_lpae
+  [32m✓[0m [PATCH 15/82] target/arm: Populate PIE in aa64_va_parameters
+  [32m✓[0m [PATCH 16/82] target/arm: Implement get_S1prot_indirect
+  [32m✓[0m [PATCH 17/82] target/arm: Implement get_S2prot_indirect
+  [32m✓[0m [PATCH 18/82] target/arm: Do not migrate env->exception
+  [32m✓[0m [PATCH 19/82] target/arm: Expand CPUARMState.exception.syndrome to 64 bits
+  [32m✓[0m [PATCH 20/82] target/arm: Expand syndrome parameter to raise_exception*
+  [32m✓[0m [PATCH 21/82] target/arm: Implement dirtybit check for PIE
+  [32m✓[0m [PATCH 22/82] target/arm: Enable FEAT_S1PIE and FEAT_S2PIE on -cpu max
+  [32m✓[0m [PATCH 23/82] include/hw/core/cpu: Introduce MMUIdxMap
+  [32m✓[0m [PATCH 24/82] include/hw/core/cpu: Introduce cpu_tlb_fast
+  [32m✓[0m [PATCH 25/82] include/hw/core/cpu: Invert the indexing into CPUTLBDescFast
+  [32m✓[0m [PATCH 26/82] target/hppa: Adjust mmu indexes to begin with 0
+  [32m✓[0m [PATCH 27/82] include/exec/memopidx: Adjust for 32 mmu indexes
+  [32m✓[0m [PATCH 28/82] include/hw/core/cpu: Widen MMUIdxMap
+  [32m✓[0m [PATCH 29/82] target/arm: Split out mmuidx.h from cpu.h
+  [32m✓[0m [PATCH 30/82] target/arm: Convert arm_mmu_idx_to_el from switch to table
+  [32m✓[0m [PATCH 31/82] target/arm: Remove unused env argument from regime_el
+  [32m✓[0m [PATCH 32/82] target/arm: Convert regime_el from switch to table
+  [32m✓[0m [PATCH 33/82] target/arm: Convert regime_has_2_ranges from switch to table
+  [32m✓[0m [PATCH 34/82] target/arm: Remove unused env argument from regime_is_pan
+  [32m✓[0m [PATCH 35/82] target/arm: Convert regime_is_pan from switch to table
+  [32m✓[0m [PATCH 36/82] target/arm: Remove unused env argument from regime_is_user
+  [32m✓[0m [PATCH 37/82] target/arm: Convert regime_is_user from switch to table
+  [32m✓[0m [PATCH 38/82] target/arm: Convert arm_mmu_idx_is_stage1_of_2 from switch to table
+  [32m✓[0m [PATCH 39/82] target/arm: Convert regime_is_stage2 to table
+  [32m✓[0m [PATCH 40/82] target/arm: Introduce mmu indexes for GCS
+  [32m✓[0m [PATCH 41/82] target/arm: Introduce regime_to_gcs
+  [32m✓[0m [PATCH 42/82] target/arm: Support page protections for GCS mmu indexes
+  [32m✓[0m [PATCH 43/82] target/arm: Implement gcs bit for data abort
+  [32m✓[0m [PATCH 44/82] target/arm: Add GCS cpregs
+  [32m✓[0m [PATCH 45/82] target/arm: Add GCS enable and trap levels to DisasContext
+  [32m✓[0m [PATCH 46/82] target/arm: Implement FEAT_CHK
+  [32m✓[0m [PATCH 47/82] target/arm: Expand pstate to 64 bits
+  [32m✓[0m [PATCH 48/82] target/arm: Add syndrome data for EC_GCS
+  [32m✓[0m [PATCH 49/82] target/arm: Implement EXLOCKException for ELR_ELx and SPSR_ELx
+  [32m✓[0m [PATCH 50/82] target/arm: Split {arm,core}_user_mem_index
+  [32m✓[0m [PATCH 51/82] target/arm: Introduce delay_exception{_el}
+  [32m✓[0m [PATCH 52/82] target/arm: Emit HSTR trap exception out of line
+  [32m✓[0m [PATCH 53/82] target/arm: Emit v7m LTPSIZE exception out of line
+  [32m✓[0m [PATCH 54/82] target/arm: Implement GCSSTR, GCSSTTR
+  [32m✓[0m [PATCH 55/82] target/arm: Implement GCSB
+  [32m✓[0m [PATCH 56/82] target/arm: Implement GCSPUSHM
+  [32m✓[0m [PATCH 57/82] target/arm: Implement GCSPOPM
+  [32m✓[0m [PATCH 58/82] target/arm: Implement GCSPUSHX
+  [32m✓[0m [PATCH 59/82] target/arm: Implement GCSPOPX
+  [32m✓[0m [PATCH 60/82] target/arm: Implement GCSPOPCX
+  [32m✓[0m [PATCH 61/82] target/arm: Implement GCSSS1
+  [32m✓[0m [PATCH 62/82] target/arm: Implement GCSSS2
+  [32m✓[0m [PATCH 63/82] target/arm: Add gcs record for BL
+  [32m✓[0m [PATCH 64/82] target/arm: Add gcs record for BLR
+  [32m✓[0m [PATCH 65/82] target/arm: Add gcs record for BLR with PAuth
+  [32m✓[0m [PATCH 66/82] target/arm: Load gcs record for RET
+  [32m✓[0m [PATCH 67/82] target/arm: Load gcs record for RET with PAuth
+  [32m✓[0m [PATCH 68/82] target/arm: Copy EXLOCKEn to EXLOCK on exception to the same EL
+  [32m✓[0m [PATCH 69/82] target/arm: Implement EXLOCK check during exception return
+  [32m✓[0m [PATCH 70/82] target/arm: Enable FEAT_GCS with -cpu max
+  [32m✓[0m [PATCH 71/82] linux-user/aarch64: Implement prctls for GCS
+  [32m✓[0m [PATCH 72/82] linux-user/aarch64: Allocate new gcs stack on clone
+  [32m✓[0m [PATCH 73/82] linux-user/aarch64: Release gcs stack on thread exit
+  [32m✓[0m [PATCH 74/82] linux-user/aarch64: Implement map_shadow_stack syscall
+  [32m✓[0m [PATCH 75/82] target/arm: Enable GCSPR_EL0 for read in user-mode
+  [32m✓[0m [PATCH 76/82] linux-user/aarch64: Inject SIGSEGV for GCS faults
+  [32m✓[0m [PATCH 77/82] linux-user/aarch64: Generate GCS signal records
+  [32m✓[0m [PATCH 78/82] linux-user: Change exported get_elf_hwcap to abi_ulong
+  [32m✓[0m [PATCH 79/82] linux-user/aarch64: Enable GCS in HWCAP
+  [32m✓[0m [PATCH 80/82] tests/tcg/aarch64: Add gcsstr
+  [32m✓[0m [PATCH 81/82] tests/tcg/aarch64: Add gcspushm
+  [32m✓[0m [PATCH 82/82] tests/tcg/aarch64: Add gcsss
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 82
+---
+Applying: target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+Applying: target/arm: Add in_prot_check to S1Translate
+Applying: target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+Applying: target/arm: Introduce get_phys_addr_for_at
+Applying: target/arm: Skip AF and DB updates for AccessType_AT
+Applying: target/arm: Add prot_check parameter to do_ats_write
+Applying: target/arm: Fill in HFG[RWI]TR_EL2 bits for Arm v9.5
+Applying: target/arm: Remove outdated comment for ZCR_EL12
+Applying: target/arm: Implement FEAT_ATS1A
+Applying: target/arm: Add isar feature test for FEAT_S1PIE, FEAT_S2PIE
+Patch failed at 0010 target/arm: Add isar feature test for FEAT_S1PIE, FEAT_S2PIE
+error: patch failed: target/arm/cpu-features.h:919
+error: target/arm/cpu-features.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
