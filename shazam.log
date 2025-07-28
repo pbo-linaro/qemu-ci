@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250728181650.165114-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 53 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] target/arm/sme: Reorg SME access handling in handle_msr_i()
+  [32m✓[0m [PATCH 2/9] target/arm/sme: Rebuild hflags in set_pstate() helpers
+  [32m✓[0m [PATCH 3/9] target/arm/sme: Introduce aarch64_set_svcr()
+  [32m✓[0m [PATCH 4/9] target/arm/sme: Reset SVE state in aarch64_set_svcr()
+  [32m✓[0m [PATCH 5/9] target/arm/sme: Reset ZA state in aarch64_set_svcr()
+  [32m✓[0m [PATCH 6/9] target/arm/sme: Rebuild hflags in aarch64_set_svcr()
+  [32m✓[0m [PATCH 7/9] target/arm/sme: Unify set_pstate() SM/ZA helpers as set_svcr()
+  [32m✓[0m [PATCH 8/9] linux-user/aarch64: Clear TPIDR2_EL0 when delivering signals
+  [32m✓[0m [PATCH 9/9] linux-user/aarch64: Support TPIDR2_MAGIC signal frame record
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: target/arm/sme: Reorg SME access handling in handle_msr_i()
+Patch failed at 0001 target/arm/sme: Reorg SME access handling in handle_msr_i()
+error: target/arm/translate-a64.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
