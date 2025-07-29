@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250729165441.1898150-1-dave@stgolabs.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] hw/cxl: Refactor component register initialization
+  [32m✓[0m [PATCH 2/2] hw/cxl: Support Type3 HDM-DB
+  ---
+  [32m✓[0m Signed: DKIM/stgolabs.net
+---
+Total patches: 2
+---
+Applying: hw/cxl: Refactor component register initialization
+Applying: hw/cxl: Support Type3 HDM-DB
+Patch failed at 0002 hw/cxl: Support Type3 HDM-DB
+error: patch failed: hw/cxl/cxl-component-utils.c:123
+error: hw/cxl/cxl-component-utils.c: patch does not apply
+error: patch failed: hw/mem/cxl_type3.c:1541
+error: hw/mem/cxl_type3.c: patch does not apply
+error: patch failed: include/hw/cxl/cxl_component.h:260
+error: include/hw/cxl/cxl_component.h: patch does not apply
+error: patch failed: include/hw/cxl/cxl_device.h:840
+error: include/hw/cxl/cxl_device.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
