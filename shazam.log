@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20250729170800.678363-1-clg@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] roms/vbootrom: update to 7b1eb5f7fe6a
+  [32m✓[0m [PATCH 2/3] roms/Makefile: build ast27x0_bootrom
+  [32m✓[0m [PATCH 3/3] aspeed: Update vbootrom image to commit 183c9ff8056b
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 3
+---
+Applying: roms/vbootrom: update to 7b1eb5f7fe6a
+Applying: roms/Makefile: build ast27x0_bootrom
+Applying: aspeed: Update vbootrom image to commit 183c9ff8056b
+Patch failed at 0003 aspeed: Update vbootrom image to commit 183c9ff8056b
+error: corrupt binary patch at line 349: -- 
+error: No valid patches in input (allow with "--allow-empty")
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
