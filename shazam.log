@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20250729115735.33619-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 41 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/9] target/mips: Only update MVPControl.EVP bit if executed by master VPE
+  [32m✓[0m [PATCH 2/9] hw/display/qxl-render: fix qxl_unpack_chunks() chunk size calculation
+  [32m✓[0m [PATCH 3/9] hw/vfio/vfio-migration: Remove unnecessary 'qemu/typedefs.h' include
+  [32m✓[0m [PATCH 4/9] migration: rename target.c to vfio.c
+  [32m✓[0m [PATCH 5/9] hw/net/cadence_gem: fix register mask initialization
+  [32m✓[0m [PATCH 6/9] hw/xen/passthrough: add missing error-report include
+    + Fixes: cfcacbab38e (xen/passthrough: use gsi to map pirq when dom0 is PVH) ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Bernhard Beschow <shentey@gmail.com> ([32m✓[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH 7/9] system/physmem: fix use-after-free with dispatch
+  [32m✓[0m [PATCH 8/9] roms/Makefile: fix npcmNxx_bootrom build rules
+    + Fixes: 269b7effd90 ("pc-bios: Add NPCM8XX vBootrom") ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/9] hw/display/sm501: fix missing error-report.h
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: target/mips: Only update MVPControl.EVP bit if executed by master VPE
+Applying: hw/display/qxl-render: fix qxl_unpack_chunks() chunk size calculation
+Patch failed at 0002 hw/display/qxl-render: fix qxl_unpack_chunks() chunk size calculation
+error: patch failed: hw/display/qxl-render.c:222
+error: hw/display/qxl-render.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
