@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20250730010122.4193496-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 60 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/11] target/riscv: Fix pmp range wraparound on zero
+  [32m✓[0m [PATCH 2/11] bios-tables-test-allowed-diff.h: Allow RISC-V FADT and MADT changes
+  [32m✓[0m [PATCH 3/11] hw/riscv/virt-acpi-build.c: Update FADT and MADT versions
+  [32m✓[0m [PATCH 4/11] tests/data/acpi/riscv64: Update expected FADT and MADT
+  [32m✓[0m [PATCH 5/11] intc/riscv_aplic: Fix target register read when source is inactive
+  [32m✓[0m [PATCH 6/11] linux-user/strace.list: add riscv_hwprobe entry
+  [32m✓[0m [PATCH 7/11] target/riscv: do not call GETPC() in check_ret_from_m_mode()
+  [32m✓[0m [PATCH 8/11] riscv: Revert "Generate strided vector loads/stores with tcg nodes."
+  [32m✓[0m [PATCH 9/11] target/riscv: Fix exception type when VU accesses supervisor CSRs
+  [32m✓[0m [PATCH 10/11] target/riscv: Restrict mideleg/medeleg/medelegh access to S-mode harts
+  [32m✓[0m [PATCH 11/11] target/riscv: Restrict midelegh access to S-mode harts
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 11
+---
+Applying: target/riscv: Fix pmp range wraparound on zero
+Applying: bios-tables-test-allowed-diff.h: Allow RISC-V FADT and MADT changes
+Applying: hw/riscv/virt-acpi-build.c: Update FADT and MADT versions
+Applying: tests/data/acpi/riscv64: Update expected FADT and MADT
+Patch failed at 0004 tests/data/acpi/riscv64: Update expected FADT and MADT
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/APIC' without full index line
+error: tests/data/acpi/riscv64/virt/APIC: patch does not apply
+error: cannot apply binary patch to 'tests/data/acpi/riscv64/virt/FACP' without full index line
+error: tests/data/acpi/riscv64/virt/FACP: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
