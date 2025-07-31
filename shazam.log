@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/wvOFxYOGozG998LMdn9syqc3Sng8jKqtioxdBZL4uvKMxTF_1_ZCXyZw3VaEA0aKf3qZsQPmHkjMob9ehFRaGpX0Wgd9lApA7oLFnPpyMss%3D@protonmail.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Subject: [PATCH] ui/sdl2: Add SDL clipboard support
+  ---
+  [32m✓[0m Signed: DKIM/protonmail.com
+---
+Total patches: 1
+---
+Applying: ui/sdl2: Add SDL clipboard support
+Patch failed at 0001 ui/sdl2: Add SDL clipboard support
+error: corrupt patch at line 16
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
