@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250801074730.28329-1-shameerkolothum@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/4] target/arm/kvm: Introduce helper to check target impl CPU support
+  [32m✓[0m [PATCH RFC 2/4] target/arm/kvm: Add QAPI struct ArmTargetImplCPU
+  [32m✓[0m [PATCH RFC 3/4] target/arm/kvm: Handle KVM Target Imp CPU hypercalls
+  [32m✓[0m [PATCH RFC 4/4] hw/arm/virt: Add Target Implementation CPU support
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 4
+---
+Applying: target/arm/kvm: Introduce helper to check target impl CPU support
+Patch failed at 0001 target/arm/kvm: Introduce helper to check target impl CPU support
+error: patch failed: target/arm/kvm_arm.h:207
+error: target/arm/kvm_arm.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
