@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250804035849.1305498-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/6] target/loongarch: Add tlb search callback in loongarch_tlb_search()
+  [PATCH 2/6] target/loongarch: Add common API loongarch_tlb_search_cb()
+  [PATCH 3/6] target/loongarch: Use loongarch_tlb_search_cb in helper_invtlb_page_asid_or_g
+  [PATCH 4/6] target/loongarch: Use loongarch_tlb_search_cb in helper_invtlb_page_asid
+  [PATCH 5/6] target/loongarch: Only flush one TLB entry in helper_invtlb_page_asid_or_g
+  [PATCH 6/6] target/loongarch: Only flush one TLB entry in helper_invtlb_page_asid
+---
+Total patches: 6
+---
+ Base: using specified base-commit e5859141b9b6aec9e0a14dacedc9f02fe2f15844
+Applying: target/loongarch: Add tlb search callback in loongarch_tlb_search()
+Applying: target/loongarch: Add common API loongarch_tlb_search_cb()
+Patch failed at 0002 target/loongarch: Add common API loongarch_tlb_search_cb()
+error: patch failed: target/loongarch/tcg/tlb_helper.c:218
+error: target/loongarch/tcg/tlb_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
