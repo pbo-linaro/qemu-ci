@@ -15,6 +15,7 @@
 
 #include <linux/kvm.h>
 
+#include "qemu/cutils.h"
 #include "qemu/timer.h"
 #include "qemu/error-report.h"
 #include "qemu/main-loop.h"
@@ -42,6 +43,8 @@
 #include "target/arm/gtimer.h"
 #include "migration/blocker.h"
 
+#define KVM_ARM_VCPU_PMU_V3_COMPOSITION 5
+
 const KVMCapabilityInfo kvm_arch_required_capabilities[] = {
     KVM_CAP_INFO(DEVICE_CTRL),
     KVM_CAP_LAST_INFO
@@ -51,12 +54,21 @@ static bool cap_has_mp_state;
 static bool cap_has_inject_serror_esr;
 static bool cap_has_inject_ext_dabt;
 
+typedef enum PMU {
+    PMU_NONE,
+    PMU_DEFAULT,
+    PMU_SINGLE,
+    PMU_COMPOSITE
+} PMU;
+
 /**
  * ARMHostCPUFeatures: information about the host CPU (identified
  * by asking the host kernel)
  */
 typedef struct ARMHostCPUFeatures {
     ARMISARegisters isar;
+    PMU pmu;
+    uint32_t pmu_single_type;
     uint64_t features;
     uint32_t target;
     const char *dtb_compatible;
@@ -219,6 +231,251 @@ static bool kvm_arm_pauth_supported(void)
             kvm_check_extension(kvm_state, KVM_CAP_ARM_PTRAUTH_GENERIC));
 }
 
+static bool read_pmu_attr(int fd, const struct dirent *ent, const char *name,
+                          char **buf, size_t *n)
+{
+    FILE *attr_file;
+    g_autofree char *rel_name = g_build_filename(ent->d_name, name, NULL);
+    int attr_fd = openat(fd, rel_name, O_RDONLY);
+    bool ret;
+
+    if (attr_fd < 0) {
+        return false;
+    }
+
+    attr_file = fdopen(attr_fd, "r");
+    assert(attr_file);
+    ret = getline(buf, n, attr_file) >= 0;
+    assert(!fclose(attr_file));
+
+    return ret;
+}
+
+static bool parse_cpus(const char *list, unsigned long **bitmap,
+                       unsigned long *nr)
+{
+    unsigned long start, end;
+
+    bitmap_clear(*bitmap, 0, *nr);
+
+    while (*list && *list != '\n') {
+        if (qemu_strtoul(list, &list, 0, &start) == -EINVAL) {
+            return false;
+        }
+
+        if (*list == '-') {
+            if (qemu_strtoul(list + 1, &list, 0, &end) == -EINVAL) {
+                return false;
+            }
+
+            if (end < start) {
+                return false;
+            }
+        } else {
+            end = start;
+        }
+
+        if (end > *nr) {
+            unsigned long new_nr = ROUND_UP(end, BITS_PER_LONG);
+            *bitmap = g_realloc(*bitmap, new_nr / BITS_PER_BYTE);
+            bitmap_clear(*bitmap, *nr, new_nr);
+            *nr = new_nr;
+        }
+
+        bitmap_set(*bitmap, start, end - start + 1);
+
+        if (*list == ',') {
+            list++;
+        }
+    }
+
+    return true;
+}
+
+static int set_pmu(int fd, uint32_t type)
+{
+    int ret = kvm_device_access(fd, KVM_ARM_VCPU_PMU_V3_CTRL,
+                                KVM_ARM_VCPU_PMU_V3_SET_PMU, &type, true, NULL);
+    trace_kvm_arm_set_pmu(type, ret);
+    return ret;
+}
+
+static PMU choose_pmu(uint32_t *single_type, bool backcompat)
+{
+    DIR *devices = NULL;
+    FILE *file;
+    PMU pmu = PMU_NONE;
+    size_t n = 64;
+    g_autofree char *buf = g_malloc(n);
+    g_autofree unsigned long *possible_cpus = NULL;
+    g_autofree unsigned long *pmu_cpus = NULL;
+    int devices_fd;
+    int fdarray[3];
+    struct dirent *ent;
+    unsigned long npossible_cpus = 0;
+    unsigned long npmu_cpus;
+    ssize_t ret;
+
+    struct kvm_vcpu_init init = {
+        .target = -1,
+        .features[0] = BIT(KVM_ARM_VCPU_PMU_V3),
+    };
+
+    if (backcompat) {
+        return PMU_DEFAULT;
+    }
+
+    file = fopen("/sys/devices/system/cpu/possible", "r");
+    if (!file) {
+        goto out;
+    }
+
+    ret = getline(&buf, &n, file);
+    assert(!fclose(file));
+    if (ret < 0) {
+        goto out;
+    }
+
+    if (!parse_cpus(buf, &possible_cpus, &npossible_cpus)) {
+        goto out;
+    }
+
+    npmu_cpus = npossible_cpus;
+    pmu_cpus = bitmap_new(npmu_cpus);
+
+    if (!kvm_arm_create_scratch_host_vcpu(fdarray, &init)) {
+        goto out;
+    }
+
+    if (kvm_device_check_attr(fdarray[2], KVM_ARM_VCPU_PMU_V3_CTRL,
+                              KVM_ARM_VCPU_PMU_V3_SET_PMU)) {
+        g_autofree char *link = NULL;
+        g_autofree unsigned long *uncovered_cpus = bitmap_new(npossible_cpus);
+
+        bitmap_copy(uncovered_cpus, possible_cpus, npossible_cpus);
+
+        devices = opendir("/sys/bus/event_source/devices");
+        if (!devices) {
+            goto out;
+        }
+
+        devices_fd = dirfd(devices);
+        if (devices_fd < 0) {
+            goto out;
+        }
+
+        while ((ent = readdir(devices))) {
+            unsigned long new_type = ULONG_MAX;
+            const char *endptr;
+
+            /*
+             * Check if this event source exposes type and cpus and
+             * KVM can use it.
+             */
+            if (!read_pmu_attr(devices_fd, ent, "type", &buf, &n) ||
+                qemu_strtoul(buf, &endptr, 0, &new_type) == -EINVAL ||
+                (*endptr && *endptr != '\n') ||
+                !read_pmu_attr(devices_fd, ent, "cpus", &buf, &n) ||
+                !parse_cpus(buf, &pmu_cpus, &npmu_cpus) ||
+                set_pmu(fdarray[2], new_type)) {
+                continue;
+            }
+
+            bitmap_andnot(uncovered_cpus, uncovered_cpus,
+                          pmu_cpus, npossible_cpus);
+
+            if (bitmap_andnot(pmu_cpus, possible_cpus, pmu_cpus,
+                              npossible_cpus)) {
+                continue;
+            }
+
+            /* Order by the device location to ensure stable selection. */
+            while (true) {
+                ret = readlinkat(devices_fd, ent->d_name, buf, n);
+                if (ret < n) {
+                    break;
+                }
+
+                n *= 2;
+                buf = g_realloc(buf, n);
+            }
+
+            if (ret < 0) {
+                continue;
+            }
+
+            buf[ret] = 0;
+
+            if (link && strcmp(link, buf) <= 0) {
+                continue;
+            }
+
+            *single_type = new_type;
+            link = g_realloc(link, ret + 1);
+            strcpy(link, buf);
+        }
+
+        /* Choose an event source covers all PCPUs if available. */
+        if (link) {
+            pmu = PMU_SINGLE;
+            goto out;
+        }
+
+        /*
+         * Choose the composite PMU if all PCPUs are covered by the available
+         * event sources and composition is supported.
+         */
+        if (bitmap_empty(uncovered_cpus, npossible_cpus) &&
+            kvm_device_check_attr(fdarray[2], KVM_ARM_VCPU_PMU_V3_CTRL,
+                                  KVM_ARM_VCPU_PMU_V3_COMPOSITION)) {
+            pmu = PMU_COMPOSITE;
+            goto out;
+        }
+
+        /* No event source that covers all PCPUs was found. */
+        goto out;
+    }
+
+    /*
+     * The old kernels that lack KVM_ARM_VCPU_PMU_V3_SET_PMU only support
+     * armv8-pmu for KVM so inspect it.
+     */
+    devices = opendir("/sys/bus/platform/drivers/armv8-pmu");
+    if (!devices) {
+        goto out;
+    }
+
+    devices_fd = dirfd(devices);
+    if (devices_fd < 0) {
+        goto out;
+    }
+
+    while ((ent = readdir(devices))) {
+        if (!read_pmu_attr(devices_fd, ent, "cpus", &buf, &n) ||
+            !parse_cpus(buf, &pmu_cpus, &npossible_cpus)) {
+            continue;
+        }
+
+        /*
+         * This device is the only available armv8-pmu device if it covers
+         * all PCPUs because an armv8-pmu device occupies fixed system
+         * registers.
+         */
+        if (!bitmap_andnot(pmu_cpus, possible_cpus, pmu_cpus,
+                            npossible_cpus)) {
+            pmu = PMU_DEFAULT;
+            break;
+        }
+    }
+
+out:
+    if (devices) {
+        assert(!closedir(devices));
+    }
+
+    return pmu;
+}
+
 
 static uint64_t idregs_sysreg_to_kvm_reg(ARMSysRegs sysreg)
 {
@@ -242,7 +499,8 @@ static int get_host_cpu_reg(int fd, ARMHostCPUFeatures *ahcf,
     return ret;
 }
 
-static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
+static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf,
+                                          bool backcompat_pmu)
 {
     /* Identify the feature bits corresponding to the host CPU, and
      * fill out the ARMHostCPUClass fields accordingly. To do this
@@ -291,11 +549,17 @@ static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
     if (kvm_arm_pmu_supported()) {
         init.features[0] |= 1 << KVM_ARM_VCPU_PMU_V3;
         pmu_supported = true;
-        features |= 1ULL << ARM_FEATURE_PMU;
     }
 
     if (!kvm_arm_create_scratch_host_vcpu(fdarray, &init)) {
         return false;
+    }
+
+    if (pmu_supported) {
+        ahcf->pmu = choose_pmu(&ahcf->pmu_single_type, backcompat_pmu);
+        if (ahcf->pmu != PMU_NONE) {
+            features |= 1ULL << ARM_FEATURE_PMU;
+        }
     }
 
     ahcf->target = init.target;
@@ -398,12 +662,6 @@ static bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
             ahcf->isar.dbgdidr = dbgdidr;
         }
 
-        if (pmu_supported) {
-            /* PMCR_EL0 is only accessible if the vCPU has feature PMU_V3 */
-            err |= read_sys_reg64(fd, &ahcf->isar.reset_pmcr_el0,
-                                  ARM64_SYS_REG(3, 3, 9, 12, 0));
-        }
-
         if (sve_supported) {
             /*
              * There is a range of kernels between kernel commit 73433762fcae
@@ -447,7 +705,8 @@ void kvm_arm_set_cpu_features_from_host(ARMCPU *cpu)
 
     if (!arm_host_cpu_features.dtb_compatible) {
         if (!kvm_enabled() ||
-            !kvm_arm_get_host_cpu_features(&arm_host_cpu_features)) {
+            !kvm_arm_get_host_cpu_features(&arm_host_cpu_features,
+                                           kvm_state->backcompat_pmu)) {
             /* We can't report this error yet, so flag that we need to
              * in arm_cpu_realizefn().
              */
@@ -1622,8 +1881,53 @@ static void kvm_arch_set_eager_split_size(Object *obj, Visitor *v,
     s->kvm_eager_split_size = value;
 }
 
+static bool kvm_arch_get_backcompat_pmu(Object *obj, Error **errp)
+{
+    KVMState *s = KVM_STATE(obj);
+
+    return s->backcompat_pmu;
+}
+
+static void kvm_arch_set_backcompat_pmu(Object *obj, bool value, Error **errp)
+{
+    KVMState *s = KVM_STATE(obj);
+
+    s->backcompat_pmu = value;
+}
+
+static void kvm_arch_get_pmu(Object *obj, Visitor *v, const char *name,
+                             void *opaque, Error **errp)
+{
+    KVMState *s = KVM_STATE(obj);
+    visit_type_uint64(v, name, &s->pmu, errp);
+}
+
+static void kvm_arch_set_pmu(Object *obj, Visitor *v, const char *name,
+                             void *opaque, Error **errp)
+{
+    KVMState *s = KVM_STATE(obj);
+    uint64_t value;
+
+    if (!visit_type_uint64(v, name, &value, errp)) {
+        return;
+    }
+
+    s->pmu = value;
+}
+
 void kvm_arch_accel_class_init(ObjectClass *oc)
 {
+    ObjectProperty *property;
+
+    object_class_property_add_bool(oc, "backcompat-pmu",
+                                   kvm_arch_get_backcompat_pmu,
+                                   kvm_arch_set_backcompat_pmu);
+
+    property = object_class_property_add(oc, "pmu", "uint64", kvm_arch_get_pmu,
+                                         kvm_arch_set_pmu, NULL, NULL);
+    object_property_set_default_uint(property, UINT64_MAX);
+    object_class_property_set_description(oc, "pmu", "KVM PMU event type");
+
     object_class_property_add(oc, "eager-split-size", "size",
                               kvm_arch_get_eager_split_size,
                               kvm_arch_set_eager_split_size, NULL, NULL);
@@ -1693,12 +1997,13 @@ static bool kvm_arm_set_device_attr(ARMCPU *cpu, struct kvm_device_attr *attr,
 
 void kvm_arm_pmu_init(ARMCPU *cpu)
 {
+    CPUARMState *env = &cpu->env;
     struct kvm_device_attr attr = {
         .group = KVM_ARM_VCPU_PMU_V3_CTRL,
         .attr = KVM_ARM_VCPU_PMU_V3_INIT,
     };
 
-    if (!cpu->has_pmu) {
+    if (!arm_feature(env, ARM_FEATURE_PMU)) {
         return;
     }
     if (!kvm_arm_set_device_attr(cpu, &attr, "PMU")) {
@@ -1709,13 +2014,14 @@ void kvm_arm_pmu_init(ARMCPU *cpu)
 
 void kvm_arm_pmu_set_irq(ARMCPU *cpu, int irq)
 {
+    CPUARMState *env = &cpu->env;
     struct kvm_device_attr attr = {
         .group = KVM_ARM_VCPU_PMU_V3_CTRL,
         .addr = (intptr_t)&irq,
         .attr = KVM_ARM_VCPU_PMU_V3_IRQ,
     };
 
-    if (!cpu->has_pmu) {
+    if (!arm_feature(env, ARM_FEATURE_PMU)) {
         return;
     }
     if (!kvm_arm_set_device_attr(cpu, &attr, "PMU")) {
@@ -1907,6 +2213,20 @@ int kvm_arch_init_vcpu(CPUState *cs)
 
     /* Do KVM_ARM_VCPU_INIT ioctl */
     ret = kvm_arm_vcpu_init(cpu);
+    if (ret) {
+        return ret;
+    }
+
+    if (cs->kvm_state->pmu <= UINT32_MAX) {
+        ret = set_pmu(cs->kvm_fd, cs->kvm_state->pmu);
+    } else if (arm_host_cpu_features.pmu == PMU_SINGLE) {
+        ret = set_pmu(cs->kvm_fd, arm_host_cpu_features.pmu_single_type);
+    } else if (arm_host_cpu_features.pmu == PMU_COMPOSITE) {
+        ret = kvm_device_access(cs->kvm_fd, KVM_ARM_VCPU_PMU_V3_CTRL,
+                                KVM_ARM_VCPU_PMU_V3_COMPOSITION, NULL, true,
+                                NULL);
+        trace_kvm_arm_set_pmu_composition(ret);
+    }
     if (ret) {
         return ret;
     }

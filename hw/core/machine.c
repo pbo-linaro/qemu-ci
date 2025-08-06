@@ -23,6 +23,7 @@
 #include "qemu/madvise.h"
 #include "qom/object_interfaces.h"
 #include "system/cpus.h"
+#include "system/kvm.h"
 #include "system/system.h"
 #include "system/reset.h"
 #include "system/runstate.h"
@@ -38,6 +39,7 @@
 #include "audio/audio.h"
 
 GlobalProperty hw_compat_10_0[] = {
+    { TYPE_KVM_ACCEL, "backcompat-pmu", "true" },
     { "scsi-hd", "dpofua", "off" },
     { "vfio-pci", "x-migration-load-config-after-iter", "off" },
     { "ramfb", "use-legacy-x86-rom", "true"},
