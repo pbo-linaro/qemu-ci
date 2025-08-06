@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20250806055708.196851-1-dave@stgolabs.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] hw/pcie: Support enabling flit mode
+  [32m✓[0m [PATCH 2/4] hw/cxl: Refactor component register initialization
+  [32m✓[0m [PATCH 3/4] hw/cxl: Allow BI by default in Window restrictions
+  [32m✓[0m [PATCH 4/4] hw/cxl: Support Type3 HDM-DB
+  ---
+  [32m✓[0m Signed: DKIM/stgolabs.net
+---
+Total patches: 4
+---
+Applying: hw/pcie: Support enabling flit mode
+Patch failed at 0001 hw/pcie: Support enabling flit mode
+error: patch failed: hw/mem/cxl_type3.c:1540
+error: hw/mem/cxl_type3.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
