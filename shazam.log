@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20250808185905.62776-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] accel: use store_release/load_acquire for cross-thread exit_request
+  [32m✓[0m [PATCH 2/8] accel/hvf: check exit_request before running the vCPU
+  [32m✓[0m [PATCH 3/8] accel: use atomic accesses for exit_request
+  [32m✓[0m [PATCH 4/8] accel/tcg: introduce tcg_kick_vcpu_thread
+  [32m✓[0m [PATCH 5/8] cpus: remove TCG-ism from cpu_exit()
+  [32m✓[0m [PATCH 6/8] cpus: properly kick CPUs out of inner execution loop
+  [32m✓[0m [PATCH 7/8] tcg/user: do not set exit_request gratuitously
+  [32m✓[0m [PATCH 8/8] accel: make all calls to qemu_wait_io_event look the same
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: accel: use store_release/load_acquire for cross-thread exit_request
+Applying: accel/hvf: check exit_request before running the vCPU
+Applying: accel: use atomic accesses for exit_request
+Patch failed at 0003 accel: use atomic accesses for exit_request
+error: patch failed: target/i386/nvmm/nvmm-all.c:414
+error: target/i386/nvmm/nvmm-all.c: patch does not apply
+error: patch failed: target/i386/whpx/whpx-all.c:1489
+error: target/i386/whpx/whpx-all.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
