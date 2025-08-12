@@ -1612,6 +1612,14 @@ bool pmsav8_mpu_lookup(CPUARMState *env, uint32_t address,
 
 void arm_log_exception(CPUState *cs);
 
+/**
+ * host_cpu_feature_supported:
+ * @feature: Feature to test for support
+ *
+ * Returns: whether @feature is supported by hardware accelerator or emulator
+ */
+bool host_cpu_feature_supported(enum arm_features feature);
+
 #endif /* !CONFIG_USER_ONLY */
 
 /*
