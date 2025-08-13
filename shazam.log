@@ -1,0 +1,48 @@
+Grabbing thread from lore.kernel.org/all/cover.1755080613.git.pabeni@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 25 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/13] linux-headers: deal with counted_by annotation
+  [32m✓[0m [PATCH v5 2/13] linux-headers: Update to Linux v6.17-rc1
+  [32m✓[0m [PATCH v5 3/13] virtio: introduce extended features type
+  [32m✓[0m [PATCH v5 4/13] virtio: serialize extended features state
+  [32m✓[0m [PATCH v5 5/13] virtio: add support for negotiating extended features
+  [32m✓[0m [PATCH v5 6/13] virtio-pci: implement support for extended features
+  [32m✓[0m [PATCH v5 7/13] vhost: add support for negotiating extended features
+  [32m✓[0m [PATCH v5 8/13] qmp: update virtio features map to support extended features
+  [32m✓[0m [PATCH v5 9/13] vhost-backend: implement extended features support
+  [32m✓[0m [PATCH v5 10/13] vhost-net: implement extended features support
+  [32m✓[0m [PATCH v5 11/13] virtio-net: implement extended features support
+  [32m✓[0m [PATCH v5 12/13] net: implement tunnel probing
+  [32m✓[0m [PATCH v5 13/13] net: implement UDP tunnel features offloading
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 13
+---
+Applying: linux-headers: deal with counted_by annotation
+Applying: linux-headers: Update to Linux v6.17-rc1
+Applying: virtio: introduce extended features type
+Applying: virtio: serialize extended features state
+Applying: virtio: add support for negotiating extended features
+Applying: virtio-pci: implement support for extended features
+Applying: vhost: add support for negotiating extended features
+Applying: qmp: update virtio features map to support extended features
+Applying: vhost-backend: implement extended features support
+Applying: vhost-net: implement extended features support
+Applying: virtio-net: implement extended features support
+Patch failed at 0011 virtio-net: implement extended features support
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:163: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: patch failed: hw/net/virtio-net.c:786
+error: hw/net/virtio-net.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
