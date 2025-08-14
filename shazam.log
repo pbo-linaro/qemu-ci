@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20250814073624.430928-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/9] target/loongarch: Use auto method with PTW feature
+  [PATCH 2/9] target/loongarch: Add CSR_PWCH write helper function
+  [PATCH 3/9] target/loongarch: Add present and write bit with pte entry
+  [PATCH 4/9] target/loongarch: Add function sptw_prepare_tlb before adding tlb entry
+  [PATCH 5/9] target/loongarch: Add common function get_tlb_random_index()
+  [PATCH 6/9] target/loongarch: Add MMUContext parameter in fill_tlb_entry()
+  [PATCH 7/9] target/loongarch: Add basic hardware PTW support
+  [PATCH 8/9] target/loongarch: Update matched ptw bit A/D with PTW supported
+  [PATCH 9/9] target/loongarch: Add bit A/D checking in TLB entry with PTW supported
+---
+Total patches: 9
+---
+ Base: base-commit e013d94c0fd78e88ca78bc90d323626c97076fd3 not known, ignoring
+Applying: target/loongarch: Use auto method with PTW feature
+Patch failed at 0001 target/loongarch: Use auto method with PTW feature
+error: patch failed: target/loongarch/cpu.c:495
+error: target/loongarch/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
