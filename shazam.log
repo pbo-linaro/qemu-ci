@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/cover.1755287531.git.chao.liu@yeah.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 3 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/2] target/riscv: fix vector register address calculation in strided LD/ST
+  [32m✓[0m [PATCH v2 2/2] tests/tcg/riscv64: Add test for vlsseg8e32 instruction
+  ---
+  [32m✓[0m Signed: DKIM/yeah.net
+---
+Total patches: 2
+---
+Applying: target/riscv: fix vector register address calculation in strided LD/ST
+Patch failed at 0001 target/riscv: fix vector register address calculation in strided LD/ST
+error: patch failed: target/riscv/insn_trans/trans_rvv.c.inc:877
+error: target/riscv/insn_trans/trans_rvv.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
