@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20250815140633.86920-1-vladimir.isaev@syntacore.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] target/riscv: do not use translator_ldl in opcode_at
+  ---
+  [32m✓[0m Signed: DKIM/syntacore.com
+---
+Total patches: 1
+---
+Applying: target/riscv: do not use translator_ldl in opcode_at
+Patch failed at 0001 target/riscv: do not use translator_ldl in opcode_at
+error: patch failed: target/riscv/translate.c:25
+error: target/riscv/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
