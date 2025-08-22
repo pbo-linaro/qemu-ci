@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20250822122655.1353197-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/14] treewide: write "unsigned long int" instead of "long unsigned int"
+  [32m✓[0m [PATCH 2/14] rust: move dependencies to rust/Cargo.toml
+  [32m✓[0m [PATCH 3/14] trace/ftrace: move snprintf+write from tracepoints to ftrace.c
+  [32m✓[0m [PATCH 4/14] tracetool: add CHECK_TRACE_EVENT_GET_STATE
+  [32m✓[0m [PATCH 5/14] tracetool/backend: remove redundant trace event checks
+  [32m✓[0m [PATCH 6/14] tracetool: Add Rust format support
+  [32m✓[0m [PATCH 7/14] rust: add trace crate
+  [32m✓[0m [PATCH 8/14] rust: qdev: add minimal clock bindings
+  [32m✓[0m [PATCH 9/14] rust: pl011: add tracepoints
+  [32m✓[0m [PATCH 10/14] tracetool/simple: add Rust support
+  [32m✓[0m [PATCH 11/14] log: change qemu_loglevel to unsigned
+  [32m✓[0m [PATCH 12/14] tracetool/log: add Rust support
+  [32m✓[0m [PATCH 13/14] tracetool/ftrace: add Rust support
+  [32m✓[0m [PATCH 14/14] tracetool/syslog: add Rust support
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 14
+---
+Applying: treewide: write "unsigned long int" instead of "long unsigned int"
+Applying: rust: move dependencies to rust/Cargo.toml
+Patch failed at 0002 rust: move dependencies to rust/Cargo.toml
+error: patch failed: rust/Cargo.toml:15
+error: rust/Cargo.toml: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
