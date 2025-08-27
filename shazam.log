@@ -1,0 +1,85 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.0.4-20250827180051@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 60 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 720 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/59] host-utils: Drop workaround for buggy Apple Clang __builtin_subcll()
+  [PATCH 2/59] hw/display/qxl-render.c: fix qxl_unpack_chunks() chunk size calculation
+  [PATCH 3/59] target/i386: fix width of third operand of VINSERTx128
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Tested-by: Guenter Roeck <linux@roeck-us.net> ([31m✗[0m DKIM/gmail.com)
+    + Fixes: 79068477686 ("target/i386: reimplement 0x0f 0x3a, add AVX") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 4/59] linux-user/aarch64: Clear TPIDR2_EL0 when delivering signals
+  [PATCH 5/59] linux-user/aarch64: Support TPIDR2_MAGIC signal frame record
+  [PATCH 6/59] docs/user: clarify user-mode expects the same OS
+  [PATCH 7/59] target/mips: Only update MVPControl.EVP bit if executed by master VPE
+  [PATCH 8/59] hw/net/cadence_gem: fix register mask initialization
+  [PATCH 9/59] system/physmem: fix use-after-free with dispatch
+  [PATCH 10/59] roms/Makefile: fix npcmNxx_bootrom build rules
+    + Fixes: 269b7effd90 ("pc-bios: Add NPCM8XX vBootrom") ([31m✗[0m DKIM/linaro.org)
+  [PATCH 11/59] linux-user/strace.list: add riscv_hwprobe entry
+  [PATCH 12/59] target/riscv: do not call GETPC() in check_ret_from_m_mode()
+  [PATCH 13/59] target/riscv: Fix exception type when VU accesses supervisor CSRs
+  [PATCH 14/59] target/riscv: Fix pmp range wraparound on zero
+  [PATCH 15/59] intc/riscv_aplic: Fix target register read when source is inactive
+  [PATCH 16/59] target/riscv: Restrict mideleg/medeleg/medelegh access to S-mode harts
+  [PATCH 17/59] target/riscv: Restrict midelegh access to S-mode harts
+  [PATCH 18/59] target/loongarch: Fix valid virtual address checking
+  [PATCH 19/59] virtio: fix off-by-one and invalid access in virtqueue_ordered_fill
+  [PATCH 20/59] vhost: Do not abort on log-start error
+  [PATCH 21/59] vhost: Do not abort on log-stop error
+  [PATCH 22/59] virtio-net: Fix VLAN filter table reset timing
+  [PATCH 23/59] pcie_sriov: Fix configuration and state synchronization
+  [PATCH 24/59] intel_iommu: Allow both Status Write and Interrupt Flag in QI wait
+  [PATCH 25/59] hw/i386/amd_iommu: Move IOAPIC memory region initialization to the end
+  [PATCH 26/59] hw/intc/arm_gicv3_kvm: Write all 1's to clear enable/active
+  [PATCH 27/59] target/arm: Fix big-endian handling of NEON gdb remote debugging
+  [PATCH 28/59] target/arm: Fix handling of setting SVE registers from gdb
+  [PATCH 29/59] hw/ssi/aspeed_smc: Fix incorrect FMC_WDT2 register read on AST1030
+  [PATCH 30/59] target/arm: add support for 64-bit PMCCNTR in AArch32 mode
+  [PATCH 31/59] scripts/make-release: Go back to cloning all the EDK2 submodules
+  [PATCH 32/59] qga: correctly write to /sys/power/state on linux
+  [PATCH 33/59] Revert "i386/cpu: Fix cpu number overflow in CPUID.01H.EBX[23:16]"
+  [PATCH 34/59] i386/cpu: Move adjustment of CPUID_EXT_PDCM before feature_dependencies[] check
+  [PATCH 35/59] i386/cpu: Fix number of addressable IDs field for CPUID.01H.EBX[23:16]
+  [PATCH 36/59] i386/cpu: Fix cpu number overflow in CPUID.01H.EBX[23:16]
+  [PATCH 37/59] target/i386/cpu: Move addressable ID encoding out of compat property in CPUID[0x1]
+  [PATCH 38/59] ppc/xive: Fix xive trace event output
+  [PATCH 39/59] ppc/xive: Report access size in XIVE TM operation error logs
+  [PATCH 40/59] ppc/xive2: Fix calculation of END queue sizes
+  [PATCH 41/59] ppc/xive2: Remote VSDs need to match on forwarding address
+  [PATCH 42/59] ppc/xive2: fix context push calculation of IPB priority
+  [PATCH 43/59] ppc/xive: Fix PHYS NSR ring matching
+  [PATCH 44/59] ppc/xive2: Reset Generation Flipped bit on END Cache Watch
+  [PATCH 45/59] ppc/xive2: Fix irq preempted by lower priority group irq
+  [PATCH 46/59] ppc/xive2: Fix treatment of PIPR in CPPR update
+  [PATCH 47/59] ui/curses: Fix infinite loop on windows
+  [PATCH 48/59] target/loongarch: Fix [X]VLDI raising exception incorrectly
+  [PATCH 49/59] hw/nvme: fix namespace attachment
+  [PATCH 50/59] hw/nvme: revert CMIC behavior
+  [PATCH 51/59] hw/nvme: cap MDTS value for internal limitation
+  [PATCH 52/59] rbd: Fix .bdrv_get_specific_info implementation
+  [PATCH 53/59] qemu-iotests: Ignore indentation in Killed messages
+  [PATCH 54/59] hw/sd/ssi-sd: Return noise (dummy byte) when no card connected
+  [PATCH 55/59] mkvenv: Support pip 25.2
+  [PATCH 56/59] hw/uefi: clear uefi-vars buffer in uefi_vars_write callback
+  [PATCH 57/59] hw/uefi: return success for notifications
+  [PATCH 58/59] hw/uefi: check access for first variable
+  [PATCH 59/59] hw/uefi: open json file in binary mode
+---
+Total patches: 59
+---
+Applying: host-utils: Drop workaround for buggy Apple Clang __builtin_subcll()
+Patch failed at 0001 host-utils: Drop workaround for buggy Apple Clang __builtin_subcll()
+error: patch failed: include/qemu/compiler.h:182
+error: include/qemu/compiler.h: patch does not apply
+error: patch failed: include/qemu/host-utils.h:677
+error: include/qemu/host-utils.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
