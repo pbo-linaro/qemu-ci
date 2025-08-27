@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.20-20250827180339@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 173 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/18] hw/display/qxl-render.c: fix qxl_unpack_chunks() chunk size calculation
+  [PATCH 2/18] target/i386: fix width of third operand of VINSERTx128
+  [PATCH 3/18] target/arm/sme: Reorg SME access handling in handle_msr_i()
+  [PATCH 4/18] target/arm/sme: Rebuild hflags in set_pstate() helpers
+  [PATCH 5/18] target/arm/sme: Introduce aarch64_set_svcr()
+  [PATCH 6/18] target/arm/sme: Reset SVE state in aarch64_set_svcr()
+  [PATCH 7/18] target/arm/sme: Reset ZA state in aarch64_set_svcr()
+  [PATCH 8/18] target/arm/sme: Rebuild hflags in aarch64_set_svcr()
+  [PATCH 9/18] target/arm/sme: Unify set_pstate() SM/ZA helpers as set_svcr()
+  [PATCH 10/18] linux-user/aarch64: Support TPIDR2_MAGIC signal frame record
+  [PATCH 11/18] target/mips: Only update MVPControl.EVP bit if executed by master VPE
+  [PATCH 12/18] hw/net/cadence_gem: fix register mask initialization
+  [PATCH 13/18] hw/intc/arm_gicv3_kvm: Write all 1's to clear enable/active
+  [PATCH 14/18] target/arm: Fix big-endian handling of NEON gdb remote debugging
+  [PATCH 15/18] target/arm: Fix handling of setting SVE registers from gdb
+  [PATCH 16/18] hw/ssi/aspeed_smc: Fix incorrect FMC_WDT2 register read on AST1030
+  [PATCH 17/18] qemu-iotests: Ignore indentation in Killed messages
+  [PATCH 18/18] hw/sd/ssi-sd: Return noise (dummy byte) when no card connected
+---
+Total patches: 18
+---
+Applying: hw/display/qxl-render.c: fix qxl_unpack_chunks() chunk size calculation
+Patch failed at 0001 hw/display/qxl-render.c: fix qxl_unpack_chunks() chunk size calculation
+error: patch failed: hw/display/qxl-render.c:222
+error: hw/display/qxl-render.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
