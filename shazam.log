@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/CAATJJ0%2B%2BoPyjgXsekOKpHosps4jTpe9p9TWGGDpb2igbf6iipw@mail.gmail.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Weird conflict with gcc-15
+  ---
+  [32m✓[0m Signed: DKIM/canonical.com
+---
+Total patches: 1
+---
+Applying: Weird conflict with gcc-15
+Patch failed at 0001 Weird conflict with gcc-15
+error: corrupt patch at line 6
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
