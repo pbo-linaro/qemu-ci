@@ -1,0 +1,74 @@
+Grabbing thread from lore.kernel.org/all/20250828113430.3214314-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 33 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 104 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/32] target/arm: Clean up of register field definitions
+  [32m✓[0m [PATCH 2/32] tests/functional/test_aarch64_device_passthrough: update image
+  [32m✓[0m [PATCH 3/32] tests/functional/test_aarch64_rme: update image
+  [32m✓[0m [PATCH 4/32] target/arm: Implement FEAT_SCTLR2 and enable with -cpu max
+  [32m✓[0m [PATCH 5/32] target/arm: Implement FEAT_TCR2 and enable with -cpu max
+  [32m✓[0m [PATCH 6/32] hw/intc/arm_gicv3_kvm: preserve pending interrupts during cpr
+  [32m✓[0m [PATCH 7/32] target/arm: Trap PMCR when MDCR_EL2.TPMCR is set
+  [32m✓[0m [PATCH 8/32] target/arm: Add feature predicate for FEAT_CSSC
+  [32m✓[0m [PATCH 9/32] target/arm: Implement MIN/MAX (immediate)
+  [32m✓[0m [PATCH 10/32] target/arm: Implement MIN/MAX (register)
+  [32m✓[0m [PATCH 11/32] target/arm: Split out gen_wrap2_i32 helper
+  [32m✓[0m [PATCH 12/32] target/arm: Implement CTZ, CNT, ABS
+  [32m✓[0m [PATCH 13/32] target/arm: Enable FEAT_CSSC for -cpu max
+  [32m✓[0m [PATCH 14/32] hw/arm: add static NVDIMMs in device tree
+  [32m✓[0m [PATCH 15/32] scripts/kernel-doc: Avoid new Perl precedence warning
+  [32m✓[0m [PATCH 16/32] docs/sphinx/kerneldoc.py: Handle new LINENO syntax
+  [32m✓[0m [PATCH 17/32] tests/qtest/libqtest.h: Remove stray space from doc comment
+  [32m✓[0m [PATCH 18/32] scripts: Import Python kerneldoc from Linux kernel
+  [32m✓[0m [PATCH 19/32] scripts/kernel-doc: strip QEMU_ from function definitions
+  [32m✓[0m [PATCH 20/32] scripts/kernel-doc: tweak for QEMU coding standards
+  [32m✓[0m [PATCH 21/32] scripts/kerneldoc: Switch to the Python kernel-doc script
+  [32m✓[0m [PATCH 22/32] scripts/kernel-doc: Delete the old Perl kernel-doc script
+  [32m✓[0m [PATCH 23/32] MAINTAINERS: Put kernel-doc under the "docs build machinery" section
+  [32m✓[0m [PATCH 24/32] target/arm: Correct condition of aa64_atomics feature function
+  [32m✓[0m [PATCH 25/32] qemu/atomic: Finish renaming atomic128-cas.h headers
+  [32m✓[0m [PATCH 26/32] qemu/atomic: Add atomic16 primitives for xchg, fetch_and, fetch_or
+  [32m✓[0m [PATCH 27/32] accel/tcg: Add cpu_atomic_*_mmu for 16-byte xchg, fetch_and, fetch_or
+  [32m✓[0m [PATCH 28/32] tcg: Add tcg_gen_atomic_{xchg,fetch_and,fetch_or}_i128
+  [32m✓[0m [PATCH 29/32] target/arm: Rename isar_feature_aa64_atomics
+  [32m✓[0m [PATCH 30/32] target/arm: Implement FEAT_LSE128
+  [32m✓[0m [PATCH 31/32] target/arm: Enable FEAT_LSE128 for -cpu max
+  [32m✓[0m [PATCH 32/32] hw/arm/stm32f205_soc: Don't leak TYPE_OR_IRQ objects
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 32
+---
+Applying: target/arm: Clean up of register field definitions
+Applying: tests/functional/test_aarch64_device_passthrough: update image
+Applying: tests/functional/test_aarch64_rme: update image
+Applying: target/arm: Implement FEAT_SCTLR2 and enable with -cpu max
+Applying: target/arm: Implement FEAT_TCR2 and enable with -cpu max
+Applying: hw/intc/arm_gicv3_kvm: preserve pending interrupts during cpr
+Applying: target/arm: Trap PMCR when MDCR_EL2.TPMCR is set
+Applying: target/arm: Add feature predicate for FEAT_CSSC
+Applying: target/arm: Implement MIN/MAX (immediate)
+Applying: target/arm: Implement MIN/MAX (register)
+Applying: target/arm: Split out gen_wrap2_i32 helper
+Applying: target/arm: Implement CTZ, CNT, ABS
+Applying: target/arm: Enable FEAT_CSSC for -cpu max
+Applying: hw/arm: add static NVDIMMs in device tree
+Applying: scripts/kernel-doc: Avoid new Perl precedence warning
+Applying: docs/sphinx/kerneldoc.py: Handle new LINENO syntax
+Applying: tests/qtest/libqtest.h: Remove stray space from doc comment
+Applying: scripts: Import Python kerneldoc from Linux kernel
+Applying: scripts/kernel-doc: strip QEMU_ from function definitions
+Applying: scripts/kernel-doc: tweak for QEMU coding standards
+Applying: scripts/kerneldoc: Switch to the Python kernel-doc script
+Applying: scripts/kernel-doc: Delete the old Perl kernel-doc script
+Patch failed at 0022 scripts/kernel-doc: Delete the old Perl kernel-doc script
+error: kernel-doc: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
