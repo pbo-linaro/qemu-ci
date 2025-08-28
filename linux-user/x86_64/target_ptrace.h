@@ -23,7 +23,7 @@ struct target_user_regs_struct {
     abi_ulong dx;
     abi_ulong si;
     abi_ulong di;
-    abi_ulong orig_rax;
+    abi_ulong orig_ax;
     abi_ulong ip;
     abi_ulong cs;
     abi_ulong flags;
