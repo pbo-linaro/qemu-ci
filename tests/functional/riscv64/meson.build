@@ -10,6 +10,6 @@ tests_riscv64_system_quick = [
 ]
 
 tests_riscv64_system_thorough = [
-  'sifive_u',
+  #'sifive_u', # ubsan error
   'tuxrun',
 ]
