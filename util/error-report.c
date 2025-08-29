@@ -25,8 +25,6 @@ typedef enum {
     REPORT_TYPE_INFO,
 } report_type;
 
-bool error_with_guestname;
-const char *error_guest_name;
 
 int error_printf(const char *fmt, ...)
 {
@@ -182,11 +180,6 @@ static void vreport(report_type type, const char *fmt, va_list ap)
 
     if (context != NULL) {
         error_printf("%s", context);
-    }
-
-    /* Only prepend guest name if -msg guest-name and -name guest=... are set */
-    if (error_with_guestname && error_guest_name && !monitor_cur()) {
-        error_printf("%s ", error_guest_name);
     }
 
     print_loc();
