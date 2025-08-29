@@ -44,15 +44,28 @@ char *qmessage_context(int flags)
         pgnamestr = g_get_prgname();
     }
 
-    if (!timestr && !wknamestr && !pgnamestr) {
-        return NULL;
-    }
+    if (message_format & QMESSAGE_FORMAT_THREAD_INFO) {
+        int thid = qemu_get_thread_id();
+        const char *thname = qemu_thread_get_name();
 
-    return g_strdup_printf("%s%s%s%s%s%s",
-                           timestr ? timestr : "",
-                           timestr ? " " : "",
-                           wknamestr ? wknamestr : "",
-                           wknamestr ? " " : "",
-                           pgnamestr ? pgnamestr : "",
-                           pgnamestr ? ": " : "");
+        return g_strdup_printf("%s%s%s%s%s(%d:%s): ",
+                               timestr ? timestr : "",
+                               timestr ? " " : "",
+                               wknamestr ? wknamestr : "",
+                               wknamestr ? " " : "",
+                               pgnamestr ? pgnamestr : "",
+                               thid, thname);
+    } else {
+        if (!timestr && !wknamestr && !pgnamestr) {
+            return NULL;
+        }
+
+        return g_strdup_printf("%s%s%s%s%s%s",
+                               timestr ? timestr : "",
+                               timestr ? " " : "",
+                               wknamestr ? wknamestr : "",
+                               wknamestr ? " " : "",
+                               pgnamestr ? pgnamestr : "",
+                               pgnamestr ? ": " : "");
+    }
 }
