@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20250830045006.380393-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2] target/arm: Rename isar_feature_aa64_atomics
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: target/arm: Rename isar_feature_aa64_atomics
+Patch failed at 0001 target/arm: Rename isar_feature_aa64_atomics
+error: patch failed: target/arm/cpu-features.h:406
+error: target/arm/cpu-features.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
