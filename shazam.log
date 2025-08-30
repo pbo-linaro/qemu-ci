@@ -1,0 +1,58 @@
+Grabbing thread from lore.kernel.org/all/20250829152909.1589668-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 36 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] target/ppc: limit cpu_interrupt_exittb to system emulation
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/18] target/sparc: limit cpu_check_irqs to system emulation
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 3/18] target/i386: limit a20 to system emulation
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/18] target-arm: remove uses of cpu_interrupt() for user-mode emulation
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 5/18] user-exec: remove cpu_interrupt() stub
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/18] treewide: clear bits of cs->interrupt_request with cpu_reset_interrupt()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/18] cpu-common: use atomic access for interrupt_request
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 8/18] cpus: document that qemu_cpu_kick() can be used for BQL-less operation
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/18] accel: use store_release/load_acquire for cross-thread exit_request
+  [32m✓[0m [PATCH 10/18] accel: use atomic accesses for exit_request
+  [32m✓[0m [PATCH 11/18] accel/tcg: create a thread-kick function for TCG
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 12/18] accel/tcg: inline cpu_exit()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 13/18] cpus: remove TCG-ism from cpu_exit()
+  [32m✓[0m [PATCH 14/18] cpus: properly kick CPUs out of inner execution loop
+  [32m✓[0m [PATCH 15/18] bsd-user, linux-user: introduce qemu_wait_io_event
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 16/18] cpus: clear exit_request in qemu_wait_io_event
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 17/18] accel: make all calls to qemu_wait_io_event look the same
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 18/18] tcg/user: do not set exit_request gratuitously
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 18
+---
+Applying: target/ppc: limit cpu_interrupt_exittb to system emulation
+Applying: target/sparc: limit cpu_check_irqs to system emulation
+Applying: target/i386: limit a20 to system emulation
+Applying: target-arm: remove uses of cpu_interrupt() for user-mode emulation
+Patch failed at 0004 target-arm: remove uses of cpu_interrupt() for user-mode emulation
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:414: new blank line at EOF.
++
+error: patch failed: target/arm/cpu.c:680
+error: target/arm/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
