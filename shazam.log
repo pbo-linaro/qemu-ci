@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20250830025025.3610-1-hibriansong@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] export/fuse: add opt to enable FUSE-over-io_uring
+  [32m✓[0m [PATCH 2/4] export/fuse: process FUSE-over-io_uring requests
+  [32m✓[0m [PATCH 3/4] export/fuse: Safe termination for FUSE-uring
+  [32m✓[0m [PATCH 4/4] iotests: add tests for FUSE-over-io_uring
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 4
+---
+Applying: export/fuse: add opt to enable FUSE-over-io_uring
+Patch failed at 0001 export/fuse: add opt to enable FUSE-over-io_uring
+error: patch failed: block/export/fuse.c:48
+error: block/export/fuse.c: patch does not apply
+error: patch failed: util/fdmon-io_uring.c:452
+error: util/fdmon-io_uring.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
