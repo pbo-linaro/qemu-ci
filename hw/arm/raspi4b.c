@@ -47,7 +47,7 @@ static int raspi_add_memory_node(void *fdt, hwaddr mem_base, hwaddr mem_len)
     scells = qemu_fdt_getprop_cell(fdt, "/", "#size-cells",
                                    NULL, &error_fatal);
     if (acells == 0 || scells == 0) {
-        fprintf(stderr, "dtb file invalid (#address-cells or #size-cells 0)\n");
+        error_report("dtb file invalid (#address-cells or #size-cells 0)");
         ret = -1;
     } else {
         qemu_fdt_add_subnode(fdt, nodename);
