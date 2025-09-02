@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20250902103010.309094-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/4] util: Introduce LogOutput
+  [32m✓[0m [PATCH RFC 2/4] util: Drop QMESSAGE_CONTEXT_SKIP_MONITOR
+  [32m✓[0m [PATCH RFC 3/4] util/message: Use LogOutput
+  [32m✓[0m [PATCH RFC 4/4] util/error-report: Use LogOutput in vreport
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: util: Introduce LogOutput
+Applying: util: Drop QMESSAGE_CONTEXT_SKIP_MONITOR
+Patch failed at 0002 util: Drop QMESSAGE_CONTEXT_SKIP_MONITOR
+error: include/qemu/message.h: does not exist in index
+error: patch failed: util/error-report.c:172
+error: util/error-report.c: patch does not apply
+error: patch failed: util/log.c:161
+error: util/log.c: patch does not apply
+error: util/message.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
