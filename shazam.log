@@ -1,0 +1,101 @@
+Grabbing thread from lore.kernel.org/all/20250902034847.1948010-1-brian.cain@oss.qualcomm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 40 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 112 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/39] target/hexagon: Implement ciad helper
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 2/39] target/hexagon: Implement {c,}swi helpers
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 3/39] target/hexagon: Implement iassign{r,w} helpers
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 4/39] target/hexagon: Implement start/stop helpers, soft reset
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 5/39] target/hexagon: Implement modify SSR
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 6/39] target/hexagon: Implement {g,s}etimask helpers
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 7/39] target/hexagon: Implement wait helper
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 8/39] target/hexagon: Implement get_exe_mode()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 9/39] target/hexagon: Implement arch_get_system_reg()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [31m✗[0m [PATCH v2 10/39] target/hexagon: Implement arch_{s, g}et_{thread, system}_reg()
+    [31m✗[0m BADSIG: DKIM/qualcomm.com
+  [32m✓[0m [PATCH v2 11/39] target/hexagon: Add representation to count cycles
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 12/39] target/hexagon: Add implementation of cycle counters
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 13/39] target/hexagon: Implement modify_syscfg()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 14/39] target/hexagon: Implement hex_tlb_entry_get_perm()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 15/39] target/hexagon: Implement hex_tlb_lookup_by_asid()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 16/39] target/hexagon: Implement software interrupt
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 17/39] target/hexagon: Implement exec_interrupt, set_irq
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 18/39] target/hexagon: add simple cpu_exec_reset and pointer_wrap
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 19/39] target/hexagon: Implement hexagon_tlb_fill()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 20/39] target/hexagon: Implement siad inst
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 21/39] target/hexagon: Implement hexagon_resume_threads()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 22/39] target/hexagon: Implement setprio, resched
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 23/39] target/hexagon: Add sysemu_ops, cpu_get_phys_page_debug()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 24/39] target/hexagon: Add exec-start-addr prop
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 25/39] target/hexagon: extend hexagon_cpu_mmu_index() for sysemu
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 26/39] target/hexagon: Decode trap1, rte as COF
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 27/39] target/hexagon: Implement hexagon_find_last_irq()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 28/39] target/hexagon: Implement modify_ssr, resched, pending_interrupt
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 29/39] target/hexagon: Add pkt_ends_tb to translation
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 30/39] target/hexagon: Add next_PC, {s,g}reg writes
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 31/39] target/hexagon: Add implicit sysreg writes
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 32/39] target/hexagon: Define system, guest reg names
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+    + Reviewed-by: Taylor Simpson <ltaylorsimpson@gmail.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH v2 33/39] target/hexagon: initialize sys/guest reg TCGvs
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 34/39] target/hexagon: Add TLB, k0 {un,}lock
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+    + Reviewed-by: Taylor Simpson <ltaylorsimpson@gmail.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH v2 35/39] target/hexagon: Define gen_precise_exception()
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 36/39] target/hexagon: Add TCG overrides for transfer insts
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 37/39] target/hexagon: Add support for loadw_phys
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+  [32m✓[0m [PATCH v2 38/39] target/hexagon: Add guest reg reading functionality
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+    + Reviewed-by: Taylor Simpson <ltaylorsimpson@gmail.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH v2 39/39] target/hexagon: Add pcycle setting functionality
+    [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+---
+Total patches: 39
+---
+Applying: target/hexagon: Implement ciad helper
+Patch failed at 0001 target/hexagon: Implement ciad helper
+error: patch failed: target/hexagon/op_helper.c:34
+error: target/hexagon/op_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
