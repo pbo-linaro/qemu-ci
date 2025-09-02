@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20250902034951.1948194-1-brian.cain@oss.qualcomm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 32 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/11] hw/hexagon: Add globalreg model
+  [32m✓[0m [PATCH v2 2/11] hw/hexagon: Add global register tracing
+  [32m✓[0m [PATCH v2 3/11] hw/hexagon: Add machine configs for sysemu
+  [32m✓[0m [PATCH v2 4/11] hw/hexagon: Add v68, sa8775-cdsp0 defs
+  [32m✓[0m [PATCH v2 5/11] hw/hexagon: Add support for cfgbase
+  [32m✓[0m [PATCH v2 6/11] hw/hexagon: Modify "Standalone" symbols
+  [32m✓[0m [PATCH v2 7/11] target/hexagon: add build config for softmmu
+  [32m✓[0m [PATCH v2 8/11] hw/hexagon: Define hexagon "virt" machine
+  [32m✓[0m [PATCH v2 9/11] tests/qtest: Add hexagon boot-serial-test
+  [32m✓[0m [PATCH v2 10/11] hw/timer: Add QTimer device
+  [32m✓[0m [PATCH v2 11/11] hw/intc: Add l2vic interrupt controller
+  ---
+  [32m✓[0m Signed: DKIM/qualcomm.com (From: brian.cain@oss.qualcomm.com)
+---
+Total patches: 11
+---
+Applying: hw/hexagon: Add globalreg model
+Patch failed at 0001 hw/hexagon: Add globalreg model
+error: patch failed: target/hexagon/cpu.h:197
+error: target/hexagon/cpu.h: patch does not apply
+error: patch failed: target/hexagon/cpu.c:70
+error: target/hexagon/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
