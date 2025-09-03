@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20250903100702.16726-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/24] target/arm/hvf: Release memory allocated by hv_vcpu_config_create()
+  [32m✓[0m [PATCH 2/24] target/arm/hvf: Check hv_vcpus_exit() returned value
+  [32m✓[0m [PATCH 3/24] target/arm/hvf: Check hv_vcpu_set_vtimer_mask() returned value
+  [32m✓[0m [PATCH 4/24] accel/hvf: Rename hvf_vcpu_exec() -> hvf_arch_vcpu_exec()
+  [32m✓[0m [PATCH 5/24] accel/hvf: Rename hvf_put|get_registers -> hvf_arch_put|get_registers
+  [32m✓[0m [PATCH 6/24] target/arm/hvf: Mention flush_cpu_state() must run on vCPU thread
+  [32m✓[0m [PATCH 7/24] accel/hvf: Mention hvf_arch_init_vcpu() must run on vCPU thread
+  [32m✓[0m [PATCH 8/24] target/arm/hvf: Mention hvf_wfi() must run on vCPU thread
+  [32m✓[0m [PATCH 9/24] target/arm/hvf: Mention hvf_sync_vtimer() must run on vCPU thread
+  [32m✓[0m [PATCH 10/24] target/arm/hvf: Mention hvf_arch_set_traps() must run on vCPU thread
+  [32m✓[0m [PATCH 11/24] accel/hvf: Mention hvf_arch_update_guest_debug() must run on vCPU
+  [32m✓[0m [PATCH 12/24] target/arm/hvf: Mention hvf_inject_interrupts() must run on vCPU thread
+  [32m✓[0m [PATCH 13/24] accel/hvf: Implement hvf_arch_vcpu_destroy()
+  [32m✓[0m [PATCH 14/24] target/arm/hvf: Hardcode Apple MIDR
+  [32m✓[0m [PATCH 15/24] target/arm/hvf: switch hvf_arm_get_host_cpu_features to not create a vCPU
+  [32m✓[0m [PATCH 16/24] target/arm/hvf: Factor hvf_handle_exception() out
+  [32m✓[0m [PATCH 17/24] target/arm/hvf: Factor hvf_handle_vmexit() out
+  [32m✓[0m [PATCH 18/24] target/arm/hvf: Keep calling hv_vcpu_run() in loop
+  [32m✓[0m [PATCH 19/24] cpus: Trace cpu_exec_start() and cpu_exec_end() calls
+  [32m✓[0m [PATCH 20/24] accel/hvf: Guard hv_vcpu_run() between cpu_exec_start/end() calls
+  [32m✓[0m [PATCH 21/24] target/arm: Call aarch64_add_pauth_properties() once in host_initfn()
+  [32m✓[0m [PATCH 22/24] accel/hvf: Restrict ARM specific fields of AccelCPUState
+  [32m✓[0m [PATCH 23/24] target/arm: Rename init_cpreg_list() -> arm_init_cpreg_list()
+  [32m✓[0m [PATCH 24/24] target/arm: Add arm_destroy_cpreg_list() helper
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 24
+---
+Applying: target/arm/hvf: Release memory allocated by hv_vcpu_config_create()
+Applying: target/arm/hvf: Check hv_vcpus_exit() returned value
+Applying: target/arm/hvf: Check hv_vcpu_set_vtimer_mask() returned value
+Applying: accel/hvf: Rename hvf_vcpu_exec() -> hvf_arch_vcpu_exec()
+Patch failed at 0004 accel/hvf: Rename hvf_vcpu_exec() -> hvf_arch_vcpu_exec()
+error: patch failed: accel/hvf/hvf-accel-ops.c:194
+error: accel/hvf/hvf-accel-ops.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
