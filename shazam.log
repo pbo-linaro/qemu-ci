@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250903124934.1169899-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 67 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/19] net/tap: net_init_tap_one(): add return value
+  [32m✓[0m [PATCH v3 2/19] net/tap: tap_set_sndbuf(): add return value
+  [32m✓[0m [PATCH v3 3/19] net/tap: net_init_tap_one(): drop extra error propagation
+  [32m✓[0m [PATCH v3 4/19] net/tap: net_init_tap_one(): move parameter checking earlier
+  [32m✓[0m [PATCH v3 5/19] net/tap: net_init_tap(): refactor parameter checking
+  [32m✓[0m [PATCH v3 6/19] net/tap: net_init_tap(): drop extra variable vhostfdname
+  [32m✓[0m [PATCH v3 7/19] net/tap: move local variables related to the latter case to else branch
+  [32m✓[0m [PATCH v3 8/19] net/tap: use glib strings vector and g_strsplit for fds case
+  [32m✓[0m [PATCH v3 9/19] net/tap: drop extra tap_fd_get_ifname() call
+  [32m✓[0m [PATCH v3 10/19] net/tap: net_init_tap_one(): refactor to use netdev as first arg
+  [32m✓[0m [PATCH v3 11/19] net/tap: net_init_tap_one(): support bridge
+  [32m✓[0m [PATCH v3 12/19] net/tap: net_init_bridge(): support tap
+  [32m✓[0m [PATCH v3 13/19] net/tap: refactor net_tap_init() into net_tap_open_one()
+  [32m✓[0m [PATCH v3 14/19] net/tap: introduce net_tap_open()
+  [32m✓[0m [PATCH v3 15/19] net/tap: introduce net_tap_fd_init_external()
+  [32m✓[0m [PATCH v3 16/19] net/tap: introduce net_tap_from_monitor_fd() helper
+  [32m✓[0m [PATCH v3 17/19] net/tap: split net_tap_setup_vhost() separate function
+  [32m✓[0m [PATCH v3 18/19] net/tap: drop net_tap_fd_init()
+  [32m✓[0m [PATCH v3 19/19] net/tap: introduce net_init_tap_fds()
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 19
+---
+Applying: net/tap: net_init_tap_one(): add return value
+Applying: net/tap: tap_set_sndbuf(): add return value
+Applying: net/tap: net_init_tap_one(): drop extra error propagation
+Patch failed at 0003 net/tap: net_init_tap_one(): drop extra error propagation
+error: patch failed: net/tap.c:721
+error: net/tap.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
