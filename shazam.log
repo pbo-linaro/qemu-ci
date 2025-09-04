@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250904121840.2023683-1-gaosong@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 66 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v6 1/11] target/loongarch: move some machine define to virt.h
+  [PATCH v6 2/11] hw/loongarch: add virt feature avecintc support
+  [PATCH v6 3/11] hw/loongarch: add misc register supoort avecintc
+  [PATCH v6 4/11] loongarch: add a advance interrupt controller device
+  [PATCH v6 5/11] target/loongarch: add msg interrupt CSR registers
+  [PATCH v6 6/11] hw/loongarch: AVEC controller add a MemoryRegion
+  [PATCH v6 7/11] hw/loongarch: Implement avec controller imput and output pins
+  [PATCH v6 8/11] hw/loongarch: Implement avec set irq
+  [PATCH v6 9/11] target/loongarch: Add CSR_ESTAT.bit15 and CSR_ECFG.bit15 for msg interrupts.
+  [PATCH v6 10/11] target/loongarch:Implement csrrd CSR_MSGIR register
+  [PATCH v6 11/11] hw/loongarch: Implement AVEC plug/unplug interfaces
+---
+Total patches: 11
+---
+Applying: target/loongarch: move some machine define to virt.h
+Applying: hw/loongarch: add virt feature avecintc support
+Patch failed at 0002 hw/loongarch: add virt feature avecintc support
+error: patch failed: hw/loongarch/virt.c:47
+error: hw/loongarch/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
