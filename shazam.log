@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20250905135039.2202924-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 88 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/9] net/tap: add some trace points
+  [32m✓[0m [PATCH v3 2/9] net/tap: keep exit notifier only when downscript set
+  [32m✓[0m [PATCH v3 3/9] net/tap: refactor net_tap_setup_vhost()
+  [32m✓[0m [PATCH v3 4/9] qapi: add interface for local TAP migration
+  [32m✓[0m [PATCH v3 5/9] net/tap: implement interfaces for local migration
+  [32m✓[0m [PATCH v3 6/9] virtio-net: support local tap migration
+  [32m✓[0m [PATCH v3 7/9] tests/functional: exec_command_and_wait_for_pattern: add vm arg
+  [32m✓[0m [PATCH v3 8/9] tests/functional: add skipUnlessPasswordlessSudo() decorator
+  [32m✓[0m [PATCH v3 9/9] tests/functional: add test_x86_64_tap_fd_migration
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 9
+---
+Applying: net/tap: add some trace points
+Applying: net/tap: keep exit notifier only when downscript set
+Patch failed at 0002 net/tap: keep exit notifier only when downscript set
+error: patch failed: net/tap.c:727
+error: net/tap.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
