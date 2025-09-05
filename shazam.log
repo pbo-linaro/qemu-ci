@@ -1,0 +1,54 @@
+Grabbing thread from lore.kernel.org/all/cover.1757084668.git.mchehab%2Bhuawei@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 178 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v11 1/17] Revert "hw/acpi/ghes: Make ghes_record_cper_errors() static"
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v11 2/17] acpi/ghes: Cleanup the code which gets ghes ged state
+  [32m✓[0m [PATCH v11 3/17] acpi/ghes: prepare to change the way HEST offsets are calculated
+  [32m✓[0m [PATCH v11 4/17] acpi/ghes: add a firmware file with HEST address
+  [32m✓[0m [PATCH v11 5/17] acpi/ghes: Use HEST table offsets when preparing GHES records
+  [32m✓[0m [PATCH v11 6/17] acpi/ghes: don't hard-code the number of sources for HEST table
+  [32m✓[0m [PATCH v11 7/17] acpi/ghes: add a notifier to notify when error data is ready
+  [32m✓[0m [PATCH v11 8/17] acpi/generic_event_device: Update GHES migration to cover hest addr
+  [32m✓[0m [PATCH v11 9/17] acpi/generic_event_device: add logic to detect if HEST addr is available
+  [32m✓[0m [PATCH v11 10/17] acpi/generic_event_device: add an APEI error device
+  [32m✓[0m [PATCH v11 11/17] tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+  [32m✓[0m [PATCH v11 12/17] arm/virt: Wire up a GED error device for ACPI / GHES
+  [32m✓[0m [PATCH v11 13/17] qapi/acpi-hest: add an interface to do generic CPER error injection
+  [32m✓[0m [PATCH v11 14/17] acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
+  [32m✓[0m [PATCH v11 15/17] tests/acpi: virt: update HEST and DSDT tables
+  [32m✓[0m [PATCH v11 16/17] docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
+  [32m✓[0m [PATCH v11 17/17] scripts/ghes_inject: add a script to generate GHES error inject
+  ---
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 17
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: Revert "hw/acpi/ghes: Make ghes_record_cper_errors() static"
+Applying: acpi/ghes: Cleanup the code which gets ghes ged state
+Applying: acpi/ghes: prepare to change the way HEST offsets are calculated
+Applying: acpi/ghes: add a firmware file with HEST address
+Applying: acpi/ghes: Use HEST table offsets when preparing GHES records
+Applying: acpi/ghes: don't hard-code the number of sources for HEST table
+Applying: acpi/ghes: add a notifier to notify when error data is ready
+Applying: acpi/generic_event_device: Update GHES migration to cover hest addr
+Applying: acpi/generic_event_device: add logic to detect if HEST addr is available
+Applying: acpi/generic_event_device: add an APEI error device
+Patch failed at 0010 acpi/generic_event_device: add an APEI error device
+error: patch failed: hw/acpi/generic_event_device.c:120
+error: hw/acpi/generic_event_device.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
