@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20250908200028.115789-1-milesg@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 14 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/9] target/ppc: IBM PPE42 general regs and flags
+  [32m✓[0m [PATCH v3 2/9] target/ppc: Add IBM PPE42 family of processors
+  [32m✓[0m [PATCH v3 3/9] target/ppc: IBM PPE42 exception flags and regs
+  [32m✓[0m [PATCH v3 4/9] target/ppc: Add IBM PPE42 exception model
+  [32m✓[0m [PATCH v3 5/9] target/ppc: Support for IBM PPE42 MMU
+  [32m✓[0m [PATCH v3 6/9] target/ppc: Add IBM PPE42 special instructions
+  [32m✓[0m [PATCH v3 7/9] hw/ppc: Support for an IBM PPE42 CPU decrementer
+  [32m✓[0m [PATCH v3 8/9] hw/ppc: Add a test machine for the IBM PPE42 CPU
+  [32m✓[0m [PATCH v3 9/9] tests/functional: Add test for IBM PPE42 instructions
+  ---
+  [32m✓[0m Signed: DKIM/ibm.com (From: milesg@linux.ibm.com)
+---
+Total patches: 9
+---
+Applying: target/ppc: IBM PPE42 general regs and flags
+Applying: target/ppc: Add IBM PPE42 family of processors
+Applying: target/ppc: IBM PPE42 exception flags and regs
+Applying: target/ppc: Add IBM PPE42 exception model
+Applying: target/ppc: Support for IBM PPE42 MMU
+Applying: target/ppc: Add IBM PPE42 special instructions
+Applying: hw/ppc: Support for an IBM PPE42 CPU decrementer
+Applying: hw/ppc: Add a test machine for the IBM PPE42 CPU
+Patch failed at 0008 hw/ppc: Add a test machine for the IBM PPE42 CPU
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:865: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: patch failed: MAINTAINERS:1531
+error: MAINTAINERS: patch does not apply
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:173: new blank line at EOF.
++
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
