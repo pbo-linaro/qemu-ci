@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/425ef990-85cb-4c02-bb41-2f88f939d147@redhat.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Some iotests are failing with -luks
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: Some iotests are failing with -luks
+Patch failed at 0001 Some iotests are failing with -luks
+error: corrupt patch at line 80
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
