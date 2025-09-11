@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20250911092007.1370002-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 43 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/8] char-socket: tcp_chr_recv(): drop extra _set_(block, cloexec)
+    [31m✗[0m BADSIG: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 2/8] char-socket: tcp_chr_recv(): add comment
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 3/8] util: add qemu_set_blocking() function
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 4/8] util: drop qemu_socket_set_nonblock()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 5/8] util: drop qemu_socket_try_set_nonblock()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 6/8] io/channel-socket: rework qio_channel_socket_copy_fds()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 7/8] util: drop qemu_socket_set_block()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+  [32m✓[0m [PATCH v2 8/8] use qemu_set_blocking instead of g_unix_set_fd_nonblocking
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 8
+---
+Applying: char-socket: tcp_chr_recv(): drop extra _set_(block, cloexec)
+Applying: char-socket: tcp_chr_recv(): add comment
+Applying: util: add qemu_set_blocking() function
+Applying: util: drop qemu_socket_set_nonblock()
+Applying: util: drop qemu_socket_try_set_nonblock()
+Applying: io/channel-socket: rework qio_channel_socket_copy_fds()
+Patch failed at 0006 io/channel-socket: rework qio_channel_socket_copy_fds()
+error: patch failed: io/channel-socket.c:464
+error: io/channel-socket.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
