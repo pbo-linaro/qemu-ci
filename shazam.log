@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20250915193105.230085-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 24 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 80 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v4 1/12] char-socket: tcp_chr_recv(): drop extra _set_(block, cloexec)
+    [31m✗[0m BADSIG: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 2/12] char-socket: tcp_chr_recv(): add comment
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 3/12] util: add qemu_set_blocking() function
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 4/12] handle result of qio_channel_set_blocking()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 5/12] migration: qemu_file_set_blocking(): add errp parameter
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 6/12] util: drop qemu_socket_set_nonblock()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 7/12] util: drop qemu_socket_try_set_nonblock()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 8/12] io/channel-socket: rework qio_channel_socket_copy_fds()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 9/12] util: drop qemu_socket_set_block()
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 10/12] use qemu_set_blocking instead of g_unix_set_fd_nonblocking
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 11/12] chardev: qemu_chr_open_fd(): add errp
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+  [32m✓[0m [PATCH v4 12/12] chardev: close an fd on failure path
+    [32m✓[0m Signed: DKIM/yandex-team.ru
+    + Based-on: <20250910193112.1220763-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+---
+Total patches: 12
+---
+Applying: char-socket: tcp_chr_recv(): drop extra _set_(block, cloexec)
+Applying: char-socket: tcp_chr_recv(): add comment
+Applying: util: add qemu_set_blocking() function
+Applying: handle result of qio_channel_set_blocking()
+Applying: migration: qemu_file_set_blocking(): add errp parameter
+Applying: util: drop qemu_socket_set_nonblock()
+Applying: util: drop qemu_socket_try_set_nonblock()
+Applying: io/channel-socket: rework qio_channel_socket_copy_fds()
+Patch failed at 0008 io/channel-socket: rework qio_channel_socket_copy_fds()
+error: patch failed: include/io/channel.h:124
+error: include/io/channel.h: patch does not apply
+error: patch failed: io/channel-socket.c:464
+error: io/channel-socket.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
