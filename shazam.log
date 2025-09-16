@@ -1,0 +1,97 @@
+Grabbing thread from lore.kernel.org/all/20250916180611.1481266-1-peter.maydell@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 37 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 812 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/36] tests, scripts: Don't import print_function from __future__
+  [32m✓[0m [PATCH 2/36] linux-user/aarch64: Split out signal_for_exception
+  [32m✓[0m [PATCH 3/36] linux-user/aarch64: Check syndrome for EXCP_UDEF
+  [32m✓[0m [PATCH 4/36] linux-user/aarch64: Generate ESR signal records
+  [32m✓[0m [PATCH 5/36] target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+  [32m✓[0m [PATCH 6/36] target/arm: Add in_prot_check to S1Translate
+  [32m✓[0m [PATCH 7/36] target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+  [32m✓[0m [PATCH 8/36] target/arm: Introduce get_phys_addr_for_at
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/36] target/arm: Skip AF and DB updates for AccessType_AT
+  [32m✓[0m [PATCH 10/36] target/arm: Add prot_check parameter to do_ats_write
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/36] target/arm: Fill in HFG[RWI]TR_EL2 bits for Arm v9.5
+  [32m✓[0m [PATCH 12/36] target/arm: Remove outdated comment for ZCR_EL12
+  [32m✓[0m [PATCH 13/36] target/arm: Implement FEAT_ATS1A
+  [32m✓[0m [PATCH 14/36] hw/arm/raspi4b: remove redundant check in raspi_add_memory_node
+  [32m✓[0m [PATCH 15/36] target/arm: Remove deprecated pxa CPU family
+  [32m✓[0m [PATCH 16/36] target/arm: Remove XScale and iWMMXt translate.c code
+  [32m✓[0m [PATCH 17/36] target/arm: Remove iwmmxt helper functions
+  [32m✓[0m [PATCH 18/36] target/arm: Drop ARM_FEATURE_XSCALE handling
+  [32m✓[0m [PATCH 19/36] target/arm: Drop ARM_FEATURE_IWMMXT handling
+  [32m✓[0m [PATCH 20/36] system: drop the -old-param option
+  [32m✓[0m [PATCH 21/36] arm/kvm: report registers we failed to set
+  [32m✓[0m [PATCH 22/36] target/arm: Increase MAX_PACKET_LENGTH for SME ZA remote gdb debugging
+  [32m✓[0m [PATCH 23/36] target/arm: Added support for SME register exposure to GDB
+  [32m✓[0m [PATCH 24/36] target/arm: Added test case for SME register exposure to GDB
+  [32m✓[0m [PATCH 25/36] hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+  [32m✓[0m [PATCH 26/36] hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+  [32m✓[0m [PATCH 27/36] hw/arm/virt-acpi-build: Update IORT for multiple smmuv3 devices
+  [32m✓[0m [PATCH 28/36] hw/arm/virt: Factor out common SMMUV3 dt bindings code
+  [32m✓[0m [PATCH 29/36] hw/arm/virt: Add an SMMU_IO_LEN macro
+  [32m✓[0m [PATCH 30/36] hw/pci: Introduce pci_setup_iommu_per_bus() for per-bus IOMMU ops retrieval
+  [32m✓[0m [PATCH 31/36] hw/arm/virt: Allow user-creatable SMMUv3 dev instantiation
+  [32m✓[0m [PATCH 32/36] qemu-options.hx: Document the arm-smmuv3 device
+  [32m✓[0m [PATCH 33/36] bios-tables-test: Allow for smmuv3 test data.
+  [32m✓[0m [PATCH 34/36] qtest/bios-tables-test: Add tests for legacy smmuv3 and smmuv3 device
+  [32m✓[0m [PATCH 35/36] qtest/bios-tables-test: Update tables for smmuv3 tests
+  [32m✓[0m [PATCH 36/36] hw/usb/network: Remove hardcoded 0x40 prefix in STRING_ETHADDR response
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 36
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tests, scripts: Don't import print_function from __future__
+Applying: linux-user/aarch64: Split out signal_for_exception
+Applying: linux-user/aarch64: Check syndrome for EXCP_UDEF
+Applying: linux-user/aarch64: Generate ESR signal records
+Applying: target/arm: Add prot_check parameter to pmsav8_mpu_lookup
+Applying: target/arm: Add in_prot_check to S1Translate
+Applying: target/arm: Skip permission check from arm_cpu_get_phys_page_attrs_debug
+Applying: target/arm: Introduce get_phys_addr_for_at
+Applying: target/arm: Skip AF and DB updates for AccessType_AT
+Applying: target/arm: Add prot_check parameter to do_ats_write
+Applying: target/arm: Fill in HFG[RWI]TR_EL2 bits for Arm v9.5
+Applying: target/arm: Remove outdated comment for ZCR_EL12
+Applying: target/arm: Implement FEAT_ATS1A
+Applying: hw/arm/raspi4b: remove redundant check in raspi_add_memory_node
+Applying: target/arm: Remove deprecated pxa CPU family
+Applying: target/arm: Remove XScale and iWMMXt translate.c code
+Applying: target/arm: Remove iwmmxt helper functions
+Applying: target/arm: Drop ARM_FEATURE_XSCALE handling
+Applying: target/arm: Drop ARM_FEATURE_IWMMXT handling
+Applying: system: drop the -old-param option
+Applying: arm/kvm: report registers we failed to set
+Applying: target/arm: Increase MAX_PACKET_LENGTH for SME ZA remote gdb debugging
+Applying: target/arm: Added support for SME register exposure to GDB
+Applying: target/arm: Added test case for SME register exposure to GDB
+Applying: hw/arm/smmu-common: Check SMMU has PCIe Root Complex association
+Applying: hw/arm/virt-acpi-build: Re-arrange SMMUv3 IORT build
+Applying: hw/arm/virt-acpi-build: Update IORT for multiple smmuv3 devices
+Applying: hw/arm/virt: Factor out common SMMUV3 dt bindings code
+Applying: hw/arm/virt: Add an SMMU_IO_LEN macro
+Applying: hw/pci: Introduce pci_setup_iommu_per_bus() for per-bus IOMMU ops retrieval
+Applying: hw/arm/virt: Allow user-creatable SMMUv3 dev instantiation
+Patch failed at 0031 hw/arm/virt: Allow user-creatable SMMUv3 dev instantiation
+error: patch failed: hw/arm/virt.c:3231
+error: hw/arm/virt.c: patch does not apply
+error: patch failed: hw/core/sysbus-fdt.c:31
+error: hw/core/sysbus-fdt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
