@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20250917143330.294698-1-Jonathan.Cameron@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 50 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/3] hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature attributes in cmd_features_set_feature()
+  [PATCH 2/3] hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)
+  [PATCH 3/3] hw/cxl: Add emulation for memory sparing control feature
+---
+Total patches: 3
+---
+Applying: hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature attributes in cmd_features_set_feature()
+Applying: hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)
+Patch failed at 0002 hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)
+error: patch failed: hw/mem/cxl_type3.c:1667
+error: hw/mem/cxl_type3.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
