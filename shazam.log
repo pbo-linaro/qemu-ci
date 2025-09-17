@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20250917-subregion-v1-0-bef37d9b4f73@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 81 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/14] hw/pci-bridge: Do not assume immediate MemoryRegion finalization
+  [31m✗[0m [PATCH 2/14] qdev: Automatically delete memory subregions
+  [31m✗[0m [PATCH 3/14] vfio-user: Do not delete the subregion
+  [31m✗[0m [PATCH 4/14] hw/char/diva-gsp: Do not delete the subregion
+  [31m✗[0m [PATCH 5/14] hw/char/serial-pci-multi: Do not delete the subregion
+  [31m✗[0m [PATCH 6/14] secondary-vga: Do not delete the subregions
+  [31m✗[0m [PATCH 7/14] cmd646: Do not delete the subregions
+  [31m✗[0m [PATCH 8/14] hw/ide/piix: Do not delete the subregions
+  [31m✗[0m [PATCH 9/14] hw/ide/via: Do not delete the subregions
+  [31m✗[0m [PATCH 10/14] hw/nvme: Do not delete the subregion
+  [31m✗[0m [PATCH 11/14] pci: Do not delete the subregions
+  [31m✗[0m [PATCH 12/14] hw/ppc/spapr_pci: Do not delete the subregions
+  [31m✗[0m [PATCH 13/14] hw/usb/hcd-ehci: Do not delete the subregions
+  [31m✗[0m [PATCH 14/14] hw/usb/hcd-xhci: Do not delete the subregions
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 14
+---
+ Base: using specified base-commit e101d33792530093fa0b0a6e5f43e4d8cfe4581e
+ Deps: looking for dependencies matching 7 patch-ids
+Grabbing search results from lore.kernel.org
+ Deps: Applying prerequisite patch: [PATCH v3 1/7] docs/devel: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH 02/16] vfio/pci: Do not unparent in instance_finalize
+ Deps: Applying prerequisite patch: [PATCH v3 3/7] hw/core/register: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH v3 4/7] hv-balloon: hw/core/register: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH v3 5/7] hw/sd/sdhci: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH v3 6/7] vfio: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH v3 7/7] hw/xen: Do not unparent in instance_finalize()
+Applying: docs/devel: Do not unparent in instance_finalize()
+Patch failed at 0001 docs/devel: Do not unparent in instance_finalize()
+error: patch failed: docs/devel/memory.rst:161
+error: docs/devel/memory.rst: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
