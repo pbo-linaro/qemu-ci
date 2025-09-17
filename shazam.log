@@ -1,0 +1,90 @@
+Grabbing thread from lore.kernel.org/all/20250917-qom-v1-0-7262db7b0a84@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 37 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/35] memory: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 2/35] hw/core/loader: Use address_space_get_path()
+  [31m✗[0m [PATCH 3/35] vfio: Use address_space_get_path()
+  [31m✗[0m [PATCH 4/35] hw/alpha: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 5/35] hw/arm: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 6/35] hw/display: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 7/35] hw/dma: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 8/35] hw/fsi: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 9/35] hw/i2c: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 10/35] hw/i386: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 11/35] hw/intc: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 12/35] hw/loongarch: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 13/35] hw/mem: QOM-ify AddressSpace
+    + Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+  [31m✗[0m [PATCH 14/35] hw/misc: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 15/35] hw/net: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 16/35] hw/nubus: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 17/35] hw/pci: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 18/35] hw/pci-host: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 19/35] hw/ppc: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 20/35] hw/remote: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 21/35] hw/riscv: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 22/35] hw/s390x: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 23/35] hw/scsi: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 24/35] hw/sd: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 25/35] hw/sparc: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 26/35] hw/sparc64: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 27/35] hw/ssi: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 28/35] hw/usb: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 29/35] hw/usb: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 30/35] hw/virtio: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 31/35] system/physmem: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 32/35] target/i386: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 33/35] target/mips: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 34/35] target/xtensa: QOM-ify AddressSpace
+  [31m✗[0m [PATCH 35/35] memory: Drop non-QOM AddressSpace support
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 35
+---
+ Base: using specified base-commit e101d33792530093fa0b0a6e5f43e4d8cfe4581e
+ Deps: looking for dependencies matching 29 patch-ids
+Grabbing search results from lore.kernel.org
+ Deps: Applying prerequisite patch: [PATCH v3 1/7] docs/devel: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH v3 2/7] vfio/pci: Do not unparent in instance_finalize()
+ Deps: Applying prerequisite patch: [PATCH 03/22] hw/pci-bridge: Do not assume immediate MemoryRegion finalization
+ Deps: Applying prerequisite patch: [PATCH 15/16] vfio-user: Do not delete the subregion
+ Deps: Applying prerequisite patch: [PATCH 04/16] hw/char/diva-gsp: Do not delete the subregion
+ Deps: Applying prerequisite patch: [PATCH 05/14] hw/char/serial-pci-multi: Do not delete the subregion
+ Deps: Applying prerequisite patch: [PATCH 14/22] secondary-vga: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 07/14] cmd646: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 16/22] hw/ide/piix: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 17/22] hw/ide/via: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 10/14] hw/nvme: Do not delete the subregion
+ Deps: Applying prerequisite patch: [PATCH v2 12/15] pci: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 12/16] hw/ppc/spapr_pci: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 21/22] hw/usb/hcd-ehci: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH 14/16] hw/usb/hcd-xhci: Do not delete the subregions
+ Deps: Applying prerequisite patch: [PATCH v2 01/14] hw/pci-host/raven: Simplify PCI facing part
+ Deps: Applying prerequisite patch: [PATCH 04/16] hw/pci-host/raven: Simplify host bridge type declaration
+ Deps: Applying prerequisite patch: [PATCH 05/16] hw/pci-host/raven: Use DEFINE_TYPES macro
+ Deps: Applying prerequisite patch: [PATCH 06/16] hw/pci-host/raven: Simplify PCI bus creation
+ Deps: Applying prerequisite patch: [PATCH 07/16] hw/pci-host/raven: Simplify PCI interrupt routing
+ Deps: Applying prerequisite patch: [PATCH 08/16] hw/pci-host/raven: Simplify direct config access address decoding
+ Deps: Applying prerequisite patch: [PATCH v2 07/14] hw/pci-host/raven: Rename direct config access ops
+ Deps: Applying prerequisite patch: [PATCH v2 08/14] hw/pci-host/raven: Use correct parameter in direct access ops
+ Deps: Applying prerequisite patch: [PATCH 11/16] hw/pci-host/raven: Do not use parent object for mmcfg region
+ Deps: Applying prerequisite patch: [PATCH 12/16] hw/pci-host/raven: Fix PCI config direct access region
+ Deps: Applying prerequisite patch: [PATCH 13/16] hw/pci-host/raven: Simpify discontiguous IO access
+ Deps: Applying prerequisite patch: [PATCH 14/16] hw/pci-host/raven: Move bus master address space creation to one place
+ Deps: Applying prerequisite patch: [PATCH 15/16] hw/pci-host/raven: Do not map regions in init method
+ Deps: Applying prerequisite patch: [PATCH v2 14/14] hw/ppc/prep: Fix non-contiguous IO control bit
+Applying: docs/devel: Do not unparent in instance_finalize()
+Patch failed at 0001 docs/devel: Do not unparent in instance_finalize()
+error: patch failed: docs/devel/memory.rst:161
+error: docs/devel/memory.rst: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
