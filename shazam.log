@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250917114450.175892-1-luc.michel@amd.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] hw/core/register: remove the REGISTER device type
+  [32m✓[0m [PATCH 2/7] hw/core/register: add the REGISTER_ARRAY type
+  [32m✓[0m [PATCH 3/7] hw/core/register: remove the calls to `register_finalize_block'
+  [32m✓[0m [PATCH 4/7] hw/core/register: remove the `register_finalize_block' function
+  [32m✓[0m [PATCH 5/7] hw/net/can/xlnx-versal-canfd: remove unused include directives
+  [32m✓[0m [PATCH 6/7] hw/net/can/xlnx-versal-canfd: refactor the banked registers logic
+  [32m✓[0m [PATCH 7/7] hw/net/can/xlnx-versal-canfd: remove register API usage for banked regs
+  ---
+  [32m✓[0m Signed: DKIM/amd.com
+---
+Total patches: 7
+---
+Applying: hw/core/register: remove the REGISTER device type
+Applying: hw/core/register: add the REGISTER_ARRAY type
+Applying: hw/core/register: remove the calls to `register_finalize_block'
+Patch failed at 0003 hw/core/register: remove the calls to `register_finalize_block'
+error: patch failed: include/hw/misc/xlnx-versal-crl.h:531
+error: include/hw/misc/xlnx-versal-crl.h: patch does not apply
+error: patch failed: hw/misc/xlnx-versal-crl.c:632
+error: hw/misc/xlnx-versal-crl.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
