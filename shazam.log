@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20250919032431.3316764-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 76 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v4 1/14] hw/pci/pci_ids: Add PCI vendor ID for ASPEED
+  [PATCH v4 2/14] hw/pci-host/aspeed: Add AST2600 PCIe PHY model
+  [PATCH v4 3/14] hw/pci-host/aspeed: Add AST2600 PCIe config space and host bridge
+  [PATCH v4 4/14] hw/pci-host/aspeed: Add AST2600 PCIe Root Device support
+  [PATCH v4 5/14] hw/pci-host/aspeed: Add AST2600 PCIe Root Port and make address configurable
+  [PATCH v4 6/14] hw/pci-host/aspeed: Add MSI support and per-RC IOMMU address space
+  [PATCH v4 7/14] hw/arm/aspeed: Wire up PCIe devices in SoC model
+  [PATCH v4 8/14] hw/arm/aspeed_ast2600: Add PCIe RC support (RC_H only)
+  [PATCH v4 9/14] hw/pci-host/aspeed: Add AST2700 PCIe PHY
+  [PATCH v4 10/14] hw/pci-host/aspeed: Add AST2700 PCIe config with dedicated H2X blocks
+  [PATCH v4 11/14] hw/pci-host/aspeed: Disable Root Device and place Root Port at 00:00.0 to AST2700
+  [PATCH v4 12/14] hw/arm/aspeed_ast27x0: Introduce 3 PCIe RCs for AST2700
+  [PATCH v4 13/14] tests/functional/arm/test_aspeed_ast2600: Add PCIe and network test
+  [PATCH v4 14/14] tests/functional/aarch64/aspeed_ast2700: Add PCIe and network tests
+---
+Total patches: 14
+---
+Applying: hw/pci/pci_ids: Add PCI vendor ID for ASPEED
+Applying: hw/pci-host/aspeed: Add AST2600 PCIe PHY model
+Applying: hw/pci-host/aspeed: Add AST2600 PCIe config space and host bridge
+Applying: hw/pci-host/aspeed: Add AST2600 PCIe Root Device support
+Applying: hw/pci-host/aspeed: Add AST2600 PCIe Root Port and make address configurable
+Applying: hw/pci-host/aspeed: Add MSI support and per-RC IOMMU address space
+Applying: hw/arm/aspeed: Wire up PCIe devices in SoC model
+Applying: hw/arm/aspeed_ast2600: Add PCIe RC support (RC_H only)
+Applying: hw/pci-host/aspeed: Add AST2700 PCIe PHY
+Applying: hw/pci-host/aspeed: Add AST2700 PCIe config with dedicated H2X blocks
+Applying: hw/pci-host/aspeed: Disable Root Device and place Root Port at 00:00.0 to AST2700
+Applying: hw/arm/aspeed_ast27x0: Introduce 3 PCIe RCs for AST2700
+Applying: tests/functional/arm/test_aspeed_ast2600: Add PCIe and network test
+Patch failed at 0013 tests/functional/arm/test_aspeed_ast2600: Add PCIe and network test
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:222: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+error: patch failed: tests/functional/arm/test_aspeed_ast2600.py:135
+error: tests/functional/arm/test_aspeed_ast2600.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
