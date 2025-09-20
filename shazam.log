@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250920142958.181910-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] rust: bql: add BqlRefCell::get_mut()
+  [32m✓[0m [PATCH 2/7] rust: move VMState from bql to migration
+  [32m✓[0m [PATCH 3/7] rust: migration: extract vmstate_fields_ref
+  [32m✓[0m [PATCH 4/7] rust: migration: add high-level migration wrappers
+  [32m✓[0m [PATCH 5/7] rust: qemu-macros: add ToMigrationState derive macro
+  [32m✓[0m [PATCH 6/7] rust: migration: implement ToMigrationState for Timer
+  [32m✓[0m [PATCH 7/7] rust: migration: implement ToMigrationState as part of impl_vmstate_bitsized
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 7
+---
+Applying: rust: bql: add BqlRefCell::get_mut()
+Applying: rust: move VMState from bql to migration
+Applying: rust: migration: extract vmstate_fields_ref
+Applying: rust: migration: add high-level migration wrappers
+Applying: rust: qemu-macros: add ToMigrationState derive macro
+Patch failed at 0005 rust: qemu-macros: add ToMigrationState derive macro
+error: patch failed: rust/qemu-macros/src/lib.rs:13
+error: rust/qemu-macros/src/lib.rs: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
