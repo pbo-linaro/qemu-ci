@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/2d375ec3-a071-4ae3-b03a-05a823c48016@oracle.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Should QEMU (accel=kvm) kvm-clock/guest_tsc stop counting during downtime blackout?
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 1
+---
+Applying: Should QEMU (accel=kvm) kvm-clock/guest_tsc stop counting during downtime blackout?
+Patch failed at 0001 Should QEMU (accel=kvm) kvm-clock/guest_tsc stop counting during downtime blackout?
+error: corrupt patch at line 30
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
