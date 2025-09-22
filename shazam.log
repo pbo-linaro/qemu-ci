@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/1758548985-354793-1-git-send-email-steven.sistare@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 248 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/8] migration: multi-mode notifier
+  [32m✓[0m [PATCH v4 2/8] migration: add cpr_walk_fd
+  [32m✓[0m [PATCH v4 3/8] oslib: qemu_clear_cloexec
+  [32m✓[0m [PATCH v4 4/8] migration: cpr-exec-command parameter
+  [32m✓[0m [PATCH v4 5/8] migration: cpr-exec save and load
+  [32m✓[0m [PATCH v4 6/8] migration: cpr-exec mode
+  [32m✓[0m [PATCH v4 7/8] migration: cpr-exec docs
+  [32m✓[0m [PATCH v4 8/8] vfio: cpr-exec mode
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 8
+---
+ Base: using specified base-commit e7c1e8043a69c5a8efa39d4f9d111f7c72c076e6
+Applying: migration: multi-mode notifier
+Applying: migration: add cpr_walk_fd
+Applying: oslib: qemu_clear_cloexec
+Patch failed at 0003 oslib: qemu_clear_cloexec
+error: patch failed: include/qemu/osdep.h:688
+error: include/qemu/osdep.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
