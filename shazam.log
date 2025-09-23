@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20250923090729.1887406-1-max.chou@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/2] target/riscv: rvv: Replace checking V by checking Zve32x
+  [32m✓[0m [PATCH v2 2/2] target/riscv: rvv: Modify minimum VLEN according to enabled vector extensions
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 2
+---
+Applying: target/riscv: rvv: Replace checking V by checking Zve32x
+Patch failed at 0001 target/riscv: rvv: Replace checking V by checking Zve32x
+error: patch failed: target/riscv/riscv-qmp-cmds.c:342
+error: target/riscv/riscv-qmp-cmds.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
