@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20250924091746.1882125-1-djordje.todorovic@htecgroup.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 127 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v8 1/14] hw/intc: Allow gaps in hartids for aclint and aplic
+  [32m✓[0m [PATCH v8 2/14] target/riscv: Add cpu_set_exception_base
+  [32m✓[0m [PATCH v8 3/14] target/riscv: Add MIPS P8700 CPU
+  [32m✓[0m [PATCH v8 4/14] target/riscv: Add MIPS P8700 CSRs
+  [32m✓[0m [PATCH v8 5/14] target/riscv: Add mips.ccmov instruction
+  [32m✓[0m [PATCH v8 6/14] target/riscv: Add mips.pref instruction
+  [32m✓[0m [PATCH v8 7/14] target/riscv: Add Xmipslsp instructions
+  [32m✓[0m [PATCH v8 8/14] hw/misc: Add RISC-V CMGCR device implementation
+  [32m✓[0m [PATCH v8 9/14] hw/misc: Add RISC-V CPC device implementation
+  [32m✓[0m [PATCH v8 10/14] hw/riscv: Add support for RISCV CPS
+  [32m✓[0m [PATCH v8 11/14] hw/riscv: Add support for MIPS Boston-aia board mode
+  [32m✓[0m [PATCH v8 12/14] hw/pci: Allow explicit function numbers in pci
+  [32m✓[0m [PATCH v8 13/14] riscv/boston-aia: Add an e1000e NIC in slot 0 func 1
+  [32m✓[0m [PATCH v8 14/14] test/functional: Add test for boston-aia board
+  ---
+  [32m✓[0m Signed: DKIM/htecgroup.com
+---
+Total patches: 14
+---
+Applying: hw/intc: Allow gaps in hartids for aclint and aplic
+Applying: target/riscv: Add cpu_set_exception_base
+Applying: target/riscv: Add MIPS P8700 CPU
+Applying: target/riscv: Add MIPS P8700 CSRs
+Applying: target/riscv: Add mips.ccmov instruction
+Applying: target/riscv: Add mips.pref instruction
+Applying: target/riscv: Add Xmipslsp instructions
+Applying: hw/misc: Add RISC-V CMGCR device implementation
+Applying: hw/misc: Add RISC-V CPC device implementation
+Applying: hw/riscv: Add support for RISCV CPS
+Applying: hw/riscv: Add support for MIPS Boston-aia board mode
+Applying: hw/pci: Allow explicit function numbers in pci
+Patch failed at 0012 hw/pci: Allow explicit function numbers in pci
+error: patch failed: hw/pci/pci.c:984
+error: hw/pci/pci.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
