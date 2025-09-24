@@ -122,12 +122,12 @@ unmap_exit:
 
 static int vfio_legacy_dma_unmap_one(const VFIOContainerBase *bcontainer,
                                      hwaddr iova, ram_addr_t size,
-                                     IOMMUTLBEntry *iotlb)
+                                     uint32_t flags, IOMMUTLBEntry *iotlb)
 {
     const VFIOContainer *container = VFIO_IOMMU_LEGACY(bcontainer);
     struct vfio_iommu_type1_dma_unmap unmap = {
         .argsz = sizeof(unmap),
-        .flags = 0,
+        .flags = flags,
         .iova = iova,
         .size = size,
     };
@@ -187,25 +187,32 @@ static int vfio_legacy_dma_unmap(const VFIOContainerBase *bcontainer,
                                  hwaddr iova, ram_addr_t size,
                                  IOMMUTLBEntry *iotlb, bool unmap_all)
 {
+    uint32_t flags = 0;
     int ret;
 
     if (unmap_all) {
-        /* The unmap ioctl doesn't accept a full 64-bit span. */
-        Int128 llsize = int128_rshift(int128_2_64(), 1);
+        const VFIOContainer *container = VFIO_IOMMU_LEGACY(bcontainer);
 
-        ret = vfio_legacy_dma_unmap_one(bcontainer, 0, int128_get64(llsize),
-                                        iotlb);
+        assert(!iova && !size);
 
-        if (ret == 0) {
-            ret = vfio_legacy_dma_unmap_one(bcontainer, int128_get64(llsize),
-                                            int128_get64(llsize), iotlb);
+        ret = ioctl(container->fd, VFIO_CHECK_EXTENSION, VFIO_UNMAP_ALL);
+        if (ret) {
+            flags = VFIO_DMA_UNMAP_FLAG_ALL;
+        } else {
+            /* The unmap ioctl doesn't accept a full 64-bit span. */
+            Int128 llsize = int128_rshift(int128_2_64(), 1);
+            size = int128_get64(llsize);
+
+            ret = vfio_legacy_dma_unmap_one(bcontainer, 0, size, flags, iotlb);
+            if (ret) {
+                return ret;
+            }
+
+            iova = size;
         }
-
-    } else {
-        ret = vfio_legacy_dma_unmap_one(bcontainer, iova, size, iotlb);
     }
 
-    return ret;
+    return vfio_legacy_dma_unmap_one(bcontainer, iova, size, flags, iotlb);
 }
 
 static int vfio_legacy_dma_map(const VFIOContainerBase *bcontainer, hwaddr iova,
