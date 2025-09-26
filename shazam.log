@@ -1,0 +1,84 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.1.1-20250926101857@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 61 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 865 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/60] python: mkvenv: fix messages printed by mkvenv
+  [PATCH 2/60] i386/tcg/svm: fix incorrect canonicalization
+  [PATCH 3/60] linux-user: Add strace for rseq
+  [PATCH 4/60] tests/functional: Fix reverse_debugging asset precaching
+  [PATCH 5/60] hw/intc/arm_gicv3_kvm: preserve pending interrupts during cpr
+  [PATCH 6/60] target/arm: Trap PMCR when MDCR_EL2.TPMCR is set
+  [PATCH 7/60] scripts/kernel-doc: Avoid new Perl precedence warning
+  [PATCH 8/60] qemu/atomic: Finish renaming atomic128-cas.h headers
+  [PATCH 9/60] hw/arm/stm32f205_soc: Don't leak TYPE_OR_IRQ objects
+  [PATCH 10/60] qga/installer: Remove QGA VSS if QGA installation failed
+  [PATCH 11/60] qga-vss: Write hex value of error in log
+  [PATCH 12/60] qga: Fix truncated output handling in guest-exec status reporting
+  [PATCH 13/60] i386/kvm/vmsr_energy: Plug memory leak on failure to connect socket
+  [PATCH 14/60] vfio scsi ui: Error-check qio_channel_socket_connect_sync() the same way
+  [PATCH 15/60] Revert "tests/qtest: use qos_printf instead of g_test_message"
+  [PATCH 16/60] e1000e: Prevent crash from legacy interrupt firing after MSI-X enable
+  [PATCH 17/60] elf: Add EF_MIPS_ARCH_ASE definitions
+  [PATCH 18/60] linux-user/mips: Select 74Kf CPU to run MIPS16e binaries
+  [PATCH 19/60] linux-user/mips: Select M14Kc CPU to run microMIPS binaries
+  [PATCH 20/60] target/mips: fix TLB huge page check to use 64-bit shift
+  [PATCH 21/60] hw/ppc: Fix build error with CONFIG_POWERNV disabled
+  [PATCH 22/60] hw/gpio/pca9554: Avoid leak in pca9554_set_pin()
+  [PATCH 23/60] hw/char/max78000_uart: Destroy FIFO on deinit
+  [PATCH 24/60] block/curl: fix curl internal handles handling
+  [PATCH 25/60] target/loongarch: Guard 64-bit-only insn translation with TRANS64 macro
+  [PATCH 26/60] hw/intc/loongarch_pch_pic: Fix ubsan warning and endianness issue
+  [PATCH 27/60] hw/vfio-user: add x-pci-class-code
+  [PATCH 28/60] ui/vnc: Fix crash when specifying [vnc] without id in the config file
+  [PATCH 29/60] python: backport 'kick event queue on legacy event_pull()'
+  [PATCH 30/60] python: backport 'drop Python3.6 workarounds'
+  [PATCH 31/60] python: backport 'Use @asynciocontextmanager'
+  [PATCH 32/60] python: backport 'qmp-shell-wrap: handle missing binary gracefully'
+  [PATCH 33/60] python: backport 'qmp-tui: Do not crash if optional dependencies are not met'
+  [PATCH 34/60] python: backport 'Remove deprecated get_event_loop calls'
+  [PATCH 35/60] python: backport 'avoid creating additional event loops per thread'
+  [PATCH 36/60] iotests: drop compat for old version context manager
+    + Reviewed-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 37/60] python: ensure QEMUQtestProtocol closes its socket
+    + Reviewed-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 38/60] iotests/147: ensure temporary sockets are closed before exiting
+    + Reviewed-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 39/60] iotests/151: ensure subprocesses are cleaned up
+  [PATCH 40/60] iotests/check: always enable all python warnings
+    + Reviewed-by: John Snow <jsnow@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [PATCH 41/60] .gitmodules: move u-boot mirrors to qemu-project-mirrors
+  [PATCH 42/60] hw/usb/network: Remove hardcoded 0x40 prefix in STRING_ETHADDR response
+  [PATCH 43/60] i386/cpu: Enable SMM cpu address space under KVM
+  [PATCH 44/60] target/i386: Define enum X86ASIdx for x86's address spaces
+  [PATCH 45/60] multiboot: Fix the split lock
+  [PATCH 46/60] linux-user: avoid -Werror=int-in-bool-context
+  [PATCH 47/60] target/sparc: Allow TRANS macro with no extra arguments
+  [PATCH 48/60] target/sparc: Loosen decode of STBAR for v8
+  [PATCH 49/60] target/sparc: Loosen decode of RDY for v7
+  [PATCH 50/60] target/sparc: Loosen decode of RDPSR for v7
+  [PATCH 51/60] target/sparc: Loosen decode of RDWIM for v7
+  [PATCH 52/60] target/sparc: Loosen decode of RDTBR for v7
+  [PATCH 53/60] target/sparc: Relax decode of rs2_or_imm for v7
+  [PATCH 54/60] hw/pci-host/dino: Don't call pci_register_root_bus() in init
+  [PATCH 55/60] hw/pci-host/astro: Don't call pci_regsiter_root_bus() in init
+  [PATCH 56/60] tcg/optimize: Fix folding of vector bitsel
+  [PATCH 57/60] .gitlab-ci.d/buildtest.yml: Unset CI_COMMIT_DESCRIPTION for htags
+  [PATCH 58/60] tests: Fix "make check-functional" for targets without thorough tests
+  [PATCH 59/60] accel/tcg: Properly unlink a TB linked to itself
+  [PATCH 60/60] tests/tcg/multiarch: Add tb-link test
+---
+Total patches: 60
+---
+Applying: python: mkvenv: fix messages printed by mkvenv
+Patch failed at 0001 python: mkvenv: fix messages printed by mkvenv
+error: patch failed: python/scripts/mkvenv.py:184
+error: python/scripts/mkvenv.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
