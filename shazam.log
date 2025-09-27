@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.21-20250927105809@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 721 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/16] hw/usb/hcd-ohci: Fix #1510, #303: pid not IN or OUT
+  [PATCH 2/16] .gitmodules: move u-boot mirrors to qemu-project-mirrors
+  [PATCH 3/16] tests: vhost-user-test: release mutex on protocol violation
+  [PATCH 4/16] vhost-user-test: no set non-blocking for cal fd less than 0.
+  [PATCH 5/16] Revert "tests/qtest: use qos_printf instead of g_test_message"
+  [PATCH 6/16] tests/qtest: Do not run lsi53c895a test if device is not present
+  [PATCH 7/16] tests: Ensure TAP version is printed before other messages
+  [PATCH 8/16] hw/usb/network: Remove hardcoded 0x40 prefix in STRING_ETHADDR response
+  [PATCH 9/16] use fedora:37 for python container instead of :latest
+  [PATCH 10/16] python/machine: Fix AF_UNIX path too long on macOS
+  [PATCH 11/16] python/qmp/protocol: add open_with_socket()
+  [PATCH 12/16] python/qmp/legacy: make QEMUMonitorProtocol accept a socket
+  [PATCH 13/16] python/qemu/machine: use socketpair() for QMP by default
+  [PATCH 14/16] multiboot: Fix the split lock
+  [PATCH 15/16] accel/tcg: Properly unlink a TB linked to itself
+  [PATCH 16/16] tests/tcg/multiarch: Add tb-link test
+---
+Total patches: 16
+---
+Applying: hw/usb/hcd-ohci: Fix #1510, #303: pid not IN or OUT
+Patch failed at 0001 hw/usb/hcd-ohci: Fix #1510, #303: pid not IN or OUT
+error: patch failed: hw/usb/hcd-ohci.c:904
+error: hw/usb/hcd-ohci.c: patch does not apply
+error: patch failed: hw/usb/trace-events:28
+error: hw/usb/trace-events: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
