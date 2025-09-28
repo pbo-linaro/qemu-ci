@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20250926022348.1883776-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 7 patches
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Will use the latest revision: v2
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/6] vfio/container: Remap only populated parts in a section
+  [32m✓[0m [PATCH v2 2/6] vfio/cpr-legacy: drop an erroneous assert
+  [32m✓[0m [PATCH v2 3/6] vfio/iommufd: Set cpr.ioas_id on source side for CPR transfer
+  [32m✓[0m [PATCH v2 4/6] vfio/iommufd: Restore vbasedev's reference to hwpt after CPR transfer
+  [32m✓[0m [PATCH v2 5/6] accel/kvm: Fix an erroneous check on coalesced_mmio_ring
+  [32m✓[0m [PATCH v2 6/6] accel/kvm: Fix SIGSEGV when execute "query-balloon" after CPR transfer
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 6
+---
+Applying: vfio/container: Remap only populated parts in a section
+Patch failed at 0001 vfio/container: Remap only populated parts in a section
+error: patch failed: include/hw/vfio/vfio-cpr.h:68
+error: include/hw/vfio/vfio-cpr.h: patch does not apply
+error: patch failed: hw/vfio/cpr-legacy.c:227
+error: hw/vfio/cpr-legacy.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
