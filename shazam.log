@@ -1,0 +1,59 @@
+Grabbing thread from lore.kernel.org/all/20250929133643.38961-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 28 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/27] backends/iommufd: Introduce iommufd_backend_alloc_viommu
+  [32m✓[0m [PATCH v4 2/27] backends/iommufd: Introduce iommufd_vdev_alloc
+  [32m✓[0m [PATCH v4 3/27] hw/arm/smmu-common: Factor out common helper functions and export
+  [32m✓[0m [PATCH v4 4/27] hw/arm/smmu-common:Make iommu ops part of SMMUState
+  [32m✓[0m [PATCH v4 5/27] hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+  [32m✓[0m [PATCH v4 6/27] hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+  [32m✓[0m [PATCH v4 7/27] hw/arm/smmuv3: Implement get_viommu_cap() callback
+  [32m✓[0m [PATCH v4 8/27] hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+  [32m✓[0m [PATCH v4 9/27] hw/arm/smmuv3-accel: Support nested STE install/uninstall support
+  [32m✓[0m [PATCH v4 10/27] hw/arm/smmuv3-accel: Allocate a vDEVICE object for device
+  [32m✓[0m [PATCH v4 11/27] hw/pci/pci: Introduce optional get_msi_address_space() callback
+  [32m✓[0m [PATCH v4 12/27] hw/arm/smmuv3-accel: Make use of get_msi_address_space() callback
+  [32m✓[0m [PATCH v4 13/27] hw/arm/smmuv3-accel: Add support to issue invalidation cmd to host
+  [32m✓[0m [PATCH v4 14/27] hw/arm/smmuv3-accel: Get host SMMUv3 hw info and validate
+  [32m✓[0m [PATCH v4 15/27] acpi/gpex: Fix PCI Express Slot Information function 0 returned value
+  [32m✓[0m [PATCH v4 16/27] hw/pci-host/gpex: Allow to generate preserve boot config DSM #5
+  [32m✓[0m [PATCH v4 17/27] hw/arm/virt: Set PCI preserve_config for accel SMMUv3
+  [32m✓[0m [PATCH v4 18/27] hw/arm/virt-acpi-build: Add IORT RMR regions to handle MSI nested binding
+  [32m✓[0m [PATCH v4 19/27] hw/arm/smmuv3-accel: Install S1 bypass hwpt on reset
+  [32m✓[0m [PATCH v4 20/27] hw/arm/smmuv3: Add accel property for SMMUv3 device
+  [32m✓[0m [PATCH v4 21/27] hw/arm/smmuv3-accel: Add a property to specify RIL support
+  [32m✓[0m [PATCH v4 22/27] hw/arm/smmuv3-accel: Add support for ATS
+  [32m✓[0m [PATCH v4 23/27] hw/arm/smmuv3-accel: Add property to specify OAS bits
+  [32m✓[0m [PATCH v4 24/27] backends/iommufd: Retrieve PASID width from iommufd_backend_get_device_info()
+  [32m✓[0m [PATCH v4 25/27] backends/iommufd: Add a callback helper to retrieve PASID support
+  [32m✓[0m [PATCH v4 26/27] vfio: Synthesize vPASID capability to VM
+  [32m✓[0m [PATCH v4 27/27] hw.arm/smmuv3: Add support for PASID enable
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 27
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_viommu
+Applying: backends/iommufd: Introduce iommufd_vdev_alloc
+Applying: hw/arm/smmu-common: Factor out common helper functions and export
+Applying: hw/arm/smmu-common:Make iommu ops part of SMMUState
+Applying: hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+Applying: hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+Applying: hw/arm/smmuv3: Implement get_viommu_cap() callback
+Applying: hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+Applying: hw/arm/smmuv3-accel: Support nested STE install/uninstall support
+Applying: hw/arm/smmuv3-accel: Allocate a vDEVICE object for device
+Applying: hw/pci/pci: Introduce optional get_msi_address_space() callback
+Patch failed at 0011 hw/pci/pci: Introduce optional get_msi_address_space() callback
+error: patch failed: include/hw/pci/pci.h:652
+error: include/hw/pci/pci.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
