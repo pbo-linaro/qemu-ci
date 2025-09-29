@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/a637a6be-ac18-4cf2-ae31-392de0676ab3@redhat.com/t.mbox.gz
+Analyzing 1 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Two iotests failing with -qcow
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 1
+---
+Applying: Two iotests failing with -qcow
+Patch failed at 0001 Two iotests failing with -qcow
+error: corrupt patch at line 9
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
