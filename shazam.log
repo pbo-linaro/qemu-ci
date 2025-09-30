@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20250930082126.28618-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 38 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/18] docs/devel/loads-stores: Stop mentioning cpu_physical_memory_write_rom()
+  [32m✓[0m [PATCH v3 2/18] system/memory: Better describe @plen argument of flatview_translate()
+  [32m✓[0m [PATCH v3 3/18] system/memory: Factor address_space_is_io() out
+  [32m✓[0m [PATCH v3 4/18] target/i386/arch_memory_mapping: Use address_space_memory_is_io()
+  [32m✓[0m [PATCH v3 5/18] hw/s390x/sclp: Use address_space_memory_is_io() in sclp_service_call()
+  [32m✓[0m [PATCH v3 6/18] system/physmem: Remove cpu_physical_memory_is_io()
+  [32m✓[0m [PATCH v3 7/18] system/physmem: Pass address space argument to cpu_flush_icache_range()
+  [32m✓[0m [PATCH v3 8/18] hw/s390x/sclp: Replace [cpu_physical_memory -> address_space]_r/w()
+  [32m✓[0m [PATCH v3 9/18] target/s390x/mmu: Replace [cpu_physical_memory -> address_space]_rw()
+  [32m✓[0m [PATCH v3 10/18] target/i386/whpx: Replace legacy cpu_physical_memory_rw() call
+  [32m✓[0m [PATCH v3 11/18] target/i386/kvm: Replace legacy cpu_physical_memory_rw() call
+  [32m✓[0m [PATCH v3 12/18] target/i386/nvmm: Inline cpu_physical_memory_rw() in nvmm_mem_callback
+  [32m✓[0m [PATCH v3 13/18] hw/xen/hvm: Inline cpu_physical_memory_rw() in rw_phys_req_item()
+  [32m✓[0m [PATCH v3 14/18] system/physmem: Un-inline cpu_physical_memory_read/write()
+  [32m✓[0m [PATCH v3 15/18] system/physmem: Avoid cpu_physical_memory_rw when is_write is constant
+  [32m✓[0m [PATCH v3 16/18] system/physmem: Remove legacy cpu_physical_memory_rw()
+  [32m✓[0m [PATCH v3 17/18] hw/virtio/vhost: Replace legacy cpu_physical_memory_*map() calls
+  [32m✓[0m [PATCH v3 18/18] hw/virtio/virtio: Replace legacy cpu_physical_memory_map() call
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: docs/devel/loads-stores: Stop mentioning cpu_physical_memory_write_rom()
+Applying: system/memory: Better describe @plen argument of flatview_translate()
+Applying: system/memory: Factor address_space_is_io() out
+Applying: target/i386/arch_memory_mapping: Use address_space_memory_is_io()
+Applying: hw/s390x/sclp: Use address_space_memory_is_io() in sclp_service_call()
+Applying: system/physmem: Remove cpu_physical_memory_is_io()
+Applying: system/physmem: Pass address space argument to cpu_flush_icache_range()
+Patch failed at 0007 system/physmem: Pass address space argument to cpu_flush_icache_range()
+error: patch failed: system/physmem.c:3215
+error: system/physmem.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
