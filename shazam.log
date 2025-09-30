@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/CANdvy3dH9bBdopj_KUqaLD0Viq7uKn0jPObjqz6H7XvMgRnPrw@mail.gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] ui/vnc: Fix NULL pointer dereference in vnc_disconnect_start
+  ---
+  [32m✓[0m Signed: DKIM/cylo-net.20230601.gappssmtp.com (From: rid@cylo.io)
+---
+Total patches: 1
+---
+Applying: ui/vnc: Fix NULL pointer dereference in vnc_disconnect_start
+Patch failed at 0001 ui/vnc: Fix NULL pointer dereference in vnc_disconnect_start
+error: corrupt patch at line 20
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
