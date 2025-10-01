@@ -1,0 +1,96 @@
+Grabbing thread from lore.kernel.org/all/20251001082127.65741-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 28 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/25] system/ram_addr: Remove unnecessary 'exec/cpu-common.h' header
+    + Reviewed-by: Thomas Huth <thuth@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/25] accel/kvm: Include missing 'exec/target_page.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 3/25] hw/s390x/s390-stattrib: Include missing 'exec/target_page.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/25] hw/vfio/listener: Include missing 'exec/target_page.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 5/25] target/arm/tcg/mte: Include missing 'exec/target_page.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/25] hw: Remove unnecessary 'system/ram_addr.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/25] accel/tcg: Document rcu_read_lock is held when calling tlb_reset_dirty()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 8/25] accel/tcg: Rename @start argument of tlb_reset_dirty*()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 9/25] system/physmem: Rename @start argument of physical_memory_get_dirty()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 10/25] system/physmem: Un-inline cpu_physical_memory_get_dirty_flag()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/25] system/physmem: Un-inline cpu_physical_memory_is_clean()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 12/25] system/physmem: Rename @start argument of physical_memory_all_dirty()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 13/25] system/physmem: Rename @start argument of physical_memory_range*()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 14/25] system/physmem: Un-inline cpu_physical_memory_range_includes_clean()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 15/25] system/physmem: Un-inline cpu_physical_memory_set_dirty_flag()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 16/25] system/physmem: Rename @start argument of physical_memory_*range()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 17/25] system/physmem: Un-inline cpu_physical_memory_set_dirty_range()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 18/25] system/physmem: Un-inline cpu_physical_memory_set_dirty_lebitmap()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 19/25] system/physmem: Rename @start argument of physmem_dirty_bits_cleared()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 20/25] system/physmem: Un-inline cpu_physical_memory_dirty_bits_cleared()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 21/25] system/physmem: Rename @start argument of physmem_test_and_clear_dirty()
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 22/25] system/physmem: Reduce cpu_physical_memory_clear_dirty_range() scope
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 23/25] system/physmem: Reduce cpu_physical_memory_sync_dirty_bitmap() scope
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 24/25] system/physmem: Drop 'cpu_' prefix in Physical Memory API
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 25/25] system/physmem: Extract API out of 'system/ram_addr.h' header
+    + Based-on: <20250930082126.28618-1-philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 25
+---
+Applying: system/ram_addr: Remove unnecessary 'exec/cpu-common.h' header
+Applying: accel/kvm: Include missing 'exec/target_page.h' header
+Applying: hw/s390x/s390-stattrib: Include missing 'exec/target_page.h' header
+Applying: hw/vfio/listener: Include missing 'exec/target_page.h' header
+Applying: target/arm/tcg/mte: Include missing 'exec/target_page.h' header
+Applying: hw: Remove unnecessary 'system/ram_addr.h' header
+Applying: accel/tcg: Document rcu_read_lock is held when calling tlb_reset_dirty()
+Applying: accel/tcg: Rename @start argument of tlb_reset_dirty*()
+Applying: system/physmem: Rename @start argument of physical_memory_get_dirty()
+Applying: system/physmem: Un-inline cpu_physical_memory_get_dirty_flag()
+Applying: system/physmem: Un-inline cpu_physical_memory_is_clean()
+Applying: system/physmem: Rename @start argument of physical_memory_all_dirty()
+Applying: system/physmem: Rename @start argument of physical_memory_range*()
+Applying: system/physmem: Un-inline cpu_physical_memory_range_includes_clean()
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_flag()
+Applying: system/physmem: Rename @start argument of physical_memory_*range()
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_range()
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_lebitmap()
+Applying: system/physmem: Rename @start argument of physmem_dirty_bits_cleared()
+Applying: system/physmem: Un-inline cpu_physical_memory_dirty_bits_cleared()
+Applying: system/physmem: Rename @start argument of physmem_test_and_clear_dirty()
+Applying: system/physmem: Reduce cpu_physical_memory_clear_dirty_range() scope
+Applying: system/physmem: Reduce cpu_physical_memory_sync_dirty_bitmap() scope
+Applying: system/physmem: Drop 'cpu_' prefix in Physical Memory API
+Patch failed at 0024 system/physmem: Drop 'cpu_' prefix in Physical Memory API
+error: patch failed: hw/vfio/container.c:255
+error: hw/vfio/container.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
