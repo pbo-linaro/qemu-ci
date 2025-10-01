@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20251001150529.14122-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/22] system/qtest: Use &address_space_memory for first vCPU address space
+  [32m✓[0m [PATCH 2/22] disas/disas-mon: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 3/22] monitor/hmp-cmds: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 4/22] hw/core/loader: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 5/22] hw/ppc: Get cpu first addr space with cpu_get_address_space()
+    + Reviewed-by: Glenn Miles <milesg@linux.ibm.com> ([32m✓[0m DKIM/ibm.com)
+  [32m✓[0m [PATCH 6/22] hw/m86k: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 7/22] target/xtensa: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 8/22] target/riscv: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 9/22] semihosting: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 10/22] target/alpha: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 11/22] target/arm: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 12/22] target/hppa: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 13/22] target/i386: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 14/22] target/loongarch: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 15/22] target/m68k: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 16/22] target/microblaze: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 17/22] target/ppc: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 18/22] target/s390x: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 19/22] target/sparc: Get cpu first addr space with cpu_get_address_space()
+  [32m✓[0m [PATCH 20/22] hw/core/cpu: Remove @CPUState::as field
+  [32m✓[0m [PATCH 21/22] exec/cpu: Declare cpu_memory_rw_debug() in 'hw/core/cpu.h' and document
+  [32m✓[0m [PATCH 22/22] target/sparc: Reduce inclusions of 'exec/cpu-common.h'
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 22
+---
+Applying: system/qtest: Use &address_space_memory for first vCPU address space
+Applying: disas/disas-mon: Get cpu first addr space with cpu_get_address_space()
+Applying: monitor/hmp-cmds: Get cpu first addr space with cpu_get_address_space()
+Applying: hw/core/loader: Get cpu first addr space with cpu_get_address_space()
+Applying: hw/ppc: Get cpu first addr space with cpu_get_address_space()
+Applying: hw/m86k: Get cpu first addr space with cpu_get_address_space()
+Applying: target/xtensa: Get cpu first addr space with cpu_get_address_space()
+Applying: target/riscv: Get cpu first addr space with cpu_get_address_space()
+Applying: semihosting: Get cpu first addr space with cpu_get_address_space()
+Applying: target/alpha: Get cpu first addr space with cpu_get_address_space()
+Applying: target/arm: Get cpu first addr space with cpu_get_address_space()
+Applying: target/hppa: Get cpu first addr space with cpu_get_address_space()
+Applying: target/i386: Get cpu first addr space with cpu_get_address_space()
+Applying: target/loongarch: Get cpu first addr space with cpu_get_address_space()
+Applying: target/m68k: Get cpu first addr space with cpu_get_address_space()
+Applying: target/microblaze: Get cpu first addr space with cpu_get_address_space()
+Applying: target/ppc: Get cpu first addr space with cpu_get_address_space()
+Applying: target/s390x: Get cpu first addr space with cpu_get_address_space()
+Applying: target/sparc: Get cpu first addr space with cpu_get_address_space()
+Applying: hw/core/cpu: Remove @CPUState::as field
+Applying: exec/cpu: Declare cpu_memory_rw_debug() in 'hw/core/cpu.h' and document
+Patch failed at 0021 exec/cpu: Declare cpu_memory_rw_debug() in 'hw/core/cpu.h' and document
+error: patch failed: include/exec/cpu-common.h:150
+error: include/exec/cpu-common.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
