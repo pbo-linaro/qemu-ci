@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/1759324985-369944-1-git-send-email-steven.sistare@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] migration-test: fix migrate_args
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 1
+---
+Applying: migration-test: fix migrate_args
+Patch failed at 0001 migration-test: fix migrate_args
+error: patch failed: tests/qtest/migration/framework.c:258
+error: tests/qtest/migration/framework.c: patch does not apply
+error: patch failed: tests/qtest/migration/framework.h:227
+error: tests/qtest/migration/framework.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
