@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/1759332851-370353-1-git-send-email-steven.sistare@oracle.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 310 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/19] migration: multi-mode notifier
+  [32m✓[0m [PATCH v5 2/19] migration: add cpr_walk_fd
+  [32m✓[0m [PATCH v5 3/19] oslib: qemu_clear_cloexec
+  [32m✓[0m [PATCH v5 4/19] migration: cpr-exec-command parameter
+  [32m✓[0m [PATCH v5 5/19] migration: cpr-exec save and load
+  [32m✓[0m [PATCH v5 6/19] migration: cpr-exec mode
+  [32m✓[0m [PATCH v5 7/19] migration: cpr-exec docs
+  [32m✓[0m [PATCH v5 8/19] vfio: cpr-exec mode
+  [32m✓[0m [PATCH v5 9/19] tests/qtest: export qtest_qemu_binary
+  [32m✓[0m [PATCH v5 10/19] tests/qtest: qtest_qemu_args
+  [32m✓[0m [PATCH v5 11/19] tests/qtest: qtest_create_test_state
+  [32m✓[0m [PATCH v5 12/19] tests/qtest: qtest_qemu_spawn_func
+  [32m✓[0m [PATCH v5 13/19] tests/qtest: qtest_init_after_exec
+  [32m✓[0m [PATCH v5 14/19] migration-test: only_source option
+  [32m✓[0m [PATCH v5 15/19] migration-test: shm path accessor
+  [32m✓[0m [PATCH v5 16/19] migration-test: misc exports
+  [32m✓[0m [PATCH v5 17/19] migration-test: migrate_args
+  [32m✓[0m [PATCH v5 18/19] migration-test: strv parameter
+  [32m✓[0m [PATCH v5 19/19] migration-test: test cpr-exec
+  ---
+  [32m✓[0m Signed: DKIM/oracle.com
+---
+Total patches: 19
+---
+Applying: migration: multi-mode notifier
+Applying: migration: add cpr_walk_fd
+Applying: oslib: qemu_clear_cloexec
+Patch failed at 0003 oslib: qemu_clear_cloexec
+error: patch failed: include/qemu/osdep.h:688
+error: include/qemu/osdep.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
