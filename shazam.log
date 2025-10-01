@@ -1,0 +1,56 @@
+Grabbing thread from lore.kernel.org/all/20251001175448.18933-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 40 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 26 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/18] system/ram_addr: Remove unnecessary 'exec/cpu-common.h' header
+  [32m✓[0m [PATCH v2 2/18] accel/kvm: Include missing 'exec/target_page.h' header
+  [32m✓[0m [PATCH v2 3/18] hw/s390x/s390-stattrib: Include missing 'exec/target_page.h' header
+  [32m✓[0m [PATCH v2 4/18] hw/vfio/listener: Include missing 'exec/target_page.h' header
+  [32m✓[0m [PATCH v2 5/18] target/arm/tcg/mte: Include missing 'exec/target_page.h' header
+  [32m✓[0m [PATCH v2 6/18] hw: Remove unnecessary 'system/ram_addr.h' header
+  [32m✓[0m [PATCH v2 7/18] system/physmem: Un-inline cpu_physical_memory_get_dirty_flag()
+  [32m✓[0m [PATCH v2 8/18] system/physmem: Un-inline cpu_physical_memory_is_clean()
+  [32m✓[0m [PATCH v2 9/18] system/physmem: Un-inline cpu_physical_memory_range_includes_clean()
+  [32m✓[0m [PATCH v2 10/18] system/physmem: Un-inline cpu_physical_memory_set_dirty_flag()
+  [32m✓[0m [PATCH v2 11/18] system/physmem: Un-inline cpu_physical_memory_set_dirty_range()
+  [32m✓[0m [PATCH v2 12/18] system/physmem: Remove _WIN32 #ifdef'ry
+  [32m✓[0m [PATCH v2 13/18] system/physmem: Un-inline cpu_physical_memory_set_dirty_lebitmap()
+  [32m✓[0m [PATCH v2 14/18] system/physmem: Un-inline cpu_physical_memory_dirty_bits_cleared()
+  [32m✓[0m [PATCH v2 15/18] system/physmem: Reduce cpu_physical_memory_clear_dirty_range() scope
+  [32m✓[0m [PATCH v2 16/18] system/physmem: Reduce cpu_physical_memory_sync_dirty_bitmap() scope
+  [32m✓[0m [PATCH v2 17/18] system/physmem: Drop 'cpu_' prefix in Physical Memory API
+  [32m✓[0m [PATCH v2 18/18] system/physmem: Extract API out of 'system/ram_addr.h' header
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: system/ram_addr: Remove unnecessary 'exec/cpu-common.h' header
+Applying: accel/kvm: Include missing 'exec/target_page.h' header
+Applying: hw/s390x/s390-stattrib: Include missing 'exec/target_page.h' header
+Applying: hw/vfio/listener: Include missing 'exec/target_page.h' header
+Applying: target/arm/tcg/mte: Include missing 'exec/target_page.h' header
+Applying: hw: Remove unnecessary 'system/ram_addr.h' header
+Applying: system/physmem: Un-inline cpu_physical_memory_get_dirty_flag()
+Applying: system/physmem: Un-inline cpu_physical_memory_is_clean()
+Applying: system/physmem: Un-inline cpu_physical_memory_range_includes_clean()
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_flag()
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_range()
+Applying: system/physmem: Remove _WIN32 #ifdef'ry
+Applying: system/physmem: Un-inline cpu_physical_memory_set_dirty_lebitmap()
+Applying: system/physmem: Un-inline cpu_physical_memory_dirty_bits_cleared()
+Applying: system/physmem: Reduce cpu_physical_memory_clear_dirty_range() scope
+Applying: system/physmem: Reduce cpu_physical_memory_sync_dirty_bitmap() scope
+Applying: system/physmem: Drop 'cpu_' prefix in Physical Memory API
+Patch failed at 0017 system/physmem: Drop 'cpu_' prefix in Physical Memory API
+error: patch failed: hw/vfio/container.c:255
+error: hw/vfio/container.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
