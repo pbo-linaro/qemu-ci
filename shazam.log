@@ -1,0 +1,72 @@
+Grabbing thread from lore.kernel.org/all/20251001010127.3092631-1-salil.mehta@opnsrc.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v6 1/24] hw/core: Introduce administrative power-state property and its accessors
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 2/24] hw/core, qemu-options.hx: Introduce 'disabledcpus' SMP parameter
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 3/24] hw/arm/virt: Clamp 'maxcpus' as-per machine's vCPU deferred online-capability
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 4/24] arm/virt, target/arm: Add new ARMCPU {socket, cluster, core, thread}-id property
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 5/24] arm/virt, kvm: Pre-create KVM vCPUs for 'disabled' QOM vCPUs at machine init
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 6/24] arm/virt, gicv3: Pre-size GIC with possible vCPUs at machine init
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 7/24] arm/gicv3: Refactor CPU interface init for shared TCG/KVM use
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 8/24] arm/virt, gicv3: Guard CPU interface access for admin disabled vCPUs
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 9/24] hw/intc/arm_gicv3_common: Migrate & check 'GICv3CPUState' accessibility mismatch
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 10/24] arm/virt: Init PMU at host for all present vCPUs
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 11/24] hw/arm/acpi: MADT change to size the guest with possible vCPUs
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 12/24] hw/core: Introduce generic device power-state handler interface
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 13/24] qdev: make admin power state changes trigger platform transitions via ACPI
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 14/24] arm/acpi: Introduce dedicated CPU OSPM interface for ARM-like platforms
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 15/24] acpi/ged: Notify OSPM of CPU administrative state changes via GED
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 16/24] arm/virt/acpi: Update ACPI DSDT Tbl to include 'Online-Capable' CPUs AML
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 17/24] hw/arm/virt, acpi/ged: Add PowerStateHandler hooks for runtime CPU state changes
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 18/24] target/arm/kvm, tcg: Handle SMCCC hypercall exits in VMM during PSCI_CPU_{ON, OFF}
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 19/24] target/arm/cpu: Add the Accessor hook to fetch ARM CPU arch-id
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 20/24] target/arm/kvm: Write vCPU's state back to KVM on cold-reset
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 21/24] hw/intc/arm-gicv3-kvm: Pause all vCPUs & cache ICC_CTLR_EL1 for userspace PSCI CPU_ON
+    [32m✓[0m Signed: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 22/24] monitor, qdev: Introduce 'device_set' to change admin state of existing devices
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [31m✗[0m [PATCH RFC v6 23/24] monitor, qapi: add 'info cpus-powerstate' and QMP query (Admin + Oper states)
+    [31m✗[0m BADSIG: DKIM/opnsrc.net
+  [32m✓[0m [PATCH RFC v6 24/24] tcg: Defer TB flush for 'lazy realized' vCPUs on first region alloc
+    [32m✓[0m Signed: DKIM/opnsrc.net
+---
+Total patches: 24
+---
+Applying: hw/core: Introduce administrative power-state property and its accessors
+Applying: hw/core, qemu-options.hx: Introduce 'disabledcpus' SMP parameter
+Applying: hw/arm/virt: Clamp 'maxcpus' as-per machine's vCPU deferred online-capability
+Applying: arm/virt, target/arm: Add new ARMCPU {socket, cluster, core, thread}-id property
+Applying: arm/virt, kvm: Pre-create KVM vCPUs for 'disabled' QOM vCPUs at machine init
+Patch failed at 0005 arm/virt, kvm: Pre-create KVM vCPUs for 'disabled' QOM vCPUs at machine init
+error: patch failed: include/system/kvm.h:317
+error: include/system/kvm.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
