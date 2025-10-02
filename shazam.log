@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20251002084203.63899-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 87 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/17] docs/devel/loads-stores: Stop mentioning cpu_physical_memory_write_rom()
+  [32m✓[0m [PATCH v4 2/17] system/memory: Factor address_space_is_io() out
+  [32m✓[0m [PATCH v4 3/17] target/i386/arch_memory_mapping: Use address_space_memory_is_io()
+  [32m✓[0m [PATCH v4 4/17] hw/s390x/sclp: Use address_space_memory_is_io() in sclp_service_call()
+  [32m✓[0m [PATCH v4 5/17] system/physmem: Remove cpu_physical_memory_is_io()
+  [32m✓[0m [PATCH v4 6/17] system/physmem: Pass address space argument to cpu_flush_icache_range()
+  [32m✓[0m [PATCH v4 7/17] hw/s390x/sclp: Replace [cpu_physical_memory -> address_space]_r/w()
+  [32m✓[0m [PATCH v4 8/17] target/s390x/mmu: Replace [cpu_physical_memory -> address_space]_rw()
+  [32m✓[0m [PATCH v4 9/17] target/i386/whpx: Replace legacy cpu_physical_memory_rw() call
+  [32m✓[0m [PATCH v4 10/17] target/i386/kvm: Replace legacy cpu_physical_memory_rw() call
+  [32m✓[0m [PATCH v4 11/17] target/i386/nvmm: Inline cpu_physical_memory_rw() in nvmm_mem_callback
+  [32m✓[0m [PATCH v4 12/17] hw/xen/hvm: Inline cpu_physical_memory_rw() in rw_phys_req_item()
+  [32m✓[0m [PATCH v4 13/17] system/physmem: Un-inline cpu_physical_memory_read/write()
+  [32m✓[0m [PATCH v4 14/17] system/physmem: Avoid cpu_physical_memory_rw when is_write is constant
+  [32m✓[0m [PATCH v4 15/17] system/physmem: Remove legacy cpu_physical_memory_rw()
+  [32m✓[0m [PATCH v4 16/17] hw/virtio/vhost: Replace legacy cpu_physical_memory_*map() calls
+  [32m✓[0m [PATCH v4 17/17] hw/virtio/virtio: Replace legacy cpu_physical_memory_map() call
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 17
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: docs/devel/loads-stores: Stop mentioning cpu_physical_memory_write_rom()
+Applying: system/memory: Factor address_space_is_io() out
+Applying: target/i386/arch_memory_mapping: Use address_space_memory_is_io()
+Applying: hw/s390x/sclp: Use address_space_memory_is_io() in sclp_service_call()
+Applying: system/physmem: Remove cpu_physical_memory_is_io()
+Applying: system/physmem: Pass address space argument to cpu_flush_icache_range()
+Patch failed at 0006 system/physmem: Pass address space argument to cpu_flush_icache_range()
+error: patch failed: system/physmem.c:3214
+error: system/physmem.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
