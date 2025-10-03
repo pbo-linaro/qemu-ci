@@ -1,0 +1,59 @@
+Grabbing thread from lore.kernel.org/all/20251003032718.1324734-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 27 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 93 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/26] hw/riscv/riscv-iommu: Fix MSI table size limit
+  [32m✓[0m [PATCH 2/26] docs/interop/firmware: Add riscv64 to FirmwareArchitecture
+  [32m✓[0m [PATCH 3/26] linux-user/syscall.c: sync RISC-V hwprobe with Linux
+  [32m✓[0m [PATCH 4/26] target/riscv: implement MonitorDef HMP API
+  [32m✓[0m [PATCH 5/26] roms/opensbi: Update to v1.7
+  [32m✓[0m [PATCH 6/26] hw/char: sifive_uart: Raise IRQ according to the Tx/Rx watermark thresholds
+  [32m✓[0m [PATCH 7/26] hw/char: sifive_uart: Avoid pushing Tx FIFO when size is zero
+  [32m✓[0m [PATCH 8/26] hw/char: sifive_uart: Remove outdated comment about Tx FIFO
+  [32m✓[0m [PATCH 9/26] hw/char: sifive_uart: Add newline to error message
+  [32m✓[0m [PATCH 10/26] hw/intc: Save time_delta in RISC-V mtimer VMState
+  [32m✓[0m [PATCH 11/26] migration: Add support for a variable-length array of UINT32 pointers
+  [32m✓[0m [PATCH 12/26] hw/intc: Save timers array in RISC-V mtimer VMState
+  [32m✓[0m [PATCH 13/26] target/riscv: Save stimer and vstimer in CPU vmstate
+  [32m✓[0m [PATCH 14/26] target/riscv/kvm: Use riscv_cpu_is_32bit() when handling SBI_DBCN reg
+  [32m✓[0m [PATCH 15/26] target/riscv: use riscv_csrr in riscv_csr_read
+  [32m✓[0m [PATCH 16/26] qemu/osdep: align memory allocations to 2M on RISC-V
+  [32m✓[0m [PATCH 17/26] target/riscv: do not use translator_ldl in opcode_at
+  [32m✓[0m [PATCH 18/26] target/riscv: Fix the mepc when sspopchk triggers the exception
+  [32m✓[0m [PATCH 19/26] target/riscv: Fix SSP CSR error handling in VU/VS mode
+  [32m✓[0m [PATCH 20/26] target/riscv: Fix ssamoswap error handling
+  [32m✓[0m [PATCH 21/26] target/riscv: rvv: Replace checking V by checking Zve32x
+  [32m✓[0m [PATCH 22/26] target/riscv: rvv: Modify minimum VLEN according to enabled vector extensions
+  [32m✓[0m [PATCH 23/26] target/riscv: rvv: Fix vslide1[up|down].vx unexpected result when XLEN=32 and SEW=64
+  [32m✓[0m [PATCH 24/26] hw/riscv/riscv-iommu: Fixup PDT Nested Walk
+  [32m✓[0m [PATCH 25/26] target/riscv: Fix endianness swap on compressed instructions
+  [32m✓[0m [PATCH 26/26] docs: riscv-iommu: Update status of kernel support
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 26
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: hw/riscv/riscv-iommu: Fix MSI table size limit
+Applying: docs/interop/firmware: Add riscv64 to FirmwareArchitecture
+Applying: linux-user/syscall.c: sync RISC-V hwprobe with Linux
+Applying: target/riscv: implement MonitorDef HMP API
+Applying: roms/opensbi: Update to v1.7
+Patch failed at 0005 roms/opensbi: Update to v1.7
+error: cannot apply binary patch to 'pc-bios/opensbi-riscv32-generic-fw_dynamic.bin' without full index line
+error: pc-bios/opensbi-riscv32-generic-fw_dynamic.bin: patch does not apply
+error: cannot apply binary patch to 'pc-bios/opensbi-riscv64-generic-fw_dynamic.bin' without full index line
+error: pc-bios/opensbi-riscv64-generic-fw_dynamic.bin: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
