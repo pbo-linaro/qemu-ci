@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251003072107.3530642-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v1 1/5] tests/functional/arm/test_aspeed_ast1030: Update test ASPEED SDK v03.03
+  [PATCH v1 2/5] tests/functional/arm/test_aspeed_ast2500: Update test ASPEED SDK v09.08
+  [PATCH v1 3/5] tests/functional/arm/test_aspeed_ast2600: Update test ASPEED SDK v09.08
+  [PATCH v1 4/5] tests/functional/aarch64/test_aspeed_ast2700: Update test ASPEED SDK v09.08 for A1
+  [PATCH v1 5/5] tests/functional/aarch64/test_aspeed_ast2700: Move eth2 IP check into common function
+---
+Total patches: 5
+---
+Applying: tests/functional/arm/test_aspeed_ast1030: Update test ASPEED SDK v03.03
+Applying: tests/functional/arm/test_aspeed_ast2500: Update test ASPEED SDK v09.08
+Applying: tests/functional/arm/test_aspeed_ast2600: Update test ASPEED SDK v09.08
+Applying: tests/functional/aarch64/test_aspeed_ast2700: Update test ASPEED SDK v09.08 for A1
+Patch failed at 0004 tests/functional/aarch64/test_aspeed_ast2700: Update test ASPEED SDK v09.08 for A1
+error: patch failed: tests/functional/aarch64/test_aspeed_ast2700.py:133
+error: tests/functional/aarch64/test_aspeed_ast2700.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
