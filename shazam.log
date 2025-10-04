@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/CC5A0011-CD14-40F9-8023-8BF5F989BCCF@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] hw/arm: add pvpanic mmio device for arm
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+ Base: using specified base-commit bd6aa0d1e59d71218c3eee055bc8d222c6e1a628
+Applying: hw/arm: add pvpanic mmio device for arm
+Patch failed at 0001 hw/arm: add pvpanic mmio device for arm
+error: corrupt patch at line 11
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
