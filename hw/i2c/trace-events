@@ -61,3 +61,18 @@ pca954x_read_data(uint8_t value) "PCA954X read data: 0x%02x"
 
 imx_i2c_read(const char *id, const char *reg, uint64_t ofs, uint64_t value) "%s:[%s (0x%" PRIx64 ")] -> 0x%02" PRIx64
 imx_i2c_write(const char *id, const char *reg, uint64_t ofs, uint64_t value) "%s:[%s (0x%" PRIx64 ")] <- 0x%02" PRIx64
+
+# remote-i2c-master.c
+remote_i2c_master_fuse_export(void)
+remote_i2c_master_fuse_io_read(void)
+remote_i2c_master_i2cdev_init(void)
+remote_i2c_master_i2cdev_open(void)
+remote_i2c_master_i2cdev_release(void)
+remote_i2c_master_i2cdev_read(void)
+remote_i2c_master_i2cdev_functional(void) "Send current master functional"
+remote_i2c_master_i2cdev_address(uint32_t address) "Set slave address: 0x%x"
+remote_i2c_master_i2cdev_send(uint32_t size) "Send data to slave. Size: 0x%x"
+remote_i2c_master_i2cdev_receive(uint32_t size) "Received data from slave. Size: 0x%x"
+remote_i2c_master_i2cdev_smbus(uint8_t state) "Received SMBus command. State: 0x%x"
+remote_i2c_master_i2cdev_ioctl(int cmd) "Start, command: 0x%x"
+remote_i2c_master_i2cdev_ioctl_finished(int cmd) "Finished, command: 0x%x"
