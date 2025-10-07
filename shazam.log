@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20251007141604.761686-1-clg@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] aspeed: Deprecate the sonorapass-bmc machine
+  [32m✓[0m [PATCH 2/5] aspeed: Deprecate the qcom-dc-scm-v1-bmc and qcom-firework-bmc machines
+  [32m✓[0m [PATCH 3/5] aspeed: Deprecate the fp5280g2-bmc machine
+  [32m✓[0m [PATCH 4/5] test/functional/aarch64: Remove test for the ast2700a0-evb machine
+  [32m✓[0m [PATCH 5/5] test/functional/aarch64: Split the ast2700a1-evb OpenBMC boot test
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: aspeed: Deprecate the sonorapass-bmc machine
+Applying: aspeed: Deprecate the qcom-dc-scm-v1-bmc and qcom-firework-bmc machines
+Applying: aspeed: Deprecate the fp5280g2-bmc machine
+Applying: test/functional/aarch64: Remove test for the ast2700a0-evb machine
+Patch failed at 0004 test/functional/aarch64: Remove test for the ast2700a0-evb machine
+error: patch failed: tests/functional/aarch64/test_aspeed_ast2700.py:46
+error: tests/functional/aarch64/test_aspeed_ast2700.py: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
