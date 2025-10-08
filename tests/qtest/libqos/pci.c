@@ -541,6 +541,22 @@ QPCIBar qpci_iomap(QPCIDevice *dev, int barno, uint64_t *sizeptr)
         addr &= PCI_BASE_ADDRESS_MEM_MASK;
     }
 
+#ifdef CONFIG_FUZZ
+    /*
+     * During fuzzing runs, an unimplemented BAR (addr=0) is not a fatal
+     * error. This occurs when probing devices like the Q35 host bridge. We
+     * return gracefully to allow fuzzing to continue. In non-fuzzing builds,
+     * we retain the original g_assert() to catch unexpected behavior.
+     */
+    if (!addr) {
+        if (sizeptr) {
+            *sizeptr = 0;
+        }
+        memset(&bar, 0, sizeof(bar));
+        return bar;
+    }
+#endif
+
     g_assert(addr); /* Must have *some* size bits */
 
     size = 1U << ctz32(addr);
