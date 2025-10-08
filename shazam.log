@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/1131357261.3273575.1759928457969.JavaMail.zimbra@sjtu.edu.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 2 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC] linux-user: add syscall-filter and fork-cpu in plugin interfaces
+---
+Total patches: 1
+---
+Applying: linux-user: add syscall-filter and fork-cpu in plugin interfaces
+Patch failed at 0001 linux-user: add syscall-filter and fork-cpu in plugin interfaces
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:197: trailing whitespace.
+                int syscall_filter_ret = filter_syscall(cs, 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:221: trailing whitespace.
+                int syscall_filter_ret = filter_syscall(cs, 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:306: trailing whitespace.
+} 
+error: patch failed: include/qemu/plugin.h:207
+error: include/qemu/plugin.h: patch does not apply
+error: patch failed: linux-user/i386/cpu_loop.c:24
+error: linux-user/i386/cpu_loop.c: patch does not apply
+error: patch failed: linux-user/main.c:738
+error: linux-user/main.c: patch does not apply
+error: patch failed: linux-user/user-internals.h:66
+error: linux-user/user-internals.h: patch does not apply
+error: patch failed: plugins/api.c:628
+error: plugins/api.c: patch does not apply
+error: patch failed: plugins/core.c:743
+error: plugins/core.c: patch does not apply
+error: patch failed: plugins/plugin.h:118
+error: plugins/plugin.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
