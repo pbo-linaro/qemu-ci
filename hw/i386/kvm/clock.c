@@ -38,6 +38,9 @@ struct KVMClockState {
     /*< public >*/
 
     uint64_t clock;
+    uint64_t realtime;
+    uint64_t host_tsc;
+    uint32_t flags;
     bool clock_valid;
 
     /* whether the 'clock' value was obtained in the 'paused' state */
@@ -49,6 +52,12 @@ struct KVMClockState {
     /* whether the 'clock' value was obtained in a host with
      * reliable KVM_GET_CLOCK */
     bool clock_is_reliable;
+
+    /*
+     * whether to account downtimes by taking advantage of
+     * KVM_CLOCK_REALTIME, KVM_CLOCK_HOST_TSC and KVM_VCPU_TSC_CTRL.
+     */
+    bool account_downtime;
 };
 
 struct pvclock_vcpu_time_info {
@@ -100,6 +109,7 @@ static uint64_t kvmclock_current_nsec(KVMClockState *s)
 static void kvm_update_clock(KVMClockState *s)
 {
     struct kvm_clock_data data;
+    bool has_aux;
     int ret;
 
     ret = kvm_vm_ioctl(kvm_state, KVM_GET_CLOCK, &data);
@@ -108,6 +118,18 @@ static void kvm_update_clock(KVMClockState *s)
                 abort();
     }
     s->clock = data.clock;
+
+    s->realtime = 0;
+    s->host_tsc = 0;
+    s->flags = 0;
+
+    has_aux = with_kvmclock_aux_flags(data.flags);
+
+    if (s->account_downtime && kvm_support_clock_downtime() && has_aux) {
+        s->realtime = data.realtime;
+        s->host_tsc = data.host_tsc;
+        s->flags = data.flags & KVM_CLOCK_AUX_FLAGS;
+    }
 
     /* If kvm_has_adjust_clock_stable() is false, KVM_GET_CLOCK returns
      * essentially CLOCK_MONOTONIC plus a guest-specific adjustment.  This
@@ -160,6 +182,30 @@ static void do_kvmclock_ctrl(CPUState *cpu, run_on_cpu_data data)
     }
 }
 
+static void kvmclock_adjust_tsc_offset(KVMClockState *s)
+{
+    CPUX86State *env = cpu_env(first_cpu);
+    struct kvm_clock_data data;
+    uint64_t delta;
+    int ret;
+
+    ret = kvm_vm_ioctl(kvm_state, KVM_GET_CLOCK, &data);
+    if (ret < 0) {
+        fprintf(stderr, "KVM_GET_CLOCK failed: %s\n", strerror(-ret));
+        abort();
+    }
+
+    if (!with_kvmclock_aux_flags(data.flags)) {
+        fprintf(stderr, "warning: cannot adjust tsc offset\n");
+        return;
+    }
+
+    delta = ((data.clock - s->clock) * env->tsc_khz + 999999) / 1000000 +
+            (s->host_tsc - data.host_tsc);
+
+    kvm_write_all_tsc_offset(delta);
+}
+
 static void kvmclock_vm_state_change(void *opaque, bool running,
                                      RunState state)
 {
@@ -170,6 +216,7 @@ static void kvmclock_vm_state_change(void *opaque, bool running,
 
     if (running) {
         struct kvm_clock_data data = {};
+        bool account_downtime;
 
         /*
          * If the host where s->clock was read did not support reliable
@@ -184,12 +231,26 @@ static void kvmclock_vm_state_change(void *opaque, bool running,
         }
 
         s->clock_valid = false;
-
         data.clock = s->clock;
+
+        account_downtime = s->account_downtime &&
+            kvm_support_clock_downtime() &&
+            with_kvmclock_aux_flags(s->flags);
+
+        if (account_downtime) {
+            data.realtime = s->realtime;
+            data.host_tsc = s->host_tsc;
+            data.flags = s->flags & KVM_CLOCK_AUX_FLAGS;
+        }
+
         ret = kvm_vm_ioctl(kvm_state, KVM_SET_CLOCK, &data);
         if (ret < 0) {
             fprintf(stderr, "KVM_SET_CLOCK failed: %s\n", strerror(-ret));
             abort();
+        }
+
+        if (account_downtime) {
+            kvmclock_adjust_tsc_offset(s);
         }
 
         if (!cap_clock_ctrl) {
@@ -250,6 +311,26 @@ static const VMStateDescription kvmclock_reliable_get_clock = {
     }
 };
 
+static bool kvmclock_account_downtime(void *opaque)
+{
+    KVMClockState *s = opaque;
+
+    return s->account_downtime;
+}
+
+static const VMStateDescription kvmclock_auxiliary = {
+    .name = "kvmclock/auxiliary",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = kvmclock_account_downtime,
+    .fields = (VMStateField[]) {
+        VMSTATE_UINT32(flags, KVMClockState),
+        VMSTATE_UINT64(realtime, KVMClockState),
+        VMSTATE_UINT64(host_tsc, KVMClockState),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
 /*
  * When migrating, assume the source has an unreliable
  * KVM_GET_CLOCK unless told otherwise.
@@ -259,6 +340,9 @@ static int kvmclock_pre_load(void *opaque)
     KVMClockState *s = opaque;
 
     s->clock_is_reliable = false;
+    s->realtime = 0;
+    s->host_tsc = 0;
+    s->flags = 0;
 
     return 0;
 }
@@ -300,6 +384,7 @@ static const VMStateDescription kvmclock_vmsd = {
     },
     .subsections = (const VMStateDescription * const []) {
         &kvmclock_reliable_get_clock,
+        &kvmclock_auxiliary,
         NULL
     }
 };
@@ -307,6 +392,8 @@ static const VMStateDescription kvmclock_vmsd = {
 static const Property kvmclock_properties[] = {
     DEFINE_PROP_BOOL("x-mach-use-reliable-get-clock", KVMClockState,
                       mach_use_reliable_get_clock, true),
+    DEFINE_PROP_BOOL("x-account-downtime", KVMClockState,
+                      account_downtime, true),
 };
 
 static void kvmclock_class_init(ObjectClass *klass, const void *data)

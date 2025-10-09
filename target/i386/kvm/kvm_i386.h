@@ -51,10 +51,16 @@ typedef struct KvmCpuidInfo {
     struct kvm_cpuid_entry2 entries[KVM_MAX_CPUID_ENTRIES];
 } KvmCpuidInfo;
 
+#define KVM_CLOCK_AUX_FLAGS (KVM_CLOCK_REALTIME | KVM_CLOCK_HOST_TSC)
+#define with_kvmclock_aux_flags(flags) \
+    ((flags & KVM_CLOCK_AUX_FLAGS) == KVM_CLOCK_AUX_FLAGS)
+
 bool kvm_is_vm_type_supported(int type);
 bool kvm_has_adjust_clock_stable(void);
 bool kvm_has_exception_payload(void);
+bool kvm_support_clock_downtime(void);
 void kvm_synchronize_all_tsc(void);
+void kvm_write_all_tsc_offset(uint64_t delta);
 
 void kvm_get_apic_state(DeviceState *d, struct kvm_lapic_state *kapic);
 void kvm_put_apicbase(X86CPU *cpu, uint64_t value);
