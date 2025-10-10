@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20251010115954.1995298-1-Marco.Cavenati@eurecom.fr/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/2] migration: add FEATURE_SEEKABLE to QIOChannelBlock
+  [31m✗[0m [PATCH v2 2/2] migration: mapped-ram: handle zero pages
+  ---
+  [31m✗[0m BADSIG: DKIM/eurecom.fr
+---
+Total patches: 2
+---
+Applying: migration: add FEATURE_SEEKABLE to QIOChannelBlock
+Applying: migration: mapped-ram: handle zero pages
+Patch failed at 0002 migration: mapped-ram: handle zero pages
+error: patch failed: migration/options.c:449
+error: migration/options.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
