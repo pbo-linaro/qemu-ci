@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20251010052141.42460-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/12] target/tricore: Remove target_ulong use in gen_goto_tb()
+  [32m✓[0m [PATCH 2/12] target/tricore: Replace target_ulong -> vaddr with tlb_fill() callees
+  [32m✓[0m [PATCH 3/12] target/tricore: Remove target_ulong use in translate_insn() handler
+  [32m✓[0m [PATCH 4/12] target/tricore: Remove target_ulong use in gen_addi_d()
+  [32m✓[0m [PATCH 5/12] target/tricore: Remove unnecessary cast to target_ulong
+  [32m✓[0m [PATCH 6/12] target/tricore: Replace target_ulong -> uint32_t in op_helper.c
+  [32m✓[0m [PATCH 7/12] target/tricore: Declare registers as TCGv_i32
+  [32m✓[0m [PATCH 8/12] target/tricore: Inline tcg_gen_ld32u_tl()
+  [32m✓[0m [PATCH 9/12] target/tricore: Expand TCG helpers for 32-bit target
+  [32m✓[0m [PATCH 10/12] target/tricore: Pass DisasContext as first argument
+  [32m✓[0m [PATCH 11/12] target/tricore: Un-inline various helpers
+  [32m✓[0m [PATCH 12/12] target/tricore: Expand TCGv type for 32-bit target
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 12
+---
+Applying: target/tricore: Remove target_ulong use in gen_goto_tb()
+Patch failed at 0001 target/tricore: Remove target_ulong use in gen_goto_tb()
+error: patch failed: target/tricore/translate.c:2811
+error: target/tricore/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
