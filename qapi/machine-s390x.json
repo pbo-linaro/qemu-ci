@@ -119,3 +119,28 @@
 { 'command': 'query-s390x-cpu-polarization', 'returns': 'CpuPolarizationInfo',
   'features': [ 'unstable' ]
 }
+
+##
+# @SCLP_CPI_INFO_AVAILABLE:
+#
+# Emitted when the Control-Program Identification data is available
+# in the QOM tree.
+#
+# @iscpiavailable: is CPI data available in QOM
+#
+# Features:
+#
+# @unstable: This event is experimental.
+#
+# Since: 10.2
+#
+# .. qmp-example::
+#
+#     <- { "event": "SCLP_CPI_INFO_AVAILABLE",
+#          "data": { "iscpiavailable": true },
+#          "timestamp": { "seconds": 1401385907, "microseconds": 422329 } }
+##
+{ 'event': 'SCLP_CPI_INFO_AVAILABLE',
+  'data': { 'iscpiavailable': 'bool' },
+  'features': [ 'unstable' ]
+}
