@@ -1,0 +1,79 @@
+Grabbing thread from lore.kernel.org/all/20251014200718.422022-1-richard.henderson@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 38 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 94 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/37] target/arm: Implement isar tests for FEAT_SYSREG128, FEAT_SYSINSTR128
+  [32m✓[0m [PATCH v2 2/37] target/arm: Define CP_REG_SIZE_U128
+  [32m✓[0m [PATCH v2 3/37] target/arm: Update ARMCPRegInfo for 128-bit sysregs
+  [32m✓[0m [PATCH v2 4/37] target/arm: Asserts for ARM_CP_128BIT in define_one_arm_cp_reg
+  [32m✓[0m [PATCH v2 5/37] target/arm: Split add_cpreg_to_hashtable_aa64
+  [32m✓[0m [PATCH v2 6/37] target/arm: Add raw_read128, raw_write128
+  [32m✓[0m [PATCH v2 7/37] target/arm: Add read_raw_cp_reg128, write_raw_cp_reg128
+  [32m✓[0m [PATCH v2 8/37] target/arm: Use cpreg_field_type in arm_gen_one_feature_sysreg
+  [32m✓[0m [PATCH v2 9/37] target/arm: Merge arm_gen_one_feature_sysreg into the single caller
+  [32m✓[0m [PATCH v2 10/37] target/arm: Handle MO_128 in arm_gdb_get_sysreg
+  [32m✓[0m [PATCH v2 11/37] target/arm: Handle ARM_CP_128BIT in cpu reset
+  [32m✓[0m [PATCH v2 12/37] target/arm: Put 128-bit sysregs into a separate list
+  [32m✓[0m [PATCH v2 13/37] target/arm/kvm: Assert no 128-bit sysregs in kvm_arm_init_cpreg_list
+  [32m✓[0m [PATCH v2 14/37] target/arm/hvf: Assert no 128-bit sysregs in hvf_arch_init_vcpu
+  [32m✓[0m [PATCH v2 15/37] migration: Add vmstate_info_int128
+  [32m✓[0m [PATCH v2 16/37] target/arm: Migrate cpreg128 registers
+  [32m✓[0m [PATCH v2 17/37] target/arm: Add syn_aa64_sysreg128trap
+  [32m✓[0m [PATCH v2 18/37] target/arm: Introduce helper_{get,set}_cp_reg128
+  [32m✓[0m [PATCH v2 19/37] target/arm: Implement MRRS, MSRR, SYSP
+  [32m✓[0m [PATCH v2 20/37] target/arm: Consolidate definitions of PAR
+  [32m✓[0m [PATCH v2 21/37] target/arm: Extend PAR_EL1 to 128-bit
+  [32m✓[0m [PATCH v2 22/37] target/arm: Consolidate definitions of TTBR[01]
+  [32m✓[0m [PATCH v2 23/37] target/arm: Split out flush_if_asid_change
+  [32m✓[0m [PATCH v2 24/37] target/arm: Use flush_if_asid_change in vmsa_ttbr_write
+  [32m✓[0m [PATCH v2 25/37] target/arm: Extend TTBR system registers to 128-bit
+  [32m✓[0m [PATCH v2 26/37] target/arm: Implement TLBIP IPAS2E1, IPAS2LE1
+  [32m✓[0m [PATCH v2 27/37] target/arm: Implement TLBIP IPAS2E1IS, IPAS2LE1IS
+  [32m✓[0m [PATCH v2 28/37] target/arm: Implement TLBIP RVAE1, RVAAE1, RVALE1, RVAALE1
+  [32m✓[0m [PATCH v2 29/37] target/arm: Implement TLBIP RIPAS1E1, RIPAS1LE1, RIPAS2E1IS, RIPAS2LE1IS
+  [32m✓[0m [PATCH v2 30/37] target/arm: Implement TLBIP RVA{L}E2{IS,OS}
+  [32m✓[0m [PATCH v2 31/37] target/arm: Implement TLBIP RVA{L}E3{IS,OS}
+  [32m✓[0m [PATCH v2 32/37] target/arm: Implement TLBIP VA{L}E1{IS,OS}
+  [32m✓[0m [PATCH v2 33/37] target/arm: Implement TLBIP VAE2, VALE2
+  [32m✓[0m [PATCH v2 34/37] target/arm: Implement TLBIP VAE3, VALE3
+  [32m✓[0m [PATCH v2 35/37] target/arm: Implement TLBIP VA{L}E2{IS,OS}
+  [32m✓[0m [PATCH v2 36/37] target/arm: Implement TLBIP VA{L}E3{IS,OS}
+  [32m✓[0m [PATCH v2 37/37] NOTFORMERGE: Enable FEAT_SYSREG128, FEAT_SYSINSTR128 for cpu max
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 37
+---
+Applying: target/arm: Implement isar tests for FEAT_SYSREG128, FEAT_SYSINSTR128
+Applying: target/arm: Define CP_REG_SIZE_U128
+Applying: target/arm: Update ARMCPRegInfo for 128-bit sysregs
+Applying: target/arm: Asserts for ARM_CP_128BIT in define_one_arm_cp_reg
+Applying: target/arm: Split add_cpreg_to_hashtable_aa64
+Applying: target/arm: Add raw_read128, raw_write128
+Applying: target/arm: Add read_raw_cp_reg128, write_raw_cp_reg128
+Applying: target/arm: Use cpreg_field_type in arm_gen_one_feature_sysreg
+Applying: target/arm: Merge arm_gen_one_feature_sysreg into the single caller
+Applying: target/arm: Handle MO_128 in arm_gdb_get_sysreg
+Applying: target/arm: Handle ARM_CP_128BIT in cpu reset
+Applying: target/arm: Put 128-bit sysregs into a separate list
+Applying: target/arm/kvm: Assert no 128-bit sysregs in kvm_arm_init_cpreg_list
+Applying: target/arm/hvf: Assert no 128-bit sysregs in hvf_arch_init_vcpu
+Applying: migration: Add vmstate_info_int128
+Applying: target/arm: Migrate cpreg128 registers
+Applying: target/arm: Add syn_aa64_sysreg128trap
+Applying: target/arm: Introduce helper_{get,set}_cp_reg128
+Applying: target/arm: Implement MRRS, MSRR, SYSP
+Applying: target/arm: Consolidate definitions of PAR
+Applying: target/arm: Extend PAR_EL1 to 128-bit
+Patch failed at 0021 target/arm: Extend PAR_EL1 to 128-bit
+error: patch failed: target/arm/cpu.h:1750
+error: target/arm/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
