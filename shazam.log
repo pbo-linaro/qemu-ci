@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/176045275486.7119.13003157223292391926-0@git.sr.ht/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 3 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v7 1/2] Honor guest PAT on x86, absent Bochs display
+  [31m✗[0m [PATCH v7 2/2] Honor guest PAT on x86, absent Bochs display
+  ---
+  [31m✗[0m BADSIG: DKIM/git.sr.ht
+---
+Total patches: 2
+---
+Applying: Honor guest PAT on x86, absent Bochs display
+Applying: Honor guest PAT on x86, absent Bochs display
+Patch failed at 0002 Honor guest PAT on x86, absent Bochs display
+error: patch failed: accel/kvm/kvm-all.c:103
+error: accel/kvm/kvm-all.c: patch does not apply
+error: patch failed: accel/stubs/kvm-stub.c:24
+error: accel/stubs/kvm-stub.c: patch does not apply
+error: patch failed: hw/display/bochs-display.c:20
+error: hw/display/bochs-display.c: patch does not apply
+error: patch failed: include/system/kvm.h:43
+error: include/system/kvm.h: patch does not apply
+error: patch failed: target/i386/kvm/kvm.c:2692
+error: target/i386/kvm/kvm.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
