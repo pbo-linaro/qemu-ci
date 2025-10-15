@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.0.6-20251014174303@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 201 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/13] Revert "target/i386: do not expose ARCH_CAPABILITIES on AMD CPU"
+  [PATCH 2/13] Revert "i386/cpu: Move adjustment of CPUID_EXT_PDCM before feature_dependencies[] check"
+  [PATCH 3/13] ui/gtk: Consider scaling when propagating ui info
+  [PATCH 4/13] ui/gtk: Fix callback function signature
+  [PATCH 5/13] hid: fix incorrect return value for hid
+  [PATCH 6/13] docs/devel: Correct uefi-vars-x64 device name
+  [PATCH 7/13] pcie_sriov: make pcie_sriov_pf_exit() safe on non-SR-IOV devices
+  [PATCH 8/13] target/arm: Don't set HCR.RW for AArch32 only CPUs
+  [PATCH 9/13] target/riscv: Fix the mepc when sspopchk triggers the exception
+  [PATCH 10/13] target/riscv: Fix SSP CSR error handling in VU/VS mode
+  [PATCH 11/13] target/riscv: Fix ssamoswap error handling
+  [PATCH 12/13] target/riscv: rvv: Fix vslide1[up|down].vx unexpected result when XLEN=32 and SEW=64
+  [PATCH 13/13] pcie_sriov: Fix broken MMIO accesses from SR-IOV VFs
+---
+Total patches: 13
+---
+Applying: Revert "target/i386: do not expose ARCH_CAPABILITIES on AMD CPU"
+Patch failed at 0001 Revert "target/i386: do not expose ARCH_CAPABILITIES on AMD CPU"
+error: patch failed: target/i386/kvm/kvm.c:500
+error: target/i386/kvm/kvm.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
