@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20251015180115.97493-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 51 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/7] target/microblaze: Remove target_ulong use in cpu_handle_mmu_fault()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 2/7] target/microblaze: Remove target_ulong uses in get_phys_page_attrs_debug
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Edgar E. Iglesias <edgar.iglesias@amd.com> ([31m✗[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH v3 3/7] target/microblaze: Remove target_ulong use in gen_goto_tb()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 4/7] target/microblaze: Remove target_ulong use in helper_stackprot()
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 5/7] target/microblaze: Have compute_ldst_addr_type[ab] return TCG_i32
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 6/7] target/microblaze: Have do_load/store() take a TCG_i32 address argument
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v3 7/7] target/microblaze: Convert CPUMBState::res_addr field to uint32_t type
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 7
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Anton Johansson <anjo@rev.ng>
+     Msg From: Anton Johansson via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/microblaze: Remove target_ulong use in cpu_handle_mmu_fault()
+Applying: target/microblaze: Remove target_ulong uses in get_phys_page_attrs_debug
+Applying: target/microblaze: Remove target_ulong use in gen_goto_tb()
+Patch failed at 0003 target/microblaze: Remove target_ulong use in gen_goto_tb()
+error: patch failed: target/microblaze/translate.c:116
+error: target/microblaze/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
