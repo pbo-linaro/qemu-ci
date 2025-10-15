@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.1.2-20251014173635@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 285 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/11] pcie_sriov: Fix broken MMIO accesses from SR-IOV VFs
+  [PATCH 2/11] hid: fix incorrect return value for hid
+  [PATCH 3/11] docs/devel: Correct uefi-vars-x64 device name
+  [PATCH 4/11] pcie_sriov: make pcie_sriov_pf_exit() safe on non-SR-IOV devices
+  [PATCH 5/11] target/arm: Don't set HCR.RW for AArch32 only CPUs
+  [PATCH 6/11] target/riscv: Fix the mepc when sspopchk triggers the exception
+  [PATCH 7/11] target/riscv: Fix SSP CSR error handling in VU/VS mode
+  [PATCH 8/11] target/riscv: Fix ssamoswap error handling
+  [PATCH 9/11] target/riscv: rvv: Fix vslide1[up|down].vx unexpected result when XLEN=32 and SEW=64
+  [PATCH 10/11] target/i386: add compatibility property for arch_capabilities
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+  [PATCH 11/11] target/i386: add compatibility property for pdcm feature
+    + Reviewed-by: Zhao Liu <zhao1.liu@intel.com> ([32m✓[0m DKIM/intel.com)
+---
+Total patches: 11
+---
+Applying: pcie_sriov: Fix broken MMIO accesses from SR-IOV VFs
+Patch failed at 0001 pcie_sriov: Fix broken MMIO accesses from SR-IOV VFs
+error: patch failed: docs/pcie_sriov.txt:72
+error: docs/pcie_sriov.txt: patch does not apply
+error: patch failed: hw/net/igbvf.c:251
+error: hw/net/igbvf.c: patch does not apply
+error: patch failed: hw/nvme/ctrl.c:8708
+error: hw/nvme/ctrl.c: patch does not apply
+error: patch failed: hw/pci/pci.c:1490
+error: hw/pci/pci.c: patch does not apply
+error: patch failed: hw/pci/pcie_sriov.c:242
+error: hw/pci/pcie_sriov.c: patch does not apply
+error: patch failed: include/hw/pci/pcie_sriov.h:37
+error: include/hw/pci/pcie_sriov.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
