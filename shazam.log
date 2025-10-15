@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20251015212051.1156334-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 39 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/7] chardev/char-socket: simplify reconnect-ms handling
+  [32m✓[0m [PATCH v4 2/7] chardev/char: split chardev_init_common() out of qemu_char_open()
+  [32m✓[0m [PATCH v4 3/7] chardev/char: qemu_char_open(): add return value
+  [32m✓[0m [PATCH v4 4/7] chardev/char: move filename and be_opened handling to qemu_char_open()
+  [32m✓[0m [PATCH v4 5/7] chardev/char: introduce .init() + .connect() initialization interface
+  [32m✓[0m [PATCH v4 6/7] chardev/char-socket: move to .init + .connect api
+  [32m✓[0m [PATCH v4 7/7] chardev: introduce DEFINE_PROP_CHR_NO_CONNECT
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 7
+---
+Applying: chardev/char-socket: simplify reconnect-ms handling
+Patch failed at 0001 chardev/char-socket: simplify reconnect-ms handling
+error: patch failed: chardev/char-socket.c:1378
+error: chardev/char-socket.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
