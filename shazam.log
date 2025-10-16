@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20251016114104.1384675-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 28 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 108 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/25] vhost: store busyloop_timeout into struct vhost_dev
+  [32m✓[0m [PATCH v2 2/25] vhost: reorder logic in vhost_dev_init()
+  [32m✓[0m [PATCH v2 3/25] vhost: rework vhost_virtqueue_init()
+  [32m✓[0m [PATCH v2 4/25] vhost: add connect parameter to vhost_dev_init()
+  [32m✓[0m [PATCH v2 5/25] vhost: split vhost_dev_connect() out of vhost_dev_init()
+  [32m✓[0m [PATCH v2 6/25] vhost-user: support connect api
+  [32m✓[0m [PATCH v2 7/25] vhost-user-blk: vhost_user_blk_connect() move connected check to caller
+  [32m✓[0m [PATCH v2 8/25] vhost-user-blk: vhost_user_blk_connect(): call vhost_dev_connect()
+  [32m✓[0m [PATCH v2 9/25] vhost-user-blk: rename vhost_user_blk_connect to vhost_user_blk_init
+  [32m✓[0m [PATCH v2 10/25] vhost-user-blk: split vhost_user_blk_init()
+  [32m✓[0m [PATCH v2 11/25] vhost-user-blk: move initial reconnect loop to separate function
+  [32m✓[0m [PATCH v2 12/25] vhost-user-blk: move first vhost_user_blk_init() to _realize()
+  [32m✓[0m [PATCH v2 13/25] vhost-user-blk: postpone connect to pre-incoming
+  [32m✓[0m [PATCH v2 14/25] virtio: introduce .skip_vhost_migration_log() handler
+    + Acked-by: Raphael Norwitz <raphael.s.norwitz@gmail.com> ([32m✓[0m DKIM/gmail.com)
+  [32m✓[0m [PATCH v2 15/25] migration: introduce vmstate_event_notifier
+  [32m✓[0m [PATCH v2 16/25] chardev: add .chr_get_client() handler
+  [32m✓[0m [PATCH v2 17/25] vhost: add inflight region backend-transfer vmstate
+  [32m✓[0m [PATCH v2 18/25] chardev: introduce backend-transfer vmstate for chardev
+  [32m✓[0m [PATCH v2 19/25] vhost: support backend-transfer migration
+  [32m✓[0m [PATCH v2 20/25] vhost-user: add vmstate
+  [32m✓[0m [PATCH v2 21/25] virtio: support vhost backend migration
+  [32m✓[0m [PATCH v2 22/25] virtio: support .needed for virtio vmsd
+  [32m✓[0m [PATCH v2 23/25] RFC qapi: add local-vhost-user-blk migration capability
+  [32m✓[0m [PATCH v2 24/25] vhost-user-blk: support vhost backend migration
+  [32m✓[0m [PATCH v2 25/25] tests/functional: add test_x86_64_vhost_user_blk_fd_migration.py
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 25
+---
+Applying: vhost: store busyloop_timeout into struct vhost_dev
+Patch failed at 0001 vhost: store busyloop_timeout into struct vhost_dev
+error: patch failed: hw/virtio/vhost.c:1501
+error: hw/virtio/vhost.c: patch does not apply
+error: patch failed: include/hw/virtio/vhost.h:105
+error: include/hw/virtio/vhost.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
