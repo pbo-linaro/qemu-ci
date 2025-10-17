@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20251017082234.517827-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 36 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/8] vfio/iommufd: Add framework code to support getting dirty bitmap before unmap
+  [32m✓[0m [PATCH v2 2/8] vfio/iommufd: Query dirty bitmap before DMA unmap
+  [32m✓[0m [PATCH v2 3/8] vfio/container-legacy: rename vfio_dma_unmap_bitmap() to vfio_legacy_dma_unmap_get_dirty_bitmap()
+  [32m✓[0m [PATCH v2 4/8] vfio: Add a backend_flag parameter to vfio_contianer_query_dirty_bitmap()
+  [32m✓[0m [PATCH v2 5/8] vfio/iommufd: Add IOMMU_HWPT_GET_DIRTY_BITMAP_NO_CLEAR flag support
+  [32m✓[0m [PATCH v2 6/8] intel_iommu: Fix unmap_bitmap failure with legacy VFIO backend
+  [32m✓[0m [PATCH v2 7/8] vfio/migration: Add migration blocker if VM memory is too large to cause unmap_bitmap failure
+  [32m✓[0m [PATCH v2 8/8] vfio/migration: Allow live migration with vIOMMU without VFs using device dirty tracking
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 8
+---
+Applying: vfio/iommufd: Add framework code to support getting dirty bitmap before unmap
+Patch failed at 0001 vfio/iommufd: Add framework code to support getting dirty bitmap before unmap
+error: patch failed: hw/vfio/iommufd.c:61
+error: hw/vfio/iommufd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
