@@ -1,0 +1,24 @@
+Grabbing thread from lore.kernel.org/all/20251020081159.2370512-1-maobibo@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC 1/2] linux-headers: Update to Linux v6.18-rc2
+  [PATCH RFC 2/2] target/loongarch: Add PTW feature support in KVM mode
+---
+Total patches: 2
+---
+ Base: base-commit 36df9f3764a5d18683e79f743bc9fa1550d76da0 not known, ignoring
+Applying: linux-headers: Update to Linux v6.18-rc2
+Applying: target/loongarch: Add PTW feature support in KVM mode
+Patch failed at 0002 target/loongarch: Add PTW feature support in KVM mode
+error: patch failed: target/loongarch/cpu.c:233
+error: target/loongarch/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
