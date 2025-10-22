@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251022144903.74612-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] chardev/char-fe: Improve @docstrings
+  [32m✓[0m [PATCH 2/7] chardev/char-io: Add @docstrings for io_channel_send[_full]()
+  [32m✓[0m [PATCH 3/7] chardev/char-pty: Do not ignore chr_write() failures
+  [32m✓[0m [PATCH 4/7] chardev/char: Allow partial writes in qemu_chr_write()
+  [32m✓[0m [PATCH 5/7] chardev/char: Preserve %errno in qemu_chr_write()
+  [32m✓[0m [PATCH 6/7] chardev/char-hub: Retry when qemu_chr_fe_write() can not write
+  [32m✓[0m [PATCH 7/7] hw/char: Simplify when qemu_chr_fe_write() could not write
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 7
+---
+Applying: chardev/char-fe: Improve @docstrings
+Patch failed at 0001 chardev/char-fe: Improve @docstrings
+error: patch failed: include/chardev/char-fe.h:26
+error: include/chardev/char-fe.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
