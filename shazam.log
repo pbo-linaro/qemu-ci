@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20251022150743.78183-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 8 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/9] chardev/char-fe: Improve @docstrings
+  [32m✓[0m [PATCH v2 2/9] chardev/char-io: Add @docstrings for io_channel_send[_full]()
+  [32m✓[0m [PATCH v2 3/9] chardev/char: Improve ChardevClass::chr_write() docstring
+  [32m✓[0m [PATCH v2 4/9] chardev/char: Document qemu_chr_write[_all]()
+  [32m✓[0m [PATCH v2 5/9] chardev/char-pty: Do not ignore chr_write() failures
+  [32m✓[0m [PATCH v2 6/9] chardev/char: Allow partial writes in qemu_chr_write()
+  [32m✓[0m [PATCH v2 7/9] chardev/char: Preserve %errno in qemu_chr_write()
+  [32m✓[0m [PATCH v2 8/9] chardev/char-hub: Retry when qemu_chr_fe_write() can not write
+  [32m✓[0m [PATCH v2 9/9] hw/char: Simplify when qemu_chr_fe_write() could not write
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Suggested-by: Peter Maydell <peter.maydell@linaro.org>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: chardev/char-fe: Improve @docstrings
+Patch failed at 0001 chardev/char-fe: Improve @docstrings
+error: patch failed: include/chardev/char-fe.h:26
+error: include/chardev/char-fe.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
