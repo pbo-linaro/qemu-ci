@@ -119,7 +119,7 @@ Surfaceless is the default if ``wsi`` is not specified.
        hostmem=8G,wayland-socket-path=/tmp/nonstandard/mock_wayland.sock,
        wsi=headless
 
-.. _gfxstream: https://android.googlesource.com/platform/hardware/google/gfxstream/
+.. _gfxstream: https://github.com/google/gfxstream
 .. _Wayland display passthrough: https://www.youtube.com/watch?v=OZJiHMtIQ2M
-.. _gfxstream-enabled rutabaga: https://crosvm.dev/book/appendix/rutabaga_gfx.html
+.. _gfxstream-enabled rutabaga: https://github.com/magma-gpu/rutabaga_gfx
 .. _guest Wayland proxy: https://crosvm.dev/book/devices/wayland.html
