@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20251024123041.51254-1-kwolf@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+WARNING: duplicate messages found at index 4
+   Subject 1: qemu-img info: Add cache mode option
+   Subject 2: qemu-img info: Add cache mode option
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 10 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/4] block: Improve comments in BlockLimits
+  [32m✓[0m [PATCH v2 2/4] block: Expose block limits for images in QMP
+  [32m✓[0m [PATCH v2 3/4] qemu-img info: Optionally show block limits
+  [32m✓[0m [PATCH v2 4/4] qemu-img info: Add cache mode option
+  [32m✓[0m [PATCH v2 4/4] qemu-img info: Add cache mode option
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: block: Improve comments in BlockLimits
+Applying: block: Expose block limits for images in QMP
+Applying: qemu-img info: Optionally show block limits
+Applying: qemu-img info: Add cache mode option
+Applying: qemu-img info: Add cache mode option
+Patch failed at 0005 qemu-img info: Add cache mode option
+error: patch failed: docs/tools/qemu-img.rst:503
+error: docs/tools/qemu-img.rst: patch does not apply
+error: patch failed: qemu-img.c:3003
+error: qemu-img.c: patch does not apply
+error: patch failed: qemu-img-cmds.hx:66
+error: qemu-img-cmds.hx: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
