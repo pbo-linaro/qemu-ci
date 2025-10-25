@@ -1,0 +1,21 @@
+Grabbing thread from lore.kernel.org/all/20251025125512.19967597305@zero.eik.bme.hu/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] hw/pci-host/articia: Add variable for common type cast
+---
+Total patches: 1
+---
+Applying: hw/pci-host/articia: Add variable for common type cast
+Patch failed at 0001 hw/pci-host/articia: Add variable for common type cast
+error: patch failed: hw/pci-host/articia.c:174
+error: hw/pci-host/articia.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
