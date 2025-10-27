@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20251027-virt-v3-0-fa2a2f37e32d@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v3 1/3] test/acpi: aarch64/virt: Allow DSDT and MCFG changes
+  [31m✗[0m [PATCH v3 2/3] hw/arm/virt: Remove the lower bound of HighMem IO Regions
+  [31m✗[0m [PATCH v3 3/3] test/acpi: aarch64/virt: Update golden masters for DSDT and MCFG
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 3
+---
+ Base: using specified base-commit 36076d24f04ea9dc3357c0fbe7bb14917375819c
+Applying: test/acpi: aarch64/virt: Allow DSDT and MCFG changes
+Applying: hw/arm/virt: Remove the lower bound of HighMem IO Regions
+Applying: test/acpi: aarch64/virt: Update golden masters for DSDT and MCFG
+Patch failed at 0003 test/acpi: aarch64/virt: Update golden masters for DSDT and MCFG
+error: tmp/asl-DU2NE3.dsl: does not exist in index
+error: tmp/asl-R7MNE3.dsl: does not exist in index
+error: tmp/asl-EAUQE3.dsl: does not exist in index
+error: tmp/asl-COEQE3.dsl: does not exist in index
+error: tmp/asl-18CPE3.dsl: does not exist in index
+error: tmp/asl-CNWOE3.dsl: does not exist in index
+error: tmp/asl-RQWVE3.dsl: does not exist in index
+error: tmp/asl-AJEVE3.dsl: does not exist in index
+error: tmp/asl-4IU1E3.dsl: does not exist in index
+error: tmp/asl-NNZZE3.dsl: does not exist in index
+error: tmp/asl-4UB3E3.dsl: does not exist in index
+error: tmp/asl-I1L3E3.dsl: does not exist in index
+error: tmp/asl-3A9OE3.dsl: does not exist in index
+error: tmp/asl-85JPE3.dsl: does not exist in index
+error: tmp/asl-6TI2E3.dsl: does not exist in index
+error: tmp/asl-WLK3E3.dsl: does not exist in index
+error: tmp/asl-A3PME3.dsl: does not exist in index
+error: tmp/asl-EYCKE3.dsl: does not exist in index
+error: tmp/asl-BVH1E3.dsl: does not exist in index
+error: tmp/asl-O600E3.dsl: does not exist in index
+error: tmp/asl-2M40E3.dsl: does not exist in index
+error: tmp/asl-V8J1E3.dsl: does not exist in index
+error: tmp/asl-28D3E3.dsl: does not exist in index
+error: tmp/asl-TY02E3.dsl: does not exist in index
+error: tmp/asl-XC7GE3.dsl: does not exist in index
+error: tmp/asl-0EG2E3.dsl: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
