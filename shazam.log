@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20251027165304.98296-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/7] hw/pci/pci_host: Add 'config-reg-check-high-bit' property
+  [32m✓[0m [PATCH v2 2/7] hw/pci-host/astro: Re-use generic pci_host_data_le_ops MemoryRegionOps
+  [32m✓[0m [PATCH v2 3/7] hw/pci-host/dino: Re-use generic pci_host_data_le_ops MemoryRegionOps
+  [32m✓[0m [PATCH v2 4/7] hw/pci-host/sabre: Remove pointless OBJECT() cast
+  [32m✓[0m [PATCH v2 5/7] hw/pci-host/sabre: Include 'host' in host bridge method names
+  [32m✓[0m [PATCH v2 6/7] hw/pci-host/sabre: Re-use generic pci_host_data_le_ops MemoryRegionOps
+  [32m✓[0m [PATCH v2 7/7] hw/pci-host/typhoon: Re-use generic pci_host_data_le_ops MemoryRegionOps
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 7
+---
+Applying: hw/pci/pci_host: Add 'config-reg-check-high-bit' property
+Applying: hw/pci-host/astro: Re-use generic pci_host_data_le_ops MemoryRegionOps
+Applying: hw/pci-host/dino: Re-use generic pci_host_data_le_ops MemoryRegionOps
+Applying: hw/pci-host/sabre: Remove pointless OBJECT() cast
+Applying: hw/pci-host/sabre: Include 'host' in host bridge method names
+Patch failed at 0005 hw/pci-host/sabre: Include 'host' in host bridge method names
+error: patch failed: hw/pci-host/sabre.c:492
+error: hw/pci-host/sabre.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
