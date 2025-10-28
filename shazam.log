@@ -1,0 +1,49 @@
+Grabbing thread from lore.kernel.org/all/20251028173430.2180057-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 82 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] scripts: clean up meson-buildoptions.py
+  [32m✓[0m [PATCH 2/18] i386/kvm/cpu: Init SMM cpu address space for hotplugged CPUs
+  [32m✓[0m [PATCH 3/18] rcu: Unify force quiescent state
+  [32m✓[0m [PATCH 4/18] rust: remove useless glib_sys bindings
+  [32m✓[0m [PATCH 5/18] rust: only leave leaf crates as workspace members
+  [32m✓[0m [PATCH 6/18] qobject: make refcount atomic
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 7/18] char: rename CharBackend->CharFrontend
+  [32m✓[0m [PATCH 8/18] accel/mshv: initialize thread name
+  [32m✓[0m [PATCH 9/18] accel/mshv: use return value of handle_pio_str_read
+  [32m✓[0m [PATCH 10/18] esp.c: fix esp_cdb_ready() FIFO wraparound limit calculation
+    + Buglink: https://issues.oss-fuzz.com/issues/439878564 ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 11/18] qtest/am53c974-test: add additional test for cmdfifo overflow
+  [32m✓[0m [PATCH 12/18] rust/qemu-macros: Convert bit value to u8 within #[property]
+    + Reviewed-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 13/18] scsi: make SCSIRequest refcount atomic
+  [32m✓[0m [PATCH 14/18] qdev: Change PropertyInfo method print() to return malloc'ed string
+  [32m✓[0m [PATCH 15/18] hw/i386/isapc.c: warn rather than reject modern x86 CPU models
+  [32m✓[0m [PATCH 16/18] docs/about/deprecated.rst: document isapc deprecation for modern x86 CPU models
+  [32m✓[0m [PATCH 17/18] target/i386: clear CPU_INTERRUPT_SIPI for all accelerators
+  [32m✓[0m [PATCH 18/18] rust: migration: allow passing ParentField<> to vmstate_of!
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 18
+---
+Applying: scripts: clean up meson-buildoptions.py
+Applying: i386/kvm/cpu: Init SMM cpu address space for hotplugged CPUs
+Applying: rcu: Unify force quiescent state
+Applying: rust: remove useless glib_sys bindings
+Applying: rust: only leave leaf crates as workspace members
+Applying: qobject: make refcount atomic
+Applying: char: rename CharBackend->CharFrontend
+Patch failed at 0007 char: rename CharBackend->CharFrontend
+error: patch failed: hw/char/xen_console.c:53
+error: hw/char/xen_console.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
