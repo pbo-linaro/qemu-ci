@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20251028231347.194844-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/22] migration: introduce vmstate_load_vmsd() and vmstate_save_vmsd()
+  [32m✓[0m [PATCH RFC 2/22] migration: VMStateInfo: introduce new handlers with errp
+  [32m✓[0m [PATCH RFC 3/22] tests/unit/test-vmstate: move to new migration APIs
+  [32m✓[0m [PATCH RFC 4/22] ui/vdagent: move to new migration APIs
+  [32m✓[0m [PATCH RFC 5/22] hw/s390x/virtio-ccw.c: move to new migration APIs
+  [32m✓[0m [PATCH RFC 6/22] hw/scsi/spapr_vscsi: move to new migration APIs
+  [32m✓[0m [PATCH RFC 7/22] hw/scsi/scsi-bus.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 8/22] hw/vfio/pci: move to new migration APIs
+  [32m✓[0m [PATCH RFC 9/22] hw/pci/pci: move to new migration APIs
+  [32m✓[0m [PATCH RFC 10/22] hw/pci/msix.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 11/22] hw/pci/shpc.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 12/22] hw/virtio: move to new migration APIs
+  [32m✓[0m [PATCH RFC 13/22] hw/display/virtio-gpu: move to new migration APIs
+  [32m✓[0m [PATCH RFC 14/22] hw/net/virtio-net.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 15/22] hw/nvram/eeprom93xx.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 16/22] hw/nvram/fw_cfg.c: use new migration APIs
+  [32m✓[0m [PATCH RFC 17/22] migration/cpr: move to new migration APIs
+  [32m✓[0m [PATCH RFC 18/22] migration/savevm: move to new migration APIs
+  [32m✓[0m [PATCH RFC 19/22] migration/vmstate-types: move to new migration APIs
+  [32m✓[0m [PATCH RFC 20/22] migration: VMStateInfo: remove old .get / .set handlers
+  [32m✓[0m [PATCH RFC 21/22] migration: convert vmstate_subsection_save/load functions to bool
+  [32m✓[0m [PATCH RFC 22/22] migration: finally convert vmstate_save/load_state() functions
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 22
+---
+Applying: migration: introduce vmstate_load_vmsd() and vmstate_save_vmsd()
+Applying: migration: VMStateInfo: introduce new handlers with errp
+Applying: tests/unit/test-vmstate: move to new migration APIs
+Applying: ui/vdagent: move to new migration APIs
+Applying: hw/s390x/virtio-ccw.c: move to new migration APIs
+Applying: hw/scsi/spapr_vscsi: move to new migration APIs
+Applying: hw/scsi/scsi-bus.c: use new migration APIs
+Applying: hw/vfio/pci: move to new migration APIs
+Applying: hw/pci/pci: move to new migration APIs
+Applying: hw/pci/msix.c: use new migration APIs
+Applying: hw/pci/shpc.c: use new migration APIs
+Applying: hw/virtio: move to new migration APIs
+Applying: hw/display/virtio-gpu: move to new migration APIs
+Applying: hw/net/virtio-net.c: use new migration APIs
+Applying: hw/nvram/eeprom93xx.c: use new migration APIs
+Applying: hw/nvram/fw_cfg.c: use new migration APIs
+Applying: migration/cpr: move to new migration APIs
+Applying: migration/savevm: move to new migration APIs
+Applying: migration/vmstate-types: move to new migration APIs
+Applying: migration: VMStateInfo: remove old .get / .set handlers
+Applying: migration: convert vmstate_subsection_save/load functions to bool
+Patch failed at 0021 migration: convert vmstate_subsection_save/load functions to bool
+error: patch failed: migration/vmstate.c:249
+error: migration/vmstate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
