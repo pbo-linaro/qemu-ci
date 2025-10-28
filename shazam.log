@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20251028062307.2410346-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v1 1/16] hw/arm/aspeed: Split Quanta-Q71L machine into a separate source file for maintainability
+  [PATCH v1 2/16] hw/arm/aspeed: Split Supermicro X11 machine into a separate source file for maintainability
+  [PATCH v1 3/16] hw/arm/aspeed: Split Palmetto machine into a separate source file for maintainability
+  [PATCH v1 4/16] hw/arm/aspeed: Split Bletchley machine into a separate source file for maintainability
+  [PATCH v1 5/16] hw/arm/aspeed: Split fby35 BMC machine into a separate source file for maintainability
+  [PATCH v1 6/16] hw/arm/aspeed: Split Facebook Fuji machine into a separate source file for maintainability
+  [PATCH v1 7/16] hw/arm/aspeed: Split QCOM Firework machine into a separate source file for maintainability
+  [PATCH v1 8/16] hw/arm/aspeed: Split QCOM DC-SCM V1 machine into a separate source file for maintainability
+  [PATCH v1 9/16] hw/arm/aspeed: Make aspeed_machine_ast2600_class_emmc_init() a common API for eMMC boot setup
+  [PATCH v1 10/16] hw/arm/aspeed: Split GB200NVL machine into a separate source file for maintainability
+  [PATCH v1 11/16] hw/arm/aspeed: Split Rainier machine into a separate source file for maintainability
+  [PATCH v1 12/16] hw/arm/aspeed: Split Catalina machine into a separate source file for maintainability
+  [PATCH v1 13/16] hw/arm/aspeed: Split AST2600 EVB machine into a separate source file for maintainability
+  [PATCH v1 14/16] hw/arm/aspeed: Split AST2700 EVB machine into a separate source file for maintainability
+  [PATCH v1 15/16] hw/arm/aspeed: Promote connect_serial_hds_to_uarts() to public machine API
+  [PATCH v1 16/16] hw/arm/aspeed: Split AST1030 EVB machine into a separate source file for maintainability
+---
+Total patches: 16
+---
+Applying: hw/arm/aspeed: Split Quanta-Q71L machine into a separate source file for maintainability
+Patch failed at 0001 hw/arm/aspeed: Split Quanta-Q71L machine into a separate source file for maintainability
+error: patch failed: hw/arm/aspeed.c:70
+error: hw/arm/aspeed.c: patch does not apply
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:196: new blank line at EOF.
++
+error: patch failed: hw/arm/meson.build:44
+error: hw/arm/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
