@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20251029-force_rcu-v1-0-bf860a6277a6@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/5] futex: Add qemu_futex_timedwait()
+  [31m✗[0m [PATCH 2/5] qemu-thread: Add qemu_event_timedwait()
+  [31m✗[0m [PATCH 3/5] rcu: Use call_rcu() in synchronize_rcu()
+  [31m✗[0m [PATCH 4/5] rcu: Wake the RCU thread when draining
+  [31m✗[0m [PATCH 5/5] virtio-gpu: Force RCU when unmapping blob
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 5
+---
+ Base: base-commit ee7fbe81705732785aef2cb568bbc5d8f7d2fce1 not known, ignoring
+Applying: futex: Add qemu_futex_timedwait()
+Applying: qemu-thread: Add qemu_event_timedwait()
+Applying: rcu: Use call_rcu() in synchronize_rcu()
+Patch failed at 0003 rcu: Use call_rcu() in synchronize_rcu()
+error: patch failed: util/rcu.c:52
+error: util/rcu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
