@@ -358,6 +358,11 @@ struct AMDVIPCIState {
     uint32_t capab_offset;       /* capability offset pointer    */
 };
 
+struct AMDVI_dte_key {
+    PCIBus *bus;
+    uint8_t devfn;
+};
+
 struct AMDVIState {
     X86IOMMUState iommu;        /* IOMMU bus device             */
     AMDVIPCIState *pci;         /* IOMMU PCI device             */
@@ -415,6 +420,9 @@ struct AMDVIState {
 
     /* IOTLB */
     GHashTable *iotlb;
+
+    /* HostIOMMUDevice hash table*/
+    GHashTable *hiod_hash;
 
     /* Interrupt remapping */
     bool ga_enabled;

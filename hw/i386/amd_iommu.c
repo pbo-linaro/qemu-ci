@@ -382,6 +382,22 @@ static guint amdvi_uint64_hash(gconstpointer v)
     return (guint)*(const uint64_t *)v;
 }
 
+static guint amdvi_dte_hash(gconstpointer v)
+{
+    const struct AMDVI_dte_key *key = v;
+    guint value = (guint)(uintptr_t)key->bus;
+
+    return (guint)(value << 8 | key->devfn);
+}
+
+static gboolean amdvi_dte_equal(gconstpointer v1, gconstpointer v2)
+{
+    const struct AMDVI_dte_key *key1 = v1;
+    const struct AMDVI_dte_key *key2 = v2;
+
+    return (key1->bus == key2->bus) && (key1->devfn == key2->devfn);
+}
+
 static AMDVIIOTLBEntry *amdvi_iotlb_lookup(AMDVIState *s, hwaddr addr,
                                            uint64_t devid)
 {
@@ -2291,8 +2307,60 @@ static AddressSpace *amdvi_host_dma_iommu(PCIBus *bus, void *opaque, int devfn)
     return &iommu_as[devfn]->as;
 }
 
+static bool amdvi_set_iommu_device(PCIBus *bus, void *opaque, int devfn,
+                                   HostIOMMUDevice *hiod, Error **errp)
+{
+    AMDVIState *s = opaque;
+    struct AMDVI_dte_key *new_key;
+    struct AMDVI_dte_key key = {
+        .bus = bus,
+        .devfn = devfn,
+    };
+
+    assert(hiod);
+    assert(0 <= devfn && devfn < PCI_DEVFN_MAX);
+
+    if (g_hash_table_lookup(s->hiod_hash, &key)) {
+        error_setg(errp, "Host IOMMU device already exist");
+        return false;
+    }
+
+    if (hiod->caps.type != IOMMU_HW_INFO_TYPE_AMD &&
+        hiod->caps.type != IOMMU_HW_INFO_TYPE_DEFAULT) {
+        error_setg(errp, "IOMMU hardware is not compatible");
+        return false;
+    }
+
+    new_key = g_malloc(sizeof(*new_key));
+    new_key->bus = bus;
+    new_key->devfn = devfn;
+
+    object_ref(hiod);
+    g_hash_table_insert(s->hiod_hash, new_key, hiod);
+
+    return true;
+}
+
+static void amdvi_unset_iommu_device(PCIBus *bus, void *opaque,
+                                     int devfn)
+{
+    AMDVIState *s = opaque;
+    struct AMDVI_dte_key key = {
+        .bus = bus,
+        .devfn = devfn,
+    };
+
+    if (!g_hash_table_lookup(s->hiod_hash, &key)) {
+        return;
+    }
+
+    g_hash_table_remove(s->hiod_hash, &key);
+}
+
 static const PCIIOMMUOps amdvi_iommu_ops = {
     .get_address_space = amdvi_host_dma_iommu,
+    .set_iommu_device = amdvi_set_iommu_device,
+    .unset_iommu_device = amdvi_unset_iommu_device,
 };
 
 static const MemoryRegionOps mmio_mem_ops = {
@@ -2509,6 +2577,9 @@ static void amdvi_sysbus_realize(DeviceState *dev, Error **errp)
 
     s->iotlb = g_hash_table_new_full(amdvi_uint64_hash,
                                      amdvi_uint64_equal, g_free, g_free);
+
+    s->hiod_hash = g_hash_table_new_full(amdvi_dte_hash,
+                                         amdvi_dte_equal, g_free, g_free);
 
     /* set up MMIO */
     memory_region_init_io(&s->mr_mmio, OBJECT(s), &mmio_mem_ops, s,
