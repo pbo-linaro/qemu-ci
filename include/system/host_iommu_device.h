@@ -20,6 +20,7 @@
 typedef union VendorCaps {
     struct iommu_hw_info_vtd vtd;
     struct iommu_hw_info_arm_smmuv3 smmuv3;
+    struct iommu_hw_info_amd amd;
 } VendorCaps;
 
 /**
