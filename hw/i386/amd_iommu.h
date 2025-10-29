@@ -107,6 +107,9 @@
 #define AMDVI_MMIO_CONTROL_COMWAITINTEN   (1ULL << 4)
 #define AMDVI_MMIO_CONTROL_CMDBUFLEN      (1ULL << 12)
 #define AMDVI_MMIO_CONTROL_GAEN           (1ULL << 17)
+#define AMDVI_MMIO_CONTROL_NUM_INT_REMAP_MASK        (0x3)
+#define AMDVI_MMIO_CONTROL_NUM_INT_REMAP_SHIFT       (43)
+#define AMDVI_MMIO_CONTROL_NUM_INT_REMAP_2K          (0x1)
 
 /* MMIO status register bits */
 #define AMDVI_MMIO_STATUS_CMDBUF_RUN  (1 << 4)
@@ -160,6 +163,7 @@
 #define AMDVI_PERM_READ             (1 << 0)
 #define AMDVI_PERM_WRITE            (1 << 1)
 
+/* EFR */
 #define AMDVI_FEATURE_PREFETCH            (1ULL << 0) /* page prefetch       */
 #define AMDVI_FEATURE_PPR                 (1ULL << 1) /* PPR Support         */
 #define AMDVI_FEATURE_XT                  (1ULL << 2) /* x2APIC Support      */
@@ -168,6 +172,9 @@
 #define AMDVI_FEATURE_GA                  (1ULL << 7) /* guest VAPIC support */
 #define AMDVI_FEATURE_HE                  (1ULL << 8) /* hardware error regs */
 #define AMDVI_FEATURE_PC                  (1ULL << 9) /* Perf counters       */
+
+/* EFR2 */
+#define AMDVI_FEATURE_NUM_INT_REMAP_SUP   (1ULL << 8) /* 2K int support      */
 
 /* reserved DTE bits */
 #define AMDVI_DTE_QUAD0_RESERVED        (GENMASK64(6, 2) | GENMASK64(63, 63))
@@ -380,6 +387,8 @@ struct AMDVIState {
     bool evtlog_enabled;         /* event log enabled            */
     bool excl_enabled;
 
+    uint8_t num_int_enabled;
+
     hwaddr devtab;               /* base address device table    */
     uint64_t devtab_len;         /* device table length          */
 
@@ -433,6 +442,9 @@ struct AMDVIState {
 
     /* DMA address translation */
     bool dma_remap;
+
+    /* upto 2048 interrupt support */
+    bool num_int_sup_2k;
 };
 
 uint64_t amdvi_extended_feature_register(AMDVIState *s);

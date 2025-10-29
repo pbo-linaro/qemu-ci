@@ -116,7 +116,12 @@ uint64_t amdvi_extended_feature_register(AMDVIState *s)
 
 uint64_t amdvi_extended_feature_register2(AMDVIState *s)
 {
-    return AMDVI_DEFAULT_EXT_FEATURES2;
+    uint64_t feature = AMDVI_DEFAULT_EXT_FEATURES2;
+    if (s->num_int_sup_2k) {
+        feature |= AMDVI_FEATURE_NUM_INT_REMAP_SUP;
+    }
+
+    return feature;
 }
 
 /* configure MMIO registers at startup/reset */
@@ -1538,6 +1543,9 @@ static void amdvi_handle_control_write(AMDVIState *s)
                         AMDVI_MMIO_CONTROL_CMDBUFLEN);
     s->ga_enabled = !!(control & AMDVI_MMIO_CONTROL_GAEN);
 
+    s->num_int_enabled = (control >> AMDVI_MMIO_CONTROL_NUM_INT_REMAP_SHIFT) &
+                         AMDVI_MMIO_CONTROL_NUM_INT_REMAP_MASK;
+
     /* update the flags depending on the control register */
     if (s->cmdbuf_enabled) {
         amdvi_assign_orq(s, AMDVI_MMIO_STATUS, AMDVI_MMIO_STATUS_CMDBUF_RUN);
@@ -2119,6 +2127,25 @@ static int amdvi_int_remap_msi(AMDVIState *iommu,
      * (page 5)
      */
     delivery_mode = (origin->data >> MSI_DATA_DELIVERY_MODE_SHIFT) & 7;
+    /*
+     * The MSI address register bit[2] is used to get the destination
+     * mode. The dest_mode 1 is valid for fixed and arbitrated interrupts
+     * and when IOMMU supports upto 2048 interrupts.
+     */
+    dest_mode = (origin->address >> MSI_ADDR_DEST_MODE_SHIFT) & 1;
+
+    if (dest_mode &&
+        iommu->num_int_enabled == AMDVI_MMIO_CONTROL_NUM_INT_REMAP_2K) {
+
+        trace_amdvi_ir_delivery_mode("2K interrupt mode");
+        ret = __amdvi_int_remap_msi(iommu, origin, translated, dte, &irq, sid);
+        if (ret < 0) {
+            goto remap_fail;
+        }
+        /* Translate IRQ to MSI messages */
+        x86_iommu_irq_to_msi_message(&irq, translated);
+        goto out;
+    }
 
     switch (delivery_mode) {
     case AMDVI_IOAPIC_INT_TYPE_FIXED:
@@ -2159,12 +2186,6 @@ static int amdvi_int_remap_msi(AMDVIState *iommu,
         goto remap_fail;
     }
 
-    /*
-     * The MSI address register bit[2] is used to get the destination
-     * mode. The dest_mode 1 is valid for fixed and arbitrated interrupts
-     * only.
-     */
-    dest_mode = (origin->address >> MSI_ADDR_DEST_MODE_SHIFT) & 1;
     if (dest_mode) {
         trace_amdvi_ir_err("invalid dest_mode");
         ret = -AMDVI_IR_ERR;
@@ -2322,6 +2343,30 @@ static AddressSpace *amdvi_host_dma_iommu(PCIBus *bus, void *opaque, int devfn)
     return &iommu_as[devfn]->as;
 }
 
+static void amdvi_refresh_efrs_hwinfo(struct AMDVIState *s,
+                                      struct iommu_hw_info_amd *hwinfo)
+{
+    /* Check if host OS has enabled 2K interrupts */
+    bool hwinfo_ctrl_2k;
+
+    if (s->num_int_sup_2k && !hwinfo) {
+        warn_report("AMDVI: Disabling 2048 MSI for guest, "
+                    "use IOMMUFD for device passthrough to support it");
+        s->num_int_sup_2k = 0;
+    }
+
+    hwinfo_ctrl_2k = ((hwinfo->control_register
+                       >> AMDVI_MMIO_CONTROL_NUM_INT_REMAP_SHIFT)
+                      & AMDVI_MMIO_CONTROL_NUM_INT_REMAP_2K);
+
+    if (s->num_int_sup_2k && !hwinfo_ctrl_2k) {
+        warn_report("AMDVI: Disabling 2048 MSIs for guest, "
+                    "as host kernel does not support this feature");
+        s->num_int_sup_2k = 0;
+    }
+
+    amdvi_refresh_efrs(s);
+}
 
 static bool amdvi_set_iommu_device(PCIBus *bus, void *opaque, int devfn,
                                    HostIOMMUDevice *hiod, Error **errp)
@@ -2353,6 +2398,20 @@ static bool amdvi_set_iommu_device(PCIBus *bus, void *opaque, int devfn,
 
     object_ref(hiod);
     g_hash_table_insert(s->hiod_hash, new_key, hiod);
+
+    if (hiod->caps.type == IOMMU_HW_INFO_TYPE_AMD) {
+        /*
+         * Refresh the MMIO efr registers so that changes are visible to the
+         * guest.
+         */
+        amdvi_refresh_efrs_hwinfo(s, &hiod->caps.vendor_caps.amd);
+    } else {
+        /*
+         * Pass NULL hardware registers when we have non-IOMMUFD
+         * passthrough device
+         */
+        amdvi_refresh_efrs_hwinfo(s, NULL);
+    }
 
     return true;
 }
@@ -2641,6 +2700,7 @@ static const Property amdvi_properties[] = {
     DEFINE_PROP_BOOL("xtsup", AMDVIState, xtsup, false),
     DEFINE_PROP_STRING("pci-id", AMDVIState, pci_id),
     DEFINE_PROP_BOOL("dma-remap", AMDVIState, dma_remap, false),
+    DEFINE_PROP_BOOL("numint2k", AMDVIState, num_int_sup_2k, false),
 };
 
 static const VMStateDescription vmstate_amdvi_sysbus = {
