@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251029150618.186803-1-nnmlinux@linux.ibm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/4] ppc/spapr: Add VFIO EEH error injection backend
+    [32m✓[0m Signed: DKIM/ibm.com (From: nnmlinux@linux.ibm.com)
+  [32m✓[0m [PATCH RFC 2/4] ppc/spapr: Add ibm,errinjct RTAS call handler
+    [32m✓[0m Signed: DKIM/ibm.com (From: nnmlinux@linux.ibm.com)
+  [31m✗[0m [PATCH RFC 3/4] ppc/spapr: Add support for 'ibm, open-errinjct' and 'ibm, close-errinjct'
+    [31m✗[0m BADSIG: DKIM/ibm.com
+  [32m✓[0m [PATCH RFC 4/4] ppc/spapr: Advertise RTAS error injection call support via FDT property
+    [32m✓[0m Signed: DKIM/ibm.com (From: nnmlinux@linux.ibm.com)
+---
+Total patches: 4
+---
+Applying: ppc/spapr: Add VFIO EEH error injection backend
+Applying: ppc/spapr: Add ibm,errinjct RTAS call handler
+Patch failed at 0002 ppc/spapr: Add ibm,errinjct RTAS call handler
+error: patch failed: include/hw/ppc/spapr.h:814
+error: include/hw/ppc/spapr.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
