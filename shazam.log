@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/CAOOGzQJqfoF7Cy87nZWsrKcDSr5QOWUpoZ2rN3q4tRU5cOVZNA@mail.gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] RISC-V: Add Vega machine support for upstream QEMU
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: riscv: Add Vega board support
+Patch failed at 0001 riscv: Add Vega board support
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:102: trailing whitespace.
+config VEGA_ACLINT      
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:105: trailing whitespace.
+config VEGA_PLIC        
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:116: trailing whitespace.
+specific_ss.add(when: 'CONFIG_VEGA_ACLINT', if_true: files('vega_aclint.c'))  
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:117: trailing whitespace.
+specific_ss.add(when: 'CONFIG_VEGA_PLIC', if_true: files('vega_plic.c'))      
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:866: trailing whitespace.
+ 
+error: patch failed: hw/intc/Kconfig:109
+error: hw/intc/Kconfig: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
