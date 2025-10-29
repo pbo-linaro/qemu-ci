@@ -114,6 +114,11 @@ uint64_t amdvi_extended_feature_register(AMDVIState *s)
     return feature;
 }
 
+uint64_t amdvi_extended_feature_register2(AMDVIState *s)
+{
+    return AMDVI_DEFAULT_EXT_FEATURES2;
+}
+
 /* configure MMIO registers at startup/reset */
 static void amdvi_set_quad(AMDVIState *s, hwaddr addr, uint64_t val,
                            uint64_t romask, uint64_t w1cmask)
@@ -121,6 +126,16 @@ static void amdvi_set_quad(AMDVIState *s, hwaddr addr, uint64_t val,
     stq_le_p(&s->mmior[addr], val);
     stq_le_p(&s->romask[addr], romask);
     stq_le_p(&s->w1cmask[addr], w1cmask);
+}
+
+static void amdvi_refresh_efrs(struct AMDVIState *s)
+{
+    amdvi_set_quad(s, AMDVI_MMIO_EXT_FEATURES,
+                   amdvi_extended_feature_register(s),
+                   0xffffffffffffffef, 0);
+    amdvi_set_quad(s, AMDVI_MMIO_EXT_FEATURES2,
+                   amdvi_extended_feature_register2(s),
+                   0xffffffffffffffff, 0);
 }
 
 static uint16_t amdvi_readw(AMDVIState *s, hwaddr addr)
@@ -2307,6 +2322,7 @@ static AddressSpace *amdvi_host_dma_iommu(PCIBus *bus, void *opaque, int devfn)
     return &iommu_as[devfn]->as;
 }
 
+
 static bool amdvi_set_iommu_device(PCIBus *bus, void *opaque, int devfn,
                                    HostIOMMUDevice *hiod, Error **errp)
 {
@@ -2434,9 +2450,7 @@ static void amdvi_init(AMDVIState *s)
 
     /* reset MMIO */
     memset(s->mmior, 0, AMDVI_MMIO_SIZE);
-    amdvi_set_quad(s, AMDVI_MMIO_EXT_FEATURES,
-                   amdvi_extended_feature_register(s),
-                   0xffffffffffffffef, 0);
+    amdvi_refresh_efrs(s);
     amdvi_set_quad(s, AMDVI_MMIO_STATUS, 0, 0x98, 0x67);
 }
 

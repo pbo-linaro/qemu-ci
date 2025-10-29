@@ -1873,7 +1873,9 @@ build_amd_iommu(GArray *table_data, BIOSLinker *linker, const char *oem_id,
                               amdvi_extended_feature_register(s),
                               8);
     /* EFR Register Image 2 */
-    build_append_int_noprefix(table_data, 0, 8);
+    build_append_int_noprefix(table_data,
+                              amdvi_extended_feature_register2(s),
+                              8);
 
     /* IVHD entries as found above */
     g_array_append_vals(table_data, ivhd_blob->data, ivhd_blob->len);
