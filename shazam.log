@@ -1,0 +1,61 @@
+Grabbing thread from lore.kernel.org/all/20251016202044.75261-1-mohamed@unpredictable.fr/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v10: 29 patches
+Analyzing 63 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 697 code-review messages
+Will use the latest revision: v10
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v10 1/28] target/arm/kvm: add constants for new PSCI versions
+  [32m✓[0m [PATCH v10 2/28] accel/system: Introduce hwaccel_enabled() helper
+  [32m✓[0m [PATCH v10 3/28] qtest: hw/arm: virt: skip ACPI test for ITS off
+  [32m✓[0m [PATCH v10 4/28] hw/arm: virt: add GICv2m for the case when ITS is not available
+  [32m✓[0m [PATCH v10 5/28] tests: data: update AArch64 ACPI tables
+  [32m✓[0m [PATCH v10 6/28] whpx: Move around files before introducing AArch64 support
+  [32m✓[0m [PATCH v10 7/28] whpx: reshuffle common code
+  [32m✓[0m [PATCH v10 8/28] whpx: ifdef out winhvemulation on non-x86_64
+  [32m✓[0m [PATCH v10 9/28] whpx: common: add WHPX_INTERCEPT_DEBUG_TRAPS define
+  [32m✓[0m [PATCH v10 10/28] hw, target, accel: whpx: change apic_in_platform to kernel_irqchip
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v10 11/28] whpx: interrupt controller support
+  [32m✓[0m [PATCH v10 12/28] whpx: add arm64 support
+  [32m✓[0m [PATCH v10 13/28] whpx: change memory management logic
+  [32m✓[0m [PATCH v10 14/28] target/arm: cpu: mark WHPX as supporting PSCI 1.3
+  [32m✓[0m [PATCH v10 15/28] hw/arm: virt: cleanly fail on attempt to use the platform vGIC together with ITS
+  [32m✓[0m [PATCH v10 16/28] hw: arm: virt: rework MSI-X configuration
+  [32m✓[0m [PATCH v10 17/28] hw: arm: virt-acpi-build: add hack
+  [32m✓[0m [PATCH v10 18/28] docs: arm: update virt machine model description
+  [32m✓[0m [PATCH v10 19/28] whpx: arm64: clamp down IPA size
+  [32m✓[0m [PATCH v10 20/28] hw/arm, accel/hvf, whpx: unify get_physical_address_range between WHPX and HVF
+  [32m✓[0m [PATCH v10 21/28] whpx: arm64: implement -cpu host
+  [32m✓[0m [PATCH v10 22/28] target/arm: whpx: instantiate GIC early
+  [32m✓[0m [PATCH v10 23/28] whpx: arm64: gicv3: add migration blocker
+  [32m✓[0m [PATCH v10 24/28] whpx: enable arm64 builds
+  [32m✓[0m [PATCH v10 25/28] MAINTAINERS: update maintainers for WHPX
+  [32m✓[0m [PATCH v10 26/28] whpx: apic: use non-deprecated APIs to control interrupt controller state
+  [32m✓[0m [PATCH v10 27/28] whpx: arm64: check for physical address width after WHPX availability
+  [32m✓[0m [PATCH v10 28/28] whpx: arm64: add partition-wide reset on the reboot path
+  ---
+  [32m✓[0m Signed: DKIM/unpredictable.fr
+---
+Total patches: 28
+---
+Applying: target/arm/kvm: add constants for new PSCI versions
+Applying: accel/system: Introduce hwaccel_enabled() helper
+Applying: qtest: hw/arm: virt: skip ACPI test for ITS off
+Applying: hw/arm: virt: add GICv2m for the case when ITS is not available
+Applying: tests: data: update AArch64 ACPI tables
+Applying: whpx: Move around files before introducing AArch64 support
+Applying: whpx: reshuffle common code
+Applying: whpx: ifdef out winhvemulation on non-x86_64
+Patch failed at 0008 whpx: ifdef out winhvemulation on non-x86_64
+error: patch failed: include/system/whpx-internal.h:4
+error: include/system/whpx-internal.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
