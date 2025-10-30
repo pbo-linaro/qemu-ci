@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20251030203116.870742-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 114 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v9 1/8] migration: introduce .pre_incoming() vmsd handler
+  [32m✓[0m [PATCH v9 2/8] qapi: introduce query-backend-transfer-support
+  [32m✓[0m [PATCH v9 3/8] qapi: add backend-transfer migration parameter
+  [32m✓[0m [PATCH v9 4/8] net: introduce vmstate_net_peer_backend
+  [32m✓[0m [PATCH v9 5/8] virtio-net: support backend-transfer migration
+  [32m✓[0m [PATCH v9 6/8] net/tap: support backend-transfer migration
+  [32m✓[0m [PATCH v9 7/8] tests/functional: add skipWithoutSudo() decorator
+  [32m✓[0m [PATCH v9 8/8] tests/functional: add test_tap_migration
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 8
+---
+Applying: migration: introduce .pre_incoming() vmsd handler
+Applying: qapi: introduce query-backend-transfer-support
+Applying: qapi: add backend-transfer migration parameter
+Applying: net: introduce vmstate_net_peer_backend
+Patch failed at 0004 net: introduce vmstate_net_peer_backend
+error: patch failed: include/net/net.h:115
+error: include/net/net.h: patch does not apply
+error: patch failed: net/net.c:2177
+error: net/net.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
