@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20251030171915.726441-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 114 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v9 1/9] net: introduce backend-connect concept
+  [32m✓[0m [PATCH v9 2/9] net/tap: rework net_tap_init()
+  [32m✓[0m [PATCH v9 3/9] net/tap: split net_tap_fd_init()
+  [32m✓[0m [PATCH v9 4/9] net/tap: rework sndbuf handling
+  [32m✓[0m [PATCH v9 5/9] net/tap: introduce net_tap_setup()
+  [32m✓[0m [PATCH v9 6/9] net/tap: move vhost fd initialization to net_tap_new()
+  [32m✓[0m [PATCH v9 7/9] net/tap: finalize net_tap_set_fd() logic
+  [32m✓[0m [PATCH v9 8/9] net/tap: introduce TAP_IFNAME_SZ
+  [32m✓[0m [PATCH v9 9/9] net/tap: postpone tap setup to net_backend_connect() call
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 9
+---
+Applying: net: introduce backend-connect concept
+Applying: net/tap: rework net_tap_init()
+Patch failed at 0002 net/tap: rework net_tap_init()
+error: patch failed: net/tap.c:989
+error: net/tap.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
