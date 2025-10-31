@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20251031094751.2817932-1-armbru@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 113 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] qapi/audio: Fix description markup of AudiodevDBusOptions @nsamples
+    + Reviewed-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/8] qapi: Refill doc comments to conform to conventions
+  [32m✓[0m [PATCH 3/8] qapi: Clean up whitespace between definitions
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 4/8] qga/qapi-schema: Refill doc comments to conform to conventions
+  [32m✓[0m [PATCH 5/8] qga/qapi-schema: Clean up whitespace between definitions
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/8] docs/interop: Refill QAPI doc comments to conform to conventions
+  [32m✓[0m [PATCH 7/8] docs/interop/firmware: Literal block markup
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 8/8] docs/interop: Add test to keep vhost-user.json sane
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: qapi/audio: Fix description markup of AudiodevDBusOptions @nsamples
+Applying: qapi: Refill doc comments to conform to conventions
+Patch failed at 0002 qapi: Refill doc comments to conform to conventions
+error: patch failed: qapi/char.json:272
+error: qapi/char.json: patch does not apply
+error: patch failed: qapi/net.json:774
+error: qapi/net.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
