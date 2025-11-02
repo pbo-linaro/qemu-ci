@@ -66,6 +66,10 @@ option('tools', type : 'feature', value : 'auto',
 option('qga_vss', type : 'feature', value: 'auto',
        description: 'build QGA VSS support (broken with MinGW)')
 
+# Enable libc-backed safe_syscall in user-mode (-libc-syscalls option)
+option('libc_syscalls', type: 'feature', value: 'disabled',
+       description: 'Enable libc-backed safe_syscall() and -libc-syscalls in user-mode (POTENTIALLY UNSAFE SIGNAL HANDLING)')
+
 option('malloc_trim', type : 'feature', value : 'auto',
        description: 'enable libc malloc_trim() for memory optimization')
 option('malloc', type : 'combo', choices : ['system', 'tcmalloc', 'jemalloc'],
