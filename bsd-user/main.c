@@ -38,6 +38,7 @@
 #include "qemu/plugin.h"
 #include "user/guest-base.h"
 #include "user/page-protection.h"
+#include "user/safe-syscall.h"
 #include "accel/accel-ops.h"
 #include "tcg/startup.h"
 #include "qemu/timer.h"
@@ -166,6 +167,7 @@ static void usage(void)
            "-E var=value      sets/modifies targets environment variable(s)\n"
            "-U var            unsets targets environment variable(s)\n"
            "-B address        set guest_base address to address\n"
+           "-libc-syscall     use libc syscall() instead of assembly safe-syscall\n"
            "\n"
            "Debug options:\n"
            "-d item1[,...]    enable logging of specified items\n"
@@ -183,6 +185,8 @@ static void usage(void)
            "Environment variables:\n"
            "QEMU_STRACE       Print system calls and arguments similar to the\n"
            "                  'strace' program.  Enable by setting to any value.\n"
+           "QEMU_LIBC_SYSCALL Use libc syscall() instead of assembly safe-syscall.\n"
+           "                  Enable by setting to any value.\n"
            "You can use -E and -U options to set/unset environment variables\n"
            "for target process.  It is possible to provide several variables\n"
            "by repeating the option.  For example:\n"
@@ -310,6 +314,11 @@ int main(int argc, char **argv)
     qemu_add_opts(&qemu_trace_opts);
     qemu_plugin_add_opts();
 
+    /* Check QEMU_LIBC_SYSCALL environment variable */
+    if (getenv("QEMU_LIBC_SYSCALL")) {
+        qemu_use_libc_syscall = true;
+    }
+
     optind = 1;
     for (;;) {
         if (optind >= argc) {
@@ -380,6 +389,8 @@ int main(int argc, char **argv)
             have_guest_base = true;
         } else if (!strcmp(r, "drop-ld-preload")) {
             (void) envlist_unsetenv(envlist, "LD_PRELOAD");
+        } else if (!strcmp(r, "libc-syscall")) {
+            qemu_use_libc_syscall = true;
         } else if (!strcmp(r, "seed")) {
             seed_optarg = optarg;
         } else if (!strcmp(r, "one-insn-per-tb")) {

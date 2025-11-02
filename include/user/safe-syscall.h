@@ -125,16 +125,27 @@
  * kinds of restartability.
  */
 
-/* The core part of this function is implemented in assembly */
-long safe_syscall_base(int *pending, long number, ...);
-long safe_syscall_set_errno_tail(int value);
+/*
+ * The core part remains implemented in assembly; a C dispatcher selects
+ * runtime path.
+ */
+extern long safe_syscall_base(int *pending, long number, ...);
+extern long safe_syscall_set_errno_tail(int value);
+extern long safe_syscall_libc(int *pending, long number, ...);
+extern bool qemu_use_libc_syscall;
 
-/* These are defined by the safe-syscall.inc.S file */
+/*
+ * These symbols are defined for compatibility with signal handling code.
+ * In the C implementation, they are dummy symbols.
+ */
 extern char safe_syscall_start[];
 extern char safe_syscall_end[];
 
-#define safe_syscall(...)                                                 \
-    safe_syscall_base(&get_task_state(thread_cpu)->signal_pending,        \
-                      __VA_ARGS__)
+#define safe_syscall(...)                                               \
+    (qemu_use_libc_syscall ?                                            \
+     safe_syscall_libc(&get_task_state(thread_cpu)->signal_pending,     \
+                       __VA_ARGS__) :                                   \
+     safe_syscall_base(&get_task_state(thread_cpu)->signal_pending,     \
+                       __VA_ARGS__))
 
 #endif

@@ -40,6 +40,7 @@
 #include "qemu/plugin.h"
 #include "user/guest-base.h"
 #include "user/page-protection.h"
+#include "user/safe-syscall.h"
 #include "exec/gdbstub.h"
 #include "gdbstub/user.h"
 #include "accel/accel-ops.h"
@@ -456,6 +457,12 @@ static void handle_arg_jitdump(const char *arg)
     perf_enable_jitdump();
 }
 
+static void handle_arg_libc_syscall(const char *arg)
+{
+    /* Enable libc-backed syscall implementation */
+    qemu_use_libc_syscall = true;
+}
+
 static QemuPluginList plugins = QTAILQ_HEAD_INITIALIZER(plugins);
 
 #ifdef CONFIG_PLUGIN
@@ -534,6 +541,8 @@ static const struct qemu_argument arg_table[] = {
      "",           "Generate a /tmp/perf-${pid}.map file for perf"},
     {"jitdump",    "QEMU_JITDUMP",     false, handle_arg_jitdump,
      "",           "Generate a jit-${pid}.dump file for perf"},
+    {"libc-syscall", "QEMU_LIBC_SYSCALL", false, handle_arg_libc_syscall,
+     "",           "use libc syscall() instead of assembly safe-syscall"},
     {NULL, NULL, false, NULL, NULL, NULL}
 };
 

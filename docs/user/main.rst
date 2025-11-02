@@ -70,7 +70,7 @@ Command line options
 
 ::
 
-   qemu-i386 [-h] [-d] [-L path] [-s size] [-cpu model] [-g endpoint] [-B offset] [-R size] program [arguments...]
+   qemu-i386 [-h] [-d] [-L path] [-s size] [-cpu model] [-g endpoint] [-B offset] [-R size] [-libc-syscall] program [arguments...]
 
 ``-h``
    Print the help
@@ -100,6 +100,15 @@ Command line options
    Pre-allocate a guest virtual address space of the given size (in
    bytes). \"G\", \"M\", and \"k\" suffixes may be used when specifying
    the size.
+
+``-libc-syscall``
+   Use the host C library's ``syscall()`` entry point for guest system calls
+   instead of QEMU's built-in safe-syscall trampoline. By default this option
+   is disabled and QEMU uses its internal assembly implementation for
+   performance and precise control of signal-restart semantics. This switch is
+   primarily intended for debugging and integration scenarios (for example
+   when interposing on ``syscall()`` via ``LD_PRELOAD``). Available on Linux
+   and BSD user-mode builds.
 
 Debug options:
 
@@ -134,6 +143,10 @@ QEMU_STRACE
    incomplete. All system calls that don't have a specific argument
    format are printed with information for six arguments. Many
    flag-style arguments don't have decoders and will show up as numbers.
+
+QEMU_LIBC_SYSCALL
+   When set to a non-empty value, behave as if ``-libc-syscall`` was specified
+   on the command line. Defaults to disabled.
 
 Other binaries
 ~~~~~~~~~~~~~~
@@ -231,7 +244,7 @@ Command line options
 
 ::
 
-   qemu-sparc64 [-h] [-d] [-L path] [-s size] [-bsd type] program [arguments...]
+   qemu-sparc64 [-h] [-d] [-L path] [-s size] [-bsd type] [-libc-syscall] program [arguments...]
 
 ``-h``
    Print the help
@@ -256,6 +269,11 @@ Command line options
    Set the type of the emulated BSD Operating system. Valid values are
    FreeBSD, NetBSD and OpenBSD (default).
 
+``-libc-syscall``
+   Use the host C library's ``syscall()`` entry point for guest system calls
+   instead of QEMU's built-in safe-syscall trampoline. See the Linux user-mode
+   option of the same name for details. Defaults to disabled.
+
 Debug options:
 
 ``-d item1,...``
@@ -266,3 +284,9 @@ Debug options:
    Run the emulation with one guest instruction per translation block.
    This slows down emulation a lot, but can be useful in some situations,
    such as when trying to analyse the logs produced by the ``-d`` option.
+
+Environment variables:
+
+QEMU_LIBC_SYSCALL
+   When set to a non-empty value, behave as if ``-libc-syscall`` was specified
+   on the command line. Defaults to disabled.
