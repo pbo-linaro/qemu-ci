@@ -38,6 +38,9 @@
 #include "qemu/plugin.h"
 #include "user/guest-base.h"
 #include "user/page-protection.h"
+#ifdef CONFIG_LIBC_SYSCALLS
+#include "user/safe-syscall.h"
+#endif
 #include "accel/accel-ops.h"
 #include "tcg/startup.h"
 #include "qemu/timer.h"
@@ -166,6 +169,9 @@ static void usage(void)
            "-E var=value      sets/modifies targets environment variable(s)\n"
            "-U var            unsets targets environment variable(s)\n"
            "-B address        set guest_base address to address\n"
+#ifdef CONFIG_LIBC_SYSCALLS
+           "-libc-syscalls     use libc syscall() instead of assembly safe-syscall\n"
+#endif
            "\n"
            "Debug options:\n"
            "-d item1[,...]    enable logging of specified items\n"
@@ -183,6 +189,10 @@ static void usage(void)
            "Environment variables:\n"
            "QEMU_STRACE       Print system calls and arguments similar to the\n"
            "                  'strace' program.  Enable by setting to any value.\n"
+#ifdef CONFIG_LIBC_SYSCALLS
+           "QEMU_LIBC_SYSCALLS Use libc syscall() instead of assembly safe-syscall.\n"
+           "                  Enable by setting to any value.\n"
+#endif
            "You can use -E and -U options to set/unset environment variables\n"
            "for target process.  It is possible to provide several variables\n"
            "by repeating the option.  For example:\n"
@@ -310,6 +320,12 @@ int main(int argc, char **argv)
     qemu_add_opts(&qemu_trace_opts);
     qemu_plugin_add_opts();
 
+#ifdef CONFIG_LIBC_SYSCALLS
+    if (getenv("QEMU_LIBC_SYSCALLS")) {
+        qemu_use_libc_syscalls = true;
+    }
+#endif
+
     optind = 1;
     for (;;) {
         if (optind >= argc) {
@@ -380,6 +396,10 @@ int main(int argc, char **argv)
             have_guest_base = true;
         } else if (!strcmp(r, "drop-ld-preload")) {
             (void) envlist_unsetenv(envlist, "LD_PRELOAD");
+#ifdef CONFIG_LIBC_SYSCALLS
+        } else if (!strcmp(r, "libc-syscalls")) {
+            qemu_use_libc_syscalls = true;
+#endif
         } else if (!strcmp(r, "seed")) {
             seed_optarg = optarg;
         } else if (!strcmp(r, "one-insn-per-tb")) {

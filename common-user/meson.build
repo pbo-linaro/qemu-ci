@@ -8,3 +8,7 @@ user_ss.add(files(
   'safe-syscall.S',
   'safe-syscall-error.c',
 ))
+
+if get_option('libc_syscalls').enabled()
+  user_ss.add(files('safe-syscall.c'))
+endif

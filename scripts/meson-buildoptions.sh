@@ -136,6 +136,8 @@ meson_options_help() {
   printf "%s\n" '  keyring         Linux keyring support'
   printf "%s\n" '  kvm             KVM acceleration support'
   printf "%s\n" '  l2tpv3          l2tpv3 network backend support'
+  printf "%s\n" '  libc-syscalls    Enable libc-backed safe_syscall() and -libc-syscalls in'
+  printf "%s\n" '                  user-mode (POTENTIALLY UNSAFE SIGNAL HANDLING)'
   printf "%s\n" '  libcbor         libcbor support'
   printf "%s\n" '  libdaxctl       libdaxctl support'
   printf "%s\n" '  libdw           debuginfo support'
@@ -365,6 +367,8 @@ _meson_option_parse() {
     --disable-kvm) printf "%s" -Dkvm=disabled ;;
     --enable-l2tpv3) printf "%s" -Dl2tpv3=enabled ;;
     --disable-l2tpv3) printf "%s" -Dl2tpv3=disabled ;;
+    --enable-libc-syscalls) printf "%s" -Dlibc_syscalls=enabled ;;
+    --disable-libc-syscalls) printf "%s" -Dlibc_syscalls=disabled ;;
     --enable-libcbor) printf "%s" -Dlibcbor=enabled ;;
     --disable-libcbor) printf "%s" -Dlibcbor=disabled ;;
     --enable-libdaxctl) printf "%s" -Dlibdaxctl=enabled ;;

@@ -128,13 +128,30 @@
 /* The core part of this function is implemented in assembly */
 long safe_syscall_base(int *pending, long number, ...);
 long safe_syscall_set_errno_tail(int value);
+#ifdef CONFIG_LIBC_SYSCALLS
+/* This is implemented in C.*/
+long safe_syscall_libc(int *pending, long number, ...);
+extern bool qemu_use_libc_syscalls;
+#endif
 
-/* These are defined by the safe-syscall.inc.S file */
+/*
+ * These are defined by the safe-syscall.inc.S file.
+ * In the C implementation, they are dummy symbols.
+ */
 extern char safe_syscall_start[];
 extern char safe_syscall_end[];
 
+#ifdef CONFIG_LIBC_SYSCALLS
+#define safe_syscall(...)                                               \
+    (qemu_use_libc_syscalls ?                                           \
+     safe_syscall_libc(&get_task_state(thread_cpu)->signal_pending,     \
+                       __VA_ARGS__) :                                   \
+     safe_syscall_base(&get_task_state(thread_cpu)->signal_pending,     \
+                       __VA_ARGS__))
+#else
 #define safe_syscall(...)                                                 \
     safe_syscall_base(&get_task_state(thread_cpu)->signal_pending,        \
                       __VA_ARGS__)
+#endif
 
 #endif
