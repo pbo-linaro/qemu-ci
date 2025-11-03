@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20251103183301.3840862-1-jmarcin@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 59 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/8] migration: Flush migration channel after sending data of CMD_PACKAGED
+  [32m✓[0m [PATCH v4 2/8] migration: Do not try to start VM if disk activation fails
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+  [32m✓[0m [PATCH v4 3/8] migration: Move postcopy_ram_listen_thread() to postcopy-ram.c
+  [32m✓[0m [PATCH v4 4/8] migration: Introduce postcopy incoming setup and cleanup functions
+  [32m✓[0m [PATCH v4 5/8] migration: Refactor all incoming cleanup info migration_incoming_destroy()
+  [32m✓[0m [PATCH v4 6/8] migration: Respect exit-on-error when migration fails before resuming
+  [32m✓[0m [PATCH v4 7/8] migration: Make postcopy listen thread joinable
+  [32m✓[0m [PATCH v4 8/8] migration: Introduce POSTCOPY_DEVICE state
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 8
+---
+Applying: migration: Flush migration channel after sending data of CMD_PACKAGED
+Applying: migration: Do not try to start VM if disk activation fails
+Applying: migration: Move postcopy_ram_listen_thread() to postcopy-ram.c
+Patch failed at 0003 migration: Move postcopy_ram_listen_thread() to postcopy-ram.c
+error: patch failed: migration/savevm.c:2088
+error: migration/savevm.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
