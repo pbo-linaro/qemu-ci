@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20251023041435.1775208-1-alistair.francis@wdc.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v2: 22 patches
+Analyzing 49 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Traceback (most recent call last):
+  File "/usr/local/bin/b4", line 8, in <module>
+    sys.exit(cmd())
+             ^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/b4/command.py", line 417, in cmd
+    cmdargs.func(cmdargs)
+  File "/usr/local/lib/python3.12/dist-packages/b4/command.py", line 103, in cmd_shazam
+    b4.mbox.main(cmdargs)
+  File "/usr/local/lib/python3.12/dist-packages/b4/mbox.py", line 829, in main
+    make_am(msgs, cmdargs, msgid)
+  File "/usr/local/lib/python3.12/dist-packages/b4/mbox.py", line 111, in make_am
+    lser = lmbx.get_series(revision=wantver, sloppytrailers=cmdargs.sloppytrailers, reroll=reroll,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/b4/__init__.py", line 310, in get_series
+    self.partial_reroll(revision, sloppytrailers)
+  File "/usr/local/lib/python3.12/dist-packages/b4/__init__.py", line 209, in partial_reroll
+    pser = self.get_series(revision - 1, sloppytrailers=sloppytrailers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/b4/__init__.py", line 329, in get_series
+    self.load_codereview_trailers()
+  File "/usr/local/lib/python3.12/dist-packages/b4/__init__.py", line 275, in load_codereview_trailers
+    qmsgs = get_pi_search_results(query, message='Looking for additional code-review trailers on %s')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/b4/__init__.py", line 3301, in get_pi_search_results
+    t_mbox = gzip.decompress(resp.content)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/gzip.py", line 634, in decompress
+    raise EOFError("Compressed file ended before the end-of-stream "
+EOFError: Compressed file ended before the end-of-stream marker was reached
