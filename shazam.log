@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/cover.1762172539.git.chao.liu.riscv@isrc.iscas.ac.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC v1 1/1] hw/riscv/server_platform_ref.c: add virtio bus
+---
+Total patches: 1
+---
+Applying: hw/riscv/server_platform_ref.c: add virtio bus
+Patch failed at 0001 hw/riscv/server_platform_ref.c: add virtio bus
+error: hw/riscv/server_platform_ref.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
