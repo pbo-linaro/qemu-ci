@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20251104130227.19183-1-engguopeng@buaa.edu.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH] hw/i386/pc: Avoid overlap between CXL window and PCI 64bit BARs in QEMU 10.0.x
+  ---
+  [31m✗[0m BADSIG: DKIM/buaa.edu.cn
+---
+Total patches: 1
+---
+Applying: hw/i386/pc: Avoid overlap between CXL window and PCI 64bit BARs in QEMU 10.0.x
+Patch failed at 0001 hw/i386/pc: Avoid overlap between CXL window and PCI 64bit BARs in QEMU 10.0.x
+error: patch failed: hw/i386/pc.c:840
+error: hw/i386/pc.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
