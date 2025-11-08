@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/AM9PR04MB8487562AFE05FFEF901244E587C0A@AM9PR04MB8487.eurprd04.prod.outlook.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] Add support for the NXP i.MX8MM EVK (Evaluation Kit) board
+  ---
+  [32m✓[0m Signed: DKIM/nxp.com
+---
+Total patches: 1
+---
+Applying: Add support for the NXP i.MX8MM EVK (Evaluation Kit) board
+Patch failed at 0001 Add support for the NXP i.MX8MM EVK (Evaluation Kit) board
+error: corrupt patch at line 32
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
