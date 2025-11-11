@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20251111102836.212535-1-corvin.koehne@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 99 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/15] hw/timer: Make frequency configurable
+  [32m✓[0m [PATCH v4 2/15] hw/timer: Make PERIPHCLK divider configurable
+  [32m✓[0m [PATCH v4 3/15] hw/dma/zynq-devcfg: Handle bitstream loading via DMA to 0xffffffff
+  [32m✓[0m [PATCH v4 4/15] hw/arm/zynq-devcfg: Prevent unintended unlock during initialization
+  [32m✓[0m [PATCH v4 5/15] hw/dma/zynq: Ensure PCFG_DONE bit remains set to indicate PL is in user mode
+  [32m✓[0m [PATCH v4 6/15] hw/dma/zynq-devcfg: Simulate dummy PL reset
+  [32m✓[0m [PATCH v4 7/15] hw/dma/zynq-devcfg: Indicate power-up status of PL
+  [32m✓[0m [PATCH v4 8/15] hw/dma/zynq-devcfg: Fix register memory
+  [32m✓[0m [PATCH v4 9/15] hw/misc: Add dummy ZYNQ DDR controller
+  [32m✓[0m [PATCH v4 10/15] hw/misc/zynq_slcr: Add logic for DCI configuration
+  [32m✓[0m [PATCH v4 11/15] hw/misc: Add Beckhoff CCAT device
+  [32m✓[0m [PATCH v4 12/15] hw/block/m25p80: Add HAS_SR_TB flag for is25lp016d
+  [32m✓[0m [PATCH v4 13/15] hw/arm: Add new machine based on xilinx-zynq-a9 for Beckhoff CX7200
+  [32m✓[0m [PATCH v4 14/15] tests/functional: Add a Beckhoff CX7200 test
+  [32m✓[0m [PATCH v4 15/15] docs/system/arm: Add support for Beckhoff CX7200
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 15
+---
+Applying: hw/timer: Make frequency configurable
+Applying: hw/timer: Make PERIPHCLK divider configurable
+Patch failed at 0002 hw/timer: Make PERIPHCLK divider configurable
+error: patch failed: hw/timer/a9gtimer.c:378
+error: hw/timer/a9gtimer.c: patch does not apply
+error: patch failed: hw/timer/arm_mptimer.c:309
+error: hw/timer/arm_mptimer.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
