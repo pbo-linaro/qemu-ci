@@ -21,6 +21,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/units.h"
+#include "hw/registerfields.h"
 #include "hw/acpi/ghes.h"
 #include "hw/acpi/aml-build.h"
 #include "qemu/error-report.h"
@@ -54,8 +55,12 @@
 /* The memory section CPER size, UEFI 2.6: N.2.5 Memory Error Section */
 #define ACPI_GHES_MEM_CPER_LENGTH           80
 
-/* Masks for block_status flags */
-#define ACPI_GEBS_UNCORRECTABLE         1
+/* Bits for block_status flags */
+FIELD(ACPI_GEBS, UNCORRECTABLE, 0, 1)
+FIELD(ACPI_GEBS, CORRECTABLE, 1, 1)
+FIELD(ACPI_GEBS, MULTIPLE_UNCORRECTABLE, 2, 1)
+FIELD(ACPI_GEBS, MULTIPLE_CORRECTABLE, 3, 1)
+FIELD(ACPI_GEBS, ERROR_DATA_ENTRIES, 4, 10)
 
 /*
  * Total size for Generic Error Status Block except Generic Error Data Entries
@@ -207,26 +212,6 @@ static void acpi_ghes_build_append_mem_cper(GArray *table,
     build_append_int_noprefix(table, 0 /* Unknown error */, 1);
     /* Skip all the detailed information normally found in such a record */
     build_append_int_noprefix(table, 0, 7);
-}
-
-static void
-ghes_gen_err_data_uncorrectable_recoverable(GArray *block,
-                                            const uint8_t *section_type,
-                                            int data_length)
-{
-    /* invalid fru id: ACPI 4.0: 17.3.2.6.1 Generic Error Data,
-     * Table 17-13 Generic Error Data Entry
-     */
-    QemuUUID fru_id = {};
-
-    /* Build the new generic error status block header */
-    acpi_ghes_generic_error_status(block, ACPI_GEBS_UNCORRECTABLE,
-        0, 0, data_length, ACPI_CPER_SEV_RECOVERABLE);
-
-    /* Build this new generic error data entry header */
-    acpi_ghes_generic_error_data(block, section_type,
-        ACPI_CPER_SEV_RECOVERABLE, 0, 0,
-        ACPI_GHES_MEM_CPER_LENGTH, fru_id, 0);
 }
 
 static inline uint32_t ghes_max_raw_data_length(AcpiGhesState *ags)
@@ -565,30 +550,56 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
 }
 
 int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
-                            uint64_t physical_address)
+                            uint64_t *addresses, uint32_t num_of_addresses)
 {
     /* Memory Error Section Type */
     const uint8_t guid[] =
           UUID_LE(0xA5BC1114, 0x6F64, 0x4EDE, 0xB8, 0x63, 0x3E, 0x83, \
                   0xED, 0x7C, 0x83, 0xB1);
+    /*
+     * invalid fru id: ACPI 4.0: 17.3.2.6.1 Generic Error Data,
+     * Table 17-13 Generic Error Data Entry
+     */
+    QemuUUID fru_id = {};
     Error *errp = NULL;
     int data_length;
     GArray *block;
+    uint32_t block_status = 0, i;
 
     block = g_array_new(false, true /* clear */, 1);
 
-    data_length = ACPI_GHES_DATA_LENGTH + ACPI_GHES_MEM_CPER_LENGTH;
+    data_length = num_of_addresses *
+                  (ACPI_GHES_DATA_LENGTH + ACPI_GHES_MEM_CPER_LENGTH);
     /*
      * It should not run out of the preallocated memory if adding a new generic
      * error data entry
      */
     assert((data_length + ACPI_GHES_GESB_SIZE) <=
            ghes_max_raw_data_length(ags));
+    assert(num_of_addresses <=
+           FIELD_EX32(0xffffffff, ACPI_GEBS, ERROR_DATA_ENTRIES));
 
-    ghes_gen_err_data_uncorrectable_recoverable(block, guid, data_length);
+    /* Build the new generic error status block header */
+    block_status = FIELD_DP32(block_status, ACPI_GEBS, UNCORRECTABLE, 1);
+    block_status = FIELD_DP32(block_status, ACPI_GEBS, ERROR_DATA_ENTRIES,
+                              num_of_addresses);
+    if (num_of_addresses > 1) {
+        block_status = FIELD_DP32(block_status, ACPI_GEBS,
+                                  MULTIPLE_UNCORRECTABLE, 1);
+    }
 
-    /* Build the memory section CPER for above new generic error data entry */
-    acpi_ghes_build_append_mem_cper(block, physical_address);
+    acpi_ghes_generic_error_status(block, block_status, 0, 0,
+                                   data_length, ACPI_CPER_SEV_RECOVERABLE);
+
+    for (i = 0; i < num_of_addresses; i++) {
+        /* Build generic error data entries */
+        acpi_ghes_generic_error_data(block, guid,
+                                     ACPI_CPER_SEV_RECOVERABLE, 0, 0,
+                                     ACPI_GHES_MEM_CPER_LENGTH, fru_id, 0);
+
+        /* Memory section CPER on top of the generic error data entry */
+        acpi_ghes_build_append_mem_cper(block, addresses[i]);
+    }
 
     /* Report the error */
     ghes_record_cper_errors(ags, block->data, block->len, source_id, &errp);
