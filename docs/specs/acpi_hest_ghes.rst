@@ -68,9 +68,9 @@ Design Details
     and N Read Ack Register entries. The size for each entry is 8-byte.
     The Error Status Data Block table contains N Error Status Data Block
     entries. The size for each entry is defined at the source code as
-    ACPI_GHES_MAX_RAW_DATA_LENGTH (currently 1024 bytes). The total size
-    for the "etc/hardware_errors" fw_cfg blob is
-    (N * 8 * 2 + N * ACPI_GHES_MAX_RAW_DATA_LENGTH) bytes.
+    GHES_MAX_RAW_DATA_LENGTH, which is 4096 bytes in QEMU 10.2 or onwards,
+    but 1024 bytes in other cases. The total size of "etc/hardware_errors"
+    fw_cfg blob is (N * 8 * 2 + N * GHES_MAX_RAW_DATA_LENGTH) bytes.
     N is the number of the kinds of hardware error sources.
 
 (4) QEMU generates the ACPI linker/loader script for the firmware. The

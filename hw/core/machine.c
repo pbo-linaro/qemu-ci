@@ -40,6 +40,7 @@
 
 GlobalProperty hw_compat_10_1[] = {
     { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+    { TYPE_ACPI_GED, "x-error-block-size", "1024" },
     { TYPE_VIRTIO_NET, "host_tunnel", "off" },
     { TYPE_VIRTIO_NET, "host_tunnel_csum", "off" },
     { TYPE_VIRTIO_NET, "guest_tunnel", "off" },

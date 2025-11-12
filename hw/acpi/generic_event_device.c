@@ -364,6 +364,8 @@ static const Property acpi_ged_properties[] = {
                      TYPE_PCI_BUS, PCIBus *),
     DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
                      ghes_state.use_hest_addr, true),
+    DEFINE_PROP_UINT32("x-error-block-size", AcpiGedState,
+                       ghes_state.error_block_size, 4096),
 };
 
 static const VMStateDescription vmstate_memhp_state = {
