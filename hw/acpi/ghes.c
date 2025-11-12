@@ -32,9 +32,6 @@
 #define ACPI_HW_ERROR_ADDR_FW_CFG_FILE      "etc/hardware_errors_addr"
 #define ACPI_HEST_ADDR_FW_CFG_FILE          "etc/acpi_table_hest_addr"
 
-/* The max size in bytes for one error block */
-#define ACPI_GHES_MAX_RAW_DATA_LENGTH   (1 * KiB)
-
 /* Generic Hardware Error Source version 2 */
 #define ACPI_GHES_SOURCE_GENERIC_ERROR_V2   10
 
@@ -232,6 +229,15 @@ ghes_gen_err_data_uncorrectable_recoverable(GArray *block,
         ACPI_GHES_MEM_CPER_LENGTH, fru_id, 0);
 }
 
+static inline uint32_t ghes_max_raw_data_length(AcpiGhesState *ags)
+{
+    if (ags->error_block_size == 0) {
+        return 1 * KiB;
+    } else {
+        return ags->error_block_size;
+    }
+}
+
 /*
  * Build table for the hardware error fw_cfg blob.
  * Initialize "etc/hardware_errors" and "etc/hardware_errors_addr" fw_cfg blobs.
@@ -263,7 +269,7 @@ static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
 
     /* Reserve space for Error Status Data Block */
     acpi_data_push(hardware_errors,
-        ACPI_GHES_MAX_RAW_DATA_LENGTH * num_sources);
+        ghes_max_raw_data_length(ags) * num_sources);
 
     /* Tell guest firmware to place hardware_errors blob into RAM */
     bios_linker_loader_alloc(linker, ACPI_HW_ERROR_FW_CFG_FILE,
@@ -280,7 +286,7 @@ static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
                                        sizeof(uint64_t),
                                        ACPI_HW_ERROR_FW_CFG_FILE,
                                        error_status_block_offset +
-                                       i * ACPI_GHES_MAX_RAW_DATA_LENGTH);
+                                       i * ghes_max_raw_data_length(ags));
     }
 
     if (!ags->use_hest_addr) {
@@ -295,7 +301,8 @@ static void build_ghes_error_table(AcpiGhesState *ags, GArray *hardware_errors,
 }
 
 /* Build Generic Hardware Error Source version 2 (GHESv2) */
-static void build_ghes_v2_entry(GArray *table_data,
+static void build_ghes_v2_entry(AcpiGhesState *ags,
+                                GArray *table_data,
                                 BIOSLinker *linker,
                                 const AcpiNotificationSourceId *notif_src,
                                 uint16_t index, int num_sources)
@@ -323,7 +330,7 @@ static void build_ghes_v2_entry(GArray *table_data,
     /* Max Sections Per Record */
     build_append_int_noprefix(table_data, 1, 4);
     /* Max Raw Data Length */
-    build_append_int_noprefix(table_data, ACPI_GHES_MAX_RAW_DATA_LENGTH, 4);
+    build_append_int_noprefix(table_data, ghes_max_raw_data_length(ags), 4);
 
     address_offset = table_data->len;
     /* Error Status Address */
@@ -339,7 +346,7 @@ static void build_ghes_v2_entry(GArray *table_data,
     build_ghes_hw_error_notification(table_data, notify);
 
     /* Error Status Block Length */
-    build_append_int_noprefix(table_data, ACPI_GHES_MAX_RAW_DATA_LENGTH, 4);
+    build_append_int_noprefix(table_data, ghes_max_raw_data_length(ags), 4);
 
     /*
      * Read Ack Register
@@ -387,7 +394,8 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
     /* Error Source Count */
     build_append_int_noprefix(table_data, num_sources, 4);
     for (i = 0; i < num_sources; i++) {
-        build_ghes_v2_entry(table_data, linker, &notif_source[i], i, num_sources);
+        build_ghes_v2_entry(ags, table_data, linker,
+                            &notif_source[i], i, num_sources);
     }
 
     acpi_table_end(linker, &table);
@@ -518,7 +526,7 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
 {
     uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
 
-    if (len > ACPI_GHES_MAX_RAW_DATA_LENGTH) {
+    if (len > ghes_max_raw_data_length(ags)) {
         error_setg(errp, "GHES CPER record is too big: %zd", len);
         return;
     }
@@ -575,7 +583,7 @@ int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
      * error data entry
      */
     assert((data_length + ACPI_GHES_GESB_SIZE) <=
-            ACPI_GHES_MAX_RAW_DATA_LENGTH);
+           ghes_max_raw_data_length(ags));
 
     ghes_gen_err_data_uncorrectable_recoverable(block, guid, data_length);
 
