@@ -3796,10 +3796,16 @@ bdrv_open_child_common(const char *filename, QDict *options,
         return NULL;
     }
 
-    bdrv_graph_wrlock_drained();
+
+    /* We only need this parent's subtree to be drained, not the entire graph.
+     * So we avoid global drain here.
+     */
+    bdrv_drained_begin(parent);
+    bdrv_graph_wrlock();
     child = bdrv_attach_child(parent, bs, bdref_key, child_class, child_role,
                               errp);
     bdrv_graph_wrunlock();
+    bdrv_drained_end(parent);
 
     return child;
 }

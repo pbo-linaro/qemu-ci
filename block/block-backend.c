@@ -889,7 +889,16 @@ void blk_remove_bs(BlockBackend *blk)
     root = blk->root;
     blk->root = NULL;
 
-    bdrv_graph_wrlock_drained();
+    if (blk->dev) {
+        bdrv_graph_wrlock_drained();
+    } else {
+        /* We suppose that blk with an unattached dev is temporary (e.g.
+         * used for probing in bdrv_open_inherit()) and therefore global
+         * drain is unnecessary.  Draining of this blk's subtree is done above
+         * in blk_drain().
+         */
+        bdrv_graph_wrlock();
+    }
     bdrv_root_unref_child(root);
     bdrv_graph_wrunlock();
 }
