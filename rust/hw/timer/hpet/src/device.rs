@@ -324,7 +324,7 @@ impl HPETTimer {
         }
     }
 
-    fn set_irq(&mut self, set: bool) {
+    fn set_irq(&self, set: bool) {
         let route = self.get_int_route();
 
         if set && self.is_int_enabled() && self.get_state().is_hpet_enabled() {
@@ -350,7 +350,7 @@ impl HPETTimer {
         }
     }
 
-    fn update_irq(&mut self, set: bool) {
+    fn update_irq(&self, set: bool) {
         // If Timer N Interrupt Enable bit is 0, "the timer will
         // still operate and generate appropriate status bits, but
         // will not cause an interrupt"
@@ -388,7 +388,7 @@ impl HPETTimer {
         self.arm_timer(self.cmp64);
     }
 
-    fn del_timer(&mut self) {
+    fn del_timer(&self) {
         // Just remove the timer from the timer_list without destroying
         // this timer instance.
         self.qemu_timer.delete();
@@ -657,7 +657,7 @@ impl HPETState {
             self.counter.set(self.get_ticks());
 
             for timer in self.timers.iter().take(self.num_timers) {
-                timer.borrow_mut().del_timer();
+                timer.borrow().del_timer();
             }
         }
 
@@ -681,7 +681,7 @@ impl HPETState {
 
         for (index, timer) in self.timers.iter().take(self.num_timers).enumerate() {
             if cleared & (1 << index) != 0 {
-                timer.borrow_mut().update_irq(false);
+                timer.borrow().update_irq(false);
             }
         }
     }
