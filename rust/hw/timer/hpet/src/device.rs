@@ -8,6 +8,7 @@ use std::{
     pin::Pin,
     ptr::{addr_of_mut, null_mut, NonNull},
     slice::from_ref,
+    sync::{Mutex, MutexGuard},
 };
 
 use bql::{BqlCell, BqlRefCell};
@@ -179,8 +180,8 @@ const fn deactivating_bit(old: u64, new: u64, shift: usize) -> bool {
 fn timer_handler(timer_cell: &BqlRefCell<HPETTimer>) {
     let mut t = timer_cell.borrow_mut();
     // SFAETY: state field is valid after timer initialization.
-    let regs = &mut unsafe { t.state.as_mut() }.regs.borrow_mut();
-    t.callback(regs)
+    let mut regs = unsafe { t.state.as_ref() }.regs.lock().unwrap();
+    t.callback(&mut regs)
 }
 
 #[repr(C)]
@@ -299,13 +300,7 @@ impl HPETTimer {
     /// calculate next value of the general counter that matches the
     /// target (either entirely, or the low 32-bit only depending on
     /// the timer mode).
-    fn calculate_cmp64(&self, regs: &HPETRegisters, cur_tick: u64, target: u64) -> u64 {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn calculate_cmp64(&self, regs: &MutexGuard<HPETRegisters>, cur_tick: u64, target: u64) -> u64 {
         let tn_regs = &regs.tn_regs[self.index as usize];
         if tn_regs.is_32bit_mod() {
             let mut result: u64 = cur_tick.deposit(0, 32, target);
@@ -318,13 +313,7 @@ impl HPETTimer {
         }
     }
 
-    fn get_int_route(&self, regs: &HPETRegisters) -> usize {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn get_int_route(&self, regs: &MutexGuard<HPETRegisters>) -> usize {
         if self.index <= 1 && regs.is_legacy_mode() {
             // If LegacyReplacement Route bit is set, HPET specification requires
             // timer0 be routed to IRQ0 in NON-APIC or IRQ2 in the I/O APIC,
@@ -349,13 +338,7 @@ impl HPETTimer {
         }
     }
 
-    fn set_irq(&self, regs: &HPETRegisters, set: bool) {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_irq(&self, regs: &MutexGuard<HPETRegisters>, set: bool) {
         let tn_regs = &regs.tn_regs[self.index as usize];
         let route = self.get_int_route(regs);
 
@@ -382,13 +365,7 @@ impl HPETTimer {
         }
     }
 
-    fn update_irq(&self, regs: &mut HPETRegisters, set: bool) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn update_irq(&self, regs: &mut MutexGuard<HPETRegisters>, set: bool) {
         // If Timer N Interrupt Enable bit is 0, "the timer will
         // still operate and generate appropriate status bits, but
         // will not cause an interrupt"
@@ -400,13 +377,7 @@ impl HPETTimer {
         self.set_irq(regs, set);
     }
 
-    fn arm_timer(&mut self, regs: &HPETRegisters, tick: u64) {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn arm_timer(&mut self, regs: &MutexGuard<HPETRegisters>, tick: u64) {
         let tn_regs = &regs.tn_regs[self.index as usize];
         let mut ns = self.get_state().get_ns(tick);
 
@@ -419,13 +390,7 @@ impl HPETTimer {
         self.qemu_timer.modify(self.last);
     }
 
-    fn set_timer(&mut self, regs: &HPETRegisters) {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_timer(&mut self, regs: &MutexGuard<HPETRegisters>) {
         let tn_regs = &regs.tn_regs[self.index as usize];
         let cur_tick: u64 = self.get_state().get_ticks();
 
@@ -443,13 +408,7 @@ impl HPETTimer {
         self.arm_timer(regs, self.cmp64);
     }
 
-    fn del_timer(&self, regs: &mut HPETRegisters) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn del_timer(&self, regs: &mut MutexGuard<HPETRegisters>) {
         // Just remove the timer from the timer_list without destroying
         // this timer instance.
         self.qemu_timer.delete();
@@ -463,17 +422,11 @@ impl HPETTimer {
 
     fn prepare_tn_cfg_reg_new(
         &self,
-        regs: &mut HPETRegisters,
+        regs: &mut MutexGuard<HPETRegisters>,
         shift: u32,
         len: u32,
         val: u64,
     ) -> (u64, u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
         let tn_regs = &regs.tn_regs[self.index as usize];
         // TODO: Add trace point - trace_hpet_ram_write_tn_cfg(addr & 4)
         let old_val: u64 = tn_regs.config;
@@ -491,13 +444,13 @@ impl HPETTimer {
     }
 
     /// Configuration and Capability Register
-    fn set_tn_cfg_reg(&mut self, regs: &mut HPETRegisters, shift: u32, len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_tn_cfg_reg(
+        &mut self,
+        regs: &mut MutexGuard<HPETRegisters>,
+        shift: u32,
+        len: u32,
+        val: u64,
+    ) {
         // Factor out a prepare_tn_cfg_reg_new() to better handle immutable scope.
         let (new_val, old_val) = self.prepare_tn_cfg_reg_new(regs, shift, len, val);
         // After prepare_tn_cfg_reg_new(), it's safe to access int_status with a
@@ -523,13 +476,13 @@ impl HPETTimer {
     }
 
     /// Comparator Value Register
-    fn set_tn_cmp_reg(&mut self, regs: &mut HPETRegisters, shift: u32, len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_tn_cmp_reg(
+        &mut self,
+        regs: &mut MutexGuard<HPETRegisters>,
+        shift: u32,
+        len: u32,
+        val: u64,
+    ) {
         let tn_regs = &mut regs.tn_regs[self.index as usize];
         let mut length = len;
         let mut value = val;
@@ -560,24 +513,18 @@ impl HPETTimer {
     }
 
     /// FSB Interrupt Route Register
-    fn set_tn_fsb_route_reg(&self, regs: &mut HPETRegisters, shift: u32, len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_tn_fsb_route_reg(
+        &self,
+        regs: &mut MutexGuard<HPETRegisters>,
+        shift: u32,
+        len: u32,
+        val: u64,
+    ) {
         let tn_regs = &mut regs.tn_regs[self.index as usize];
         tn_regs.fsb = tn_regs.fsb.deposit(shift, len, val);
     }
 
-    fn reset(&mut self, regs: &mut HPETRegisters) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn reset(&mut self, regs: &mut MutexGuard<HPETRegisters>) {
         self.del_timer(regs);
 
         let tn_regs = &mut regs.tn_regs[self.index as usize];
@@ -594,13 +541,7 @@ impl HPETTimer {
     }
 
     /// timer expiration callback
-    fn callback(&mut self, regs: &mut HPETRegisters) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn callback(&mut self, regs: &mut MutexGuard<HPETRegisters>) {
         let tn_regs = &mut regs.tn_regs[self.index as usize];
         let period: u64 = self.period;
         let cur_tick: u64 = self.get_state().get_ticks();
@@ -622,13 +563,7 @@ impl HPETTimer {
         self.update_irq(regs, true);
     }
 
-    fn read(&self, target: TimerRegister, regs: &HPETRegisters) -> u64 {
-        // &HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn read(&self, target: TimerRegister, regs: &MutexGuard<HPETRegisters>) -> u64 {
         let tn_regs = &regs.tn_regs[self.index as usize];
 
         use TimerRegister::*;
@@ -642,17 +577,11 @@ impl HPETTimer {
     fn write(
         &mut self,
         target: TimerRegister,
-        regs: &mut HPETRegisters,
+        regs: &mut MutexGuard<HPETRegisters>,
         value: u64,
         shift: u32,
         len: u32,
     ) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
         use TimerRegister::*;
         match target {
             CFG => self.set_tn_cfg_reg(regs, shift, len, value),
@@ -701,7 +630,7 @@ impl HPETRegisters {
 pub struct HPETState {
     parent_obj: ParentField<SysBusDevice>,
     iomem: MemoryRegion,
-    regs: Migratable<BqlRefCell<HPETRegisters>>,
+    regs: Migratable<Mutex<HPETRegisters>>,
 
     // Internal state
     /// Capabilities that QEMU HPET supports.
@@ -751,7 +680,7 @@ impl HPETState {
     }
 
     fn handle_legacy_irq(&self, irq: u32, level: u32) {
-        let regs = self.regs.borrow();
+        let regs = self.regs.lock().unwrap();
         if irq == HPET_LEGACY_PIT_INT {
             if !regs.is_legacy_mode() {
                 self.irqs[0].set(level != 0);
@@ -780,13 +709,7 @@ impl HPETState {
     }
 
     /// General Configuration Register
-    fn set_cfg_reg(&self, regs: &mut HPETRegisters, shift: u32, len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_cfg_reg(&self, regs: &mut MutexGuard<HPETRegisters>, shift: u32, len: u32, val: u64) {
         let old_val = regs.config;
         let mut new_val = old_val.deposit(shift, len, val);
 
@@ -831,13 +754,13 @@ impl HPETState {
     }
 
     /// General Interrupt Status Register: Read/Write Clear
-    fn set_int_status_reg(&self, regs: &mut HPETRegisters, shift: u32, _len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_int_status_reg(
+        &self,
+        regs: &mut MutexGuard<HPETRegisters>,
+        shift: u32,
+        _len: u32,
+        val: u64,
+    ) {
         let new_val = val << shift;
         let cleared = new_val & regs.int_status;
 
@@ -849,13 +772,13 @@ impl HPETState {
     }
 
     /// Main Counter Value Register
-    fn set_counter_reg(&self, regs: &mut HPETRegisters, shift: u32, len: u32, val: u64) {
-        // &mut HPETRegisters should be gotten from BqlRefCell<HPETRegisters>,
-        // but there's no lock guard to guarantee this. So we have to check BQL
-        // context explicitly. This check should be removed when we switch to
-        // Mutex<HPETRegisters>.
-        assert!(bql::is_locked());
-
+    fn set_counter_reg(
+        &self,
+        regs: &mut MutexGuard<HPETRegisters>,
+        shift: u32,
+        len: u32,
+        val: u64,
+    ) {
         if regs.is_hpet_enabled() {
             // TODO: Add trace point -
             // trace_hpet_ram_write_counter_write_while_enabled()
@@ -922,7 +845,7 @@ impl HPETState {
         self.hpet_id.set(HPETFwConfig::assign_hpet_id()?);
 
         // 64-bit General Capabilities and ID Register; LegacyReplacementRoute.
-        self.regs.borrow_mut().capability = HPET_CAP_REV_ID_VALUE << HPET_CAP_REV_ID_SHIFT |
+        self.regs.lock().unwrap().capability = HPET_CAP_REV_ID_VALUE << HPET_CAP_REV_ID_SHIFT |
             1 << HPET_CAP_COUNT_SIZE_CAP_SHIFT |
             1 << HPET_CAP_LEG_RT_CAP_SHIFT |
             HPET_CAP_VENDER_ID_VALUE << HPET_CAP_VENDER_ID_SHIFT |
@@ -939,7 +862,7 @@ impl HPETState {
         // again. We cannot borrow BqlRefCell twice at once. Minimize the
         // scope of regs to ensure it will be dropped before irq callback.
         {
-            let mut regs = self.regs.borrow_mut();
+            let mut regs = self.regs.lock().unwrap();
 
             for timer in self.timers.iter().take(self.num_timers) {
                 timer.borrow_mut().reset(&mut regs);
@@ -989,7 +912,7 @@ impl HPETState {
     fn read(&self, addr: hwaddr, size: u32) -> u64 {
         // TODO: Add trace point - trace_hpet_ram_read(addr)
         let HPETAddrDecode { shift, target, .. } = self.decode(addr, size);
-        let regs = &self.regs.borrow();
+        let regs = &self.regs.lock().unwrap();
 
         use DecodedRegister::*;
         use GlobalRegister::*;
@@ -1016,7 +939,7 @@ impl HPETState {
 
     fn write(&self, addr: hwaddr, value: u64, size: u32) {
         let HPETAddrDecode { shift, len, target } = self.decode(addr, size);
-        let regs = &mut self.regs.borrow_mut();
+        let regs = &mut self.regs.lock().unwrap();
 
         // TODO: Add trace point - trace_hpet_ram_write(addr, value)
         use DecodedRegister::*;
@@ -1034,9 +957,10 @@ impl HPETState {
     }
 
     fn pre_save(&self) -> Result<(), migration::Infallible> {
-        let mut regs = self.regs.borrow_mut();
+        let mut regs = self.regs.lock().unwrap();
         if regs.is_hpet_enabled() {
             regs.counter = self.get_ticks();
+            drop(regs); // required by clippy::significant-drop-tightening
         }
 
         /*
@@ -1049,7 +973,7 @@ impl HPETState {
     }
 
     fn post_load(&self, _version_id: u8) -> Result<(), migration::Infallible> {
-        let regs = self.regs.borrow();
+        let regs = self.regs.lock().unwrap();
 
         for timer in self.timers.iter().take(self.num_timers) {
             let mut t = timer.borrow_mut();
@@ -1064,6 +988,7 @@ impl HPETState {
         if !self.hpet_offset_saved {
             self.hpet_offset
                 .set(ticks_to_ns(regs.counter) - CLOCK_VIRTUAL.get_ns());
+            drop(regs); // required by clippy::significant-drop-tightening
         }
 
         Ok(())
@@ -1074,7 +999,7 @@ impl HPETState {
     }
 
     fn is_offset_needed(&self) -> bool {
-        self.regs.borrow().is_hpet_enabled() && self.hpet_offset_saved
+        self.regs.lock().unwrap().is_hpet_enabled() && self.hpet_offset_saved
     }
 
     fn validate_num_timers(&self, _version_id: u8) -> bool {
