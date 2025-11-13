@@ -173,8 +173,7 @@ static void periodic_timer_update(MC146818RtcState *s, int64_t current_time,
         next_periodic_clock = muldiv64(s->next_periodic_time,
                                 RTC_CLOCK_RATE, NANOSECONDS_PER_SECOND);
         last_periodic_clock = next_periodic_clock - old_period;
-        lost_clock = cur_clock - last_periodic_clock;
-        assert(lost_clock >= 0);
+        lost_clock = MAX(cur_clock - last_periodic_clock, 0);
     }
 
     /*
