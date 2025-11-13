@@ -23,6 +23,17 @@ void bql_unlock(void)
     assert(!bql_unlock_blocked);
 }
 
+void rust_bql_lock(void)
+{
+    rust_bql_mock_lock();
+}
+
+void rust_bql_unlock(void)
+{
+    bql_unlock();
+    bql_is_locked = false;
+}
+
 void bql_block_unlock(bool increase)
 {
     uint32_t new_value;

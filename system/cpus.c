@@ -578,11 +578,21 @@ void bql_lock_impl(const char *file, int line)
     bql_lock_fn(&bql, file, line);
 }
 
+void rust_bql_lock(void)
+{
+    bql_lock();
+}
+
 void bql_unlock(void)
 {
     g_assert(bql_locked());
     g_assert(!bql_unlock_blocked);
     qemu_mutex_unlock(&bql);
+}
+
+void rust_bql_unlock(void)
+{
+    bql_unlock();
 }
 
 void qemu_cond_wait_bql(QemuCond *cond)

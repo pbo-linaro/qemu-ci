@@ -250,7 +250,7 @@ AioContext *iohandler_get_aio_context(void);
 /**
  * rust_bql_mock_lock:
  *
- * Called from Rust doctests to make bql_lock() return true.
+ * Called from Rust doctests to make bql_locked() return true.
  * Do not touch.
  */
 void rust_bql_mock_lock(void);
@@ -369,6 +369,16 @@ bool qemu_in_main_thread(void);
 void bql_lock_impl(const char *file, int line);
 
 /**
+ * @rust_bql_lock: A wrapper over bql_lock().
+ *
+ * This function is used to allow bindgen to generate bql_lock()
+ * binding.
+ *
+ * Do not call this function directly! Use bql_lock() instead.
+ */
+void rust_bql_lock(void);
+
+/**
  * bql_unlock: Unlock the Big QEMU Lock (BQL).
  *
  * This function unlocks the Big QEMU Lock.  The lock is taken by
@@ -382,6 +392,16 @@ void bql_lock_impl(const char *file, int line);
  * is a no-op there.
  */
 void bql_unlock(void);
+
+/**
+ * @rust_bql_unlock: A wrapper over bql_unlock().
+ *
+ * This function is used to allow bindgen to generate bql_unlock()
+ * binding.
+ *
+ * Do not call this function directly! Use bql_unlock() instead.
+ */
+void rust_bql_unlock(void);
 
 /**
  * BQL_LOCK_GUARD
