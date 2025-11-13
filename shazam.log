@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20251113-quanta-q71l-eeproms-v2-0-e72451b974b0@google.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 10 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/3] hw/nvram: Add a new auxiliary function to init at24c eeprom
+  [32m✓[0m [PATCH v2 2/3] hw/arm: add eeproms to quanta-q7l1 board
+  [32m✓[0m [PATCH v2 3/3] hw/arm: enable eeproms for quanta-q71l
+  ---
+  [32m✓[0m Signed: DKIM/google.com
+---
+Total patches: 3
+---
+ Base: using specified base-commit 190d5d7fd725ff754f94e8e0cbfb69f279c82b5d
+Applying: hw/nvram: Add a new auxiliary function to init at24c eeprom
+Applying: hw/arm: add eeproms to quanta-q7l1 board
+Patch failed at 0002 hw/arm: add eeproms to quanta-q7l1 board
+error: patch failed: hw/arm/aspeed.c:561
+error: hw/arm/aspeed.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
