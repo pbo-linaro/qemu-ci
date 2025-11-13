@@ -192,6 +192,41 @@ pub struct HPETTimerRegisters {
     fsb: u64,
 }
 
+impl HPETTimerRegisters {
+    const fn is_fsb_route_enabled(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_FSB_ENABLE_SHIFT) != 0
+    }
+
+    const fn is_periodic(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_PERIODIC_SHIFT) != 0
+    }
+
+    const fn is_int_enabled(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_INT_ENABLE_SHIFT) != 0
+    }
+
+    const fn is_32bit_mod(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_32BIT_SHIFT) != 0
+    }
+
+    const fn is_valset_enabled(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_SETVAL_SHIFT) != 0
+    }
+
+    /// True if timer interrupt is level triggered; otherwise, edge triggered.
+    const fn is_int_level_triggered(&self) -> bool {
+        self.config & (1 << HPET_TN_CFG_INT_TYPE_SHIFT) != 0
+    }
+
+    const fn clear_valset(&mut self) {
+        self.config &= !(1 << HPET_TN_CFG_SETVAL_SHIFT);
+    }
+
+    const fn get_individual_route(&self) -> usize {
+        ((self.config & HPET_TN_CFG_INT_ROUTE_MASK) >> HPET_TN_CFG_INT_ROUTE_SHIFT) as usize
+    }
+}
+
 /// HPET Timer Abstraction
 #[repr(C)]
 #[derive(Debug)]
@@ -254,40 +289,11 @@ impl HPETTimer {
         self.get_state().is_timer_int_active(self.index.into())
     }
 
-    const fn is_fsb_route_enabled(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_FSB_ENABLE_SHIFT) != 0
-    }
-
-    const fn is_periodic(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_PERIODIC_SHIFT) != 0
-    }
-
-    const fn is_int_enabled(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_INT_ENABLE_SHIFT) != 0
-    }
-
-    const fn is_32bit_mod(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_32BIT_SHIFT) != 0
-    }
-
-    const fn is_valset_enabled(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_SETVAL_SHIFT) != 0
-    }
-
-    fn clear_valset(&mut self) {
-        self.regs.config &= !(1 << HPET_TN_CFG_SETVAL_SHIFT);
-    }
-
-    /// True if timer interrupt is level triggered; otherwise, edge triggered.
-    const fn is_int_level_triggered(&self) -> bool {
-        self.regs.config & (1 << HPET_TN_CFG_INT_TYPE_SHIFT) != 0
-    }
-
     /// calculate next value of the general counter that matches the
     /// target (either entirely, or the low 32-bit only depending on
     /// the timer mode).
     fn calculate_cmp64(&self, cur_tick: u64, target: u64) -> u64 {
-        if self.is_32bit_mod() {
+        if self.regs.is_32bit_mod() {
             let mut result: u64 = cur_tick.deposit(0, 32, target);
             if result < cur_tick {
                 result += 0x100000000;
@@ -296,10 +302,6 @@ impl HPETTimer {
         } else {
             target
         }
-    }
-
-    const fn get_individual_route(&self) -> usize {
-        ((self.regs.config & HPET_TN_CFG_INT_ROUTE_MASK) >> HPET_TN_CFG_INT_ROUTE_SHIFT) as usize
     }
 
     fn get_int_route(&self) -> usize {
@@ -323,15 +325,15 @@ impl HPETTimer {
             // ...
             // If the LegacyReplacement Route bit is not set, the individual
             // routing bits for each of the timers are used.
-            self.get_individual_route()
+            self.regs.get_individual_route()
         }
     }
 
     fn set_irq(&self, set: bool) {
         let route = self.get_int_route();
 
-        if set && self.is_int_enabled() && self.get_state().is_hpet_enabled() {
-            if self.is_fsb_route_enabled() {
+        if set && self.regs.is_int_enabled() && self.get_state().is_hpet_enabled() {
+            if self.regs.is_fsb_route_enabled() {
                 // SAFETY:
                 // the parameters are valid.
                 unsafe {
@@ -343,12 +345,12 @@ impl HPETTimer {
                         null_mut(),
                     );
                 }
-            } else if self.is_int_level_triggered() {
+            } else if self.regs.is_int_level_triggered() {
                 self.get_state().irqs[route].raise();
             } else {
                 self.get_state().irqs[route].pulse();
             }
-        } else if !self.is_fsb_route_enabled() {
+        } else if !self.regs.is_fsb_route_enabled() {
             self.get_state().irqs[route].lower();
         }
     }
@@ -358,7 +360,7 @@ impl HPETTimer {
         // still operate and generate appropriate status bits, but
         // will not cause an interrupt"
         self.get_state()
-            .update_int_status(self.index.into(), set && self.is_int_level_triggered());
+            .update_int_status(self.index.into(), set && self.regs.is_int_level_triggered());
         self.set_irq(set);
     }
 
@@ -366,7 +368,7 @@ impl HPETTimer {
         let mut ns = self.get_state().get_ns(tick);
 
         // Clamp period to reasonable min value (1 us)
-        if self.is_periodic() && ns - self.last < 1000 {
+        if self.regs.is_periodic() && ns - self.last < 1000 {
             ns = self.last + 1000;
         }
 
@@ -379,10 +381,10 @@ impl HPETTimer {
 
         self.wrap_flag = 0;
         self.cmp64 = self.calculate_cmp64(cur_tick, self.regs.cmp);
-        if self.is_32bit_mod() {
+        if self.regs.is_32bit_mod() {
             // HPET spec says in one-shot 32-bit mode, generate an interrupt when
             // counter wraps in addition to an interrupt with comparator match.
-            if !self.is_periodic() && self.cmp64 > hpet_next_wrap(cur_tick) {
+            if !self.regs.is_periodic() && self.cmp64 > hpet_next_wrap(cur_tick) {
                 self.wrap_flag = 1;
                 self.arm_timer(hpet_next_wrap(cur_tick));
                 return;
@@ -423,7 +425,7 @@ impl HPETTimer {
             self.update_irq(true);
         }
 
-        if self.is_32bit_mod() {
+        if self.regs.is_32bit_mod() {
             self.regs.cmp = u64::from(self.regs.cmp as u32); // truncate!
             self.period = u64::from(self.period as u32); // truncate!
         }
@@ -439,7 +441,7 @@ impl HPETTimer {
         let mut value = val;
 
         // TODO: Add trace point - trace_hpet_ram_write_tn_cmp(addr & 4)
-        if self.is_32bit_mod() {
+        if self.regs.is_32bit_mod() {
             // High 32-bits are zero, leave them untouched.
             if shift != 0 {
                 // TODO: Add trace point - trace_hpet_ram_write_invalid_tn_cmp()
@@ -449,15 +451,15 @@ impl HPETTimer {
             value = u64::from(value as u32); // truncate!
         }
 
-        if !self.is_periodic() || self.is_valset_enabled() {
+        if !self.regs.is_periodic() || self.regs.is_valset_enabled() {
             self.regs.cmp = self.regs.cmp.deposit(shift, length, value);
         }
 
-        if self.is_periodic() {
+        if self.regs.is_periodic() {
             self.period = self.period.deposit(shift, length, value);
         }
 
-        self.clear_valset();
+        self.regs.clear_valset();
         if self.get_state().is_hpet_enabled() {
             self.set_timer();
         }
@@ -488,11 +490,11 @@ impl HPETTimer {
         let period: u64 = self.period;
         let cur_tick: u64 = self.get_state().get_ticks();
 
-        if self.is_periodic() && period != 0 {
+        if self.regs.is_periodic() && period != 0 {
             while hpet_time_after(cur_tick, self.cmp64) {
                 self.cmp64 += period;
             }
-            if self.is_32bit_mod() {
+            if self.regs.is_32bit_mod() {
                 self.regs.cmp = u64::from(self.cmp64 as u32); // truncate!
             } else {
                 self.regs.cmp = self.cmp64;
@@ -651,7 +653,7 @@ impl HPETState {
             for timer in self.timers.iter().take(self.num_timers) {
                 let mut t = timer.borrow_mut();
 
-                if t.is_int_enabled() && t.is_int_active() {
+                if t.regs.is_int_enabled() && t.is_int_active() {
                     t.update_irq(true);
                 }
                 t.set_timer();
@@ -810,8 +812,8 @@ impl HPETState {
         // TODO: Add trace point - trace_hpet_ram_read(addr)
         let HPETAddrDecode { shift, target, .. } = self.decode(addr, size);
 
-        use GlobalRegister::*;
         use DecodedRegister::*;
+        use GlobalRegister::*;
         (match target {
             Timer(timer, tn_target) => timer.borrow_mut().read(tn_target),
             Global(CAP) => self.capability.get(), /* including HPET_PERIOD 0x004 */
@@ -837,8 +839,8 @@ impl HPETState {
         let HPETAddrDecode { shift, len, target } = self.decode(addr, size);
 
         // TODO: Add trace point - trace_hpet_ram_write(addr, value)
-        use GlobalRegister::*;
         use DecodedRegister::*;
+        use GlobalRegister::*;
         match target {
             Timer(timer, tn_target) => timer.borrow_mut().write(tn_target, value, shift, len),
             Global(CAP) => {} // General Capabilities and ID Register: Read Only
