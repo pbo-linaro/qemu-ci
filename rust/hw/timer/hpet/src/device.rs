@@ -356,12 +356,12 @@ impl HPETTimer {
                     );
                 }
             } else if tn_regs.is_int_level_triggered() {
-                self.get_state().irqs[route].raise();
+                bql::with_guard(|| self.get_state().irqs[route].raise());
             } else {
-                self.get_state().irqs[route].pulse();
+                bql::with_guard(|| self.get_state().irqs[route].pulse());
             }
         } else if !tn_regs.is_fsb_route_enabled() {
-            self.get_state().irqs[route].lower();
+            bql::with_guard(|| self.get_state().irqs[route].lower());
         }
     }
 
@@ -672,14 +672,20 @@ impl HPETState {
     }
 
     fn get_ticks(&self) -> u64 {
-        ns_to_ticks(CLOCK_VIRTUAL.get_ns() + self.hpet_offset.get())
+        // Protect hpet_offset in lockless IO case which would not lock BQL.
+        ns_to_ticks(CLOCK_VIRTUAL.get_ns() + bql::with_guard(|| self.hpet_offset.get()))
     }
 
     fn get_ns(&self, tick: u64) -> u64 {
-        ticks_to_ns(tick) - self.hpet_offset.get()
+        // Protect hpet_offset in lockless IO case which would not lock BQL.
+        ticks_to_ns(tick) - bql::with_guard(|| self.hpet_offset.get())
     }
 
     fn handle_legacy_irq(&self, irq: u32, level: u32) {
+        // Protect both rtc_irq_level and irqs[] in lockless IO case which
+        // would not lock BQL.
+        let _bql_guard = bql::BqlGuard::new();
+
         let regs = self.regs.lock().unwrap();
         if irq == HPET_LEGACY_PIT_INT {
             if !regs.is_legacy_mode() {
@@ -718,38 +724,49 @@ impl HPETState {
 
         if activating_bit(old_val, new_val, HPET_CFG_ENABLE_SHIFT) {
             // Enable main counter and interrupt generation.
-            self.hpet_offset
-                .set(ticks_to_ns(regs.counter) - CLOCK_VIRTUAL.get_ns());
+            // Protect hpet_offset in lockless IO case which would not lock BQL.
+            bql::with_guard(|| {
+                self.hpet_offset
+                    .set(ticks_to_ns(regs.counter) - CLOCK_VIRTUAL.get_ns())
+            });
 
             for timer in self.timers.iter().take(self.num_timers) {
-                let mut t = timer.borrow_mut();
-                let id = t.index as usize;
-                let tn_regs = &regs.tn_regs[id];
+                // Protect timer in lockless IO case which would not lock BQL.
+                bql::with_guard(|| {
+                    let mut t = timer.borrow_mut();
+                    let id = t.index as usize;
+                    let tn_regs = &regs.tn_regs[id];
 
-                if tn_regs.is_int_enabled() && t.is_int_active(regs) {
-                    t.update_irq(regs, true);
-                }
-                t.set_timer(regs);
+                    if tn_regs.is_int_enabled() && t.is_int_active(regs) {
+                        t.update_irq(regs, true);
+                    }
+                    t.set_timer(regs);
+                });
             }
         } else if deactivating_bit(old_val, new_val, HPET_CFG_ENABLE_SHIFT) {
             // Halt main counter and disable interrupt generation.
             regs.counter = self.get_ticks();
 
             for timer in self.timers.iter().take(self.num_timers) {
-                timer.borrow().del_timer(regs);
+                // Protect timer in lockless IO case which would not lock BQL.
+                bql::with_guard(|| timer.borrow().del_timer(regs));
             }
         }
 
         // i8254 and RTC output pins are disabled when HPET is in legacy mode
         if activating_bit(old_val, new_val, HPET_CFG_LEG_RT_SHIFT) {
-            self.pit_enabled.set(false);
-            self.irqs[0].lower();
-            self.irqs[RTC_ISA_IRQ].lower();
+            bql::with_guard(|| {
+                self.pit_enabled.set(false);
+                self.irqs[0].lower();
+                self.irqs[RTC_ISA_IRQ].lower();
+            });
         } else if deactivating_bit(old_val, new_val, HPET_CFG_LEG_RT_SHIFT) {
-            // TODO: Add irq binding: qemu_irq_lower(s->irqs[0])
-            self.irqs[0].lower();
-            self.pit_enabled.set(true);
-            self.irqs[RTC_ISA_IRQ].set(self.rtc_irq_level.get() != 0);
+            bql::with_guard(|| {
+                // TODO: Add irq binding: qemu_irq_lower(s->irqs[0])
+                self.irqs[0].lower();
+                self.pit_enabled.set(true);
+                self.irqs[RTC_ISA_IRQ].set(self.rtc_irq_level.get() != 0);
+            });
         }
     }
 
@@ -766,7 +783,8 @@ impl HPETState {
 
         for (index, timer) in self.timers.iter().take(self.num_timers).enumerate() {
             if cleared & (1 << index) != 0 {
-                timer.borrow().update_irq(regs, false);
+                // Protect timer in lockless IO case which would not lock BQL.
+                bql::with_guard(|| timer.borrow().update_irq(regs, false));
             }
         }
     }
@@ -827,6 +845,7 @@ impl HPETState {
 
     fn post_init(&self) {
         self.init_mmio(&self.iomem);
+        self.iomem.enable_lockless_io();
         for irq in self.irqs.iter() {
             self.init_irq(irq);
         }
