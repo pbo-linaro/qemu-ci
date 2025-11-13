@@ -12,7 +12,9 @@ use std::{
 use common::{callbacks::FnCall, uninit::MaybeUninitField, zeroable::Zeroable, Opaque};
 use qom::prelude::*;
 
-use crate::bindings::{self, device_endian, memory_region_init_io};
+use crate::bindings::{
+    self, device_endian, memory_region_enable_lockless_io, memory_region_init_io,
+};
 pub use crate::bindings::{hwaddr, MemTxAttrs};
 
 pub struct MemoryRegionOps<T>(
@@ -171,6 +173,17 @@ impl MemoryRegion {
                 size,
             );
         }
+    }
+
+    /// Enable lockless (BQL free) acceess.
+    ///
+    /// Enable BQL-free access for devices that are well prepared to handle
+    /// locking during I/O themselves: either by doing fine grained locking or
+    /// by providing lock-free I/O schemes.
+    pub fn enable_lockless_io(&self) {
+        // SAFETY: MemoryRegion is wrapped by Opaque<>, it's safe to get a
+        // raw pointer as *mut MemoryRegion.
+        unsafe { memory_region_enable_lockless_io(self.as_mut_ptr()) }
     }
 }
 
