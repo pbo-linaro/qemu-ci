@@ -286,7 +286,10 @@ impl HPETTimer {
     }
 
     fn is_int_active(&self) -> bool {
-        self.get_state().is_timer_int_active(self.index.into())
+        self.get_state()
+            .regs
+            .borrow()
+            .is_timer_int_active(self.index.into())
     }
 
     /// calculate next value of the general counter that matches the
@@ -305,7 +308,7 @@ impl HPETTimer {
     }
 
     fn get_int_route(&self) -> usize {
-        if self.index <= 1 && self.get_state().is_legacy_mode() {
+        if self.index <= 1 && self.get_state().regs.borrow().is_legacy_mode() {
             // If LegacyReplacement Route bit is set, HPET specification requires
             // timer0 be routed to IRQ0 in NON-APIC or IRQ2 in the I/O APIC,
             // timer1 be routed to IRQ8 in NON-APIC or IRQ8 in the I/O APIC.
@@ -332,7 +335,7 @@ impl HPETTimer {
     fn set_irq(&self, set: bool) {
         let route = self.get_int_route();
 
-        if set && self.regs.is_int_enabled() && self.get_state().is_hpet_enabled() {
+        if set && self.regs.is_int_enabled() && self.get_state().regs.borrow().is_hpet_enabled() {
             if self.regs.is_fsb_route_enabled() {
                 // SAFETY:
                 // the parameters are valid.
@@ -430,7 +433,7 @@ impl HPETTimer {
             self.period = u64::from(self.period as u32); // truncate!
         }
 
-        if self.get_state().is_hpet_enabled() {
+        if self.get_state().regs.borrow().is_hpet_enabled() {
             self.set_timer();
         }
     }
@@ -460,7 +463,7 @@ impl HPETTimer {
         }
 
         self.regs.clear_valset();
-        if self.get_state().is_hpet_enabled() {
+        if self.get_state().regs.borrow().is_hpet_enabled() {
             self.set_timer();
         }
     }
@@ -542,6 +545,20 @@ pub struct HPETRegisters {
     counter: u64,
 }
 
+impl HPETRegisters {
+    fn is_legacy_mode(&self) -> bool {
+        self.config & (1 << HPET_CFG_LEG_RT_SHIFT) != 0
+    }
+
+    fn is_hpet_enabled(&self) -> bool {
+        self.config & (1 << HPET_CFG_ENABLE_SHIFT) != 0
+    }
+
+    fn is_timer_int_active(&self, index: usize) -> bool {
+        self.int_status & (1 << index) != 0
+    }
+}
+
 /// HPET Event Timer Block Abstraction
 #[repr(C)]
 #[derive(qom::Object, hwcore::Device)]
@@ -589,18 +606,6 @@ impl HPETState {
         self.flags & (1 << HPET_FLAG_MSI_SUPPORT_SHIFT) != 0
     }
 
-    fn is_legacy_mode(&self) -> bool {
-        self.regs.borrow().config & (1 << HPET_CFG_LEG_RT_SHIFT) != 0
-    }
-
-    fn is_hpet_enabled(&self) -> bool {
-        self.regs.borrow().config & (1 << HPET_CFG_ENABLE_SHIFT) != 0
-    }
-
-    fn is_timer_int_active(&self, index: usize) -> bool {
-        self.regs.borrow().int_status & (1 << index) != 0
-    }
-
     fn get_ticks(&self) -> u64 {
         ns_to_ticks(CLOCK_VIRTUAL.get_ns() + self.hpet_offset.get())
     }
@@ -610,13 +615,14 @@ impl HPETState {
     }
 
     fn handle_legacy_irq(&self, irq: u32, level: u32) {
+        let regs = self.regs.borrow();
         if irq == HPET_LEGACY_PIT_INT {
-            if !self.is_legacy_mode() {
+            if !regs.is_legacy_mode() {
                 self.irqs[0].set(level != 0);
             }
         } else {
             self.rtc_irq_level.set(level);
-            if !self.is_legacy_mode() {
+            if !regs.is_legacy_mode() {
                 self.irqs[RTC_ISA_IRQ].set(level != 0);
             }
         }
@@ -699,7 +705,8 @@ impl HPETState {
 
     /// Main Counter Value Register
     fn set_counter_reg(&self, shift: u32, len: u32, val: u64) {
-        if self.is_hpet_enabled() {
+        let mut regs = self.regs.borrow_mut();
+        if regs.is_hpet_enabled() {
             // TODO: Add trace point -
             // trace_hpet_ram_write_counter_write_while_enabled()
             //
@@ -710,7 +717,6 @@ impl HPETState {
             // tick count (i.e., the previously calculated offset will
             // not be changed as well).
         }
-        let mut regs = self.regs.borrow_mut();
         regs.counter = regs.counter.deposit(shift, len, val);
     }
 
@@ -829,12 +835,13 @@ impl HPETState {
             Global(CFG) => self.regs.borrow().config,
             Global(INT_STATUS) => self.regs.borrow().int_status,
             Global(COUNTER) => {
+                let regs = self.regs.borrow();
                 // TODO: Add trace point
                 // trace_hpet_ram_read_reading_counter(addr & 4, cur_tick)
-                if self.is_hpet_enabled() {
+                if regs.is_hpet_enabled() {
                     self.get_ticks()
                 } else {
-                    self.regs.borrow().counter
+                    regs.counter
                 }
             }
             Unknown(_) => {
@@ -863,8 +870,9 @@ impl HPETState {
     }
 
     fn pre_save(&self) -> Result<(), migration::Infallible> {
-        if self.is_hpet_enabled() {
-            self.regs.borrow_mut().counter = self.get_ticks();
+        let mut regs = self.regs.borrow_mut();
+        if regs.is_hpet_enabled() {
+            regs.counter = self.get_ticks();
         }
 
         /*
@@ -899,7 +907,7 @@ impl HPETState {
     }
 
     fn is_offset_needed(&self) -> bool {
-        self.is_hpet_enabled() && self.hpet_offset_saved
+        self.regs.borrow().is_hpet_enabled() && self.hpet_offset_saved
     }
 
     fn validate_num_timers(&self, _version_id: u8) -> bool {
