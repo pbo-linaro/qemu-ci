@@ -109,10 +109,22 @@ static void loongarch_cpu_do_interrupt(CPUState *cs)
         }
         QEMU_FALLTHROUGH;
     case EXCCODE_PIF:
-    case EXCCODE_ADEF:
         cause = cs->exception_index;
         update_badinstr = 0;
         break;
+    case EXCCODE_ADEF:
+        update_badinstr = 0;
+        QEMU_FALLTHROUGH;
+    case EXCCODE_BCE:
+    case EXCCODE_ADEM:
+        env->CSR_BADV = env->pc;
+        QEMU_FALLTHROUGH;
+    case EXCCODE_PNR:
+    case EXCCODE_PNX:
+    case EXCCODE_PPI:
+    case EXCCODE_PIL:
+    case EXCCODE_PIS:
+    case EXCCODE_PME:
     case EXCCODE_SYS:
     case EXCCODE_BRK:
     case EXCCODE_INE:
@@ -121,16 +133,6 @@ static void loongarch_cpu_do_interrupt(CPUState *cs)
     case EXCCODE_FPE:
     case EXCCODE_SXD:
     case EXCCODE_ASXD:
-        env->CSR_BADV = env->pc;
-        QEMU_FALLTHROUGH;
-    case EXCCODE_BCE:
-    case EXCCODE_ADEM:
-    case EXCCODE_PIL:
-    case EXCCODE_PIS:
-    case EXCCODE_PME:
-    case EXCCODE_PNR:
-    case EXCCODE_PNX:
-    case EXCCODE_PPI:
         cause = cs->exception_index;
         break;
     default:
