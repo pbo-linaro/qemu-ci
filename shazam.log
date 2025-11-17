@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20251117093729.1121324-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 24 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 400 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v8 1/23] intel_iommu: Rename vtd_ce_get_rid2pasid_entry to vtd_ce_get_pasid_entry
+  [32m✓[0m [PATCH v8 2/23] intel_iommu: Delete RPS capability related supporting code
+  [32m✓[0m [PATCH v8 3/23] intel_iommu: Update terminology to match VTD spec
+  [32m✓[0m [PATCH v8 4/23] hw/pci: Export pci_device_get_iommu_bus_devfn() and return bool
+  [32m✓[0m [PATCH v8 5/23] hw/pci: Introduce pci_device_get_viommu_flags()
+  [32m✓[0m [PATCH v8 6/23] intel_iommu: Implement get_viommu_flags() callback
+  [32m✓[0m [PATCH v8 7/23] intel_iommu: Introduce a new structure VTDHostIOMMUDevice
+  [32m✓[0m [PATCH v8 8/23] vfio/iommufd: Force creating nesting parent HWPT
+  [32m✓[0m [PATCH v8 9/23] intel_iommu_accel: Check for compatibility with IOMMUFD backed device when x-flts=on
+  [32m✓[0m [PATCH v8 10/23] intel_iommu_accel: Fail passthrough device under PCI bridge if x-flts=on
+  [32m✓[0m [PATCH v8 11/23] intel_iommu_accel: Stick to system MR for IOMMUFD backed host device when x-flts=on
+  [32m✓[0m [PATCH v8 12/23] intel_iommu: Add some macros and inline functions
+  [32m✓[0m [PATCH v8 13/23] intel_iommu_accel: Bind/unbind guest page table to host
+  [32m✓[0m [PATCH v8 14/23] intel_iommu_accel: Propagate PASID-based iotlb invalidation to host
+  [32m✓[0m [PATCH v8 15/23] intel_iommu: Replay all pasid bindings when either SRTP or TE bit is changed
+  [32m✓[0m [PATCH v8 16/23] intel_iommu: Replay pasid bindings after context cache invalidation
+  [32m✓[0m [PATCH v8 17/23] vfio/listener: Bypass readonly region for dirty tracking
+  [32m✓[0m [PATCH v8 18/23] intel_iommu: Add migration support with x-flts=on
+  [32m✓[0m [PATCH v8 19/23] hw/pci: Introduce pci_device_get_host_iommu_quirks()
+  [32m✓[0m [PATCH v8 20/23] intel_iommu_accel: Implement get_host_iommu_quirks() callback
+  [32m✓[0m [PATCH v8 21/23] Workaround for ERRATA_772415_SPR17
+  [32m✓[0m [PATCH v8 22/23] intel_iommu: Enable host device when x-flts=on in scalable mode
+  [32m✓[0m [PATCH v8 23/23] docs/devel: Add IOMMUFD nesting documentation
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 23
+---
+Applying: intel_iommu: Rename vtd_ce_get_rid2pasid_entry to vtd_ce_get_pasid_entry
+Applying: intel_iommu: Delete RPS capability related supporting code
+Applying: intel_iommu: Update terminology to match VTD spec
+Applying: hw/pci: Export pci_device_get_iommu_bus_devfn() and return bool
+Applying: hw/pci: Introduce pci_device_get_viommu_flags()
+Applying: intel_iommu: Implement get_viommu_flags() callback
+Patch failed at 0006 intel_iommu: Implement get_viommu_flags() callback
+error: patch failed: hw/i386/intel_iommu.c:4696
+error: hw/i386/intel_iommu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
