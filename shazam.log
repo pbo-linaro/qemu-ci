@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20251118154812.57861-1-chad@jablonski.xyz/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 19 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/11] ati-vga: Fix DST_PITCH and SRC_PITCH reads
+  [32m✓[0m [PATCH v3 2/11] ati-vga: Add scissor clipping register support
+  [32m✓[0m [PATCH v3 3/11] ati-vga: Implement foreground and background color register writes
+  [32m✓[0m [PATCH v3 4/11] ati-vga: Latch src and dst pitch and offset on master_cntl default
+  [32m✓[0m [PATCH v3 5/11] ati-vga: Fix DP_GUI_MASTER_CNTL register mask
+  [32m✓[0m [PATCH v3 6/11] ati-vga: Create dst and sc rectangle helpers
+  [32m✓[0m [PATCH v3 7/11] ati-vga: Implement scissor rectangle clipping for 2D operations
+  [32m✓[0m [PATCH v3 8/11] ati-vga: Create 2d_blt destination setup helper
+  [32m✓[0m [PATCH v3 9/11] ati-vga: Refactor ati_2d_blt to use dst setup helper
+  [32m✓[0m [PATCH v3 10/11] ati-vga: Implement HOST_DATA register writes
+  [32m✓[0m [PATCH v3 11/11] ati-vga: Implement HOST_DATA flush to VRAM
+  ---
+  [32m✓[0m Signed: DKIM/jablonski.xyz
+---
+Total patches: 11
+---
+Applying: ati-vga: Fix DST_PITCH and SRC_PITCH reads
+Applying: ati-vga: Add scissor clipping register support
+Applying: ati-vga: Implement foreground and background color register writes
+Applying: ati-vga: Latch src and dst pitch and offset on master_cntl default
+Applying: ati-vga: Fix DP_GUI_MASTER_CNTL register mask
+Applying: ati-vga: Create dst and sc rectangle helpers
+Applying: ati-vga: Implement scissor rectangle clipping for 2D operations
+Applying: ati-vga: Create 2d_blt destination setup helper
+Applying: ati-vga: Refactor ati_2d_blt to use dst setup helper
+Applying: ati-vga: Implement HOST_DATA register writes
+Applying: ati-vga: Implement HOST_DATA flush to VRAM
+Patch failed at 0011 ati-vga: Implement HOST_DATA flush to VRAM
+error: patch failed: hw/display/ati_int.h:34
+error: hw/display/ati_int.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
