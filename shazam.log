@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20251118162513.730659-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+WARNING: duplicate messages found at index 1
+   Subject 1: replay: add tracing events
+   Subject 2: replay: add tracing events
+  2 is not a reply... assume additional patch
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] replay: add tracing events
+  [32m✓[0m [PATCH] replay: add tracing events
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 2
+---
+Applying: replay: add tracing events
+Applying: replay: add tracing events
+Patch failed at 0002 replay: add tracing events
+error: patch failed: meson.build:3678
+error: meson.build: patch does not apply
+error: replay/trace.h: already exists in index
+error: patch failed: replay/replay-internal.c:15
+error: replay/replay-internal.c: patch does not apply
+error: replay/trace-events: already exists in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
