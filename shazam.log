@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251118101532.4315-1-sarunkod@amd.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/5] linux-headers: Introduce struct iommu_hw_info_amd
+  [32m✓[0m [PATCH RFC 2/5] vfio/iommufd: Add amd specific hardware info struct to vendor capability
+  [32m✓[0m [PATCH RFC 3/5] amd-iommu: Add support for set/unset IOMMU for VFIO PCI devices
+  [32m✓[0m [PATCH RFC 4/5] amd_iommu: Add support for extended feature register 2
+  [32m✓[0m [PATCH RFC 5/5] amd_iommu: Add support for upto 2048 interrupts per IRT
+  ---
+  [32m✓[0m Signed: DKIM/amd.com
+---
+Total patches: 5
+---
+Applying: linux-headers: Introduce struct iommu_hw_info_amd
+Applying: vfio/iommufd: Add amd specific hardware info struct to vendor capability
+Applying: amd-iommu: Add support for set/unset IOMMU for VFIO PCI devices
+Patch failed at 0003 amd-iommu: Add support for set/unset IOMMU for VFIO PCI devices
+error: patch failed: hw/i386/amd_iommu.c:382
+error: hw/i386/amd_iommu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
