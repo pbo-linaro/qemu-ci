@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20251118085758.3996513-1-djordje.todorovic@htecgroup.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 15 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 309 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v14 1/14] hw/intc: Allow gaps in hartids for aclint and aplic
+  [32m✓[0m [PATCH v14 2/14] target/riscv: Add cpu_set_exception_base
+  [32m✓[0m [PATCH v14 3/14] target/riscv: Add MIPS P8700 CPU
+  [32m✓[0m [PATCH v14 4/14] target/riscv: Add MIPS P8700 CSRs
+  [32m✓[0m [PATCH v14 5/14] target/riscv: Add mips.ccmov instruction
+  [32m✓[0m [PATCH v14 6/14] target/riscv: Add mips.pref instruction
+  [32m✓[0m [PATCH v14 7/14] target/riscv: Add Xmipslsp instructions
+  [32m✓[0m [PATCH v14 8/14] hw/misc: Add RISC-V CMGCR device implementation
+  [32m✓[0m [PATCH v14 9/14] hw/misc: Add RISC-V CPC device implementation
+  [32m✓[0m [PATCH v14 10/14] hw/riscv: Add support for RISCV CPS
+  [32m✓[0m [PATCH v14 11/14] hw/riscv: Add support for MIPS Boston-aia board mode
+  [32m✓[0m [PATCH v14 12/14] riscv/boston-aia: Add an e1000e NIC in slot 0 func 1
+  [32m✓[0m [PATCH v14 13/14] test/functional: Add test for boston-aia board
+  [32m✓[0m [PATCH v14 14/14] scripts/checkpatch: Check DEVICE_NATIVE_ENDIAN
+  ---
+  [32m✓[0m Signed: DKIM/htecgroup.com
+---
+Total patches: 14
+---
+Applying: hw/intc: Allow gaps in hartids for aclint and aplic
+Patch failed at 0001 hw/intc: Allow gaps in hartids for aclint and aplic
+error: patch failed: hw/intc/riscv_aclint.c:297
+error: hw/intc/riscv_aclint.c: patch does not apply
+error: patch failed: hw/intc/riscv_aplic.c:903
+error: hw/intc/riscv_aplic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
