@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20251119172913.577392-1-peterx@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/9] kvm: Decouple memory attribute check from kvm_guest_memfd_supported
+  [32m✓[0m [PATCH v2 2/9] kvm: Detect guest-memfd flags supported
+  [32m✓[0m [PATCH v2 3/9] memory: Rename RAM_GUEST_MEMFD to RAM_GUEST_MEMFD_PRIVATE
+  [32m✓[0m [PATCH v2 4/9] memory: Rename memory_region_has_guest_memfd() to *_private()
+  [32m✓[0m [PATCH v2 5/9] ramblock: Rename guest_memfd to guest_memfd_private
+  [32m✓[0m [PATCH v2 6/9] hostmem: Rename guest_memfd to guest_memfd_private
+  [32m✓[0m [PATCH v2 7/9] hostmem: Support in-place guest memfd to back a VM
+  [32m✓[0m [PATCH v2 8/9] tests/migration-test: Support guest-memfd init shared mem type
+  [32m✓[0m [PATCH v2 9/9] tests/migration-test: Add a precopy test for guest-memfd
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+Applying: kvm: Decouple memory attribute check from kvm_guest_memfd_supported
+Applying: kvm: Detect guest-memfd flags supported
+Applying: memory: Rename RAM_GUEST_MEMFD to RAM_GUEST_MEMFD_PRIVATE
+Applying: memory: Rename memory_region_has_guest_memfd() to *_private()
+Applying: ramblock: Rename guest_memfd to guest_memfd_private
+Applying: hostmem: Rename guest_memfd to guest_memfd_private
+Applying: hostmem: Support in-place guest memfd to back a VM
+Applying: tests/migration-test: Support guest-memfd init shared mem type
+Patch failed at 0008 tests/migration-test: Support guest-memfd init shared mem type
+error: patch failed: tests/qtest/migration/framework.h:34
+error: tests/qtest/migration/framework.h: patch does not apply
+error: patch failed: tests/qtest/migration/framework.c:279
+error: tests/qtest/migration/framework.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
