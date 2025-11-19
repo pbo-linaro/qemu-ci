@@ -1,0 +1,20 @@
+Grabbing thread from lore.kernel.org/all/9101680c-9b01-4ca8-b54d-15d01451f592@tls.msk.ru/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] A few more patches for u-boot-sam460ex (based on 10.2.0-rc1)
+---
+Total patches: 1
+---
+Applying: roms/u-boot-sam460ex: support c23 (bool)
+Patch failed at 0001 roms/u-boot-sam460ex: support c23 (bool)
+error: roms/u-boot-sam460ex/include/xyzModem.h: does not exist in index
+error: roms/u-boot-sam460ex/board/ACube/menu/list.h: does not exist in index
+error: roms/u-boot-sam460ex/board/ACube/menu/menu.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
