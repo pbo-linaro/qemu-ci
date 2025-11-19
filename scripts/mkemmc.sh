@@ -34,13 +34,19 @@ usage() {
     exit "$1"
 }
 
+file_size() {
+	ls_line=$(ls -Hdog "$1") || return
+	printf %s\\n "$ls_line" | cut -d\  -f3
+	unset ls_line
+}
+
 process_size() {
     name=$1
     image_file=$2
     alignment=$3
     image_arg=$4
     if [ "${image_arg#*:}" = "$image_arg"  ]; then
-        if ! size=$(wc -c < "$image_file" 2>/dev/null); then
+        if ! size=$(file_size "$image_file"); then
             echo "Missing $name image '$image_file'." >&2
             exit 1
         fi
@@ -102,7 +108,7 @@ check_truncation() {
     if [ "$image_file" = "/dev/zero" ]; then
         return
     fi
-    if ! actual_size=$(wc -c < "$image_file" 2>/dev/null); then
+    if ! actual_size=$(file_size "$image_file"); then
         echo "Missing image '$image_file'." >&2
         exit 1
     fi
