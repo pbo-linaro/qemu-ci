@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/20251120001649.1085913-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 103 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/10] ioapic: fix typo in irqfd check
+    + Fixes: 638ac1c78457 ("hw/intc: Generalize APIC helper names from kvm_* to accel_*") ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 2/10] target/i386: emulate: Make sure fetch_instruction exist before calling it
+    + Fixes: 1e25327b244 ("x86/emulate: Allow instruction decoding from stream") ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 3/10] target/i386: Mark VPERMILPS as not valid with prefix 0
+  [32m✓[0m [PATCH 4/10] target/i386/tcg: validate segment registers
+  [32m✓[0m [PATCH 5/10] target/i386: svm: fix sign extension of exit code
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH 6/10] target/i386: fix stack size when delivering real mode interrupts
+  [32m✓[0m [PATCH 7/10] mtest2make: cleanup mtest-suites variables
+  [32m✓[0m [PATCH 8/10] mtest2make: add dependencies to the "speed-qualified" suite
+  [32m✓[0m [PATCH 9/10] mtest2make: do not repeat the same speed over and over
+  [32m✓[0m [PATCH 10/10] replay: add tracing events
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 10
+---
+Applying: ioapic: fix typo in irqfd check
+Patch failed at 0001 ioapic: fix typo in irqfd check
+error: patch failed: hw/intc/ioapic.c:216
+error: hw/intc/ioapic.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
