@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/5e07267f-b990-47fc-ade7-934209ea942f@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] hw/9pfs: Follow native symlinks when security-model=mapped
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 1
+---
+Applying: hw/9pfs: Follow native symlinks when security-model=mapped
+Patch failed at 0001 hw/9pfs: Follow native symlinks when security-model=mapped
+error: patch failed: hw/9pfs/9p-local.c:468
+error: hw/9pfs/9p-local.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
