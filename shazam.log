@@ -1,0 +1,79 @@
+Grabbing thread from lore.kernel.org/all/20251120132213.56581-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 34 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 317 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/33] backends/iommufd: Introduce iommufd_backend_alloc_viommu
+  [32m✓[0m [PATCH v6 2/33] backends/iommufd: Introduce iommufd_backend_alloc_vdev
+  [32m✓[0m [PATCH v6 3/33] hw/arm/smmu-common: Factor out common helper functions and export
+  [32m✓[0m [PATCH v6 4/33] hw/arm/smmu-common: Make iommu ops part of SMMUState
+  [32m✓[0m [PATCH v6 5/33] hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+  [32m✓[0m [PATCH v6 6/33] hw/arm/smmuv3-accel: Initialize shared system address space
+  [32m✓[0m [PATCH v6 7/33] hw/pci/pci: Move pci_init_bus_master() after adding device to bus
+  [32m✓[0m [PATCH v6 8/33] hw/pci/pci: Add optional supports_address_space() callback
+  [32m✓[0m [PATCH v6 9/33] hw/pci-bridge/pci_expander_bridge: Move TYPE_PXB_PCIE_DEV to header
+  [32m✓[0m [PATCH v6 10/33] hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+  [32m✓[0m [PATCH v6 11/33] hw/arm/smmuv3: Implement get_viommu_cap() callback
+  [32m✓[0m [PATCH v6 12/33] hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+  [32m✓[0m [PATCH v6 13/33] hw/arm/smmuv3: propagate smmuv3_cmdq_consume() errors to caller
+  [32m✓[0m [PATCH v6 14/33] hw/arm/smmuv3-accel: Add nested vSTE install/uninstall support
+  [32m✓[0m [PATCH v6 15/33] hw/arm/smmuv3-accel: Install SMMUv3 GBPA based hwpt
+  [32m✓[0m [PATCH v6 16/33] hw/pci/pci: Introduce a callback to retrieve the MSI doorbell GPA directly
+  [32m✓[0m [PATCH v6 17/33] hw/arm/smmuv3: Add support for providing a direct MSI doorbell GPA
+  [32m✓[0m [PATCH v6 18/33] hw/arm/smmuv3-accel: Add support to issue invalidation cmd to host
+  [32m✓[0m [PATCH v6 19/33] hw/arm/smmuv3: Initialize ID registers early during realize()
+  [32m✓[0m [PATCH v6 20/33] hw/arm/smmuv3-accel: Get host SMMUv3 hw info and validate
+  [32m✓[0m [PATCH v6 21/33] hw/pci-host/gpex: Allow to generate preserve boot config DSM #5
+  [32m✓[0m [PATCH v6 22/33] hw/arm/virt: Set PCI preserve_config for accel SMMUv3
+  [32m✓[0m [PATCH v6 23/33] tests/qtest/bios-tables-test: Prepare for IORT revison upgrade
+  [32m✓[0m [PATCH v6 24/33] hw/arm/virt-acpi-build: Add IORT RMR regions to handle MSI nested binding
+  [32m✓[0m [PATCH v6 25/33] tests/qtest/bios-tables-test: Update IORT blobs after revision upgrade
+  [32m✓[0m [PATCH v6 26/33] hw/arm/smmuv3: Add accel property for SMMUv3 device
+  [32m✓[0m [PATCH v6 27/33] hw/arm/smmuv3-accel: Add a property to specify RIL support
+  [32m✓[0m [PATCH v6 28/33] hw/arm/smmuv3-accel: Add support for ATS
+  [32m✓[0m [PATCH v6 29/33] hw/arm/smmuv3-accel: Add property to specify OAS bits
+  [32m✓[0m [PATCH v6 30/33] backends/iommufd: Retrieve PASID width from iommufd_backend_get_device_info()
+  [32m✓[0m [PATCH v6 31/33] Extend get_cap() callback to support PASID
+  [32m✓[0m [PATCH v6 32/33] vfio: Synthesize vPASID capability to VM
+  [32m✓[0m [PATCH v6 33/33] hw/arm/smmuv3-accel: Add support for PASID enable
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 33
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Nicolin Chen <nicolinc@nvidia.com>
+     Msg From: Nicolin Chen via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_viommu
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_vdev
+Applying: hw/arm/smmu-common: Factor out common helper functions and export
+Applying: hw/arm/smmu-common: Make iommu ops part of SMMUState
+Applying: hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+Applying: hw/arm/smmuv3-accel: Initialize shared system address space
+Applying: hw/pci/pci: Move pci_init_bus_master() after adding device to bus
+Applying: hw/pci/pci: Add optional supports_address_space() callback
+Applying: hw/pci-bridge/pci_expander_bridge: Move TYPE_PXB_PCIE_DEV to header
+Applying: hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+Applying: hw/arm/smmuv3: Implement get_viommu_cap() callback
+Applying: hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+Applying: hw/arm/smmuv3: propagate smmuv3_cmdq_consume() errors to caller
+Applying: hw/arm/smmuv3-accel: Add nested vSTE install/uninstall support
+Applying: hw/arm/smmuv3-accel: Install SMMUv3 GBPA based hwpt
+Applying: hw/pci/pci: Introduce a callback to retrieve the MSI doorbell GPA directly
+Patch failed at 0016 hw/pci/pci: Introduce a callback to retrieve the MSI doorbell GPA directly
+error: patch failed: hw/pci/pci.c:2979
+error: hw/pci/pci.c: patch does not apply
+error: patch failed: include/hw/pci/pci.h:664
+error: include/hw/pci/pci.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
