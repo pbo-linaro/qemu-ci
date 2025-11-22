@@ -1,0 +1,104 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.0.7-20251121170317@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 82 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1545 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/81] tests/tcg/multiarch/linux/linux-test: Don't try to test atime update
+  [PATCH 2/81] ui/gtk-gl-area: Remove extra draw call in refresh
+  [PATCH 3/81] hw/ppc/e500: Check for compatible CPU type instead of aborting ungracefully
+  [PATCH 4/81] target/arm: Fix reads of CNTFRQ_EL0 in linux-user mode
+  [PATCH 5/81] hw/riscv: Correct mmu-type property of sifive_u harts in device tree
+  [PATCH 6/81] aplic: fix mask for smsiaddrcfgh
+  [PATCH 7/81] target/riscv/kvm: add senvcfg CSR
+  [PATCH 8/81] target/riscv/kvm: read/write KVM regs via env size
+  [PATCH 9/81] target/riscv/kvm: add scounteren CSR
+  [PATCH 10/81] target/riscv/kvm: fix env->priv setting in reset_regs_csr()
+  [PATCH 11/81] target/riscv: fix riscv_cpu_sirq_pending() mask
+  [PATCH 12/81] io: release active GSource in TLS channel finalizer
+  [PATCH 13/81] io: move websock resource release to close method
+  [PATCH 14/81] io: fix use after free in websocket handshake code
+  [PATCH 15/81] crypto: stop requiring "key encipherment" usage in x509 certs
+  [PATCH 16/81] hw/scsi: avoid deadlock upon TMF request cancelling with VirtIO
+  [PATCH 17/81] target/hppa: Set FPCR exception flag bits for non-trapped exceptions
+  [PATCH 18/81] nw/nvram/ds1225y: Fix nvram MemoryRegion owner
+  [PATCH 19/81] hw/hppa: Fix interrupt of LASI parallel port
+  [PATCH 20/81] esp.c: fix esp_cdb_ready() FIFO wraparound limit calculation
+    + Buglink: https://issues.oss-fuzz.com/issues/439878564 ([31m✗[0m DKIM/linaro.org)
+  [PATCH 21/81] qtest/am53c974-test: add additional test for cmdfifo overflow
+  [PATCH 22/81] linux-user: Use correct type for FIBMAP and FIGETBSZ emulation
+  [PATCH 23/81] linux-user: permit sendto() with NULL buf and 0 len
+  [PATCH 24/81] target/i386: clear CPU_INTERRUPT_SIPI for all accelerators
+  [PATCH 25/81] hw/i386/pc: Avoid overlap between CXL window and PCI 64bit BARs in QEMU 10.0.x
+  [PATCH 26/81] i386/kvm/cpu: Init SMM cpu address space for hotplugged CPUs
+  [PATCH 27/81] block: remove 'detached-header' option from opts after use
+  [PATCH 28/81] block: fix luks 'amend' when run in coroutine
+  [PATCH 29/81] block/curl.c: Fix CURLOPT_VERBOSE parameter type
+  [PATCH 30/81] gdbstub: Fix %s formatting
+  [PATCH 31/81] target/microblaze: Remove unused arg from check_divz()
+  [PATCH 32/81] target/microblaze: div: Break out raise_divzero()
+  [PATCH 33/81] target/microblaze: Handle signed division overflows
+  [PATCH 34/81] target/s390x: Fix missing interrupts for small CKC values
+  [PATCH 35/81] target/s390x: Fix missing clock-comparator interrupts after reset
+  [PATCH 36/81] target/s390x: Use address generation for register branch targets
+  [PATCH 37/81] tests/tcg/s390x: Test SET CLOCK COMPARATOR
+  [PATCH 38/81] hostmem/shm: Allow shm memory backend serve as shared memory for coco-VMs
+  [PATCH 39/81] target/x86: Correctly handle invalid 0x0f 0xc7 0xxx insns
+  [PATCH 40/81] vhost-user: fix shared object lookup handler logic
+  [PATCH 41/81] tests/qtest/bios-tables-test: Prepare for _DSM change in the DSDT table
+  [PATCH 42/81] hw/pci-host/gpex-acpi: Fix _DSM function 0 support return value
+  [PATCH 43/81] tests/qtest/bios-tables-test: Update DSDT blobs after GPEX _DSM change
+  [PATCH 44/81] qemu-img: Fix amend option parse error handling
+  [PATCH 45/81] qemu-img rebase: don't exceed IO_BUF_SIZE in one operation
+  [PATCH 46/81] tests/qemu-iotest: fix iotest 024 with qed images
+  [PATCH 47/81] qio: Add trace points to net_listener
+  [PATCH 48/81] qio: Unwatch before notify in QIONetListener
+  [PATCH 49/81] qio: Remember context of qio_net_listener_set_client_func_full
+  [PATCH 50/81] qio: Protect NetListener callback with mutex
+  [PATCH 51/81] hw/net/e1000e_core: Don't advance desc_offset for NULL buffer RX descriptors
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 52/81] hw/net/e1000e_core: Correct rx oversize packet checks
+  [PATCH 53/81] hw/net/e1000e_core: Adjust e1000e_write_payload_frag_to_rx_buffers() assert
+  [PATCH 54/81] net: pad packets to minimum length in qemu_receive_packet()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 55/81] hw/display/xlnx_dp.c: Don't abort on AUX FIFO overrun/underrun
+  [PATCH 56/81] hw/display/xlnx_dp: Don't abort for unsupported graphics formats
+  [PATCH 57/81] hw/misc/npcm_clk: Don't divide by zero when calculating frequency
+  [PATCH 58/81] block: get type of block allocation in commit_run
+  [PATCH 59/81] block: move commit_run loop to separate function
+  [PATCH 60/81] block: refactor error handling of commit_iteration
+  [PATCH 61/81] block: allow commit to unmap zero blocks
+  [PATCH 62/81] block: add test non-active commit with zeroed data
+  [PATCH 63/81] tests: move test_xen assets to share.linaro.org
+  [PATCH 64/81] tests: move test_virt assets to share.linaro.org
+  [PATCH 65/81] tests: move test_netdev_ethtool to share.linaro.org
+  [PATCH 66/81] tests: move test_kvm_xen to share.linaro.org
+  [PATCH 67/81] tests: move test_virt_gpu to share.linaro.org
+  [PATCH 68/81] rbd: Run co BH CB in the coroutine’s AioContext
+  [PATCH 69/81] nfs: Run co BH CB in the coroutine’s AioContext
+  [PATCH 70/81] curl: Fix coroutine waking
+  [PATCH 71/81] nvme: Kick and check completions in BDS context
+  [PATCH 72/81] nvme: Fix coroutine waking
+  [PATCH 73/81] block/io: Take reqs_lock for tracked_requests
+  [PATCH 74/81] tests/functional: fix formatting of exception args
+  [PATCH 75/81] tests/functional: handle URLError when fetching assets
+  [PATCH 76/81] hw/dma/zynq-devcfg: Fix register memory
+  [PATCH 77/81] hw/southbridge/lasi: Correct LasiState parent
+  [PATCH 78/81] target/i386: Mark VPERMILPS as not valid with prefix 0
+  [PATCH 79/81] target/i386/tcg: validate segment registers
+  [PATCH 80/81] target/i386: svm: fix sign extension of exit code
+  [PATCH 81/81] target/i386: fix stack size when delivering real mode interrupts
+---
+Total patches: 81
+---
+Applying: tests/tcg/multiarch/linux/linux-test: Don't try to test atime update
+Patch failed at 0001 tests/tcg/multiarch/linux/linux-test: Don't try to test atime update
+error: patch failed: tests/tcg/multiarch/linux/linux-test.c:155
+error: tests/tcg/multiarch/linux/linux-test.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
