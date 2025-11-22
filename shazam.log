@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-7.2.22-20251122235450@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 406 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/25] target/i386: Fix CR2 handling for non-canonical addresses
+  [PATCH 2/25] i386/cpu: Prevent delivering SIPI during SMM in TCG mode
+  [PATCH 3/25] i386/tcg/smm_helper: Properly apply DR values on SMM entry / exit
+  [PATCH 4/25] async: access bottom half flags with qatomic_read
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 5/25] target/i386: user: do not set up a valid LDT on reset
+  [PATCH 6/25] linux-user: Use correct type for FIBMAP and FIGETBSZ emulation
+  [PATCH 7/25] linux-user: permit sendto() with NULL buf and 0 len
+  [PATCH 8/25] io: add trace event when cancelling TLS handshake
+  [PATCH 9/25] io: release active GSource in TLS channel finalizer
+  [PATCH 10/25] io: move websock resource release to close method
+  [PATCH 11/25] io: fix use after free in websocket handshake code
+  [PATCH 12/25] crypto: stop requiring "key encipherment" usage in x509 certs
+  [PATCH 13/25] block/curl.c: Use explicit long constants in curl_easy_setopt calls
+  [PATCH 14/25] block/curl.c: Fix CURLOPT_VERBOSE parameter type
+  [PATCH 15/25] qio: Add trace points to net_listener
+  [PATCH 16/25] qio: Unwatch before notify in QIONetListener
+  [PATCH 17/25] qio: Remember context of qio_net_listener_set_client_func_full
+  [PATCH 18/25] qio: Protect NetListener callback with mutex
+  [PATCH 19/25] hw/net/e1000e_core: Don't advance desc_offset for NULL buffer RX descriptors
+  [PATCH 20/25] hw/net/e1000e_core: Correct rx oversize packet checks
+  [PATCH 21/25] hw/net/e1000e_core: Adjust e1000e_write_payload_frag_to_rx_buffers() assert
+  [PATCH 22/25] net: pad packets to minimum length in qemu_receive_packet()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 23/25] hw/display/xlnx_dp.c: Don't abort on AUX FIFO overrun/underrun
+  [PATCH 24/25] hw/display/xlnx_dp: Don't abort for unsupported graphics formats
+  [PATCH 25/25] hw/misc/npcm_clk: Don't divide by zero when calculating frequency
+---
+Total patches: 25
+---
+Applying: target/i386: Fix CR2 handling for non-canonical addresses
+Patch failed at 0001 target/i386: Fix CR2 handling for non-canonical addresses
+error: target/i386/tcg/sysemu/excp_helper.c: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
