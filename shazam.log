@@ -1,0 +1,106 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.1.3-20251121155857@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 77 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1546 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/76] tcg/arm: Fix tgen_deposit
+  [PATCH 2/76] tests/tcg/multiarch/linux/linux-test: Don't try to test atime update
+  [PATCH 3/76] hw/ppc/e500: Check for compatible CPU type instead of aborting ungracefully
+  [PATCH 4/76] vfio: rename field to "num_initial_regions"
+  [PATCH 5/76] vfio: only check region info cache for initial regions
+  [PATCH 6/76] target/arm: Fix reads of CNTFRQ_EL0 in linux-user mode
+  [PATCH 7/76] hw/riscv: Correct mmu-type property of sifive_u harts in device tree
+  [PATCH 8/76] aplic: fix mask for smsiaddrcfgh
+  [PATCH 9/76] target/riscv/kvm: fix env->priv setting in reset_regs_csr()
+  [PATCH 10/76] target/riscv: fix riscv_cpu_sirq_pending() mask
+  [PATCH 11/76] io: release active GSource in TLS channel finalizer
+  [PATCH 12/76] io: move websock resource release to close method
+  [PATCH 13/76] io: fix use after free in websocket handshake code
+  [PATCH 14/76] crypto: stop requiring "key encipherment" usage in x509 certs
+  [PATCH 15/76] hw/scsi: avoid deadlock upon TMF request cancelling with VirtIO
+  [PATCH 16/76] target/hppa: Set FPCR exception flag bits for non-trapped exceptions
+  [PATCH 17/76] hw/hppa: Fix interrupt of LASI parallel port
+  [PATCH 18/76] esp.c: fix esp_cdb_ready() FIFO wraparound limit calculation
+    + Buglink: https://issues.oss-fuzz.com/issues/439878564 ([31m✗[0m DKIM/linaro.org)
+  [PATCH 19/76] qtest/am53c974-test: add additional test for cmdfifo overflow
+  [PATCH 20/76] linux-user: Use correct type for FIBMAP and FIGETBSZ emulation
+  [PATCH 21/76] linux-user: permit sendto() with NULL buf and 0 len
+  [PATCH 22/76] target/i386: clear CPU_INTERRUPT_SIPI for all accelerators
+  [PATCH 23/76] hw/i386/pc: Avoid overlap between CXL window and PCI 64bit BARs in QEMU
+  [PATCH 24/76] i386/kvm/cpu: Init SMM cpu address space for hotplugged CPUs
+  [PATCH 25/76] block: remove 'detached-header' option from opts after use
+  [PATCH 26/76] block: fix luks 'amend' when run in coroutine
+  [PATCH 27/76] block/curl.c: Fix CURLOPT_VERBOSE parameter type
+  [PATCH 28/76] gdbstub: Fix %s formatting
+  [PATCH 29/76] target/microblaze: Remove unused arg from check_divz()
+  [PATCH 30/76] target/microblaze: div: Break out raise_divzero()
+  [PATCH 31/76] target/microblaze: Handle signed division overflows
+  [PATCH 32/76] target/s390x: Fix missing interrupts for small CKC values
+  [PATCH 33/76] target/s390x: Fix missing clock-comparator interrupts after reset
+  [PATCH 34/76] target/s390x: Use address generation for register branch targets
+  [PATCH 35/76] tests/tcg/s390x: Test SET CLOCK COMPARATOR
+  [PATCH 36/76] ram-block-attributes: fix interaction with hugetlb memory backends
+    + Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com> ([32m✓[0m DKIM/intel.com)
+  [PATCH 37/76] hostmem/shm: Allow shm memory backend serve as shared memory for coco-VMs
+  [PATCH 38/76] target/x86: Correctly handle invalid 0x0f 0xc7 0xxx insns
+  [PATCH 39/76] vhost-user: fix shared object lookup handler logic
+  [PATCH 40/76] tests/qtest/bios-tables-test: Prepare for _DSM change in the DSDT table
+  [PATCH 41/76] hw/pci-host/gpex-acpi: Fix _DSM function 0 support return value
+  [PATCH 42/76] tests/qtest/bios-tables-test: Update DSDT blobs after GPEX _DSM change
+  [PATCH 43/76] qemu-img: Fix amend option parse error handling
+  [PATCH 44/76] qemu-img rebase: don't exceed IO_BUF_SIZE in one operation
+  [PATCH 45/76] tests/qemu-iotest: fix iotest 024 with qed images
+  [PATCH 46/76] qio: Add trace points to net_listener
+  [PATCH 47/76] qio: Unwatch before notify in QIONetListener
+  [PATCH 48/76] qio: Remember context of qio_net_listener_set_client_func_full
+  [PATCH 49/76] qio: Protect NetListener callback with mutex
+  [PATCH 50/76] hw/net/e1000e_core: Don't advance desc_offset for NULL buffer RX descriptors
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 51/76] hw/net/e1000e_core: Correct rx oversize packet checks
+  [PATCH 52/76] hw/net/e1000e_core: Adjust e1000e_write_payload_frag_to_rx_buffers() assert
+  [PATCH 53/76] net: pad packets to minimum length in qemu_receive_packet()
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+  [PATCH 54/76] hw/display/xlnx_dp.c: Don't abort on AUX FIFO overrun/underrun
+  [PATCH 55/76] hw/display/xlnx_dp: Don't abort for unsupported graphics formats
+  [PATCH 56/76] hw/misc/npcm_clk: Don't divide by zero when calculating frequency
+  [PATCH 57/76] tests: move test_xen assets to share.linaro.org
+  [PATCH 58/76] tests: move test_virt assets to share.linaro.org
+  [PATCH 59/76] tests: move test_netdev_ethtool to share.linaro.org
+  [PATCH 60/76] tests: move test_kvm_xen to share.linaro.org
+  [PATCH 61/76] tests: move test_kvm to share.linaro.org
+  [PATCH 62/76] tests: move test_virt_gpu to share.linaro.org
+  [PATCH 63/76] rbd: Run co BH CB in the coroutine’s AioContext
+  [PATCH 64/76] nfs: Run co BH CB in the coroutine’s AioContext
+  [PATCH 65/76] curl: Fix coroutine waking
+  [PATCH 66/76] nvme: Kick and check completions in BDS context
+  [PATCH 67/76] nvme: Fix coroutine waking
+  [PATCH 68/76] block/io: Take reqs_lock for tracked_requests
+  [PATCH 69/76] tests/functional: fix formatting of exception args
+  [PATCH 70/76] tests/functional: handle URLError when fetching assets
+  [PATCH 71/76] hw/dma/zynq-devcfg: Fix register memory
+  [PATCH 72/76] hw/southbridge/lasi: Correct LasiState parent
+  [PATCH 73/76] target/i386: Mark VPERMILPS as not valid with prefix 0
+  [PATCH 74/76] target/i386/tcg: validate segment registers
+  [PATCH 75/76] target/i386: svm: fix sign extension of exit code
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [PATCH 76/76] target/i386: fix stack size when delivering real mode interrupts
+---
+Total patches: 76
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: tcg/arm: Fix tgen_deposit
+Patch failed at 0001 tcg/arm: Fix tgen_deposit
+error: patch failed: tcg/arm/tcg-target.c.inc:975
+error: tcg/arm/tcg-target.c.inc: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
