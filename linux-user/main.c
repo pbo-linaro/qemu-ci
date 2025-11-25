@@ -128,6 +128,7 @@ static void usage(int exitcode);
 
 static const char *interp_prefix = CONFIG_QEMU_INTERP_PREFIX;
 const char *qemu_uname_release;
+const char *qemu_execve_path;
 
 #if !defined(TARGET_DEFAULT_STACK_SIZE)
 /* XXX: on x86 MAP_GROWSDOWN only works if ESP <= address + 32, so
@@ -367,6 +368,56 @@ static void handle_arg_guest_base(const char *arg)
     have_guest_base = true;
 }
 
+static void handle_arg_execve(const char *arg)
+{
+    const char *execfn;
+    char buf[PATH_MAX];
+    char *ret;
+    int len;
+
+    /*
+     * Since the 'execve' command line option has no argument ('has_arg' is
+     * 'false'), this function will always receive NULL for 'arg' during
+     * argument parsing. If 'arg' is non-NULL, we are being called during env
+     * var handling, because QEMU_EXECVE is set.
+     */
+    if (arg != NULL) {
+        /*
+         * If the env var is set, check whether its value is '0'. In this case,
+         * we don't want to enable 'execve' mode and thus bail out. Please note
+         * that an empty value will NOT disable 'execve' mode.
+         */
+        if (!strcmp(arg, "0")) {
+            return;
+        }
+    }
+
+    /* try getauxval() */
+    execfn = (const char *)qemu_getauxval(AT_EXECFN);
+
+    if (execfn != 0) {
+        ret = realpath(execfn, buf);
+
+        if (ret != NULL) {
+            qemu_execve_path = g_strdup(buf);
+            return;
+        }
+    }
+
+    /* try /proc/self/exe */
+    len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+
+    if (len != -1) {
+        buf[len] = '\0';
+        qemu_execve_path = g_strdup(buf);
+        return;
+    }
+
+    fprintf(stderr, "qemu_execve: unable to determine interpreter's path\n");
+    exit(EXIT_FAILURE);
+}
+
+
 static void handle_arg_reserved_va(const char *arg)
 {
     char *p;
@@ -497,6 +548,9 @@ static const struct qemu_argument arg_table[] = {
      "uname",      "set qemu uname release string to 'uname'"},
     {"B",          "QEMU_GUEST_BASE",  true,  handle_arg_guest_base,
      "address",    "set guest_base address to 'address'"},
+    {"execve",     "QEMU_EXECVE",      false, handle_arg_execve,
+     "",           "use this interpreter when a process calls execve() "
+     "(disabled if env var is '0', enabled for all other values / when empty)"},
     {"R",          "QEMU_RESERVED_VA", true,  handle_arg_reserved_va,
      "size",       "reserve 'size' bytes for guest virtual address space"},
     {"t",          "QEMU_RTSIG_MAP",   true,  handle_arg_rtsig_map,

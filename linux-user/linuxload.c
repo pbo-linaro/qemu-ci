@@ -138,15 +138,124 @@ abi_ulong loader_build_argptr(int envc, int argc, abi_ulong sp,
     return sp;
 }
 
+int load_script_file(const char *filename, struct linux_binprm *bprm)
+{
+    int retval, fd;
+    char *i_arg = NULL, *i_name = NULL;
+    char **new_argv;
+    char *cp;
+    char buf[BPRM_BUF_SIZE];
+
+    /* Check if it is a script */
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) {
+        return fd;
+    }
+
+    retval = read(fd, buf, BPRM_BUF_SIZE);
+    if (retval == -1) {
+        close(fd);
+        return retval;
+    }
+
+     /* if we have less than 2 bytes, we can guess it is not executable */
+    if (retval < 2) {
+        close(fd);
+        return -ENOEXEC;
+    }
+
+    close(fd);
+    /*
+     * adapted from the kernel
+     * https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/fs/binfmt_script.c
+     */
+    if ((buf[0] == '#') && (buf[1] == '!')) {
+        buf[BPRM_BUF_SIZE - 1] = '\0';
+        cp = strchr(buf, '\n');
+        if (cp == NULL) {
+            cp = buf + BPRM_BUF_SIZE - 1;
+        }
+        *cp = '\0';
+        while (cp > buf) {
+            cp--;
+            if ((*cp == ' ') || (*cp == '\t')) {
+                *cp = '\0';
+            } else {
+                break;
+            }
+        }
+        for (cp = buf + 2; (*cp == ' ') || (*cp == '\t'); cp++) {
+            /* nothing */ ;
+        }
+        if (*cp == '\0') {
+            return -ENOEXEC; /* No interpreter name found */
+        }
+        i_name = cp;
+        i_arg = NULL;
+        for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++) {
+            /* nothing */ ;
+        }
+        while ((*cp == ' ') || (*cp == '\t')) {
+            *cp++ = '\0';
+        }
+
+        new_argv = NULL;
+        if (*cp) {
+            i_arg = cp;
+        }
+
+        if (i_arg) {
+            new_argv = g_alloca(sizeof(void *));
+            new_argv[0] = i_arg;
+        }
+        bprm->argv = new_argv;
+        bprm->filename = i_name;
+    } else {
+        return 1;
+    }
+    return 0;
+}
+
 int loader_exec(int fdexec, const char *filename, char **argv, char **envp,
                 struct image_info *infop, struct linux_binprm *bprm)
 {
-    int retval;
+    int retval, fd, offset = 1, argc = count(argv);
+    char **new_argv;
 
-    bprm->src.fd = fdexec;
-    bprm->filename = (char *)filename;
-    bprm->argc = count(argv);
-    bprm->argv = argv;
+    retval = load_script_file(filename, bprm);
+    if (retval == 0) {
+        if (bprm->argv != NULL) {
+            offset = 2;
+        }
+        new_argv = g_alloca((argc + offset + 1) * sizeof(void *));
+
+        new_argv[0] = (char *)filename;
+        if (bprm->argv != NULL) {
+            new_argv[1] = bprm->argv[0];
+        }
+        /* Copy the original arguments with offset */
+        for (int i = 0; i < argc; i++) {
+            new_argv[i + offset] = argv[i];
+        }
+        new_argv[argc + offset] = NULL;
+
+        bprm->argc = count(new_argv);
+        bprm->argv = new_argv;
+        fd = open(bprm->filename, O_RDONLY);
+        if (fd < 0) {
+            printf("Error while loading %s: %s\n",
+                bprm->filename,
+                strerror(errno));
+            _exit(EXIT_FAILURE);
+        }
+        bprm->src.fd = fd;
+    } else {
+        bprm->filename = (char *)filename;
+        bprm->argc = count(argv);
+        bprm->argv = argv;
+        bprm->src.fd = fdexec;
+    }
+
     bprm->envc = count(envp);
     bprm->envp = envp;
 

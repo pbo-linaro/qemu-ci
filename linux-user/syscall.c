@@ -127,6 +127,7 @@
 #include <libdrm/drm.h>
 #include <libdrm/i915_drm.h>
 #endif
+#include <linux/binfmts.h>
 #include "linux_loop.h"
 #include "uname.h"
 
@@ -8726,6 +8727,86 @@ ssize_t do_guest_readlink(const char *pathname, char *buf, size_t bufsiz)
     return ret;
 }
 
+static int qemu_execve(const char *filename, char *argv[],
+                       char *envp[])
+{
+    char **new_argv;
+    const char *new_filename;
+    int argc, ret, i, offset = 3;
+    struct linux_binprm *bprm;
+
+    /* normal execve case */
+    if (qemu_execve_path == NULL || *qemu_execve_path == 0) {
+        new_filename = filename;
+        new_argv = argv;
+    } else {
+        new_filename = qemu_execve_path;
+
+        for (argc = 0; argv[argc] != NULL; argc++) {
+            /* nothing */ ;
+        }
+
+        bprm = g_alloca(sizeof(struct linux_binprm));
+        ret = load_script_file(filename, bprm);
+
+        if (ret < 0) {
+            if (ret == -1) {
+                return get_errno(ret);
+            } else {
+                return -host_to_target_errno(ENOEXEC);
+            }
+        }
+
+        if (ret == 0) {
+            if (bprm->argv != NULL) {
+                offset = 5;
+            } else {
+                offset = 4;
+            }
+        }
+
+        /* Need to store execve argument */
+        offset++;
+
+        new_argv = g_alloca((argc + offset + 1) * sizeof(void *));
+
+        /* Copy the original arguments with offset */
+        for (i = 0; i < argc; i++) {
+            new_argv[i + offset] = argv[i];
+        }
+
+        new_argv[0] = g_strdup(qemu_execve_path);
+        new_argv[1] = g_strdup("-execve"); /* Add execve argument */
+        new_argv[2] = g_strdup("-0");
+        new_argv[offset] = g_strdup(filename);
+        new_argv[argc + offset] = NULL;
+
+        if (ret == 0) {
+            new_argv[3] = bprm->filename;
+            new_argv[4] = bprm->filename;
+
+            if (bprm->argv != NULL) {
+                new_argv[5] = bprm->argv[0];
+            }
+        } else {
+            new_argv[3] = argv[0];
+        }
+    }
+
+    /*
+     * Although execve() is not an interruptible syscall it is
+     * a special case where we must use the safe_syscall wrapper:
+     * if we allow a signal to happen before we make the host
+     * syscall then we will 'lose' it, because at the point of
+     * execve the process leaves QEMU's control. So we use the
+     * safe syscall wrapper to ensure that we either take the
+     * signal as a guest signal, or else it does not happen
+     * before the execve completes and makes it the other
+     * program's problem.
+     */
+    return safe_execve(new_filename, new_argv, envp);
+}
+
 static int do_execv(CPUArchState *cpu_env, int dirfd,
                     abi_long pathname, abi_long guest_argp,
                     abi_long guest_envp, int flags, bool is_execveat)
@@ -8791,17 +8872,6 @@ static int do_execv(CPUArchState *cpu_env, int dirfd,
     }
     *q = NULL;
 
-    /*
-     * Although execve() is not an interruptible syscall it is
-     * a special case where we must use the safe_syscall wrapper:
-     * if we allow a signal to happen before we make the host
-     * syscall then we will 'lose' it, because at the point of
-     * execve the process leaves QEMU's control. So we use the
-     * safe syscall wrapper to ensure that we either take the
-     * signal as a guest signal, or else it does not happen
-     * before the execve completes and makes it the other
-     * program's problem.
-     */
     p = lock_user_string(pathname);
     if (!p) {
         goto execve_efault;
@@ -8813,7 +8883,7 @@ static int do_execv(CPUArchState *cpu_env, int dirfd,
     }
     ret = is_execveat
         ? safe_execveat(dirfd, exe, argp, envp, flags)
-        : safe_execve(exe, argp, envp);
+        : qemu_execve(exe, argp, envp);
     ret = get_errno(ret);
 
     unlock_user(p, pathname, 0);

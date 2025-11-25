@@ -90,6 +90,7 @@ int loader_exec(int fdexec, const char *filename, char **argv, char **envp,
 uint32_t get_elf_eflags(int fd);
 int load_elf_binary(struct linux_binprm *bprm, struct image_info *info);
 int load_flt_binary(struct linux_binprm *bprm, struct image_info *info);
+int load_script_file(const char *filename, struct linux_binprm *bprm);
 
 abi_long memcpy_to_target(abi_ulong dest, const void *src,
                           unsigned long len);
