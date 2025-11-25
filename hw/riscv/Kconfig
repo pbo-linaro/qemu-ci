@@ -128,3 +128,25 @@ config XIANGSHAN_KUNMINGHU
     select RISCV_APLIC
     select RISCV_IMSIC
     select SERIAL_MM
+
+config LEAPFIVE_RVA23_BASE
+    bool
+    default y
+    depends on RISCV64
+    imply PCI_DEVICES
+    select DEVICE_TREE
+    select RISCV_NUMA
+    select GOLDFISH_RTC
+    select PCI
+    select PCI_EXPRESS_GENERIC_BRIDGE
+    select SERIAL_MM
+    select RISCV_ACLINT
+    select RISCV_APLIC
+    select RISCV_IOMMU
+    select RISCV_IMSIC
+    select SIFIVE_PLIC
+    select SIFIVE_TEST
+    select PLATFORM_BUS
+    select ACPI
+    select ACPI_PCI
+    select SDHCI
