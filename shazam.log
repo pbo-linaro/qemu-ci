@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20251127225526.700-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC 1/7] hw/mem: Add tagged memory backend object
+  [PATCH RFC 2/7] hw/cxl: Allow initializing type3 device with no backing device
+  [PATCH RFC 3/7] hw/cxl: Change Extent add/remove APIs for lazy memory backend.
+  [PATCH RFC 4/7] hw/cxl: Map lazy memory backend after host acceptance
+  [PATCH RFC 5/7] hw/cxl: Add performant direct mapping for extents
+  [PATCH RFC 6/7] hw/cxl: Add remove alias functionality for extent direct mapping
+  [PATCH RFC 7/7] hw/cxl: Add tag-based removal functionality
+---
+Total patches: 7
+---
+Applying: hw/mem: Add tagged memory backend object
+Applying: hw/cxl: Allow initializing type3 device with no backing device
+Applying: hw/cxl: Change Extent add/remove APIs for lazy memory backend.
+Patch failed at 0003 hw/cxl: Change Extent add/remove APIs for lazy memory backend.
+error: patch failed: hw/cxl/cxl-host.c:365
+error: hw/cxl/cxl-host.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
