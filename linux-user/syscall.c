@@ -127,6 +127,7 @@
 #include <libdrm/drm.h>
 #include <libdrm/i915_drm.h>
 #endif
+#include <linux/binfmts.h>
 #include "linux_loop.h"
 #include "uname.h"
 
@@ -8726,6 +8727,138 @@ ssize_t do_guest_readlink(const char *pathname, char *buf, size_t bufsiz)
     return ret;
 }
 
+static int qemu_execve(const char *filename, char *argv[],
+                       char *envp[])
+{
+    char **new_argv;
+    int argc, ret, i, offset = 4;
+    struct linux_binprm *bprm;
+
+    /*
+     * When execve mode is disabled, we just execute the system call with the
+     * arguments as-is. When enabled, we run whatever is supposed to be executed
+     * via qemu.
+     */
+    if (qemu_execve_path == NULL || *qemu_execve_path == 0) {
+        /*
+         * Although execve() is not an interruptible syscall it is
+         * a special case where we must use the safe_syscall wrapper:
+         * if we allow a signal to happen before we make the host
+         * syscall then we will 'lose' it, because at the point of
+         * execve the process leaves QEMU's control. So we use the
+         * safe syscall wrapper to ensure that we either take the
+         * signal as a guest signal, or else it does not happen
+         * before the execve completes and makes it the other
+         * program's problem.
+         */
+        return safe_execve(filename, argv, envp);
+    }
+
+    /*
+     * To launch the new process via qemu, we need to modify the filename and
+     * argv[]. When executing a script we also need to splice in the
+     * interpreter and - if set - the interpreter argument into argv. This
+     * allows us to minic real Kernel behaviour: The Kernel allows one to
+     * execute scripts via execve(). QEMU however doesn't run scripts as
+     * 'user executables', i.e. 'qemu-<arch> foo.sh' results in an 'invalid
+     * exec format' error. 'qemu-<arch> <interpreter> foo.sh' works though,
+     * so this is what we do.
+     *
+     * That means that the expected argv layout is as follows:
+     *
+     * For binaries:
+     *   argv[0] = qemu-<arch>
+     *   argv[1] = -execve
+     *   argv[2] = -0
+     *   argv[3] = original argv[0] (as 'argv[0] override')
+     *   argv[4] = filename (as 'user executable' to run)
+     *   argv[5] = original argv[1]
+     *   ...
+     *
+     * For scripts:
+     *   argv[0] = qemu-<arch>
+     *   argv[1] = -execve
+     *   argv[2] = -0
+     *   argv[3] = interpreter (as 'argv[0] override')
+     *   argv[4] = interpreter (as 'user executable' to run)
+     *   argv[5] = interpreter argument (if any)
+     *   argv[6] = filename
+     *   argv[7] = original argv[1]
+     *   ...
+     */
+
+    /* Determine number of original arguments. */
+    for (argc = 0; argv[argc] != NULL; argc++) {
+        /* nothing */ ;
+    }
+
+    bprm = g_new0(struct linux_binprm, 1);
+    /* Check whether we want to execute a shell script or a binary. */
+    ret = load_script_file(filename, bprm);
+
+    /* Bail out in case of errors (file doesn't exist, ...). */
+    if (ret < 0) {
+        if (ret == -1) {
+            return get_errno(ret);
+        } else {
+            return -host_to_target_errno(ENOEXEC);
+        }
+    }
+
+    /*
+     * When executing a script, we need to splice in the interpreter and -
+     * if set - the argument into argv, so additional space is needed.
+     */
+    if (ret == 0) {
+        offset += (bprm->argv != NULL) ? 2 : 1;
+    }
+
+    /* Zeroed out to ensure array is NULL-terminated. */
+    new_argv = g_new0(char*, argc + offset + 1);
+
+    /*
+     * Copy the original arguments with offset. We don't copy argv[0] (which
+     * would become the 'user executable') as we need to override it with
+     * 'filename' (which might be fully-qualified). The original argv[0] is
+     * restored using the '-0' option.
+     */
+    for (i = 1; i < argc; i++) {
+        new_argv[i + offset] = argv[i];
+    }
+
+    new_argv[0] = g_strdup(qemu_execve_path);
+    /* Ensure execve mode lives on in the new instance. */
+    new_argv[1] = g_strdup("-execve");
+    /* '-0' is used to keep the original argv[0] intact. The actual value is set below. */
+    new_argv[2] = g_strdup("-0");
+    /*
+     * Pass 'filename', which might be a fully-qualified version of the
+     * original argv[0] as the 'user executable' to run to qemu.
+     */
+    new_argv[offset] = g_strdup(filename);
+
+    if (ret == 0) {
+        /*
+         * For scripts, set the interpreter as argv0 of the new process
+         * (argument to -0)...
+         */
+        new_argv[3] = bprm->filename;
+        /* ... and as the executable to execute. */
+        new_argv[4] = bprm->filename;
+
+        /* If set, add the interpreter argument as well. */
+        if (bprm->argv != NULL) {
+            new_argv[5] = bprm->argv[0];
+        }
+    } else {
+        /* For binaries, restore original argv[0]. */
+        new_argv[3] = argv[0];
+    }
+
+    /* See comment above re. why safe syscall handler is used. */
+    return safe_execve(qemu_execve_path, new_argv, envp);
+}
+
 static int do_execv(CPUArchState *cpu_env, int dirfd,
                     abi_long pathname, abi_long guest_argp,
                     abi_long guest_envp, int flags, bool is_execveat)
@@ -8791,17 +8924,6 @@ static int do_execv(CPUArchState *cpu_env, int dirfd,
     }
     *q = NULL;
 
-    /*
-     * Although execve() is not an interruptible syscall it is
-     * a special case where we must use the safe_syscall wrapper:
-     * if we allow a signal to happen before we make the host
-     * syscall then we will 'lose' it, because at the point of
-     * execve the process leaves QEMU's control. So we use the
-     * safe syscall wrapper to ensure that we either take the
-     * signal as a guest signal, or else it does not happen
-     * before the execve completes and makes it the other
-     * program's problem.
-     */
     p = lock_user_string(pathname);
     if (!p) {
         goto execve_efault;
@@ -8813,7 +8935,7 @@ static int do_execv(CPUArchState *cpu_env, int dirfd,
     }
     ret = is_execveat
         ? safe_execveat(dirfd, exe, argp, envp, flags)
-        : safe_execve(exe, argp, envp);
+        : qemu_execve(exe, argp, envp);
     ret = get_errno(ret);
 
     unlock_user(p, pathname, 0);
