@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/69e22b6002d411a8edee3f589c568ce8217c2f37.1764426204.git.chenmiao@openatom.club/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Analyzing 1 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH RFC v3 1/4] rust/hw/core: Add the BusState of rust version
+  [31m✗[0m [PATCH RFC v3 2/4] rust/hw/core: Add rust bindings/funcs for i2c bus
+  [31m✗[0m [PATCH RFC v3 3/4] rust/hw/core: Provide some interfaces for the GPIO device
+  [31m✗[0m [PATCH RFC v3 4/4] rust/hw/gpio: Add the the first gpio device pcf8574
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 4
+---
+Applying: rust/hw/core: Add the BusState of rust version
+Applying: rust/hw/core: Add rust bindings/funcs for i2c bus
+Applying: rust/hw/core: Provide some interfaces for the GPIO device
+Applying: rust/hw/gpio: Add the the first gpio device pcf8574
+Patch failed at 0004 rust/hw/gpio: Add the the first gpio device pcf8574
+error: patch failed: rust/Cargo.toml:10
+error: rust/Cargo.toml: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
