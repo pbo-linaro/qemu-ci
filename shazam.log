@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20251201112309.4163921-1-marcandre.lureau@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 2 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/24] rust: patch thiserror to work with meson
+  [32m✓[0m [PATCH RFC 2/24] audio: remove obsolete/obscure functions
+  [32m✓[0m [PATCH RFC 3/24] audio/dbus: make "dbus" the default backend when using -display dbus
+  [32m✓[0m [PATCH RFC 4/24] qemu-options.hx: clarify default audio backend selection
+  [32m✓[0m [PATCH RFC 5/24] audio: introduce AudioDriver
+  [32m✓[0m [PATCH RFC 6/24] audio: simplify audio_init()
+  [32m✓[0m [PATCH RFC 7/24] audio: move object creation to audio_driver_init()
+  [32m✓[0m [PATCH RFC 8/24] audio: add QOM module-objects for each backend
+  [32m✓[0m [PATCH RFC 9/24] audio: remove set_dbus_server from audio_driver
+  [32m✓[0m [PATCH RFC 10/24] audio: lookup "audio-" object types, and realize them
+  [32m✓[0m [PATCH RFC 11/24] audio: switch to module-object, drop audio driver registration
+  [32m✓[0m [PATCH RFC 12/24] module: remove audio module support
+  [32m✓[0m [PATCH RFC 13/24] audio: keep a strong reference on the backend
+  [32m✓[0m [PATCH RFC 14/24] audio: make list type declaration private
+  [32m✓[0m [PATCH RFC 15/24] audio: make create_pdos() private
+  [32m✓[0m [PATCH RFC 16/24] replay: remove dependency on audio/
+  [32m✓[0m [PATCH RFC 17/24] audio: make all the backend-specific APIs take the be
+  [32m✓[0m [PATCH RFC 18/24] audio: make AudioBackend truely abstract
+  [32m✓[0m [PATCH RFC 19/24] audio: split AudioBackend
+  [32m✓[0m [PATCH RFC 20/24] audio: AUD_ -> audio_be_
+  [32m✓[0m [PATCH RFC 21/24] audio-be: add common pre-conditions
+  [32m✓[0m [PATCH RFC 22/24] audio-be: add some state trace
+  [32m✓[0m [PATCH RFC 23/24] audio: split AudioDriver code in audio-driver.c
+  [32m✓[0m [PATCH RFC 24/24] WIP: rust/audio: add GStreamer backend
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 24
+---
+Applying: rust: patch thiserror to work with meson
+Patch failed at 0001 rust: patch thiserror to work with meson
+error: patch failed: subprojects/syn-2-rs.wrap:1
+error: subprojects/syn-2-rs.wrap: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
