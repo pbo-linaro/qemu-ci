@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20251202170502.3228625-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 11 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/10] qom: Rename ObjectPropertyFlags to ObjectPropertyAccessorFlags
+  [32m✓[0m [PATCH RFC 2/10] qom: Add basic object property deprecation hint support
+  [32m✓[0m [PATCH RFC 3/10] qom: Check property deprecation flag for global property
+  [32m✓[0m [PATCH RFC 4/10] qom: Check property deprecation flag for properities from qdict
+  [32m✓[0m [PATCH RFC 5/10] system/vl: Check property deprecation flag for properities of accelerator
+  [32m✓[0m [PATCH RFC 6/10] qom/qom-hmp-cmd: Check property deprecation flag for "qom-set" command
+  [32m✓[0m [PATCH RFC 7/10] hw/core/qdev-properties: Allow to mark qdev property as deprecated
+  [32m✓[0m [PATCH RFC 8/10] target/i386: Deprecate fill-mtrr-mask property
+  [32m✓[0m [PATCH RFC 9/10] target/i386: Deprecate cpuid-0xb property
+  [32m✓[0m [PATCH RFC 10/10] hw/intc/ioapic: Deprecate version property
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 10
+---
+Applying: qom: Rename ObjectPropertyFlags to ObjectPropertyAccessorFlags
+Applying: qom: Add basic object property deprecation hint support
+Applying: qom: Check property deprecation flag for global property
+Applying: qom: Check property deprecation flag for properities from qdict
+Applying: system/vl: Check property deprecation flag for properities of accelerator
+Applying: qom/qom-hmp-cmd: Check property deprecation flag for "qom-set" command
+Applying: hw/core/qdev-properties: Allow to mark qdev property as deprecated
+Applying: target/i386: Deprecate fill-mtrr-mask property
+Applying: target/i386: Deprecate cpuid-0xb property
+Patch failed at 0009 target/i386: Deprecate cpuid-0xb property
+error: patch failed: target/i386/cpu.c:10009
+error: target/i386/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
