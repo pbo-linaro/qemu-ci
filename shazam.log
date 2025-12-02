@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20251202-sdcard-performance-b4-v2-0-d42490b11322@avm.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 9 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/4] hw/sd: Switch from byte-wise to buf+len read/writes
+  [32m✓[0m [PATCH v2 2/4] hw/sd/sdhci: Don't use bounce buffer for ADMA
+  [32m✓[0m [PATCH v2 3/4] hw/sd/sdcard: Add erase-blocks-as-zero option.
+  [32m✓[0m [PATCH v2 4/4] hw/sd/sdcard: Optimize erase blocks as zero.
+  ---
+  [32m✓[0m Signed: DKIM/avm.de
+---
+Total patches: 4
+---
+ Base: using specified base-commit e7c1e8043a69c5a8efa39d4f9d111f7c72c076e6
+Applying: hw/sd: Switch from byte-wise to buf+len read/writes
+Patch failed at 0001 hw/sd: Switch from byte-wise to buf+len read/writes
+error: patch failed: hw/sd/sd.c:1049
+error: hw/sd/sd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
