@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20251203185133.2458207-1-pbonzini@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/5] hw: add missing includes hidden by block/aio.h
+  [32m✓[0m [PATCH 2/5] block: extract include/qemu/aiocb.h out of include/block/aio.h
+  [32m✓[0m [PATCH 3/5] block: reduce files included by block/aio.h
+  [32m✓[0m [PATCH 4/5] block: rename block/aio.h to qemu/aio.h
+  [32m✓[0m [PATCH 5/5] block: rename block/aio-wait.h to qemu/aio-wait.h
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: hw: add missing includes hidden by block/aio.h
+Applying: block: extract include/qemu/aiocb.h out of include/block/aio.h
+Patch failed at 0002 block: extract include/qemu/aiocb.h out of include/block/aio.h
+error: patch failed: include/block/aio.h:27
+error: include/block/aio.h: patch does not apply
+error: patch failed: include/hw/scsi/scsi.h:1
+error: include/hw/scsi/scsi.h: patch does not apply
+error: patch failed: hw/core/ptimer.c:13
+error: hw/core/ptimer.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
