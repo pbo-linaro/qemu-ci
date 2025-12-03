@@ -1,0 +1,37 @@
+Grabbing thread from lore.kernel.org/all/20251203060942.57851-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 14 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 245 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/13] hw/ppc/mac: Use fw_cfg_init_mem_nodma()
+  [32m✓[0m [PATCH v6 2/13] hw/sparc/sun4m: Use fw_cfg_init_mem_nodma()
+  [32m✓[0m [PATCH v6 3/13] hw/nvram/fw_cfg: Factor fw_cfg_init_mem_internal() out
+  [32m✓[0m [PATCH v6 4/13] hw/nvram/fw_cfg: Rename fw_cfg_init_mem_wide() -> fw_cfg_init_mem_dma()
+  [32m✓[0m [PATCH v6 5/13] hw/nvram/fw_cfg: Propagate I/O MemoryRegion to fw_cfg_init_io_dma()
+  [32m✓[0m [PATCH v6 6/13] hw/nvram/fw_cfg: Factor fw_cfg_init_io_internal() out
+  [32m✓[0m [PATCH v6 7/13] hw/nvram/fw_cfg: Add fw_cfg_init_io_nodma() helper
+  [32m✓[0m [PATCH v6 8/13] hw/sparc64/sun4u: Use fw_cfg_init_io_nodma()
+  [32m✓[0m [PATCH v6 9/13] hw/nvram/fw_cfg: Remove fw_cfg_io_properties::dma_enabled
+  [32m✓[0m [PATCH v6 10/13] hw/i386/x86: Remove X86MachineClass::fwcfg_dma_enabled field
+  [32m✓[0m [PATCH v6 11/13] hw/i386/pc: Remove multiboot.bin
+  [32m✓[0m [PATCH v6 12/13] hw/i386: Assume fw_cfg DMA is always enabled
+  [32m✓[0m [PATCH v6 13/13] hw/i386: Remove linuxboot.bin
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 13
+---
+Applying: hw/ppc/mac: Use fw_cfg_init_mem_nodma()
+Applying: hw/sparc/sun4m: Use fw_cfg_init_mem_nodma()
+Applying: hw/nvram/fw_cfg: Factor fw_cfg_init_mem_internal() out
+Patch failed at 0003 hw/nvram/fw_cfg: Factor fw_cfg_init_mem_internal() out
+error: patch failed: hw/nvram/fw_cfg.c:1088
+error: hw/nvram/fw_cfg.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
