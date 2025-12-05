@@ -1,0 +1,35 @@
+Grabbing thread from lore.kernel.org/all/20251205053819.2021772-1-gaurav.sharma_7@nxp.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 16 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 54 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v4 1/15] hw/arm: Add the i.MX 8MM EVK(Evaluation Kit) board
+  [PATCH v4 2/15] hw/misc/imx8mp_analog: Add property to analog device
+  [PATCH v4 3/15] hw/arm/fsl-imx8mm: Add Analog device IP to iMX8MM SOC
+  [PATCH v4 4/15] hw/arm/fsl-imx8mm: Add Clock Control Module IP to iMX8MM
+  [PATCH v4 5/15] hw/arm/fsl-imx8mm: Implemented support for SNVS
+  [PATCH v4 6/15] hw/arm/fsl-imx8mm: Adding support for USDHC storage controllers
+  [PATCH v4 7/15] hw/arm/fsl-imx8mm: Add PCIe support
+  [PATCH v4 8/15] hw/arm/fsl-imx8mm: Add GPIO controllers
+  [PATCH v4 9/15] hw/arm/fsl-imx8mm: Adding support for I2C emulation
+  [PATCH v4 10/15] hw/arm/fsl-imx8mm: Adding support for SPI controller
+  [PATCH v4 11/15] hw/arm/fsl-imx8mm: Adding support for Watchdog Timers
+  [PATCH v4 12/15] hw/arm/fsl-imx8mm: Adding support for General Purpose Timers
+  [PATCH v4 13/15] hw/arm/fsl-imx8mm: Adding support for ENET ethernet controller
+  [PATCH v4 14/15] hw/arm/fsl-imx8mm: Adding support for USB controller
+  [PATCH v4 15/15] hw/arm/fsl-imx8mm: Adding functional testing of iMX8MM emulation
+---
+Total patches: 15
+---
+Applying: hw/arm: Add the i.MX 8MM EVK(Evaluation Kit) board
+Patch failed at 0001 hw/arm: Add the i.MX 8MM EVK(Evaluation Kit) board
+error: patch failed: hw/arm/Kconfig:626
+error: hw/arm/Kconfig: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
