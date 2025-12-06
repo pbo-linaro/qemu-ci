@@ -1,0 +1,22 @@
+Grabbing thread from lore.kernel.org/all/20251206065952.714540-1-gaosong@loongson.cn/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH RFC v2 1/2] target/loongarch: Add kvm support dintc
+  [PATCH RFC v2 2/2] add avec irqchip in kernel support
+---
+Total patches: 2
+---
+Applying: target/loongarch: Add kvm support dintc
+Patch failed at 0001 target/loongarch: Add kvm support dintc
+error: patch failed: target/loongarch/cpu.c:411
+error: target/loongarch/cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
