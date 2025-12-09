@@ -370,6 +370,27 @@ static bool gen_load_tl(DisasContext *ctx, arg_lb *a, MemOp memop)
     return true;
 }
 
+/* Zilsd extension adds load/store double for 32bit arch */
+static bool gen_load_zilsd(DisasContext *ctx, arg_lb *a)
+{
+    TCGv dest_1 = tcg_temp_new();
+    TCGv dest_2 = tcg_temp_new();
+    TCGv addr_1 = get_address(ctx, a->rs1, a->imm);
+    TCGv addr_2 = get_address(ctx, a->rs1, a->imm + 4);
+
+    tcg_gen_qemu_ld_tl(dest_1, addr_1, ctx->mem_idx, MO_SL);
+    tcg_gen_qemu_ld_tl(dest_2, addr_2, ctx->mem_idx, MO_SL);
+
+    /* If destination is x0 then result of the load is discarded */
+    if (a->rd == 0) {
+        return true;
+    }
+
+    gen_set_gpr(ctx, a->rd, dest_1);
+    gen_set_gpr(ctx, a->rd + 1, dest_2);
+    return true;
+}
+
 /* Compute only 64-bit addresses to use the address translation mechanism */
 static bool gen_load_i128(DisasContext *ctx, arg_lb *a, MemOp memop)
 {
@@ -409,6 +430,8 @@ static bool gen_load(DisasContext *ctx, arg_lb *a, MemOp memop)
     decode_save_opc(ctx, 0);
     if (get_xl(ctx) == MXL_RV128) {
         out = gen_load_i128(ctx, a, memop);
+    } else if (memop == MO_SQ && get_xl(ctx) == MXL_RV32) {
+        out = gen_load_zilsd(ctx, a);
     } else {
         out = gen_load_tl(ctx, a, memop);
     }
@@ -437,7 +460,10 @@ static bool trans_lw(DisasContext *ctx, arg_lw *a)
 
 static bool trans_ld(DisasContext *ctx, arg_ld *a)
 {
-    REQUIRE_64_OR_128BIT(ctx);
+    /* Check for Zilsd extension if 32bit */
+    if (get_xl(ctx) == MXL_RV32 && !ctx->cfg_ptr->ext_zilsd) {
+        return false;
+    }
     return gen_load(ctx, a, MO_SQ);
 }
 
@@ -482,6 +508,33 @@ static bool gen_store_tl(DisasContext *ctx, arg_sb *a, MemOp memop)
     return true;
 }
 
+/* Zilsd extension adds load/store double for 32bit arch */
+static bool gen_store_zilsd(DisasContext *ctx, arg_sb *a)
+{
+    TCGv_i64 data = tcg_constant_i64(0);
+    TCGv addr = get_address(ctx, a->rs1, a->imm);
+
+    if (a->rs2 != 0) {
+        TCGv data_1 = get_gpr(ctx, a->rs2, EXT_NONE);
+        TCGv data_2 = get_gpr(ctx, a->rs2 + 1, EXT_NONE);
+        data = tcg_temp_new_i64();
+        /* little-endian memory access assumed for now */
+        tcg_gen_concat_tl_i64(data, data_1, data_2);
+    }
+
+    if (ctx->ztso) {
+        tcg_gen_mb(TCG_MO_ALL | TCG_BAR_STRL);
+    }
+
+    /*
+     * The spec allows for this op to be non-atomic and made of two 32bit
+     * stores. However, the two stores have been combined into one 64bit store,
+     * thus avoiding the case where only one of these stores succeeds.
+     */
+    tcg_gen_qemu_st_i64(data, addr, ctx->mem_idx, MO_UQ);
+    return true;
+}
+
 static bool gen_store_i128(DisasContext *ctx, arg_sb *a, MemOp memop)
 {
     TCGv src1l = get_gpr(ctx, a->rs1, EXT_NONE);
@@ -511,6 +564,8 @@ static bool gen_store(DisasContext *ctx, arg_sb *a, MemOp memop)
     decode_save_opc(ctx, 0);
     if (get_xl(ctx) == MXL_RV128) {
         return gen_store_i128(ctx, a, memop);
+    } else if (memop == MO_UQ && get_xl(ctx) == MXL_RV32) {
+        return gen_store_zilsd(ctx, a);
     } else {
         return gen_store_tl(ctx, a, memop);
     }
@@ -533,7 +588,10 @@ static bool trans_sw(DisasContext *ctx, arg_sw *a)
 
 static bool trans_sd(DisasContext *ctx, arg_sd *a)
 {
-    REQUIRE_64_OR_128BIT(ctx);
+    /* Check for Zilsd extension if 32bit */
+    if (get_xl(ctx) == MXL_RV32 && !ctx->cfg_ptr->ext_zilsd) {
+        return false;
+    }
     return gen_store(ctx, a, MO_UQ);
 }
 
