@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20251210133737.78257-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/16] backends/iommufd: Update iommufd_backend_get_device_info
+  [32m✓[0m [PATCH RFC 2/16] backends/iommufd: Update iommufd_backend_alloc_viommu to allow user ptr
+  [32m✓[0m [PATCH RFC 3/16] backends/iommufd: Introduce iommufd_backend_alloc_hw_queue
+  [32m✓[0m [PATCH RFC 4/16] backends/iommufd: Introduce iommufd_backend_viommu_mmap
+  [32m✓[0m [PATCH RFC 5/16] hw/arm/tegra241-cmdqv: Add initial Tegra241 CMDQ-Virtualisation support
+  [32m✓[0m [PATCH RFC 6/16] hw/arm/tegra241-cmdqv: Map VINTF Page0 into guest
+  [32m✓[0m [PATCH RFC 7/16] hw/arm/tegra241-cmdqv: Add read emulation support for registers
+  [32m✓[0m [PATCH RFC 8/16] system/physmem: Add helper to check whether a guest PA maps to RAM
+  [32m✓[0m [PATCH RFC 9/16] hw/arm/tegra241-cmdqv:: Add write emulation for registers
+  [32m✓[0m [PATCH RFC 10/16] hw/arm/tegra241-cmdqv: Allocate vEVENTQ object
+  [32m✓[0m [PATCH RFC 11/16] hw/arm/tegra241-cmdqv: Read and propagate Tegra241 CMDQV errors
+  [32m✓[0m [PATCH RFC 12/16] hw/arm/tegra241-cmdqv: Add reset handler
+  [32m✓[0m [PATCH RFC 13/16] hw/arm/tegra241-cmdqv: Limit queue size based on backend page size
+  [32m✓[0m [PATCH RFC 14/16] virt-acpi-build: Rename AcpiIortSMMUv3Dev to AcpiSMMUv3Dev
+  [32m✓[0m [PATCH RFC 15/16] hw/arm/virt-acpi: Advertise Tegra241 CMDQV nodes in DSDT
+  [32m✓[0m [PATCH RFC 16/16] hw/arm/smmuv3: Add tegra241-cmdqv property for SMMUv3 device
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 16
+---
+Applying: backends/iommufd: Update iommufd_backend_get_device_info
+Patch failed at 0001 backends/iommufd: Update iommufd_backend_get_device_info
+error: patch failed: backends/iommufd.c:386
+error: backends/iommufd.c: patch does not apply
+error: hw/arm/smmuv3-accel.c: does not exist in index
+error: patch failed: hw/vfio/iommufd.c:889
+error: hw/vfio/iommufd.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
