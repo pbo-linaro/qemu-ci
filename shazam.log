@@ -1,0 +1,23 @@
+Grabbing thread from lore.kernel.org/all/20251211221715.2206662-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 67 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] hw/arm/smmu: add memory regions as property for an SMMU instance
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 1
+---
+Applying: hw/arm/smmu: add memory regions as property for an SMMU instance
+Patch failed at 0001 hw/arm/smmu: add memory regions as property for an SMMU instance
+error: patch failed: hw/arm/virt.c:1549
+error: hw/arm/virt.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
