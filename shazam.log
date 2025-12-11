@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20251211081517.1546957-1-osteffen@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] hw/acpi: Make BIOS linker optional
+  [32m✓[0m [PATCH 2/3] hw/acpi: Add standalone function to build MADT
+  [32m✓[0m [PATCH 3/3] igvm: Fill MADT IGVM parameter field
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 3
+---
+Applying: hw/acpi: Make BIOS linker optional
+Applying: hw/acpi: Add standalone function to build MADT
+Applying: igvm: Fill MADT IGVM parameter field
+Patch failed at 0003 igvm: Fill MADT IGVM parameter field
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:131: trailing whitespace.
+    int (*process)(IgvmCfg *cfg, ConfidentialGuestSupport *cgs, 
+error: patch failed: backends/igvm-cfg.c:17
+error: backends/igvm-cfg.c: patch does not apply
+error: patch failed: include/system/igvm.h:18
+error: include/system/igvm.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
