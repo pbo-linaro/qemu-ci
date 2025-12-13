@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20251213-force_rcu-v2-0-1de1ca84c6d6@rsg.ci.i.u-tokyo.ac.jp/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 29 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v2 1/6] timer: Rename init_clocks() to qemu_clock_init()
+  [31m✗[0m [PATCH v2 2/6] futex: Add qemu_futex_timedwait()
+  [31m✗[0m [PATCH v2 3/6] qemu-thread: Add qemu_event_timedwait()
+  [31m✗[0m [PATCH v2 4/6] rcu: Use call_rcu() in synchronize_rcu()
+  [31m✗[0m [PATCH v2 5/6] rcu: Wake the RCU thread when draining
+  [31m✗[0m [PATCH v2 6/6] virtio-gpu: Force RCU when unmapping blob
+    + Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com> ([32m✓[0m DKIM/collabora.com)
+  ---
+  [31m✗[0m BADSIG: DKIM/rsg.ci.i.u-tokyo.ac.jp
+---
+Total patches: 6
+---
+ Base: base-commit 466e779e05b5087bffe39ecc51ec97fdf9121e8b not known, ignoring
+Applying: timer: Rename init_clocks() to qemu_clock_init()
+Patch failed at 0001 timer: Rename init_clocks() to qemu_clock_init()
+error: patch failed: include/qemu/timer.h:786
+error: include/qemu/timer.h: patch does not apply
+error: patch failed: tests/unit/test-aio-multithread.c:443
+error: tests/unit/test-aio-multithread.c: patch does not apply
+error: patch failed: util/main-loop.c:162
+error: util/main-loop.c: patch does not apply
+error: patch failed: util/qemu-timer.c:637
+error: util/qemu-timer.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
