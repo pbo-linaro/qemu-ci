@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20251215073743.4055227-1-zhao1.liu@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 12 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/11] i386/cpu: Add support for MOVRS in CPUID enumeration
+  [32m✓[0m [PATCH v2 2/11] i386/cpu: Add CPUID.0x1E.0x1 subleaf for AMX instructions
+  [32m✓[0m [PATCH v2 3/11] i386/cpu: Add support for AVX10_VNNI_INT in CPUID enumeration
+  [32m✓[0m [PATCH v2 4/11] i386/cpu: Support AVX10.2 with AVX10 feature models
+  [32m✓[0m [PATCH v2 5/11] i386/cpu: Add a helper to get host avx10 version
+  [32m✓[0m [PATCH v2 6/11] i386/cpu: Allow unsupported avx10_version with x-force-features
+  [32m✓[0m [PATCH v2 7/11] i386/cpu: Allow cache to be shared at thread level
+  [32m✓[0m [PATCH v2 8/11] i386/cpu: Add an option in X86CPUDefinition to control CPUID 0x1f
+  [32m✓[0m [PATCH v2 9/11] i386/cpu: Define dependency for VMX_VM_ENTRY_LOAD_IA32_FRED
+  [32m✓[0m [PATCH v2 10/11] i386/cpu: Add CPU model for Diamond Rapids
+  [32m✓[0m [PATCH v2 11/11] dosc/cpu-models-x86: Add documentation for DiamondRapids
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 11
+---
+Applying: i386/cpu: Add support for MOVRS in CPUID enumeration
+Applying: i386/cpu: Add CPUID.0x1E.0x1 subleaf for AMX instructions
+Patch failed at 0002 i386/cpu: Add CPUID.0x1E.0x1 subleaf for AMX instructions
+error: patch failed: target/i386/cpu.c:1037
+error: target/i386/cpu.c: patch does not apply
+error: patch failed: target/i386/cpu.h:713
+error: target/i386/cpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
