@@ -388,10 +388,14 @@ static bool gen_load_i128(DisasContext *ctx, arg_lb *a, MemOp memop)
             tcg_gen_movi_tl(desth, 0);
         }
     } else {
-        /* assume little-endian memory access for now */
-        tcg_gen_qemu_ld_tl(destl, addrl, ctx->mem_idx, MO_TEUQ);
-        tcg_gen_addi_tl(addrl, addrl, 8);
-        tcg_gen_qemu_ld_tl(desth, addrl, ctx->mem_idx, MO_TEUQ);
+        TCGv_i128 t16 = tcg_temp_new_i128();
+
+        tcg_gen_qemu_ld_i128(t16, addrl, ctx->mem_idx, memop);
+        if (mo_endian(ctx) == MO_LE) {
+            tcg_gen_extr_i128_i64(destl, desth, t16);
+        } else {
+            tcg_gen_extr_i128_i64(desth, destl, t16);
+        }
     }
 
     gen_set_gpr128(ctx, a->rd, destl, desth);
@@ -494,10 +498,14 @@ static bool gen_store_i128(DisasContext *ctx, arg_sb *a, MemOp memop)
     if ((memop & MO_SIZE) <= MO_64) {
         tcg_gen_qemu_st_tl(src2l, addrl, ctx->mem_idx, memop);
     } else {
-        /* little-endian memory access assumed for now */
-        tcg_gen_qemu_st_tl(src2l, addrl, ctx->mem_idx, MO_TEUQ);
-        tcg_gen_addi_tl(addrl, addrl, 8);
-        tcg_gen_qemu_st_tl(src2h, addrl, ctx->mem_idx, MO_TEUQ);
+        TCGv_i128 t16 = tcg_temp_new_i128();
+
+        if (mo_endian(ctx) == MO_LE) {
+            tcg_gen_concat_i64_i128(t16, src2l, src2h);
+        } else {
+            tcg_gen_concat_i64_i128(t16, src2h, src2l);
+        }
+        tcg_gen_qemu_st_i128(t16, addrl, ctx->mem_idx, memop);
     }
     return true;
 }
