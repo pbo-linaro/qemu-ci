@@ -35,5 +35,5 @@ tests_x86_64_system_thorough = [
   'tuxrun',
   'vfio_user_client',
   'virtio_balloon',
-  'virtio_gpu',
+  # 'virtio_gpu', # issue: no drm render node available
 ]
