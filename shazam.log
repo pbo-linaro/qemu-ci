@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20251218062643.624796-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 84 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/9] vfio/iommufd: Add framework code to support getting dirty bitmap before unmap
+  [32m✓[0m [PATCH v6 2/9] vfio/iommufd: Query dirty bitmap before DMA unmap
+  [32m✓[0m [PATCH v6 3/9] vfio/container-legacy: rename vfio_dma_unmap_bitmap() to vfio_legacy_dma_unmap_get_dirty_bitmap()
+  [32m✓[0m [PATCH v6 4/9] vfio: Add a backend_flag parameter to vfio_contianer_query_dirty_bitmap()
+  [32m✓[0m [PATCH v6 5/9] vfio/iommufd: Add IOMMU_HWPT_GET_DIRTY_BITMAP_NO_CLEAR flag support
+  [32m✓[0m [PATCH v6 6/9] intel_iommu: Fix unmap_bitmap failure with legacy VFIO backend
+  [32m✓[0m [PATCH v6 7/9] vfio/listener: Add missing dirty tracking in region_del
+  [32m✓[0m [PATCH v6 8/9] vfio/migration: Add migration blocker if VM memory is too large to cause unmap_bitmap failure
+  [32m✓[0m [PATCH v6 9/9] vfio/migration: Allow live migration with vIOMMU without VFs using device dirty tracking
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 9
+---
+Applying: vfio/iommufd: Add framework code to support getting dirty bitmap before unmap
+Applying: vfio/iommufd: Query dirty bitmap before DMA unmap
+Applying: vfio/container-legacy: rename vfio_dma_unmap_bitmap() to vfio_legacy_dma_unmap_get_dirty_bitmap()
+Applying: vfio: Add a backend_flag parameter to vfio_contianer_query_dirty_bitmap()
+Applying: vfio/iommufd: Add IOMMU_HWPT_GET_DIRTY_BITMAP_NO_CLEAR flag support
+Applying: intel_iommu: Fix unmap_bitmap failure with legacy VFIO backend
+Patch failed at 0006 intel_iommu: Fix unmap_bitmap failure with legacy VFIO backend
+error: patch failed: hw/i386/intel_iommu.c:4764
+error: hw/i386/intel_iommu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
