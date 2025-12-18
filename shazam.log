@@ -1,0 +1,55 @@
+Grabbing thread from lore.kernel.org/all/20251217-hw-riscv-cpu-int-v1-0-d24a4048d3aa@rev.ng/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 34 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/14] hw/riscv: Register generic riscv[32|64] QOM interfaces
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 2/14] hw/riscv: Add macros and globals for simplifying machine definitions
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 3/14] hw/riscv: Filter machine types for qemu-system-riscv32/64 binaries
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 4/14] hw/core: Add riscv[32|64] to "none" machine
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 5/14] configs/target: Implement per-binary TargetInfo structure for riscv
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 6/14] target-info: Add target_riscv64()
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 7/14] target/riscv: Replace TYPE_RISCV_CPU_BASE
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 8/14] target/riscv: Remove ifdefs in cpu.h
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 9/14] target/riscv: Replace TARGET_LONG_BITS in header exposed to common code
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 10/14] target/riscv: Move riscv_pmu_read_ctr() to internal csr.h header
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 11/14] target/riscv: Make pmu.h target-agnostic
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 12/14] target/riscv: Stub out kvm functions
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 13/14] hw/riscv: Define SiFive E/U CPUs using runtime conditions
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [31m✗[0m [PATCH 14/14] hw/riscv: Compile once
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Reviewed-by: Pierrick Bouvier <pierrick.bouvier@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  ---
+  [31m✗[0m BADSIG: DKIM/rev.ng
+---
+Total patches: 14
+---
+Applying: hw/riscv: Register generic riscv[32|64] QOM interfaces
+Applying: hw/riscv: Add macros and globals for simplifying machine definitions
+Patch failed at 0002 hw/riscv: Add macros and globals for simplifying machine definitions
+error: patch failed: target/riscv/machine.c:23
+error: target/riscv/machine.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
