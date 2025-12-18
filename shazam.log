@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251218085059.54160-1-15927021679@163.com/t.mbox.gz
+Analyzing 2 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] hw/rdma: Implement vhost-user RDMA device with PCI support
+  ---
+  [32m✓[0m Signed: DKIM/163.com
+---
+Total patches: 1
+---
+Applying: hw/rdma: Implement vhost-user RDMA device with PCI support
+Patch failed at 0001 hw/rdma: Implement vhost-user RDMA device with PCI support
+error: hw/rdma/Kconfig: does not exist in index
+error: hw/rdma/meson.build: does not exist in index
+error: patch failed: hw/virtio/meson.build:63
+error: hw/virtio/meson.build: patch does not apply
+error: patch failed: hw/virtio/vhost.c:934
+error: hw/virtio/vhost.c: patch does not apply
+error: patch failed: include/hw/virtio/virtio.h:369
+error: include/hw/virtio/virtio.h: patch does not apply
+error: patch failed: include/standard-headers/linux/virtio_ids.h:68
+error: include/standard-headers/linux/virtio_ids.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
