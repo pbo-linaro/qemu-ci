@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20251218212814.61445-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] system/memory: Use explicit endianness in ram_device::read/write()
+  [32m✓[0m [PATCH 2/4] system/memory: Introduce LD/ST helpers with @m suffix (for MemOp)
+  [32m✓[0m [PATCH 3/4] configs/targets: Introduce TARGET_USE_LEGACY_NATIVE_ENDIAN_API
+  [32m✓[0m [PATCH 4/4] system/memory: Restrict legacy 'native-endian' APIs
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: system/memory: Use explicit endianness in ram_device::read/write()
+Applying: system/memory: Introduce LD/ST helpers with @m suffix (for MemOp)
+Patch failed at 0002 system/memory: Introduce LD/ST helpers with @m suffix (for MemOp)
+error: include/system/memory_ldst_endian.h.inc: does not exist in index
+error: include/system/memory_ldst_phys_endian.h.inc: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
