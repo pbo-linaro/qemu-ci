@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20251218221457.73341-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 73 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/6] hw/sparc: Use explicit big-endian LD/ST API
+  [32m✓[0m [PATCH 2/6] target/sparc: Simplify gdbstub sparc_cpu_gdb_write_register()
+  [32m✓[0m [PATCH 3/6] target/sparc: Inline translator_ldl()
+  [32m✓[0m [PATCH 4/6] target/sparc: Use address_space_ld/st[n]_be() in ld/st_asi helpers
+  [32m✓[0m [PATCH 5/6] target/sparc: Use explicit big-endian LD/ST API
+  [32m✓[0m [PATCH 6/6] configs/targets: Forbid SPARC64 to use legacy native endianness API
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 6
+---
+Applying: hw/sparc: Use explicit big-endian LD/ST API
+Applying: target/sparc: Simplify gdbstub sparc_cpu_gdb_write_register()
+Applying: target/sparc: Inline translator_ldl()
+Applying: target/sparc: Use address_space_ld/st[n]_be() in ld/st_asi helpers
+Applying: target/sparc: Use explicit big-endian LD/ST API
+Applying: configs/targets: Forbid SPARC64 to use legacy native endianness API
+Patch failed at 0006 configs/targets: Forbid SPARC64 to use legacy native endianness API
+error: patch failed: configs/targets/sparc64-softmmu.mak:1
+error: configs/targets/sparc64-softmmu.mak: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
