@@ -3252,7 +3252,7 @@ int qcow2_update_header(BlockDriverState *bs)
     }
 
     /* Write the new header */
-    ret = bdrv_pwrite(bs->file, 0, s->cluster_size, header, 0);
+    ret = bdrv_pwrite(bs->file, 0, s->cluster_size, header, BDRV_REQ_FUA);
     if (ret < 0) {
         goto fail;
     }
