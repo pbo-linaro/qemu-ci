@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20251219163650.74303-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 182 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/9] hw/sparc: Use explicit big-endian LD/ST API
+  [32m✓[0m [PATCH v2 2/9] target/sparc: Replace MO_TE -> MO_BE
+  [32m✓[0m [PATCH v2 3/9] target/sparc: Use address_space_ld/st[n]_be() in ld/st_asi helpers
+  [32m✓[0m [PATCH v2 4/9] target/sparc: Use explicit big-endian LD/ST API
+  [32m✓[0m [PATCH v2 5/9] target/sparc: Use big-endian variant of cpu_ld/st_data*()
+  [32m✓[0m [PATCH v2 6/9] target/sparc: Inline translator_ldl()
+  [32m✓[0m [PATCH v2 7/9] target/sparc: Inline cpu_ldl_code() call in cpu_do_interrupt()
+  [32m✓[0m [PATCH v2 8/9] target/sparc: Simplify gdbstub sparc_cpu_gdb_write_register()
+  [32m✓[0m [PATCH v2 9/9] configs/targets: Forbid SPARC to use legacy native endianness APIs
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: hw/sparc: Use explicit big-endian LD/ST API
+Applying: target/sparc: Replace MO_TE -> MO_BE
+Applying: target/sparc: Use address_space_ld/st[n]_be() in ld/st_asi helpers
+Applying: target/sparc: Use explicit big-endian LD/ST API
+Patch failed at 0004 target/sparc: Use explicit big-endian LD/ST API
+error: patch failed: target/sparc/mmu_helper.c:189
+error: target/sparc/mmu_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
