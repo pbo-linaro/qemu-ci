@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20251224014203.756264-1-kane_chen@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 53 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v4 1/19] hw/misc: Add LTPI controller
+  [PATCH v4 2/19] hw/arm/aspeed: Attach LTPI controller to AST27X0 platform
+  [PATCH v4 3/19] hw/misc: Add basic Aspeed PWM model
+  [PATCH v4 4/19] hw/arm/aspeed: Add AST1700 LTPI expander device model
+  [PATCH v4 5/19] hw/arm/aspeed: Integrate AST1700 device into AST27X0
+  [PATCH v4 6/19] hw/arm/aspeed: Integrate interrupt controller for AST1700
+  [PATCH v4 7/19] hw/arm/aspeed: Attach LTPI controller to AST1700 model
+  [PATCH v4 8/19] hw/arm/aspeed: Attach UART device to AST1700 model
+  [PATCH v4 9/19] hw/arm/aspeed: Attach SRAM device to AST1700 model
+  [PATCH v4 10/19] hw/arm/aspeed: Attach SPI device to AST1700 model
+  [PATCH v4 11/19] hw/arm/aspeed: Attach ADC device to AST1700 model
+  [PATCH v4 12/19] hw/arm/aspeed: Attach SCU device to AST1700 model
+  [PATCH v4 13/19] hw/arm/aspeed: Attach GPIO device to AST1700 model
+  [PATCH v4 14/19] hw/arm/aspeed: attach I2C device to AST1700 model
+  [PATCH v4 15/19] hw/arm/aspeed: Attach WDT device to AST1700 model
+  [PATCH v4 16/19] hw/arm/aspeed: Attach PWM device to AST1700 model
+  [PATCH v4 17/19] hw/arm/aspeed: Attach SGPIOM device to AST1700 model
+  [PATCH v4 18/19] hw/arm/aspeed: Model AST1700 I3C block as unimplemented device
+  [PATCH v4 19/19] hw/arm/aspeed: Enable AST1700 IO expander support
+---
+Total patches: 19
+---
+Applying: hw/misc: Add LTPI controller
+Applying: hw/arm/aspeed: Attach LTPI controller to AST27X0 platform
+Applying: hw/misc: Add basic Aspeed PWM model
+Patch failed at 0003 hw/misc: Add basic Aspeed PWM model
+error: patch failed: include/hw/arm/aspeed_soc.h:108
+error: include/hw/arm/aspeed_soc.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
