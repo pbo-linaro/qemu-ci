@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251224163304.91384-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 151 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] target/rx: Use little-endian variant of cpu_ld/st_data*()
+  [32m✓[0m [PATCH 2/4] target/rx: Use explicit little-endian LD/ST API
+  [32m✓[0m [PATCH 3/4] target/rx: Inline translator_lduw() and translator_ldl()
+  [32m✓[0m [PATCH 4/4] configs/targets: Forbid Renesas RX to use legacy native endianness API
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: target/rx: Use little-endian variant of cpu_ld/st_data*()
+Applying: target/rx: Use explicit little-endian LD/ST API
+Applying: target/rx: Inline translator_lduw() and translator_ldl()
+Applying: configs/targets: Forbid Renesas RX to use legacy native endianness API
+Patch failed at 0004 configs/targets: Forbid Renesas RX to use legacy native endianness API
+error: patch failed: configs/targets/rx-softmmu.mak:4
+error: configs/targets/rx-softmmu.mak: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
