@@ -1,0 +1,18 @@
+Grabbing thread from lore.kernel.org/all/bc5f4a5b-02fe-4cbc-8718-a294f9d3b078@tls.msk.ru/t.mbox.gz
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH] u-boot-sam460ex: can't be built in 10.2 if libfdt-dev is installed
+---
+Total patches: 1
+---
+Applying: u-boot-sam460ex: can't be built in 10.2 if libfdt-dev is installed
+Patch failed at 0001 u-boot-sam460ex: can't be built in 10.2 if libfdt-dev is installed
+error: roms/u-boot-sam460ex/tools/Makefile: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
