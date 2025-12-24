@@ -1,0 +1,50 @@
+Grabbing thread from lore.kernel.org/all/20251224152210.87880-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 68 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/25] system/physmem: Inline and remove leul_to_cpu()
+  [32m✓[0m [PATCH v3 2/25] system/physmem: Convert DEBUG_SUBPAGE printf() to trace events
+  [32m✓[0m [PATCH v3 3/25] system/physmem: Use explicit endianness in subpage_ops::read/write()
+  [32m✓[0m [PATCH v3 4/25] system/memory: Split MemoryRegionCache API to 'memory_cached.h'
+  [32m✓[0m [PATCH v3 5/25] system/memory: Move *ldst* headers from exec/ to system/ namespace
+  [32m✓[0m [PATCH v3 6/25] system/memory: Inline address_space_stq_internal()
+  [32m✓[0m [PATCH v3 7/25] system/memory: Define address_space_ldst[W] endian variants via template
+  [32m✓[0m [PATCH v3 8/25] system/memory: Define address_space_ldst[L] endian variants via template
+  [32m✓[0m [PATCH v3 9/25] system/memory: Define address_space_ldst[Q] endian variants via template
+  [32m✓[0m [PATCH v3 10/25] system/memory: Factor address_space_ldst[M]_internal() helper out
+  [32m✓[0m [PATCH v3 11/25] system/memory: Pass device_endian argument as MemOp bit
+  [32m✓[0m [PATCH v3 12/25] system/memory: Directly call address_space_ldst[M]_internal() helper
+  [32m✓[0m [PATCH v3 13/25] system/memory: Introduce LD/ST helpers with @n suffix (variable size)
+  [32m✓[0m [PATCH v3 14/25] system/memory: Use explicit endianness in ram_device::read/write()
+  [32m✓[0m [PATCH v3 15/25] system: Allow restricting the legacy ld/st_phys() 'native-endian' API
+  [32m✓[0m [PATCH v3 16/25] system: Allow restricting the legacy ld/st_he() 'native-endian' API
+  [32m✓[0m [PATCH v3 17/25] system: Allow restricting legacy address_space_ldst() native-endian API
+  [32m✓[0m [PATCH v3 18/25] system: Allow restricting the legacy cpu_ld/st() 'native-endian' API
+  [32m✓[0m [PATCH v3 19/25] system: Allow restricting the legacy translator_ld() 'native-endian' API
+  [32m✓[0m [PATCH v3 20/25] system: Allow restricting the legacy tswap() 'native-endian' API
+  [32m✓[0m [PATCH v3 21/25] system: Allow restricting the legacy MO_TE* 'native-endian' definitions
+  [32m✓[0m [PATCH v3 22/25] system: Allow restricting the legacy DEVICE_NATIVE_ENDIAN definition
+  [32m✓[0m [PATCH v3 23/25] tests/qtest: Remove unnecessary 'qemu/bswap.h' include
+  [32m✓[0m [PATCH v3 24/25] system/ioport: Declare x86-specific I/O port in little-endian order
+  [32m✓[0m [PATCH v3 25/25] system/ioport: Do not open-code address_space_ld/st_le() methods
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 25
+---
+Applying: system/physmem: Inline and remove leul_to_cpu()
+Applying: system/physmem: Convert DEBUG_SUBPAGE printf() to trace events
+Applying: system/physmem: Use explicit endianness in subpage_ops::read/write()
+Applying: system/memory: Split MemoryRegionCache API to 'memory_cached.h'
+Patch failed at 0004 system/memory: Split MemoryRegionCache API to 'memory_cached.h'
+error: patch failed: include/system/memory.h:2857
+error: include/system/memory.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
