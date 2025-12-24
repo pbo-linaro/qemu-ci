@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20251224161804.90064-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 4 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/4] hw/intc: Mark OpenRISC-specific peripheral as big-endian
+  [32m✓[0m [PATCH 2/4] target/openrisc: Use explicit big-endian LD/ST API
+  [32m✓[0m [PATCH 3/4] target/openrisc: Inline translator_ldl()
+  [32m✓[0m [PATCH 4/4] configs/targets: Forbid OpenRISC to use legacy native endianness APIs
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 4
+---
+Applying: hw/intc: Mark OpenRISC-specific peripheral as big-endian
+Applying: target/openrisc: Use explicit big-endian LD/ST API
+Applying: target/openrisc: Inline translator_ldl()
+Applying: configs/targets: Forbid OpenRISC to use legacy native endianness APIs
+Patch failed at 0004 configs/targets: Forbid OpenRISC to use legacy native endianness APIs
+error: patch failed: configs/targets/or1k-softmmu.mak:4
+error: configs/targets/or1k-softmmu.mak: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
