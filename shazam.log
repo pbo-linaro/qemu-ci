@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20251224163005.91137-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 106 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] target/tricore: Use little-endian variant of cpu_ld/st_data*()
+  [32m✓[0m [PATCH 2/3] target/tricore: Inline translator_lduw()
+  [32m✓[0m [PATCH 3/3] configs/targets: Forbid TriCore to use legacy native endianness API
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 3
+---
+Applying: target/tricore: Use little-endian variant of cpu_ld/st_data*()
+Applying: target/tricore: Inline translator_lduw()
+Applying: configs/targets: Forbid TriCore to use legacy native endianness API
+Patch failed at 0003 configs/targets: Forbid TriCore to use legacy native endianness API
+error: patch failed: configs/targets/tricore-softmmu.mak:1
+error: configs/targets/tricore-softmmu.mak: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
