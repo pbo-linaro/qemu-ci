@@ -10,7 +10,10 @@
 
 #include "qemu/osdep.h"
 #include "libqtest-single.h"
+#include "libqtest.h"
 #include "qobject/qdict.h"
+#include "qemu/iov.h"
+#include "qemu/sockets.h"
 
 /* add a netfilter to a netdev and then remove it */
 static void add_one_netfilter(void)
