@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20251226211930.27565-1-farosas@suse.de/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 26 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/25] migration: Remove redundant state change
+  [32m✓[0m [PATCH RFC 2/25] migration: Fix state change at migration_channel_process_incoming
+  [32m✓[0m [PATCH RFC 3/25] migration/tls: Remove unused parameter
+  [32m✓[0m [PATCH RFC 4/25] migration: Move multifd_recv_setup call
+  [32m✓[0m [PATCH RFC 5/25] migration: Cleanup TLS handshake hostname passing
+  [32m✓[0m [PATCH RFC 6/25] migration: Move postcopy_try_recover into migration_incoming_process
+  [32m✓[0m [PATCH RFC 7/25] migration: Use migrate_mode() to query for cpr-transfer
+  [32m✓[0m [PATCH RFC 8/25] migration: Free the error earlier in the resume case
+  [32m✓[0m [PATCH RFC 9/25] migration: Move error reporting out of migration_cleanup
+  [32m✓[0m [PATCH RFC 10/25] migration: Expand migration_connect_error_propagate to cover cancelling
+  [32m✓[0m [PATCH RFC 11/25] migration: yank: Move register instance earlier
+  [32m✓[0m [PATCH RFC 12/25] migration: Fold migration_cleanup() into migration_connect_error_propagate()
+  [32m✓[0m [PATCH RFC 13/25] migration: Handle error in the early async paths
+  [32m✓[0m [PATCH RFC 14/25] migration: Remove QEMUFile from channel.c
+  [32m✓[0m [PATCH RFC 15/25] migration/channel: Rename migration_channel_connect
+  [32m✓[0m [PATCH RFC 16/25] migration: Rename instances of start
+  [32m✓[0m [PATCH RFC 17/25] migration: Move channel code to channel.c
+  [32m✓[0m [PATCH RFC 18/25] migration: Move transport connection code into channel.c
+  [32m✓[0m [PATCH RFC 19/25] migration/channel: Make synchronous calls evident
+  [32m✓[0m [PATCH RFC 20/25] migration/channel: Use switch statements in outgoing code
+  [32m✓[0m [PATCH RFC 21/25] migration/channel: Cleanup early passing of MigrationState
+  [32m✓[0m [PATCH RFC 22/25] migration/channel: Merge both sides of the connection initiation code
+  [32m✓[0m [PATCH RFC 23/25] migration: Move channel parsing to channel.c
+  [32m✓[0m [PATCH RFC 24/25] migration: Move URI parsing to channel.c
+  [32m✓[0m [PATCH RFC 25/25] migration: Remove qmp_migrate_finish
+  ---
+  [32m✓[0m Signed: DKIM/suse.de
+---
+Total patches: 25
+---
+Applying: migration: Remove redundant state change
+Patch failed at 0001 migration: Remove redundant state change
+error: patch failed: migration/migration.c:2326
+error: migration/migration.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
