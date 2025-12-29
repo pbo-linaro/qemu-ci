@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20251229120839.89817-1-me@linux.beauty/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/3] system/physmem: allow /dev/fdset for file-backed RAM
+  [32m✓[0m [PATCH 2/3] docs: CPR: document shared RAM with x-ignore-shared
+  [32m✓[0m [PATCH 3/3] tests/qtest: cpr-reboot: check ignore-shared transfer
+  ---
+  [32m✓[0m Signed: DKIM/linux.beauty
+---
+Total patches: 3
+---
+Applying: system/physmem: allow /dev/fdset for file-backed RAM
+Applying: docs: CPR: document shared RAM with x-ignore-shared
+Applying: tests/qtest: cpr-reboot: check ignore-shared transfer
+Patch failed at 0003 tests/qtest: cpr-reboot: check ignore-shared transfer
+error: patch failed: tests/qtest/migration/cpr-tests.c:69
+error: tests/qtest/migration/cpr-tests.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
