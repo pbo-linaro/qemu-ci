@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20251229184656.2224369-1-daniel.barboza@oss.qualcomm.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 18 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 44 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/17] hw/riscv: Trace Encoder initial impl
+  [32m✓[0m [PATCH v3 2/17] hw/riscv: Trace RAM Sink initial impl
+  [32m✓[0m [PATCH v3 3/17] hw/riscv/trace-encoder: add trace start/stop logic
+  [32m✓[0m [PATCH v3 4/17] hw/riscv/virt.c: add trace encoders and trace ram sinks
+  [32m✓[0m [PATCH v3 5/17] hw/riscv/virt.c add trace encoder and ramsink fdt nodes
+  [32m✓[0m [PATCH v3 6/17] hw/riscv: add e-trace message helpers
+  [32m✓[0m [PATCH v3 7/17] target/riscv: add initial trace instrumentation
+  [32m✓[0m [PATCH v3 8/17] hw/riscv/trace-encoder: write e-trace packets to RAM sink
+  [32m✓[0m [PATCH v3 9/17] test/qtest: add riscv-trace-test.c
+  [32m✓[0m [PATCH v3 10/17] hw/riscv/rv-trace-messages.c: add encoded trap message
+  [32m✓[0m [PATCH v3 11/17] hw/riscv, target/riscv: send trace trap messages
+  [32m✓[0m [PATCH v3 12/17] target/riscv, hw/riscv: send trace ppccd packets
+  [32m✓[0m [PATCH v3 13/17] hw/riscv/trace: add format2 msg helper
+  [32m✓[0m [PATCH v3 14/17] hw/riscv, target/riscv: send resync updiscon trace packets
+  [32m✓[0m [PATCH v3 15/17] hw/riscv/rv-trace-messages: add format 1 msgs with branch info
+  [32m✓[0m [PATCH v3 16/17] hw/riscv/trace-encoder: send branches info
+  [32m✓[0m [PATCH v3 17/17] hw/riscv/trace: update branch bit in sync messages
+  ---
+  [32m✓[0m Signed: DKIM/oss.qualcomm.com
+---
+Total patches: 17
+---
+Applying: hw/riscv: Trace Encoder initial impl
+Applying: hw/riscv: Trace RAM Sink initial impl
+Applying: hw/riscv/trace-encoder: add trace start/stop logic
+Applying: hw/riscv/virt.c: add trace encoders and trace ram sinks
+Patch failed at 0004 hw/riscv/virt.c: add trace encoders and trace ram sinks
+error: patch failed: target/riscv/tcg/tcg-cpu.c:37
+error: target/riscv/tcg/tcg-cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
