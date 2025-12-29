@@ -1,0 +1,28 @@
+Grabbing thread from lore.kernel.org/all/20251229102107.1291790-1-dtalexundeer@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/5] vhost-user.rst: specify vhost-user back-end action on GET_VRING_BASE
+  [32m✓[0m [PATCH v4 2/5] vhost-user: introduce should_drain on GET_VRING_BASE
+  [32m✓[0m [PATCH v4 3/5] vmstate: introduce VMSTATE_VBUFFER_UINT64
+  [32m✓[0m [PATCH v4 4/5] vhost: add vmstate for inflight region with inner buffer
+  [32m✓[0m [PATCH v4 5/5] vhost-user-blk: support inter-host inflight migration
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 5
+---
+Applying: vhost-user.rst: specify vhost-user back-end action on GET_VRING_BASE
+Applying: vhost-user: introduce should_drain on GET_VRING_BASE
+Patch failed at 0002 vhost-user: introduce should_drain on GET_VRING_BASE
+error: patch failed: hw/block/vhost-user-blk.c:227
+error: hw/block/vhost-user-blk.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
