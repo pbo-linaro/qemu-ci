@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20251229161740.758800-1-den@openvz.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 5 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/3] block: create bdrv_advance_flush_gen() helper
+  [31m✗[0m [PATCH 2/3] block: move bdrv_advance_flush_gen() earlier from bdrv_co_write_req_finish
+  [31m✗[0m [PATCH 3/3] qcow2: add very final sync on QCOW2 image closing
+  ---
+  [31m✗[0m BADSIG: DKIM/virtuozzo.com
+---
+Total patches: 3
+---
+Applying: block: create bdrv_advance_flush_gen() helper
+Patch failed at 0001 block: create bdrv_advance_flush_gen() helper
+error: patch failed: include/block/block_int-common.h:1373
+error: include/block/block_int-common.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
