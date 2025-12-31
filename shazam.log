@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20251231212107.1020964-1-chad@jablonski.xyz/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] ati-vga: Extract ati_reg_write() from ati_mm_write()
+  [32m✓[0m [PATCH 2/7] ati-vga: Implement CCE/PM4 microcode register handling
+  [32m✓[0m [PATCH 3/7] ati-vga: Implement PM4_BUFFER_CNTL register
+  [32m✓[0m [PATCH 4/7] ati-vga: Implement PM4_MICRO_CNTL register
+  [32m✓[0m [PATCH 5/7] ati-vga: Disable GUI engine MMIO writes when CCE enabled
+  [32m✓[0m [PATCH 6/7] ati-vga: Process Type-0/1/2 CCE packets via PIO
+  [32m✓[0m [PATCH 7/7] ati-vga: Implement PM4_STAT register and common flags
+  ---
+  [32m✓[0m Signed: DKIM/jablonski.xyz
+---
+Total patches: 7
+---
+Applying: ati-vga: Extract ati_reg_write() from ati_mm_write()
+Patch failed at 0001 ati-vga: Extract ati_reg_write() from ati_mm_write()
+error: patch failed: hw/display/ati.c:562
+error: hw/display/ati.c: patch does not apply
+error: patch failed: hw/display/ati_int.h:129
+error: hw/display/ati_int.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
