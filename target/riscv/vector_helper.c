@@ -4854,10 +4854,16 @@ void HELPER(NAME)(void *vd, void *v0, void *vs1,          \
     uint32_t vl = env->vl;                                \
     uint32_t total_elems = riscv_cpu_cfg(env)->vlenb << 3;\
     uint32_t vta_all_1s = vext_vta_all_1s(desc);          \
+    uint32_t mask_reg_full_update =                       \
+                 vext_mask_reg_full_update(desc);         \
     uint32_t i;                                           \
     int a, b;                                             \
                                                           \
     VSTART_CHECK_EARLY_EXIT(env, vl);                     \
+                                                          \
+    if (mask_reg_full_update) {                           \
+        vl = total_elems;                                 \
+    }                                                     \
                                                           \
     for (i = env->vstart; i < vl; i++) {                  \
         a = vext_elem_mask(vs1, i);                       \
