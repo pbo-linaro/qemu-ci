@@ -4949,11 +4949,16 @@ static void vmsetm(void *vd, void *v0, void *vs2, CPURISCVState *env,
     uint32_t vl = env->vl;
     uint32_t total_elems = riscv_cpu_cfg(env)->vlenb << 3;
     uint32_t vta_all_1s = vext_vta_all_1s(desc);
+    uint32_t mask_reg_full_update = vext_mask_reg_full_update(desc);
     uint32_t vma = vext_vma(desc);
     int i;
     bool first_mask_bit = false;
 
     VSTART_CHECK_EARLY_EXIT(env, vl);
+
+    if (mask_reg_full_update) {
+        vl = total_elems;
+    }
 
     for (i = env->vstart; i < vl; i++) {
         if (!vm && !vext_elem_mask(v0, i)) {
@@ -4968,6 +4973,17 @@ static void vmsetm(void *vd, void *v0, void *vs2, CPURISCVState *env,
             vext_set_elem_mask(vd, i, 0);
             continue;
         }
+
+        /* Handle elements past vl in mask_reg_full_update mode */
+        if (i >= env->vl) {
+            if (type == ONLY_FIRST) {
+                vext_set_elem_mask(vd, i, 0);
+            } else {
+                vext_set_elem_mask(vd, i, 1);
+            }
+            continue;
+        }
+
         if (vext_elem_mask(vs2, i)) {
             first_mask_bit = true;
             if (type == BEFORE_FIRST) {
