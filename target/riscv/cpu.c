@@ -3144,6 +3144,7 @@ static const TypeInfo riscv_cpu_type_infos[] = {
         .cfg.elen = 64,
         .cfg.rvv_ma_all_1s = true,
         .cfg.rvv_ta_all_1s = true,
+        .cfg.rvv_mask_reg_full_update = true,
         .cfg.misa_w = true,
         .cfg.pmp = true,
         .cfg.cbom_blocksize = 64,
