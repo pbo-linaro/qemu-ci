@@ -94,6 +94,11 @@ static inline uint32_t vext_vta_all_1s(uint32_t desc)
     return FIELD_EX32(simd_data(desc), VDATA, VTA_ALL_1S);
 }
 
+static inline uint32_t vext_mask_reg_full_update(uint32_t desc)
+{
+    return FIELD_EX32(simd_data(desc), VDATA, MASK_REG_FULL_UPDATE);
+}
+
 /*
  * Earlier designs (pre-0.9) had a varying number of bits
  * per mask value (MLEN). In the 0.9 design, MLEN=1.

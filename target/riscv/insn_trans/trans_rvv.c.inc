@@ -3135,6 +3135,8 @@ static bool trans_##NAME(DisasContext *s, arg_r *a)                \
         data = FIELD_DP32(data, VDATA, LMUL, s->lmul);             \
         data =                                                     \
             FIELD_DP32(data, VDATA, VTA_ALL_1S, s->cfg_vta_all_1s);\
+        data = FIELD_DP32(data, VDATA, MASK_REG_FULL_UPDATE,       \
+                          s->cfg_mask_reg_full_update);            \
         tcg_gen_gvec_4_ptr(vreg_ofs(s, a->rd), vreg_ofs(s, 0),     \
                            vreg_ofs(s, a->rs1),                    \
                            vreg_ofs(s, a->rs2), tcg_env,           \
@@ -3234,6 +3236,8 @@ static bool trans_##NAME(DisasContext *s, arg_rmr *a)              \
         data =                                                     \
             FIELD_DP32(data, VDATA, VTA_ALL_1S, s->cfg_vta_all_1s);\
         data = FIELD_DP32(data, VDATA, VMA, s->vma);               \
+        data = FIELD_DP32(data, VDATA, MASK_REG_FULL_UPDATE,       \
+                          s->cfg_mask_reg_full_update);            \
         tcg_gen_gvec_3_ptr(vreg_ofs(s, a->rd),                     \
                            vreg_ofs(s, 0), vreg_ofs(s, a->rs2),    \
                            tcg_env, s->cfg_ptr->vlenb,             \

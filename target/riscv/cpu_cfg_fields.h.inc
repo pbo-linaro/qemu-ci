@@ -116,6 +116,7 @@ BOOL_FIELD(rvv_ta_all_1s)
 BOOL_FIELD(rvv_ma_all_1s)
 BOOL_FIELD(rvv_vl_half_avl)
 BOOL_FIELD(rvv_vsetvl_x0_vill)
+BOOL_FIELD(rvv_mask_reg_full_update)
 /* Named features  */
 BOOL_FIELD(ext_svade)
 BOOL_FIELD(ext_zic64b)

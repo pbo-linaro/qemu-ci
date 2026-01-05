@@ -2674,6 +2674,8 @@ static const Property riscv_cpu_properties[] = {
     DEFINE_PROP_BOOL("rvv_ma_all_1s", RISCVCPU, cfg.rvv_ma_all_1s, false),
     DEFINE_PROP_BOOL("rvv_vl_half_avl", RISCVCPU, cfg.rvv_vl_half_avl, false),
     DEFINE_PROP_BOOL("rvv_vsetvl_x0_vill", RISCVCPU, cfg.rvv_vsetvl_x0_vill, false),
+    DEFINE_PROP_BOOL("rvv_mask_reg_full_update", RISCVCPU,
+                     cfg.rvv_mask_reg_full_update, false),
 
     /*
      * write_misa() is marked as experimental for now so mark
