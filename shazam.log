@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20260106055658.209029-1-joel@jms.id.au/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 17 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/16] target/riscv: tt-ascalon: Enable Zkr extension
+  [31m✗[0m [PATCH 2/16] target/riscv: tt-ascalon: Add Svadu extension
+  [31m✗[0m [PATCH 3/16] target/riscv: tt-ascalon: Add Tenstorrent mvendorid
+  [31m✗[0m [PATCH 4/16] riscv/boot: Describe discontiguous memory in boot_info
+  [31m✗[0m [PATCH 5/16] riscv/boot: Account for discontiguous memory when loading firmware
+  [31m✗[0m [PATCH 6/16] hw/riscv: Move AIA initialisation to helper file
+  [31m✗[0m [PATCH 7/16] hw/riscv/aia: Provide number of irq sources
+  [31m✗[0m [PATCH 8/16] hw/riscv: Add Tenstorrent Atlantis machine
+  [31m✗[0m [PATCH 9/16] hw/riscv/atlantis: Add PCIe controller
+  [31m✗[0m [PATCH 10/16] tests/functional/riscv64: Add tt-atlantis tests
+  [31m✗[0m [PATCH 11/16] hw/i2c: Add designware i2c controller
+  [31m✗[0m [PATCH 12/16] hw/riscv/atlantis: Integrate i2c buses
+  [31m✗[0m [PATCH 13/16] hw/riscv/atlantis: Add some i2c peripherals
+  [31m✗[0m [PATCH 14/16] hw/riscv/boot: Warn if a ELF format file is loaded as a binary
+  [31m✗[0m [PATCH 15/16] hw/riscv/boot: Provide a simple halting payload
+  [31m✗[0m [PATCH 16/16] hw/riscv/atlantis: Use halting kernel if there is no payload
+  ---
+  [31m✗[0m BADSIG: DKIM/gmail.com
+---
+Total patches: 16
+---
+Applying: target/riscv: tt-ascalon: Enable Zkr extension
+Applying: target/riscv: tt-ascalon: Add Svadu extension
+Applying: target/riscv: tt-ascalon: Add Tenstorrent mvendorid
+Applying: riscv/boot: Describe discontiguous memory in boot_info
+Patch failed at 0004 riscv/boot: Describe discontiguous memory in boot_info
+error: patch failed: include/hw/riscv/boot.h:43
+error: include/hw/riscv/boot.h: patch does not apply
+error: patch failed: hw/riscv/boot.c:69
+error: hw/riscv/boot.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
