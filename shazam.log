@@ -1,0 +1,29 @@
+Grabbing thread from lore.kernel.org/all/20260106062808.316574-1-zhenzhong.duan@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 5 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v10 1/4] hw/pci: Introduce pci_device_get_host_iommu_quirks()
+  [32m✓[0m [PATCH v10 2/4] intel_iommu_accel: Implement get_host_iommu_quirks() callback
+  [32m✓[0m [PATCH v10 3/4] vfio/listener: Bypass readonly region for dirty tracking
+  [32m✓[0m [PATCH v10 4/4] Workaround for ERRATA_772415_SPR17
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 4
+---
+Applying: hw/pci: Introduce pci_device_get_host_iommu_quirks()
+Patch failed at 0001 hw/pci: Introduce pci_device_get_host_iommu_quirks()
+error: include/hw/core/iommu.h: does not exist in index
+error: patch failed: include/hw/pci/pci.h:474
+error: include/hw/pci/pci.h: patch does not apply
+error: patch failed: hw/pci/pci.c:3032
+error: hw/pci/pci.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
