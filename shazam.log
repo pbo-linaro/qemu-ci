@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20260107130807.69870-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] target/s390x: Restrict WatchPoint API to TCG
+  [32m✓[0m [PATCH 2/18] target/s390x: Use address_space_ldl_be() in read_table_entry()
+  [32m✓[0m [PATCH 3/18] target/s390x: Use vaddr for $pc in get_next_pc()
+  [32m✓[0m [PATCH 4/18] target/s390x: Replace target_ulong -> uint64_t in gdb_write_register()
+  [32m✓[0m [PATCH 5/18] target/s390x: Remove unused 'gdbstub/helpers.h' header in helper.c
+  [32m✓[0m [PATCH 6/18] target/s390x: Replace target_ulong -> hwaddr in get_phys_page_debug()
+  [32m✓[0m [PATCH 7/18] target/s390x: Pass vaddr/hwaddr types to mmu_translate_asce()
+  [32m✓[0m [PATCH 8/18] target/s390x: Use hwaddr in mmu_real2abs()
+  [32m✓[0m [PATCH 9/18] target/s390x: Pass hwaddr to mmu_handle_skey()
+  [32m✓[0m [PATCH 10/18] target/s390x: Replace target_ulong -> vaddr in get_phys_addr_debug()
+  [32m✓[0m [PATCH 11/18] target/s390x: Use hwaddr in translate_pages()
+  [32m✓[0m [PATCH 12/18] target/s390x: Pass vaddr/hwaddr types to mmu_translate*()
+  [32m✓[0m [PATCH 13/18] target/s390x: Introduce CHSC_MAX_REQ_LEN definition
+  [32m✓[0m [PATCH 14/18] target/s390x: Simplify S390_ADAPTER_SUPPRESSIBLE definition
+  [32m✓[0m [PATCH 15/18] target/s390x: Un-inline s390_is_pv()
+  [32m✓[0m [PATCH 16/18] target/s390x: Un-inline KVM Protected Virtualization stubs
+  [32m✓[0m [PATCH 17/18] target/s390x: Add more unreachable KVM stubs
+  [32m✓[0m [PATCH 18/18] target/s390x: Build system units in common source set
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 18
+---
+Applying: target/s390x: Restrict WatchPoint API to TCG
+Applying: target/s390x: Use address_space_ldl_be() in read_table_entry()
+Applying: target/s390x: Use vaddr for $pc in get_next_pc()
+Patch failed at 0003 target/s390x: Use vaddr for $pc in get_next_pc()
+error: patch failed: target/s390x/tcg/translate.c:6405
+error: target/s390x/tcg/translate.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
