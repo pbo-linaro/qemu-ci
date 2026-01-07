@@ -172,8 +172,6 @@ extern RISCVCPUImpliedExtsRule *riscv_multi_ext_implied_rules[];
 
 #define RISCV_IMPLIED_EXTS_RULE_END -1
 
-#define MMU_USER_IDX 3
-
 #define MAX_RISCV_PMPS (64)
 #define OLD_MAX_RISCV_PMPS (16)
 #define MIN_RISCV_PMP_GRANULARITY 4
