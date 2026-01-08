@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20260108061146.95497-1-dmitry.osipenko@collabora.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 66 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v8 1/4] virtio-gpu: Remove superfluous memory_region_set_enabled()
+  [32m✓[0m [PATCH RFC v8 2/4] virtio-gpu: Validate hostmem mapping offset
+  [32m✓[0m [PATCH RFC v8 3/4] virtio-gpu: Destroy virgl resources on virtio-gpu reset
+  [32m✓[0m [PATCH RFC v8 4/4] virtio-gpu: Support mapping hostmem blobs with map_fixed
+  ---
+  [32m✓[0m Signed: DKIM/collabora.com
+---
+Total patches: 4
+---
+Applying: virtio-gpu: Remove superfluous memory_region_set_enabled()
+Applying: virtio-gpu: Validate hostmem mapping offset
+Applying: virtio-gpu: Destroy virgl resources on virtio-gpu reset
+Patch failed at 0003 virtio-gpu: Destroy virgl resources on virtio-gpu reset
+error: patch failed: hw/display/virtio-gpu-virgl.c:1273
+error: hw/display/virtio-gpu-virgl.c: patch does not apply
+error: patch failed: include/hw/virtio/virtio-gpu.h:389
+error: include/hw/virtio/virtio-gpu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
