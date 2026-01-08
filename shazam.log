@@ -1,0 +1,45 @@
+Grabbing thread from lore.kernel.org/all/20260108151650.16329-1-max.chou@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 19 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/18] target/riscv: rvv: Fix NOP_UU_B vs2 width
+  [32m✓[0m [PATCH 2/18] fpu/softfloat: Add OCP(Open Compute Project) OFP8 data type
+  [32m✓[0m [PATCH 3/18] fpu/softfloat: Add convert operations(bf16, fp32) for OFP8 data types
+  [32m✓[0m [PATCH 4/18] fpu/softfloat: Add OCP(Open Compute Project) OFP4 data type
+  [32m✓[0m [PATCH 5/18] fpu/softfloat: Add OCP FP4 E2M1 to OCP FP8 E4M3 convert operation
+  [32m✓[0m [PATCH 6/18] target/riscv: Add cfg properity for Zvfofp8min extension
+  [32m✓[0m [PATCH 7/18] target/riscv: Add implied rules for Zvfofp8min extension
+  [32m✓[0m [PATCH 8/18] target/riscv: rvv: Make vfwcvtbf16.f.f.v support OFP8 to BF16 conversion for Zvfofp8min extension
+  [32m✓[0m [PATCH 9/18] target/riscv: rvv: Make vfncvtbf16.f.f.w support BF16 to OFP8 conversion for Zvfofp8min extension
+  [32m✓[0m [PATCH 10/18] target/riscv: rvv: Add vfncvtbf16.sat.f.f.w instruction for Zvfofp8min extension
+  [32m✓[0m [PATCH 11/18] target/riscv: rvv: Add vfncvt.f.f.q and vfncvt.sat.f.f.q instructions for Zvfofp8min extension
+  [32m✓[0m [PATCH 12/18] target/riscv: Expose Zvfofp8min properity
+  [32m✓[0m [PATCH 13/18] disas/riscv: Add support of Zvfofp8min extension
+  [32m✓[0m [PATCH 14/18] target/riscv: Add cfg properity for Zvfofp4min extension
+  [32m✓[0m [PATCH 15/18] target/riscv: Add implied rules for Zvfofp4min extension
+  [32m✓[0m [PATCH 16/18] target/riscv: rvv: Add vfext.vf2 instruction for Zvfofp4min extension
+  [32m✓[0m [PATCH 17/18] target/riscv: Expose Zvfofp4min properity
+  [32m✓[0m [PATCH 18/18] disas/riscv: Add support of Zvfofp4min extension
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 18
+---
+Applying: target/riscv: rvv: Fix NOP_UU_B vs2 width
+Applying: fpu/softfloat: Add OCP(Open Compute Project) OFP8 data type
+Applying: fpu/softfloat: Add convert operations(bf16, fp32) for OFP8 data types
+Applying: fpu/softfloat: Add OCP(Open Compute Project) OFP4 data type
+Applying: fpu/softfloat: Add OCP FP4 E2M1 to OCP FP8 E4M3 convert operation
+Applying: target/riscv: Add cfg properity for Zvfofp8min extension
+Patch failed at 0006 target/riscv: Add cfg properity for Zvfofp8min extension
+error: patch failed: target/riscv/vector_helper.c:38
+error: target/riscv/vector_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
