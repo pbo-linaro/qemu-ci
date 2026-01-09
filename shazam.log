@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20260109073154.46251-1-max.chou@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 28 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/4] target/riscv: Add Zvqdotq cfg property
+  [32m✓[0m [PATCH v5 2/4] target/riscv: rvv: Add Zvqdotq support
+  [32m✓[0m [PATCH v5 3/4] target/riscv: Expose Zvqdotq extension as a cpu property
+  [32m✓[0m [PATCH v5 4/4] disas/riscv: Support the Zvqdotq extension
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 4
+---
+Applying: target/riscv: Add Zvqdotq cfg property
+Applying: target/riscv: rvv: Add Zvqdotq support
+Patch failed at 0002 target/riscv: rvv: Add Zvqdotq support
+error: patch failed: target/riscv/insn32.decode:1084
+error: target/riscv/insn32.decode: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
