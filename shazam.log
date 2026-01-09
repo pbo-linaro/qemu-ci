@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20260109164916.58713-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v5: 23 patches
+Analyzing 25 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 125 code-review messages
+Will use the latest revision: v5
+You can pick other revisions using the -vN flag
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/22] MAINTAINERS: Cover 'system/memory_ldst*.h.inc' files
+  [32m✓[0m [PATCH v5 2/22] util: Introduce ldm_p() and stm_p() load/store helpers
+  [32m✓[0m [PATCH v5 3/22] system/physmem: Inline and remove leul_to_cpu()
+  [32m✓[0m [PATCH v5 4/22] system/physmem: Convert DEBUG_SUBPAGE printf() to trace events
+  [32m✓[0m [PATCH v5 5/22] system/memory: Split MemoryRegionCache API to 'memory_cached.h'
+  [32m✓[0m [PATCH v5 6/22] system/memory: Inline address_space_stq_internal()
+  [32m✓[0m [PATCH v5 7/22] system/memory: Define address_space_ldst[W] endian variants via template
+  [32m✓[0m [PATCH v5 8/22] system/memory: Define address_space_ldst[L] endian variants via template
+  [32m✓[0m [PATCH v5 9/22] system/memory: Define address_space_ldst[Q] endian variants via template
+  [32m✓[0m [PATCH v5 10/22] system/memory: Factor address_space_ldst[M]_internal() helper out
+  [32m✓[0m [PATCH v5 11/22] system/memory: Pass device_endian argument as MemOp bit
+  [32m✓[0m [PATCH v5 12/22] system/memory: Use ldm_p() and stm_p() helpers
+  [32m✓[0m [PATCH v5 13/22] system/memory: Directly call address_space_ldst[M]_internal() helper
+  [32m✓[0m [PATCH v5 14/22] system: Allow restricting the legacy ld/st_phys() 'native-endian' API
+  [32m✓[0m [PATCH v5 15/22] system: Allow restricting legacy address_space_ldst() native-endian API
+  [32m✓[0m [PATCH v5 16/22] system: Allow restricting the legacy cpu_ld/st() 'native-endian' API
+  [32m✓[0m [PATCH v5 17/22] system: Allow restricting the legacy translator_ld() 'native-endian' API
+  [32m✓[0m [PATCH v5 18/22] system: Allow restricting the legacy tswap() 'native-endian' API
+  [32m✓[0m [PATCH v5 19/22] system: Allow restricting the legacy MO_TE* 'native-endian' definitions
+  [32m✓[0m [PATCH v5 20/22] system: Allow restricting the legacy DEVICE_NATIVE_ENDIAN definition
+  [32m✓[0m [PATCH v5 21/22] system/ioport: Declare x86-specific I/O port in little-endian order
+  [32m✓[0m [PATCH v5 22/22] system/ioport: Do not open-code address_space_ld/st_le() methods
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 22
+---
+Applying: MAINTAINERS: Cover 'system/memory_ldst*.h.inc' files
+Patch failed at 0001 MAINTAINERS: Cover 'system/memory_ldst*.h.inc' files
+error: patch failed: MAINTAINERS:3260
+error: MAINTAINERS: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
