@@ -1,0 +1,69 @@
+Grabbing thread from lore.kernel.org/all/20260111195508.106943-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 37 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 438 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v7 1/36] backends/iommufd: Introduce iommufd_backend_alloc_vdev
+  [32m✓[0m [PATCH v7 2/36] hw/arm/smmu-common: Factor out common helper functions and export
+  [32m✓[0m [PATCH v7 3/36] hw/arm/smmu-common: Make iommu ops part of SMMUState
+  [32m✓[0m [PATCH v7 4/36] hw/arm/smmuv3-accel: Introduce smmuv3 accel device
+  [32m✓[0m [PATCH v7 5/36] hw/arm/smmuv3-accel: Initialize shared system address space
+  [32m✓[0m [PATCH v7 6/36] hw/pci/pci: Move pci_init_bus_master() after adding device to bus
+  [32m✓[0m [PATCH v7 7/36] hw/pci/pci: Add optional supports_address_space() callback
+  [32m✓[0m [PATCH v7 8/36] hw/pci-bridge/pci_expander_bridge: Move TYPE_PXB_PCIE_DEV to header
+  [32m✓[0m [PATCH v7 9/36] hw/arm/smmuv3-accel: Restrict accelerated SMMUv3 to vfio-pci endpoints with iommufd
+  [32m✓[0m [PATCH v7 10/36] hw/arm/smmuv3: Implement get_viommu_cap() callback
+  [32m✓[0m [PATCH v7 11/36] hw/arm/smmuv3-accel: Add set/unset_iommu_device callback
+  [32m✓[0m [PATCH v7 12/36] hw/arm/smmuv3: propagate smmuv3_cmdq_consume() errors to caller
+  [32m✓[0m [PATCH v7 13/36] hw/arm/smmuv3-accel: Add nested vSTE install/uninstall support
+  [32m✓[0m [PATCH v7 14/36] hw/arm/smmuv3-accel: Install SMMUv3 GBPA based hwpt
+  [32m✓[0m [PATCH v7 15/36] hw/pci/pci: Introduce a callback to retrieve the MSI doorbell GPA directly
+  [32m✓[0m [PATCH v7 16/36] hw/arm/smmuv3-accel: Implement get_msi_direct_gpa callback
+  [32m✓[0m [PATCH v7 17/36] hw/arm/virt: Set msi-gpa property
+  [32m✓[0m [PATCH v7 18/36] hw/arm/smmuv3-accel: Add support to issue invalidation cmd to host
+  [32m✓[0m [PATCH v7 19/36] hw/arm/smmuv3: Initialize ID registers early during realize()
+  [32m✓[0m [PATCH v7 20/36] hw/arm/smmuv3-accel: Get host SMMUv3 hw info and validate
+  [32m✓[0m [PATCH v7 21/36] hw/pci-host/gpex: Allow to generate preserve boot config DSM #5
+  [32m✓[0m [PATCH v7 22/36] hw/arm/virt: Set PCI preserve_config for accel SMMUv3
+  [32m✓[0m [PATCH v7 23/36] tests/qtest/bios-tables-test: Prepare for IORT revison upgrade
+  [32m✓[0m [PATCH v7 24/36] hw/arm/virt-acpi-build: Add IORT RMR regions to handle MSI nested binding
+  [32m✓[0m [PATCH v7 25/36] tests/qtest/bios-tables-test: Update IORT blobs after revision upgrade
+  [32m✓[0m [PATCH v7 26/36] hw/arm/smmuv3: Block migration when accel is enabled
+  [32m✓[0m [PATCH v7 27/36] hw/arm/smmuv3: Add accel property for SMMUv3 device
+  [32m✓[0m [PATCH v7 28/36] hw/arm/smmuv3-accel: Add a property to specify RIL support
+  [32m✓[0m [PATCH v7 29/36] hw/arm/smmuv3-accel: Add support for ATS
+  [32m✓[0m [PATCH v7 30/36] hw/arm/smmuv3-accel: Add property to specify OAS bits
+  [32m✓[0m [PATCH v7 31/36] backends/iommufd: Retrieve PASID width from iommufd_backend_get_device_info()
+  [32m✓[0m [PATCH v7 32/36] backends/iommufd: Add get_pasid_info() callback
+  [32m✓[0m [PATCH v7 33/36] hw/pci: Add helper to insert PCIe extended capability at a fixed offset
+  [32m✓[0m [PATCH v7 34/36] hw/pci: Factor out common PASID capability initialization
+  [32m✓[0m [PATCH v7 35/36] hw/vfio/pci: Synthesize PASID capability for vfio-pci devices
+  [32m✓[0m [PATCH v7 36/36] hw/arm/smmuv3-accel: Make SubstreamID support configurable
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 36
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Nicolin Chen <nicolinc@nvidia.com>
+     Msg From: Nicolin Chen via <qemu-devel@nongnu.org>
+    ! Trailer: Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+     Msg From: Jonathan Cameron via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_vdev
+Patch failed at 0001 backends/iommufd: Introduce iommufd_backend_alloc_vdev
+error: patch failed: backends/iommufd.c:472
+error: backends/iommufd.c: patch does not apply
+error: patch failed: backends/trace-events:22
+error: backends/trace-events: patch does not apply
+error: patch failed: include/system/iommufd.h:48
+error: include/system/iommufd.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
