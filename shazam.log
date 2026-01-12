@@ -1,0 +1,33 @@
+Grabbing thread from lore.kernel.org/all/20260112114503.1174330-1-dtalexundeer@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/5] vhost-user.rst: specify vhost-user back-end action on GET_VRING_BASE
+  [32m✓[0m [PATCH v5 2/5] vhost-user: introduce protocol feature for skip drain on GET_VRING_BASE
+  [32m✓[0m [PATCH v5 3/5] vmstate: introduce VMSTATE_VBUFFER_UINT64
+    + Acked-by: Peter Xu <peterx@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v5 4/5] vhost: add vmstate for inflight region with inner buffer
+  [32m✓[0m [PATCH v5 5/5] vhost-user-blk: support inter-host inflight migration
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 5
+---
+Applying: vhost-user.rst: specify vhost-user back-end action on GET_VRING_BASE
+Applying: vhost-user: introduce protocol feature for skip drain on GET_VRING_BASE
+Applying: vmstate: introduce VMSTATE_VBUFFER_UINT64
+Applying: vhost: add vmstate for inflight region with inner buffer
+Patch failed at 0004 vhost: add vmstate for inflight region with inner buffer
+error: patch failed: hw/virtio/vhost.c:2028
+error: hw/virtio/vhost.c: patch does not apply
+error: patch failed: include/hw/virtio/vhost.h:596
+error: include/hw/virtio/vhost.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
