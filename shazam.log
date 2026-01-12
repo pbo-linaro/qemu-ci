@@ -1,0 +1,80 @@
+Grabbing thread from lore.kernel.org/all/20260112132259.76855-1-anisinha@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 33 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 48 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/32] i386/kvm: avoid installing duplicate msr entries in msr_handlers
+  [32m✓[0m [PATCH v2 2/32] hw/accel: add a per-accelerator callback to change VM accelerator handle
+  [32m✓[0m [PATCH v2 3/32] system/physmem: add helper to reattach existing memory after KVM VM fd change
+  [32m✓[0m [PATCH v2 4/32] accel/kvm: add changes required to support KVM VM file descriptor change
+  [32m✓[0m [PATCH v2 5/32] accel/kvm: mark guest state as unprotected after vm file descriptor change
+  [32m✓[0m [PATCH v2 6/32] accel/kvm: add a notifier to indicate KVM VM file descriptor has changed
+  [32m✓[0m [PATCH v2 7/32] accel/kvm: add notifier to inform that the KVM VM file fd is about to be changed
+  [32m✓[0m [PATCH v2 8/32] i386/kvm: unregister smram listeners prior to vm file descriptor change
+  [32m✓[0m [PATCH v2 9/32] kvm/i386: implement architecture support for kvm file descriptor change
+  [32m✓[0m [PATCH v2 10/32] hw/i386: refactor x86_bios_rom_init for reuse in confidential guest reset
+  [32m✓[0m [PATCH v2 11/32] kvm/i386: reload firmware for confidential guest reset
+  [32m✓[0m [PATCH v2 12/32] accel/kvm: rebind current VCPUs to the new KVM VM file descriptor upon reset
+  [32m✓[0m [PATCH v2 13/32] i386/tdx: refactor TDX firmware memory initialization code into a new function
+  [32m✓[0m [PATCH v2 14/32] i386/tdx: finalize TDX guest state upon reset
+  [32m✓[0m [PATCH v2 15/32] i386/tdx: add a pre-vmfd change notifier to reset tdx state
+  [32m✓[0m [PATCH v2 16/32] i386/sev: add migration blockers only once
+  [32m✓[0m [PATCH v2 17/32] i386/sev: add notifiers only once
+  [32m✓[0m [PATCH v2 18/32] i386/sev: free existing launch update data and kernel hashes data on init
+  [32m✓[0m [PATCH v2 19/32] i386/sev: add support for confidential guest reset
+  [32m✓[0m [PATCH v2 20/32] hw/vfio: generate new file fd for pseudo device and rebind existing descriptors
+  [32m✓[0m [PATCH v2 21/32] kvm/i8254: refactor pit initialization into a helper
+  [32m✓[0m [PATCH v2 22/32] kvm/i8254: add support for confidential guest reset
+  [32m✓[0m [PATCH v2 23/32] hw/hyperv/vmbus: add support for confidential guest reset
+  [32m✓[0m [PATCH v2 24/32] accel/kvm: add a per-confidential class callback to unlock guest state
+  [32m✓[0m [PATCH v2 25/32] kvm/xen-emu: re-initialize capabilities during confidential guest reset
+  [32m✓[0m [PATCH v2 26/32] kvm/xen_evtchn: add support for confidential guest reset
+  [32m✓[0m [PATCH v2 27/32] ppc/openpic: create a new openpic device and reattach mem region on coco reset
+  [32m✓[0m [PATCH v2 28/32] kvm/vcpu: add notifiers to inform vcpu file descriptor change
+  [32m✓[0m [PATCH v2 29/32] kvm/i386/apic: set local apic after vcpu file descriptors changed
+  [32m✓[0m [PATCH v2 30/32] kvm/clock: add support for confidential guest reset
+  [32m✓[0m [PATCH v2 31/32] hw/machine: introduce machine specific option 'x-change-vmfd-on-reset'
+  [32m✓[0m [PATCH v2 32/32] tests/functional/x86_64: add functional test to exercise vm fd change on reset
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 32
+---
+Applying: i386/kvm: avoid installing duplicate msr entries in msr_handlers
+Applying: hw/accel: add a per-accelerator callback to change VM accelerator handle
+Applying: system/physmem: add helper to reattach existing memory after KVM VM fd change
+Applying: accel/kvm: add changes required to support KVM VM file descriptor change
+Applying: accel/kvm: mark guest state as unprotected after vm file descriptor change
+Applying: accel/kvm: add a notifier to indicate KVM VM file descriptor has changed
+Applying: accel/kvm: add notifier to inform that the KVM VM file fd is about to be changed
+Applying: i386/kvm: unregister smram listeners prior to vm file descriptor change
+Applying: kvm/i386: implement architecture support for kvm file descriptor change
+Applying: hw/i386: refactor x86_bios_rom_init for reuse in confidential guest reset
+Applying: kvm/i386: reload firmware for confidential guest reset
+Applying: accel/kvm: rebind current VCPUs to the new KVM VM file descriptor upon reset
+Applying: i386/tdx: refactor TDX firmware memory initialization code into a new function
+Applying: i386/tdx: finalize TDX guest state upon reset
+Applying: i386/tdx: add a pre-vmfd change notifier to reset tdx state
+Applying: i386/sev: add migration blockers only once
+Applying: i386/sev: add notifiers only once
+Applying: i386/sev: free existing launch update data and kernel hashes data on init
+Applying: i386/sev: add support for confidential guest reset
+Applying: hw/vfio: generate new file fd for pseudo device and rebind existing descriptors
+Applying: kvm/i8254: refactor pit initialization into a helper
+Applying: kvm/i8254: add support for confidential guest reset
+Applying: hw/hyperv/vmbus: add support for confidential guest reset
+Applying: accel/kvm: add a per-confidential class callback to unlock guest state
+Applying: kvm/xen-emu: re-initialize capabilities during confidential guest reset
+Applying: kvm/xen_evtchn: add support for confidential guest reset
+Applying: ppc/openpic: create a new openpic device and reattach mem region on coco reset
+Patch failed at 0027 ppc/openpic: create a new openpic device and reattach mem region on coco reset
+error: patch failed: hw/intc/openpic_kvm.c:197
+error: hw/intc/openpic_kvm.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
