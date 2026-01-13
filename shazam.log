@@ -1,0 +1,30 @@
+Grabbing thread from lore.kernel.org/all/20260113113754.1189-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/4] linux-headers: Update to Linux v6.19-rc1
+  [32m✓[0m [PATCH v2 2/4] hw/net/virtio-net: Adapt hash handling to updated UAPI
+  [32m✓[0m [PATCH v2 3/4] hw/vfio: Add helper to retrieve device feature
+  [32m✓[0m [PATCH v2 4/4] hw/vfio/region: Create dmabuf for PCI BAR per region
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 4
+---
+Applying: linux-headers: Update to Linux v6.19-rc1
+Applying: hw/net/virtio-net: Adapt hash handling to updated UAPI
+Applying: hw/vfio: Add helper to retrieve device feature
+Patch failed at 0003 hw/vfio: Add helper to retrieve device feature
+error: patch failed: hw/vfio/device.c:516
+error: hw/vfio/device.c: patch does not apply
+error: patch failed: include/hw/vfio/vfio-device.h:259
+error: include/hw/vfio/vfio-device.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
