@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20260114175007.90845-1-osteffen@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/5] hw/acpi: Make BIOS linker optional
+  [32m✓[0m [PATCH v4 2/5] hw/acpi: Add standalone function to build MADT
+  [32m✓[0m [PATCH v4 3/5] igvm: Add common function for finding parameter entries
+  [32m✓[0m [PATCH v4 4/5] igvm: Pass machine state to IGVM file processing
+  [32m✓[0m [PATCH v4 5/5] igvm: Fill MADT IGVM parameter field
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: hw/acpi: Make BIOS linker optional
+Applying: hw/acpi: Add standalone function to build MADT
+Applying: igvm: Add common function for finding parameter entries
+Applying: igvm: Pass machine state to IGVM file processing
+Patch failed at 0004 igvm: Pass machine state to IGVM file processing
+error: patch failed: backends/igvm-cfg.c:51
+error: backends/igvm-cfg.c: patch does not apply
+error: patch failed: include/system/igvm-cfg.h:12
+error: include/system/igvm-cfg.h: patch does not apply
+error: patch failed: include/system/igvm.h:14
+error: include/system/igvm.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
