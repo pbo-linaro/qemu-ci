@@ -1,0 +1,73 @@
+Grabbing thread from lore.kernel.org/all/20260116135235.38092-1-mohamed@unpredictable.fr/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 32 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 884 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v16 1/26] target/arm/kvm: add constants for new PSCI versions
+    + Reviewed-by: Eric Auger <eric.auger@redhat.com> ([32m✓[0m DKIM/redhat.com)
+  [32m✓[0m [PATCH v16 2/26] accel/system: Introduce hwaccel_enabled() helper
+  [32m✓[0m [PATCH v16 3/26] qtest: hw/arm: virt: skip ACPI test for ITS off
+  [32m✓[0m [PATCH v16 4/26] hw/arm: virt: add GICv2m for the case when ITS is not available
+  [32m✓[0m [PATCH v16 5/26] tests: data: update AArch64 ACPI tables
+  [32m✓[0m [PATCH v16 6/26] hw/arm: virt: cleanly fail on attempt to use the platform vGIC together with ITS
+  [32m✓[0m [PATCH v16 7/26] hw: arm: virt: rework MSI-X configuration
+  [32m✓[0m [PATCH v16 8/26] docs: arm: update virt machine model description
+  [32m✓[0m [PATCH v16 9/26] whpx: Move around files before introducing AArch64 support
+  [32m✓[0m [PATCH v16 10/26] whpx: reshuffle common code
+  [32m✓[0m [PATCH v16 11/26] whpx: ifdef out winhvemulation on non-x86_64
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+  [32m✓[0m [PATCH v16 12/26] whpx: common: add WHPX_INTERCEPT_DEBUG_TRAPS define
+  [32m✓[0m [PATCH v16 13/26] hw, target, accel: whpx: change apic_in_platform to kernel_irqchip
+  [32m✓[0m [PATCH v16 14/26] whpx: interrupt controller support
+  [32m✓[0m [PATCH v16 15/26] whpx: add arm64 support
+  [32m✓[0m [PATCH v16 16/26] whpx: change memory management logic
+  [32m✓[0m [PATCH v16 17/26] target/arm: cpu: mark WHPX as supporting PSCI 1.3
+  [32m✓[0m [PATCH v16 18/26] whpx: arm64: clamp down IPA size
+  [32m✓[0m [PATCH v16 19/26] hw/arm, accel/hvf, whpx: unify get_physical_address_range between WHPX and HVF
+  [32m✓[0m [PATCH v16 20/26] whpx: arm64: implement -cpu host
+  [32m✓[0m [PATCH v16 21/26] target/arm: whpx: instantiate GIC early
+  [32m✓[0m [PATCH v16 22/26] whpx: arm64: gicv3: add migration blocker
+  [32m✓[0m [PATCH v16 23/26] whpx: enable arm64 builds
+  [32m✓[0m [PATCH v16 24/26] whpx: arm64: check for physical address width after WHPX availability
+  [32m✓[0m [PATCH v16 25/26] whpx: arm64: add partition-wide reset on the reboot path
+  [32m✓[0m [PATCH v16 26/26] MAINTAINERS: update the list of maintained files for WHPX
+  ---
+  [32m✓[0m Signed: DKIM/unpredictable.fr
+---
+Total patches: 26
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Stefan Weil <sw@weilnetz.de>
+     Msg From: Stefan Weil via <qemu-devel@nongnu.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/arm/kvm: add constants for new PSCI versions
+Applying: accel/system: Introduce hwaccel_enabled() helper
+Applying: qtest: hw/arm: virt: skip ACPI test for ITS off
+Applying: hw/arm: virt: add GICv2m for the case when ITS is not available
+Applying: tests: data: update AArch64 ACPI tables
+Applying: hw/arm: virt: cleanly fail on attempt to use the platform vGIC together with ITS
+Applying: hw: arm: virt: rework MSI-X configuration
+Applying: docs: arm: update virt machine model description
+Applying: whpx: Move around files before introducing AArch64 support
+Applying: whpx: reshuffle common code
+Applying: whpx: ifdef out winhvemulation on non-x86_64
+Applying: whpx: common: add WHPX_INTERCEPT_DEBUG_TRAPS define
+Applying: hw, target, accel: whpx: change apic_in_platform to kernel_irqchip
+Applying: whpx: interrupt controller support
+Applying: whpx: add arm64 support
+Applying: whpx: change memory management logic
+Applying: target/arm: cpu: mark WHPX as supporting PSCI 1.3
+Applying: whpx: arm64: clamp down IPA size
+Applying: hw/arm, accel/hvf, whpx: unify get_physical_address_range between WHPX and HVF
+Patch failed at 0019 hw/arm, accel/hvf, whpx: unify get_physical_address_range between WHPX and HVF
+error: patch failed: include/system/hvf_int.h:57
+error: include/system/hvf_int.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
