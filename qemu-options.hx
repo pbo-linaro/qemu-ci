@@ -6352,7 +6352,7 @@ SRST
 
             CN=laptop.example.com,O=Example Home,L=London,ST=London,C=GB
 
-    ``-object iothread,id=id,poll-max-ns=poll-max-ns,poll-grow=poll-grow,poll-shrink=poll-shrink,aio-max-batch=aio-max-batch``
+    ``-object iothread,id=id,attached=attached,poll-max-ns=poll-max-ns,poll-grow=poll-grow,poll-shrink=poll-shrink,aio-max-batch=aio-max-batch``
         Creates a dedicated event loop thread that devices can be
         assigned to. This is known as an IOThread. By default device
         emulation happens in vCPU threads or the main event loop thread.
@@ -6375,6 +6375,13 @@ SRST
         a short time. The algorithm's default parameters are suitable
         for many cases but can be adjusted based on knowledge of the
         workload and/or host device latency.
+
+        The ``attached`` parameter is a flag to show whether the iothread
+        is attached to an actual device(for example virtio-blk). In hotplug
+        scenario, user can add multiple "-object iothread" and multiple
+        devices (like virtio-blk). When user hotunplug the devices can keep
+        the iothreads as a thread pool, following the new hotplug devices can
+        attach to the released iothread.
 
         The ``poll-max-ns`` parameter is the maximum number of
         nanoseconds to busy wait for events. Polling can be disabled by
