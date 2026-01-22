@@ -1,0 +1,41 @@
+Grabbing thread from lore.kernel.org/all/20260122221106.57184-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 12 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/11] target/ppc: Inline cpu_ldl_data_ra() calls in ICBI helpers
+  [32m✓[0m [PATCH v5 2/11] target/ppc: Inline cpu_ld/st_mmuidx_ra() calls in memory helpers
+  [32m✓[0m [PATCH v5 3/11] target/ppc: Inline cpu_ld/st_data_ra() calls in do_hash()
+  [32m✓[0m [PATCH v5 4/11] target/ppc: Expect page translation hash addresses to be aligned
+  [32m✓[0m [PATCH v5 5/11] target/ppc: Introduce the mo_endian_env() helper
+  [32m✓[0m [PATCH v5 6/11] target/ppc: Introduce ppc_code_endian() helper
+  [32m✓[0m [PATCH v5 7/11] target/ppc: Inline need_byteswap() and replace translator_ldl_swap()
+  [32m✓[0m [PATCH v5 8/11] target/ppc: Check endianness via env in ppc_disas_set_info()
+  [32m✓[0m [PATCH v5 9/11] target/ppc: Introduce ppc_env_is_little_endian() helper
+  [32m✓[0m [PATCH v5 10/11] target/ppc: Check endianness at runtime in mo_endian_env()
+  [32m✓[0m [PATCH v5 11/11] target/ppc: Inline cpu_ldl_code() call in ppc_ldl_code()
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 11
+---
+Applying: target/ppc: Inline cpu_ldl_data_ra() calls in ICBI helpers
+Applying: target/ppc: Inline cpu_ld/st_mmuidx_ra() calls in memory helpers
+Applying: target/ppc: Inline cpu_ld/st_data_ra() calls in do_hash()
+Applying: target/ppc: Expect page translation hash addresses to be aligned
+Applying: target/ppc: Introduce the mo_endian_env() helper
+Applying: target/ppc: Introduce ppc_code_endian() helper
+Applying: target/ppc: Inline need_byteswap() and replace translator_ldl_swap()
+Applying: target/ppc: Check endianness via env in ppc_disas_set_info()
+Applying: target/ppc: Introduce ppc_env_is_little_endian() helper
+Patch failed at 0009 target/ppc: Introduce ppc_env_is_little_endian() helper
+error: patch failed: target/ppc/mem_helper.c:420
+error: target/ppc/mem_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
