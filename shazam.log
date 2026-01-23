@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20260123062042.568703-1-vivek.kasireddy@intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 59 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/8] virtio-gpu: Recreate the resource's dmabuf if new backing is attached
+  [32m✓[0m [PATCH v4 2/8] virtio-gpu: Find hva for Guest's DMA addr associated with a ram device
+  [32m✓[0m [PATCH v4 3/8] vfio: Document vfio_device_get_region_info()
+  [32m✓[0m [PATCH v4 4/8] vfio/region: Add a helper to get region index from memory region
+  [32m✓[0m [PATCH v4 5/8] vfio/device: Add a helper to lookup VFIODevice from memory region
+  [32m✓[0m [PATCH v4 6/8] vfio/device: Add support for creating dmabuf from multiple ranges
+  [32m✓[0m [PATCH v4 7/8] virtio-gpu: Rename udmabuf files and helpers to dmabuf
+  [32m✓[0m [PATCH v4 8/8] virtio-gpu-dmabuf: Create dmabuf for blobs associated with VFIO devices
+  ---
+  [32m✓[0m Signed: DKIM/intel.com
+---
+Total patches: 8
+---
+Applying: virtio-gpu: Recreate the resource's dmabuf if new backing is attached
+Applying: virtio-gpu: Find hva for Guest's DMA addr associated with a ram device
+Applying: vfio: Document vfio_device_get_region_info()
+Patch failed at 0003 vfio: Document vfio_device_get_region_info()
+error: patch failed: include/hw/vfio/vfio-device.h:275
+error: include/hw/vfio/vfio-device.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
