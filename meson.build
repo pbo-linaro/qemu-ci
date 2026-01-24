@@ -4,12 +4,13 @@ project('qemu', ['c'], meson_version: '>=1.5.0',
                           'rust_std=2021', 'build.rust_std=2021'],
         version: files('VERSION'))
 
-add_test_setup('quick', exclude_suites: ['slow', 'thorough'], is_default: true,
+add_test_setup('quick', exclude_suites: ['slow', 'thorough'],
                env: ['RUST_BACKTRACE=1'])
 add_test_setup('slow', exclude_suites: ['thorough'],
                env: ['G_TEST_SLOW=1', 'SPEED=slow', 'RUST_BACKTRACE=1'])
 add_test_setup('thorough',
-               env: ['G_TEST_SLOW=1', 'SPEED=thorough', 'RUST_BACKTRACE=1'])
+               env: ['G_TEST_SLOW=1', 'SPEED=thorough', 'RUST_BACKTRACE=1'],
+               is_default: true)
 
 meson.add_postconf_script(find_program('scripts/symlink-install-tree.py'))
 
@@ -359,6 +360,10 @@ if host_os == 'darwin'
   # won't work when we're compiling with gcc as a C compiler.
   if compiler.get_id() == 'gcc'
     qemu_common_flags += '-DOS_OBJECT_USE_OBJC=0'
+  elif compiler.get_id() == 'clang'
+    # error: 'strchrnul' is only available on macOS 15.4 or newer
+    # [-Werror,-Wunguarded-availability-new]
+    qemu_common_flags += ['-Wno-unguarded-availability-new']
   endif
 elif host_os == 'sunos'
   # needed for CMSG_ macros in sys/socket.h
@@ -368,6 +373,8 @@ elif host_os == 'sunos'
 elif host_os == 'haiku'
   qemu_common_flags += ['-DB_USE_POSITIVE_POSIX_ERRORS', '-D_BSD_SOURCE', '-fPIC']
 elif host_os == 'windows'
+  # spice headers report a warning with clang
+  qemu_common_flags += ['-Wno-pragma-pack']
   # plugins use delaylib, and clang needs to be used with lld to make it work.
   if compiler.get_id() == 'clang' and compiler.get_linker_id() != 'ld.lld'
     error('On windows, you need to use lld with clang - use msys2 clang64/clangarm64 env')
@@ -3770,6 +3777,8 @@ subdir('chardev')
 subdir('fsdev')
 subdir('dump')
 
+common_ss.add(files('sanitizer.c'))
+
 if have_block
   block_ss.add(files(
     'block.c',
@@ -3960,10 +3969,6 @@ if enable_modules
     if target.endswith('-softmmu')
       config_target = config_target_mak[target]
       arch = config_target['TARGET_NAME'] == 'sparc64' ? 'sparc64' : config_target['TARGET_BASE_ARCH']
-      if not hw_arch.has_key(arch)
-        continue
-      endif
-
       config_devices_mak = target + '-config-devices.mak'
       modinfo_src = custom_target('modinfo-' + target + '.c',
                                   output: 'modinfo-' + target + '.c',
@@ -3973,6 +3978,11 @@ if enable_modules
 
       modinfo_lib = static_library('modinfo-' + target + '.c', modinfo_src)
       modinfo_dep = declare_dependency(link_with: modinfo_lib)
+
+      if not hw_arch.has_key(arch)
+        hw_arch += {arch: ss.source_set()}
+      endif
+
       hw_arch[arch].add(modinfo_dep)
     endif
   endforeach
