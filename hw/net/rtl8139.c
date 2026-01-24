@@ -745,9 +745,16 @@ static void rtl8139_write_buffer(RTL8139State *s, const void *buf, int size)
 {
     PCIDevice *d = PCI_DEVICE(s);
 
-    if (s->RxBufAddr + size > s->RxBufferSize)
+    if (size < 0 || s->RxBufAddr > s->RxBufferSize - (uint32_t)size)
     {
-        int wrapped = MOD2(s->RxBufAddr + size, s->RxBufferSize);
+        /* Calculate wrapped position safely without overflow.
+         * Use modulo on each term to prevent overflow.
+         * RxBufferSize is always a power of 2, so MOD2 is safe. */
+        int wrapped = MOD2((uint32_t)s->RxBufAddr, s->RxBufferSize) +
+                    MOD2((uint32_t)size, s->RxBufferSize);
+        if (wrapped >= s->RxBufferSize) {
+            wrapped -= s->RxBufferSize;
+        }
 
         /* write packet data */
         if (wrapped && !(s->RxBufferSize < 65536 && rtl8139_RxWrap(s)))
