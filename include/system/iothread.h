@@ -32,6 +32,7 @@ struct IOThread {
     QemuSemaphore init_done_sem; /* is thread init done? */
     bool stopping;              /* has iothread_stop() been called? */
     bool running;               /* should iothread_run() continue? */
+    bool attached;              /* Whether or not attached to device */
     int thread_id;
 
     /* AioContext poll parameters */
