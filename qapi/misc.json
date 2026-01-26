@@ -76,6 +76,15 @@
 #
 # @thread-id: ID of the underlying host thread
 #
+# @attached: The attached parameter is a flag indicating whether
+#     the IOThread is currently associated with an active device
+#     (e.g., virtio-blk).  In hotplug scenarios, users can
+#     pre-allocate multiple iothread objects to serve as a persistent
+#     thread pool.  When a device is hot-unplugged, the corresponding
+#     IOThread is released but remains available, allowing subsequent
+#     hot-plugged devices to attach to and reuse the existing thread.
+#     (since 12.0)
+#
 # @poll-max-ns: maximum polling time in ns, 0 means polling is
 #     disabled (since 2.9)
 #
@@ -93,6 +102,7 @@
 { 'struct': 'IOThreadInfo',
   'data': {'id': 'str',
            'thread-id': 'int',
+           'attached': 'bool',
            'poll-max-ns': 'int',
            'poll-grow': 'int',
            'poll-shrink': 'int',
@@ -118,6 +128,7 @@
 #              {
 #                 "id":"iothread0",
 #                 "thread-id":3134,
+#                 "attached":false,
 #                 "poll-max-ns":32768,
 #                 "poll-grow":0,
 #                 "poll-shrink":0,
@@ -126,6 +137,7 @@
 #              {
 #                 "id":"iothread1",
 #                 "thread-id":3135,
+#                 "attached":true,
 #                 "poll-max-ns":32768,
 #                 "poll-grow":0,
 #                 "poll-shrink":0,
