@@ -94,6 +94,7 @@ void iothread_stop(IOThread *iothread)
         return;
     }
     iothread->stopping = true;
+    iothread->attached = false;
     aio_bh_schedule_oneshot(iothread->ctx, iothread_stop_bh, iothread);
     qemu_thread_join(&iothread->thread);
 }
@@ -198,6 +199,9 @@ static void iothread_init(EventLoopBase *base, Error **errp)
      * it's not used
      */
     iothread_init_gcontext(iothread, thread_name);
+
+    /* Clear iothread attached flag for init gcontext */
+    iothread->attached = false;
 
     iothread_set_aio_context_params(base, &local_error);
     if (local_error) {
@@ -336,6 +340,7 @@ char *iothread_get_id(IOThread *iothread)
 
 AioContext *iothread_get_aio_context(IOThread *iothread)
 {
+    iothread->attached = true;
     return iothread->ctx;
 }
 
