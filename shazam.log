@@ -1,0 +1,65 @@
+Grabbing thread from lore.kernel.org/all/20260127182516.289834-1-marcandre.lureau@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 44 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/43] audio/dbus: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 2/43] audio/spice: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 3/43] audio/wav: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 4/43] audio/noaudio: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 5/43] audio/alsa: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 6/43] audio/oss: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 7/43] audio/pa: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 8/43] audio/sdl: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 9/43] audio/pw: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 10/43] audio/jack: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 11/43] audio/sndio: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 12/43] audio/coreaudio: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 13/43] audio/dsound: convert to QOM lifecycle methods
+  [32m✓[0m [PATCH 14/43] audio: remove audio_driver init/fini/next
+  [32m✓[0m [PATCH 15/43] audio: remove audio_driver
+  [32m✓[0m [PATCH 16/43] audio: move pcm_ops into AudioMixengBackendClass
+  [32m✓[0m [PATCH 17/43] audio: constify some add_capture() arguments
+  [32m✓[0m [PATCH 18/43] audio/alsa: replace custom logging with error_report and trace events
+  [32m✓[0m [PATCH 19/43] audio/coreaudio: replace custom logging with error_report
+  [32m✓[0m [PATCH 20/43] audio/dbus: remove unused AUDIO_CAP macro
+  [32m✓[0m [PATCH 21/43] audio/dsound: replace custom logging with error_report & trace
+  [32m✓[0m [PATCH 22/43] audio/jack: replace custom logging with report & trace
+  [32m✓[0m [PATCH 23/43] audio/noaudio: remove unused AUDIO_CAP macro
+  [32m✓[0m [PATCH 24/43] audio/oss: replace custom logging with report & trace
+  [32m✓[0m [PATCH 25/43] audio/pa: replace custom logging with report & trace
+  [32m✓[0m [PATCH 26/43] audio/pw: replace custom logging with error_report
+  [32m✓[0m [PATCH 27/43] audio/sdl: replace custom logging with error_report
+  [32m✓[0m [PATCH 28/43] audio/sndio: replace custom logging with error_report
+  [32m✓[0m [PATCH 29/43] audio/spice: remove unused AUDIO_CAP macro
+  [32m✓[0m [PATCH 30/43] audio/wav: replace custom logging with error_report
+  [32m✓[0m [PATCH 31/43] audio/mixeng: replace redundant pcm_info fields with AudioFormat
+  [32m✓[0m [PATCH 32/43] audio: replace int endianness with bool big_endian in audsettings
+  [32m✓[0m [PATCH 33/43] audio: replace ldebug with trace events
+  [32m✓[0m [PATCH 34/43] audio: rework DEBUG_POLL
+  [32m✓[0m [PATCH 35/43] audio: replace DEBUG_CAPTURE with traces
+  [32m✓[0m [PATCH 36/43] audio: replace DEBUG_OUT with traces
+  [32m✓[0m [PATCH 37/43] audio: replace DEBUG_AUDIO with trace
+  [32m✓[0m [PATCH 38/43] tests/audio: add an invalid settings test
+  [32m✓[0m [PATCH 39/43] audio: rework invalid audsettings error
+  [32m✓[0m [PATCH 40/43] audio: rework audio_bug()
+  [32m✓[0m [PATCH 41/43] audio: replace remaining dolog() and AUD_log
+  [32m✓[0m [PATCH 42/43] audio: remove AUD_log/ldebug
+  [32m✓[0m [PATCH 43/43] audio: remove AudioMixengBackendClass.name
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 43
+---
+Applying: audio/dbus: convert to QOM lifecycle methods
+Patch failed at 0001 audio/dbus: convert to QOM lifecycle methods
+error: patch failed: audio/dbusaudio.c:48
+error: audio/dbusaudio.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
