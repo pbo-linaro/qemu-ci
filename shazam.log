@@ -1,0 +1,38 @@
+Grabbing thread from lore.kernel.org/all/cover.1769517768.git.chao.liu.zevorn@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 26 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC v3 1/7] target/riscv: deprecate 'debug' CPU property
+  [32m✓[0m [PATCH RFC v3 2/7] target/riscv: add sdext debug CSRs state
+  [32m✓[0m [PATCH RFC v3 3/7] target/riscv: add sdext Debug Mode helpers
+  [32m✓[0m [PATCH RFC v3 4/7] target/riscv: add dret instruction
+  [32m✓[0m [PATCH RFC v3 5/7] target/riscv: add sdext enter Debug Mode on ebreak
+  [32m✓[0m [PATCH RFC v3 6/7] target/riscv: add sdext single-step support
+  [32m✓[0m [PATCH RFC v3 7/7] target/riscv: add sdtrig trigger action=debug mode
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 7
+---
+Applying: target/riscv: deprecate 'debug' CPU property
+Applying: target/riscv: add sdext debug CSRs state
+Applying: target/riscv: add sdext Debug Mode helpers
+Applying: target/riscv: add dret instruction
+Applying: target/riscv: add sdext enter Debug Mode on ebreak
+Applying: target/riscv: add sdext single-step support
+Patch failed at 0006 target/riscv: add sdext single-step support
+error: patch failed: include/exec/translation-block.h:64
+error: include/exec/translation-block.h: patch does not apply
+error: patch failed: target/riscv/cpu.h:712
+error: target/riscv/cpu.h: patch does not apply
+error: patch failed: target/riscv/tcg/tcg-cpu.c:193
+error: target/riscv/tcg/tcg-cpu.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
