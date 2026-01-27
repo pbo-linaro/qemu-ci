@@ -138,6 +138,103 @@ abi_ulong loader_build_argptr(int envc, int argc, abi_ulong sp,
     return sp;
 }
 
+/**
+ * Prepares script files for execution.
+ *
+ * Checks whether the given file is a script, i.e. starts with a shebang (#!).
+ * If so, the first line is parsed to extract the interpreter name and (if
+ * given) the single argument and bprm is updated accordingly.
+ *
+ * Returns 0 on success, 1 if the file is not a script, <0 for errors.
+ */
+int load_script_file(const char *filename, struct linux_binprm *bprm)
+{
+    int retval, fd;
+    char *i_name = NULL;
+    char **new_argv = NULL;
+    char *cp;
+    char buf[BPRM_BUF_SIZE];
+
+    /* Check if it is a script */
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) {
+        return fd;
+    }
+
+    retval = read(fd, buf, BPRM_BUF_SIZE);
+    close(fd);
+
+    if (retval == -1) {
+        return retval;
+    }
+
+     /* if we have less than 2 bytes, we can guess it is not executable */
+    if (retval < 2) {
+        return -ENOEXEC;
+    }
+
+    /*
+     * Extract interpreter and argument (if given).
+     *
+     * Adapted from the kernel:
+     * https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/fs/binfmt_script.c
+     */
+    if ((buf[0] == '#') && (buf[1] == '!')) {
+        /* Ensure buffer is 0-terminated. */
+        buf[BPRM_BUF_SIZE - 1] = '\0';
+        /* Find end of first line, we might have read more than one... */
+        cp = strchr(buf, '\n');
+        /* ... or the first line might have been truncated. */
+        if (cp == NULL) {
+            cp = buf + BPRM_BUF_SIZE - 1;
+        }
+        /* Truncate buffer to first line. */
+        *cp = '\0';
+        /* Truncate trailing whitespace on the first line. */
+        while (cp > buf) {
+            cp--;
+            if ((*cp == ' ') || (*cp == '\t')) {
+                *cp = '\0';
+            } else {
+                break;
+            }
+        }
+        /* Skip (optional) whitespace between shebang and interpreter name. */
+        for (cp = buf + 2; (*cp == ' ') || (*cp == '\t'); cp++) {
+            /* nothing */ ;
+        }
+        if (*cp == '\0') {
+            return -ENOEXEC; /* No interpreter name found */
+        }
+        /* We now have identified the beginning of the interpreter name. */
+        i_name = cp;
+
+        /*
+         * Skip over the interpreter name till we hit end of string or
+         * whitespace (that may separate an optional argument).
+         */
+        for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++) {
+            /* nothing */ ;
+        }
+        /* Mark the end of the interpreter name and skip whitespace behind it. */
+        while ((*cp == ' ') || (*cp == '\t')) {
+            *cp++ = '\0';
+        }
+
+        /* We now have identified the beginning of the argument. */
+        if (*cp) {
+            new_argv = g_new0(char*, 1 + 1);
+            new_argv[0] = g_strdup(cp);
+        }
+        bprm->argv = new_argv;
+        bprm->filename = g_strdup(i_name);
+
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 int loader_exec(int fdexec, const char *filename, char **argv, char **envp,
                 struct image_info *infop, struct linux_binprm *bprm)
 {

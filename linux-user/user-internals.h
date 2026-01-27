@@ -69,6 +69,7 @@ abi_long get_errno(abi_long ret);
 const char *target_strerror(int err);
 int get_osversion(void);
 void init_qemu_uname_release(void);
+extern const char *qemu_execve_path;
 void fork_start(void);
 void fork_end(pid_t pid);
 
