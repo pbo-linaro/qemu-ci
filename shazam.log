@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20260128-cpr-tap-v4-0-48e334d4216b@akamai.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 64 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/8] migration: stop vm earlier for cpr
+  [32m✓[0m [PATCH v4 2/8] migration: cpr setup notifier
+  [32m✓[0m [PATCH v4 3/8] vhost: reset vhost devices for cpr
+  [32m✓[0m [PATCH v4 4/8] cpr: delete all fds
+  [32m✓[0m [PATCH v4 5/8] tap: common return label
+  [32m✓[0m [PATCH v4 6/8] tap: cpr support
+  [32m✓[0m [PATCH v4 7/8] tap: postload fix for cpr
+  [32m✓[0m [PATCH v4 8/8] tap: cpr fixes
+  ---
+  [31m✗[0m No key: ed25519/bchaney@akamai.com
+  [32m✓[0m Signed: DKIM/akamai.com
+---
+Total patches: 8
+---
+ Base: using specified base-commit 2339d0a1cfac6ecc667e6e062a593865c1541c35
+Applying: migration: stop vm earlier for cpr
+Patch failed at 0001 migration: stop vm earlier for cpr
+error: patch failed: migration/migration.c:1654
+error: migration/migration.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
