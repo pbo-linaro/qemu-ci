@@ -11,7 +11,7 @@ tests_ppc_system_quick = [
 
 tests_ppc_system_thorough = [
   '40p',
-  'amiga',
+  # 'amiga', # asset can't be downloaded
   'bamboo',
   'mac',
   'mpc8544ds',
