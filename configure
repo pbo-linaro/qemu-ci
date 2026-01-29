@@ -1313,17 +1313,19 @@ fi
 
 container="no"
 runc=""
-if test $use_containers = "yes" && (has "docker" || has "podman"); then
-    case $($python "$source_path"/tests/docker/docker.py --engine "$container_engine" probe) in
-        *docker) container=docker ;;
-        podman) container=podman ;;
-        no) container=no ;;
-    esac
-    if test "$container" != "no"; then
-        docker_py="$python $source_path/tests/docker/docker.py --engine $container"
-        runc=$container
-    fi
-fi
+
+## Do not detect any runtime container
+#if test $use_containers = "yes" && (has "docker" || has "podman"); then
+#    case $($python "$source_path"/tests/docker/docker.py --engine "$container_engine" probe) in
+#        *docker) container=docker ;;
+#        podman) container=podman ;;
+#        no) container=no ;;
+#    esac
+#    if test "$container" != "no"; then
+#        docker_py="$python $source_path/tests/docker/docker.py --engine $container"
+#        runc=$container
+#    fi
+#fi
 
 # cross compilers defaults, can be overridden with --cross-cc-ARCH
 : ${cross_prefix_aarch64="aarch64-linux-gnu-"}
@@ -1772,7 +1774,7 @@ echo "SRC_PATH=$source_path" >> $config_host_mak
 echo "TARGET_DIRS=$target_list" >> $config_host_mak
 echo "GDB=$gdb_bin" >> $config_host_mak
 if test "$container" != no; then
-    echo "RUNC=$runc" >> $config_host_mak
+   echo "RUNC=$runc" >> $config_host_mak
 fi
 echo "SUBDIRS=$subdirs" >> $config_host_mak
 if test "$rust" != disabled; then
