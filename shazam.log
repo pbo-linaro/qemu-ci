@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20260129215338.1422004-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] qapi/net: deprecate TAP fd and vhostfd options
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 1
+---
+Applying: qapi/net: deprecate TAP fd and vhostfd options
+Patch failed at 0001 qapi/net: deprecate TAP fd and vhostfd options
+error: patch failed: docs/about/deprecated.rst:451
+error: docs/about/deprecated.rst: patch does not apply
+error: patch failed: qapi/net.json:359
+error: qapi/net.json: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
