@@ -1,0 +1,42 @@
+Grabbing thread from lore.kernel.org/all/20260130054714.715928-1-osteffen@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 10 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 24 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/9] hw/acpi: Make acpi_checksum() public
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-2-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 2/9] hw/acpi: Make BIOS linker optional
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-3-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 3/9] hw/acpi: Add standalone function to build MADT
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-4-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 4/9] igvm: Move structs to internal header
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-5-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 5/9] igvm: Add common function for finding parameter entries
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-6-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 6/9] igvm: Refactor qigvm_parameter_insert
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-7-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 7/9] igvm: Pass machine state to IGVM file processing
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-8-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 8/9] igvm: Only build stubs if igvm is enabled
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-9-osteffen@redhat.com
+  [32m✓[0m [PATCH v6 9/9] igvm: Fill MADT IGVM parameter field on x86_64
+    + Link: https://lore.kernel.org/qemu-devel/20260130054714.715928-10-osteffen@redhat.com
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 9
+---
+Applying: hw/acpi: Make acpi_checksum() public
+Applying: hw/acpi: Make BIOS linker optional
+Applying: hw/acpi: Add standalone function to build MADT
+Applying: igvm: Move structs to internal header
+Patch failed at 0004 igvm: Move structs to internal header
+error: include/system/igvm-internal.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
