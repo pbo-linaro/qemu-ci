@@ -1,0 +1,47 @@
+Grabbing thread from lore.kernel.org/all/20260201231959.88559-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 31 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v2 1/10] target-info: add target_base_ppc, target_ppc and target_ppc64
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-2-philmd@linaro.org
+  [32m✓[0m [PATCH v2 2/10] hw/virtio: Constify virtio_is_big_endian() argument
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-3-philmd@linaro.org
+  [32m✓[0m [PATCH v2 3/10] hw/virtio: Introduce VirtIODevice::access_is_big_endian boolean field
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-4-philmd@linaro.org
+  [32m✓[0m [PATCH v2 4/10] hw/virtio: Use VirtIODevice::access_is_big_endian field
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-5-philmd@linaro.org
+  [32m✓[0m [PATCH v2 5/10] hw/virtio: Reduce virtio_access_is_big_endian() scope
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-6-philmd@linaro.org
+  [32m✓[0m [PATCH v2 6/10] hw/virtio: Check target supports legacy bi-endianness at runtime
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-7-philmd@linaro.org
+  [32m✓[0m [PATCH v2 7/10] hw/virtio: Replace TARGET_BIG_ENDIAN -> target_big_endian()
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-8-philmd@linaro.org
+  [32m✓[0m [PATCH v2 8/10] hw/virtio/vhost-user: make compilation unit common
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-9-philmd@linaro.org
+  [32m✓[0m [PATCH v2 9/10] hw/virtio/virtio-qmp: make compilation unit common
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-10-philmd@linaro.org
+  [32m✓[0m [PATCH v2 10/10] hw/virtio: make all compilation units common
+    + Link: https://lore.kernel.org/qemu-devel/20260201231959.88559-11-philmd@linaro.org
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 10
+---
+Applying: target-info: add target_base_ppc, target_ppc and target_ppc64
+Applying: hw/virtio: Constify virtio_is_big_endian() argument
+Applying: hw/virtio: Introduce VirtIODevice::access_is_big_endian boolean field
+Applying: hw/virtio: Use VirtIODevice::access_is_big_endian field
+Applying: hw/virtio: Reduce virtio_access_is_big_endian() scope
+Patch failed at 0005 hw/virtio: Reduce virtio_access_is_big_endian() scope
+error: patch failed: hw/virtio/virtio.c:3233
+error: hw/virtio/virtio.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
