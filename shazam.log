@@ -1,0 +1,141 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.2.1-20260202173336@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 57 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1115 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/56] target/i386: Fix #GP error code for INT instructions
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-1-mjt@tls.msk.ru
+  [PATCH 2/56] target/i386/tcg: ignore V3 in 32-bit mode
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-2-mjt@tls.msk.ru
+  [PATCH 3/56] hw/i2c/imx: Fix trace func name error
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-3-mjt@tls.msk.ru
+  [PATCH 4/56] tests/functional: Fix URL of gb200nvl-bmc image
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-4-mjt@tls.msk.ru
+  [PATCH 5/56] monitor/qmp: cleanup SocketChardev listener sources early to avoid fd handling race
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-5-mjt@tls.msk.ru
+  [PATCH 6/56] tcg/optimize: Save o_mask in fold_masks_zosa_int
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-6-mjt@tls.msk.ru
+  [PATCH 7/56] tcg/optimize: Fix a_mask computation for orc
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-7-mjt@tls.msk.ru
+  [PATCH 8/56] tcg/optimize: Do use affected bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-8-mjt@tls.msk.ru
+  [PATCH 9/56] tcg/riscv: Fix TCG_REG_TMP0 clobber in tcg_gen_dup{m, i}
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-9-mjt@tls.msk.ru
+  [PATCH 10/56] linux-user: allow null `pathname` for statx()/fstatat()
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-10-mjt@tls.msk.ru
+  [PATCH 11/56] linux-user/elfload.c: Correction to HWCAP2 accessor
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-11-mjt@tls.msk.ru
+  [PATCH 12/56] linux-user: fix mremap unmapping adjacent region
+    + Reviewed-by: Peter Maydell <peter.maydell@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-12-mjt@tls.msk.ru
+  [PATCH 13/56] linux-user: fix mremap errors for invalid ranges
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-13-mjt@tls.msk.ru
+  [PATCH 14/56] linux-user: fix reserved_va page leak in do_munmap
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-14-mjt@tls.msk.ru
+  [PATCH 15/56] tests: add tcg coverage for fixed mremap bugs
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-15-mjt@tls.msk.ru
+  [PATCH 16/56] target/ppc: Fix env->quiesced migration
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-16-mjt@tls.msk.ru
+  [PATCH 17/56] configs: use default prefix for Windows compilation
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-17-mjt@tls.msk.ru
+  [PATCH 18/56] m68k: fix CAS2 writeback when Dc1==Dc2
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-18-mjt@tls.msk.ru
+  [PATCH 19/56] target/i386/tcg: do not mark all SSE instructions as unaligned
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-19-mjt@tls.msk.ru
+  [PATCH 20/56] target/i386/tcg: mask addresses for VSIB
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-20-mjt@tls.msk.ru
+  [PATCH 21/56] target/i386/tcg: allow VEX in 16-bit protected mode
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-21-mjt@tls.msk.ru
+  [PATCH 22/56] hw/i386/kvm: fix PIRQ bounds check in xen_physdev_map_pirq()
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-22-mjt@tls.msk.ru
+  [PATCH 23/56] hw/loongarch/virt: Modify the interrupt trigger type in fdt table
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-23-mjt@tls.msk.ru
+  [PATCH 24/56] hw/loongarch/virt: Fix irq allocation failure with pci device from fdt
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-24-mjt@tls.msk.ru
+  [PATCH 25/56] target/loongach: Fix some exceptions failure in updating CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-25-mjt@tls.msk.ru
+  [PATCH 26/56] target/loongarch: Fix exception BCE missing to update CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-26-mjt@tls.msk.ru
+  [PATCH 27/56] target/loongarch: Fix exception ADEF/ADEM missing to update CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-27-mjt@tls.msk.ru
+  [PATCH 28/56] hw/loongarch/virt: Don't abort on access to unimplemented IOCSR
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-28-mjt@tls.msk.ru
+  [PATCH 29/56] hw/arm: Re-enable the MAX78000FTHR machine in qemu-system-arm/aarch64
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-29-mjt@tls.msk.ru
+  [PATCH 30/56] tests/functional: migrate aspeed_rainier image
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-30-mjt@tls.msk.ru
+  [PATCH 31/56] target/arm: Don't specify ID_PFR1 accessfn twice
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-31-mjt@tls.msk.ru
+  [PATCH 32/56] target/arm: Correctly honour HCR.TID3 for v7A cores
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-32-mjt@tls.msk.ru
+  [PATCH 33/56] target/arm: Correctly trap HCR.TID1 registers in v7A
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-33-mjt@tls.msk.ru
+  [PATCH 34/56] accel/nvmm: Fix 'cpu' typo in nvmm_init_vcpu()
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-34-mjt@tls.msk.ru
+  [PATCH 35/56] linux-user/aarch64/target_fcntl.h: add missing TARGET_O_LARGEFILE definition
+    + Fixes: 050a1ba69a ("linux-user: move arm/aarch64/m68k fcntl definitions  to [arm|aarch64|m68k]/target_fcntl.h") ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Laurent Vivier <laurent@vivier.eu>
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-35-mjt@tls.msk.ru
+  [PATCH 36/56] hw/sd/sdhci: Fix TYPE_IMX_USDHC to implement sd-spec-version 3 by default
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-36-mjt@tls.msk.ru
+  [PATCH 37/56] bsd-user: Fix __i386__ test for TARGET_HAS_STAT_TIME_T_EXT
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-37-mjt@tls.msk.ru
+  [PATCH 38/56] bsd-user/syscall_defs.h: define STAT_TIME_T_EXT only for 32 bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-38-mjt@tls.msk.ru
+  [PATCH 39/56] hw/intc: avoid byte swap fiddling in gicv3 its path
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-39-mjt@tls.msk.ru
+  [PATCH 40/56] linux-user: Add termios2 support
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-40-mjt@tls.msk.ru
+  [PATCH 41/56] linux-user: Add termios2 support to alpha target
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-41-mjt@tls.msk.ru
+  [PATCH 42/56] linux-user: Add termios2 support to hppa target
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-42-mjt@tls.msk.ru
+  [PATCH 43/56] linux-user: Add termios2 support to mips target
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-43-mjt@tls.msk.ru
+  [PATCH 44/56] linux-user: Add termios2 support to sh4 target
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-44-mjt@tls.msk.ru
+  [PATCH 45/56] linux-user: Add termios2 support to sparc target
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-45-mjt@tls.msk.ru
+  [PATCH 46/56] linux-user: Add missing termios baud rates
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-46-mjt@tls.msk.ru
+  [PATCH 47/56] linux-user: fixup termios2 related things on PowerPC
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-47-mjt@tls.msk.ru
+  [PATCH 48/56] target/i386/tcg: fix a few instructions that do not support VEX.L=1
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-48-mjt@tls.msk.ru
+  [PATCH 49/56] gitlab: preserve base rules for container template
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-49-mjt@tls.msk.ru
+  [PATCH 50/56] pc-bios/optionrom: Use 32-bit linker emulation for the optionroms
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-50-mjt@tls.msk.ru
+  [PATCH 51/56] tests/functional: migrate sbsa_ref test images
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-51-mjt@tls.msk.ru
+  [PATCH 52/56] hw/ufs: Ensure DBC of PRDT uses only lower 18 bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-52-mjt@tls.msk.ru
+  [PATCH 53/56] hw/ufs: fix CQE endianness and UPIU length
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-53-mjt@tls.msk.ru
+  [PATCH 54/56] hw/ufs: Fix mcq completion queue wraparound
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-54-mjt@tls.msk.ru
+  [PATCH 55/56] tests/qtest/ufs-test: Add test for mcq completion queue wraparound
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-55-mjt@tls.msk.ru
+  [PATCH 56/56] python: fix msys64 wheel directory specification
+    + Link: https://lore.kernel.org/qemu-devel/20260202220805.945271-56-mjt@tls.msk.ru
+---
+Total patches: 56
+---
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Tested-by: Markus Armbruster <armbru@redhat.com>
+     Msg From: Philippe Mathieu-Daudé <philmd@linaro.org>
+NOTE: Rerun with -S to apply them anyway
+---
+Applying: target/i386: Fix #GP error code for INT instructions
+Patch failed at 0001 target/i386: Fix #GP error code for INT instructions
+error: patch failed: target/i386/tcg/user/seg_helper.c:63
+error: target/i386/tcg/user/seg_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
