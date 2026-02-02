@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20260202075358.2137740-1-jim.shu@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] accel/tcg: Pass access_type as an argument of tlb_set_page*()
+    + Link: https://lore.kernel.org/qemu-devel/20260202075358.2137740-2-jim.shu@sifive.com
+  [32m✓[0m [PATCH 2/2] accel/tcg: address_space_translate*() will pass the correct iommu_flags
+    + Link: https://lore.kernel.org/qemu-devel/20260202075358.2137740-3-jim.shu@sifive.com
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 2
+---
+Applying: accel/tcg: Pass access_type as an argument of tlb_set_page*()
+Applying: accel/tcg: address_space_translate*() will pass the correct iommu_flags
+Patch failed at 0002 accel/tcg: address_space_translate*() will pass the correct iommu_flags
+error: patch failed: include/accel/tcg/iommu.h:20
+error: include/accel/tcg/iommu.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
