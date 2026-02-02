@@ -1,0 +1,26 @@
+Grabbing thread from lore.kernel.org/all/20260202054537.2538899-1-Qi.Chen@windriver.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 1 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 18 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH] linux-user/elfload.c: use get_elf_hwcap2 to fix regression
+    + Reviewed-by: Richard Henderson <richard.henderson@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260202054537.2538899-1-Qi.Chen@windriver.com
+  ---
+  [32m✓[0m Signed: DKIM/windriver.com
+---
+Total patches: 1
+---
+Applying: linux-user/elfload.c: use get_elf_hwcap2 to fix regression
+Patch failed at 0001 linux-user/elfload.c: use get_elf_hwcap2 to fix regression
+error: patch failed: linux-user/elfload.c:708
+error: linux-user/elfload.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
