@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20260201-riscv-ssqosid-cbqri-v5-0-273ea4a21703@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 40 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v5 1/6] riscv: implement Ssqosid extension and srmcfg CSR
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-1-273ea4a21703@kernel.org
+  [32m✓[0m [PATCH v5 2/6] hw/riscv: define capabilities of CBQRI controllers
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-2-273ea4a21703@kernel.org
+  [32m✓[0m [PATCH v5 3/6] hw/riscv: implement CBQRI capacity controller
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-3-273ea4a21703@kernel.org
+  [32m✓[0m [PATCH v5 4/6] hw/riscv: implement CBQRI bandwidth controller
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-4-273ea4a21703@kernel.org
+  [32m✓[0m [PATCH v5 5/6] hw/riscv: add CBQRI to Kconfig and build if enabled
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-5-273ea4a21703@kernel.org
+  [32m✓[0m [PATCH v5 6/6] hw/riscv: add CBQRI controllers to virt machine
+    + Link: https://lore.kernel.org/qemu-devel/20260201-riscv-ssqosid-cbqri-v5-6-273ea4a21703@kernel.org
+  ---
+  [31m✗[0m No key: openpgp/fustini@kernel.org
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 6
+---
+ Base: using specified base-commit 942b0d378a1de9649085ad6db5306d5b8cef3591
+Applying: riscv: implement Ssqosid extension and srmcfg CSR
+Applying: hw/riscv: define capabilities of CBQRI controllers
+Applying: hw/riscv: implement CBQRI capacity controller
+Applying: hw/riscv: implement CBQRI bandwidth controller
+Applying: hw/riscv: add CBQRI to Kconfig and build if enabled
+Patch failed at 0005 hw/riscv: add CBQRI to Kconfig and build if enabled
+error: patch failed: hw/riscv/meson.build:14
+error: hw/riscv/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
