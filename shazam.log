@@ -1,0 +1,174 @@
+Grabbing thread from lore.kernel.org/all/qemu-stable-10.1.4-20260202173333@cover.tls.msk.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 75 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 1227 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH 1/74] file-posix: Handle suspended dm-multipath better for SG_IO
+    + Reviewed-by: Hanna Czenczek <hreitz@redhat.com> ([32m✓[0m DKIM/redhat.com)
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-1-mjt@tls.msk.ru
+  [PATCH 2/74] tcg: Zero extend 32-bit addresses for TCI
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-2-mjt@tls.msk.ru
+  [PATCH 3/74] gitlab-ci.d/cirrus: Update the FreeBSD job to v14.3
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-3-mjt@tls.msk.ru
+  [PATCH 4/74] gitlab: move custom runners to Ubuntu 24.04
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-4-mjt@tls.msk.ru
+  [PATCH 5/74] target/arm: handle unaligned PC during tlb probe
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-5-mjt@tls.msk.ru
+  [PATCH 6/74] scripts: fix broken error path in modinfo-collect.py
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-6-mjt@tls.msk.ru
+  [PATCH 7/74] vhost: Always initialize cached vring data
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-7-mjt@tls.msk.ru
+  [PATCH 8/74] scripts/nsis.py: Tell makensis that WoA is 64 bit
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-8-mjt@tls.msk.ru
+  [PATCH 9/74] block: Fix BDS use after free during shutdown
+    + Reviewed-by: Fabiano Rosas <farosas@suse.de> ([32m✓[0m DKIM/suse.de)
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-9-mjt@tls.msk.ru
+  [PATCH 10/74] nvme: Note in which AioContext some functions run
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-10-mjt@tls.msk.ru
+  [PATCH 11/74] Revert "nvme: Fix coroutine waking"
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-11-mjt@tls.msk.ru
+  [PATCH 12/74] tests/qemu-iotests: Fix check for existing file in _require_disk_usage()
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-12-mjt@tls.msk.ru
+  [PATCH 13/74] qga: Fix ubsan warning
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-13-mjt@tls.msk.ru
+  [PATCH 14/74] Fix const qualifier build errors with recent glibc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-14-mjt@tls.msk.ru
+  [PATCH 15/74] i386: Fix const qualifier build errors with recent glibc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-15-mjt@tls.msk.ru
+  [PATCH 16/74] tests/vhost-user-bridge.c: Fix const qualifier build errors with recent glibc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-16-mjt@tls.msk.ru
+  [PATCH 17/74] monitor: Fix const qualifier build errors with recent glibc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-17-mjt@tls.msk.ru
+  [PATCH 18/74] gdbstub: Fix const qualifier build errors with recent glibc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-18-mjt@tls.msk.ru
+  [PATCH 19/74] qdev: fix error handling in set_uint64_checkmask
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-19-mjt@tls.msk.ru
+  [PATCH 20/74] target/i386: Fix #GP error code for INT instructions
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-20-mjt@tls.msk.ru
+  [PATCH 21/74] target/i386/tcg: ignore V3 in 32-bit mode
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-21-mjt@tls.msk.ru
+  [PATCH 22/74] hw/i2c/imx: Fix trace func name error
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-22-mjt@tls.msk.ru
+  [PATCH 23/74] tests/functional: Fix URL of gb200nvl-bmc image
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-23-mjt@tls.msk.ru
+  [PATCH 24/74] monitor/qmp: cleanup SocketChardev listener sources early to avoid fd handling race
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-24-mjt@tls.msk.ru
+  [PATCH 25/74] tcg/optimize: Save o_mask in fold_masks_zosa_int
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-25-mjt@tls.msk.ru
+  [PATCH 26/74] tcg/optimize: Fix a_mask computation for orc
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-26-mjt@tls.msk.ru
+  [PATCH 27/74] tcg/optimize: Do use affected bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-27-mjt@tls.msk.ru
+  [PATCH 28/74] tcg/riscv: Fix TCG_REG_TMP0 clobber in tcg_gen_dup{m, i}
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-28-mjt@tls.msk.ru
+  [PATCH 29/74] linux-user: allow null `pathname` for statx()/fstatat()
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-29-mjt@tls.msk.ru
+  [PATCH 30/74] linux-user: fix mremap unmapping adjacent region
+    + Reviewed-by: Peter Maydell <peter.maydell@linaro.org> ([31m✗[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-30-mjt@tls.msk.ru
+  [PATCH 31/74] linux-user: fix mremap errors for invalid ranges
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-31-mjt@tls.msk.ru
+  [PATCH 32/74] linux-user: fix reserved_va page leak in do_munmap
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-32-mjt@tls.msk.ru
+  [PATCH 33/74] tests: add tcg coverage for fixed mremap bugs
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-33-mjt@tls.msk.ru
+  [PATCH 34/74] target/ppc: Fix env->quiesced migration
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-34-mjt@tls.msk.ru
+  [PATCH 35/74] configs: use default prefix for Windows compilation
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-35-mjt@tls.msk.ru
+  [PATCH 36/74] m68k: fix CAS2 writeback when Dc1==Dc2
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-36-mjt@tls.msk.ru
+  [PATCH 37/74] target/i386/tcg: do not mark all SSE instructions as unaligned
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-37-mjt@tls.msk.ru
+  [PATCH 38/74] target/i386/tcg: mask addresses for VSIB
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-38-mjt@tls.msk.ru
+  [PATCH 39/74] target/i386/tcg: allow VEX in 16-bit protected mode
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-39-mjt@tls.msk.ru
+  [PATCH 40/74] hw/i386/kvm: fix PIRQ bounds check in xen_physdev_map_pirq()
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-40-mjt@tls.msk.ru
+  [PATCH 41/74] hw/loongarch/virt: Modify the interrupt trigger type in fdt table
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-41-mjt@tls.msk.ru
+  [PATCH 42/74] hw/loongarch/virt: Fix irq allocation failure with pci device from fdt
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-42-mjt@tls.msk.ru
+  [PATCH 43/74] target/loongach: Fix some exceptions failure in updating CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-43-mjt@tls.msk.ru
+  [PATCH 44/74] target/loongarch: Fix exception BCE missing to update CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-44-mjt@tls.msk.ru
+  [PATCH 45/74] target/loongarch: Fix exception ADEF/ADEM missing to update CSR_BADV
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-45-mjt@tls.msk.ru
+  [PATCH 46/74] hw/loongarch/virt: Don't abort on access to unimplemented IOCSR
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-46-mjt@tls.msk.ru
+  [PATCH 47/74] tests/functional: migrate aspeed_rainier image
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-47-mjt@tls.msk.ru
+  [PATCH 48/74] target/arm: Don't specify ID_PFR1 accessfn twice
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-48-mjt@tls.msk.ru
+  [PATCH 49/74] target/arm: Correctly honour HCR.TID3 for v7A cores
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-49-mjt@tls.msk.ru
+  [PATCH 50/74] target/arm: Correctly trap HCR.TID1 registers in v7A
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-50-mjt@tls.msk.ru
+  [PATCH 51/74] accel/nvmm: Fix 'cpu' typo in nvmm_init_vcpu()
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-51-mjt@tls.msk.ru
+  [PATCH 52/74] tests/functional: Mark the MIPS replay tests as flaky
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-52-mjt@tls.msk.ru
+  [PATCH 53/74] tests/functional: Mark another MIPS replay test as flaky
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-53-mjt@tls.msk.ru
+  [PATCH 54/74] linux-user/aarch64/target_fcntl.h: add missing TARGET_O_LARGEFILE definition
+    + Reviewed-by: Laurent Vivier <laurent@vivier.eu>
+    + Fixes: 050a1ba69a ("linux-user: move arm/aarch64/m68k fcntl definitions  to [arm|aarch64|m68k]/target_fcntl.h") ([31m✗[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-54-mjt@tls.msk.ru
+  [PATCH 55/74] hw/sd/sdhci: Fix TYPE_IMX_USDHC to implement sd-spec-version 3 by default
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-55-mjt@tls.msk.ru
+  [PATCH 56/74] bsd-user: Fix __i386__ test for TARGET_HAS_STAT_TIME_T_EXT
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-56-mjt@tls.msk.ru
+  [PATCH 57/74] bsd-user/syscall_defs.h: define STAT_TIME_T_EXT only for 32 bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-57-mjt@tls.msk.ru
+  [PATCH 58/74] hw/intc: avoid byte swap fiddling in gicv3 its path
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-58-mjt@tls.msk.ru
+  [PATCH 59/74] linux-user: Add termios2 support
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-59-mjt@tls.msk.ru
+  [PATCH 60/74] linux-user: Add termios2 support to alpha target
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-60-mjt@tls.msk.ru
+  [PATCH 61/74] linux-user: Add termios2 support to hppa target
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-61-mjt@tls.msk.ru
+  [PATCH 62/74] linux-user: Add termios2 support to mips target
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-62-mjt@tls.msk.ru
+  [PATCH 63/74] linux-user: Add termios2 support to sh4 target
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-63-mjt@tls.msk.ru
+  [PATCH 64/74] linux-user: Add termios2 support to sparc target
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-64-mjt@tls.msk.ru
+  [PATCH 65/74] linux-user: Add missing termios baud rates
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-65-mjt@tls.msk.ru
+  [PATCH 66/74] linux-user: fixup termios2 related things on PowerPC
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-66-mjt@tls.msk.ru
+  [PATCH 67/74] target/i386/tcg: fix a few instructions that do not support VEX.L=1
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-67-mjt@tls.msk.ru
+  [PATCH 68/74] pc-bios/optionrom: Use 32-bit linker emulation for the optionroms
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-68-mjt@tls.msk.ru
+  [PATCH 69/74] tests/functional: migrate sbsa_ref test images
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-69-mjt@tls.msk.ru
+  [PATCH 70/74] hw/ufs: Ensure DBC of PRDT uses only lower 18 bits
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-70-mjt@tls.msk.ru
+  [PATCH 71/74] hw/ufs: fix CQE endianness and UPIU length
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-71-mjt@tls.msk.ru
+  [PATCH 72/74] hw/ufs: Fix mcq completion queue wraparound
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-72-mjt@tls.msk.ru
+  [PATCH 73/74] tests/qtest/ufs-test: Add test for mcq completion queue wraparound
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-73-mjt@tls.msk.ru
+  [PATCH 74/74] python: fix msys64 wheel directory specification
+    + Link: https://lore.kernel.org/qemu-devel/20260202205833.941615-74-mjt@tls.msk.ru
+---
+Total patches: 74
+---
+Applying: file-posix: Handle suspended dm-multipath better for SG_IO
+Patch failed at 0001 file-posix: Handle suspended dm-multipath better for SG_IO
+error: patch failed: block/file-posix.c:4300
+error: block/file-posix.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
