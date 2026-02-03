@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20260203205637.3109749-1-pierrick.bouvier@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 13 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 97 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/9] hw/virtio: Constify virtio_is_big_endian() argument
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-2-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 2/9] hw/virtio: Introduce VirtIODevice::access_is_big_endian boolean field
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-3-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 3/9] hw/virtio: Use VirtIODevice::access_is_big_endian field
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-4-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 4/9] target-info: add target_base_ppc, target_ppc and target_ppc64
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-5-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 5/9] include/hw/virtio/virtio-access.h: remove target specifics define
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-6-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 6/9] include/hw/ppc/spapr: extract SPAPR_MAX_RAM_SLOTS in a new header
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-7-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 7/9] hw/virtio/vhost-user: make compilation unit common
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-8-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 8/9] hw/virtio/virtio-qmp: make compilation unit common
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-9-pierrick.bouvier@linaro.org
+  [32m✓[0m [PATCH v4 9/9] hw/virtio/: make all compilation units common
+    + Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> ([32m✓[0m DKIM/linaro.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260203205637.3109749-10-pierrick.bouvier@linaro.org
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 9
+---
+Applying: hw/virtio: Constify virtio_is_big_endian() argument
+Applying: hw/virtio: Introduce VirtIODevice::access_is_big_endian boolean field
+Applying: hw/virtio: Use VirtIODevice::access_is_big_endian field
+Applying: target-info: add target_base_ppc, target_ppc and target_ppc64
+Patch failed at 0004 target-info: add target_base_ppc, target_ppc and target_ppc64
+error: patch failed: include/qemu/target-info.h:71
+error: include/qemu/target-info.h: patch does not apply
+error: patch failed: target-info.c:73
+error: target-info.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
