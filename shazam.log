@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20260203153952.1337-1-manojlo.pekovic@amd.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Analyzing 6 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] vfio/pci: Refactor atomic capability checking
+    + Link: https://lore.kernel.org/qemu-devel/20260203153952.1337-2-manojlo.pekovic@amd.com
+  [32m✓[0m [PATCH 2/2] vfio/pci: Support multifunction atomic ops capability
+    + Link: https://lore.kernel.org/qemu-devel/20260203153952.1337-3-manojlo.pekovic@amd.com
+  ---
+  [32m✓[0m Signed: DKIM/amd.com
+---
+Total patches: 2
+---
+Applying: vfio/pci: Refactor atomic capability checking
+Patch failed at 0001 vfio/pci: Refactor atomic capability checking
+error: patch failed: hw/vfio/pci.c:1900
+error: hw/vfio/pci.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
