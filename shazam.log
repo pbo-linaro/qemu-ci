@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20260202-riscv-rqsc-v1-0-dcf448a3ed73@kernel.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/7] hw/riscv: Add support for ACPI RQSC table
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-1-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 2/7] acpi: aml-build: Add cache structure table creation for PPTT table
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-2-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 3/7] hw/riscv: virt-acpi-build: Generate PPTT table
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-3-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 4/7] hw/riscv: virt-acpi-build: Adjust RQSC cache properties
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-4-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 5/7] include: acpi: aml-build: Add Cache ID and L2 cache for each cluster
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-5-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 6/7] acpi: aml-build: Add Cache ID to PPTT table and set Cluster ID
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-6-dcf448a3ed73@kernel.org
+  [32m✓[0m [PATCH RFC 7/7] hw/riscv: virt-acpi-build: Build PPTT table before RQSC table
+    + Link: https://lore.kernel.org/qemu-devel/20260202-riscv-rqsc-v1-7-dcf448a3ed73@kernel.org
+  ---
+  [31m✗[0m No key: openpgp/fustini@kernel.org
+  [32m✓[0m Signed: DKIM/kernel.org
+---
+Total patches: 7
+---
+ Base: base-commit 117b7aeabad83d437dfa69f2ee2bac75c0e02abe not known, ignoring
+Applying: hw/riscv: Add support for ACPI RQSC table
+Patch failed at 0001 hw/riscv: Add support for ACPI RQSC table
+error: hw/riscv/cbqri_bandwidth.c: does not exist in index
+error: hw/riscv/cbqri_capacity.c: does not exist in index
+error: include/hw/riscv/cbqri.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
