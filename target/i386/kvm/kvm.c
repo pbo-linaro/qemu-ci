@@ -162,6 +162,7 @@ static bool has_msr_core_capabs;
 static bool has_msr_vmx_vmfunc;
 static bool has_msr_ucode_rev;
 static bool has_msr_vmx_procbased_ctls2;
+static bool has_msr_vmx_procbased_ctls3;
 static bool has_msr_perf_capabs;
 static bool has_msr_pkrs;
 static bool has_msr_hwcr;
@@ -2639,6 +2640,9 @@ static int kvm_get_supported_msrs(KVMState *s)
             case MSR_IA32_VMX_PROCBASED_CTLS2:
                 has_msr_vmx_procbased_ctls2 = true;
                 break;
+            case MSR_IA32_VMX_PROCBASED_CTLS3:
+                has_msr_vmx_procbased_ctls3 = true;
+                break;
             case MSR_IA32_PKRS:
                 has_msr_pkrs = true;
                 break;
@@ -3839,6 +3843,13 @@ static void kvm_msr_entry_add_vmx(X86CPU *cpu, FeatureWordArray f)
     if (has_msr_vmx_vmfunc) {
         kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMFUNC, f[FEAT_VMX_VMFUNC]);
     }
+    if (has_msr_vmx_procbased_ctls3 &&
+        /* >> 32 is for high bit. */
+        (f[FEAT_VMX_PROCBASED_CTLS] >> 32) &
+        VMX_CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
+        kvm_msr_entry_add(cpu, MSR_IA32_VMX_PROCBASED_CTLS3,
+                          f[FEAT_VMX_TERTIARY_CTLS]);
+    }
 
     /*
      * Just to be safe, write these with constant values.  The CRn_FIXED1
@@ -3852,10 +3863,22 @@ static void kvm_msr_entry_add_vmx(X86CPU *cpu, FeatureWordArray f)
     if (f[FEAT_7_1_EAX] & CPUID_7_1_EAX_FRED) {
         /* FRED injected-event data (0x2052).  */
         kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMCS_ENUM, 0x52);
+    } else if (f[FEAT_VMX_TERTIARY_CTLS] &
+               VMX_TERTIARY_EXEC_APIC_TIMER_VIRT) {
+        /*
+         * APIC timer virtualization:
+         * virtual timer vector (0xa), guest deadline (0x2830), and
+         * guest deadline shadow (0x204e).
+         */
+        kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMCS_ENUM, 0x4e);
     } else if (f[FEAT_VMX_EXIT_CTLS] &
                VMX_VM_EXIT_ACTIVATE_SECONDARY_CONTROLS) {
         /* Secondary VM-exit controls (0x2044).  */
         kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMCS_ENUM, 0x44);
+    } else if (f[FEAT_VMX_PROCBASED_CTLS] &
+               VMX_CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
+        /* Tertiary procbased VM-execution controls (0x2034).  */
+        kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMCS_ENUM, 0x34);
     } else if (f[FEAT_VMX_SECONDARY_CTLS] & VMX_SECONDARY_EXEC_TSC_SCALING) {
         /* TSC multiplier (0x2032).  */
         kvm_msr_entry_add(cpu, MSR_IA32_VMX_VMCS_ENUM, 0x32);
