@@ -1,0 +1,39 @@
+Grabbing thread from lore.kernel.org/all/20260203020855.1642884-1-jamin_lin@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 21 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/8] hw/arm/aspeed_ast27x0: Fix EHCI3/4 IRQ routing to GIC
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-2-jamin_lin@aspeedtech.com
+  [PATCH v2 2/8] hw/arm/aspeed_ast27x0: Sort SSP and TSP memmap tables by address
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-3-jamin_lin@aspeedtech.com
+  [PATCH v2 3/8] hw/arm/aspeed_ast27x0: Sort SSP and TSP IRQ maps
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-4-jamin_lin@aspeedtech.com
+  [PATCH v2 4/8] hw/i2c/aspeed_i2c: Fix DMA moving data into incorrect address
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-5-jamin_lin@aspeedtech.com
+  [PATCH v2 5/8] tests/functional/aarch64/test_aspeed_ast2700: Enable PCIe2 DTS status for AST2700 tests
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-6-jamin_lin@aspeedtech.com
+  [PATCH v2 6/8] tests/functional/aarch64/test_aspeed_ast2700: Update test ASPEED SDK v11.00 for A1
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-7-jamin_lin@aspeedtech.com
+  [PATCH v2 7/8] tests/functional/aarch64/test_aspeed_ast2700fc: Update test ASPEED SDK v11.00 for A1
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-8-jamin_lin@aspeedtech.com
+  [PATCH v2 8/8] docs/system/arm/aspeed: Load raw U-Boot image in AST2700 boot example
+    + Link: https://lore.kernel.org/qemu-devel/20260203020855.1642884-9-jamin_lin@aspeedtech.com
+---
+Total patches: 8
+---
+Applying: hw/arm/aspeed_ast27x0: Fix EHCI3/4 IRQ routing to GIC
+Applying: hw/arm/aspeed_ast27x0: Sort SSP and TSP memmap tables by address
+Applying: hw/arm/aspeed_ast27x0: Sort SSP and TSP IRQ maps
+Applying: hw/i2c/aspeed_i2c: Fix DMA moving data into incorrect address
+Patch failed at 0004 hw/i2c/aspeed_i2c: Fix DMA moving data into incorrect address
+error: patch failed: hw/i2c/aspeed_i2c.c:270
+error: hw/i2c/aspeed_i2c.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
