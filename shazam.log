@@ -1,0 +1,32 @@
+Grabbing thread from lore.kernel.org/all/20260204190008.20070-1-skolothumtho@nvidia.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 40 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/5] backends/iommufd: Introduce iommufd_backend_alloc_veventq
+    + Link: https://lore.kernel.org/qemu-devel/20260204190008.20070-2-skolothumtho@nvidia.com
+  [32m✓[0m [PATCH v4 2/5] hw/arm/smmuv3-accel: Add viommu free helper
+    + Link: https://lore.kernel.org/qemu-devel/20260204190008.20070-3-skolothumtho@nvidia.com
+  [32m✓[0m [PATCH v4 3/5] hw/arm/smmuv3-accel: Allocate vEVENTQ for accelerated SMMUv3 devices
+    + Link: https://lore.kernel.org/qemu-devel/20260204190008.20070-4-skolothumtho@nvidia.com
+  [32m✓[0m [PATCH v4 4/5] hw/arm/smmuv3: Introduce a helper function for event propagation
+    + Link: https://lore.kernel.org/qemu-devel/20260204190008.20070-5-skolothumtho@nvidia.com
+  [32m✓[0m [PATCH v4 5/5] hw/arm/smmuv3-accel: Read and propagate host vIOMMU events
+    + Link: https://lore.kernel.org/qemu-devel/20260204190008.20070-6-skolothumtho@nvidia.com
+  ---
+  [32m✓[0m Signed: DKIM/nvidia.com
+---
+Total patches: 5
+---
+Applying: backends/iommufd: Introduce iommufd_backend_alloc_veventq
+Patch failed at 0001 backends/iommufd: Introduce iommufd_backend_alloc_veventq
+error: patch failed: backends/trace-events:23
+error: backends/trace-events: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
