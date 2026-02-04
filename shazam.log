@@ -1,0 +1,82 @@
+Grabbing thread from lore.kernel.org/all/20260204064016.3515639-1-kane_chen@aspeedtech.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 23 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 164 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v6 1/22] hw/misc: Add LTPI controller
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-2-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 2/22] hw/arm/aspeed: Attach LTPI controller to AST27X0 platform
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/kaod.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-3-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 3/22] hw/misc: Add basic Aspeed PWM model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-4-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 4/22] hw/arm/aspeed: Add AST1700 LTPI expander device model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-5-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 5/22] hw/arm/aspeed: Integrate AST1700 device into AST27X0
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-6-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 6/22] hw/arm/aspeed: Integrate interrupt controller for AST1700
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-7-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 7/22] hw/arm/aspeed: Attach LTPI controller to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-8-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 8/22] hw/arm/aspeed: Attach UART device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-9-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 9/22] hw/arm/aspeed: Attach SRAM device to AST1700 model
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/kaod.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-10-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 10/22] hw/arm/aspeed: Attach SPI device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-11-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 11/22] hw/arm/aspeed: Attach ADC device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-12-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 12/22] hw/arm/aspeed: Attach SCU device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-13-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 13/22] hw/arm/aspeed: Attach GPIO device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-14-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 14/22] hw/arm/aspeed: attach I2C device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-15-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 15/22] hw/arm/aspeed: Attach WDT device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-16-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 16/22] hw/arm/aspeed: Attach PWM device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-17-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 17/22] hw/arm/aspeed: Attach SGPIOM device to AST1700 model
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-18-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 18/22] hw/arm/aspeed: Model AST1700 I3C block as unimplemented device
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-19-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 19/22] hw/arm/aspeed: Enable AST1700 IO expander support
+    + Reviewed-by: Cédric Le Goater <clg@redhat.com> ([32m✓[0m DKIM/kaod.org)
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-20-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 20/22] tests/functional/aarch64: Parameterize I2C bus ID in AST2700 test
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-21-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 21/22] tests/functional/aarch64: Parameterize PCIe2 initialization in AST2700
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-22-kane_chen@aspeedtech.com
+  [32m✓[0m [PATCH v6 22/22] tests/functional/aarch64: Add I2C test for AST1700 IO expanders
+    + Link: https://lore.kernel.org/qemu-devel/20260204064016.3515639-23-kane_chen@aspeedtech.com
+  ---
+  [32m✓[0m Signed: DKIM/aspeedtech.com
+---
+Total patches: 22
+---
+Applying: hw/misc: Add LTPI controller
+Applying: hw/arm/aspeed: Attach LTPI controller to AST27X0 platform
+Applying: hw/misc: Add basic Aspeed PWM model
+Applying: hw/arm/aspeed: Add AST1700 LTPI expander device model
+Applying: hw/arm/aspeed: Integrate AST1700 device into AST27X0
+Applying: hw/arm/aspeed: Integrate interrupt controller for AST1700
+Applying: hw/arm/aspeed: Attach LTPI controller to AST1700 model
+Applying: hw/arm/aspeed: Attach UART device to AST1700 model
+Applying: hw/arm/aspeed: Attach SRAM device to AST1700 model
+Applying: hw/arm/aspeed: Attach SPI device to AST1700 model
+Applying: hw/arm/aspeed: Attach ADC device to AST1700 model
+Applying: hw/arm/aspeed: Attach SCU device to AST1700 model
+Applying: hw/arm/aspeed: Attach GPIO device to AST1700 model
+Applying: hw/arm/aspeed: attach I2C device to AST1700 model
+Patch failed at 0014 hw/arm/aspeed: attach I2C device to AST1700 model
+error: patch failed: hw/arm/aspeed_ast27x0.c:157
+error: hw/arm/aspeed_ast27x0.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
