@@ -1,0 +1,40 @@
+Grabbing thread from lore.kernel.org/all/20260204170936.43959-1-Jonathan.Cameron@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 83 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v7 1/7] hw/pcie: Support enabling flit mode
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-2-Jonathan.Cameron@huawei.com
+  [PATCH v7 2/7] hw/cxl: Refactor component register initialization
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-3-Jonathan.Cameron@huawei.com
+  [PATCH v7 3/7] tests/bios-tables-test: Excluded CEDT.cxl for BI restriction relaxation.
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-4-Jonathan.Cameron@huawei.com
+  [PATCH v7 4/7] hw/cxl: Update CXL Fixed Memory Window ACPI description to include Back Invalidate support.
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-5-Jonathan.Cameron@huawei.com
+  [PATCH v7 5/7] tests/acpi/cxl: Update CEDT.cxl to allow BI in CFWMS
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-6-Jonathan.Cameron@huawei.com
+  [PATCH v7 6/7] hw/cxl: Support type3 HDM-DB
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-7-Jonathan.Cameron@huawei.com
+  [PATCH v7 7/7] hw/cxl: Remove register special_ops->read()
+    + Link: https://lore.kernel.org/qemu-devel/20260204170936.43959-8-Jonathan.Cameron@huawei.com
+---
+Total patches: 7
+---
+Applying: hw/pcie: Support enabling flit mode
+Applying: hw/cxl: Refactor component register initialization
+Applying: tests/bios-tables-test: Excluded CEDT.cxl for BI restriction relaxation.
+Applying: hw/cxl: Update CXL Fixed Memory Window ACPI description to include Back Invalidate support.
+Applying: tests/acpi/cxl: Update CEDT.cxl to allow BI in CFWMS
+Applying: hw/cxl: Support type3 HDM-DB
+Patch failed at 0006 hw/cxl: Support type3 HDM-DB
+error: patch failed: include/hw/cxl/cxl_device.h:770
+error: include/hw/cxl/cxl_device.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
