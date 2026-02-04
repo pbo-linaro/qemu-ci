@@ -1,0 +1,66 @@
+Grabbing thread from lore.kernel.org/all/20260204051756.667397-1-max.chou@sifive.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 20 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 53 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v3 1/19] target/riscv: rvv: Fix NOP_UU_B vs2 width
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-2-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 2/19] fpu/softfloat: Refactor IEEE format NaN classification to share code
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-3-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 3/19] fpu/softfloat: Refactor floatx80 format NaN classification to share code
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-4-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 4/19] target/i386: Fix pseudo-NaN handling in FPATAN/FYL2XP1/FYL2X helpers
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-5-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 5/19] fpu/softfloat: Support OCP(Open Compute Project) OFP8 data type
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-6-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 6/19] fpu/softfloat: Support OCP(Open Compute Project) OFP4 data type
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-7-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 7/19] target/riscv: Add cfg properity for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-8-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 8/19] target/riscv: Add implied rules for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-9-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 9/19] target/riscv: rvv: Make vfwcvtbf16.f.f.v support OFP8 to BF16 conversion for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-10-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 10/19] target/riscv: rvv: Make vfncvtbf16.f.f.w support BF16 to OFP8 conversion for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-11-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 11/19] target/riscv: rvv: Add vfncvtbf16.sat.f.f.w instruction for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-12-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 12/19] target/riscv: rvv: Add vfncvt.f.f.q and vfncvt.sat.f.f.q instructions for Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-13-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 13/19] target/riscv: Expose Zvfofp8min properity
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-14-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 14/19] disas/riscv: Add support of Zvfofp8min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-15-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 15/19] target/riscv: Add cfg properity for Zvfofp4min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-16-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 16/19] target/riscv: Add implied rules for Zvfofp4min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-17-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 17/19] target/riscv: rvv: Add vfext.vf2 instruction for Zvfofp4min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-18-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 18/19] target/riscv: Expose Zvfofp4min properity
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-19-max.chou@sifive.com
+  [32m✓[0m [PATCH v3 19/19] disas/riscv: Add support of Zvfofp4min extension
+    + Link: https://lore.kernel.org/qemu-devel/20260204051756.667397-20-max.chou@sifive.com
+  ---
+  [32m✓[0m Signed: DKIM/sifive.com
+---
+Total patches: 19
+---
+Applying: target/riscv: rvv: Fix NOP_UU_B vs2 width
+Applying: fpu/softfloat: Refactor IEEE format NaN classification to share code
+Applying: fpu/softfloat: Refactor floatx80 format NaN classification to share code
+Applying: target/i386: Fix pseudo-NaN handling in FPATAN/FYL2XP1/FYL2X helpers
+Applying: fpu/softfloat: Support OCP(Open Compute Project) OFP8 data type
+Applying: fpu/softfloat: Support OCP(Open Compute Project) OFP4 data type
+Applying: target/riscv: Add cfg properity for Zvfofp8min extension
+Patch failed at 0007 target/riscv: Add cfg properity for Zvfofp8min extension
+error: patch failed: target/riscv/vector_helper.c:38
+error: target/riscv/vector_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
