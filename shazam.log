@@ -1,0 +1,25 @@
+Grabbing thread from lore.kernel.org/all/20260204150002.669-1-alireza.sanaee@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2 1/2] hw/cxl: Use HPA in cxl_cfmws_find_device() rather than offset in window.
+    + Link: https://lore.kernel.org/qemu-devel/20260204150002.669-2-alireza.sanaee@huawei.com
+  [PATCH v2 2/2] hw/cxl: Add a performant (and correct) path for the non interleaved cases
+    + Link: https://lore.kernel.org/qemu-devel/20260204150002.669-3-alireza.sanaee@huawei.com
+---
+Total patches: 2
+---
+Applying: hw/cxl: Use HPA in cxl_cfmws_find_device() rather than offset in window.
+Applying: hw/cxl: Add a performant (and correct) path for the non interleaved cases
+Patch failed at 0002 hw/cxl: Add a performant (and correct) path for the non interleaved cases
+error: patch failed: hw/cxl/cxl-component-utils.c:142
+error: hw/cxl/cxl-component-utils.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
