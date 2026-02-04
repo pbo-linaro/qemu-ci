@@ -1,0 +1,31 @@
+Grabbing thread from lore.kernel.org/all/20260204173223.44122-1-Jonathan.Cameron@huawei.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Nothing matching that query.
+Analyzing 4 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v5 1/3] hw/cxl: Physical Port Info FMAPI - update to current spec and add defines.
+    + Link: https://lore.kernel.org/qemu-devel/20260204173223.44122-2-Jonathan.Cameron@huawei.com
+  [PATCH v5 2/3] hw/cxl: Get Physical Port State - update for PCIe flit mode
+    + Link: https://lore.kernel.org/qemu-devel/20260204173223.44122-3-Jonathan.Cameron@huawei.com
+  [PATCH v5 3/3] hw/cxl: Add Physical Port Control FMAPI Command (Opcode 5102h)
+    + Link: https://lore.kernel.org/qemu-devel/20260204173223.44122-4-Jonathan.Cameron@huawei.com
+---
+Total patches: 3
+---
+Applying: hw/cxl: Physical Port Info FMAPI - update to current spec and add defines.
+Applying: hw/cxl: Get Physical Port State - update for PCIe flit mode
+Applying: hw/cxl: Add Physical Port Control FMAPI Command (Opcode 5102h)
+Patch failed at 0003 hw/cxl: Add Physical Port Control FMAPI Command (Opcode 5102h)
+error: patch failed: hw/pci-bridge/cxl_downstream.c:92
+error: hw/pci-bridge/cxl_downstream.c: patch does not apply
+error: patch failed: hw/pci-bridge/cxl_upstream.c:103
+error: hw/pci-bridge/cxl_upstream.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
