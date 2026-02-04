@@ -1,0 +1,27 @@
+Grabbing thread from lore.kernel.org/all/20260204215304.52757-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/2] target/sparc: Replace legacy st_phys() -> address_space_st()
+    + Link: https://lore.kernel.org/qemu-devel/20260204215304.52757-2-philmd@linaro.org
+  [32m✓[0m [PATCH 2/2] configs/targets: Restrict legacy ldst_phys() API on 32-bit SPARC target
+    + Link: https://lore.kernel.org/qemu-devel/20260204215304.52757-3-philmd@linaro.org
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 2
+---
+Applying: target/sparc: Replace legacy st_phys() -> address_space_st()
+Applying: configs/targets: Restrict legacy ldst_phys() API on 32-bit SPARC target
+Patch failed at 0002 configs/targets: Restrict legacy ldst_phys() API on 32-bit SPARC target
+error: patch failed: configs/targets/sparc-softmmu.mak:1
+error: configs/targets/sparc-softmmu.mak: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
