@@ -1,0 +1,101 @@
+Grabbing thread from lore.kernel.org/all/20260205195824.2610192-1-ruslichenko.r@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 30 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/29] hw/core: Add Remote Port protocol packet definition
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-2-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 2/29] hw/core: Add Remote Port header helpers
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-3-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 3/29] hw/core: Add Remote Port session state and hello protocol
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-4-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 4/29] hw/core: Implement Remote Port bus access helpers
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-5-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 5/29] hw/core: Implement Remote Port irq, sync and ATS helpers
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-6-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 6/29] system/vl: Introduce -machine-path command line option
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-7-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 7/29] hw/core: Add Remote Port object skeleton
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-8-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 8/29] hw/core: Setup Remote Port I/O channels
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-9-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 9/29] hw/core: Add Remote Port protocol thread and handshake
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-10-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 10/29] hw/core: Implement Remote Port packet dispatch logic
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-11-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 11/29] hw/core: Implement Remote Port response handling
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-12-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 12/29] hw/core: Implement Remote Port time synchronization
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-13-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 13/29] system/memory: Introduce unified MemoryTransaction and .access callback
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-14-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 14/29] hw/core: Add Remote Port Memory Master object skeleton
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-15-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 15/29] hw/core: Implement Remote Port Memory Master bus transactions
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-16-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 16/29] system/physmem: Add ats_do_translate helper
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-17-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 17/29] hw/core: Add Remote Port ATS device skeleton
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-18-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 18/29] hw/core: Implement Remote Port ATS logic and cache management
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-19-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 19/29] hw/core: Add Remote Port memory slave device
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-20-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 20/29] hw/core: Add Remote Port GPIO/Interrupt bridge
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-21-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 21/29] hw/core: Add Remote Port Stream device
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-22-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 22/29] hw/core: Add Remote Port files to build
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-23-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 23/29] system: Introduce -sync-quantum command line option
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-24-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 24/29] hw/core: Add FDT support to Remote Port GPIO
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-25-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 25/29] hw/core: Add FDT support to Remote Port memory master
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-26-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 26/29] hw/core: Add Remote Port connection support to fdt-generic
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-27-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 27/29] hw/core: Support IOMMU translation for Remote Port memory slave
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-28-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 28/29] hw/core: Add Remote Port attachment helpers
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-29-ruslichenko.r@gmail.com
+  [32m✓[0m [PATCH 29/29] hw/core: Add ATS support to Remote Port memory slave
+    + Link: https://lore.kernel.org/qemu-devel/20260205195824.2610192-30-ruslichenko.r@gmail.com
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 29
+---
+Applying: hw/core: Add Remote Port protocol packet definition
+Applying: hw/core: Add Remote Port header helpers
+Applying: hw/core: Add Remote Port session state and hello protocol
+Applying: hw/core: Implement Remote Port bus access helpers
+Applying: hw/core: Implement Remote Port irq, sync and ATS helpers
+Applying: system/vl: Introduce -machine-path command line option
+Applying: hw/core: Add Remote Port object skeleton
+Applying: hw/core: Setup Remote Port I/O channels
+Applying: hw/core: Add Remote Port protocol thread and handshake
+Applying: hw/core: Implement Remote Port packet dispatch logic
+Applying: hw/core: Implement Remote Port response handling
+Applying: hw/core: Implement Remote Port time synchronization
+Applying: system/memory: Introduce unified MemoryTransaction and .access callback
+Applying: hw/core: Add Remote Port Memory Master object skeleton
+Applying: hw/core: Implement Remote Port Memory Master bus transactions
+Applying: system/physmem: Add ats_do_translate helper
+Applying: hw/core: Add Remote Port ATS device skeleton
+Applying: hw/core: Implement Remote Port ATS logic and cache management
+Applying: hw/core: Add Remote Port memory slave device
+Applying: hw/core: Add Remote Port GPIO/Interrupt bridge
+Applying: hw/core: Add Remote Port Stream device
+Applying: hw/core: Add Remote Port files to build
+Patch failed at 0022 hw/core: Add Remote Port files to build
+error: patch failed: hw/core/meson.build:27
+error: hw/core/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
