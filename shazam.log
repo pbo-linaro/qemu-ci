@@ -1,0 +1,46 @@
+Grabbing thread from lore.kernel.org/all/20260207134728.1495932-1-lulu@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/12] net: introduce read_poll/write_poll
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-1-lulu@redhat.com
+  [32m✓[0m [PATCH 2/12] net/filter-mirror: add enable_when_stopped option for filter-redirector
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-2-lulu@redhat.com
+  [32m✓[0m [PATCH 3/12] net/filter: add statistics counters for netfilters
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-3-lulu@redhat.com
+  [32m✓[0m [PATCH 4/12] net/filter-mirror: add indev/outdev statistics for filter-redirector
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-4-lulu@redhat.com
+  [32m✓[0m [PATCH 5/12] tests/qtest: add tests for filter-redirector indev/outdev statistics
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-5-lulu@redhat.com
+  [32m✓[0m [PATCH 6/12] netfilter: filter-redirector: always return iov_size()
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-6-lulu@redhat.com
+  [32m✓[0m [PATCH 7/12] netfilter: enable read_poll when redirector created while stopped
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-7-lulu@redhat.com
+  [32m✓[0m [PATCH 8/12] virtio-net: disable backend poll while stopped by default
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-8-lulu@redhat.com
+  [32m✓[0m [PATCH 9/12] net/filter-mirror: treat redirector injections as raw frames
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-9-lulu@redhat.com
+  [32m✓[0m [PATCH 10/12] net/filter-buffer: store raw frames and synthesize vnet_hdr on release
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-10-lulu@redhat.com
+  [32m✓[0m [PATCH 11/12] virtio-net: re-apply vnet_hdr state after virtio_load
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-11-lulu@redhat.com
+  [32m✓[0m [PATCH 12/12] net/filter-mirror: keep mirroring while stopped
+    + Link: https://lore.kernel.org/qemu-devel/20260207134728.1495932-12-lulu@redhat.com
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 12
+---
+Applying: net: introduce read_poll/write_poll
+Patch failed at 0001 net: introduce read_poll/write_poll
+error: patch failed: net/tap.c:334
+error: net/tap.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
