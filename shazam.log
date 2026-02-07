@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20260207120901.17222-1-hibriansong@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 8 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH v4 1/7] aio-posix: enable 128-byte SQEs
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-2-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 2/7] fuse: io_uring mode init
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-3-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 3/7] fuse: uring support for write ops
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-4-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 4/7] fuse: refactor FUSE request handler
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-5-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 5/6] fuse: safe termination for io_uring
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-6-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 6/7] fuse: add 'io-uring' option
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-7-hibriansong@gmail.com
+  [32m✓[0m [PATCH v4 7/7] fuse: add io_uring test support
+    + Link: https://lore.kernel.org/qemu-devel/20260207120901.17222-8-hibriansong@gmail.com
+  ---
+  [32m✓[0m Signed: DKIM/gmail.com
+---
+Total patches: 7
+---
+Applying: aio-posix: enable 128-byte SQEs
+Patch failed at 0001 aio-posix: enable 128-byte SQEs
+error: patch failed: util/fdmon-io_uring.c:452
+error: util/fdmon-io_uring.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
