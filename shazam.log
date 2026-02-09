@@ -1,0 +1,52 @@
+Grabbing thread from lore.kernel.org/all/20260209073908.2125178-1-vsementsov@yandex-team.ru/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 12 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/10] vhost: move IOTLB functions from vhost-backend.c to vhost.c
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-2-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 2/10] vhost: use consistent naming for backend handlers
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-3-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 3/10] vhost: rename vhost-backend.c to vhost-kernel.c
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-4-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 4/10] vhost: replace .vhost_vq_get_addr() with .vhost_phys_vring_addr()
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-5-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 5/10] vhost: simplify vhost_memory_map() and vhost_memory_unmap()
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-6-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 6/10] qapi: remove user addresses from x-query-virtio-vhost-queue-status
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-7-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 7/10] vhost: stop reusing vq->desc (and friends) to store physical address
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-8-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 8/10] vhost: rename vring pointer fields to reflect user addresses
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-9-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 9/10] vhost: add .vhost_phys_iotlb_msg() handler
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-10-vsementsov@yandex-team.ru
+  [32m✓[0m [PATCH 10/10] vhost-user: add VHOST_USER_PROTOCOL_F_GPA_ADDRESSES
+    + Based-on: <20260206095258.894504-1-vsementsov@yandex-team.ru> ([32m✓[0m DKIM/yandex-team.ru)
+    + Link: https://lore.kernel.org/qemu-devel/20260209073908.2125178-11-vsementsov@yandex-team.ru
+  ---
+  [32m✓[0m Signed: DKIM/yandex-team.ru
+---
+Total patches: 10
+---
+Applying: vhost: move IOTLB functions from vhost-backend.c to vhost.c
+Patch failed at 0001 vhost: move IOTLB functions from vhost-backend.c to vhost.c
+error: patch failed: include/hw/virtio/vhost.h:403
+error: include/hw/virtio/vhost.h: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
