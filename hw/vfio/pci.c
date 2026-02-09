@@ -3458,6 +3458,51 @@ bool vfio_pci_interrupt_setup(VFIOPCIDevice *vdev, Error **errp)
     return true;
 }
 
+static int write_sysfs(const char *path, const char *value)
+{
+    FILE *f = fopen(path, "w");
+    if (!f) {
+        return -1;
+    }
+    int ret = fprintf(f, "%s", value);
+    fclose(f);
+    return (ret > 0) ? 0 : -1;
+}
+
+static void vfio_ensure_d0_state(VFIOPCIDevice *vdev)
+{
+    VFIODevice *vbasedev = &vdev->vbasedev;
+    char sysfs_power_path[PATH_MAX];
+
+    /*
+     * Test config region accessibility (D3cold-safe, no PCI config
+     * reads!)
+     */
+    struct vfio_region_info reg_info = {
+        .argsz = sizeof(reg_info),
+        .index = VFIO_PCI_CONFIG_REGION_INDEX,
+        .offset = 0,
+        .size = 0
+    };
+
+    if (ioctl(vbasedev->fd, VFIO_DEVICE_GET_REGION_INFO, &reg_info) < 0) {
+        warn_report("vfio: %s config region probe failed (D3cold): %s",
+                    vbasedev->name, strerror(errno));
+
+        /* D3cold confirmed → sysfs power control (EEH-safe) */
+        snprintf(sysfs_power_path, sizeof(sysfs_power_path),
+                 "/sys/bus/pci/devices/%s/power/control", vbasedev->name;
+
+        /* Force runtime resume */
+        if (write_sysfs(sysfs_power_path, "on") == 0) {
+            g_usleep(10000);  /* 10ms settle */
+            write_sysfs(sysfs_power_path, "auto");
+            info_report("vfio: %s D3cold → D0 via sysfs", vbasedev->name);
+        }
+    }
+    return;
+}
+
 static void vfio_pci_realize(PCIDevice *pdev, Error **errp)
 {
     ERRP_GUARD();
@@ -3466,6 +3511,13 @@ static void vfio_pci_realize(PCIDevice *pdev, Error **errp)
     int i;
     char uuid[UUID_STR_LEN];
     g_autofree char *name = NULL;
+
+    /*
+     * ensure the power state of the pci device to D0,
+     * otherwise it will set to D0, before accessing the
+     * config space.
+     */
+    vfio_ensure_d0_state(vdev);
 
     if (vbasedev->fd < 0 && !vbasedev->sysfsdev) {
         if (!(~vdev->host.domain || ~vdev->host.bus ||
