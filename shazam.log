@@ -1,0 +1,36 @@
+Grabbing thread from lore.kernel.org/all/20260210-hppa-c3600-v1-0-a17ec58f053f@rev.ng/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 5 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH 1/4] hppa: Prepare for additional CPU models
+    + Link: https://lore.kernel.org/qemu-devel/20260210-hppa-c3600-v1-1-a17ec58f053f@rev.ng
+  [31m✗[0m [PATCH 2/4] hppa: Introduce HPPACPUDef
+    + Link: https://lore.kernel.org/qemu-devel/20260210-hppa-c3600-v1-2-a17ec58f053f@rev.ng
+  [31m✗[0m [PATCH 3/4] hppa: Get physical address space bits from CPUHPPADef
+    + Link: https://lore.kernel.org/qemu-devel/20260210-hppa-c3600-v1-3-a17ec58f053f@rev.ng
+  [31m✗[0m [PATCH 4/4] hppa: Add C3600 machine with PA-8600 CPU
+    + Link: https://lore.kernel.org/qemu-devel/20260210-hppa-c3600-v1-4-a17ec58f053f@rev.ng
+  ---
+  [31m✗[0m BADSIG: DKIM/rev.ng
+---
+Total patches: 4
+---
+Applying: hppa: Prepare for additional CPU models
+Applying: hppa: Introduce HPPACPUDef
+Applying: hppa: Get physical address space bits from CPUHPPADef
+Patch failed at 0003 hppa: Get physical address space bits from CPUHPPADef
+error: patch failed: target/hppa/cpu.h:352
+error: target/hppa/cpu.h: patch does not apply
+error: patch failed: hw/hppa/machine.c:181
+error: hw/hppa/machine.c: patch does not apply
+error: patch failed: target/hppa/mem_helper.c:29
+error: target/hppa/mem_helper.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
