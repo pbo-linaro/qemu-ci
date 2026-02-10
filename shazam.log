@@ -1,0 +1,44 @@
+Grabbing thread from lore.kernel.org/all/20260210-phys_addr-v4-0-725a589e83c8@rev.ng/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 34 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [31m✗[0m [PATCH v4 1/8] target/alpha: Introduce alpha_phys_addr_space_bits()
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-1-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 2/8] target/hppa: Define PA[20|1X] physical address space size
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-2-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 3/8] hw/hppa: Use hppa_abs_to_phys_pa1x()
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-3-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 4/8] target/i386: Drop physical address range checks
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-4-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 5/8] target/loongarch: Introduce loongarch_palen_mask()
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-5-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 6/8] hw/loongarch: Use loongarch_palen_mask()
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-6-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 7/8] hw/riscv: Fix IOMMU PAS capability to 56 bits
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-7-725a589e83c8@rev.ng
+  [31m✗[0m [PATCH v4 8/8] Drop TARGET_PHYS_ADDR_SPACE_BITS
+    + Link: https://lore.kernel.org/qemu-devel/20260210-phys_addr-v4-8-725a589e83c8@rev.ng
+  ---
+  [31m✗[0m BADSIG: DKIM/rev.ng
+---
+Total patches: 8
+---
+Applying: target/alpha: Introduce alpha_phys_addr_space_bits()
+Applying: target/hppa: Define PA[20|1X] physical address space size
+Applying: hw/hppa: Use hppa_abs_to_phys_pa1x()
+Applying: target/i386: Drop physical address range checks
+Applying: target/loongarch: Introduce loongarch_palen_mask()
+Applying: hw/loongarch: Use loongarch_palen_mask()
+Applying: hw/riscv: Fix IOMMU PAS capability to 56 bits
+Applying: Drop TARGET_PHYS_ADDR_SPACE_BITS
+Patch failed at 0008 Drop TARGET_PHYS_ADDR_SPACE_BITS
+error: target/openrisc/cpu-param.h: does not exist in index
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
