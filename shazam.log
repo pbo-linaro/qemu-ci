@@ -1,0 +1,43 @@
+Grabbing thread from lore.kernel.org/all/20260211055356.44664-1-mohamed@unpredictable.fr/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/7] whpx: re-enable guest debug support on x86
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-2-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 2/7] whpx: preparatory changes before switching over from winhvemulation
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-3-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 3/7] whpx: refactor whpx_destroy_vcpu to arch-specific function
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-4-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 4/7] whpx: move whpx_get_reg/whpx_set_reg to generic code
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-5-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 5/7] whpx: x86: switch over from winhvemulation to target/i386/emulate
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-6-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 6/7] whpx: remove remaining winhvemulation support code
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-7-mohamed@unpredictable.fr
+  [32m✓[0m [PATCH 7/7] whpx: x86: remove messages
+    + Link: https://lore.kernel.org/qemu-devel/20260211055356.44664-8-mohamed@unpredictable.fr
+  ---
+  [32m✓[0m Signed: DKIM/unpredictable.fr
+---
+Total patches: 7
+---
+Applying: whpx: re-enable guest debug support on x86
+Patch failed at 0001 whpx: re-enable guest debug support on x86
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:62: trailing whitespace.
+bool whpx_arch_supports_guest_debug(void) 
+/home/runner/work/qemu-ci/qemu-ci/.git/rebase-apply/patch:78: trailing whitespace.
+bool whpx_arch_supports_guest_debug(void) 
+error: accel/whpx/whpx-accel-ops.c: does not exist in index
+error: include/system/whpx-all.h: does not exist in index
+error: target/arm/whpx/whpx-all.c: does not exist in index
+error: patch failed: target/i386/whpx/whpx-all.c:1272
+error: target/i386/whpx/whpx-all.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
