@@ -71,6 +71,28 @@ void iothread_unref(IOThread *iothread, const char *holder)
     }
 }
 
+static char *iothread_get_attached_dev_list(IOThread *iothread)
+{
+    guint len = g_list_length(iothread->attached_dev);
+
+    if (len == 0) {
+        return g_strdup("none");
+    }
+
+    gchar **array = g_new0(gchar *, len + 1);
+    GList *l;
+    int i = 0;
+
+    for (l = iothread->attached_dev; l != NULL; l = l->next) {
+        array[i++] = l->data;
+    }
+
+    char *result = g_strjoinv(" | ", array);
+    g_free(array);
+
+    return result;
+}
+
 static void *iothread_run(void *opaque)
 {
     IOThread *iothread = opaque;
@@ -388,6 +410,8 @@ static int query_one_iothread(Object *object, void *opaque)
     info = g_new0(IOThreadInfo, 1);
     info->id = iothread_get_id(iothread);
     info->thread_id = iothread->thread_id;
+    info->attached_cnt = iothread->attached_cnt;
+    info->attached_dev = iothread_get_attached_dev_list(iothread);
     info->poll_max_ns = iothread->poll_max_ns;
     info->poll_grow = iothread->poll_grow;
     info->poll_shrink = iothread->poll_shrink;
