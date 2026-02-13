@@ -33,6 +33,8 @@ struct IOThread {
     bool stopping;              /* has iothread_stop() been called? */
     bool running;               /* should iothread_run() continue? */
     int thread_id;
+    int attached_cnt;
+    GList *attached_dev;
 
     /* AioContext poll parameters */
     int64_t poll_max_ns;
@@ -48,6 +50,8 @@ char *iothread_get_id(IOThread *iothread);
 IOThread *iothread_by_id(const char *id);
 AioContext *iothread_get_aio_context(IOThread *iothread);
 GMainContext *iothread_get_g_main_context(IOThread *iothread);
+void iothread_ref(IOThread *iothread, const char* holder);
+void iothread_unref(IOThread *iothread, const char* holder);
 
 /*
  * Helpers used to allocate iothreads for internal use.  These

@@ -36,6 +36,41 @@
 #define IOTHREAD_POLL_MAX_NS_DEFAULT 0ULL
 #endif
 
+/*
+ * Increment iothread's reference count,
+ * and add holder device path to the list.
+ */
+void iothread_ref(IOThread *iothread, const char *holder)
+{
+    iothread->attached_cnt++;
+    iothread->attached_dev = g_list_prepend(iothread->attached_dev,
+                                           (gpointer)holder);
+}
+
+/*
+ * Decrement iothread's reference count,
+ * and delete holder device path from the list.
+ */
+void iothread_unref(IOThread *iothread, const char *holder)
+{
+    if (iothread->attached_cnt > 0) {
+        GList *link = g_list_find_custom(iothread->attached_dev,
+                                         holder, (GCompareFunc)g_strcmp0);
+
+        if (link) {
+            g_free(link->data);
+            iothread->attached_dev = g_list_delete_link(iothread->attached_dev,
+                                                        link);
+            iothread->attached_cnt--;
+        } else {
+            error_report("iohtread_unref can't find device. attached_dev=%s",
+                        holder);
+        }
+    } else {
+        error_report("iohtread_unref counter error. attached_dev=%s", holder);
+    }
+}
+
 static void *iothread_run(void *opaque)
 {
     IOThread *iothread = opaque;
