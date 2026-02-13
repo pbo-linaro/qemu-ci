@@ -1,0 +1,34 @@
+Grabbing thread from lore.kernel.org/all/20260213071042.3733239-1-lulu@redhat.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 6 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH RFC 1/5] net/filter: Allow redirector on vhost backends
+    + Link: https://lore.kernel.org/qemu-devel/20260213071042.3733239-2-lulu@redhat.com
+  [32m✓[0m [PATCH RFC 2/5] net/filter-redirector: add in/out_netdev properties
+    + Link: https://lore.kernel.org/qemu-devel/20260213071042.3733239-3-lulu@redhat.com
+  [32m✓[0m [PATCH RFC 3/5] net/filter-redirector: Add AF_PACKET sockets initialization
+    + Link: https://lore.kernel.org/qemu-devel/20260213071042.3733239-4-lulu@redhat.com
+  [32m✓[0m [PATCH RFC 4/5] net/filter-redirector: add AF_PACKET redirect datapath
+    + Link: https://lore.kernel.org/qemu-devel/20260213071042.3733239-5-lulu@redhat.com
+  [32m✓[0m [PATCH RFC 5/5] qapi: add in/out_netdev to filter-redirector
+    + Link: https://lore.kernel.org/qemu-devel/20260213071042.3733239-6-lulu@redhat.com
+  ---
+  [32m✓[0m Signed: DKIM/redhat.com
+---
+Total patches: 5
+---
+Applying: net/filter: Allow redirector on vhost backends
+Applying: net/filter-redirector: add in/out_netdev properties
+Applying: net/filter-redirector: Add AF_PACKET sockets initialization
+Patch failed at 0003 net/filter-redirector: Add AF_PACKET sockets initialization
+error: patch failed: net/filter-mirror.c:26
+error: net/filter-mirror.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
