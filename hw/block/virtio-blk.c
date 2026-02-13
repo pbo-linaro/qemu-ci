@@ -1462,6 +1462,9 @@ static bool virtio_blk_vq_aio_context_init(VirtIOBlock *s, Error **errp)
             return false;
         }
     } else if (conf->iothread) {
+        char *path = object_get_canonical_path(OBJECT(s));
+
+        iothread_ref(conf->iothread, path);
         AioContext *ctx = iothread_get_aio_context(conf->iothread);
         for (unsigned i = 0; i < conf->num_queues; i++) {
             s->vq_aio_context[i] = ctx;
@@ -1491,7 +1494,12 @@ static void virtio_blk_vq_aio_context_cleanup(VirtIOBlock *s)
     }
 
     if (conf->iothread) {
+        char *path = object_get_canonical_path(OBJECT(s));
+
+        iothread_unref(conf->iothread, path);
         object_unref(OBJECT(conf->iothread));
+
+        g_free(path);
     }
 
     g_free(s->vq_aio_context);
