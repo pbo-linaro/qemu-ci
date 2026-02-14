@@ -1,0 +1,45 @@
+Grabbing thread from lore.kernel.org/all/20260214021240.58657-1-philmd@linaro.org/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 9 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [32m✓[0m [PATCH 1/8] hw/display/macfb: Constify macfb_sense_table[] array
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-2-philmd@linaro.org
+  [32m✓[0m [PATCH 2/8] hw/display/macfb: Constify macfb_mode_table[] array
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-3-philmd@linaro.org
+  [32m✓[0m [PATCH 3/8] hw/m68k/q800: Use MacFbMode fields in q800_machine_init()
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-4-philmd@linaro.org
+  [32m✓[0m [PATCH 4/8] hw/m68k/q800: Set MACFB_DISPLAY_APPLE_21_COLOR within MacFrameBuffer
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-5-philmd@linaro.org
+  [32m✓[0m [PATCH 5/8] hw/m68k: Set graphic display dimensions generically
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-6-philmd@linaro.org
+  [32m✓[0m [PATCH 6/8] hw/sparc: Set graphic display dimensions generically
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-7-philmd@linaro.org
+  [32m✓[0m [PATCH 7/8] hw/ppc: Set graphic display dimensions generically
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-8-philmd@linaro.org
+  [32m✓[0m [PATCH 8/8] system/globals: Build as common code
+    + Link: https://lore.kernel.org/qemu-devel/20260214021240.58657-9-philmd@linaro.org
+  ---
+  [32m✓[0m Signed: DKIM/linaro.org
+---
+Total patches: 8
+---
+Applying: hw/display/macfb: Constify macfb_sense_table[] array
+Applying: hw/display/macfb: Constify macfb_mode_table[] array
+Applying: hw/m68k/q800: Use MacFbMode fields in q800_machine_init()
+Applying: hw/m68k/q800: Set MACFB_DISPLAY_APPLE_21_COLOR within MacFrameBuffer
+Applying: hw/m68k: Set graphic display dimensions generically
+Applying: hw/sparc: Set graphic display dimensions generically
+Applying: hw/ppc: Set graphic display dimensions generically
+Applying: system/globals: Build as common code
+Patch failed at 0008 system/globals: Build as common code
+error: patch failed: system/meson.build:1
+error: system/meson.build: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
